@@ -8,6 +8,9 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     let TENANT;
     const vm = {
+        selectAll: false,
+        selectedAll: false,
+        addToSelectedTestRunsAll: addToSelectedTestRunsAll,
         testRuns: [],
         totalResults: 0,
         pageSize: 20,
@@ -297,15 +300,28 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         });
     }
 
-    function addToSelectedTestRuns(testRun) { //TODO: why do we use object instead of array here?
-        $timeout(function () {
-            if (testRun.selected) {
-                vm.selectedTestRuns[testRun.id] = testRun;
-            } else {
-                delete vm.selectedTestRuns[testRun.id];
-            }
-        }, 100);
-    }
+        function addToSelectedTestRuns(testRun) { //TODO: why do we use object instead of array here?
+            $timeout(function () {
+                if (testRun.selected) {
+                    vm.selectedTestRuns[testRun.id] = testRun;
+                } else {
+                    vm.selectedAll = false;
+                    vm.selectAll = false;
+                    
+                    delete vm.selectedTestRuns[testRun.id];
+                }
+            }, 100);
+        }
+
+        function addToSelectedTestRunsAll() {
+            vm.selectAll = !vm.selectAll;
+            vm.selectedAll = true;
+
+            vm.testRuns.forEach(function(testRun) {
+                testRun.selected = vm.selectAll;
+                addToSelectedTestRuns(testRun);
+            })
+        }
 
     function deleteSingleTestRun(testRun) {
         const confirmation = confirm('Do you really want to delete "' + testRun.testSuite.name + '" test run?');

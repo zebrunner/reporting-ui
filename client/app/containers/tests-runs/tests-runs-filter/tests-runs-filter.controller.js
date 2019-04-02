@@ -128,7 +128,6 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         });
         readStoredParams();
         if (vm.isMobile()) {
-            $rootScope.$on('tr-filter-reset', onReset);
             $rootScope.$on('tr-filter-apply', onApply);
             $rootScope.$on('tr-filter-open-search', toggleMobileSearch);
         }
@@ -191,6 +190,9 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
 
     function toggleMobileSearch() {
         vm.isMobileSearchActive = !vm.isMobileSearchActive;
+        if(!vm.isMobileSearchActive) {
+            $rootScope.$emit('tr-filter-close');
+        }
     }
 
     function loadFilters() {
@@ -366,6 +368,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     }
 
     function onReset() {
+        $rootScope.$emit('tr-filter-reset');
         vm.selectedRange.dateStart = null;
         vm.selectedRange.dateEnd = null;
         vm.selectedRange.selectedTemplate = null;
