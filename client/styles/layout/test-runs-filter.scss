@@ -182,11 +182,8 @@
                 margin-left: 0px;
                 margin-right: 8px;
                 max-height: 32px;
-                &.md-focused {
+                &.md-focused, &:hover {
                     background-color: rgba(31, 36, 42, 1) !important;
-                }
-                &:hover {
-                    background-color: rgba(31, 36, 42, .7) !important;
                 }
                 @media screen and (max-width: $breakpoint-mobile) {
                     font-size: 11px;
