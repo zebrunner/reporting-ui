@@ -5,7 +5,7 @@
         .controller('AppCtrl', AppCtrl); // overall control
 	    function AppCtrl($scope, $rootScope, $templateCache, $state, httpBuffer, $window, $cookies, $q, appConfig,
                          AuthService, UserService, SettingsService, ConfigService, AuthIntercepter, UtilService,
-                         SettingProvider, $timeout, toolsService) {
+                         SettingProvider, $timeout, toolsService, UI_VERSION) {
             'ngInject';
 
 	        $scope.pageTransitionOpts = appConfig.pageTransitionOpts;
@@ -84,6 +84,8 @@
                         if(rs.success)
                         {
                             $rootScope.version = rs.data;
+                            $rootScope.version.ui = UI_VERSION;
+
                             resolve(rs.data);
                         } else {
                             reject(rs.message);
