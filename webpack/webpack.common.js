@@ -28,7 +28,7 @@ module.exports = (env) => {
             inject: true,
             template: '../index.html',
             showErrors: true,
-            // base,
+            base,
         },
         isProd
             ? {
@@ -81,10 +81,6 @@ module.exports = (env) => {
                     // match the requirements. When no loader matches it will fall
                     // back to the "file" loader at the end of the loader list.
                     oneOf: [
-                        // {
-                        //     test: /\.json$/,
-                        //     include: [path.resolve(__dirname, '../confi']
-                        // },
                         {
                             test: /\.m?js$/,
                             exclude: [/node_modules/],
@@ -130,6 +126,7 @@ module.exports = (env) => {
                         },
                         {
                             test: /\.html$/,
+                            exclude: [path.resolve(__dirname, '../client/index.html')],
                             loader: 'html',
                             options: {
                                 attrs: [':md-svg-src', ':data-src', ':src']
