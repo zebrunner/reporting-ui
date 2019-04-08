@@ -17,7 +17,7 @@
             var envParams = getENVParams(dashboard, userId);
             angular.forEach(config, function (paramValue, paramName) {
                 var type = paramValue.value ? getType(paramValue.value) :
-                    paramValue.values && paramValue.values.length ? 'array' : undefined;
+                    paramValue.values && angular.isArray(paramValue.values) ? 'array' : undefined;
                 var isExistingWidget = widget.id && widget.paramsConfig && widget.paramsConfig.length;
                 var value = getValue(widget.paramsConfig, paramName, paramValue, type, isExistingWidget, envParams);
                 if(type) {
@@ -43,7 +43,8 @@
                     getValueByType(envParams[paramName], getType(value))
                     : value
                 : value;
-            value = paramValue.multiple && getType(value) !== 'array' ? [value] : value;
+            value = paramValue.multiple && getType(value) !== 'array'? value ? [value] : [] : value;
+            value = required ? value : value ? value : '';
             return value;
         };
 
