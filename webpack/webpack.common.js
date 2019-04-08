@@ -17,6 +17,36 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 module.exports = (env) => {
     const isProd = env === 'production';
     const isDev = env === 'development';
+    const __PRODUCTION__ = JSON.stringify(isProd);
+    const __ZAFIRA_WS_URL__ = JSON.stringify(process.env.ZAFIRA_WS_URL) || 'http://localhost:8080/zafira-ws';
+    const __ZAFIRA_UI_VERSION__ = JSON.stringify(process.env.ZAFIRA_UI_VERSION) || 'local';
+    const packageName = JSON.stringify(process.env.npm_package_name) || '';
+    const base = JSON.stringify(process.env.ZAFIRA_UI_BASE) || '/';
+    const htmlWebpackConfig = Object.assign(
+        {},
+        {
+            inject: true,
+            template: '../index.html',
+            showErrors: true,
+            // base,
+        },
+        isProd
+            ? {
+                minify: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    removeRedundantAttributes: true,
+                    useShortDoctype: true,
+                    removeEmptyAttributes: true,
+                    removeStyleLinkTypeAttributes: true,
+                    keepClosingSlash: true,
+                    minifyJS: true,
+                    minifyCSS: true,
+                    minifyURLs: true,
+                },
+            }
+            : undefined
+    );
 
     return {
         mode: 'none',
@@ -51,6 +81,10 @@ module.exports = (env) => {
                     // match the requirements. When no loader matches it will fall
                     // back to the "file" loader at the end of the loader list.
                     oneOf: [
+                        // {
+                        //     test: /\.json$/,
+                        //     include: [path.resolve(__dirname, '../confi']
+                        // },
                         {
                             test: /\.m?js$/,
                             exclude: [/node_modules/],
@@ -154,9 +188,9 @@ module.exports = (env) => {
         },
         plugins: [
             new webpack.DefinePlugin({
-                __PRODUCTION__: JSON.stringify(isProd),
-                __ZAFIRA_WS_URL__: JSON.stringify(process.env.ZAFIRA_WS_URL || 'http://localhost:8080/zafira-ws'),
-                __ZAFIRA_UI_VERSION__: JSON.stringify(process.env.ZAFIRA_UI_VERSION || 'local'),
+                __PRODUCTION__,
+                __ZAFIRA_WS_URL__,
+                __ZAFIRA_UI_VERSION__,
             }),
             new CopyWebpackPlugin(
                 [{ from: '../config.json'}]
@@ -187,7 +221,7 @@ module.exports = (env) => {
                 // favicon background color (see https://github.com/haydenbleasel/favicons#usage)
                 background: '#fff',
                 // favicon app title (see https://github.com/haydenbleasel/favicons#usage)
-                title: 'Zafira',
+                title: packageName,
 
                 // which icons should be generated (see https://github.com/haydenbleasel/favicons#usage)
                 icons: {
@@ -203,33 +237,7 @@ module.exports = (env) => {
                     windows: false
                 }
             }),
-            new HtmlWebpackPlugin(
-                Object.assign(
-                    {},
-                    {
-                        inject: true,
-                        template: '../index.html',
-                        showErrors: true,
-                        base: JSON.stringify(process.env.ZAFIRA_UI_BASE || '/')
-                    },
-                    isProd
-                        ? {
-                            minify: {
-                                removeComments: true,
-                                collapseWhitespace: true,
-                                removeRedundantAttributes: true,
-                                useShortDoctype: true,
-                                removeEmptyAttributes: true,
-                                removeStyleLinkTypeAttributes: true,
-                                keepClosingSlash: true,
-                                minifyJS: true,
-                                minifyCSS: true,
-                                minifyURLs: true,
-                            },
-                        }
-                        : undefined
-                )
-            ),
+            new HtmlWebpackPlugin(htmlWebpackConfig),
             new webpack.ProgressPlugin(),
             // To strip all locales except “en”
             new MomentLocalesPlugin(),
