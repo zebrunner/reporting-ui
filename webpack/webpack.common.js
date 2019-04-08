@@ -154,7 +154,9 @@ module.exports = (env) => {
         },
         plugins: [
             new webpack.DefinePlugin({
-                __PRODUCTION__: JSON.stringify(isProd)
+                __PRODUCTION__: JSON.stringify(isProd),
+                __ZAFIRA_WS_URL__: JSON.stringify(process.env.ZAFIRA_WS_URL || 'http://localhost:8080/zafira-ws'),
+                __ZAFIRA_UI_VERSION__: JSON.stringify(process.env.ZAFIRA_UI_VERSION || 'local'),
             }),
             new CopyWebpackPlugin(
                 [{ from: '../config.json'}]
@@ -208,6 +210,7 @@ module.exports = (env) => {
                         inject: true,
                         template: '../index.html',
                         showErrors: true,
+                        base: JSON.stringify(process.env.ZAFIRA_UI_BASE || '/')
                     },
                     isProd
                         ? {

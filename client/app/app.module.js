@@ -1208,6 +1208,7 @@ const ngModule = angular.module('app', [
 
 angular.injector(['ng']).get('$http').get('./config.json').then(function(response){
     ngModule.constant('API_URL', response.data['API_URL']);
+    ngModule.constant('UI_VERSION', response.data['UI_VERSION']);
 
     //manually bootstrap application after we have gotten our config data
     angular.element(document).ready(function() {
