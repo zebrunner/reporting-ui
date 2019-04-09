@@ -1,15 +1,6 @@
-ARG base=/app/
-ARG version=1.0-SNAPSHOT
-
 FROM node:10.15.1-alpine as build-stage
 
 LABEL authors="Alex Khursevich"
-
-ARG base
-ARG version
-
-ENV ZAFIRA_UI_BASE=$base
-ENV ZAFIRA_UI_VERSION=$version
 
 # Linux setup
 RUN apk update \
@@ -34,12 +25,12 @@ RUN npm run build
 
 FROM nginx:1.15.9-alpine
 
-ARG base
+ARG version=1.0-SNAPSHOT
 
-ENV ZAFIRA_UI_BASE=$base
+ENV ZAFIRA_UI_VERSION=${version}
 ENV ZAFIRA_WS_URL=http://localhost:8080/zafira-ws
 
-COPY --from=build-stage /app/dist/ /usr/share/nginx/html${ZAFIRA_UI_BASE}
+COPY --from=build-stage /app/dist/ /usr/share/nginx/html/app/
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY entrypoint.sh /
 
