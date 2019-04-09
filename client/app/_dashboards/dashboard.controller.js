@@ -100,11 +100,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         func(params, sqlAdapter).then(function (rs) {
             if (rs.success) {
                 var data = rs.data;
-                for (var j = 0; j < data.length; j++) {
-                    if (data[j] !== null && data[j].CREATED_AT) {
-                        data[j].CREATED_AT = new Date(data[j].CREATED_AT);
-                    }
-                }
                 if(!refresh){
                     widget.model = widget.widgetTemplate ? jsonSafeParse(widget.widgetTemplate.chartConfig) : jsonSafeParse(widget.model);
                 }

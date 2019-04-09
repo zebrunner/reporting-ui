@@ -159,9 +159,6 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                         if (j === 0) {
                             columns = Object.keys(data[j]);
                         }
-                        if (data[j].CREATED_AT) {
-                            data[j].CREATED_AT = new Date(data[j].CREATED_AT);
-                        }
                     }
                 }
                 widget.widgetTemplate.model = isTable ? {"columns" : columns} : JSON.parse(widget.widgetTemplate.chartConfig);

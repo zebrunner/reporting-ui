@@ -71,7 +71,7 @@
         "angular-validation-match": "^1.9.0",
         "bootstrap-sass": "^3.4.1",
         "d3": "^3.5.17",
-        "echarts": "^4.2.0-rc.2",
+        "echarts": "^4.2.1",
         "elasticsearch-browser": "^15.4.1",
         "font-awesome": "^4.7.0",
         "gridstack": "^0.4.0",
