@@ -2,6 +2,8 @@ FROM node:10.15.1-alpine as build-stage
 
 LABEL authors="Alex Khursevich"
 
+ENV ZAFIRA_UI_BASE=/app/
+
 # Linux setup
 RUN apk update \
   && apk add --update alpine-sdk \

@@ -21,7 +21,7 @@ module.exports = (env) => {
     const __ZAFIRA_WS_URL__ = JSON.stringify(process.env.ZAFIRA_WS_URL) || 'http://localhost:8080/zafira-ws';
     const __ZAFIRA_UI_VERSION__ = JSON.stringify(process.env.ZAFIRA_UI_VERSION) || 'local';
     const packageName = JSON.stringify(process.env.npm_package_name) || '';
-    const base = JSON.stringify(process.env.ZAFIRA_UI_BASE) || '/app/';
+    const base = JSON.stringify(process.env.ZAFIRA_UI_BASE) || '/';
     const htmlWebpackConfig = Object.assign(
         {},
         {
@@ -122,7 +122,6 @@ module.exports = (env) => {
                             loader: 'file',
                             options: {
                                 name: '[name].[ext]',
-                                publicPath: '/',
                             },
                         },
                         {
@@ -173,7 +172,6 @@ module.exports = (env) => {
                             exclude: [/\.(s?css)$/, /\.(m?js)$/, /\.html$/, /\.json$/],
                             options: {
                                 name: isProd ? '[name].[hash:8].[ext]' : '[name].[ext]',
-                                publicPath: '/',
                             },
                         },
                         // ** STOP ** Are you adding a new loader?
