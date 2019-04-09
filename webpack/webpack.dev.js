@@ -11,11 +11,15 @@ module.exports = merge(common, {
     devtool: 'inline-source-map',
     devServer: {
         contentBase: path.join(__dirname, '../dist'),
+        publicPath: path.join(__dirname, '../dist'),
         compress: true,
         port: 3000,
         disableHostCheck: true,
         inline: true,
         hot: true,
+        historyApiFallback: true,
+        watchContentBase: true,
+        writeToDisk: true,
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),

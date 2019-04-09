@@ -10,7 +10,7 @@
                      'bg-info': ['14','24','34'].indexOf($ctrl.mainData) >= 0,
                      'bg-warning': ['15','25','35'].indexOf($ctrl.mainData) >= 0,
                      'bg-danger': ['16','26','36'].indexOf($ctrl.mainData) >= 0 }">
-            <a href="#!/">
+            <a href="/">
                 <span class="logo-icon"><img src="../../../../assets/images/logo/logo-zafira_white.svg" /></span>
             </a>
         </div>
@@ -80,19 +80,19 @@
                                 </md-button>
                             </md-menu-item>
                             <!-- md-menu-item>
-                            <md-button aria-label="menu" ng-href="#!/dashboards/{{$ctrl.currentUser.personalDashboardId}}?userId={{$ctrl.currentUser.id}}">
+                            <md-button aria-label="menu" ng-href="/dashboards/{{$ctrl.currentUser.personalDashboardId}}?userId={{$ctrl.currentUser.id}}">
                                 <md-icon class="material-icons">equalizer</md-icon><span>Personal</span></md-button>
-                        </md-menu-item -->
-                            <!-- md-menu-item>
-                          <md-button aria-label="menu" ng-href="#!/dashboards/{{$ctrl.currentUser.pefrDashboardId}}?userId={{$ctrl.currentUser.id}}">
-                                <md-icon class="material-icons">timeline</md-icon><span>Performance</span></md-button>
-                        </md-menu-item-->
-                            <!--md-menu-item has-any-permission="['VIEW_INTEGRATIONS']">
-                            <md-button aria-label="menu" ng-href="#!/integrations">
-                                <md-icon class="material-icons">settings_input_component</md-icon><span>Integrations</span></md-button>
-                        </md-menu-item-->
+                            </md-menu-item -->
+                                <!-- md-menu-item>
+                              <md-button aria-label="menu" ng-href="/dashboards/{{$ctrl.currentUser.pefrDashboardId}}?userId={{$ctrl.currentUser.id}}">
+                                    <md-icon class="material-icons">timeline</md-icon><span>Performance</span></md-button>
+                            </md-menu-item-->
+                                <!--md-menu-item has-any-permission="['VIEW_INTEGRATIONS']">
+                                <md-button aria-label="menu" ng-href="/integrations">
+                                    <md-icon class="material-icons">settings_input_component</md-icon><span>Integrations</span></md-button>
+                            </md-menu-item-->
                             <md-menu-item>
-                                <md-button aria-label="menu" ng-href="#!/logout">
+                                <md-button aria-label="menu" ng-href="/logout">
                                     <md-icon class="material-icons">power_settings_new</md-icon><span>Logout</span>
                                 </md-button>
                             </md-menu-item>

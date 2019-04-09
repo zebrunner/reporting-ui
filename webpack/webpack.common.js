@@ -122,6 +122,7 @@ module.exports = (env) => {
                             loader: 'file',
                             options: {
                                 name: '[name].[ext]',
+                                publicPath: '/',
                             },
                         },
                         {
@@ -171,7 +172,8 @@ module.exports = (env) => {
                             // by webpacks internal loaders.
                             exclude: [/\.(s?css)$/, /\.(m?js)$/, /\.html$/, /\.json$/],
                             options: {
-                                name: isProd ? '[name].[hash:8].[ext]' : '[name].[hash:8].[ext]',
+                                name: isProd ? '[name].[hash:8].[ext]' : '[name].[ext]',
+                                publicPath: '/',
                             },
                         },
                         // ** STOP ** Are you adding a new loader?
