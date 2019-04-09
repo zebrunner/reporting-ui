@@ -1,6 +1,7 @@
 'use strict';
 
 import '../styles/main.scss';
+import appConfig from 'appConfig';
 
 const ngModule = angular.module('app', [
     // Core modules
@@ -1132,6 +1133,8 @@ const ngModule = angular.module('app', [
         return angular.equals({}, object);
     }
 }])
+.constant('API_URL', appConfig['API_URL'])
+.constant('UI_VERSION', appConfig['UI_VERSION'])
 .run(function($rootScope, $location, $cookies, $http, $transitions, AuthService, $document,
               UserService) {
     'ngInject';
@@ -1211,22 +1214,6 @@ const ngModule = angular.module('app', [
     })
 
 });
-
-angular.injector(['ng']).get('$http').get('./config.json')
-    .then(function(response){
-        ngModule.constant('API_URL', response.data['API_URL']);
-        ngModule.constant('UI_VERSION', response.data['UI_VERSION']);
-
-        //manually bootstrap application after we have gotten our config data
-        angular.element(document).ready(function() {
-            angular.bootstrap(document, ['app']);
-        });
-    })
-    .catch((err) => {
-        //Display error message if couldn't get config
-        alertify.set('notifier','delay', 0);
-        alertify.error('Can\'t get app config, please try to reload page');
-    });
 
 //Services
 require('./_services/services.module');
