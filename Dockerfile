@@ -2,9 +2,13 @@ FROM node:10.15.1-alpine as build-stage
 
 LABEL authors="Alex Khursevich"
 
-ARG environment=stage
+ARG base=/zafira/
+ARG version=1.0-SNAPSHOT
 
-#Linux setup
+ENV ZAFIRA_UI_BASE=${base}
+ENV ZAFIRA_UI_VERSION=${version}
+
+# Linux setup
 RUN apk update \
   && apk add --update alpine-sdk \
   && rm -rf /tmp/* /var/cache/apk/* *.tar.gz ~/.npm \
@@ -27,11 +31,9 @@ RUN npm run build
 FROM nginx:1.15.9-alpine
 
 ARG base=/zafira/
-ARG version=1.0-SNAPSHOT
 
-ENV ZAFIRA_WS_URL=https://localhost:8080/zafira-ws
 ENV ZAFIRA_UI_BASE=${base}
-ENV ZAFIRA_UI_VERSION=${version}
+ENV ZAFIRA_WS_URL=http://localhost:8080/zafira-ws
 
 COPY --from=build-stage /app/dist/ /usr/share/nginx/html${ZAFIRA_UI_BASE}
 COPY nginx.conf /etc/nginx/conf.d/default.conf
