@@ -42,6 +42,10 @@ html {
     min-height: 100%; // important!
     height: auto; // important!
 
+    &.md-menu-is-open {
+        max-height: 100%;
+    }
+
     > .header-container {
         &.header-fixed {
             position: fixed;

@@ -18,6 +18,13 @@
                 value: SettingProvider.getCompanyLogoURl() || ''
             };
 
+            $scope.$on('$mdMenuOpen', function() {
+                $('body.app').addClass('md-menu-is-open');
+            });
+            $scope.$on('$ndMenuClose', function() {
+                $('body.app').removeClass('md-menu-is-open');
+            })
+
             var UNANIMATED_STATES = ['signin', 'signup', 'forgotPassword', 'resetPassword'];
 
             $scope.isAnimated = function() {
