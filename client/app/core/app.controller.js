@@ -19,10 +19,10 @@
             };
 
             $scope.$on('$mdMenuOpen', function() {
-                $('.app').addClass('md-menu-is-open');
+                $('body.app').addClass('md-menu-is-open');
             });
             $scope.$on('$ndMenuClose', function() {
-                $('.app').removeClass('md-menu-is-open');
+                $('body.app').removeClass('md-menu-is-open');
             })
 
             var UNANIMATED_STATES = ['signin', 'signup', 'forgotPassword', 'resetPassword'];
