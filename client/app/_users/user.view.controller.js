@@ -60,11 +60,8 @@ const UserViewController = function UserViewController($scope, $rootScope, $loca
         querySearch: querySearch,
         showInviteUsersDialog: showInviteUsersDialog,
         selectedTabIndex: 0,
-
-        get tools() {
-            return toolsService.tools;
-        }
-    }
+        isToolConnected: toolsService.isToolConnected,
+    };
 
     vm.$onInit = initController;
 
@@ -285,7 +282,7 @@ const UserViewController = function UserViewController($scope, $rootScope, $loca
             fullscreen: true,
             locals: {
                 groups: GroupService.groups,
-                isLDAPConnected: vm.tools['LDAP']
+                isLDAPConnected: toolsService.isToolConnected('ldap'),
             }
         })
             .then(function (invitations) {

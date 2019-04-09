@@ -203,9 +203,7 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
                     });
                 }
 
-                Object.defineProperty($scope, 'tools', {
-                    get: () => toolsService.tools,
-                });
+                $scope.isToolConnected = toolsService.isToolConnected;
 
                 $scope.createMonitor = function () {
                     $scope.monitor.recipients = $scope.monitor.emailList.toString();

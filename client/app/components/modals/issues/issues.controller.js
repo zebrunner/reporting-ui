@@ -34,6 +34,7 @@ const IssuesModalController = function IssuesModalController(
         hide: hide,
         cancel: cancel,
         bindEvents: bindEvents,
+        isToolConnected: toolsService.isToolConnected,
         get isConnectedToJira() { return toolsService.jira.enabled; },
     };
 
@@ -263,7 +264,7 @@ const IssuesModalController = function IssuesModalController(
     /*  Checks whether conditions for issue search in Jira are fulfilled */
 
     function isIssueSearchAvailable(jiraId) {
-        if (vm.isConnectedToJira && jiraId) {
+        if (vm.isToolConnected('jira') && jiraId) {
             if (vm.issueTabDisabled || vm.issueJiraIdInputIsChanged) {
                 vm.issueJiraIdInputIsChanged = false;
                 return true;

@@ -16,7 +16,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
 
     const vm = {
         dashboard: null,
-        get tools() { return toolsService.tools; },
+        isToolConnected: toolsService.isToolConnected,
     };
 
     $scope.currentUserId = $location.search().userId;

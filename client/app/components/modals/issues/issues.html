@@ -8,9 +8,6 @@
             </md-button>
         </div>
     </md-toolbar>
-    <!-- <md-progress-linear md-mode="query"
-        ng-show="(!isIssueFound || !isTaskFound) && isConnectedToJira || issueTabDisabled || taskTabDisabled">
-    </md-progress-linear> -->
     <md-dialog-content>
         <form class="form-validation" name="known_issue_form" ng-cloak>
             <div class="issue-modal__wrapper">
@@ -43,8 +40,8 @@
                                 ng-pattern="/^([A-z0-9]+-[0-9]+|\d+)$/" class="form-control validation jira" ng-model-options="{debounce: 500}"
                                 data-ng-model="$ctrl.newIssue.jiraId" data-ng-change="$ctrl.initIssueSearch(!known_issue_form.issueJiraId.$valid)" required />
                         </div>
-                        <!-- <span ng-if="$ctrl.isConnectedToJira && !$ctrl.issueJiraIdExists && $ctrl.newIssue.jiraId" class="jira-status elment-with-label label label-warn">Not found in JIRA</span> -->
-                        <span ng-if="$ctrl.isConnectedToJira && $ctrl.issueJiraIdExists && known_issue_form.issueJiraId.$valid" class="jira-status elment-with-label label label-info">Found in JIRA</span>
+                        <!--<span ng-if="$ctrl.isToolConnected('jira') && !$ctrl.issueJiraIdExists && $ctrl.newIssue.jiraId" class="jira-status elment-with-label label label-warn">Not found in JIRA</span>-->
+                        <span ng-if="$ctrl.isToolConnected('jira') && $ctrl.issueJiraIdExists && known_issue_form.issueJiraId.$valid" class="jira-status elment-with-label label label-info">Connected to JIRA</span>
                     </md-input-container>
                     <md-input-container flex class="issue-element-container summary-container">
                         <label>Summary</label>

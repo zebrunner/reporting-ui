@@ -19,7 +19,7 @@
         </zf-sub-header-button>
         <zf-sub-header-options ng-class="{'header-option-selected': MODE === 'WIDGET_PLACEMENT'}">
             <div>
-                <i class="material-icons" data-ng-if="$ctrl.tools['EMAIL'] && MODE !== 'WIDGET_PLACEMENT'" ng-click="showEmailDialog($event);">
+                <i class="material-icons" data-ng-if="$ctrl.isToolConnected('email') && MODE !== 'WIDGET_PLACEMENT'" ng-click="showEmailDialog($event);">
                     send
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </i>
@@ -53,7 +53,7 @@
                         <div class="panel-heading">
                             {{widget.title}}
                             <span class="show-icon-on-hover show-phone pull-right" data-html2canvas-ignore>
-                                <i class="material-icons widget-icon" data-ng-if="$ctrl.tools['EMAIL']" data-ng-click="showEmailDialog($event, widget.id)">
+                                <i class="material-icons widget-icon" data-ng-if="$ctrl.isToolConnected('email')" data-ng-click="showEmailDialog($event, widget.id)">
                                     send
                                     <md-tooltip md-direction="top">Send by email</md-tooltip>
                                 </i>

@@ -187,7 +187,7 @@ const integrationsController = function integrationsController($scope, $rootScop
                     var enabledSetting = getEnabledSetting(rsTool, settings.data);
                     var currentTool = {
                         name: rsTool,
-                        isConnected: toolsService.tools[rsTool],
+                        isConnected: toolsService.isToolConnected(rsTool),
                         settings: settings.data.filter(function (setting) {
                             setting.notEditable = NOT_EDITABLE_SETTINGS.indexOf(setting.name) >= 0;
                             return isEnabledSetting(rsTool, setting) ? false : setting.tool === rsTool;
@@ -264,8 +264,8 @@ const integrationsController = function integrationsController($scope, $rootScop
 
         function controllerInit() {
             // tools should be fetched by resolver
-            Object.keys(toolsService.tools).forEach((key) => {
-                initTool(key);
+            toolsService.tools.forEach((tool) => {
+                initTool(tool.name);
             });
         }
 

@@ -512,7 +512,7 @@
                         toolsServicePrepare: (toolsService, $timeout, $state) => {
                             'ngInject';
 
-                            return toolsService.getTools()
+                            return toolsService.getTools(true)
                                 .catch((err) => {
                                     err && err.message && alertify.error(err.message);
                                     // Timeout to avoid digest issues

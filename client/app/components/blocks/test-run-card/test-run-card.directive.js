@@ -48,6 +48,7 @@
                     downloadApplication: downloadApplication,
                     goToTestRun: goToTestRun,
                     onBackClick: onBackClick,
+                    isToolConnected: toolsService.isToolConnected,
 
                     get tools() { return toolsService.tools; },
                     get currentOffset() { return $rootScope.currentOffset; },
