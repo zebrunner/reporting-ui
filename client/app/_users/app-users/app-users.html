@@ -100,7 +100,7 @@
                                     </md-menu-item>
                                     <md-menu-item>
                                         <md-button name="userPerformance"
-                                            ng-href="#!/dashboards/{{$ctrl.currentUser.pefrDashboardId}}?userId={{user.id}}"
+                                            ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })"
                                             style="padding-top: 12px">
                                             <md-icon class="material-icons">timeline</md-icon>
                                             Performance

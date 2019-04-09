@@ -775,9 +775,6 @@ div.switch-view div.card.bg-white {
     to {top: 0}
 }
 
-body:not(.fixed-menu) div.md-open-menu-container {
-    position: absolute !important;
-}
 
 body.fixed-menu div.md-open-menu-container {
     position: fixed !important;
@@ -2515,6 +2512,7 @@ $light-inprogress: #68c9fd;
     width: calc(100% - 60px);
     right: 0;
     background-color: white;
+    top: 48px;
     z-index: 5;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 

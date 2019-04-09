@@ -26,7 +26,14 @@ const ngModule = angular.module('app', [
     'angular-jwt',
     'oc.lazyLoad',
 ])
-.config(['$httpProvider', '$anchorScrollProvider', '$qProvider', function($httpProvider, $anchorScrollProvider, $qProvider) {
+.config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider) {
+    'ngInject';
+
+    //Enable $location HTML5 mode (hashless)
+    $locationProvider.html5Mode({
+        enabled: true,
+    });
+
     $anchorScrollProvider.disableAutoScrolling();
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -155,8 +162,7 @@ const ngModule = angular.module('app', [
     String.prototype.getValidFilename = function () {
         return this.replace(/[/\\?%*:|"<>]/g, '-');
     };
-}
-])
+})
 .directive('ngReallyClick', [function() {
     return {
         restrict: 'A',
@@ -1206,15 +1212,21 @@ const ngModule = angular.module('app', [
 
 });
 
-angular.injector(['ng']).get('$http').get('./config.json').then(function(response){
-    ngModule.constant('API_URL', response.data['API_URL']);
-    ngModule.constant('UI_VERSION', response.data['UI_VERSION']);
+angular.injector(['ng']).get('$http').get('./config.json')
+    .then(function(response){
+        ngModule.constant('API_URL', response.data['API_URL']);
+        ngModule.constant('UI_VERSION', response.data['UI_VERSION']);
 
-    //manually bootstrap application after we have gotten our config data
-    angular.element(document).ready(function() {
-        angular.bootstrap(document, ['app']);
+        //manually bootstrap application after we have gotten our config data
+        angular.element(document).ready(function() {
+            angular.bootstrap(document, ['app']);
+        });
+    })
+    .catch((err) => {
+        //Display error message if couldn't get config
+        alertify.set('notifier','delay', 0);
+        alertify.error('Can\'t get app config, please try to reload page');
     });
-});
 
 //Services
 require('./_services/services.module');

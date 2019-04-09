@@ -171,7 +171,7 @@ module.exports = (env) => {
                             // by webpacks internal loaders.
                             exclude: [/\.(s?css)$/, /\.(m?js)$/, /\.html$/, /\.json$/],
                             options: {
-                                name: isProd ? '[name].[hash:8].[ext]' : '[name].[hash:8].[ext]',
+                                name: isProd ? '[name].[hash:8].[ext]' : '[name].[ext]',
                             },
                         },
                         // ** STOP ** Are you adding a new loader?
