@@ -39,8 +39,13 @@ $wizard-white:          #ffffff;
         &_elements {
             &_item {
                 width: 252px;
+                max-width: 252px;
                 height: 164px;
                 margin: 0 $inner-padding $inner-padding 0;
+
+                @media (min-width: $screen-tablet) {
+                    width: calc((100% - (#{$inner-padding} * 2)) / 2);
+                }
 
                 &_title {
                     margin-bottom: 12px;
