@@ -19,7 +19,7 @@ spec:
       - env:
         envFrom:
           - configMapRef:
-              name: zebrunner-config
+              name: zafira-config
         image: qaprosoft/zafira-ui:$version
         imagePullPolicy: Always
         name: zafira-ui
