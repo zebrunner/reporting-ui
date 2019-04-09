@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zafira-ui
+  labels:
+    app: zafira-ui
+  namespace: zafira
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zafira-ui
+  template:
+    metadata:
+      labels:
+        app: zafira-ui
+    spec:
+      containers:
+      - env:
+        envFrom:
+          - configMapRef:
+              name: zebrunner-config
+        image: qaprosoft/zafira-ui:$version
+        imagePullPolicy: Always
+        name: zafira-ui
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      imagePullSecrets:
+        - name: regcred
+      nodeSelector:
+        app: zafira

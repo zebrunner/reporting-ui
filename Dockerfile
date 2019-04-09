@@ -1,4 +1,4 @@
-ARG base=/zafira/
+ARG base=/app/
 ARG version=1.0-SNAPSHOT
 
 FROM node:10.15.1-alpine as build-stage
