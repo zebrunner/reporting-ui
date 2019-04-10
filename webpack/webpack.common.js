@@ -12,13 +12,14 @@ const ImageminPlugin = require('imagemin-webpack-plugin').default;
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env) => {
     const isProd = env === 'production';
     const isDev = env === 'development';
     const __PRODUCTION__ = JSON.stringify(isProd);
-    const __ZAFIRA_WS_URL__ = process.env.ZAFIRA_WS_URL || 'http://localhost:8080/zafira-ws';
-    const __ZAFIRA_UI_VERSION__ = process.env.ZAFIRA_UI_VERSION || 'local';
+    const __ZAFIRA_WS_URL__ = process.env.ZAFIRA_WS_URL || 'http://localhost:8080/zafira-ws'; //TODO: move WS_URL fallback value from this file
+    const __ZAFIRA_UI_VERSION__ = process.env.ZAFIRA_UI_VERSION || '"local"';
     const packageName = JSON.stringify(process.env.npm_package_name) || '';
     const base = JSON.stringify(process.env.ZAFIRA_UI_BASE) || '/';
     const htmlWebpackConfig = Object.assign(
@@ -81,17 +82,6 @@ module.exports = (env) => {
                     // match the requirements. When no loader matches it will fall
                     // back to the "file" loader at the end of the loader list.
                     oneOf: [
-                        {
-                            test: /\.json$/,
-                            enforce: 'pre',
-                            loader: 'string-replace',
-                            options: {
-                                multiple: [
-                                    { search: '__ZAFIRA_WS_URL__', replace: __ZAFIRA_WS_URL__ },
-                                    { search: '__ZAFIRA_UI_VERSION__', replace: __ZAFIRA_UI_VERSION__ },
-                                ],
-                            },
-                        },
                         {
                             test: /\.m?js$/,
                             exclude: [/node_modules/],
@@ -197,6 +187,7 @@ module.exports = (env) => {
         plugins: [
             new webpack.DefinePlugin({
                 __PRODUCTION__,
+                __ZAFIRA_UI_VERSION__,
             }),
             new webpack.ProvidePlugin({
                 $: 'jquery',
@@ -261,7 +252,16 @@ module.exports = (env) => {
                     ]
                 },
             }),
-            // new BundleAnalyzerPlugin(),
+            new CopyWebpackPlugin(
+                [{
+                    from: '../config.json',
+                    transform(data) {
+                        const str = data.toString('utf8').replace('__ZAFIRA_WS_URL__', __ZAFIRA_WS_URL__);
+
+                        return Buffer.from(str);
+                    }
+                }]
+            ),
         ],
         optimization: {
             runtimeChunk: 'single',
