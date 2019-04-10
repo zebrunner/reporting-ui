@@ -1,4 +1,4 @@
 {
-    "API_URL": "http://localhost:8080/zafira-ws",
-    "UI_VERSION": "1.0-SNAPSHOT"
+    "API_URL": "__ZAFIRA_WS_URL__",
+    "UI_VERSION": "__ZAFIRA_UI_VERSION__"
 }
