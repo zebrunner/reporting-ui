@@ -109,17 +109,13 @@ const integrationsController = function integrationsController($scope, $rootScop
             })[0];
         };
 
-        var isEnabledSetting  = function (tool, setting) {
+        function isEnabledSetting(tool, setting) {
             return setting.name === tool + ENABLED_POSTFIX;
         };
 
-        var getEnabledSetting = function (tool, settings) {
-            return settings.filter(function (setting) {
-                if(isEnabledSetting(tool, setting)) {
-                    return true;
-                }
-            })[0];
-        };
+        function getEnabledSetting(tool, settings) {
+            return settings.find(({ name }) => name === tool + ENABLED_POSTFIX);
+        }
 
         function compareBySettingSortOrder(a, b) {
             var aSortOrder = getSortOrderByPostfix(a.name);
@@ -180,41 +176,43 @@ const integrationsController = function integrationsController($scope, $rootScop
             return max;
         };
 
-        var initTool = function (tool) {
-            SettingsService.getSettingByTool(tool).then(function (settings) {
-                if (settings.success) {
-                    var rsTool = settings.data[0].tool;
-                    var enabledSetting = getEnabledSetting(rsTool, settings.data);
-                    var currentTool = {
-                        name: rsTool,
-                        isConnected: toolsService.isToolConnected(rsTool),
-                        settings: settings.data.filter(function (setting) {
-                            setting.notEditable = NOT_EDITABLE_SETTINGS.indexOf(setting.name) >= 0;
-                            return isEnabledSetting(rsTool, setting) ? false : setting.tool === rsTool;
-                        }),
-                        isEnabled: enabledSetting.value === 'true',
-                        newSetting: {}
-                    };
-                    $scope.enabledSettings[enabledSetting.tool] = enabledSetting.id;
-                    if ($scope.settingTools.indexOfName(tool) === -1) {
-                        currentTool.settings.sort(compareBySettingSortOrder);
-                        $scope.settingTools.push(currentTool);
-                        $scope.settingTools.sort(compareByName);
-                        $scope.settingTools.sort(compareByIsEnabled);
+        function initTool(toolName) {
+            SettingsService.getSettingByTool(toolName)
+                .then(function(settings) {
+                    if (settings.success) {
+                        console.log(settings);
+                        const enabledSetting = getEnabledSetting(toolName, settings.data);
+                        var currentTool = {
+                            name: toolName,
+                            isConnected: toolsService.isToolConnected(toolName),
+                            settings: settings.data.filter(function (setting) {
+                                setting.notEditable = NOT_EDITABLE_SETTINGS.indexOf(setting.name) >= 0;
+
+                                return isEnabledSetting(toolName, setting) ? false : setting.tool === toolName;
+                            }),
+                            isEnabled: enabledSetting.value === 'true',
+                            newSetting: {}
+                        };
+                        $scope.enabledSettings[enabledSetting.tool] = enabledSetting.id;
+                        if ($scope.settingTools.indexOfName(toolName) === -1) {
+                            currentTool.settings.sort(compareBySettingSortOrder);
+                            $scope.settingTools.push(currentTool);
+                            $scope.settingTools.sort(compareByName);
+                            $scope.settingTools.sort(compareByIsEnabled);
+                        } else {
+                            var index = $scope.settingTools.indexOfName(toolName);
+                            SettingsService.isToolConnected(toolName).then(function (rs) {
+                                if(rs.success) {
+                                    currentTool.isConnected = rs.data;
+                                    toolsService.tools[toolName] = rs.data;
+                                }
+                            });
+                            $scope.settingTools.splice(index, 1, currentTool);
+                        }
                     } else {
-                        var index = $scope.settingTools.indexOfName(tool);
-                        SettingsService.isToolConnected(tool).then(function (rs) {
-                            if(rs.success) {
-                                currentTool.isConnected = rs.data;
-                                toolsService.tools[tool] = rs.data;
-                            }
-                        });
-                        $scope.settingTools.splice(index, 1, currentTool);
+                        console.error(`Failed to load ${toolName} settings`);
                     }
-                } else {
-                    console.error('Failed to load settings');
-                }
-            });
+                });
         };
 
         $scope.showUploadFileDialog = function ($event, toolName, settingName) {
@@ -264,8 +262,8 @@ const integrationsController = function integrationsController($scope, $rootScop
 
         function controllerInit() {
             // tools should be fetched by resolver
-            toolsService.tools.forEach((tool) => {
-                initTool(tool.name);
+            Object.keys(toolsService.tools).forEach((key) => {
+                initTool(toolsService.tools[key].name);
             });
         }
 
