@@ -2,7 +2,11 @@ FROM node:10.15.1-alpine as build-stage
 
 LABEL authors="Alex Khursevich"
 
+ARG version=1.0-SNAPSHOT
+
 ENV ZAFIRA_UI_BASE=/app/
+ENV ZAFIRA_UI_VERSION=${version}
+ENV ZAFIRA_WS_URL=http://api.qaprosoft.farm/zafira-ws
 
 # Linux setup
 RUN apk update \
@@ -27,9 +31,6 @@ RUN npm run build
 
 FROM nginx:1.15.9-alpine
 
-ARG version=1.0-SNAPSHOT
-
-ENV ZAFIRA_UI_VERSION=${version}
 ENV ZAFIRA_WS_URL=http://localhost:8080/zafira-ws
 
 COPY --from=build-stage /app/dist/ /usr/share/nginx/html/app/
