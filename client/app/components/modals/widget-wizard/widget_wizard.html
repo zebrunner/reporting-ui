@@ -133,7 +133,7 @@
                 <table class="table table-striped table-bordered table-hover" ng-if="widget.widgetTemplate.type === 'TABLE'" style="width: 100%;">
                     <thead>
                     <tr>
-                        <th class="pointer" data-ng-repeat="column in widget.widgetTemplate.model.columns" data-ng-click="changeSorting(column)">
+                        <th class="pointer" data-ng-repeat="column in widget.widgetTemplate.model.columns">
                             {{column}}&nbsp;<i class="fa fa-sort"></i>
                         </th>
                     </tr>
@@ -143,7 +143,7 @@
                         <td data-ng-repeat="column in widget.widgetTemplate.model.columns" data-ng-bind-html="asString(row[column])" data-ng-style="widget.widgetTemplate.model.columns.length > 1 && {'max-width': '500px'}"></td>
                     </tr>
                     <tr class="text-center" data-ng-if="widget.data.dataset == 0">
-                        <td colspan="{{widget.model.columns.length}}">No data</td>
+                        <td colspan="{{widget.widgetTemplate.model.columns.length}}">No data</td>
                     </tr>
                     </tbody>
                 </table>

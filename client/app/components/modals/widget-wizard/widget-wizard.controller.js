@@ -154,12 +154,16 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             if (rs.success) {
                 var data = rs.data;
                 var columns = {};
-                for (var j = 0; j < data.length; j++) {
-                    if(data[j] !== null) {
-                        if (j === 0) {
-                            columns = Object.keys(data[j]);
+                if(! widget.widgetTemplate.chartConfig) {
+                    for (var j = 0; j < data.length; j++) {
+                        if (data[j] !== null) {
+                            if (j === 0) {
+                                columns = Object.keys(data[j]);
+                            }
                         }
                     }
+                } else {
+                    columns = JSON.parse(widget.widgetTemplate.chartConfig).columns;
                 }
                 widget.widgetTemplate.model = isTable ? {"columns" : columns} : JSON.parse(widget.widgetTemplate.chartConfig);
                 widget.data = {
