@@ -21,7 +21,7 @@ module.exports = (env) => {
     const __ZAFIRA_WS_URL__ = process.env.ZAFIRA_WS_URL || 'http://localhost:8080/zafira-ws'; //TODO: move WS_URL fallback value from this file
     const __ZAFIRA_UI_VERSION__ = JSON.stringify(process.env.ZAFIRA_UI_VERSION || 'local');
     const packageName = JSON.stringify(process.env.npm_package_name) || '';
-    const base = JSON.stringify(process.env.ZAFIRA_UI_BASE) || '/';
+    const base = JSON.stringify(process.env.ZAFIRA_UI_BASE || '/');
     const htmlWebpackConfig = Object.assign(
         {},
         {
