@@ -21,7 +21,7 @@
             </div>
             <div ng-switch-when="2">
                 <ng-form class="zf-display-table" name="params">
-                    <div ng-if="paramValue.required" class="widget-wizard_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
+                    <div ng-if="paramValue.required && ! paramValue.hidden" class="widget-wizard_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
                         <div class="zf-label">{{paramName}}</div>
                         <div ng-switch-default>
                             <zf-input-container>
@@ -51,7 +51,7 @@
                     </div>
                 </ng-form>
                 <ng-form class="zf-display-table" name="notRequiredparams">
-                    <div ng-if="! paramValue.required" ng-show="showAdvanced || paramValue.input_enabled || paramValue.oldValue" class="widget-wizard_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
+                    <div ng-if="! paramValue.required && ! paramValue.hidden" ng-show="showAdvanced || paramValue.input_enabled || paramValue.oldValue" class="widget-wizard_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
                         <div class="zf-label">{{paramName}}</div>
                         <div ng-switch-default>
                             <zf-input-container>

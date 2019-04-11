@@ -25,6 +25,12 @@
                     paramValue.type = type;
                 }
             });
+            angular.forEach(envParams, function (value, key) {
+                if(! config[key]) {
+                    setParameter(config, key, value);
+                    config[key].hidden = true;
+                }
+            });
             return config;
         };
 
@@ -75,7 +81,7 @@
 
         // Get query params merged by hierarchy: cookies.projects -> dashboard.attributes -> dashboardName -> currentUserId -> queryParams
         function getENVParams(dashboard, currentUserId) {
-            var params = projectsService.getProjectsQueryParamObject(); //get project from cookies
+            var params = projectsService.getProjectsQueryParamObject() || {}; //get project from cookies
 
             if(dashboard) {
                 dashboard.attributes.forEach(function (attr) { // override with dashboard attributes
