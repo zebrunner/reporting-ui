@@ -6,7 +6,6 @@ ARG version=1.0-SNAPSHOT
 
 ENV ZAFIRA_UI_BASE=/app/
 ENV ZAFIRA_UI_VERSION=${version}
-ENV ZAFIRA_WS_URL=https://api.qaprosoft.farm/zafira-ws
 
 # Linux setup
 RUN apk update \
