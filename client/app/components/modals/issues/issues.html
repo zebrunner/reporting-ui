@@ -40,8 +40,8 @@
                                 ng-pattern="/^([A-z0-9]+-[0-9]+|\d+)$/" class="form-control validation jira" ng-model-options="{debounce: 500}"
                                 data-ng-model="$ctrl.newIssue.jiraId" data-ng-change="$ctrl.initIssueSearch(!known_issue_form.issueJiraId.$valid)" required />
                         </div>
-                        <!--<span ng-if="$ctrl.isToolConnected('jira') && !$ctrl.issueJiraIdExists && $ctrl.newIssue.jiraId" class="jira-status elment-with-label label label-warn">Not found in JIRA</span>-->
-                        <span ng-if="$ctrl.isToolConnected('jira') && $ctrl.issueJiraIdExists && known_issue_form.issueJiraId.$valid" class="jira-status elment-with-label label label-info">Connected to JIRA</span>
+                        <!--<span ng-if="$ctrl.isToolConnected('JIRA') && !$ctrl.issueJiraIdExists && $ctrl.newIssue.jiraId" class="jira-status elment-with-label label label-warn">Not found in JIRA</span>-->
+                        <span ng-if="$ctrl.isToolConnected('JIRA') && $ctrl.issueJiraIdExists && known_issue_form.issueJiraId.$valid" class="jira-status elment-with-label label label-info">Connected to JIRA</span>
                     </md-input-container>
                     <md-input-container flex class="issue-element-container summary-container">
                         <label>Summary</label>

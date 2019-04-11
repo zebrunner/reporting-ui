@@ -174,7 +174,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     }
 
     function rebuild(testRun, rerunFailures) {
-        if (vm.isToolConnected('jenkins')) {
+        if (vm.isToolConnected('JENKINS')) {
             if (!rerunFailures) {
                 rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
             }
@@ -211,7 +211,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     }
 
     function abortSelectedTestRuns() {
-        if (vm.isToolConnected('jenkins')) {
+        if (vm.isToolConnected('JENKINS')) {
             vm.selectedTestRuns.forEach(testRun => {
                 if (testRun.status === 'IN_PROGRESS') {
                     abort(testRun);

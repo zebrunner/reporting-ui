@@ -25,18 +25,14 @@ const toolsService = function toolsService($httpMock, API_URL, $q, SettingsServi
             .then(response => {
                 if (response.success) {
                     const promises = response.data.map(toolName => {
-                        const tool = toolName.toLowerCase();
 
-                        tools[tool] = tools[tool] || {};
-                        tools[tool].name = toolName;
+                        tools[toolName] = tools[toolName] || {};
+                        tools[toolName].name = toolName;
 
                         return SettingsService.isToolConnected(toolName)
                             .then(toolResponse => {
                                 if (toolResponse.success) {
-                                    tools[tool].connected = toolResponse.data;
-
-                                    //TODO: get rid of this after BE is fixed
-                                    // fillToolsSettings(toolName);
+                                    tools[toolName].connected = toolResponse.data;
                                 }
                             });
                     });
@@ -80,7 +76,28 @@ const toolsService = function toolsService($httpMock, API_URL, $q, SettingsServi
     }
 
     function setToolStatus(toolName, status) {
+        const tool = tools[toolName];
 
+        if (tool.enabled === status) { return $q.resolve(); }
+
+        tool.enabled = status;
+
+        if (!status) {
+            tool.connected = status;
+
+            return $q.resolve(tool);
+        } else {
+            return SettingsService.isToolConnected(toolName)
+                .then(rs => {
+                    if (rs.success) {
+                        tool.connected = rs.data;
+                    } else {
+                        alertify.error(rs.message);
+                    }
+
+                    return tool;
+                });
+        }
     }
 
     function fetchToolData(toolName) {

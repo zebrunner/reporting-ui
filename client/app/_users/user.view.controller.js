@@ -282,7 +282,7 @@ const UserViewController = function UserViewController($scope, $rootScope, $loca
             fullscreen: true,
             locals: {
                 groups: GroupService.groups,
-                isLDAPConnected: toolsService.isToolConnected('ldap'),
+                isLDAPConnected: toolsService.isToolConnected('LDAP'),
             }
         })
             .then(function (invitations) {

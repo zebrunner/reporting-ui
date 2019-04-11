@@ -264,7 +264,7 @@ const IssuesModalController = function IssuesModalController(
     /*  Checks whether conditions for issue search in Jira are fulfilled */
 
     function isIssueSearchAvailable(jiraId) {
-        if (vm.isToolConnected('jira') && jiraId) {
+        if (vm.isToolConnected('JIRA') && jiraId) {
             if (vm.issueTabDisabled || vm.issueJiraIdInputIsChanged) {
                 vm.issueJiraIdInputIsChanged = false;
                 return true;
