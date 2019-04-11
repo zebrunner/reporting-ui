@@ -123,6 +123,7 @@ module.exports = (env) => {
                             loader: 'file',
                             options: {
                                 name: '[name].[ext]',
+                                basePath: '/',
                             },
                         },
                         {
@@ -173,6 +174,7 @@ module.exports = (env) => {
                             exclude: [/\.(s?css)$/, /\.(m?js)$/, /\.html$/, /\.json$/],
                             options: {
                                 name: isProd ? '[name].[hash:8].[ext]' : '[name].[ext]',
+                                basePath: '/',
                             },
                         },
                         // ** STOP ** Are you adding a new loader?
