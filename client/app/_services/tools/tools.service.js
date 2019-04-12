@@ -40,8 +40,6 @@ const toolsService = function toolsService($httpMock, API_URL, $q, SettingsServi
                     return $q.all(promises)
                         .then(() => tools)
                         .finally(() => {
-                            console.log(tools, tools);
-
                             service.initialized = true;
                         });
                 }

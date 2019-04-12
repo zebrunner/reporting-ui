@@ -1,0 +1,11 @@
+.integration-tool {
+    &__item {
+        &-loader {
+            display: inline-block;
+
+            path {
+                stroke: currentColor
+            }
+        }
+    }
+}
