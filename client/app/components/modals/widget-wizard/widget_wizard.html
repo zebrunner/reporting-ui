@@ -53,7 +53,7 @@
                                 <td ng-switch-when="radio">
                                     <zf-input-container>
                                         <md-input-container>
-                                            <md-radio-group ng-model="paramValue.value">
+                                            <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)">
                                                 <md-radio-button ng-value="val" class="md-primary" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
                                             </md-radio-group>
                                         </md-input-container>
@@ -102,7 +102,7 @@
                                 <td ng-switch-when="radio">
                                     <zf-input-container>
                                         <md-input-container>
-                                            <md-radio-group ng-model="paramValue.value">
+                                            <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)">
                                                 <md-radio-button ng-value="val" class="md-primary" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
                                             </md-radio-group>
                                         </md-input-container>
@@ -112,7 +112,7 @@
                                     <div class="zf-label">{{paramValue.value}}</div>
                                 </td>
                                 <td>
-                                    <md-switch ng-show="['title'].indexOf(paramValue.type) === -1" class="md-primary" ng-init="paramValue.input_enabled = paramValue.multiple ? !! paramValue.value && !! paramValue.value.length : !! paramValue.value" ng-model="paramValue.input_enabled" ng-change="switchInputEnabled(paramValue); buildConfigs(widget_form.params);" aria-label="extended_switch"></md-switch>
+                                    <md-switch ng-show="['title'].indexOf(paramValue.type) === -1" class="md-primary" ng-init="paramValue.input_enabled = paramValue.multiple ? !! paramValue.value && !! paramValue.value.length : ['title'].indexOf(paramValue.type) !== -1 ? false : !! paramValue.value" ng-model="paramValue.input_enabled" ng-change="switchInputEnabled(paramValue); buildConfigs(widget_form.params);" aria-label="extended_switch"></md-switch>
                                 </td>
                             </tr>
                         </tbody>
