@@ -21,68 +21,102 @@
             </div>
             <div ng-switch-when="2">
                 <ng-form class="zf-display-table" name="params">
-                    <div ng-if="paramValue.required && ! paramValue.hidden" class="widget-wizard_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
-                        <div class="zf-label">{{paramName}}</div>
-                        <div ng-switch-default>
-                            <zf-input-container>
-                                <input ng-attr-type="{{paramValue.type === 'int' ? 'number' : 'text'}}" ng-attr-name="{{paramName}}" ng-model="paramValue.value" placeholder="{{paramName}}" ng-change="buildConfigs(widget_form.params)" ng-required="true"/>
-                                <div ng-messages="widget_form.params[paramName].$error" ng-if="widget_form.params[paramName].$dirty">
-                                    <div ng-message="required">{{paramName}} required</div>
-                                </div>
-                            </zf-input-container>
-                        </div>
-                        <div ng-switch-when="array">
-                            <zf-input-container>
-                                <md-input-container>
-                                    <label>{{paramName}}</label>
-                                    <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple !== true" ng-required="true">
-                                        <md-option ng-repeat="val in paramValue.values" ng-value="val">
-                                            {{val}}
-                                        </md-option>
-                                    </md-select>
-                                    <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple === true" ng-required="true" multiple>
-                                        <md-option ng-repeat="val in paramValue.values" ng-value="val">
-                                            {{val}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-                            </zf-input-container>
-                        </div>
-                    </div>
+                    <table>
+                        <tbody>
+                            <tr ng-if="paramValue.required && ! paramValue.hidden" class="widget-wizard_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
+                                <td ng-show="['title'].indexOf(paramValue.type) === -1" class="zf-label">{{paramName}}</td>
+                                <td ng-switch-default>
+                                    <zf-input-container>
+                                        <input ng-attr-type="{{paramValue.type === 'int' ? 'number' : 'text'}}" ng-attr-name="{{paramName}}" ng-model="paramValue.value" placeholder="{{paramName}}" ng-change="buildConfigs(widget_form.params)" ng-required="true"/>
+                                        <div ng-messages="widget_form.params[paramName].$error" ng-if="widget_form.params[paramName].$dirty">
+                                            <div ng-message="required">{{paramName}} required</div>
+                                        </div>
+                                    </zf-input-container>
+                                </td>
+                                <td ng-switch-when="array">
+                                    <zf-input-container>
+                                        <md-input-container>
+                                            <label>{{paramName}}</label>
+                                            <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple !== true" ng-required="true">
+                                                <md-option ng-repeat="val in paramValue.values" ng-value="val">
+                                                    {{val}}
+                                                </md-option>
+                                            </md-select>
+                                            <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple === true" ng-required="true" multiple>
+                                                <md-option ng-repeat="val in paramValue.values" ng-value="val">
+                                                    {{val}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                    </zf-input-container>
+                                </td>
+                                <td ng-switch-when="radio">
+                                    <zf-input-container>
+                                        <md-input-container>
+                                            <md-radio-group ng-model="paramValue.value">
+                                                <md-radio-button ng-value="val" class="md-primary" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
+                                            </md-radio-group>
+                                        </md-input-container>
+                                    </zf-input-container>
+                                </td>
+                                <td ng-switch-when="title" colspan="3">
+                                    <div class="zf-label">{{paramValue.value}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </ng-form>
-                <ng-form class="zf-display-table" name="notRequiredparams">
-                    <div ng-if="! paramValue.required && ! paramValue.hidden" ng-show="showAdvanced || paramValue.input_enabled || paramValue.oldValue" class="widget-wizard_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
-                        <div class="zf-label">{{paramName}}</div>
-                        <div ng-switch-default>
-                            <zf-input-container>
-                                <input ng-attr-type="{{paramValue.type === 'int' ? 'number' : 'text'}}" ng-attr-name="{{paramName}}"
-                                       ng-model="paramValue.value" placeholder="{{paramName}}"
-                                       ng-change="buildConfigs(widget_form.params)" ng-required="true"
-                                       ng-disabled="! paramValue.input_enabled"/>
-                                <div ng-messages="widget_form.params[paramName].$error" ng-if="widget_form.params[paramName].$dirty">
-                                    <div ng-message="required">{{paramName}} required</div>
-                                </div>
-                            </zf-input-container>
-                        </div>
-                        <div ng-switch-when="array">
-                            <zf-input-container>
-                                <md-input-container>
-                                    <label>{{paramName}}</label>
-                                    <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple !== true" ng-disabled="! paramValue.input_enabled">
-                                        <md-option ng-repeat="val in paramValue.values" ng-value="val">
-                                            {{val}}
-                                        </md-option>
-                                    </md-select>
-                                    <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple === true" ng-disabled="! paramValue.input_enabled" multiple>
-                                        <md-option ng-repeat="val in paramValue.values" ng-value="val">
-                                            {{val}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-                            </zf-input-container>
-                        </div>
-                        <md-switch class="md-primary" ng-init="paramValue.input_enabled = paramValue.multiple ? !! paramValue.value && !! paramValue.value.length : !! paramValue.value" ng-model="paramValue.input_enabled" ng-change="switchInputEnabled(paramValue); buildConfigs(widget_form.params);" aria-label="extended_switch"></md-switch>
-                    </div>
+                <ng-form name="notRequiredparams">
+                    <table>
+                        <tbody>
+                            <tr ng-if="! paramValue.required && ! paramValue.hidden" ng-show="showAdvanced || paramValue.input_enabled || paramValue.oldValue" class="widget-wizard_container_elements_input type-{{paramValue.type}}" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
+                                <td ng-show="['title'].indexOf(paramValue.type) === -1" class="zf-label">{{paramName}}</td>
+                                <td ng-switch-default>
+                                    <zf-input-container>
+                                        <input ng-attr-type="{{paramValue.type === 'int' ? 'number' : 'text'}}" ng-attr-name="{{paramName}}"
+                                               ng-model="paramValue.value" placeholder="{{paramName}}"
+                                               ng-change="buildConfigs(widget_form.params)" ng-required="true"
+                                               ng-disabled="! paramValue.input_enabled"/>
+                                        <div ng-messages="widget_form.params[paramName].$error" ng-if="widget_form.params[paramName].$dirty">
+                                            <div ng-message="required">{{paramName}} required</div>
+                                        </div>
+                                    </zf-input-container>
+                                </td>
+                                <td ng-switch-when="array">
+                                    <zf-input-container>
+                                        <md-input-container>
+                                            <label>{{paramName}}</label>
+                                            <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple !== true" ng-disabled="! paramValue.input_enabled">
+                                                <md-option ng-repeat="val in paramValue.values" ng-value="val">
+                                                    {{val}}
+                                                </md-option>
+                                            </md-select>
+                                            <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple === true" ng-disabled="! paramValue.input_enabled" multiple>
+                                                <md-option ng-repeat="val in paramValue.values" ng-value="val">
+                                                    {{val}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                    </zf-input-container>
+                                </td>
+                                <td ng-switch-when="radio">
+                                    <zf-input-container>
+                                        <md-input-container>
+                                            <md-radio-group ng-model="paramValue.value">
+                                                <md-radio-button ng-value="val" class="md-primary" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
+                                            </md-radio-group>
+                                        </md-input-container>
+                                    </zf-input-container>
+                                </td>
+                                <td ng-switch-when="title" colspan="3">
+                                    <div class="zf-label">{{paramValue.value}}</div>
+                                </td>
+                                <td>
+                                    <md-switch ng-show="['title'].indexOf(paramValue.type) === -1" class="md-primary" ng-init="paramValue.input_enabled = paramValue.multiple ? !! paramValue.value && !! paramValue.value.length : !! paramValue.value" ng-model="paramValue.input_enabled" ng-change="switchInputEnabled(paramValue); buildConfigs(widget_form.params);" aria-label="extended_switch"></md-switch>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </ng-form>
                 <div ng-show="hasEmptyOptionalParams(false)" class="widget-wizard_container_elements_show-more" md-no-ink>
                     <md-button ng-init="showAdvanced === false" ng-click="showAdvanced = ! showAdvanced" class="btn-w-md md-primary md-n">

@@ -137,6 +137,26 @@ $wizard-white:          #ffffff;
                 md-select[disabled] > md-select-value {
                     background-image: none;
                 }
+                md-radio-group {
+                    height: 34px;
+                    md-radio-button {
+                        margin-bottom: 0;
+                        font-size: 14px;
+                        display: inline-block;
+
+                        &:not(:first-child) {
+                            margin-left: 16px;
+                        }
+                    }
+                }
+
+                &.type-title {
+                    font-size: 14px;
+                    .zf-label {
+                        line-height: 16px;
+                        text-transform: none;
+                    }
+                }
             }
 
             &_show-more {
