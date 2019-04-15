@@ -2,8 +2,8 @@
     <div class="p-tests-runs__section _filters row ui-section no-margin">
         <div class="search-filter-body col-md-12 no-padding">
             <div id="filter" class="md-row tests-runs-filter__wrapper" ng-class="{'non-empty-filters': $ctrl.filters.length && $ctrl.isMobile() && !$ctrl.isSearchActive()}">
-                <div class="md-row tests-runs-filter__wrapper-panel-body no-padding-t" ng-if="!$ctrl.isMobile()">
-                    <div ng-class="{'disable-layer': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()"></div>
+                <div class="md-row tests-runs-filter__wrapper-panel-body no-padding-t" ng-class="{'_lighter': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()">
+                    <div ng-class="{'disable-layer _transparent': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()"></div>
                     <div layout="row" layout-xs="column" layout-align="space-between" ng-show="$ctrl.filterBlockExpand">
                         <div layout="row">
                         <div class="manage-chip" ng-click="$ctrl.clearAndOpenFilterBlock(true);">

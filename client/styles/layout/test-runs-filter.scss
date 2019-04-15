@@ -63,6 +63,9 @@
             padding: 24px 0 18px 0;
             position: relative;   
             @extend %chips-scrolling;
+            &._lighter {
+                opacity: .5;
+            }
             .manage-chip {
                 md-chips.filter-chip md-chips-wrap.md-chips md-chip {
                     background-color: rgba(#011627, .5) !important;
@@ -149,6 +152,8 @@
         .panel-body {
             padding-bottom: 20px !important;
             .filter-chip md-chip, .filter-chip md-chip:hover {
+                background-color: transparent !important;
+                border: 1px solid rgba(#011627, 0.2) !important;
                 .md-chip-content {
                     margin-top: -1px;
                 }
