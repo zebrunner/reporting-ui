@@ -76,6 +76,22 @@
                 // axisFormatterApply(opts.yAxis);
                 // tooltipFormatterApply(opts.tooltip);
 
+                // hide tooltip and legend for beauty view a miniature
+                if(scope.forceWatch) {
+                    opts.tooltip = opts.tooltip || {};
+                    opts.tooltip.show = false;
+
+                    opts.legend = opts.legend || {};
+                    opts.legend.show = false;
+
+                    opts.grid = opts.grid || {};
+                    opts.grid.top = 0;
+                    opts.grid.bottom = 0;
+                    opts.grid.right = 0;
+                    opts.grid.left = 0;
+
+                }
+
                 chart.setOption(opts);
                 scope.$emit('create', chart);
 

@@ -196,20 +196,21 @@ $wizard-white:          #ffffff;
         align-items: center;
         min-width: 240px;
         &_picture {
-            width: 100%;//228px;
+            width: 100%;
             min-height: 180px;
 
             &_item {
-                height: 149px;
+
                 margin-bottom: 18px;
+
+                &.item-table {
+                    margin: 0 10px 18px 10px;
+                    height: 149px;
+                }
                 overflow: auto;
-                //padding: 20px;
 
                 *[data-echarts] {
                     margin: auto !important;
-                    > div {
-                        margin: auto !important;
-                    }
                 }
             }
             &_caption {
