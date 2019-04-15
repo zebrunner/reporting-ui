@@ -109,19 +109,35 @@
                 min-width: 100px;
             }
         }
-        .filter-input-container {
-            min-width: 184px;
-        }
-        .filter-state {
-            padding: 7px 20px;
-            border-right: 1px solid rgba(black, .5);
-            label {
-                padding-right: 8px;
+        .filter {
+            &-input-container {
+                min-width: 184px;
             }
-            md-checkbox {
-                margin-bottom: 0;
-                &.md-checked .md-icon {
-                    background-color: #011627;
+            &-state {
+                padding: 7px 20px;
+                border-right: 1px solid rgba(black, .5);
+                label {
+                    padding-right: 8px;
+                }
+                md-checkbox {
+                    margin-bottom: 0;
+                    &.md-checked .md-icon {
+                        background-color: #011627;
+                    }
+                }
+            }
+            &-name {
+                max-width: 240px;
+                max-height: 36px;
+            }
+            &-control {
+                max-height: 36px;
+                border-radius: 4px;
+            }
+            &-select {
+                max-width: 100% !important;
+                md-select {
+                    border-radius: 4px;
                 }
             }
         }
@@ -133,20 +149,6 @@
             margin-bottom: 15px;
             &[disabled] {
                 background-color: rgba(#011627, 0.1) !important;
-            }
-        }
-        .filter-name {
-            max-width: 240px;
-            max-height: 36px;
-        }
-        .form-control {
-            max-height: 36px;
-            border-radius: 4px;
-        }
-        .filter-select {
-            max-width: 100% !important;
-            md-select {
-                border-radius: 4px;
             }
         }
         .panel-body {
