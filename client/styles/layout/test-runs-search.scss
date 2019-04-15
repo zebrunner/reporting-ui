@@ -1,12 +1,13 @@
 @import "../global/var";
+
 #search {
     .tests-runs-filter {
         &__search {
             border-top-left-radius: 4px;
             border-top-right-radius: 4px;
-            background-color: white;
             
             &-panel {
+                background-color: white;
                 padding: 18px 20px 14px 20px;
                 @media(max-width: 1279px) {
                     padding-left: 15px;
@@ -48,18 +49,19 @@
                         padding: 0 16px;
     
                         .reviewed {
-                            width: 40px !important;
-                            height: 40px !important;
-                            min-width: 40px;
+                            width: 36px !important;
+                            height: 36px !important;
+                            min-width: 36px;
                             border-radius: 4px;
-                            background-color: rgba(31, 36, 42, .1);
-                            color: #35393f ;
-                            border: none;
+                            border-width: 1px;
+                            background-color: transparent;
+                            color: black;
+                            border-color: rgba(#011627, .1);
                             &:hover {
-                                background-color: rgba(31, 36, 42, .2);
+                                border-color: rgba(#011627, .2) !important;
                             }
                             &.label-primary {
-                                background-color: $green-new;
+                                background-color: $medium-teal-light-new;
                                 color: #fff;
                             }
                         }
@@ -69,7 +71,7 @@
     
                             md-select {
                                 border: none;
-                                margin-top: 2px;
+                                margin-top: -1px;
                                 height: 36px;
                                 padding: 0 0 0 12px;
                                 md-select-value {
@@ -91,11 +93,12 @@
                             md-input-container {
                                 @extend %select;
                             }
-                            .date-picker-container {
-                                padding-top: 2px !important;
-    
+                            .date-picker-container { 
+                                span {
+                                    line-height: 2.3;
+                                }                             
                                 button {
-                                    min-height: 38px;
+                                    max-height: 36px;
                                 }
     
                                 i {
@@ -109,125 +112,54 @@
                 .btn-check {
                     button.btn {
                         outline: none;
-                        font-size: 11px;
+                        font-size: 10px;
                         font-weight: 500;
-                        max-height: 28px;
+                        max-height: 24px;
                         border-radius: 14px;
-                        background-color: transparent;
-                        border: 1px solid rgba(0,0,0, .25);
+                        background-color: #edeff0;
+                        border: 1px solid #edeff0;
                         box-shadow: none;
                         color: #000;
                         text-transform: uppercase;
                         height: 28px;
                         line-height: 26px;
-                        padding: 7px 14px !important;
+                        padding: 7px 10px !important;
                         margin: 6px 3px;
                         line-height: 1 !important;
-                        &:hover, &.active, &.default-blue {
-                            background-color: #d3e9e6 !important;
-                            border: 1px solid #d3e9e6 !important;
-                            color: #000 !important;
-                        }
-                    }
-                }
-            }
-            
-            &._mobile {
-                &,
-                &#search {
-                    position: fixed;
-                    top: 96px;
-                    left: 0;
-                    right: 0;
-                    z-index: 5;
-                    border: transparent;
-                    box-shadow: none;
-                    border-radius: 0;
-                    @media (min-width: 481px){ 
-                        left: 60px; 
-                    }
-                    
-                    .tests-runs-filter__search-panel {
-                        padding: 0;
-                        &-body {
-                            &._row-wrapper {
-                                overflow: hidden;
-                                display: flex;
-                                align-items: center;
-    
-                                #search-input {
-                                    margin: 16px 16px 7px;
-                                }
-                
-                                .search-wrapper {
-                                    top: 16px;
-                                    left: 16px;
-                                    max-width: 40px;
-                                    max-height: 40px;
-                                    z-index: 3;
-                                    position: absolute;
-                                    i {
-                                        color: rgba(0, 0, 0, 0.5) !important;
-                                        font-size: 18px;
-                                        line-height: 40px;
-                                        text-align: center;
-                                        width: 40px;
-                                        height: 40px;
-                                    }
-                                }
-                            }
-                        }
-                    }
-    
-                    .tests-runs-filter__search-select {
-                        position: absolute;
-                        z-index: 4;
-                        background-color: #fff;
-                        left: 0;
-                        top: 63px;
-                        border-bottom-left-radius: 10px;
-                        border-bottom-right-radius: 10px;
-                        box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.2);
-    
-                        md-checkbox {
+                        display: inline-flex;
+                        .material-icons {
+                            color: white;
+                            font-size: 20px;
+                            line-height: 9px;
                             display: none;
                         }
-    
-                        .reviewed {
-                            margin-right: 16px;
+                        &:hover, &.active, &.default-blue {
+                            background-color: $medium-teal-light-new !important;
+                            border: 1px solid $medium-teal-light-new !important;
+                            color: white !important;
                         }
-    
-                        .search {
-                            &-fields {
-                                .searchable.select {
-                                    margin-bottom: 16px !important;
-                                }
-    
-                                &._main {
-                                    padding-top: 15px;
-                                }
-    
-                                &._additional {
-                                    margin-bottom: 20px;
-                                }
+                        &.active, &.default-blue {
+                            padding: 7px 7px 7px 10px !important;
+                            .material-icons {
+                                display: inline-block;
                             }
                         }
                     }
                 }
-    
-                .btn-check {
-                    position: relative;
-                    margin: 0;
-                    padding: 2px 14px;
-                    display: flex;
-                    justify-content: space-between;
-                    flex-grow: 1;
-                    border-bottom: 1px rgba(0, 0, 0, 0.10) solid;
-                    right: 0;
-    
-                    button.btn {
-                        flex-grow: 1;
-                        margin-bottom: 14px;
+
+                .search-reset-btn {
+                    max-height: 36px;
+                    border-radius: 4px;
+                    box-shadow: none;
+                    margin-right: 0;
+                    margin-left: 12px;
+                    font-size: 14px;
+                    min-width: 80px;
+                    padding-top: 2px;
+                    background-color: $fog-gray;
+                    color: $dark-coal-new;
+                    &:hover {
+                        background-color: rgba($dark-coal-new, .3);
                     }
                 }
             }
@@ -256,18 +188,140 @@
     }
 }
 
+.tests-runs-filter__search._mobile {
+    &,
+    &#search {
+        position: fixed;
+        top: 96px;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        border: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        @media (min-width: 481px){ 
+            left: 60px; 
+        }
+        .btn-check {
+            button.btn {
+                display: inline;
+                max-width: 104px;
+                padding-right: 10px;
+                .material-icons {
+                    display: none;
+                }
+            }
+        }
+        .tests-runs-filter__search-panel {
+            padding: 0;
+            &-body {
+                &._row-wrapper {
+                    overflow: hidden;
+                    display: flex;
+                    align-items: center;
+
+                    #search-input {
+                        margin: 16px 16px 7px;
+                    }
+    
+                    .search-wrapper {
+                        top: 16px;
+                        left: 16px;
+                        max-width: 40px;
+                        max-height: 40px;
+                        z-index: 3;
+                        position: absolute;
+                        i {
+                            color: rgba(0, 0, 0, 0.5) !important;
+                            font-size: 18px;
+                            line-height: 40px;
+                            text-align: center;
+                            width: 40px;
+                            height: 40px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .tests-runs-filter__search-select {
+            position: absolute;
+            z-index: 4;
+            background-color: #fff;
+            left: 0;
+            top: 59px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.2);
+
+            md-checkbox {
+                display: none;
+            }
+
+            .reviewed {
+                margin-right: 16px;
+            }
+
+            .search {
+                &-fields {
+                    .searchable.select {
+                        margin-bottom: 16px !important;
+                    }
+
+                    &._main {
+                        padding-top: 15px;
+                    }
+
+                    &._additional {
+                        margin-bottom: 20px;
+                        align-items: flex-start;
+                    }
+                }
+            }
+        }
+    }
+
+    .btn-check {
+        position: relative;
+        margin: 0;
+        padding: 2px 14px 6px;
+        display: flex;
+        justify-content: space-between;
+        flex-grow: 1;
+        border-bottom: 1px rgba(0, 0, 0, 0.10) solid;
+        right: 0;
+
+        button.btn {
+            flex-grow: 1;
+            margin-bottom: 14px;
+        }
+    }
+}
+
+// @media screen and (max-width: $breakpoint-mobile) {
+//     #search {
+//         position: absolute !important;
+//         z-index: 20;
+//         width: 100%;
+//         top: 78px;
+//         .search-reset-btn {
+//             margin-bottom: 8px;
+//         }
+//     }         
+// }
+
 
 %select {
     border-radius: 4px;
-    border: solid 2px ;
+    border: solid 1px ;
     border-color: rgba(#011627, .1) !important;
     font-size: 14px !important;
     color: #000;
     letter-spacing: 0.28px;
     #search & {
-        height: 40px !important;
+        height: 36px !important;
         &:hover {
-            border-color: rgba(0, 0, 0, 0.35) !important;
+            border-color: rgba(#011627, .2) !important;
         }
     }
 }

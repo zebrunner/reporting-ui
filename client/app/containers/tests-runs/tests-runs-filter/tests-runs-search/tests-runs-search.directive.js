@@ -8,7 +8,7 @@ const testsRunsSearchDirective = function testsRunsSearchDirective() {
         template,
         controller,
         scope: {
-            onFilterChange: '&'
+            onFilterChange: '&',
         },
         controllerAs: '$ctrl',
         restrict: 'E',

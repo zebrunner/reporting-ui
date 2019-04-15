@@ -190,9 +190,6 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
 
     function toggleMobileSearch() {
         vm.isMobileSearchActive = !vm.isMobileSearchActive;
-        if(!vm.isMobileSearchActive) {
-            $rootScope.$emit('tr-filter-close');
-        }
     }
 
     function loadFilters() {

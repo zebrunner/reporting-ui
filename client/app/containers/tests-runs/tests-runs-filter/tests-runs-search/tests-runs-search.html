@@ -27,11 +27,11 @@
                             aria-describedby="basic-addon2">
                         <div class="btn-check" layout-xs="row">
                             <button type="button" ng-class="{'default-blue': $ctrl.fastSearch['testSuite'] && $ctrl.fastSearch['testSuite'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'testSuite'}"
-                                ng-click="$ctrl.selectSearchType('testSuite')" class="btn btn-default">Test Suite</button>
+                                ng-click="$ctrl.selectSearchType('testSuite')" class="btn btn-default">Test Suite <i class="material-icons">short_text</i></button>
                             <button type="button" ng-class="{'default-blue': $ctrl.fastSearch['executionURL'] && $ctrl.fastSearch['executionURL'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'executionURL'}"
-                                ng-click="$ctrl.selectSearchType('executionURL')" class="btn btn-default">Job URL</button>
+                                ng-click="$ctrl.selectSearchType('executionURL')" class="btn btn-default">Job URL<i class="material-icons">short_text</i></button>
                             <button type="button" ng-class="{'default-blue': $ctrl.fastSearch['appVersion'] && $ctrl.fastSearch['appVersion'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'appVersion'}"
-                                ng-click="$ctrl.selectSearchType('appVersion')" class="btn btn-default"> App Version</button>
+                                ng-click="$ctrl.selectSearchType('appVersion')" class="btn btn-default"> App Version<i class="material-icons">short_text</i></button>
                         </div>
                     </div>
                 </div>
@@ -65,15 +65,15 @@
                             </md-select>
                         </md-input-container>
                     </div>
-                    <div layout="row" class="search-fields _additional">
+                    <div layout="row" layout-align="none end" class="search-fields _additional">
                         <md-input-container class="date-picker-container pull-left" flex="grow">
                             <span data-ng-if="!$ctrl.selectedRange.dateStart && !$ctrl.selectedRange.dateEnd">Date</span>
                             <span data-ng-if="$ctrl.selectedRange.dateStart && $ctrl.selectedRange.dateEnd && !$ctrl.isEqualDate()">{{$ctrl.selectedRange.dateStart | date : 'dd MMM'}} - </span>
                             <span>{{$ctrl.selectedRange.dateEnd | date : 'dd MMM'}}</span>
                             <md-button id="searchCalendar" ng-click="$ctrl.openDatePicker($event, true)">
-                                <i class="material-icons">date_range</i>
                             </md-button>
                         </md-input-container>
+                        <button id="reset" class="search-reset-btn md-button md-raised md-warn md-ink-ripple pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></button>
                     </div>
                 </div>
             </div>

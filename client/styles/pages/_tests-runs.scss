@@ -6,6 +6,9 @@
             padding: 15px;
             background-color: white;
         }
+        md-card {
+            box-shadow: none;
+        }
     }
     @media screen and (max-width: $breakpoint-mobile) {
         .page {
@@ -21,6 +24,7 @@
             }
             md-card {
                 background: none;
+                box-shadow: none;
             }
             &._content {
                 background-color: transparent;

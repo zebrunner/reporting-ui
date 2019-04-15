@@ -1,6 +1,6 @@
 'use strict'
 
-const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker) {
+const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout) {
     'ngInject';
 
     const subjectName = 'TEST_RUN';
@@ -190,6 +190,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                 testsRunsService.deleteSearchParam(type);
             }
         });
+        vm.onApply();
     }
 
     function onChangeSearchCriteria(name) {//TODO: refactor this fn and onSearchChange for "DRY"
@@ -204,6 +205,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         } else {
             testsRunsService.deleteSearchParam(name);
         }
+        vm.onApply();
     }
 
     function selectSearchType(type) {
@@ -239,6 +241,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                         testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
                     }
                 }
+                vm.onApply();
             }
         })
     }
