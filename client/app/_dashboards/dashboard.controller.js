@@ -557,7 +557,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     $scope.optimizeWidget = function (widget, index) {
-        if (widget.type == 'table' && (Object.size(widget.data.dataset) == 0 || Object.size(widget.data.dataset) == index + 1)) {
+        if (['table', 'TABLE'].indexOf(widget.type) !== -1 && (Object.size(widget.data.dataset) == 0 || Object.size(widget.data.dataset) == index + 1)) {
             $timeout(function () {
                 var gridstack = angular.element('.grid-stack').gridstack($scope.gridstackOptions).data('gridstack');
                 $scope.gridstackOptions.disableResize = false;
