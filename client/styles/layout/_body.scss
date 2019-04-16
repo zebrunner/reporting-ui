@@ -240,6 +240,7 @@ md-chip:hover .show-icon-on-hover,
     min-width: 360px;
     min-height: 52px;
     padding: 8px 20px;
+    width: auto;
 
     @media (max-width: $screen-phone) {
         min-width: 0;
@@ -380,8 +381,69 @@ button.red {
     vertical-align: middle;
     width: 20px;
     height: 20px;
-    background: url(../assets/images/platforms.png) no-repeat;
-    background-position: 150px 0;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    &.api {
+        background-image: url(../assets/images/_icons_platform/api.svg);
+    }
+    &.safari {
+        background-image: url(../assets/images/_icons_platform/safari.svg);
+    }
+    &.chrome {
+        background-image: url(../assets/images/_icons_platform/chrome.svg);
+    }
+    &.firefox {
+        background-image: url(../assets/images/_icons_platform/firefox.svg);
+    }
+    &.edge {
+        background-image: url(../assets/images/_icons_platform/edge.svg);
+    }
+    &.xbox,
+    &.Xbox,
+    &.XBox  {
+        background-image: url(../assets/images/_icons_platform/xbox.svg);
+    }
+    &.ps,
+    &.PS,
+    &.playstation {
+        background-image: url(../assets/images/_icons_platform/ps.svg);
+    }
+    &.appletv {
+        background-image: url(../assets/images/_icons_platform/apple-tv.svg);
+    }
+    &.androidtv {
+        background-image: url(../assets/images/_icons_platform/android-tv.svg);
+    }
+    &.iexplorer,
+    &.ie {
+        background-image: url(../assets/images/_icons_platform/ie.svg);
+    }
+    &.android,
+    &.Android,
+    &.ANDROID {
+        background-image: url(../assets/images/_icons_platform/android.svg);
+    }
+    &.ios,
+    &.IOS,
+    &.iOS {
+        background-image: url(../assets/images/_icons_platform/apple.svg);
+    }
+    &.unknown {
+        background-image: url(../assets/images/_icons_platform/nd.svg);
+    }
+    &.tizen {
+        background-image: url(../assets/images/_icons_platform/tizensss.svg);
+    }
+    &.opera {
+        background-image: url(../assets/images/_icons_platform/opera.svg);
+    }
+    &.macos {
+        background-image: url(../assets/images/_icons_platform/macos.svg);
+    }
+    &.windows {
+        background-image: url(../assets/images/_icons_platform/windows.svg);
+    }
 }
 
 .jira-icon {
@@ -390,61 +452,6 @@ button.red {
 
 .slack-icon {
     background: url(../assets/images/slack.png) no-repeat;
-}
-
-.platform-icon.api {
-	background-position: -24px -177px;
-}
-
-.platform-icon.safari {
-    background: url(../assets/images/_icons_platform/safari.svg) no-repeat;
-}
-
-.platform-icon.chrome {
-    background: url(../assets/images/_icons_platform/chrome.svg) no-repeat;
-}
-
-.platform-icon.firefox {
-    background: url(../assets/images/_icons_platform/firefox.svg) no-repeat;
-}
-.platform-icon.edge {
-    background: url(../assets/images/_icons_platform/edge.svg) no-repeat;
-}
-
-.platform-icon.xbox, .platform-icon.Xbox, .platform-icon.XBox  {
-    background: url(../assets/images/_icons_platform/xbox.svg) no-repeat;
-}
-
-.platform-icon.ps, .platform-icon.PS, .platform-icon.playstation {
-    background: url(../assets/images/_icons_platform/ps.svg) no-repeat;
-}
-
-.platform-icon.appletv {
-    background-position: -24px -248px;
-}
-
-.platform-icon.androidtv {
-    background-position: -24px -225px;
-}
-
-.platform-icon.iexplorer, .platform-icon.ie {
-    background: url(../assets/images/_icons_platform/ie.svg) no-repeat;
-}
-
-.platform-icon.android, .platform-icon.Android, .platform-icon.ANDROID {
-    background: url(../assets/images/_icons_platform/android.svg) no-repeat;
-}
-
-.platform-icon.ios, .platform-icon.IOS, .platform-icon.iOS {
-    background: url(../assets/images/_icons_platform/apple.svg) no-repeat;
-}
-
-.platform-icon.unknown {
-    background-position: -24px -275px;
-}
-
-.platform-icon.tizen {
-    background-position: -24px -323px;
 }
 
 .label-success-border {
@@ -1371,7 +1378,7 @@ button#resetFilter {
             line-height: 2.3;
             font-weight: 500;
         }
-        .filter-slice-chip-button {
+        .filter-slice-chip-button:not(.md-chip-remove) {
             background-color: $gray-light;
             border: 0;
             width: 16px;
@@ -1732,7 +1739,10 @@ button#add-button{
   left: 0;
   display: block;
   z-index: 2;
-  background: rgba(210, 210, 210, 0.2);
+  background: rgba(255, 255, 255, .5);
+  &._transparent {
+      background-color: transparent;
+  }
 }
 
 .md-select-value .md-select-icon {

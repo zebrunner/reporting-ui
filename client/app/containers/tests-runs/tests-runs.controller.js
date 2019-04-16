@@ -8,11 +8,12 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     let TENANT;
     const vm = {
+        selectedAll: false,
         testRuns: [],
         totalResults: 0,
         pageSize: 20,
         currentPage: 1,
-        selectedTestRuns: {},
+        selectedTestRuns: [],
         zafiraWebsocket: null,
         subscriptions: {},
         isMobile: windowWidthService.isMobile,
@@ -23,18 +24,18 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
         isTestRunsEmpty: isTestRunsEmpty,
         getTestRuns: getTestRuns,
-        getLengthOfSelectedTestRuns: getLengthOfSelectedTestRuns,
         areTestRunsFromOneSuite: areTestRunsFromOneSuite,
         showCompareDialog: showCompareDialog,
         batchRerun: batchRerun,
         batchDelete: batchDelete,
         abortSelectedTestRuns: abortSelectedTestRuns,
         batchEmail: batchEmail,
-        addToSelectedTestRuns: addToSelectedTestRuns,
         deleteSingleTestRun: deleteSingleTestRun,
         showCiHelperDialog: showCiHelperDialog,
         resetFilter: resetFilter,
         displaySearch: displaySearch,
+        selectAllTestRuns,
+        selectTestRun,
 
         get jenkins() { return toolsService.jenkins; },
         get tools() { return toolsService.tools; },
@@ -121,54 +122,36 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         // vm.selectAll = false;
 
         return testsRunsService.fetchTestRuns(true)
-        .then(function(rs) {
-            const testRuns = rs.results;
+            .then(function(rs) {
+                const testRuns = rs.results;
 
-            vm.totalResults = rs.totalResults;
-            vm.pageSize = rs.pageSize;
-            vm.testRuns = testRuns;
+                vm.totalResults = rs.totalResults;
+                vm.pageSize = rs.pageSize;
+                vm.testRuns = testRuns;
 
-            return $q.resolve(vm.testRuns);
-        })
-        .catch(function(err) {
-            console.error(err.message);
-            alertify.error(err.message);
+                return $q.resolve(vm.testRuns);
+            })
+            .catch(function(err) {
+                console.error(err.message);
+                alertify.error(err.message);
 
-            return $q.resolve([]);
-        });
+                return $q.resolve([]);
+            });
     }
 
     function loadSlackAvailability() {
         testsRunsService.fetchSlackAvailability();
     }
 
-    function getLengthOfSelectedTestRuns() {
-        let count = 0;
-
-        for(const id in vm.selectedTestRuns) {
-            if (vm.selectedTestRuns.hasOwnProperty(id)) {
-                count += 1;
-            }
-        }
-
-        return count;
-    }
-
     function areTestRunsFromOneSuite() {
-        let testSuiteId;
+        let firstItem;
 
-        for (const testRunId in vm.selectedTestRuns) {
-            const selectedTestRun = vm.selectedTestRuns[testRunId];
+        // return false if nothing to compare
+        if (vm.selectedTestRuns.length <= 1) { return false; }
 
-            if (!testSuiteId) {
-                testSuiteId = selectedTestRun.testSuite.id;
-            }
-            if (selectedTestRun.testSuite.id !== testSuiteId) {
-                return false;
-            }
-        }
+        firstItem = vm.selectedTestRuns[0];
 
-        return true;
+        return !vm.selectedTestRuns.some(testRun => testRun.testSuite.id !== firstItem.testSuite.id);
     }
 
     function showCompareDialog(event) {
@@ -188,7 +171,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     function batchRerun() {
         const rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
 
-        // vm.selectAll = false;
         vm.testRuns.forEach(function(testRun) {
             testRun.selected && rebuild(testRun, rerunFailures);
         });
@@ -214,34 +196,28 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     }
 
     function batchDelete() {//TODO: why we don't use confirmation in this case?
-        const results = [];
-        const errors = [];
-        const keysToDelete = Object.keys(vm.selectedTestRuns);
-        const promises = keysToDelete.reduce(function(arr, key) {
-            arr.push(deleteTestRunFromQueue(vm.selectedTestRuns[key].id));
+        const selectedCount = vm.selectedTestRuns.length;
+        const promises = vm.selectedTestRuns.map(testRun => deleteTestRunFromQueue(testRun));
 
-            return arr;
-        }, []);
-
-        $q.all(promises).finally(function() {
-            vm.selectedTestRuns = {};
-            testsRunsService.clearDataCache();
-            //load previous page if was selected all tests and it was a last but not single page
-            if (keysToDelete.length === vm.testRuns.length  && vm.currentPage === Math.ceil(vm.totalResults / vm.pageSize) && vm.currentPage !== 1) {
-                getTestRuns(vm.currentPage - 1);
-            } else {
-                getTestRuns();
-            }
-        });
+        $q.all(promises)
+            .finally(function() {
+                vm.selectedAll = false;
+                vm.selectAllTestRuns();
+                testsRunsService.clearDataCache();
+                //load previous page if was selected all tests and it was a last but not single page
+                if (selectedCount === vm.testRuns.length  && vm.currentPage === Math.ceil(vm.totalResults / vm.pageSize) && vm.currentPage !== 1) {
+                    getTestRuns(vm.currentPage - 1);
+                } else {
+                    getTestRuns();
+                }
+            });
     }
 
     function abortSelectedTestRuns() {
         if (vm.jenkins.enabled) {
-            const selectedIds = Object.keys(vm.selectedTestRuns);
-
-            selectedIds.forEach(function(id) {
-                if (vm.selectedTestRuns[id].status === 'IN_PROGRESS') {
-                    abort(vm.selectedTestRuns[id]);
+            vm.selectedTestRuns.forEach(testRun => {
+                if (testRun.status === 'IN_PROGRESS') {
+                    abort(testRun);
                 }
             });
         } else {
@@ -272,15 +248,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     }
 
     function batchEmail(event) {
-        const selectedIds = Object.keys(vm.selectedTestRuns);
-        const testRunsForEmail = selectedIds.reduce(function(arr, key) {
-            arr.push(vm.selectedTestRuns[key]);
-
-            return arr;
-        }, []);
-
-        // vm.selectAll = false;
-        showEmailDialog(testRunsForEmail, event);
+        showEmailDialog(vm.selectedTestRuns, event);
     }
 
     function showEmailDialog(testRuns, event) {
@@ -297,14 +265,25 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         });
     }
 
-    function addToSelectedTestRuns(testRun) { //TODO: why do we use object instead of array here?
-        $timeout(function () {
-            if (testRun.selected) {
-                vm.selectedTestRuns[testRun.id] = testRun;
-            } else {
-                delete vm.selectedTestRuns[testRun.id];
+    function selectTestRun(testRun) {
+        if (testRun.selected) {
+            if (!vm.testRuns.some(testRun => !testRun.selected)) {
+                vm.selectedAll = true;
             }
-        }, 100);
+        } else if (!testRun.selected && vm.selectedAll) {
+            vm.selectedAll = false;
+        }
+
+        updateSelectedTestRuns();
+    }
+
+    function selectAllTestRuns() {
+        vm.testRuns.forEach(testRun => testRun.selected = vm.selectedAll);
+        updateSelectedTestRuns();
+    }
+
+    function updateSelectedTestRuns() {
+        vm.selectedTestRuns = vm.testRuns.filter(testRun => testRun.selected);
     }
 
     function deleteSingleTestRun(testRun) {
@@ -317,7 +296,9 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
                 UtilService.showDeleteMessage(messageData, [id], [], []);
                 if (rs.success) {
-                    vm.selectedTestRuns = {};
+                    // deselect any selected testRuns
+                    vm.selectedAll = false;
+                    vm.selectAllTestRuns();
                     testsRunsService.clearDataCache();
                     //if it was last item on the page try to load previous page
                     if (vm.testRuns.length === 1 && vm.currentPage !== 1) {
