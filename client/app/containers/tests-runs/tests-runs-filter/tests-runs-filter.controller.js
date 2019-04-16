@@ -64,20 +64,19 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             onePanel: true
         },
         SYMBOLS: {
-            EQUALS: " == ",
-            NOT_EQUALS: " != ",
-            CONTAINS: " cnt ",
-            NOT_CONTAINS: " !cnt ",
-            MORE: " > ",
-            LESS: " < ",
-            BEFORE: " <= ",
-            AFTER: " >= ",
-            LAST_24_HOURS: " last 24 hours",
-            LAST_7_DAYS: " last 7 days",
-            LAST_14_DAYS: " last 14 days",
-            LAST_30_DAYS: " last 30 days"
-        },
-        currentUser: UserService.currentUser,
+            EQUALS: ' == ',
+            NOT_EQUALS: ' != ',
+            CONTAINS: ' cnt ',
+            NOT_CONTAINS: ' !cnt ',
+            MORE: ' > ',
+            LESS: ' < ',
+            BEFORE: ' <= ',
+            AFTER: ' >= ',
+            LAST_24_HOURS: 'last 24 hours',
+            LAST_7_DAYS: 'last 7 days',
+            LAST_14_DAYS: 'last 14 days',
+            LAST_30_DAYS: 'last 30 days'        },
+        get currentUser() { return UserService.currentUser; },
         chipsCtrl: null,
         isMobile: windowWidthService.isMobile,
         isMobileSearchActive: false,
@@ -90,19 +89,12 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         updateFilter: updateFilter,
         deleteFilter: deleteFilter,
         clearAndOpenFilterBlock: clearAndOpenFilterBlock,
-        clearAndOpenNewFilterBlock: clearAndOpenNewFilterBlock,
         searchByFilter: searchByFilter,
         selectFilterForEdit: selectFilterForEdit,
-        selectSearchType: selectSearchType,
-        getActiveSearchType: testsRunsService.getActiveSearchType,
-        onSearchChange: onSearchChange,
-        onChangeSearchCriteria: onChangeSearchCriteria,
-        openDatePicker: openDatePicker,
         toggleMobileSearch: toggleMobileSearch,
         onFilterSliceUpdate: onFilterSliceUpdate,
         onSelect: onSelect,
         clearPickFilter: clearPickFilter,
-        pickFilter: pickFilter,
     };
 
     vm.$onInit = init;
@@ -143,18 +135,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
 
     function onSelect(dates) {
         return vm.selectedFilterRange.selectedTemplateName;
-    };
-
-    function pickFilter($event, showTemplate) {
-        vm.selectedFilterRange.showTemplate = showTemplate;
-        $mdDateRangePicker.show({
-            targetEvent: $event,
-            model: vm.selectedFilterRange,
-            autoConfirm: true
-        }).then(function(result) {
-            if (result) vm.selectedFilterRange = result;
-        })
-    };
+    }
 
     function closeDatePickerMenu() {
         var menu = angular.element('#filter-editor md-menu *[aria-owns]').scope();
@@ -168,7 +149,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         vm.selectedFilterRange.selectedTemplateName = null;
         vm.selectedFilterRange.dateStart = null;
         vm.selectedFilterRange.dateEnd = null;
-    };
+    }
 
     function readStoredParams() {
         if (vm.isSearchActive()) {
@@ -353,7 +334,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             }
         }
 
-        if (testsRunsService.isFilterActive()) {
+        if (testsRunsService.isFilterActive() && testsRunsService.getActiveFilter()) {
             mode.push('APPLY');
         }
 
@@ -375,6 +356,8 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         testsRunsService.resetFilteringState();
         vm.onFilterChange();
         vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
+        // reset filter form
+        clearAndOpenFilterBlock(false);
     }
 
     function onApply() {
@@ -389,8 +372,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             if (rs.success) {
                 alertify.success('Filter was created');
                 vm.filters.push(rs.data);
-                clearFilter();
-                vm.collapseFilter = false;
+                clearAndOpenFilterBlock(false);
             } else {
                 alertify.error(rs.message);
             }
@@ -419,8 +401,11 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             if (rs.success) {
                 alertify.success('Filter was deleted');
                 vm.filters.splice(vm.filters.indexOfField('id', id), 1);
-                clearFilter();
-                vm.collapseFilter = false;
+                if (id !== testsRunsService.getActiveFilter()) {
+                    clearAndOpenFilterBlock(false);
+                } else {
+                    onReset();
+                }
             } else {
                 alertify.error(rs.message);
             }
@@ -430,15 +415,18 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     function selectFilterForEdit(filter) {
         vm.collapseFilter = true;
         vm.filter = angular.copy(filter);
+        !vm.isFilterActive() && testsRunsService.setActiveFilteringTool('filter');
     }
 
     function clearAndOpenFilterBlock(value) {
         clearFilter();
         vm.collapseFilter = value;
-    }
 
-    function clearAndOpenNewFilterBlock() {
-        vm.collapseNewFilter = !vm.collapseNewFilter;
+        if (value) {
+            !vm.isFilterActive() && testsRunsService.setActiveFilteringTool('filter');
+        } else if (!testsRunsService.getActiveFilter() && vm.isFilterActive()) {
+            testsRunsService.deleteActiveFilteringTool();
+        }
     }
 
     function clearFilterSlice() {
@@ -467,72 +455,6 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             value: vm.currentValue.value && vm.currentValue.value.value ? vm.currentValue.value.value : vm.currentValue.value
         });
         clearFilterSlice();
-    }
-
-    function selectSearchType(type) {
-        if (vm.getActiveSearchType() === type) { return; }
-
-        testsRunsService.setActiveSearchType(type);
-    }
-
-    function onChangeSearchCriteria(name) {//TODO: refactor this fn and onSearchChange for "DRY"
-        const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
-        if (!name) { return; }
-        if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
-
-        !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
-        if (vm.searchParams[name]) {
-            testsRunsService.setSearchParam(name, vm.searchParams[name]);
-        } else {
-            testsRunsService.deleteSearchParam(name);
-        }
-    }
-
-    function onSearchChange() {
-        const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
-        if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
-
-        !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
-        testsRunsService.getSearchTypes().forEach(function(type) {
-            if (vm.fastSearch[type]) {
-                testsRunsService.setSearchParam(type, vm.fastSearch[type]);
-            } else if (testsRunsService.getSearchParam(type)) {
-                testsRunsService.deleteSearchParam(type);
-            }
-        });
-    }
-
-    function openDatePicker($event, showTemplate) {
-        if (vm.isFilterActive()) { return; }
-
-        vm.selectedRange.showTemplate = showTemplate;
-
-        $mdDateRangePicker.show({
-            targetEvent: $event,
-            model: vm.selectedRange
-        })
-        .then(function(result) {
-            if (result) {
-                const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
-                vm.selectedRange = result;
-                !vm.isSearchActive() && testsRunsService.setActiveFilteringTool('search');
-                if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
-                    if (vm.selectedRange.dateStart.getTime() !==
-                        vm.selectedRange.dateEnd.getTime()) {
-                        testsRunsService.deleteSearchParam('date');
-                        testsRunsService.setSearchParam('fromDate', vm.selectedRange.dateStart);
-                        testsRunsService.setSearchParam('toDate', vm.selectedRange.dateEnd);
-                    } else {
-                        testsRunsService.deleteSearchParam('fromDate');
-                        testsRunsService.deleteSearchParam('toDate');
-                        testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
-                    }
-                }
-            }
-        })
     }
 };
 

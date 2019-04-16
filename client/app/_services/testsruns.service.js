@@ -43,6 +43,7 @@
             deleteSearchParam: deleteSearchParam,
             setActiveFilteringTool: setActiveFilteringTool,
             getActiveFilteringTool: getActiveFilteringTool,
+            deleteActiveFilteringTool,
             resetFilteringState: resetFilteringState,
             readStoredParams: readStoredParams,
             deleteStoredParams: deleteStoredParams,

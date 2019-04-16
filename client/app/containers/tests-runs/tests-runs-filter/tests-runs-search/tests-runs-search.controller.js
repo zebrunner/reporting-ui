@@ -43,7 +43,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         loadFilters();
         readStoredParams();
         if (vm.isMobile()) {
-            $rootScope.$on('tr-filter-apply', onApply);
+            // $rootScope.$on('tr-filter-apply', onApply);
             $rootScope.$on('tr-filter-open-search', toggleMobileSearch);
             $rootScope.$on('tr-filter-close', toggleMobileSearch);
         }
