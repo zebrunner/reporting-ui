@@ -26,15 +26,15 @@
                 width: 100%;
     
                 md-checkbox {
-                    margin-bottom: 0;
                     min-width: 18px;
                     min-height: 100%;
                     margin: 0 8px 0 4px;
-                    .md-container, .md-icon {
+                    .md-container,
+                    .md-icon {
                         width: 18px;
                         height: 18px;
                     }
-                    .md-icon:before {
+                    .md-icon:after {
                         left: 3.66667px;
                         top: -0.77778px;
                     }
@@ -160,7 +160,6 @@
                     margin-left: 12px;
                     font-size: 14px;
                     min-width: 80px;
-                    padding-top: 2px;
                     background-color: $fog-gray;
                     color: $dark-coal-new;
                     &:hover {

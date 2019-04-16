@@ -121,8 +121,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div layout="row">
-                                <div layout-sm="row" layout-xs="column">
+                            <div layout="row" layout-align="none center" layout-align-sm="none" layout-sm="column" layoutclass="tests-runs-filter__editor-footer">
+                                <div layout-sm="row" layout-xs="column" class="tests-runs-filter__editor-chips-wrapper">
                                     <md-chips class="filter-chip filter-chip-scope" ng-model="$ctrl.filter.subject.criterias"
                                         readonly="false" md-on-add="$ctrl.changeChip($chip)">
                                         <input disabled>
@@ -136,7 +136,7 @@
                                                     $chip.value | date : 'MMM dd yyyy' }}'</span>
                                             </span>
                                         </md-chip-template>
-                                        <button md-chip-remove class="md-primary filter-slice-chip-button">
+                                        <button md-chip-remove class="md-primary md-chip-remove filter-slice-chip-button">
                                             <md-icon aria-label="Close dialog">close</md-icon>
                                         </button>
                                     </md-chips>

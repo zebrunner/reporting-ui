@@ -109,6 +109,9 @@
                 min-width: 100px;
             }
         }
+        &-chips-wrapper {
+            flex-grow: 1;
+        }
         .filter {
             &-input-container {
                 min-width: 184px;
@@ -153,11 +156,12 @@
         }
         .panel-body {
             padding-bottom: 20px !important;
-            .filter-chip md-chip, .filter-chip md-chip:hover {
+            .filter-chip md-chip,
+            .filter-chip md-chip:hover {
                 background-color: transparent !important;
                 border: 1px solid rgba(#011627, 0.2) !important;
                 .md-chip-content {
-                    margin-top: -1px;
+                    line-height: 30px;
                 }
                 span {
                     color: black;
@@ -165,8 +169,6 @@
                 button {
                     background-color: transparent;
                     md-icon {
-                        top: -2px;
-                        left: -7px;
                         font-size: 22px;
                         color: black;
                     }

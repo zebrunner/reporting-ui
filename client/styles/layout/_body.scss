@@ -240,6 +240,7 @@ md-chip:hover .show-icon-on-hover,
     min-width: 360px;
     min-height: 52px;
     padding: 8px 20px;
+    width: auto;
 
     @media (max-width: $screen-phone) {
         min-width: 0;
@@ -1371,7 +1372,7 @@ button#resetFilter {
             line-height: 2.3;
             font-weight: 500;
         }
-        .filter-slice-chip-button {
+        .filter-slice-chip-button:not(.md-chip-remove) {
             background-color: $gray-light;
             border: 0;
             width: 16px;

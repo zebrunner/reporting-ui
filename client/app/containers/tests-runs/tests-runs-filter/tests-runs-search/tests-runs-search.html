@@ -45,7 +45,7 @@
                             <md-input-container class="searchable select pull-left no-padding" flex="nogrow">
                                 <md-select id="searchStatus" ng-change="$ctrl.onChangeSearchCriteria('status')"
                                     ng-model="$ctrl.searchParams.status" name="status" placeholder="Status">
-                                    <md-option value="">Status</md-option>
+                                    <md-option value="">None</md-option>
                                     <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
                                 </md-select>
                             </md-input-container>
@@ -53,14 +53,14 @@
                         <md-input-container class="searchable select pull-left no-padding no-margin-l" flex="grow">
                             <md-select id="searchEnv" ng-change="$ctrl.onChangeSearchCriteria('environment')" ng-model="$ctrl.searchParams.environment"
                                 name="environment" placeholder="Environment">
-                                <md-option value="">Environment</md-option>
+                                <md-option value="">None</md-option>
                                 <md-option ng-repeat="env in $ctrl.environments" ng-value="env">{{env}}</md-option>
                             </md-select>
                         </md-input-container>
                         <md-input-container class="searchable select selectPlatform pull-left" flex="grow">
                             <md-select id="searchPlatform" ng-change="$ctrl.onChangeSearchCriteria('platform')"
                                 ng-model="$ctrl.searchParams.platform" name="platform" placeholder="Platform">
-                                <md-option value="">Platform</md-option>
+                                <md-option value="">None</md-option>
                                 <md-option ng-repeat="platform in $ctrl.platforms" ng-value="platform">{{platform}}</md-option>
                             </md-select>
                         </md-input-container>
