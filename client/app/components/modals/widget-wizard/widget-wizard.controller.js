@@ -7,7 +7,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         items: [
             {
                 index: 1,
-                title: 'Choose template',
+                title: 'Choose widget or create new',
                 nextDisabled: function (form) {
                     return ! $scope.widget.widgetTemplate;
                 },
@@ -28,6 +28,27 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             },
             {
                 index: 2,
+                title: 'Choose template',
+                nextDisabled: function (form) {
+                    return ! $scope.widget.widgetTemplate;
+                },
+                onBackClick: function() {
+                },
+                onLoad: function () {
+                    DashboardService.GetWidgetTemplates().then(function (rs) {
+                        if(rs.success) {
+                            $scope.templates = rs.data;
+                        } else {
+                            alertify.error(rs.message);
+                        }
+                    });
+                },
+                need: function (template, widgetId) {
+                    return ! widgetId && template.paramsConfig;
+                }
+            },
+            {
+                index: 3,
                 title: 'Set parameters',
                 nextDisabled: function (form) {
                     return form.params.$invalid;
@@ -44,7 +65,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 }
             },
             {
-                index: 3,
+                index: 4,
                 title: 'Save',
                 nextDisabled: function (form) {
                 },

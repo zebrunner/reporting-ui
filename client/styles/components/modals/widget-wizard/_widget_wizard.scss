@@ -47,6 +47,11 @@ $wizard-white:          #ffffff;
                     width: calc((100% - (#{$inner-padding} * 2)) / 2);
                 }
 
+                &_add {
+                    background-color: #1f242a;
+                    opacity: 0.1;
+                }
+
                 &_title {
                     margin-bottom: 12px;
                 }

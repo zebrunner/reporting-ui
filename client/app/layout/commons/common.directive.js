@@ -81,7 +81,7 @@
             restrict: 'E',
             replace: true,
             transclude: true,
-            require: 'ngModel',
+            require: '?ngModel',
             template: require('./templates/radio-button.template.html'),
             scope: {
                 ngModel: '=ngModel',
@@ -104,7 +104,10 @@
                         element.removeClass(checkedClassToAdd);
                     }
                 };
-                check();
+
+                if(ngModel) {
+                    check();
+                }
 
                 scope._onChange = function () {
                     ngModel.$setViewValue(scope.ngModel);
