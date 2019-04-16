@@ -197,7 +197,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function batchDelete() {//TODO: why we don't use confirmation in this case?
         const selectedCount = vm.selectedTestRuns.length;
-        const promises = vm.selectedTestRuns.map(testRun => deleteTestRunFromQueue(testRun));
+        const promises = vm.selectedTestRuns.map(testRun => deleteTestRunFromQueue(testRun.id));
 
         $q.all(promises)
             .finally(function() {
