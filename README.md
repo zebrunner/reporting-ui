@@ -1,7 +1,7 @@
 # Zafira UI
 
 ## Requirements
-* NPM 6.0.0
+* NPM  v6.0.0+
 * Node v8.9.4+
 
 ## Installation
