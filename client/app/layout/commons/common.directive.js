@@ -91,7 +91,7 @@
             link: function(scope, element, attrs, ngModel){
 
                 scope.$watch('ngModel', function (newVal, oldVal) {
-                    if(newVal && ! angular.equals(oldVal, newVal)) {
+                    if((newVal && ! oldVal) || (newVal && ! oldVal && newVal.id !== oldVal.id)) {
                         check();
                     }
                 });
@@ -104,6 +104,7 @@
                         element.removeClass(checkedClassToAdd);
                     }
                 };
+
                 check();
 
                 scope._onChange = function () {

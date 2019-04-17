@@ -66,12 +66,30 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         }
     };
 
+    function prepareWidgetTemplate(id) {
+        return $q(function (resolve, reject) {
+
+            DashboardService.PrepareWidgetTemplate(id).then(function (rs) {
+                if(rs.success) {
+                    resolve(rs.data);
+                } else {
+                    reject(rs.message);
+                }
+            });
+        });
+    };
+
     $scope.widget = {};
     $scope.widgetBuilder = {};
 
     $scope.onChange = function() {
         $scope.widgetBuilder = {};
-        $scope.buildConfigs()
+        prepareWidgetTemplate($scope.widget.widgetTemplate.id).then(function (rs) {
+            $scope.widget.widgetTemplate = rs;
+            $scope.buildConfigs()
+        }, function (rs) {
+            alertify.error(rs);
+        });
     };
 
     $scope.buildConfigs = function(form) {
