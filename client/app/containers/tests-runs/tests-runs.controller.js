@@ -1,5 +1,8 @@
 'use strict';
 
+import CiHelperController from './ci-helper/ci-helper.controller';
+import CiHelperTemplate from './ci-helper/ci-helper.html';
+
 const testsRunsController = function testsRunsController($cookieStore, $mdDialog, $timeout, $q, TestRunService,
                                                          UtilService, UserService, testsRunsService, $scope, API_URL,
                                                          $rootScope, $transitions, windowWidthService, TestService,
@@ -416,8 +419,8 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function showCiHelperDialog(event) {
         $mdDialog.show({
-            controller: 'CiHelperController',
-            template: require('../../components/modals/ci-helper/ci-helper.html'),
+            controller: CiHelperController,
+            template: CiHelperTemplate,
             parent: angular.element(document.body),
             targetEvent: event,
             clickOutsideToClose:false,

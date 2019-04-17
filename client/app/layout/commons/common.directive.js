@@ -108,7 +108,7 @@
 
                 scope._onChange = function () {
                     ngModel.$setViewValue(scope.ngModel);
-                    scope.onChange();
+                    scope.onChange && scope.onChange();
                 };
             }
         };

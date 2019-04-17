@@ -15,7 +15,6 @@ const ngModule = angular.module('app', [
     'app.testRunCard',
     // 3rd party feature modules
     'ngImgCrop',
-    'ui.ace',
     'md.data.table',
     'validation.match',
     'timer',
