@@ -24,7 +24,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         showGutter: false,
         theme:'eclipse',
         mode: 'json',
-        firstLineNumber: 5
+        firstLineNumber: 5,
+        rendererOptions: {
+            fontSize: '14px'
+        }
     };
 
     $scope.onLoad = function(editor) {
