@@ -91,7 +91,7 @@
             link: function(scope, element, attrs, ngModel){
 
                 scope.$watch('ngModel', function (newVal, oldVal) {
-                    if((newVal && ! oldVal) || (newVal && ! oldVal && newVal.id !== oldVal.id)) {
+                    if((newVal && ! oldVal) || (newVal && oldVal && newVal.id !== oldVal.id)) {
                         check();
                     }
                 });
