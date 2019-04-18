@@ -14,9 +14,12 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 onBackClick: function() {
                 },
                 onLoad: function () {
-                    DashboardService.GetWidgetTemplates().then(function (rs) {
-                        if(rs.success) {
-                            $scope.templates = rs.data;
+                    DashboardService.GetWidgets().then(function (rs) {
+                        if (rs.success) {
+                            $scope.widgets = rs.data.filter(function (widget) {
+                                return widget.widgetTemplate;
+                            });
+                            updateWidgetsToAdd();
                         } else {
                             alertify.error(rs.message);
                         }
@@ -87,6 +90,10 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         }
     };
 
+    $scope.addToDashboard = function () {
+
+    };
+
     function prepareWidgetTemplate(id) {
         return $q(function (resolve, reject) {
 
@@ -98,6 +105,17 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 }
             });
         });
+    };
+
+    function updateWidgetsToAdd () {
+        if($scope.widgets && dashboard.widgets) {
+            $scope.unexistWidgets =  $scope.widgets.filter(function(widget) {
+                var existingWidget = dashboard.widgets.filter(function(w) {
+                    return w.id == widget.id;
+                });
+                return !existingWidget.length || widget.id != existingWidget[0].id;
+            });
+        }
     };
 
     $scope.widget = {};
@@ -115,6 +133,15 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 reject();
             });
         });
+    };
+
+    $scope.tempData = {
+        widget: {}
+    };
+
+    $scope.onWidgetChange = function() {
+        $scope.widget = angular.copy($scope.tempData.widget);
+        return $scope.onChange();
     };
 
     $scope.buildConfigs = function(form) {

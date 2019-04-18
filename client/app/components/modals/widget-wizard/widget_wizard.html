@@ -8,17 +8,50 @@
         <div class="widget-wizard_container_elements" ng-switch="card.index">
             <div ng-switch-when="1">
                 <zf-radio-button class="widget-wizard_container_elements_item widget-wizard_container_elements_item_add" ng-click="">
-                    <div></div>
+                    <div class="widget-wizard_container_elements_item_add_icon">
+                        <md-icon md-svg-src="../../../../assets/images/pie_chart.svg"></md-icon>
+                        <md-icon md-svg-src="../../../../assets/images/big_plus.svg"></md-icon>
+                    </div>
+                    <div class="widget-wizard_container_elements_item_add_title">
+                        New widget
+                    </div>
                 </zf-radio-button>
-                <zf-radio-button class="widget-wizard_container_elements_item" ng-repeat="template in ::templates | orderBy : 'name' track by $index" on-change="onChange();" ng-model="widget.widgetTemplate" value="template">
-                    <div class="widget-wizard_container_elements_item_title"><show-part text="template.name" limit="50"></show-part></div>
-                    <div class="widget-wizard_container_elements_item_description"><show-part text="template.description" limit="150"></show-part></div>
-                    <div class="widget-wizard_container_elements_item_icon" ng-switch="template.type">
-                        <md-icon ng-switch-when="PIE" md-svg-src="../../../../assets/images/pie_chart.svg"></md-icon>
-                        <md-icon ng-switch-when="BAR" md-svg-src="../../../../assets/images/bar_chart.svg"></md-icon>
-                        <md-icon ng-switch-when="TABLE" md-svg-src="../../../../assets/images/table_chart.svg"></md-icon>
-                        <md-icon ng-switch-when="LINE" md-svg-src="../../../../assets/images/line_chart.svg"></md-icon>
-                        <md-icon ng-switch-default md-svg-src="../../../../assets/images/default_chart.svg"></md-icon>
+                <zf-radio-button class="widget-wizard_container_elements_item" ng-repeat="w in widgets | orderBy : 'title' track by $index" on-change="onWidgetChange()" ng-model="tempData.widget" value="w">
+                    <div class="widget-wizard_container_elements_item_title"><show-part text="w.title" limit="50"></show-part></div>
+                    <div class="widget-wizard_container_elements_item_description"><show-part text="w.description" limit="150"></show-part></div>
+                    <div class="widget-wizard_container_elements_item_action">
+                        <md-menu class="pull-right">
+                            <md-button aria-label="Widget settings" class="md-icon-button" data-ng-click="$mdMenu.open($event);">
+                                <md-icon class="material-icons">more_vert</md-icon>
+                            </md-button>
+                            <md-menu-content width="2">
+                                <md-menu-item>
+                                    <md-button data-ng-click="showNeededWidgetModal($event, widget, false, dashboard)">
+                                        <md-icon class="material-icons">settings</md-icon>
+                                        Edit widget
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="showWidgetDialog($event, widget, true, dashboard)">
+                                        <md-icon class="material-icons">content_copy</md-icon>
+                                        Copy widget
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="deleteWidget($event, widget)">
+                                        <md-icon class="material-icons">delete</md-icon>
+                                        Delete widget
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+                    <div class="widget-wizard_container_elements_item_icon" ng-switch="w.type">
+                        <i ng-switch-when="BAR" class="material-icons">insert_chart</i>
+                        <i ng-switch-when="PIE" class="material-icons">pie_chart</i>
+                        <i ng-switch-when="TABLE" class="material-icons">table_chart</i>
+                        <md-icon ng-switch-when="LINE" md-svg-src="../../../../assets/images/line_chart_filled.svg"></md-icon>
+                        <i ng-switch-default class="material-icons">casino</i>
                     </div>
                 </zf-radio-button>
             </div>
@@ -169,7 +202,7 @@
                 </div>
                 <div class="widget-wizard_container_elements_additional" ng-if="widgetBuilder.legendConfigObject.legend">
                     <zf-input-container>
-                        <label>Setting the legend</label>
+                        <label>Set legend</label>
                         <md-checkbox ng-model="widgetBuilder.legendConfigObject.legendItems[legendName]" ng-change="onLegendChange(legendName);" ng-repeat="legendName in widgetBuilder.legendConfigObject.legend track by $index" aria-label="checkbox">{{legendName}}</md-checkbox>
                     </zf-input-container>
                 </div>
@@ -209,7 +242,7 @@
             <md-button class="zf-button zf-info" ng-click="back();" ng-if="! isFirstCard() && ! (widget.id && getCurrentCard() === 1)">
                 Back
             </md-button>
-            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="next();" ng-if="! isLastCard()" ng-disabled="card.nextDisabled(widget_form)">
+            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="next();" ng-if="! isFirstCard() && ! isLastCard()" ng-disabled="card.nextDisabled(widget_form)">
                 Next
             </md-button>
             <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="saveWidget();" ng-if="isLastCard() && ! widget.id" ng-disabled="widget_form.info.$invalid">
@@ -217,6 +250,9 @@
             </md-button>
             <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="updateWidget();" ng-if="isLastCard() && widget.id" ng-disabled="widget_form.info.$invalid">
                 Save
+            </md-button>
+            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="addToDashboard();" ng-if="isFirstCard()" ng-disabled="card.nextDisabled(widget_form)">
+                Add
             </md-button>
         </div>
     </zf-modal-helper-container>

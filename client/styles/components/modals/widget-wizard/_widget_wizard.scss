@@ -37,6 +37,7 @@ $wizard-white:          #ffffff;
         }
 
         &_elements {
+            font-size: 0;
             &_item {
                 width: 252px;
                 max-width: 252px;
@@ -48,8 +49,41 @@ $wizard-white:          #ffffff;
                 }
 
                 &_add {
-                    background-color: #1f242a;
-                    opacity: 0.1;
+
+                    background-color: rgba(31,36,42, 0.1) !important;
+                    border-radius: 4px;
+
+                    &_icon, &_title {
+                        text-align: center;
+                    }
+
+                    &_icon {
+                        height: 74%;
+                    }
+
+                    &_title {
+                        height: 26px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        letter-spacing: normal;
+                        color: rgba(1, 22, 39, 0.6);
+                        opacity: 0.6;
+                    }
+
+                    label {
+                        *[ng-transclude] {
+                            width: 100%;
+                            i, md-icon {
+                                color: black;
+                                font-size: 64px;
+                                height: 64px;
+                                width: 64px;
+                            }
+                        }
+                        &::before {
+                            display: none;
+                        }
+                    }
                 }
 
                 &_title {
@@ -64,15 +98,35 @@ $wizard-white:          #ffffff;
                     color: $wizard-dark-gray;
                 }
 
+                &_action {
+                    position: absolute;
+                    top: 14px;
+                    right: 8px;
+                    i {
+                        color: rgba(1, 22, 39, 0.6);
+                    }
+                }
+
+                $parent: &;
+
+                &:not(.zf-checked):not(:hover) {
+                    #{$parent}_action {
+                        i {
+                            display: none;
+                        }
+                    }
+                }
+
                 &_icon {
                     position: absolute;
                     bottom: 0;
                     left: 0;
                     padding: 0 0 $inner-padding $inner-padding;
 
-                    md-icon {
+                    md-icon, i {
                         width: 34px;
                         height: 34px;
+                        font-size: 34px;
                         color: rgba(0, 0, 0, 0.2);
                     }
                 }
@@ -85,6 +139,7 @@ $wizard-white:          #ffffff;
                     }
 
                     div[ng-transclude] {
+                        width: 100%;
                         transform: none;
                         line-height: 14px;
                         font-weight: 500;
