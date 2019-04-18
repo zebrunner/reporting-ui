@@ -108,7 +108,7 @@
                 check();
 
                 function notEquals(obj1, obj2) {
-                    return (obj1 && ! obj2) || (!obj1 && obj2) || (!obj1.id && !obj2.id && angular.equals(obj1, obj2)) || (obj1 && obj2 && obj1.id !== obj2.id);
+                    return (obj1 && ! obj2) || (!obj1 && obj2) || (obj1 && obj2 && !obj1.id && !obj2.id && angular.equals(obj1, obj2)) || (obj1 && obj2 && obj1.id !== obj2.id);
                 };
 
                 scope._onChange = function () {
