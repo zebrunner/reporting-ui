@@ -231,7 +231,12 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
     };
 
     $scope.onLegendChange = function (legendName) {
-        $scope.chartActions.push({type: $scope.widgetBuilder.legendConfigObject.legendItems[legendName] ? 'legendSelect' : 'legendUnSelect', name: legendName});
+        if(['TABLE'].indexOf($scope.widget.widgetTemplate.type) === -1) {
+            $scope.chartActions.push({
+                type: $scope.widgetBuilder.legendConfigObject.legendItems[legendName] ? 'legendSelect' : 'legendUnSelect',
+                name: legendName
+            });
+        }
     };
 
     $scope.saveWidget = function () {
