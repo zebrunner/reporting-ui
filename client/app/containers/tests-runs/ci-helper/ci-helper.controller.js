@@ -83,8 +83,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     var onAddNewGithubRepoClose;
 
-    $scope.addNewGithubRepo = function(element) {
-        $scope.states.addGitRepo = ! $scope.states.addGitRepo;
+    $scope.addNewGithubRepo = function(element, forceClose) {
+        $scope.states.addGitRepo = forceClose ? false : ! $scope.states.addGitRepo;
         if($scope.states.addGitRepo) {
             $scope.connectToGitHub().then(function () {
                 if(element) {
@@ -117,6 +117,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                 el.removeClass(newGithubRepoRevertCloseClass);
             }, 500);
         }
+    };
+
+    function closeConnectGithubBlock() {
+        $scope.addNewGithubRepo(angular.element("#connect-github"), true);
     };
 
     $scope.mergeTemplate = function (template) {
@@ -178,6 +182,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     $scope.editLauncher = function(launcher) {
         $scope.launcher = angular.copy(launcher);
         $scope.cardNumber = 1;
+        closeConnectGithubBlock();
     };
 
     $scope.chooseLauncher = function(launcher, skipBuilderApply) {
@@ -324,7 +329,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if($scope.clientId) {
                 var host = $window.location.host;
                 var tenant = host.split('\.')[0];
-                var redirectURI = $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
+                var redirectURI = "http://localhost:3000/scm/callback";//$window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
