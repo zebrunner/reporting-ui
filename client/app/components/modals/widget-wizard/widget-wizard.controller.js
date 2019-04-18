@@ -87,12 +87,34 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         }
     };
 
+    function prepareWidgetTemplate(id) {
+        return $q(function (resolve, reject) {
+
+            DashboardService.PrepareWidgetTemplate(id).then(function (rs) {
+                if(rs.success) {
+                    resolve(rs.data);
+                } else {
+                    reject(rs.message);
+                }
+            });
+        });
+    };
+
     $scope.widget = {};
     $scope.widgetBuilder = {};
 
     $scope.onChange = function() {
-        $scope.widgetBuilder = {};
-        $scope.buildConfigs()
+        return $q(function (resolve, reject) {
+            $scope.widgetBuilder = {};
+            prepareWidgetTemplate($scope.widget.widgetTemplate.id).then(function (rs) {
+                $scope.widget.widgetTemplate = rs;
+                $scope.buildConfigs();
+                resolve();
+            }, function (rs) {
+                alertify.error(rs);
+                reject();
+            });
+        });
     };
 
     $scope.buildConfigs = function(form) {
@@ -318,10 +340,13 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
     (function initController() {
         if(widget.id) {
             $scope.widget = angular.copy(widget);
-            CARDS.currentItem = getNextCard().index - 1;
-            $scope.onChange();
+            $scope.onChange().then(function (rs) {
+                CARDS.currentItem = getNextCard().index - 1;
+                initCard(CARDS.items[CARDS.currentItem]);
+            });
+        } else {
+            initCard(CARDS.items[CARDS.currentItem]);
         }
-        initCard(CARDS.items[CARDS.currentItem]);
     })();
 };
 

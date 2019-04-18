@@ -31,14 +31,14 @@
     </zf-sub-header>
 
     <div class="page" ng-class="{ '_search-active': $ctrl.isSearchActive() }">
-        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.getLengthOfSelectedTestRuns() > 0" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
+        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.selectedTestRuns.length > 0" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
                     <span class="fa fa-bars" aria-hidden="true"></span>
                 </md-button>
             </md-fab-trigger>
             <md-fab-actions>
-                <md-button id="compareTestRuns" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-if="$ctrl.getLengthOfSelectedTestRuns() > 1 && $ctrl.areTestRunsFromOneSuite()" ng-click="$ctrl.showCompareDialog($event)">
+                <md-button id="compareTestRuns" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-if="$ctrl.selectedTestRuns.length > 1 && $ctrl.areTestRunsFromOneSuite()" ng-click="$ctrl.showCompareDialog($event)">
                     <md-tooltip md-direction="top">Compare</md-tooltip>
                     <span class="fa fa-columns" aria-hidden="true"></span>
                 </md-button>
@@ -60,12 +60,25 @@
                 </md-button>
             </md-fab-actions>
         </md-fab-speed-dial>
+
         <tests-runs-filter on-filter-change="$ctrl.getTestRuns(1)"></tests-runs-filter>
+        <tests-runs-search on-filter-change="$ctrl.getTestRuns(1)">
+            <span>
+                <md-checkbox name="testRunSearchCheckbox"
+                             data-ng-model="$ctrl.selectedAll"
+                             ng-change="$ctrl.selectAllTestRuns()"
+                             class="md-primary"
+                             aria-label="Select"
+                             data-ng-true-value="true"
+                             data-ng-false-value="false">
+                </md-checkbox>
+            </span>
+        </tests-runs-search>
         <div class="p-tests-runs__section _content row ui-section no-margin">
             <div class="col-md-12 no-padding">
                 <article class="article">
                     <md-card class="no-margin-h">
-                        <test-run-card test-run="testRun" ng-repeat="testRun in $ctrl.testRuns | orderObjectBy:'startedAt':true track by testRun.id" single-mode="false" on-select="$ctrl.addToSelectedTestRuns(testRun)" on-delete="$ctrl.deleteSingleTestRun(testRun)"></test-run-card>
+                        <test-run-card test-run="testRun" ng-repeat="testRun in $ctrl.testRuns | orderObjectBy:'startedAt':true track by testRun.id" single-mode="false" on-select="$ctrl.selectTestRun(testRun)" on-delete="$ctrl.deleteSingleTestRun(testRun)"></test-run-card>
                         <div ng-if="($ctrl.testRuns && !$ctrl.testRuns.length)">
                             <div id="noData" class="text-center">No test runs</div>
                         </div>

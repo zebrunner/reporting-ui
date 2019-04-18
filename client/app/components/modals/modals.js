@@ -1,5 +1,4 @@
 require('./build-now/build-now.controller');
-require('./ci-helper/ci-helper.controller');
 require('./comments/comments.controller');
 require('./compare/compare.controller');
 require('./email/email.controller');

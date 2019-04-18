@@ -29,9 +29,10 @@
         service.UpdateWidget = UpdateWidget;
         service.DeleteWidget = DeleteWidget;
         service.ExecuteWidgetSQL = ExecuteWidgetSQL;
-        service.ExecuteWidgetTemplateSQL = ExecuteWidgetTemplateSQL;
 
         service.GetWidgetTemplates = GetWidgetTemplates;
+        service.PrepareWidgetTemplate = PrepareWidgetTemplate;
+        service.ExecuteWidgetTemplateSQL = ExecuteWidgetTemplateSQL;
 
         return service;
 
@@ -124,6 +125,10 @@
 
         function GetWidgetTemplates() {
             return $httpMock.get(API_URL + '/api/widgets/templates').then(UtilService.handleSuccess, UtilService.handleError('Unable to load widget templates'));
+        };
+
+        function PrepareWidgetTemplate(id) {
+            return $httpMock.get(API_URL + '/api/widgets/templates/' + id + '/prepare').then(UtilService.handleSuccess, UtilService.handleError('Unable to prepare widget template'));
         };
 
         function ExecuteWidgetTemplateSQL(queryParams, sqlTemplateAdapter) {

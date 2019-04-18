@@ -91,27 +91,29 @@
             link: function(scope, element, attrs, ngModel){
 
                 scope.$watch('ngModel', function (newVal, oldVal) {
-                    if(newVal && ! angular.equals(oldVal, newVal)) {
+                    if(notEquals(newVal, oldVal)) {
                         check();
                     }
                 });
 
                 function check() {
                     var checkedClassToAdd = 'zf-checked';
-                    if(angular.equals(scope.ngModel, scope.value)) {
+                    if(! notEquals(scope.ngModel, scope.value)) {
                         element.addClass(checkedClassToAdd);
                     } else {
                         element.removeClass(checkedClassToAdd);
                     }
                 };
 
-                if(ngModel) {
-                    check();
-                }
+                check();
+
+                function notEquals(obj1, obj2) {
+                    return (obj1 && ! obj2) || (!obj1 && obj2) || (!obj1.id && !obj2.id && angular.equals(obj1, obj2)) || (obj1 && obj2 && obj1.id !== obj2.id);
+                };
 
                 scope._onChange = function () {
                     ngModel.$setViewValue(scope.ngModel);
-                    scope.onChange();
+                    scope.onChange && scope.onChange();
                 };
             }
         };

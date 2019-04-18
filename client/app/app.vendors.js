@@ -26,8 +26,6 @@ window.alertify = require('alertifyjs/build/alertify.min');
 require('angular-loading-bar');
 require('angular-scroll');
 require('ng-img-crop/compile/minified/ng-img-crop');
-require('ace-builds/src-min-noconflict/ace');
-require('angular-ui-ace');
 require('../vendors/md-date-range-picker'); //TODO: can't use npm  package because this file has custom changes
 
 import hljs from 'highlight.js/lib/highlight';
