@@ -1,9 +1,25 @@
 <div>
     <zf-sub-header>
         <zf-sub-header-title>{{dashboard.title}}</zf-sub-header-title>
-        <zf-sub-header-options>
+        <zf-sub-header-button hide-phone="true">
+            <div ng-if="MODE !== 'WIDGET_PLACEMENT'">
+                <button has-any-permission="['MODIFY_WIDGETS']" class="fixed-page-header__btn _dashboard zf-header-button" ng-click="showWidgetWizardDialog($event, {model : '{}'}, dashboard);">
+                    <md-icon class="material-icons">add</md-icon>
+                    <span>New widget</span>
+                </button>
+            </div>
+            <div ng-if="MODE === 'WIDGET_PLACEMENT'">
+                <md-button id="discard" class="md-raised" style="background-color: rgba(0, 0, 0, .1)" ng-click="resetGrid();">
+                    Cancel
+                </md-button>
+                <md-button id="apply" class="md-primary md-raised" ng-click="updateWidgetsPosition()">
+                    Apply
+                </md-button>
+            </div>
+        </zf-sub-header-button>
+        <zf-sub-header-options ng-class="{'header-option-selected': MODE === 'WIDGET_PLACEMENT'}">
             <div>
-                <i class="material-icons" data-ng-if="$ctrl.tools['EMAIL']" ng-click="showEmailDialog($event);">
+                <i class="material-icons" data-ng-if="$ctrl.tools['EMAIL'] && MODE !== 'WIDGET_PLACEMENT'" ng-click="showEmailDialog($event);">
                     send
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </i>
@@ -11,26 +27,10 @@
                     dashboard
                     <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
                 </i>
-                <i class="material-icons" ng-if="dashboard.editable" has-any-permission="['MODIFY_DASHBOARDS']" ng-click="showDashboardSettingsModal($event, dashboard, false);">
-                    settings
-                    <md-tooltip md-direction="bottom">Edit dashboard</md-tooltip>
-                </i>
             </div>
         </zf-sub-header-options>
-        <zf-sub-header-button hide-phone="true">
-            <button has-any-permission="['MODIFY_DASHBOARDS']" class="fixed-page-header__btn _dashboard" ng-click="showDashboardSettingsModal($event, {}, true);">
-                <md-icon class="material-icons">add</md-icon>
-                <span>New dashboard</span>
-            </button>
-        </zf-sub-header-button>
     </zf-sub-header>
     <div id="dashboard_content" class="page page-dashboard">
-        <md-fab-trigger id="main-fab" has-any-permission="['MODIFY_WIDGETS']" data-html2canvas-ignore>
-            <md-button id="createWidget" aria-label="menu" class="md-fab md-primary" data-ng-click="showWidgetWizardDialog($event, {model : '{}'}, dashboard);">
-                <md-tooltip md-direction="top">New widget</md-tooltip>
-                <md-icon>add</md-icon>
-            </md-button>
-        </md-fab-trigger>
 	    <div class="row">
 	         <div class="col-lg-12">
 	         	<ul class="nav nav-pills">
@@ -52,8 +52,8 @@
                     <div ng-attr-id="widget-container-{{ widget.id }}" class="panel panel-default grid-stack-item-content" zafira-background-theme="graph">
                         <div class="panel-heading">
                             {{widget.title}}
-                            <span class="show-icon-on-hover pull-right" data-html2canvas-ignore>
-                                <i class="material-icons widget-icon hide-phone" data-ng-if="$ctrl.tools['EMAIL']" data-ng-click="showEmailDialog($event, widget.id)">
+                            <span class="show-icon-on-hover show-phone pull-right" data-html2canvas-ignore>
+                                <i class="material-icons widget-icon" data-ng-if="$ctrl.tools['EMAIL']" data-ng-click="showEmailDialog($event, widget.id)">
                                     send
                                     <md-tooltip md-direction="top">Send by email</md-tooltip>
                                 </i>
@@ -65,29 +65,6 @@
                                     delete
                                     <md-tooltip md-direction="top">Delete from dashboard</md-tooltip>
                                 </i>
-                                <md-menu class="show-phone">
-                                    <i  data-ng-click="$mdMenu.open($event);" class="material-icons widget-icon">more_vert</i>
-                                    <md-menu-content width="2">
-                                        <md-menu-item data-ng-if="$ctrl.tools['EMAIL']">
-                                            <md-button data-ng-click="showEmailDialog($event, widget.id);">
-                                                <md-icon class="material-icons">send</md-icon>
-                                                Send by email
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item has-any-permission="['MODIFY_WIDGETS']">
-                                            <md-button data-ng-click="showNeededWidgetModal($event, widget, false, dashboard);">
-                                                <md-icon class="material-icons">edit</md-icon>
-                                                Edit widget
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item has-any-permission="['MODIFY_WIDGETS']">
-                                            <md-button data-ng-click="deleteDashboardWidget(widget);">
-                                                <md-icon class="material-icons">delete</md-icon>
-                                                Delete from dashboard
-                                            </md-button>
-                                        </md-menu-item>
-                                    </md-menu-content>
-                            </md-menu>
                             </span>
                         </div>
                         <div data-ng-attr-id="{{ widget.id }}" align="center" class="panel-body" data-ng-class="{'graph-box' :  (widget.type == 'linechart' || widget.type == 'piechart')}">

@@ -1,7 +1,6 @@
-(function () {
-    'use strict';
+'use strict';
 
-    angular.module('app.appSidebar', []);
+import appSidebar from './app-sidebar.directive';
 
-    require('./app-sidebar.directive');
-})();
+angular.module('app.appSidebar', [])
+    .directive({ appSidebar });

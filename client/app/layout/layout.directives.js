@@ -8,6 +8,7 @@ const sidebar = angular.element('#nav-container');
 const toggleBottomClassName = 'toggle-bottom';
 const slideTime = 250;
 const CLOSE_ON = ['body'];
+const CLOSE_IGNORE = [];
 
 export const toggleMenu = () => {
     function link(scope, ele, attrs) {
@@ -42,15 +43,21 @@ export const toggleMenu = () => {
             });
         }
         CLOSE_ON.forEach(function (value) {
-            angular.element(value).on('touchstart', closeMenuFunction);
-            angular.element(value).on('mousedown', closeMenuFunction);
+            var element = angular.element(value);
+            element.on('touchstart', closeMenuFunction);
+            element.on('mousedown', closeMenuFunction);
         });
 
         function closeMenuFunction(e) {
-            const isSliceOfSidebar = sidebar ? sidebar.find(e.target).length > 0 : false;
+            var preserveClose = CLOSE_IGNORE.find(function (locator) {
+                return !! e.target.closest(locator);
+            });
+            if(! preserveClose) {
+                const isSliceOfSidebar = sidebar ? sidebar.find(e.target).length > 0 : false;
 
-            if (!isSliceOfSidebar) {
-                closeMenu(scope, ele);
+                if (!isSliceOfSidebar) {
+                    closeMenu(scope, ele);
+                }
             }
         }
     }
