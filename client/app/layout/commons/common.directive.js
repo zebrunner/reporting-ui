@@ -80,13 +80,17 @@
         return {
             restrict: 'E',
             replace: true,
-            transclude: true,
+            transclude: {
+                zfRadioButtonBody: "zfRadioButtonBody",
+                zfRadioButtonControls: "?zfRadioButtonControls"
+            },
             require: '?ngModel',
             template: require('./templates/radio-button.template.html'),
             scope: {
                 ngModel: '=ngModel',
                 value: '=',
-                onChange: '&?'
+                onChange: '&?',
+                disabled: '=?'
             },
             link: function(scope, element, attrs, ngModel){
 

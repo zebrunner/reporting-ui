@@ -2,11 +2,15 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
 
     'ngInject';
 
+    $scope.START_MODE = widget && widget.id ? 'UPDATE' : 'NEW';
+
     const CARDS = {
         currentItem: 0,
         items: [
             {
                 index: 1,
+                stepCount: 1,
+                id: 'choose-create',
                 title: 'Choose widget or create new',
                 nextDisabled: function (form) {
                     return ! $scope.widget.widgetTemplate;
@@ -14,23 +18,28 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 onBackClick: function() {
                 },
                 onLoad: function () {
-                    DashboardService.GetWidgets().then(function (rs) {
-                        if (rs.success) {
-                            $scope.widgets = rs.data.filter(function (widget) {
-                                return widget.widgetTemplate;
-                            });
-                            updateWidgetsToAdd();
-                        } else {
-                            alertify.error(rs.message);
-                        }
-                    });
+                    if(! $scope.widgets) {
+                        DashboardService.GetWidgets().then(function (rs) {
+                            if (rs.success) {
+                                $scope.widgets = rs.data.filter(function (widget) {
+                                    return widget.widgetTemplate;
+                                });
+                                updateWidgetsToAdd();
+                            } else {
+                                alertify.error(rs.message);
+                            }
+                        });
+                    }
                 },
                 need: function (template, widgetId) {
-                    return ! widgetId && template.paramsConfig;
-                }
+                    return ! widgetId && ! template;
+                },
+                scValue: 'title'
             },
             {
                 index: 2,
+                stepCount: 1,
+                id: 'choose',
                 title: 'Choose template',
                 nextDisabled: function (form) {
                     return ! $scope.widget.widgetTemplate;
@@ -38,20 +47,25 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 onBackClick: function() {
                 },
                 onLoad: function () {
-                    DashboardService.GetWidgetTemplates().then(function (rs) {
-                        if(rs.success) {
-                            $scope.templates = rs.data;
-                        } else {
-                            alertify.error(rs.message);
-                        }
-                    });
+                    if(! $scope.templates) {
+                        DashboardService.GetWidgetTemplates().then(function (rs) {
+                            if (rs.success) {
+                                $scope.templates = rs.data;
+                            } else {
+                                alertify.error(rs.message);
+                            }
+                        });
+                    }
                 },
                 need: function (template, widgetId) {
-                    return ! widgetId && template.paramsConfig;
-                }
+                    return ! widgetId;
+                },
+                scValue: 'name'
             },
             {
                 index: 3,
+                stepCount: 2,
+                id: 'set',
                 title: 'Set parameters',
                 nextDisabled: function (form) {
                     return form.params.$invalid;
@@ -69,6 +83,8 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             },
             {
                 index: 4,
+                stepCount: 3,
+                id: 'save',
                 title: 'Save',
                 nextDisabled: function (form) {
                 },
@@ -90,8 +106,39 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         }
     };
 
-    $scope.addToDashboard = function () {
+    var MODE;
 
+    $scope.toEditWidgetMode = function(widget) {
+        MODE = 'UPDATE';
+        var card = getCardById('set');
+        $scope.widget = angular.copy(widget);
+        $scope.onChange();
+        initCard(card);
+    };
+
+    function getCardById(id) {
+        return CARDS.items.find(function (item) {
+            return item.id === id;
+        });
+    };
+
+    $scope.deleteWidget = function (widget) {
+        var confirmedDelete = confirm('Would you like to delete widget "' + widget.title + '" ?');
+        if (confirmedDelete) {
+            DashboardService.DeleteWidget(widget.id).then(function (rs) {
+                if (rs.success) {
+                    $scope.widgets.splice($scope.widgets.indexOfId(widget.id), 1);
+                    if(dashboard.widgets.indexOfId(widget.id) >= 0) {
+                        dashboard.widgets.splice(dashboard.widgets.indexOfId(widget.id), 1);
+                    }
+                    updateWidgetsToAdd();
+                    alertify.success("Widget deleted");
+                }
+                else {
+                    alertify.error(rs.message);
+                }
+            });
+        }
     };
 
     function prepareWidgetTemplate(id) {
@@ -109,11 +156,11 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
 
     function updateWidgetsToAdd () {
         if($scope.widgets && dashboard.widgets) {
-            $scope.unexistWidgets =  $scope.widgets.filter(function(widget) {
-                var existingWidget = dashboard.widgets.filter(function(w) {
-                    return w.id == widget.id;
-                });
-                return !existingWidget.length || widget.id != existingWidget[0].id;
+            dashboard.widgets.forEach(function(w) {
+                var widgetIndex = $scope.widgets.indexOfField('id', w.id);
+                if(widgetIndex) {
+                    $scope.widgets[widgetIndex].existing = true;
+                }
             });
         }
     };
@@ -140,8 +187,11 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
     };
 
     $scope.onWidgetChange = function() {
-        $scope.widget = angular.copy($scope.tempData.widget);
-        return $scope.onChange();
+        if($scope.tempData.widget.id) {
+            MODE = 'ADD';
+            $scope.widget = $scope.tempData.widget;
+            return $scope.onChange();
+        }
     };
 
     $scope.buildConfigs = function(form) {
@@ -283,8 +333,13 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         Reflect.deleteProperty($scope.widget, "model");
         DashboardService.UpdateWidget(widgetType).then(function (rs) {
             if(rs.success) {
-                alertify.success('Widget was updated');
-                $scope.hide('UPDATE', rs.data);
+                if(MODE === 'ADD') {
+                    alertify.success('Widget was added');
+                    $scope.hide('ADD', rs.data);
+                } else {
+                    alertify.success('Widget was updated');
+                    $scope.hide('UPDATE', rs.data);
+                }
             } else {
                 alertify.error(rs.message);
             }
@@ -357,8 +412,31 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
     };
 
     function initCard(card) {
+        $scope.sc = {};
         $scope.card = card;
+        CARDS.currentItem = card.index - 1;
         card.onLoad();
+    };
+
+    $scope.createWidgetMode = function() {
+        $scope.widget = {};
+        $scope.tempData.widget = {};
+        var card = getNextCard();
+        if(widget.id) {
+            $scope.widget = angular.copy(widget);
+            $scope.onChange().then(function (rs) {
+                CARDS.currentItem = getNextCard().index - 1;
+                initCard(card);
+            });
+        } else {
+            initCard(card);
+        }
+    };
+
+    $scope.backToWidgetsMode = function() {
+        $scope.onWidgetChange();
+        var card = getPreviousCard();
+        initCard(card);
     };
 
     $scope.hide = function (action, widget) {

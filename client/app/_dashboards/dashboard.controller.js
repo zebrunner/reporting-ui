@@ -139,21 +139,24 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     $scope.addDashboardWidget = function (widget, hideSuccessAlert) {
         widget.location = getNextEmptyGridArea(defaultWidgetLocation);
         var data = {"id": widget.id, "location": widget.location};
-        DashboardService.AddDashboardWidget($stateParams.dashboardId, data).then(function (rs) {
-            if (rs.success) {
-                $scope.dashboard.widgets.push(widget);
-                $scope.dashboard.widgets.forEach(function (widget) {
-                    widget.location = jsonSafeStringify(widget.location);
-                });
-                loadDashboardData($scope.dashboard, false);
-                if(! hideSuccessAlert) {
-                    alertify.success("Widget added");
+        return $q(function (resolve, reject) {
+            DashboardService.AddDashboardWidget($stateParams.dashboardId, data).then(function (rs) {
+                if (rs.success) {
+                    $scope.dashboard.widgets.push(widget);
+                    $scope.dashboard.widgets.forEach(function (widget) {
+                        widget.location = jsonSafeStringify(widget.location);
+                    });
+                    loadDashboardData($scope.dashboard, false);
+                    if(! hideSuccessAlert) {
+                        alertify.success("Widget added");
+                    }
+                    updateWidgetsToAdd();
                 }
-                updateWidgetsToAdd();
-            }
-            else {
-                alertify.error(rs.message);
-            }
+                else {
+                    alertify.error(rs.message);
+                }
+                resolve(rs);
+            });
         });
     };
 
@@ -447,6 +450,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             clickOutsideToClose:false,
             fullscreen: true,
             autoWrap: false,
+            escapeToClose:false,
             locals: {
                 widget: widget,
                 dashboard: dashboard,
@@ -455,17 +459,22 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         })
         .then(function (rs) {
             switch(rs.action) {
+                case 'ADD':
+                    $scope.addDashboardWidget(rs.widget, true);
+                    break;
                 case 'CREATE':
                     $scope.widgets.push(rs.widget);
                     $scope.addDashboardWidget(rs.widget, true);
-                    updateWidgetsToAdd();
+                    //updateWidgetsToAdd();
                     break;
                 case 'UPDATE':
-                    var index = $scope.dashboard.widgets.indexOfField('id', rs.widget.id);
                     $scope.widgets.splice($scope.widgets.indexOfField('id', rs.widget.id), 1, rs.widget);
-                    $scope.dashboard.widgets.splice(index, 1, rs.widget);
-                    loadWidget(dashboard, $scope.dashboard.widgets[index], dashboard.attributes, false);
-                    updateWidgetsToAdd();
+                    var index = $scope.dashboard.widgets.indexOfField('id', rs.widget.id);
+                    if(index !== -1) {
+                        $scope.dashboard.widgets.splice(index, 1, rs.widget);
+                        loadWidget(dashboard, $scope.dashboard.widgets[index], dashboard.attributes, false);
+                        //updateWidgetsToAdd();
+                    }
                     break;
                 case 'DELETE':
                     delete $scope.widgets[$scope.widgets.indexOfField('id', rs.widget.id)];

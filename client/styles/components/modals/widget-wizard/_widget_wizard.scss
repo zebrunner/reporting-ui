@@ -18,21 +18,53 @@ $wizard-white:          #ffffff;
         min-width: 300px !important;
         height: 576px;
         overflow-y: auto !important;
-        padding: 34px 8px 34px 24px !important;
+        padding: 28px 8px 34px 24px !important;
 
         &_title {
             padding-bottom: $standart-padding;
+            line-height: 20px;
 
-            &_sub {
-                font-size: 14px;
-                letter-spacing: 0.14px;
-                color: $wizard-dark-gray;
+            @media(max-width: $screen-tablet) {
+                height: 74px;
+            }
+
+            &_common, &_search {
+                display: inline-block;
             }
 
             &_common {
                 font-size: 20px;
                 letter-spacing: 0.2px;
                 color: black;
+            }
+
+            &_search {
+                height: 28px;
+                position: absolute;
+                right: 24px;
+                top: 16px;
+
+                @media(max-width: $screen-tablet) {
+                    left: 24px;
+                    top: 56px;
+                }
+
+                label, md-icon {
+                    color: rgba(78, 82, 89, 0.5);
+                }
+
+                label {
+                    font-size: 12px;
+                    letter-spacing: 0.1px;
+                }
+
+                input {
+                    width: 160px;
+                }
+
+                md-icon {
+                    font-size: 18px;
+                }
             }
         }
 
@@ -59,6 +91,28 @@ $wizard-white:          #ffffff;
 
                     &_icon {
                         height: 74%;
+                        position: relative;
+
+                        md-icon {
+                            position: absolute;
+                            right: 33%;
+                            bottom: 16px;
+                            color: rgba(1, 22, 39, 0.4) !important;
+                        }
+
+                        &.item-icon-back {
+                            height: 74%;
+                            position: relative;
+
+                            md-icon {
+                                position: absolute;
+                                height: 29px !important;
+                                left: 22px;
+                                right: auto;
+                                bottom: 16px;
+                                color: rgba(1, 22, 39, 0.4) !important;
+                            }
+                        }
                     }
 
                     &_title {
@@ -68,6 +122,12 @@ $wizard-white:          #ffffff;
                         letter-spacing: normal;
                         color: rgba(1, 22, 39, 0.6);
                         opacity: 0.6;
+
+                        &.item-title-back {
+                            position: relative;
+                            bottom: 38px;
+                            left: 14px;
+                        }
                     }
 
                     label {
@@ -109,9 +169,9 @@ $wizard-white:          #ffffff;
 
                 $parent: &;
 
-                &:not(.zf-checked):not(:hover) {
+                &:not(:hover) {
                     #{$parent}_action {
-                        i {
+                        i, md-icon {
                             display: none;
                         }
                     }
@@ -128,6 +188,22 @@ $wizard-white:          #ffffff;
                         height: 34px;
                         font-size: 34px;
                         color: rgba(0, 0, 0, 0.2);
+                    }
+                }
+
+                &_additional {
+                    position: absolute;
+                    bottom: 0;
+                    right: 15px;
+                    padding: 0 0 $inner-padding $inner-padding;
+                    letter-spacing: 0.1px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: $brand-light;
+
+                    i {
+                        line-height: 17px;
+                        vertical-align: bottom;
                     }
                 }
 
@@ -163,6 +239,9 @@ $wizard-white:          #ffffff;
                         &:before {
                             border: 2px solid $brand-light;
                             opacity: 1;
+                        }
+                        i, md-icon {
+                            color: $brand-light;
                         }
                     }
 
