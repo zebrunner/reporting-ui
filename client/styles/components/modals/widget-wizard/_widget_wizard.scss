@@ -8,6 +8,7 @@ $wizard-white:          #ffffff;
 }
 
 .widget-wizard {
+    min-width: $screen-tablet !important;
     > .md-dialog-content {
         > *[ng-transclude] {
             overflow-y: hidden !important;
@@ -24,10 +25,6 @@ $wizard-white:          #ffffff;
             padding-bottom: $standart-padding;
             line-height: 20px;
 
-            @media(max-width: $screen-tablet) {
-                height: 74px;
-            }
-
             &_common, &_search {
                 display: inline-block;
             }
@@ -42,12 +39,7 @@ $wizard-white:          #ffffff;
                 height: 28px;
                 position: absolute;
                 right: 24px;
-                top: 16px;
-
-                @media(max-width: $screen-tablet) {
-                    left: 24px;
-                    top: 56px;
-                }
+                top: 20px;
 
                 label, md-icon {
                     color: rgba(78, 82, 89, 0.5);
@@ -71,14 +63,10 @@ $wizard-white:          #ffffff;
         &_elements {
             font-size: 0;
             &_item {
-                width: 252px;
-                max-width: 252px;
+                width: calc((100% - (#{$inner-padding} * 2)) / 2);
+                //max-width: 252px;
                 height: 164px;
                 margin: 0 $inner-padding $inner-padding 0;
-
-                @media (min-width: $screen-tablet) {
-                    width: calc((100% - (#{$inner-padding} * 2)) / 2);
-                }
 
                 &_add {
 

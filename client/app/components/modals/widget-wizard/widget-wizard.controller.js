@@ -11,7 +11,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 index: 1,
                 stepCount: 1,
                 id: 'choose-create',
-                title: 'Choose widget or create new',
+                title: 'Choose widget',
                 nextDisabled: function (form) {
                     return ! $scope.widget.widgetTemplate;
                 },
