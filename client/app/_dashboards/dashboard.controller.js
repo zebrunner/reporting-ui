@@ -150,7 +150,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     if(! hideSuccessAlert) {
                         alertify.success("Widget added");
                     }
-                    updateWidgetsToAdd();
                 }
                 else {
                     alertify.error(rs.message);
@@ -171,7 +170,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     });
                     loadDashboardData($scope.dashboard, false);
                     alertify.success("Widget deleted");
-                    updateWidgetsToAdd();
                 }
                 else {
                     alertify.error(rs.message);
@@ -187,19 +185,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         } catch (e) {
             return true;
         }
-    };
-
-    function updateWidgetsToAdd () {
-        $timeout(function () {
-            if($scope.widgets && $scope.dashboard.widgets) {
-                $scope.unexistWidgets =  $scope.widgets.filter(function(widget) {
-                    var existingWidget = $scope.dashboard.widgets.filter(function(w) {
-                        return w.id == widget.id;
-                    });
-                    return !existingWidget.length || widget.id != existingWidget[0].id;
-                });
-            }
-        }, 800);
     };
 
     $scope.resetGrid = function () {
@@ -329,11 +314,9 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         if (confirmedDelete) {
             DashboardService.DeleteWidget(widget.id).then(function (rs) {
                 if (rs.success) {
-                    $scope.widgets.splice($scope.widgets.indexOfId(widget.id), 1);
                     if($scope.dashboard.widgets.indexOfId(widget.id) >= 0) {
                         $scope.dashboard.widgets.splice($scope.dashboard.widgets.indexOfId(widget.id), 1);
                     }
-                    updateWidgetsToAdd();
                     alertify.success("Widget deleted");
                 }
                 else {
@@ -463,21 +446,16 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     $scope.addDashboardWidget(rs.widget, true);
                     break;
                 case 'CREATE':
-                    $scope.widgets.push(rs.widget);
                     $scope.addDashboardWidget(rs.widget, true);
-                    //updateWidgetsToAdd();
                     break;
                 case 'UPDATE':
-                    $scope.widgets.splice($scope.widgets.indexOfField('id', rs.widget.id), 1, rs.widget);
                     var index = $scope.dashboard.widgets.indexOfField('id', rs.widget.id);
                     if(index !== -1) {
                         $scope.dashboard.widgets.splice(index, 1, rs.widget);
                         loadWidget(dashboard, $scope.dashboard.widgets[index], dashboard.attributes, false);
-                        //updateWidgetsToAdd();
                     }
                     break;
                 case 'DELETE':
-                    delete $scope.widgets[$scope.widgets.indexOfField('id', rs.widget.id)];
                     break;
                 default:
                     break;
@@ -505,12 +483,8 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             if(rs) {
                 switch(rs.action) {
                     case 'CREATE':
-                        $scope.widgets.push(rs);
-                        updateWidgetsToAdd();
                         break;
                     case 'UPDATE':
-                        $scope.widgets.splice($scope.widgets.indexOfId(rs.id), 1, rs);
-                        updateWidgetsToAdd();
                         break;
                     default:
                         break;
@@ -587,17 +561,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
 
     function refresh() {
         const currentUser = UserService.currentUser;
-
-        if (currentUser.isAdmin) {
-            DashboardService.GetWidgets().then(function (rs) {
-                if (rs.success) {
-                    $scope.widgets = rs.data;
-                    updateWidgetsToAdd();
-                } else {
-                    alertify.error(rs.message);
-                }
-            });
-        }
 
         if ($scope.dashboard.title && currentUser.refreshInterval) {
             refreshIntervalInterval = $interval(function () {
