@@ -165,9 +165,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             DashboardService.AddDashboardWidget($stateParams.dashboardId, data).then(function (rs) {
                 if (rs.success) {
                     $scope.dashboard.widgets.push(widget);
-                    $scope.dashboard.widgets.forEach(function (widget) {
-                        widget.location = jsonSafeStringify(widget.location);
-                    });
                     loadDashboardData($scope.dashboard, false);
                     if(! hideSuccessAlert) {
                         alertify.success("Widget added");

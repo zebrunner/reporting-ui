@@ -4,6 +4,26 @@
             {{ $ctrl.activeTab.name }}
             <small id="itemsCount" data-ng-if="$ctrl.activeTab.countFunc">({{ $ctrl.activeTab.countFunc.call() }})</small>
         </zf-sub-header-title>
+        <zf-sub-header-button hide-phone="true">
+            <div ng-if="$ctrl.activeTab.name === 'Users'">
+                <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showCreateUserDialog($event)" has-any-permission="['MODIFY_USERS']">
+                    <md-icon class="material-icons">add</md-icon>
+                    <span>New user</span>
+                </button>
+            </div>
+            <div ng-if="$ctrl.activeTab.name === 'Groups'">
+                <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showGroupDialog($event)" has-any-permission="['MODIFY_USER_GROUPS']">
+                    <md-icon class="material-icons">add</md-icon>
+                    <span>New group</span>
+                </button>
+            </div>
+            <div ng-if="$ctrl.activeTab.name ==='Invitations'">
+                <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showInviteUsersDialog($event)" has-any-permission="['INVITE_USERS']">
+                    <md-icon class="material-icons">add</md-icon>
+                    <span>Invite user</span>
+                </button>
+            </div>
+        </zf-sub-header-button>
     </zf-sub-header>
     <div class="page user-view-page">
         <div class="ui-section">
@@ -12,11 +32,6 @@
                                     on-reset="$ctrl.reset()"
                                     class="control-buttons"
                                     ng-if="$ctrl.activeTab.name === 'Users' && ($ctrl.searchActive || $ctrl.isFiltered)"></app-users-controls>
-            </div>
-            <div class="lonely-fab">
-                    <app-users-fabs ng-if="$ctrl.activeTab.name === 'Users'" create-user="$ctrl.showCreateUserDialog()"></app-users-fabs>
-                    <app-group-fabs ng-if="$ctrl.activeTab.name === 'Groups'" create-group="$ctrl.showGroupDialog()"></app-group-fabs>
-                    <app-invites-fabs ng-if="$ctrl.activeTab.name ==='Invitations'" tools="$ctrl.tools" invite="$ctrl.showInviteUsersDialog()"></app-invites-fabs>
             </div>
             <div ng-cloak class="col-md-12 no-padding">
                 <article class="article">
