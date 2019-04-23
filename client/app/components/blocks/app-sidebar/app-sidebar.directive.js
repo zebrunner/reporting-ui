@@ -1,16 +1,16 @@
 'use strict';
-
 import './app-sidebar.scss';
-import appSidebarController from './app-sidebar.controller';
-import appSidebarTemplate from './app-sidebar.html';
+import controller from './app-sidebar.controller';
+import template from './app-sidebar.html';
 
-const appSidebarDirective = function() {
+const appSidebarDirective = function () {
     return {
-        template: appSidebarTemplate,
-        controller: appSidebarController,
+        template,
+        controller,
         controllerAs: '$ctrl',
         restrict: 'E',
         replace: true,
+        bindToController: true
     };
 };
 

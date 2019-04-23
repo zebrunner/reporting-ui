@@ -8,7 +8,7 @@
                 </a>
             </li>
             <li toggle-menu ng-class="{'active':$state.includes('dashboard')}">
-                <a md-button aria-label="menu" ui-sref="dashboard.list" data-ng-click="loadDashboards();">
+                <a md-button aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards();">
                     <i class="material-icons">equalizer</i><span>Boards</span>
                 </a>
                 <ul class="auto-width width-icon" toggle-nav-bottom>
@@ -25,7 +25,7 @@
                             <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" class="nav-controls hide-phone">
                                 <a class="create-view-button" md-button aria-label="menu" href="" data-ng-click="showDashboardSettingsModal($event, {}, true)"></i>New dashboard +</a>
                             </li>
-                            <li data-ng-repeat="dashboard in dashboardList | orderBy:'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">
+                            <li data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy:'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
                                     <i data-ng-if="dashboard.hidden == true" style="font-size: 14px;" class="material-icons">visibility_off</i>
                                     <show-part limit="27" text="dashboard.title"></show-part>
@@ -97,6 +97,107 @@
                     <i class="material-icons">settings_input_component</i>
                     <span>Integrations</span>
                 </a>
+            </li>
+            <li toggle-menu>
+                    <a md-button aria-label="menu" ui-sref="dashboard.list">
+                        <div class="profile-img hide-phone" style="display: inline-block;">
+                            <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" squared="8" size="36" src="../../../../assets/images/project_photo.svg"
+                                icon-visible="$ctrl.currentUser.isAdmin"></profile-photo>
+                            <div class="profile-img-content-wrapper" has-any-role="['ROLE_ADMIN']">
+                                <div class="profile-img-content">
+                                    <span>
+                                        <!-- <md-icon md-svg-src="../../../../assets/images/project_circle_add.svg" ng-click="$ctrl.showUploadImageDialog($event)"
+                                            style="height: 32px; width: 32px;"></md-icon> -->
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="auto-width width-icon" toggle-nav-bottom>
+                        <li class="sub-search nav-search">
+                            <md-input-container class="no-margin no-padding">
+                                <label>Search</label>
+                                <input name="search" ng-model="navSC.title" autocomplete="off"/>
+                                <md-icon>search</md-icon>
+                            </md-input-container>
+                            <md-icon toggle-menu="close" class="search_close-button" ng-click="">close</md-icon>
+                        </li>
+                        <li class="sub-search search-menu">
+                            <ul>
+                                <md-list-item id="clearProject" class="md-2-line" ng-click="$ctrl.resetProjects()">
+                                <md-icon class="material-icons highlight_red">close</md-icon>
+                                <div class="md-list-item-text">
+                                    <h3 class="highlight_red">Clear</h3>
+                                </div>
+                            </md-list-item>
+                            <md-list-item id="createProject" class="md-2-line" ng-click="$ctrl.showProjectDialog()"
+                                has-any-permission="['MODIFY_PROJECTS']">
+                                <md-icon class="material-icons highlight_green">add</md-icon>
+                                <div class="md-list-item-text">
+                                    <h3 class="highlight_green">New</h3>
+                                </div>
+                            </md-list-item>
+                            <md-list-item name="projectName" md-prevent-menu-close class="md-2-line" data-ng-repeat="project in $ctrl.projects | orderBy:'name'">
+                                <md-checkbox md-prevent-menu-close class="md-primary" ng-change="$ctrl.chooseProject();"
+                                    ng-model="project.selected" aria-label="project {{ project.id }}"></md-checkbox>
+                                <div class="md-list-item-text">
+                                    <h3>{{ project.name }}</h3>
+                                </div>
+                            </md-list-item>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            <li>
+                
+                <md-menu id="projects-menu" md-position-mode="right bottom">
+                    <md-button id="projects" md-no-ink class="header-btn" aria-label="menu" ng-click="$mdMenu.open(event); $ctrl.loadProjects();">
+                        
+                    </md-button>
+                    <md-menu-content class="top-header-dropdown" style="z-index:99;" width="3">
+                        <md-list class="md-dense">
+                            <md-list-item id="clearProject" class="md-2-line" ng-click="$ctrl.resetProjects()">
+                                <md-icon class="material-icons highlight_red">close</md-icon>
+                                <div class="md-list-item-text">
+                                    <h3 class="highlight_red">Clear</h3>
+                                </div>
+                            </md-list-item>
+                            <md-list-item id="createProject" class="md-2-line" ng-click="$ctrl.showProjectDialog()"
+                                has-any-permission="['MODIFY_PROJECTS']">
+                                <md-icon class="material-icons highlight_green">add</md-icon>
+                                <div class="md-list-item-text">
+                                    <h3 class="highlight_green">New</h3>
+                                </div>
+                            </md-list-item>
+                            <md-list-item name="projectName" md-prevent-menu-close class="md-2-line" data-ng-repeat="project in $ctrl.projects | orderBy:'name'">
+                                <md-checkbox md-prevent-menu-close class="md-primary" ng-change="$ctrl.chooseProject();"
+                                    ng-model="project.selected" aria-label="project {{ project.id }}"></md-checkbox>
+                                <div class="md-list-item-text">
+                                    <h3>{{ project.name }}</h3>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </md-menu-content>
+                </md-menu>
+            </li>
+            <li>
+                <md-menu md-position-mode="right bottom">
+                    <md-button id="profileMenu" md-no-ink class="header-btn" aria-label="menu" ng-click="$mdMenu.open($event)">
+                        <profile-photo ng-model="$ctrl.currentUser.photoURL" squared="8" size="32" auto-resize="false"></profile-photo>
+                    </md-button>
+                    <md-menu-content style="z-index:99;" width="3">
+                        <md-menu-item>
+                            <md-button aria-label="menu" ui-sref="users.profile">
+                                <md-icon class="material-icons">account_circle</md-icon><span>Profile</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button aria-label="menu" ui-sref="logout">
+                                <md-icon class="material-icons">power_settings_new</md-icon><span>Logout</span>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
             </li>
         </ul>
     </div>
