@@ -1,10 +1,10 @@
 'use strict';
 
-const toolsService = function toolsService($httpMock, API_URL, $q, SettingsService, UtilService) {
+const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) {
     'ngInject';
 
     let loader$ = null;
-    const tools = {
+    let tools = {
 
     };
     const service = {
@@ -12,108 +12,33 @@ const toolsService = function toolsService($httpMock, API_URL, $q, SettingsServi
 
         get tools() { return tools; },
         getTools,
+        fetchToolSettings,
+        updateSettings,
+        fetchToolConnectionStatus,
+
         fillToolSettings,
-        getToolData,
-        saveToolData,
-        getToolStatus,
         setToolStatus,
         isToolConnected,
     };
-
-    function initTools() {
-        return SettingsService.getSettingTools()
-            .then(response => {
-                if (response.success) {
-                    const promises = response.data.map(toolName => {
-
-                        tools[toolName] = tools[toolName] || {};
-                        tools[toolName].name = toolName;
-
-                        return SettingsService.isToolConnected(toolName)
-                            .then(toolResponse => {
-                                if (toolResponse.success) {
-                                    tools[toolName].connected = toolResponse.data;
-                                }
-                            });
-                    });
-
-                    return $q.all(promises)
-                        .then(() => tools)
-                        .finally(() => {
-                            service.initialized = true;
-                        });
-                }
-
-                return $q.reject(response);
-            });
-    }
 
     function getTools(force) {
         if (!force && loader$) {
             return loader$;
         }
 
-        loader$ = initTools();
+        loader$ = fetchTools();
 
         return loader$;
     }
 
-    function getToolData(toolName) {
-        fetchToolData(toolName)
-            .then(res => {
-
-            });
-    }
-
-    function saveToolData(tool) {
-
-    }
-
-    function getToolStatus(toolName) {
-
-    }
-
     function setToolStatus(toolName, status) {
-        const tool = tools[toolName];
+        if (tools[toolName] === status) { return; }
 
-        if (tool.enabled === status) { return $q.resolve(); }
-
-        tool.enabled = status;
-
-        if (!status) {
-            tool.connected = status;
-
-            return $q.resolve(tool);
-        } else {
-            return SettingsService.isToolConnected(toolName)
-                .then(rs => {
-                    if (rs.success) {
-                        tool.connected = rs.data;
-                    } else {
-                        alertify.error(rs.message);
-                    }
-
-                    return tool;
-                });
-        }
-    }
-
-    function fetchToolData(toolName) {
-
+        tools[toolName] = status;
     }
 
     function isToolConnected(toolName) {
-        return tools[toolName] && tools[toolName].connected;
-    }
-
-    function fillToolsSettings(toolName) {
-        SettingsService.getSettingByTool(toolName).then(response => {
-            if (response.success) {
-                const settings = UtilService.settingsAsMap(response.data);
-
-                fillToolSettings(toolName, settings);
-            }
-        });
+        return tools[toolName];
     }
 
     function fillToolSettings(toolName, settings) {
@@ -137,6 +62,33 @@ const toolsService = function toolsService($httpMock, API_URL, $q, SettingsServi
             default:
                 break;
         }
+    }
+
+    function updateSettings(settings) {
+        return $httpMock.put(API_URL + '/api/settings/tools', settings).then(UtilService.handleSuccess, UtilService.handleError('Unable to edit settings'));
+    }
+
+    /* Fetch available tools with their statuses */
+    function fetchTools() {
+        return $httpMock.get(API_URL + '/api/settings/tools')
+            .then(UtilService.handleSuccess, UtilService.handleError('Unable to fetch tools'))
+            .then(response => {
+                if (response.success) {
+                    tools = response.data;
+
+                    return tools;
+                }
+
+                return $q.reject(response);
+            });
+    }
+
+    function fetchToolSettings(toolName) {
+        return $httpMock.get(API_URL + '/api/settings/tool/' + toolName).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch ${toolName} settings`));
+    }
+
+    function fetchToolConnectionStatus(name) {
+        return $httpMock.get(API_URL + '/api/settings/tools/' + name).then(UtilService.handleSuccess, UtilService.handleError('Unable to get tool connection'));
     }
 
     return service;

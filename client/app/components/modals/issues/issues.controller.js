@@ -1,7 +1,6 @@
 'use strict';
 const IssuesModalController = function IssuesModalController(
-        $scope, $mdDialog, $interval, SettingsService, TestService,
-        test, isNewIssue, toolsService) {
+        $scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService) {
     'ngInject';
         
     const vm = {
@@ -307,15 +306,19 @@ const IssuesModalController = function IssuesModalController(
     /* Gets from DB JIRA_CLOSED_STATUS name for the current project*/
 
     function getJiraClosedStatusName() {
-        SettingsService.getSetting('JIRA', 'JIRA_CLOSED_STATUS').
-            then(function successCallback(rs) {
+        toolsService.fetchToolSettings('JIRA')
+            .then(rs => {
                 if (rs.success) {
-                    vm.closedStatusName = rs.data.toUpperCase();
+                    const setting = rs.data.find(({ name }) => name === 'JIRA_CLOSED_STATUS');
+
+                    if (setting) {
+                        vm.closedStatusName = setting.toUpperCase();
+                    }
                 } else {
                     alertify.error(rs.message);
                 }
             });
-    };
+    }
 
     /* On Jira ID input change makes search if conditions are fulfilled */
 

@@ -35,17 +35,11 @@ const integrationsController = function integrationsController($scope, $rootScop
     };
 
     function saveTool(tool) {
-        SettingsService.editSettings(tool.settings)
+        toolsService.updateSettings(tool.settings)
             .then(rs => {
                 if (rs.success) {
-                    tool.connected = rs.data.connected; //TODO: sometimes doesn't work
-
-                    //TODO: we already have actual values on UI (are they different from BE?)
-                    // rs.data.settingList.forEach(function (setting) {
-                    //     settingTool.settings[settingTool.settings.indexOfField('name', setting.name)].value = setting.value;
-                    // });
-                    // settingTool.settings.sort(compareBySettingSortOrder);
-
+                    tool.connected = rs.data.connected;
+                    toolsService.setToolStatus(tool.name, tool.connected);
                     alertify.success('Tool ' + tool.name + ' was changed');
                 } else {
                     alertify.error(rs.message);
@@ -69,21 +63,17 @@ const integrationsController = function integrationsController($scope, $rootScop
         const statusSetting = {...tool.statusSetting};
 
         statusSetting.value = tool.enabled ? 'true' : 'false';
-        SettingsService.editSettings([statusSetting])
+        toolsService.updateSettings([statusSetting])
             .then(function (rs) {
-                console.log(rs.data);
                 if (rs.success) {
-                    tool.statusSetting = statusSetting;
+                    tool.connected = rs.data.connected;
+                    toolsService.setToolStatus(tool.name, tool.connected);
 
                     if (tool.enabled) {
                         alertify.success('Tool ' + tool.name + ' is enabled');
                     } else {
                         alertify.success('Tool ' + tool.name + ' is disabled');
                     }
-                    toolsService.setToolStatus(tool.name, tool.enabled)
-                        .then(updatedTool => {
-                            updatedTool && (tool.connected = updatedTool.connected);
-                        });
                 } else {
                     alertify.error('Unable to change ' + tool.name + ' state');
                 }
@@ -180,7 +170,7 @@ const integrationsController = function integrationsController($scope, $rootScop
     }
 
     function fillToolSettings(tool) {
-        return SettingsService.getSettingByTool(tool.name)
+        return toolsService.fetchToolSettings(tool.name)
             .then(function(settings) {
                 if (settings.success) {
                     const statusSetting = getStatusSetting(tool.name, settings.data);
@@ -206,12 +196,13 @@ const integrationsController = function integrationsController($scope, $rootScop
 
         tool.connectionChecking = true;
 
-        return SettingsService.isToolConnected(tool.name)
+        return toolsService.fetchToolConnectionStatus(tool.name)
             .then(toolResponse => {
                 const finish = Date.now();
+
                 if (toolResponse.success) {
                     tool.connected = toolResponse.data;
-                    toolsService.tools[tool.name].connected = toolResponse.data;
+                    toolsService.setToolStatus(tool.name, tool.connected);
                 }
 
                 //get rid of ugly blinking of loader
@@ -227,7 +218,7 @@ const integrationsController = function integrationsController($scope, $rootScop
     }
 
     function controllerInit() {
-        vm.tools = Object.values(toolsService.tools);
+        vm.tools = Object.keys(toolsService.tools).map(key => ({ name: key }));
         fillToolsSettings();
     }
 

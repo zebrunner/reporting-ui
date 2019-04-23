@@ -3,7 +3,7 @@
 
     angular.module('app').controller('TestInfoController', TestInfoController);
 
-    function TestInfoController($scope, $rootScope, $mdDialog, $interval,  SettingsService,
+    function TestInfoController($scope, $rootScope, $mdDialog, $interval,  toolsService,
                                 TestService, test, isNewIssue, isNewTask, isConnectedToJira,
                                 isJiraEnabled) {
         'ngInject';
@@ -473,13 +473,18 @@
         /* Gets from DB JIRA_CLOSED_STATUS name for the current project*/
 
         var getJiraClosedStatusName = function() {
-            SettingsService.getSetting('JIRA', 'JIRA_CLOSED_STATUS').then(function successCallback(rs) {
-                if(rs.success){
-                    $scope.closedStatusName = rs.data.toUpperCase();
-                } else {
-                    alertify.error(rs.message);
-                }
-            });
+            toolsService.fetchToolSettings('JIRA')
+                .then(rs => {
+                    if (rs.success) {
+                        const setting = rs.data.find(({ name }) => name === 'JIRA_CLOSED_STATUS');
+
+                        if (setting) {
+                            vm.closedStatusName = setting.toUpperCase();
+                        }
+                    } else {
+                        alertify.error(rs.message);
+                    }
+                });
         };
 
         /* On Jira ID input change makes search if conditions are fulfilled */
