@@ -4,7 +4,7 @@
             {{ $ctrl.activeTab.name }}
             <small id="itemsCount" data-ng-if="$ctrl.activeTab.countFunc">({{ $ctrl.activeTab.countFunc.call() }})</small>
         </zf-sub-header-title>
-        <zf-sub-header-button hide-phone="true">
+        <zf-sub-header-button>
             <div ng-if="$ctrl.activeTab.name === 'Users'">
                 <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showCreateUserDialog($event)" has-any-permission="['MODIFY_USERS']">
                     <md-icon class="material-icons">add</md-icon>
