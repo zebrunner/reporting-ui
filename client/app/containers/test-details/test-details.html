@@ -54,7 +54,7 @@
                     </div>
                   </th>
                 </tr>
-                <tr ng-attr-id="test_{{test.id}}" class="test" ng-repeat-end="ng-repeat-end" ng-if="test.show && test.showByStatus && $ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName" md-swipe-left="$ctrl.changeTestStatus(test, 'FAILED');" md-swipe-right="$ctrl.changeTestStatus(test, 'PASSED');" data-ng-repeat="(id, test) in $ctrl.testGroupMode === 'PLAIN' ? $ctrl.testRun.tests : tests | orderObjectBy:$ctrl.testGroups.predicate:$ctrl.testGroups.reverse track by $index" ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED'}" data-ng-hide="$ctrl.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED'">
+                <tr ng-attr-id="test_{{test.id}}" class="test" ng-repeat-end="ng-repeat-end" ng-if="test.show && test.showByStatus && $ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName" data-ng-repeat="(id, test) in $ctrl.testGroupMode === 'PLAIN' ? $ctrl.testRun.tests : tests | orderObjectBy:$ctrl.testGroups.predicate:$ctrl.testGroups.reverse track by $index" ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED'}" data-ng-hide="$ctrl.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED'">
                   <td class="test-info">
                     <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{test.name}}
                       <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></p>
@@ -130,7 +130,7 @@
                           <md-menu-item ng-click="$ctrl.updateTest(test, true);">
                               <md-button>
                                 <md-icon class="material-icons point-icon _green">lens</md-icon><span>Mark as passed</span>
-                              </md-button> 
+                              </md-button>
                             </md-menu-item>
                           <md-menu-item ng-click="$ctrl.updateTest(test, false);">
                             <md-button>
