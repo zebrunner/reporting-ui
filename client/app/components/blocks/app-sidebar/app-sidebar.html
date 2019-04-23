@@ -109,16 +109,13 @@
                     <ul class="auto-width width-icon" toggle-nav-bottom>
                         <li class="sub-search search-menu">
                             <ul>
+                                <li toggle-menu="close" id="createProject" ng-click="$ctrl.showProjectDialog()" has-any-permission="['MODIFY_PROJECTS']">
+                                    <a class="create-view-button" md-button aria-label="menu" href=""></i>New project +</a>
+                                </li>
                                 <li id="clearProject" ng-click="$ctrl.resetProjects()" ui-sref-active="active" class="show-on-hover">
                                     <a aria-label="menu">
                                         <i class="material-icons highlight_red" style="font-size: 14px;">close</i>
                                         <show-part limit="27" text='"Clear"'></show-part>
-                                    </a>
-                                </li>
-                                <li id="createProject" ng-click="$ctrl.showProjectDialog()" has-any-permission="['MODIFY_PROJECTS']">
-                                    <a toggle-menu="close" aria-label="menu">
-                                        <i class="material-icons highlight_green" style="font-size: 14px;">add</i>
-                                        <show-part limit="27" text='"New"'></show-part>
                                     </a>
                                 </li>
                                 <li  name="projectName" md-prevent-menu-close data-ng-repeat="project in $ctrl.projects | orderBy:'name'">
