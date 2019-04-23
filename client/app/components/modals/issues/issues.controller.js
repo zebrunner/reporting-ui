@@ -256,8 +256,6 @@ const IssuesModalController = function IssuesModalController(
                 vm.isNewIssue = !(vm.newIssue.jiraId ===
                     vm.attachedIssue.jiraId);
                 vm.issueTabDisabled = false;
-            } else {
-                alertify.error(rs.message);
             }
         });
     };
