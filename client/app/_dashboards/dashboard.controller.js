@@ -1,7 +1,5 @@
 'use strict';
 
-import dashboardSettingsModalController from './dashboard-settings-modal/dashboard-settings-modal.controller';
-import dashboardSettingsModalTemplate from './dashboard-settings-modal/dashboard-settings-modal.html';
 import widgetDialog from './widget-dialog/widget-dialog.html';
 import widgetDialogController from './widget-dialog/widget-dialog.controller';
 import dashboardEmailModalTemplate from './dashboard-email-modal/dashboard-email-modal.html';
@@ -49,9 +47,33 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         return !angular.element('.grid-stack-one-column-mode').is(':visible');
     };
 
+    $scope.MODE = '';
+
     $scope.startEditWidgets = function () {
         angular.element('.grid-stack').gridstack($scope.gridstackOptions).data('gridstack').enable();
-        showGridActionToast();
+        $scope.MODE = 'WIDGET_PLACEMENT';
+    };
+
+    $scope.updateWidgetsPosition = function(){
+        var widgets = [];
+        for(var i = 0; i < $scope.dashboard.widgets.length; i++) {
+            var currentWidget = $scope.dashboard.widgets[i];
+            var widgetData = {};
+            angular.copy(currentWidget, widgetData);
+            widgetData.location = JSON.stringify(widgetData.location);
+            widgets.push({'id': currentWidget.id, 'location': widgetData.location});
+        }
+        DashboardService.UpdateDashboardWidgets($stateParams.dashboardId, widgets).then(function (rs) {
+            if (rs.success) {
+                angular.copy(rs.data, $scope.pristineWidgets);
+                $scope.resetGrid();
+                alertify.success("Widget positions were updated");
+            }
+            else {
+                alertify.error(rs.message);
+            }
+            $scope.MODE = '';
+        });
     };
 
     var defaultWidgetLocation = '{ "x":0, "y":0, "width":4, "height":11 }';
@@ -139,21 +161,23 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     $scope.addDashboardWidget = function (widget, hideSuccessAlert) {
         widget.location = getNextEmptyGridArea(defaultWidgetLocation);
         var data = {"id": widget.id, "location": widget.location};
-        DashboardService.AddDashboardWidget($stateParams.dashboardId, data).then(function (rs) {
-            if (rs.success) {
-                $scope.dashboard.widgets.push(widget);
-                $scope.dashboard.widgets.forEach(function (widget) {
-                    widget.location = jsonSafeStringify(widget.location);
-                });
-                loadDashboardData($scope.dashboard, false);
-                if(! hideSuccessAlert) {
-                    alertify.success("Widget added");
+        return $q(function (resolve, reject) {
+            DashboardService.AddDashboardWidget($stateParams.dashboardId, data).then(function (rs) {
+                if (rs.success) {
+                    $scope.dashboard.widgets.push(widget);
+                    $scope.dashboard.widgets.forEach(function (widget) {
+                        widget.location = jsonSafeStringify(widget.location);
+                    });
+                    loadDashboardData($scope.dashboard, false);
+                    if(! hideSuccessAlert) {
+                        alertify.success("Widget added");
+                    }
                 }
-                updateWidgetsToAdd();
-            }
-            else {
-                alertify.error(rs.message);
-            }
+                else {
+                    alertify.error(rs.message);
+                }
+                resolve(rs);
+            });
         });
     };
 
@@ -168,7 +192,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     });
                     loadDashboardData($scope.dashboard, false);
                     alertify.success("Widget deleted");
-                    updateWidgetsToAdd();
                 }
                 else {
                     alertify.error(rs.message);
@@ -184,19 +207,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         } catch (e) {
             return true;
         }
-    };
-
-    function updateWidgetsToAdd () {
-        $timeout(function () {
-            if($scope.widgets && $scope.dashboard.widgets) {
-                $scope.unexistWidgets =  $scope.widgets.filter(function(widget) {
-                    var existingWidget = $scope.dashboard.widgets.filter(function(w) {
-                        return w.id == widget.id;
-                    });
-                    return !existingWidget.length || widget.id != existingWidget[0].id;
-                });
-            }
-        }, 800);
     };
 
     $scope.resetGrid = function () {
@@ -219,50 +229,9 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     widget.location.width, widget.location.height);
             }
         });
+        $scope.MODE = '';
         gridstack.disable();
         //gridstack.commit();
-    };
-
-    function showGridActionToast() {
-        $mdToast.show({
-            hideDelay: 0,
-            position: 'bottom right',
-            scope: $scope,
-            preserveScope: true,
-            controller  : function ($scope, $mdToast) {
-                'ngInject';
-
-                $scope.updateWidgetsPosition = function(){
-                    var widgets = [];
-                    for(var i = 0; i < $scope.dashboard.widgets.length; i++) {
-                        var currentWidget = $scope.dashboard.widgets[i];
-                        var widgetData = {};
-                        angular.copy(currentWidget, widgetData);
-                        widgetData.location = JSON.stringify(widgetData.location);
-                        widgets.push({'id': currentWidget.id, 'location': widgetData.location});
-                    }
-                    DashboardService.UpdateDashboardWidgets($stateParams.dashboardId, widgets).then(function (rs) {
-                        if (rs.success) {
-                            angular.copy(rs.data, $scope.pristineWidgets);
-                            $scope.resetGrid();
-                            $scope.closeToast();
-                            alertify.success("Widget positions were updated");
-                        }
-                        else {
-                            alertify.error(rs.message);
-                        }
-                    });
-                };
-
-                $scope.closeToast = function() {
-                    $mdToast
-                        .hide()
-                        .then(function() {
-                        });
-                };
-            },
-            template : require('./widget-placement_toast.html')
-        });
     };
 
     var setQueryParams = function(dashboardName){
@@ -326,11 +295,9 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         if (confirmedDelete) {
             DashboardService.DeleteWidget(widget.id).then(function (rs) {
                 if (rs.success) {
-                    $scope.widgets.splice($scope.widgets.indexOfId(widget.id), 1);
                     if($scope.dashboard.widgets.indexOfId(widget.id) >= 0) {
                         $scope.dashboard.widgets.splice($scope.dashboard.widgets.indexOfId(widget.id), 1);
                     }
-                    updateWidgetsToAdd();
                     alertify.success("Widget deleted");
                 }
                 else {
@@ -395,42 +362,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     //         });
     // };
 
-    $scope.showDashboardSettingsModal = function (event, dashboard, isNew) {
-        $mdDialog.show({
-            controller: dashboardSettingsModalController,
-            template: dashboardSettingsModalTemplate,
-            parent: angular.element(document.body),
-            targetEvent: event,
-            clickOutsideToClose: true,
-            fullscreen: true,
-            autoWrap: false,
-            locals: {
-                dashboard: dashboard,
-                isNew: isNew
-            }
-        })
-        //TODO: what the reason of this action?
-        .then(function (rs) {
-            if(rs) {
-                switch(rs.action) {
-                    case 'CREATE':
-                        $state.go('dashboard.page', {dashboardId: rs.id});
-                        $rootScope.dashboardList.splice(rs.position, 0, rs);
-                        break;
-                    case 'UPDATE':
-                        rs.widgets = $scope.dashboard.widgets;
-                        $scope.dashboard = angular.copy(rs);
-                        $rootScope.dashboardList.splice(rs.position, 1, rs);
-                        break;
-                    default:
-                        break;
-                }
-                delete rs.action;
-            }
-        }, function () {
-        });
-    };
-
     $scope.showNeededWidgetModal = function(event, widget, isNew, dashboard) {
         if($scope.ECHART_TYPES.indexOf(widget.type) !== -1 && widget.widgetTemplate) {
             $scope.showWidgetWizardDialog(event, widget, dashboard);
@@ -445,8 +376,10 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             template: widgetWizardModalTemplate,
             parent: angular.element(document.body),
             clickOutsideToClose:false,
+            targetEvent: event,
             fullscreen: true,
             autoWrap: false,
+            escapeToClose:false,
             locals: {
                 widget: widget,
                 dashboard: dashboard,
@@ -455,20 +388,20 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         })
         .then(function (rs) {
             switch(rs.action) {
-                case 'CREATE':
-                    $scope.widgets.push(rs.widget);
+                case 'ADD':
                     $scope.addDashboardWidget(rs.widget, true);
-                    updateWidgetsToAdd();
+                    break;
+                case 'CREATE':
+                    $scope.addDashboardWidget(rs.widget, true);
                     break;
                 case 'UPDATE':
                     var index = $scope.dashboard.widgets.indexOfField('id', rs.widget.id);
-                    $scope.widgets.splice($scope.widgets.indexOfField('id', rs.widget.id), 1, rs.widget);
-                    $scope.dashboard.widgets.splice(index, 1, rs.widget);
-                    loadWidget(dashboard, $scope.dashboard.widgets[index], dashboard.attributes, false);
-                    updateWidgetsToAdd();
+                    if(index !== -1) {
+                        $scope.dashboard.widgets.splice(index, 1, rs.widget);
+                        loadWidget(dashboard, $scope.dashboard.widgets[index], dashboard.attributes, false);
+                    }
                     break;
                 case 'DELETE':
-                    delete $scope.widgets[$scope.widgets.indexOfField('id', rs.widget.id)];
                     break;
                 default:
                     break;
@@ -496,12 +429,8 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             if(rs) {
                 switch(rs.action) {
                     case 'CREATE':
-                        $scope.widgets.push(rs);
-                        updateWidgetsToAdd();
                         break;
                     case 'UPDATE':
-                        $scope.widgets.splice($scope.widgets.indexOfId(rs.id), 1, rs);
-                        updateWidgetsToAdd();
                         break;
                     default:
                         break;
@@ -578,17 +507,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
 
     function refresh() {
         const currentUser = UserService.currentUser;
-
-        if (currentUser.isAdmin) {
-            DashboardService.GetWidgets().then(function (rs) {
-                if (rs.success) {
-                    $scope.widgets = rs.data;
-                    updateWidgetsToAdd();
-                } else {
-                    alertify.error(rs.message);
-                }
-            });
-        }
 
         if ($scope.dashboard.title && currentUser.refreshInterval) {
             refreshIntervalInterval = $interval(function () {

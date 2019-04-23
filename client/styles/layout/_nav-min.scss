@@ -160,7 +160,7 @@
                         }*/
                     }
 
-                    > li:not(.nav-search) {
+                    > li:not(.nav-search):not(.nav-controls) {
                         height: calc(95% - 40px);
                         @media (max-width:$screen-sm) {
                             height: calc(95% - 60px);

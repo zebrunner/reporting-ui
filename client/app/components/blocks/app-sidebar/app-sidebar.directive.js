@@ -1,16 +1,17 @@
-(function() {
-    'use strict';
+'use strict';
 
-    require('./app-sidebar.scss');
-    require('./app-sidebar.controller');
+import './app-sidebar.scss';
+import appSidebarController from './app-sidebar.controller';
+import appSidebarTemplate from './app-sidebar.html';
 
-    angular.module('app.appSidebar').directive('appSidebar', function() {
-        return {
-            template: require('./app-sidebar.html'),
-            controller: 'AppSidebarController',
-            controllerAs: '$ctrl',
-            restrict: 'E',
-            replace: true,
-        };
-    });
-})();
+const appSidebarDirective = function() {
+    return {
+        template: appSidebarTemplate,
+        controller: appSidebarController,
+        controllerAs: '$ctrl',
+        restrict: 'E',
+        replace: true,
+    };
+};
+
+export default appSidebarDirective;

@@ -1,6 +1,7 @@
 <div class="zf-radio-button">
     <label>
-        <div ng-transclude></div>
-        <input type="radio" name="checkboxGroup" ng-model="ngModel" ng-change="_onChange();" ng-value="value"/>
+        <div ng-transclude="zfRadioButtonBody"></div>
+        <input type="radio" name="checkboxGroup" ng-model="ngModel" ng-change="_onChange();" ng-disabled="disabled" ng-value="value"/>
     </label>
+    <div ng-transclude="zfRadioButtonControls"></div>
 </div>
