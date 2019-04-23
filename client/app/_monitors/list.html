@@ -4,6 +4,14 @@
             Monitors
             <small id="itemsCount" data-ng-if="sr.totalResults">({{sr.totalResults}})</small>
         </zf-sub-header-title>
+        <zf-sub-header-button hide-phone="true">
+            <div has-any-permission="['MODIFY_MONITORS']">
+                <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="openMonitorDialog($event)">
+                    <md-icon class="material-icons">add</md-icon>
+                    <span>New monitor</span>
+                </button>
+            </div>
+        </zf-sub-header-button>
     </zf-sub-header>
     <div class="ui-section page">
         <div layout="row" layout-xs="column" class="fixed-search-column no-padding" style="min-width: 320px;">
@@ -16,19 +24,6 @@
                 </button>
             </div>
         </div>
-        <md-fab-speed-dial id="main-fab" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_MONITORS']">
-            <md-fab-trigger>
-                <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
-                    <span class="fa fa-bars"></span>
-                </md-button>
-            </md-fab-trigger>
-            <md-fab-actions>
-                <md-button id="newMonitor" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-click="openMonitorDialog($event)">
-                    <md-tooltip md-direction="top">New monitor</md-tooltip>
-                    <span class="fa fa-plus"></span>
-                </md-button>
-            </md-fab-actions>
-        </md-fab-speed-dial>
         <div class="col-md-12 no-padding">
             <article class="article">
                     <md-card class="no-margin-h">
