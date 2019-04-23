@@ -21,6 +21,10 @@ $wizard-white:          #ffffff;
         overflow-y: auto !important;
         padding: 28px 8px 34px 24px !important;
 
+        @media(max-width: $screen-phone) {
+            height: 100%;
+        }
+
         &_title {
             padding-bottom: $standart-padding;
             line-height: 20px;

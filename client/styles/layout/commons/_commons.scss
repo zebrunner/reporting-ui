@@ -12,7 +12,11 @@ $red: #d2333b;
     padding-bottom: 40px;
 
     @media(max-width: $screen-phone) {
-        padding: 0;
+        padding: 0 !important;
+
+        > form {
+            height: 100%;
+        }
     }
     .zf-modal-container {
         text-align: left !important;
