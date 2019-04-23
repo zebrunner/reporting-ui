@@ -18,6 +18,7 @@ import uploadImageModalTemplate
             version: null,
             dashboardList: [],
             views: [],
+            projects: [],
             $state: $state,
             hasHiddenDashboardPermission,
             loadViews,
@@ -25,6 +26,11 @@ import uploadImageModalTemplate
             showViewDialog,
             showProjectDialog,
             showUploadImageDialog,
+            loadProjects,
+            selectedProjectsPresent,
+            joinProjectNames,
+            resetProjects,
+            chooseProject,
 
             get companyLogo() { return $rootScope.companyLogo; },
             get currentUser() { return UserService.currentUser; },
@@ -208,6 +214,77 @@ import uploadImageModalTemplate
                     fileTypes: 'COMMON',
                 }
             });
+        }
+
+        function bindListeners() {
+            onMenuCloseSubscr = $scope.$on('$mdMenuClose', function(name, listener) {
+                if (listener.attr('id') === 'projects-menu') {
+                    const projects = projectsService.getSelectedProjects();
+    
+                    if (!angular.equals(projects, vm.selectedProjects)) {
+                        if (!projects && !vm.selectedProjects) { return; }
+                        if (vm.selectedProjects && vm.selectedProjects.length) {
+                            projectsService.setSelectedProjects(vm.selectedProjects);
+                        } else {
+                            projectsService.resetSelectedProjects();
+                        }
+                        $timeout(() => {
+                            $state.reload();
+                        });
+                    }
+                }
+            });
+    
+            $scope.$on('$destroy', () => {
+                onMenuCloseSubscr && onMenuCloseSubscr();
+            });
+        }
+    
+        function loadProjects() {
+            ConfigService.getConfig('projects').then(function(rs) {
+                if (rs.success) {
+                    vm.projects = rs.data;
+    
+                    if (vm.selectedProjects) {
+                        vm.projects.forEach(function (project) {
+                            if (vm.selectedProjects.find(({id}) => project.id === id)) {
+                                project.selected = true;
+                            }
+                        });
+                    }
+                } else {
+                    alertify.error('Unable to load projects');
+                }
+            });
+        }
+    
+        function selectedProjectsPresent() {
+            return vm.selectedProjects && vm.selectedProjects.length;
+        }
+    
+        function joinProjectNames() {
+            var names = vm.selectedProjects.map(project => project.name).join(', ');
+    
+            if (names.length > 10) {
+                names = names.substring(0, 10) + '....';
+            }
+    
+            return names;
+        }
+    
+        function resetProjects() {
+            projectsService.resetSelectedProjects();
+            vm.selectedProjects = [];
+            vm.projects.forEach(project => project.selected = false);
+            $timeout(() => {
+                $state.reload();
+            });
+        }
+    
+        function chooseProject() {
+            $timeout(() => {
+                vm.selectedProjects = vm.projects.filter(project => project.selected);
+            }, 0);
         }
 
         function ViewController($scope, $mdDialog, view) {

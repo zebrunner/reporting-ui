@@ -1,0 +1,19 @@
+@import
+    "../global/var",   
+    "../global/var-extra";
+
+.nav-container {
+    .nav {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        li {
+            &.profile, &.projects {
+                align-self: flex-end;
+                a.md-button {
+                    padding: 8px 14px !important;
+                }
+            }
+        }
+    }
+}
