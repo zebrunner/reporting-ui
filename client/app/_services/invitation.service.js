@@ -3,15 +3,16 @@
 
     angular
         .module('app.services')
-        .factory('InvitationService', ['$httpMock', '$cookies', '$rootScope', '$state', 'UtilService', 'UserService', 'API_URL', InvitationService])
+        .factory('InvitationService', ['$httpMock', '$cookies', '$rootScope', '$state', '$httpParamSerializer', 'UtilService', 'UserService', 'API_URL', InvitationService])
 
-    function InvitationService($httpMock, $cookies, $rootScope, $state, UtilService, UserService, API_URL) {
+    function InvitationService($httpMock, $cookies, $rootScope, $state, $httpParamSerializer, UtilService, UserService, API_URL) {
         let invitations = [];
         const service = {
             invite,
             retryInvite,
             getInvitation,
             getAllInvitations,
+            search,
             deleteInvitation,
             get invitations() {
                 return invitations;
@@ -37,6 +38,11 @@
 
         function getAllInvitations() {
             return $httpMock.get(API_URL + '/api/invitations/all').then(UtilService.handleSuccess, UtilService.handleError('Failed to get all user invitations'));
+        }
+
+        function search(sc) {
+            var path = $httpParamSerializer({query: sc.query, page: sc.page, pageSize: sc.pageSize, orderBy: sc.orderBy, sortOrder: sc.sortOrder});
+            return $httpMock.get(API_URL + '/api/invitations/search?' + path).then(UtilService.handleSuccess, UtilService.handleError('Failed to search user invitations'));
         }
 
         function deleteInvitation(idOrEmail) {

@@ -84,11 +84,32 @@
                   <span>Cases</span>
                 </a>
             </li-->
-            <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$ctrl.$state.includes('users')}" toggle-nav-bottom>
-                <a md-button aria-label="menu" ui-sref="users.list"  has-any-permission="['VIEW_USERS']">
+            <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$ctrl.$state.includes('users')}" toggle-menu>
+                <a md-button aria-label="menu" ui-sref="users.list"  has-any-permission="['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS']">
                     <i class="material-icons">supervisor_account</i>
                     <span>Users</span>
                 </a>
+                <ul class="auto-width width-icon">
+                    <li class="sub-search search-menu">
+                        <ul toggle-nav-bottom>
+                            <li style="position: relative;" has-any-permission="['MODIFY_USERS', 'VIEW_USERS']">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.list">
+                                    <span>Users</span>
+                                </a>
+                            </li>
+                            <li style="position: relative;" has-any-permission="['MODIFY_USER_GROUPS']">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="groups.list">
+                                    <span>Groups</span>
+                                </a>
+                            </li>
+                            <li style="position: relative;" has-any-permission="['INVITE_USERS', 'MODIFY_INVITATIONS']">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="invitations.list">
+                                    <span>Invitations</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </li>
             <li ui-sref-active="active" toggle-nav-bottom>
                 <a md-button aria-label="menu" ui-sref="monitors" has-any-permission="['VIEW_MONITORS']">

@@ -1,69 +1,127 @@
 <div>
     <zf-sub-header>
         <zf-sub-header-title>
-            {{ $ctrl.activeTab.name }}
+            Users
         </zf-sub-header-title>
+        <zf-sub-header-options>
+            <md-input-container class="no-margin no-padding">
+                <label>Search</label>
+                <input ng-model="$ctrl.sc.query" ng-change="$ctrl.search();" autocomplete="off"/>
+                <md-icon>search</md-icon>
+            </md-input-container>
+        </zf-sub-header-options>
         <zf-sub-header-button>
-            <div ng-if="$ctrl.activeTab.name === 'Users'">
-                <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showCreateUserDialog($event)" has-any-permission="['MODIFY_USERS']">
-                    <md-icon class="material-icons">add</md-icon>
-                    <span>New user</span>
-                </button>
-            </div>
-            <div ng-if="$ctrl.activeTab.name === 'Groups'">
-                <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showGroupDialog($event)" has-any-permission="['MODIFY_USER_GROUPS']">
-                    <md-icon class="material-icons">add</md-icon>
-                    <span>New group</span>
-                </button>
-            </div>
-            <div ng-if="$ctrl.activeTab.name ==='Invitations'">
-                <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showInviteUsersDialog($event)" has-any-permission="['INVITE_USERS']">
-                    <md-icon class="material-icons">add</md-icon>
-                    <span>Invite user</span>
-                </button>
-            </div>
+            <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showCreateUserDialog($event)" has-any-permission="['MODIFY_USERS']">
+                <md-icon class="material-icons">add</md-icon>
+                <span>New user</span>
+            </button>
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page user-view-page">
         <div class="ui-section">
-            <div layout="row" layout-xs="column" class="no-padding fixed-search-column users__header-actions">
-                <app-users-controls on-search="$ctrl.search()"
-                                    on-reset="$ctrl.reset()"
-                                    class="control-buttons"
-                                    ng-if="$ctrl.activeTab.name === 'Users' && ($ctrl.searchActive || $ctrl.isFiltered)"></app-users-controls>
-            </div>
-            <div ng-cloak class="col-md-12 no-padding">
+            <md-input-container class="no-margin no-padding">
+                <label>Search</label>
+                <input ng-model="$ctrl.sc.query" ng-change="$ctrl.search();" autocomplete="off"/>
+                <md-icon>search</md-icon>
+            </md-input-container>
+            <!--<div layout="row" layout-xs="column" class="no-padding fixed-search-column users__header-actions">
+                <div class="header-actions">
+                    <button id="search" class="md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.search();">
+                        <b>Search</b>
+                    </button>
+                    <button id="clear" class="md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.reset();">
+                        <b>Reset</b>
+                    </button>
+                </div>
+            </div>-->
+            <div ng-cloak class="col-md-12 no-padding _page-card">
                 <article class="article">
                     <md-card class="no-margin-h">
-                        <md-tabs md-no-pagination="true" md-no-ink md-stretch-tabs="never" md-dynamic-height md-border-bottom md-selected="$ctrl.selectedTabIndex">
-                            <md-tab ng-disabled="! tab.show();" ng-repeat="tab in $ctrl.tabs" label="{{ tab.name }}" md-on-select="$ctrl.switchTab(tab, $index);">
-                                    <app-users ng-if="tab.name === 'Users' && tab.show();"
-                                               tabs="$ctrl.tabs"
-                                               source="$ctrl.sr"
-                                               search-value="$ctrl.sc"
-                                               on-search-change="$ctrl.onSearchChange(fields)"
-                                               on-search="$ctrl.search()"
-                                               search-act="$ctrl.searchActive"></app-users>
-                                    <app-group ng-if="tab.name === 'Groups' && tab.show();"
-                                               tabs="$ctrl.tabs" 
-                                               groups="$ctrl.groups" 
-                                               show-group="$ctrl.showGroupDialog($event, group)"
-                                               delete-group="$ctrl.deleteGroup(group)"
-                                               search="$ctrl.querySearch(criteria, group)"
-                                               add-user="$ctrl.addUserToGroup(user, group)"
-                                               delete-user="$ctrl.deleteUserFromGroup(user, group)"></app-group>
-                                    <app-invites ng-if="tab.name === 'Invitations' && tab.show();"
-                                                 tabs="$ctrl.tabs"
-                                                 on-search="$ctrl.search(data)"
-                                                 on-switch-tab="$ctrl.switchTab(tab, index)"
-                                                 invitations="invitations"
-                                                 groups="$ctrl.groups"></app-invites>
-                            </md-tab>
-                        </md-tabs>
+                        <div>
+                            <md-table-container>
+                                <table class="table-hover users-table" md-table zafira-background-theme="table">
+                                    <thead md-head style="position: parent;">
+                                    <tr md-row>
+                                        <th md-column>ID</th>
+                                        <th md-column>Username</th>
+                                        <th md-column>Email</th>
+                                        <th md-column>First/Last name</th>
+                                        <th md-column>Status</th>
+                                        <th md-column>Source</th>
+                                        <th md-column class="no-padding">Registration date</th>
+                                        <th md-column></th>
+                                    </tr>
+                                    <md-button type="submit" class="hide">Search</md-button>
+                                    </thead>
+                                    <tbody md-body name="usersTable">
+                                    <tr md-row ng-repeat="user in $ctrl.sr.results">
+                                        <td md-cell>
+                                            <profile-photo name="userPhoto" ng-model="user.photoURL" size="35" class="grey-icon" label="#{{user.id}}"></profile-photo>
+                                        </td>
+                                        <td md-cell>
+                                            <b name="userUsername">{{user.username}}</b>
+                                        </td>
+                                        <td name="userEmail" md-cell>{{user.email}}</td>
+                                        <td name="userFirstLastName" md-cell>{{user.firstName}} {{user.lastName}}</td>
+                                        <td md-cell>
+                                            <span name="status" ng-class="{'text-success': user.status == 'ACTIVE', 'text-error': user.status == 'INACTIVE'}" class="label">{{ user.status}}</span>
+                                        </td>
+                                        <td md-cell>
+                                            <span name="status" class="label black_font">{{ user.source}}</span>
+                                        </td>
+                                        <td md-cell style="padding-right: 0;">
+                                            <span name="userCreated">
+                                                {{user.createdAt | date}}
+                                            </span>
+                                            <span class="time" data-ng-if="user.lastLogin">
+                                                last login <time name="lastLogin" am-time-ago="user.lastLogin" title="{{ main.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
+                                            </span>
+                                            <span class="time" data-ng-if="!user.lastLogin">
+                                                never logged in
+                                            </span>
+                                        </td>
+                                        <td md-cell>
+                                            <md-menu class="pull-right">
+                                                <md-button name="userMenu" aria-label="User settings" class="md-icon-button"
+                                                           data-ng-click="$mdMenu.open($event);">
+                                                    <md-icon class="material-icons">more_vert</md-icon>
+                                                </md-button>
+                                                <md-menu-content width="2">
+                                                    <md-menu-item has-any-permission="['MODIFY_USERS']">
+                                                        <md-button name="userEdit" data-ng-click="$ctrl.showEditProfileDialog($event, user, $index)">
+                                                            <md-icon class="material-icons">settings</md-icon>
+                                                            Edit
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="user.source == 'INTERNAL'" has-any-permission="['MODIFY_USERS']">
+                                                        <md-button name="userChangePassword" data-ng-click="$ctrl.showChangePasswordDialog($event, user, false)">
+                                                            <md-icon class="material-icons">lock_outline</md-icon>
+                                                            Change password
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })" style="padding-top: 12px">
+                                                            <md-icon class="material-icons">timeline</md-icon>
+                                                            Performance
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </td>
+                                    </tr>
+                                    <tr md-row data-ng-if="source.results.length == 0">
+                                        <td id="noData" md-cell colspan="8" class="text-center">No users</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                            <md-table-pagination id="pagination" zafira-background-theme="pagination" ng-if="$ctrl.sr.results.length != 0"
+                                                 md-limit="$ctrl.sc.pageSize" md-limit-options=false md-page="$ctrl.sc.page" md-total="{{$ctrl.sr.totalResults}}"
+                                                 md-page-select=false md-boundary-links=true md-on-paginate="$ctrl.search"></md-table-pagination>
+                        </div>
                     </md-card>
                 </article>
             </div>
         </div>
     </div>
 </div>
-

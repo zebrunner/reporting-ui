@@ -75,7 +75,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     var stopCriteria = '########';
 
     function querySearch(criteria, user) {
-        $scope.usersSearchCriteria.email = criteria;
+        $scope.usersSearchCriteria.query = criteria;
         currentText = criteria;
         if (!criteria.includes(stopCriteria)) {
             stopCriteria = '########';

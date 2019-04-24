@@ -252,6 +252,56 @@
                             });
                     }
                 })
+                .state('groups', {
+                    url: '/users/groups',
+                    abstract: true,
+                    template: '<ui-view />',
+                    data: {
+                        requireLogin: true
+                    }
+                })
+                .state('groups.list', {
+                    url: '',
+                    component: 'groupsComponent',
+                    data: {
+                        requireLogin: true,
+                        classes: 'p-users'
+                    },
+                    lazyLoad: ($transition$) => {
+                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                        return import(/* webpackChunkName: "users" */ '../_groups/groups.module.js')
+                            .then(mod => $ocLazyLoad.load(mod.groupsModule))
+                            .catch(err => {
+                                throw new Error('Can\'t load groupsModule module, ' + err);
+                            });
+                    }
+                })
+                .state('invitations', {
+                    url: '/users/invitations?query&page&pageSize&orderBy&sortOrder',
+                    abstract: true,
+                    template: '<ui-view />',
+                    data: {
+                        requireLogin: true
+                    }
+                })
+                .state('invitations.list', {
+                    url: '',
+                    component: 'invitationsComponent',
+                    data: {
+                        requireLogin: true,
+                        classes: 'p-users'
+                    },
+                    lazyLoad: ($transition$) => {
+                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                        return import(/* webpackChunkName: "users" */ '../_invitations/invitations.module.js')
+                            .then(mod => $ocLazyLoad.load(mod.invitationsModule))
+                            .catch(err => {
+                                throw new Error('Can\'t load invitationsModule module, ' + err);
+                            });
+                    }
+                })
                 .state('users.profile', {
                     url: '/profile',
                     component: 'userComponent',

@@ -1,5 +1,5 @@
 import template from './list.html';
-import controller from './user.view.controller';
+import controller from './users.controller';
 
 const usersComponent = {
     template,
