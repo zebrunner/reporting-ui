@@ -6,7 +6,7 @@
         .controller('ViewController', ViewController);
 
     // **************************************************************************
-    function ViewController($scope, $location, $state, $mdDialog, $stateParams, UtilService, ConfigService,
+    function ViewController($scope, $location, $state, $mdDialog, $stateParams, UtilService, toolsService,
                             TestRunService, JobService, ViewService, TestService, API_URL) {
         'ngInject';
 
@@ -14,6 +14,7 @@
         $scope.jobs = [];
         $scope.jobViews = {};
         $scope.testRuns = {};
+        $scope.isToolConnected = toolsService.isToolConnected;
 
         $scope.UtilService = UtilService;
 
@@ -104,11 +105,6 @@
                     break;
             }
         };
-
-        // TODO: why we don't get this data from tools service?
-        ConfigService.getConfig("jenkins").then(function(rs) {
-            $scope.jenkinsEnabled = rs.data.connected;
-        });
 
         $scope.loadView = function(){
             ViewService.getViewById($stateParams.id).then(function(rs) {
@@ -308,7 +304,7 @@
         };
 
         $scope.rebuild = function (job, testRun) {
-    		if($scope.jenkinsEnabled)
+    		if($scope.isToolConnected('JENKINS'))
     		{
     			$scope.rebuildJobs(job.testRun.id);
     		}

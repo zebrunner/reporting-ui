@@ -16,7 +16,7 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         updateSettings,
         fetchToolConnectionStatus,
 
-        fillToolSettings,
+        // fillToolSettings,
         setToolStatus,
         isToolConnected,
     };
@@ -41,28 +41,28 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         return tools[toolName];
     }
 
-    function fillToolSettings(toolName, settings) {
-        switch(toolName) {
-            case 'RABBITMQ':
-                tools.rabbitmq.enabled = settings['RABBITMQ_ENABLED'];
-                tools.rabbitmq.user = settings['RABBITMQ_USER'];
-                tools.rabbitmq.pass = settings['RABBITMQ_PASSWORD'];
-                break;
-            case 'JIRA':
-                tools.jira.enabled = settings['JIRA_ENABLED'];
-                tools.jira.url = settings['JIRA_URL'];
-                break;
-            case 'JENKINS':
-                tools.jenkins.enabled = settings['JENKINS_ENABLED'];
-                tools.jenkins.url = settings['JENKINS_URL'];
-                break;
-            case 'GOOGLE':
-                tools.google.enabled = settings['GOOGLE_ENABLED'];
-                break;
-            default:
-                break;
-        }
-    }
+    // function fillToolSettings(toolName, settings) {
+    //     switch(toolName) {
+    //         case 'RABBITMQ':
+    //             tools.rabbitmq.enabled = settings['RABBITMQ_ENABLED'];
+    //             tools.rabbitmq.user = settings['RABBITMQ_USER'];
+    //             tools.rabbitmq.pass = settings['RABBITMQ_PASSWORD'];
+    //             break;
+    //         case 'JIRA':
+    //             tools.jira.enabled = settings['JIRA_ENABLED'];
+    //             tools.jira.url = settings['JIRA_URL'];
+    //             break;
+    //         case 'JENKINS':
+    //             tools.jenkins.enabled = settings['JENKINS_ENABLED'];
+    //             tools.jenkins.url = settings['JENKINS_URL'];
+    //             break;
+    //         case 'GOOGLE':
+    //             tools.google.enabled = settings['GOOGLE_ENABLED'];
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }
 
     function updateSettings(settings) {
         return $httpMock.put(API_URL + '/api/settings/tools', settings).then(UtilService.handleSuccess, UtilService.handleError('Unable to edit settings'));

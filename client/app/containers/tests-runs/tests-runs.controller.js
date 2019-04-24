@@ -53,7 +53,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
 
         TENANT = $rootScope.globals.auth.tenant;
-        loadSlackAvailability();
         readStoredParams();
         initWebsocket();
         bindEvents();
@@ -137,10 +136,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
                 return $q.resolve([]);
             });
-    }
-
-    function loadSlackAvailability() {
-        testsRunsService.fetchSlackAvailability();
     }
 
     function areTestRunsFromOneSuite() {
