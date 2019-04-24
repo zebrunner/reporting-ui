@@ -2,7 +2,7 @@
 
 import RFB from '../../../vendors/novnc.min';
 
-const ArtifactService = function ArtifactService($rootScope, $window, $q, $timeout, UtilService) {
+const ArtifactService = function ArtifactService($window, $q, $timeout, UtilService, toolsService) {
     'ngInject';
 
     var service = {};
@@ -41,36 +41,31 @@ const ArtifactService = function ArtifactService($rootScope, $window, $q, $timeo
     //TODO: looks like unused method
     function provideLogs(rabbitmq, testRun, test, logsContainer, needReconnect, func) {
         return $q(function (resolve, reject) {
-            //TODO: Use toolsService
-            var rabbitmqWatcher = $rootScope.$watch('rabbitmq.enabled', function (newVal) {
-                if(newVal)
-                {
-                    rabbitmqWatcher();
-                    var wsName = 'logs';
-                    var testLogsStomp = Stomp.over(new SockJS(rabbitmq.ws));
-                    testLogsStomp.debug = null;
-                    testLogsStomp.connect(rabbitmq.user, rabbitmq.pass, function () {
+            if (toolsService.isToolConnected('RABBITMQ')) {
+                var wsName = 'logs';
+                var testLogsStomp = Stomp.over(new SockJS(rabbitmq.ws));
+                testLogsStomp.debug = null;
+                testLogsStomp.connect(rabbitmq.user, rabbitmq.pass, function () {
 
-                        UtilService.websocketConnected(wsName);
+                    UtilService.websocketConnected(wsName);
 
-                        testLogsStomp.subscribe("/exchange/logs/" + testRun.ciRunId, function (data) {
-                            if((test && (testRun.ciRunId + "_" + test.id) == data.headers['correlation-id'] || (data.headers['correlation-id'].includes(testRun.ciRunId + "_" + test.id + '_') && data.headers['correlation-id'].startsWith(testRun.ciRunId)))
-                                || (! test && data.headers['correlation-id'].startsWith(testRun.ciRunId))) {
-                                var log = JSON.parse(data.body.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
-                                func.call(this, log);
-                                if(logsContainer) {
-                                    scrollLogsOnBottom(logsContainer);
-                                }
+                    testLogsStomp.subscribe("/exchange/logs/" + testRun.ciRunId, function (data) {
+                        if((test && (testRun.ciRunId + "_" + test.id) == data.headers['correlation-id'] || (data.headers['correlation-id'].includes(testRun.ciRunId + "_" + test.id + '_') && data.headers['correlation-id'].startsWith(testRun.ciRunId)))
+                            || (! test && data.headers['correlation-id'].startsWith(testRun.ciRunId))) {
+                            var log = JSON.parse(data.body.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+                            func.call(this, log);
+                            if(logsContainer) {
+                                scrollLogsOnBottom(logsContainer);
                             }
-                        });
-                        resolve({stomp: testLogsStomp, name: wsName});
-                    }, function () {
-                        if(needReconnect) {
-                            UtilService.reconnectWebsocket(wsName, provideLogs);
                         }
                     });
-                }
-            });
+                    resolve({stomp: testLogsStomp, name: wsName});
+                }, function () {
+                    if(needReconnect) {
+                        UtilService.reconnectWebsocket(wsName, provideLogs);
+                    }
+                });
+            }
         });
     };
 

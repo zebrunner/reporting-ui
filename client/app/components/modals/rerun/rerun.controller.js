@@ -10,7 +10,7 @@
         $scope.testRun = testRun;
 
         $scope.rebuild = function (testRun, rerunFailures) {
-            if (toolsService.jenkins.enabled) {
+            if (toolsService.isToolConnected('JENKINS')) {
                 TestRunService.rerunTestRun(testRun.id, rerunFailures).then(function(rs) {
                     if(rs.success)
                     {

@@ -34,7 +34,7 @@ const IssuesModalController = function IssuesModalController(
         cancel: cancel,
         bindEvents: bindEvents,
         isToolConnected: toolsService.isToolConnected,
-        get isConnectedToJira() { return toolsService.jira.enabled; },
+        get isConnectedToJira() { return toolsService.isToolConnected('JIRA'); },
     };
 
     vm.$onInit = initController;

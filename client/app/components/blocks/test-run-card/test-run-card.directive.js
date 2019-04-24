@@ -65,7 +65,7 @@
 
                 function initMenuRights() {
                     vm.showNotifyInSlackOption = (vm.isToolConnected('SLACK') && vm.testRun.slackChannels) && vm.testRun.reviewed;
-                    vm.showBuildNowOption = toolsService.jenkins.enabled;
+                    vm.showBuildNowOption = vm.isToolConnected('JENKINS');
                     vm.showDeleteTestRunOption = true;
                 }
 
@@ -347,7 +347,7 @@
                 }
 
                 function abortDebug(debuggedTestRun) {
-                    if (toolsService.jenkins.enabled) {
+                    if (vm.isToolConnected('JENKINS')) {
                         TestRunService.abortDebug(debuggedTestRun.id, debuggedTestRun.ciRunId).then(function (rs) {
                             if (rs.success) {
                                 const abortCause = {};
@@ -385,7 +385,7 @@
                 }
 
                 function abort() {
-                    if (toolsService.jenkins.enabled) {
+                    if (vm.isToolConnected('JENKINS')) {
                         TestRunService.abortCIJob(vm.testRun.id, vm.testRun.ciRunId).then(function (rs) {
                             if (rs.success) {
                                 const abortCause = {};
