@@ -152,7 +152,6 @@ html {
 
             @media (min-width:$screen-phone) {
                 margin-left: 60px;
-                padding-top: 64px;
             }
         }
 
@@ -163,10 +162,6 @@ html {
     &.sidebar-toggled {
         > .main-container {
             > .content-container {
-                @media (max-width: $screen-phone) {
-                    //margin-left: 60px;
-                    padding-top: 64px;
-                }
                 .btn-check {
                     display: inline-block;
                     button {

@@ -31,6 +31,7 @@ import uploadImageModalTemplate
             joinProjectNames,
             resetProjects,
             chooseProject,
+            searchOnProjects,
 
             get companyLogo() { return $rootScope.companyLogo; },
             get currentUser() { return UserService.currentUser; },
@@ -216,9 +217,7 @@ import uploadImageModalTemplate
             });
         }
 
-        function bindListeners() {
-            onMenuCloseSubscr = $scope.$on('$mdMenuClose', function(name, listener) {
-                if (listener.attr('id') === 'projects-menu') {
+        function searchOnProjects() {
                     const projects = projectsService.getSelectedProjects();
     
                     if (!angular.equals(projects, vm.selectedProjects)) {
@@ -232,12 +231,6 @@ import uploadImageModalTemplate
                             $state.reload();
                         });
                     }
-                }
-            });
-    
-            $scope.$on('$destroy', () => {
-                onMenuCloseSubscr && onMenuCloseSubscr();
-            });
         }
     
         function loadProjects() {
@@ -284,6 +277,7 @@ import uploadImageModalTemplate
         function chooseProject() {
             $timeout(() => {
                 vm.selectedProjects = vm.projects.filter(project => project.selected);
+                searchOnProjects();
             }, 0);
         }
 

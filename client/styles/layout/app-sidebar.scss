@@ -7,15 +7,72 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        li {
-            &.profile, &.projects {
-                align-self: flex-end;
-                a.md-button {
-                    padding: 8px 14px !important;
+        .profile, .projects {
+            a.md-button {
+                padding: 8px 14px !important;
+                @media (max-width: $screen-phone) {
+                    padding: 8px !important;
                 }
             }
-            &.profile {
-                margin-bottom: 66px;
+        }
+        .projects {
+            margin-bottom: 66px;
+            @media (max-width: $screen-phone) {
+                margin-bottom: 8px;
+            }
+        }
+        .projects {
+            &__item {
+                padding: 17px 24px;
+                display: flex;
+                align-items: center;
+            }
+        }
+        md-checkbox {
+            margin-bottom: 0;
+            .md-icon {
+                border-color: rgba(#ffffff, .5);
+            }
+        }
+        .close-button {
+            padding: 8px 8px 0;
+            display: flex;
+            md-icon {
+                font-size: 17px;
+                height: 17px;
+                width: 17px;
+                min-height: 17px;
+                min-width: 17px;
+                margin-right: 0;
+                color: rgba(255, 255, 255, 0.5);
+                margin-right: 0;
+                color: rgba(#ffffff, .5);
+            }   
+        }
+        &__button {
+            max-width: 165px;
+            max-height: 36px;
+            border: 1px #ffffff;
+            margin: 8px 23px 16px;
+            border-radius: 18px;
+            text-transform: uppercase;
+            i.material-icons {
+                font-size: 19px;
+                margin-right: 10px;
+            }
+            &._add, &._set {
+                padding: 8px 18px;
+                padding-right: 18px !important;
+                display: flex;
+                font-size: 14px;
+            }
+            &._add {
+                border: solid 1px #ffffff !important;
+                align-items: center;
+            }
+            &._set {
+                border: dashed 1px #ffffff !important;
+                align-items: flex-start;
             }
         }
     }

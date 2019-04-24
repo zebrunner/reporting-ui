@@ -2,7 +2,6 @@
     <zf-sub-header>
         <zf-sub-header-title>
             {{ $ctrl.activeTab.name }}
-            <small id="itemsCount" data-ng-if="$ctrl.activeTab.countFunc">({{ $ctrl.activeTab.countFunc.call() }})</small>
         </zf-sub-header-title>
         <zf-sub-header-button>
             <div ng-if="$ctrl.activeTab.name === 'Users'">

@@ -624,6 +624,13 @@ section.zaf-light .article-title {
     background-color: #26a69a !important;
 }
 
+.top-header.background-green {
+    background-color: #edeff1 !important;
+    @media (max-width: $screen-phone) {
+        background-color: #26a69a !important;
+    }
+}
+
 .background-darkgreen {
     background-color: #007f7b !important;
 }
@@ -2514,17 +2521,28 @@ $light-inprogress: #68c9fd;
 }
 
 .fixed-page-header {
+    top: 0;
     position: fixed;
     height: $header-height;
     width: calc(100% - 60px);
     right: 0;
     background-color: white;
-    top: 48px;
-    z-index: 5;
+    z-index: 79;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-
+    
     @media(max-width: $screen-phone) {
-        width: 100%;
+        width: calc(100% - 50px);
+        background-color: transparent;
+        &-container {
+            &_title, &_title small, &_options i {
+                color: white !important;
+            }
+        }
+    }
+
+    @media(max-width: $breakpoint-mobile) {
+        
+        box-shadow: none;
     }
 
     &-container {
@@ -2549,6 +2567,9 @@ $light-inprogress: #68c9fd;
             width: 100%;
             small {
                 color: #7f7f7f;
+            }
+            @media(max-width: $screen-phone) {
+                text-align: center;
             }
         }
 
@@ -2606,6 +2627,11 @@ $light-inprogress: #68c9fd;
                             background-color: rgba(31, 36, 42, 0.3);
                             color: #000;
                         }
+
+                        @media(max-width: $breakpoint-mobile) {
+                            max-width: 65px;
+                            min-width: 65px;
+                        }
                     }
 
                     &:hover {
@@ -2615,6 +2641,21 @@ $light-inprogress: #68c9fd;
 
                         .material-icons {
                             color: $medium-teal-light-new-hover;
+                        }
+                    }
+                    @media(max-width: $screen-phone) {
+                        &.fixed-page-header__btn {
+                            &._launcher {
+                                color: #ffffff;
+                                border: 1px solid #ffffff;
+                                background-color: $medium-teal-light-new;
+                                md-icon {
+                                    color: #ffffff;
+                                }
+                                span {
+                                    display: none;
+                                }
+                            }
                         }
                     }
 
@@ -2629,6 +2670,9 @@ $light-inprogress: #68c9fd;
                                 .material-icons {
                                     margin: 0;
                                     line-height: 24px;
+                                }
+                                md-icon {
+                                    padding: 4px 0 0 2px;
                                 }
                             }
 
@@ -2694,6 +2738,9 @@ $light-inprogress: #68c9fd;
                     }
                     &:first-child {
                         margin-left: 30px;
+                        @media(max-width: $screen-phone) {
+                            margin-left: 0;
+                        }
                     }
                     &:last-child {
                         //padding-right: 24px;

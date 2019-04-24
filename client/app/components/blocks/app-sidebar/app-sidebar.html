@@ -99,36 +99,6 @@
                 </a>
             </li>
             <li style="flex-grow: 1"></li>
-            <li class="projects" toggle-menu>
-                <a md-button aria-label="menu" ui-sref="projects.list" ng-click="$ctrl.loadProjects();">
-                    <div class="profile-img hide-phone" style="display: inline-block;">
-                        <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" squared="8" size="36" src="../../../../assets/images/project_photo.svg"
-                                icon-visible="$ctrl.currentUser.isAdmin"></profile-photo>
-                    </div>
-                </a>
-                    <ul class="auto-width width-icon" toggle-nav-bottom>
-                        <li class="sub-search search-menu">
-                            <ul>
-                                <li toggle-menu="close" id="createProject" ng-click="$ctrl.showProjectDialog()" has-any-permission="['MODIFY_PROJECTS']">
-                                    <a class="create-view-button" md-button aria-label="menu" href=""></i>New project +</a>
-                                </li>
-                                <li id="clearProject" ng-click="$ctrl.resetProjects()" ui-sref-active="active" class="show-on-hover">
-                                    <a aria-label="menu">
-                                        <i class="material-icons highlight_red" style="font-size: 14px;">close</i>
-                                        <show-part limit="27" text='"Clear"'></show-part>
-                                    </a>
-                                </li>
-                                <li  name="projectName" md-prevent-menu-close data-ng-repeat="project in $ctrl.projects | orderBy:'name'">
-                                    <a aria-label="menu">
-                                        <md-checkbox md-prevent-menu-close class="md-primary" ng-change="$ctrl.chooseProject();"
-                                                ng-model="project.selected" aria-label="project {{ project.id }}"></md-checkbox>
-                                        <show-part limit="27" text='project.name'></show-part>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
             <li class="profile">
                 <a md-button aria-label="menu" ui-sref="users.profile">
                     <div>
@@ -136,6 +106,36 @@
                     </div>
                 </a>
             </li>
+            <li class="projects" toggle-menu>
+                    <a md-button aria-label="menu" ui-sref="projects.list" ng-click="$ctrl.loadProjects();">
+                        <div style="display: inline-block;">
+                            <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" squared="8" size="36" src="../../../../assets/images/project_photo.svg"
+                                    icon-visible="$ctrl.currentUser.isAdmin"></profile-photo>
+                        </div>
+                    </a>
+                        <ul class="auto-width width-icon" toggle-nav-bottom>
+                            <li class="sub-search search-menu">
+                                <ul>
+                                    <li class="close-button">
+                                        <md-icon toggle-menu="close" ng-click="">close</md-icon>
+                                    </li>
+                                    <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
+                                        <a class="nav__button _set"  ng-click="$ctrl.showUploadImageDialog($event)" aria-label="menu" href=""><i class="material-icons">insert_photo</i> Set new logo</a>
+                                    </li>
+                                    <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
+                                        <a class="nav__button _add" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
+                                    </li>
+                                    <li name="projectName" md-prevent-menu-close data-ng-repeat="project in $ctrl.projects | orderBy:'name'">
+                                        <a aria-label="menu" class="projects__item">
+                                            <md-checkbox md-prevent-menu-close ng-change="$ctrl.chooseProject();"
+                                                    ng-model="project.selected" aria-label="project {{ project.id }}"></md-checkbox>
+                                            <show-part limit="27" text='project.name'></show-part>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
         </ul>
     </div>
 </aside>
