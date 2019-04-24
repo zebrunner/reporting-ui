@@ -22,7 +22,7 @@
                     </li>
                     <li class="sub-search search-menu">
                         <ul>
-                            <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" class="nav-controls hide-phone">
+                            <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
                                 <a class="create-view-button" md-button aria-label="menu" href="" data-ng-click="showDashboardSettingsModal($event, {}, true)"></i>New dashboard +</a>
                             </li>
                             <li data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy:'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">

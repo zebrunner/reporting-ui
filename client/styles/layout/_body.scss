@@ -1,5 +1,6 @@
 body {
     background: $main_container_bg;
+    min-width: 320px;
 
     &.menu-toggled {
         overflow: hidden !important;

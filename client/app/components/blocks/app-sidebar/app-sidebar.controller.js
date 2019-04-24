@@ -10,7 +10,7 @@ import uploadImageModalTemplate
 
     const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDialog, $state, ViewService, ConfigService,
                                   ProjectService, projectsService, UtilService, UserService, DashboardService,
-                                  AuthService, SettingsService, $timeout) {
+                                  AuthService, SettingsService, $timeout, windowWidthService) {
         'ngInject';
 
         const vm = {
@@ -35,8 +35,8 @@ import uploadImageModalTemplate
 
             get companyLogo() { return $rootScope.companyLogo; },
             get currentUser() { return UserService.currentUser; },
-
-        }
+            get isMobile() { return windowWidthService.isMobile(); },
+        };
 
         vm.$onInit = initController;
 

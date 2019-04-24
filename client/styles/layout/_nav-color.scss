@@ -90,7 +90,7 @@
     }
 
     &.bg-dark {
-        background-color: $dark;
+        background-color: $dark-new;
         &:before {
             box-shadow: inset -1px 0 1px rgba(0, 0, 0, 0.3);
         }
@@ -134,7 +134,7 @@
 
             // sub menu
             ul {
-                background-color: $dark_bg_sub_nav_bg;
+                background-color: $dark_light-new;
 
                 > li {
                     &:hover,
@@ -155,7 +155,7 @@
                     // border-bottom: 1px solid rgba(255,255,255, 0.05);
                     &.open {
                         > a {
-                            background-color: $dark_bg_link_open_bg;
+                            background-color: $dark_light-new;
                             color: $dark_bg_link_open_color;
                             > .icon-has-ul { color: $dark_bg_link_open_color; }
                         }
@@ -192,7 +192,7 @@
                     > li {
                         &:hover {
                             a {
-                                background-color: $dark_bg_link_active_bg;
+                                background-color: transparent;
                             }
                         }
                     }
