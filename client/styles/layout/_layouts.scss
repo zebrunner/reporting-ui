@@ -99,12 +99,9 @@ html {
             left: 0;
             top: $header_height;
             box-shadow: none;
-            @media (max-width: $screen-phone) {
-                top: 0;
-            }
             float: left;
             width: 220px;
-            height: 100vh;
+            height: calc(100% - 48px); // 48px - header height
             //transition: width .25s ease-in-out;
             // border-width: 0 1px 0 0;
             // border-style: solid;
@@ -112,6 +109,10 @@ html {
             //@media (min-width:$screen-sm) {
                 display: block;
             //}
+            @media (max-width: $screen-phone) {
+                top: 0;
+                height: 100%;
+            }
             &:before {
                 z-index: -1; // so that it is beneath top header
                 content: " ";

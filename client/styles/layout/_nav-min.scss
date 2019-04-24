@@ -76,6 +76,7 @@
             overflow: visible !important;
         }
         #nav {
+            overflow: visible !important;
             .sidebar-menu-button {
                 display: none;
                 @media (max-width: $screen-phone) {
@@ -83,7 +84,6 @@
                     height: $header_height;
                 }
             }
-            overflow: visible !important;
             > li {
                 // width: 50px;
                 &.li-small {
@@ -127,7 +127,7 @@
 
                     z-index: 9;
                     position: absolute;
-                    height: 95%;
+                    height: 100%;
                     left: 100%;
                     top: 0;
                     min-width: 240px;
