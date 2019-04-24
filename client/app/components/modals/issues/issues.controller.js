@@ -1,7 +1,6 @@
 'use strict';
 const IssuesModalController = function IssuesModalController(
-        $scope, $mdDialog, $interval, SettingsService, TestService,
-        test, isNewIssue, toolsService) {
+        $scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService) {
     'ngInject';
         
     const vm = {
@@ -34,6 +33,7 @@ const IssuesModalController = function IssuesModalController(
         hide: hide,
         cancel: cancel,
         bindEvents: bindEvents,
+        isToolConnected: toolsService.isToolConnected,
         get isConnectedToJira() { return toolsService.jira.enabled; },
     };
 
@@ -263,7 +263,7 @@ const IssuesModalController = function IssuesModalController(
     /*  Checks whether conditions for issue search in Jira are fulfilled */
 
     function isIssueSearchAvailable(jiraId) {
-        if (vm.isConnectedToJira && jiraId) {
+        if (vm.isToolConnected('JIRA') && jiraId) {
             if (vm.issueTabDisabled || vm.issueJiraIdInputIsChanged) {
                 vm.issueJiraIdInputIsChanged = false;
                 return true;
@@ -306,15 +306,19 @@ const IssuesModalController = function IssuesModalController(
     /* Gets from DB JIRA_CLOSED_STATUS name for the current project*/
 
     function getJiraClosedStatusName() {
-        SettingsService.getSetting('JIRA', 'JIRA_CLOSED_STATUS').
-            then(function successCallback(rs) {
+        toolsService.fetchToolSettings('JIRA')
+            .then(rs => {
                 if (rs.success) {
-                    vm.closedStatusName = rs.data.toUpperCase();
+                    const setting = rs.data.find(({ name }) => name === 'JIRA_CLOSED_STATUS');
+
+                    if (setting) {
+                        vm.closedStatusName = setting.toUpperCase();
+                    }
                 } else {
                     alertify.error(rs.message);
                 }
             });
-    };
+    }
 
     /* On Jira ID input change makes search if conditions are fulfilled */
 

@@ -11,7 +11,7 @@
         </zf-sub-header-button>
         <zf-sub-header-options>
             <div>
-                <i class="material-icons" data-ng-if="jenkinsEnabled" data-ng-click="rebuildJobs()">
+                <i class="material-icons" data-ng-if="isToolConnected('JENKINS')" data-ng-click="rebuildJobs()">
                     autorenew
                     <md-tooltip md-direction="bottom">Rerun</md-tooltip>
                 </i>
@@ -33,7 +33,7 @@
                                     <tr md-row>
                                             <th md-column colspan="4">
                                                 <b name="env" style="font-size: 14px;">{{env}}</b>
-                                                <span data-ng-if="jenkinsEnabled">
+                                                <span data-ng-if="isToolConnected('JENKINS')">
                                                     <a href="" data-ng-click="selectForRerun(env, 'All')">All</a> |
                                                     <a href="" data-ng-click="selectForRerun(env, 'None')">None</a> |
                                                     <a href="" data-ng-click="selectForRerun(env, 'Failed')">Failed</a>
@@ -57,7 +57,7 @@
                                                 <md-checkbox class="md-secondary"
                                                     aria-label="Rebuild"
                                                     data-ng-model="jobView.testRun.rebuild"
-                                                    data-ng-if="jobView.testRun != null && jobView.testRun.status != 'IN_PROGRESS' && jenkinsEnabled"
+                                                    data-ng-if="jobView.testRun != null && jobView.testRun.status != 'IN_PROGRESS' && isToolConnected('JENKINS')"
                                                     data-ng-true-value="true"
                                                     data-ng-false-value="false">
                                                 </md-checkbox>

@@ -2,7 +2,7 @@
     <zf-sub-header>
         <zf-sub-header-title>
             Integrations
-            <small id="itemsCount">({{settingTools.length}})</small>
+            <small id="itemsCount">({{::$ctrl.tools.length}})</small>
         </zf-sub-header-title>
         <zf-sub-header-button>
             <div has-any-permission="['MODIFY_INTEGRATIONS']">
@@ -17,43 +17,35 @@
         <div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-4" data-ng-repeat="tool in settingTools">
-                        <div class="card bg-white" zafira-background-theme>
-                            <div ng-class="{'large-card-content': tool.isEnabled}" class="card-content">
-                                <i ng-class="{'highlight_red': !tool.isConnected && tool.isEnabled, 'highlight_green': tool.isConnected && tool.isEnabled, 'highlight_gray': !tool.isEnabled}" class="material-icons material-icon-16px">fiber_manual_record</i>
-                                <span name="toolName" class="card-title">
-                                {{ tool.name }}
-                                    <!--<i ng-class="{'jira-icon': tool.name == 'JIRA', 'slack-icon': tool.name == 'SLACK'}"></i>-->
-                            </span>
-                                <md-input-container has-any-permission="['MODIFY_INTEGRATIONS']" style="float: right; margin-top: 0px">
-                                    <md-switch name="toolEnabled" style="margin-top: 0px" class="md-primary" ng-model="tool.isEnabled" ng-change="switchEnabled(tool)" aria-label="integr-switch"></md-switch>
+                    <div class="col-md-4 integration-tool__item-wrapper" data-ng-repeat="tool in ::$ctrl.tools track by tool.name">
+                        <div class="card bg-white integration-tool__item" zafira-background-theme ng-show="!$ctrl.isLoading">
+                            <div ng-class="{'large-card-content': tool.enabled}" class="card-content">
+                                <i ng-class="{'highlight_red': !tool.connected && tool.enabled, 'highlight_green': tool.connected && tool.enabled, 'highlight_gray': !tool.enabled}"
+                                   ng-if="!tool.connectionChecking"
+                                   class="material-icons material-icon-16px integration-tool__item-icon">fiber_manual_record</i>
+                                <md-progress-circular md-diameter="16px"
+                                                      ng-if="tool.connectionChecking"
+                                                      ng-class="{'highlight_red': !tool.connected && tool.enabled, 'highlight_green': tool.connected && tool.enabled, 'highlight_gray': !tool.enabled}"
+                                                      class="integration-tool__item-loader"></md-progress-circular>
+                                <span name="toolName" class="card-title">{{ ::tool.name }}</span>
+                                <md-input-container has-any-permission="['MODIFY_INTEGRATIONS']" style="float: right; margin-top: 0">
+                                    <md-switch name="toolEnabled" style="margin-top: 0" class="md-primary" ng-model="tool.enabled" ng-change="$ctrl.changeStatus(tool)" aria-label="integr-switch"></md-switch>
                                 </md-input-container>
-                                <div data-ng-if="tool.isEnabled" class="row col-lg-12" ng-repeat="setting in tool.settings">
+                                <div data-ng-if="tool.enabled" class="row col-lg-12" ng-repeat="setting in tool.settings track by setting.id">
                                     <div class="col-lg-11" style="padding: 0">
                                         <md-input-container class="md-block" style="margin-bottom: 0">
-                                            <label name="settingNameLabel">{{ setting.name.split(tool.name + '_')[1] }}</label>
-                                            <input name="settingName" type="text" ng-if="!setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.isEnabled || setting.notEditable" >
-                                            <input name="settingName" type="password" ng-if="setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.isEnabled || setting.notEditable" autocomplete="new-password" >
-                                        </md-input-container>
-                                    </div>
-                                    <div class="col-lg-1" style="padding: 0; margin-bottom: 0" data-ng-if="setting.name != 'SLACK_WEB_HOOK_URL'">
-                                        <md-input-container class="md-block">
-                                            <label></label>
-                                            <md-button name="deleteSetting" data-ng-if="tool.name == 'SLACK'" ng-click="deleteSetting(setting, tool)" class=" btn-w-md md-active" style="min-width: 50px">
-                                            <span class="fa-stack fa-lg">
-                                                <i class="fa fa-circle fa-stack-2x"></i>
-                                                <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
-                                            </span></md-button>
+                                            <label name="settingNameLabel">{{ ::setting.name.replace(tool.name + '_', '') }}</label>
+                                            <input name="settingName" type="text" ng-if="!setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.enabled || setting.notEditable" />
+                                            <input name="settingName" type="password" ng-if="setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.enabled || setting.notEditable" autocomplete="new-password" />
                                         </md-input-container>
                                     </div>
                                 </div>
                             </div>
-                            <div has-any-permission="['MODIFY_INTEGRATIONS']" data-ng-if="tool.isEnabled" class="card-action integration-actions text-right" style="border-top: none;">
-                                <md-button ng-if="tool.name == 'GOOGLE' || tool.name == 'CLOUD_FRONT'" ng-click="showUploadFileDialog($event, tool.name, FILE_TYPE_SETTINGS[tool.name]);" class="md-raised btn-w-md md-primary">
-                                    Upload {{FILE_TYPE_SETTINGS[tool.name].split(tool.name + '_')[1].split('_').join(' ')}}
+                            <div has-any-permission="['MODIFY_INTEGRATIONS']" data-ng-if="tool.enabled" class="card-action integration-actions text-right" style="border-top: none;">
+                                <md-button ng-if="tool.name === 'GOOGLE' || tool.name === 'CLOUD_FRONT'" ng-click="$ctrl.showUploadFileDialog($event, tool, $ctrl.FILE_TYPE_SETTINGS[tool.name]);" class="md-raised btn-w-md md-primary">
+                                    Upload {{ ::$ctrl.FILE_TYPE_SETTINGS[tool.name].replace(tool.name + '_', '').split('_').join(' ')}}
                                 </md-button>
-                                <md-button name="add" data-ng-if="tool.name == 'SLACK'" ng-click="createSetting(tool)" class="md-raised btn-w-md md-active" ng-disabled="!tool.newSetting.name && !tool.newSetting.value || !tool.isEnabled">Add +</md-button><div class="divider"></div>
-                                <md-button ng-if="tool.name != 'GOOGLE'" name="save" ng-click="saveTool(tool)" class="md-raised btn-w-md md-primary" ng-disabled="!tool.isEnabled">Save</md-button><div class="divider"></div>
+                                <md-button ng-if="tool.name !== 'GOOGLE'" name="save" ng-click="$ctrl.saveTool(tool)" class="md-raised btn-w-md md-primary" ng-disabled="!tool.enabled">Save</md-button>
                             </div>
                         </div>
                     </div>

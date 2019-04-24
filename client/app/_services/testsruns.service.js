@@ -22,8 +22,6 @@
         let _activeSearchType = searchTypes[0];
         let _searchParams = angular.copy(DEFAULT_SC);
         let _activeFilteringTool = null;
-        let _slackAvailability = false;
-        let _slackAvailabilityFetched = false;
 
         return  {
             getSearchTypes: getSearchTypes,
@@ -47,9 +45,6 @@
             resetFilteringState: resetFilteringState,
             readStoredParams: readStoredParams,
             deleteStoredParams: deleteStoredParams,
-            getSlackAvailability: getSlackAvailability,
-            isSlackAvailabilityFetched: isSlackAvailabilityFetched,
-            fetchSlackAvailability: fetchSlackAvailability,
             clearDataCache: clearDataCache,
             addNewTestRun: addNewTestRun,
             updateTestRun: updateTestRun,
@@ -215,37 +210,6 @@
                     filterId && setActiveFilter(+filterId);
                 }
             }
-        }
-
-        function getSlackAvailability() {
-            return _slackAvailability;
-        }
-
-        function isSlackAvailabilityFetched() {
-            return _slackAvailabilityFetched;
-        }
-
-        function fetchSlackAvailability(force) {
-            const defer = $q.defer();
-
-            // resolve cached data if no force reloading flag
-            if (!force && _slackAvailabilityFetched) {
-                defer.resolve(_slackAvailability);
-            }
-
-            ConfigService.getConfig('slack').then(function successCallback(rs) {
-                _slackAvailabilityFetched = true;
-
-                if (rs.success) {
-                    _slackAvailability = rs.data.available;
-                    defer.resolve(_slackAvailability);
-                } else {
-                    defer.reject(rs);
-                }
-
-            });
-
-            return defer.promise;
         }
 
         function addNewTestRun(testRun) {

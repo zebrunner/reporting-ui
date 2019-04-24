@@ -42,7 +42,7 @@
                     <md-tooltip md-direction="top">Compare</md-tooltip>
                     <span class="fa fa-columns" aria-hidden="true"></span>
                 </md-button>
-                <md-button id="rerunTestRuns" data-ng-if="$ctrl.jenkins.enabled" aria-label="menu" class="md-fab md-raised md-fab-sm" data-ng-really-message="Do you really want to rerun multiple test runs?" data-ng-really-click="$ctrl.batchRerun()" has-any-permission="['TEST_RUNS_CI']">
+                <md-button id="rerunTestRuns" data-ng-if="$ctrl.isToolConnected('JENKINS')" aria-label="menu" class="md-fab md-raised md-fab-sm" data-ng-really-message="Do you really want to rerun multiple test runs?" data-ng-really-click="$ctrl.batchRerun()" has-any-permission="['TEST_RUNS_CI']">
                     <md-tooltip md-direction="top">Rerun</md-tooltip>
                     <span class="fa fa-undo" aria-hidden="true"></span>
                 </md-button>
@@ -54,7 +54,7 @@
                     <md-tooltip md-direction="top">Abort selected test runs</md-tooltip>
                     <span class="fa fa-ban" aria-hidden="true"></span>
                 </md-button>
-                <md-button id="sendTestRunsAsEmail" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-click="$ctrl.batchEmail($event)" data-ng-if="$ctrl.tools['EMAIL']">
+                <md-button id="sendTestRunsAsEmail" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-click="$ctrl.batchEmail($event)" data-ng-if="$ctrl.isToolConnected('EMAIL')">
                     <md-tooltip md-direction="top">Send as email</md-tooltip>
                     <span class="fa fa-envelope-o" aria-hidden="true"></span>
                 </md-button>

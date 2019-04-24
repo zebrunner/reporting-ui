@@ -11,12 +11,11 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     let TENANT;
     const vm = {
-        selectedAll: false,
         testRuns: [],
         totalResults: 0,
         pageSize: 20,
         currentPage: 1,
-        selectedTestRuns: [],
+        selectedTestRuns: {},
         zafiraWebsocket: null,
         subscriptions: {},
         isMobile: windowWidthService.isMobile,
@@ -39,9 +38,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         displaySearch: displaySearch,
         selectAllTestRuns,
         selectTestRun,
-
-        get jenkins() { return toolsService.jenkins; },
-        get tools() { return toolsService.tools; },
+        isToolConnected: toolsService.isToolConnected,
     };
 
     vm.$onInit = init;
@@ -56,7 +53,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
 
         TENANT = $rootScope.globals.auth.tenant;
-        loadSlackAvailability();
         readStoredParams();
         initWebsocket();
         bindEvents();
@@ -142,10 +138,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             });
     }
 
-    function loadSlackAvailability() {
-        testsRunsService.fetchSlackAvailability();
-    }
-
     function areTestRunsFromOneSuite() {
         let firstItem;
 
@@ -180,7 +172,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     }
 
     function rebuild(testRun, rerunFailures) {
-        if (vm.jenkins.enabled) {
+        if (vm.isToolConnected('JENKINS')) {
             if (!rerunFailures) {
                 rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
             }
@@ -217,7 +209,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     }
 
     function abortSelectedTestRuns() {
-        if (vm.jenkins.enabled) {
+        if (vm.isToolConnected('JENKINS')) {
             vm.selectedTestRuns.forEach(testRun => {
                 if (testRun.status === 'IN_PROGRESS') {
                     abort(testRun);

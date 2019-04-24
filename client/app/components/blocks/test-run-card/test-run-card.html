@@ -125,12 +125,12 @@
                                 Mark as reviewed
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.tools['EMAIL']">
+                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('EMAIL')">
                             <md-button name="sendAsEmail" data-ng-click="$ctrl.sendAsEmail($event)">
                                 Send as email
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.tools['GOOGLE']">
+                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('GOOGLE')">
                             <md-button name="createSpreadsheet" data-ng-click="$ctrl.createSpreadsheet($event)">
                                 Export to Google
                             </md-button>
@@ -145,23 +145,23 @@
                                 Notify in Slack
                             </md-button>
                         </md-menu-item>
-                        <md-divider ng-if="$ctrl.tools['JENKINS']"></md-divider>
-                        <md-menu-item ng-if="$ctrl.showBuildNowOption && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-divider ng-if="$ctrl.isToolConnected('JENKINS')"></md-divider>
+                        <md-menu-item ng-if="$ctrl.showBuildNowOption && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="buildNow" data-ng-click="$ctrl.buildNow($event)">
                                 Build now
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS' && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rebuild
                             </md-button>
                         </md-menu-item>
-                        <!--<md-menu-item ng-if="$ctrl.testRun.status!='PASSED' && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <!--<md-menu-item ng-if="$ctrl.testRun.status!='PASSED' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="debug" ng-click="$ctrl.startDebug()">
                                 Debug
                             </md-button>
@@ -241,12 +241,12 @@
                                 Mark as reviewed
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.tools['EMAIL']">
+                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('EMAIL')">
                             <md-button name="sendAsEmail" data-ng-click="$ctrl.sendAsEmail($event)">
                                 Send as email
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.tools['GOOGLE']">
+                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('GOOGLE')">
                             <md-button name="createSpreadsheet" data-ng-click="$ctrl.createSpreadsheet($event)">
                                 Export to Google
                             </md-button>
@@ -261,23 +261,23 @@
                                 Notify in Slack
                             </md-button>
                         </md-menu-item>
-                        <md-divider ng-if="$ctrl.tools['JENKINS']"></md-divider>
-                        <md-menu-item ng-if="$ctrl.showBuildNowOption && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-divider ng-if="$ctrl.isToolConnected('JENKINS')"></md-divider>
+                        <md-menu-item ng-if="$ctrl.showBuildNowOption && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="buildNow" data-ng-click="$ctrl.buildNow($event)">
                                 Build now
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS' && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rebuild
                             </md-button>
                         </md-menu-item>
-                        <!--<md-menu-item ng-if="$ctrl.testRun.status!='PASSED' && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <!--<md-menu-item ng-if="$ctrl.testRun.status!='PASSED' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="debug" ng-click="$ctrl.startDebug()">
                                 Debug
                             </md-button>
@@ -395,12 +395,12 @@
                                 Mark as reviewed
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.tools['EMAIL']">
+                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('EMAIL')">
                             <md-button name="sendAsEmail" data-ng-click="$ctrl.sendAsEmail($event)">
                                 Send as email
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.tools['GOOGLE']">
+                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('GOOGLE')">
                             <md-button name="createSpreadsheet" data-ng-click="$ctrl.createSpreadsheet($event)">
                                 Export to Google
                             </md-button>
@@ -415,23 +415,23 @@
                                 Notify in Slack
                             </md-button>
                         </md-menu-item>
-                        <md-divider ng-if="$ctrl.tools['JENKINS']"></md-divider>
-                        <md-menu-item ng-if="$ctrl.showBuildNowOption && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-divider ng-if="$ctrl.isToolConnected('JENKINS')"></md-divider>
+                        <md-menu-item ng-if="$ctrl.showBuildNowOption && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="buildNow" data-ng-click="$ctrl.buildNow($event)">
                                 Build now
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS' && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rebuild
                             </md-button>
                         </md-menu-item>
-                        <!--<md-menu-item ng-if="$ctrl.testRun.status!='PASSED' && $ctrl.tools['JENKINS']" has-any-permission="['TEST_RUNS_CI']">
+                        <!--<md-menu-item ng-if="$ctrl.testRun.status!='PASSED' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="debug" ng-click="$ctrl.startDebug()">
                                 Debug
                             </md-button>

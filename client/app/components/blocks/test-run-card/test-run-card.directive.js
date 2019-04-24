@@ -26,7 +26,6 @@
                     showBuildNowOption: false,
                     showDeleteTestRunOption: false,
                     isMobile: windowWidthService.isMobile,
-                    isSlackAvailable: false,
 
                     addToSelectedtestRuns: addToSelectedtestRuns,
                     showDetails: showDetails,
@@ -48,28 +47,13 @@
                     downloadApplication: downloadApplication,
                     goToTestRun: goToTestRun,
                     onBackClick: onBackClick,
+                    isToolConnected: toolsService.isToolConnected,
 
                     get tools() { return toolsService.tools; },
                     get currentOffset() { return $rootScope.currentOffset; },
                 };
 
-                vm.$onInit = init;
-
                 return vm;
-
-                function init() {
-                    initSlackAvailability();
-                }
-
-                function initSlackAvailability() {
-                    if (testsRunsService.isSlackAvailabilityFetched()) {
-                        vm.isSlackAvailable = testsRunsService.getSlackAvailability();
-                    } else {
-                        testsRunsService.fetchSlackAvailability().then(function(isSlackAvailable) {
-                            vm.isSlackAvailable = isSlackAvailable;
-                        });
-                    }
-                }
 
                 function addToSelectedtestRuns() {
                     vm.onSelect && vm.onSelect(vm.testRun);
@@ -80,7 +64,7 @@
                 }
 
                 function initMenuRights() {
-                    vm.showNotifyInSlackOption = (vm.isSlackAvailable && vm.testRun.slackChannels) && vm.testRun.reviewed;
+                    vm.showNotifyInSlackOption = (vm.isToolConnected('SLACK') && vm.testRun.slackChannels) && vm.testRun.reviewed;
                     vm.showBuildNowOption = toolsService.jenkins.enabled;
                     vm.showDeleteTestRunOption = true;
                 }
@@ -135,7 +119,6 @@
                         fullscreen: true,
                         locals: {
                             testRun: vm.testRun,
-                            isSlackAvailable: vm.isSlackAvailable,
                         }
                     }).then(function(answer) {
                         vm.testRun.reviewed = answer.reviewed;

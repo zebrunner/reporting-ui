@@ -1,6 +1,6 @@
 'use strict';
 
-const elasticsearchService = function elasticsearchService($http, $q, $location, SettingsService, UtilService) {
+const elasticsearchService = function elasticsearchService($http, $q, $location, toolsService, UtilService) {
     'ngInject';
 
     let instance;
@@ -134,7 +134,7 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
 
     function prepareData() {
         return $q(function(resolve, reject) {
-            SettingsService.getSettingByTool('ELASTICSEARCH').then(function(settingsRs) {
+            toolsService.fetchToolSettings('ELASTICSEARCH').then(function(settingsRs) {
                 if (settingsRs.success) {
                     var url = settingsRs.data.find(function(element, index, array) {
                         return element.name.toLowerCase() === 'url';
