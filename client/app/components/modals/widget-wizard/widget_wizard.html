@@ -23,10 +23,12 @@
                         </div>
                     </zf-radio-button-body>
                 </zf-radio-button>
-                <zf-radio-button class="widget-wizard_container_elements_item" disabled="w.existing" ng-repeat="w in widgets | filter:sc track by $index" on-change="onWidgetChange()" ng-model="tempData.widget" value="w">
+                <zf-radio-button class="widget-wizard_container_elements_item" ng-repeat="w in widgets | filter:sc track by w.id" on-change="onWidgetChange()" ng-model="tempData.widget" value="w">
                     <zf-radio-button-body>
-                        <div class="widget-wizard_container_elements_item_title"><show-part text="w.title" limit="50"></show-part></div>
-                        <div class="widget-wizard_container_elements_item_description"><show-part text="w.description" limit="150"></show-part></div>
+                        <div class="widget-wizard_container_elements_item_container">
+                            <div class="widget-wizard_container_elements_item_container_title"><show-part text="w.title" limit="50"></show-part></div>
+                            <div class="widget-wizard_container_elements_item_container_description"><show-part text="w.description" limit="150"></show-part></div>
+                        </div>
                         <div class="widget-wizard_container_elements_item_icon" ng-switch="w.type">
                             <i ng-switch-when="BAR" class="material-icons">insert_chart</i>
                             <i ng-switch-when="PIE" class="material-icons">pie_chart</i>
@@ -67,10 +69,12 @@
                         </div>
                     </zf-radio-button-body>
                 </zf-radio-button>
-                <zf-radio-button class="widget-wizard_container_elements_item" ng-repeat="template in templates | filter:sc track by $index" on-change="onChange();" ng-model="widget.widgetTemplate" value="template">
+                <zf-radio-button class="widget-wizard_container_elements_item" ng-repeat="template in templates | filter:sc track by template.id" on-change="onChange();" ng-model="widget.widgetTemplate" value="template">
                     <zf-radio-button-body>
-                        <div class="widget-wizard_container_elements_item_title"><show-part text="template.name" limit="50"></show-part></div>
-                        <div class="widget-wizard_container_elements_item_description"><show-part text="template.description" limit="150"></show-part></div>
+                        <div class="widget-wizard_container_elements_item_container">
+                            <div class="widget-wizard_container_elements_item_container_title"><show-part text="template.name" limit="50"></show-part></div>
+                            <div class="widget-wizard_container_elements_item_container_description"><show-part text="template.description" limit="150"></show-part></div>
+                        </div>
                         <div class="widget-wizard_container_elements_item_icon" ng-switch="template.type">
                             <md-icon ng-switch-when="PIE" md-svg-src="../../../../assets/images/pie_chart.svg"></md-icon>
                             <md-icon ng-switch-when="BAR" md-svg-src="../../../../assets/images/bar_chart.svg"></md-icon>
@@ -216,7 +220,11 @@
                 <div class="widget-wizard_container_elements_additional" ng-if="widgetBuilder.legendConfigObject.legend">
                     <zf-input-container>
                         <label>Set legend</label>
-                        <md-checkbox ng-model="widgetBuilder.legendConfigObject.legendItems[legendName]" ng-change="onLegendChange(legendName);" ng-repeat="legendName in widgetBuilder.legendConfigObject.legend track by $index" aria-label="checkbox">{{legendName}}</md-checkbox>
+                        <div class="widget-wizard_container_elements_additional_legend-container">
+                            <div class="widget-wizard_container_elements_additional_legend-container_item" ng-repeat="legendName in widgetBuilder.legendConfigObject.legend track by $index">
+                                <md-checkbox ng-model="widgetBuilder.legendConfigObject.legendItems[legendName]" ng-change="onLegendChange(legendName);" aria-label="checkbox">{{legendName}}</md-checkbox>
+                            </div>
+                        </div>
                     </zf-input-container>
                 </div>
             </div>
@@ -258,10 +266,13 @@
             <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="next();" ng-if="! isLastCard()" ng-disabled="card.nextDisabled(widget_form)">
                 Next
             </md-button>
-            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="saveWidget();" ng-if="isLastCard() && ! widget.id" ng-disabled="widget_form.info.$invalid">
-                Save
+            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="createWidget();" ng-if="isLastCard() && ! widget.id" ng-disabled="widget_form.info.$invalid">
+                Add
             </md-button>
-            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="updateWidget();" ng-if="isLastCard() && widget.id" ng-disabled="widget_form.info.$invalid">
+            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="updateWidget();" ng-if="isLastCard() && widget.id && ! widget.existing && START_MODE === 'NEW'" ng-disabled="widget_form.info.$invalid">
+                Add
+            </md-button>
+            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="updateWidget();" ng-if="isLastCard() && widget.id && (widget.existing || START_MODE === 'UPDATE')" ng-disabled="widget_form.info.$invalid">
                 Save
             </md-button>
         </div>

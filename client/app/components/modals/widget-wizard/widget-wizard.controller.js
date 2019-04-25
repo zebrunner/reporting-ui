@@ -3,6 +3,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
     'ngInject';
 
     $scope.START_MODE = widget && widget.id ? 'UPDATE' : 'NEW';
+    var MODE = $scope.START_MODE === 'UPDATE' ? 'UPDATE' : 'ADD';
 
     const CARDS = {
         currentItem: 0,
@@ -106,22 +107,6 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         }
     };
 
-    var MODE;
-
-    $scope.toEditWidgetMode = function(widget) {
-        MODE = 'UPDATE';
-        var card = getCardById('set');
-        $scope.widget = angular.copy(widget);
-        $scope.onChange();
-        initCard(card);
-    };
-
-    function getCardById(id) {
-        return CARDS.items.find(function (item) {
-            return item.id === id;
-        });
-    };
-
     $scope.deleteWidget = function (widget) {
         var confirmedDelete = confirm('Would you like to delete widget "' + widget.title + '" ?');
         if (confirmedDelete) {
@@ -158,7 +143,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         if($scope.widgets && dashboard.widgets) {
             dashboard.widgets.forEach(function(w) {
                 var widgetIndex = $scope.widgets.indexOfField('id', w.id);
-                if(widgetIndex) {
+                if(widgetIndex !== -1) {
                     $scope.widgets[widgetIndex].existing = true;
                 }
             });
@@ -188,8 +173,8 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
 
     $scope.onWidgetChange = function() {
         if($scope.tempData.widget.id) {
-            MODE = 'ADD';
             $scope.widget = $scope.tempData.widget;
+            MODE = $scope.widget.existing ? 'UPDATE' : 'ADD';
             return $scope.onChange();
         }
     };
@@ -316,7 +301,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         }
     };
 
-    $scope.saveWidget = function () {
+    $scope.createWidget = function () {
         var widgetType = prepareWidget();
         DashboardService.CreateWidget(widgetType).then(function (rs) {
             if(rs.success) {

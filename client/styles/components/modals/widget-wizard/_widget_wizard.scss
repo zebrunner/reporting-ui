@@ -87,7 +87,7 @@ $wizard-white:          #ffffff;
 
                         md-icon {
                             position: absolute;
-                            right: 33%;
+                            right: calc((100% - 64px) / 2);
                             bottom: 16px;
                             color: rgba(1, 22, 39, 0.4) !important;
                         }
@@ -138,16 +138,25 @@ $wizard-white:          #ffffff;
                     }
                 }
 
-                &_title {
-                    margin-bottom: 12px;
-                }
+                &_container {
+                    height: 86px;
+                    overflow: hidden;
+                    &_title, &_description {
+                        word-wrap: break-word;
+                    }
 
-                &_description {
-                    font-size: 12px;
-                    font-weight: normal;
-                    letter-spacing: 0.1px;
-                    line-height: 1.33;
-                    color: $wizard-dark-gray;
+                    &_title {
+                        width: 96%;
+                        margin-bottom: 12px;
+                    }
+
+                    &_description {
+                        font-size: 12px;
+                        font-weight: normal;
+                        letter-spacing: 0.1px;
+                        line-height: 1.33;
+                        color: $wizard-dark-gray;
+                    }
                 }
 
                 &_action {
@@ -181,6 +190,7 @@ $wizard-white:          #ffffff;
                         font-size: 34px;
                         color: rgba(0, 0, 0, 0.2);
                     }
+
                 }
 
                 &_additional {
@@ -320,14 +330,21 @@ $wizard-white:          #ffffff;
                     > label {
                         margin-bottom: 20px;
                     }
-                    md-checkbox {
-                        margin-right: 64px;
-                        margin-bottom: $standart-padding;
+                }
 
-                        > *[ng-transclude] {
-                            font-size: 14px;
-                            font-weight: 500;
-                            margin-left: 32px;
+                &_legend-container {
+                    width: 100%;
+                    &_item {
+                        width: 33%;
+                        display: inline-block;
+                        md-checkbox {
+                            margin-bottom: $standart-padding;
+
+                            > *[ng-transclude] {
+                                font-size: 14px;
+                                font-weight: 500;
+                                margin-left: 32px;
+                            }
                         }
                     }
                 }
