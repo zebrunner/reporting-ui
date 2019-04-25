@@ -19,6 +19,7 @@ import uploadImageModalTemplate
             dashboardList: [],
             views: [],
             projects: [],
+            selectedTempl: projectsService.getSelectedProjects() ? projectsService.getSelectedProjects()[0].name.substr(0, 3) : '',
             $state: $state,
             hasHiddenDashboardPermission,
             loadViews,
@@ -218,10 +219,9 @@ import uploadImageModalTemplate
         }
 
         function searchOnProjects() {
-                    const projects = projectsService.getSelectedProjects();
-    
-                    if (!angular.equals(projects, vm.selectedProjects)) {
-                        if (!projects && !vm.selectedProjects) { return; }
+            const projects = projectsService.getSelectedProjects();
+                if (!angular.equals(projects, vm.selectedProjects)) {
+                    if (!projects && !vm.selectedProjects) { return; }
                         if (vm.selectedProjects && vm.selectedProjects.length) {
                             projectsService.setSelectedProjects(vm.selectedProjects);
                         } else {
@@ -274,9 +274,10 @@ import uploadImageModalTemplate
             });
         }
     
-        function chooseProject() {
+        function chooseProject(selected) {
             $timeout(() => {
-                vm.selectedProjects = vm.projects.filter(project => project.selected);
+                vm.selectedProjects = vm.projects.filter(project => project.id == selected);
+                vm.selectedTempl = vm.selectedProjects[0] ? vm.selectedProjects[0].name.substr(0, 3) : '';
                 searchOnProjects();
             }, 0);
         }

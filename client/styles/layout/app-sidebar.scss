@@ -9,70 +9,190 @@
         flex-direction: column;
         .profile, .projects {
             a.md-button {
-                padding: 8px 14px !important;
+                padding: 14px !important;
+            }
+        }
+        .show-part {
+            display: flex;
+            align-items: center;
+            max-width: 280px;
+            p {
+                margin: 0;
+                max-width: 80%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        .projects {
+            &_selected {
+                min-width: 32px;
+                text-align: center;
+                position: absolute;
+                top: 2px;
+                font-size: 8px;
+                margin-bottom: 4px;
+            }
+            &__list {
+                margin-top: 10px;
                 @media (max-width: $screen-phone) {
-                    padding: 8px !important;
+                    margin-top: 15px;
+                }
+                &-item {
+                    margin-left: 23px;
+                    margin-bottom: 0;
+                    padding: 10px 24px;
+                    display: flex;
+                    @media (max-width: $screen-phone) {
+                        padding: 15px 24px;
+                    }
+                    &:hover {
+                        .md-label {
+                            color: #ffffff;
+                        }
+                    }
+                    .md-label {
+                        margin-left: 12px;
+                        color: rgba(#ffffff, .8);
+                        
+                    }
+                    &.md-checked {
+                        .md-off {
+                            border-color: #ffffff !important;
+                        }
+                    }
+                    .md-off {
+                        border-color: rgba(#ffffff, .25) !important;
+                        &:hover {
+                            border-color: rgba(#ffffff, .5) !important;
+                        }
+                    }
+                    .md-on {
+                        border-color: #ffffff !important;
+                        background-color: #ffffff;
+                    }
                 }
             }
         }
-        .projects {
-            @media (max-width: $screen-phone) {
-                margin-bottom: 8px;
+        &-search {
+            margin: 20px 56px 18px 24px;
+            max-height: 28px;
+            @media(max-width: $screen-phone) {
+                margin: 20px 67px 18px 24px;
+            }
+            md-input-container, md-input-container.md-input-focused  {
+                width: 100%;
+                label {
+                    padding-left: 0;
+                    line-height: 1;
+                    padding-bottom: 6px;
+                    font-size: 14px;
+                    font-weight: normal;
+                    color: rgba(255, 255, 255, 0.25);
+                    @media(max-width: $screen-phone) {
+                        font-size: 16px;
+                    }
+                }
+                &.md-input-focused, &.md-input-has-value {
+                    label {
+                        display: none !important;
+                    }
+                }
+                input {
+                    padding: 8px 0px;
+                    font-size: 14px;
+                    font-weight: normal;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+                    color: rgba(255, 255, 255, 0.25);
+                    margin-bottom: 12px !important;
+                }
+                md-icon {
+                    @media(max-width: $screen-phone) {
+                        font-size: 18px;
+                    }
+                    font-size: 16px;
+                    max-width: 14px;
+                    min-width: 14px;
+                    right: 0;
+                    color: rgba(255, 255, 255, 0.25);
+                }
+            }
+            &:hover, md-input-container.md-input-focused {
+                md-input-container,
+                label,
+                md-icon,
+                input {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+                input {
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+                }
             }
         }
-        .projects {
-            &__item {
-                padding: 17px 24px;
-                display: flex;
-                align-items: center;
-            }
-        }
-        md-checkbox {
-            margin-bottom: 0;
-            .md-icon {
-                border-color: rgba(#ffffff, .5);
-            }
-        }
-        .close-button {
-            padding: 8px 8px 0;
-            display: flex;
+        .search_close-button {
+            position: absolute;
+            right: 18px;
+            top: 12px;
+            cursor: pointer;
             md-icon {
-                font-size: 17px;
-                height: 17px;
-                width: 17px;
-                min-height: 17px;
-                min-width: 17px;
-                margin-right: 0;
-                color: rgba(255, 255, 255, 0.5);
-                margin-right: 0;
+                color: rgba(#ffffff, .4);
+                font-size: 20px;
+                height: 14px;
+                width: 14px;
+                min-height: 14px;
+                min-width: 14px;
+                line-height: 14px;
+            }
+            &:hover md-icon{
                 color: rgba(#ffffff, .5);
-            }   
+            }
         }
         &__button {
-            max-width: 165px;
-            max-height: 36px;
+            margin: 24px 56px 0 24px;
+            max-height: 32px;
             border: 1px #ffffff;
-            margin: 8px 23px 16px;
-            border-radius: 18px;
-            text-transform: uppercase;
             i.material-icons {
-                font-size: 19px;
-                margin-right: 10px;
-            }
-            &._add, &._set {
-                padding: 8px 18px;
-                padding-right: 18px !important;
-                display: flex;
-                font-size: 14px;
+                font-size: 20px;
+                margin-right: 6px;
+                margin-bottom: 1px;
             }
             &._add {
-                border: solid 1px #ffffff !important;
+                color: rgba($medium-teal-light-new, .8) !important;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                text-transform: uppercase;
+                border-radius: 18px;
+                border: solid 1px rgba($medium-teal-light-new, .8) !important;
                 align-items: center;
+                padding: 11px 18px 10px;
+                padding-right: 18px !important;
+                display: flex;
+                justify-content: center;
+                font-size: 12px;
+                &:hover {
+                    color: $medium-teal-light-new !important;
+                    border: solid 1px $medium-teal-light-new !important;
+                }
             }
-            &._set {
-                border: dashed 1px #ffffff !important;
-                align-items: flex-start;
+            &._upload {
+                position: absolute;
+                bottom: 0;
+                margin: 0 0 20px 0;
+                padding: 0;
             }
         }
+    }
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: $dark_light-new; 
+    }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(#ffffff, .25); 
+        border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(#ffffff, .5);
     }
 }

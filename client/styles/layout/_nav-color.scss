@@ -75,14 +75,11 @@
         &.nav-vertical {
             .nav {
                 > li {
-                    // border-bottom: 1px solid rgba(0,0,0,.06);
                     &.open {
                         > a {
                             background-color: $light_bg_link_open_bg;
-                            color: $light_bg_link_open_color;
-                        }
-                        > .icon-has-ul,
-                        > .icon-has-ul-h { color: $light_bg_link_open_color; }               
+                            color: #ffffff;
+                        }              
                     }
                 }
             }
@@ -99,6 +96,12 @@
             a {
                 color: #ccc;
                 color: rgba(255,255,255,.4);
+                &.show-on-hover, &.show-part {
+                    color: rgba(#ffffff, .8);
+                    &:hover {
+                        color: #ffffff;
+                    }
+                }
             }
 
             .nav-title {

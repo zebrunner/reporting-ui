@@ -12,25 +12,27 @@
                     <i class="material-icons">equalizer</i><span>Boards</span>
                 </a>
                 <ul class="auto-width width-icon" toggle-nav-bottom>
+                    <li class="nav-controls search_close-button">
+                        <md-icon toggle-menu="close">close</md-icon>
+                    </li>
+                    <li  has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
+                        <a class="nav__button _add" aria-label="menu" href="" data-ng-click="showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
+                    </li>
                     <li class="sub-search nav-search">
                         <md-input-container class="no-margin no-padding">
                             <label>Search</label>
                             <input name="search" ng-model="navSC.title" autocomplete="off"/>
                             <md-icon>search</md-icon>
                         </md-input-container>
-                        <md-icon toggle-menu="close" class="search_close-button" ng-click="">close</md-icon>
                     </li>
                     <li class="sub-search search-menu">
                         <ul>
-                            <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
-                                <a class="create-view-button" md-button aria-label="menu" href="" data-ng-click="showDashboardSettingsModal($event, {}, true)"></i>New dashboard +</a>
-                            </li>
                             <li data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy:'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
+                                <a toggle-menu="close" md-button aria-label="menu" class="show-part" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
                                     <i data-ng-if="dashboard.hidden == true" style="font-size: 14px;" class="material-icons">visibility_off</i>
-                                    <show-part limit="27" text="dashboard.title"></show-part>
+                                    <p>{{dashboard.title}}</p>
                                 </a>
-                                <span ng-if="dashboard.editable" has-any-permission="['MODIFY_DASHBOARDS']" style="position: absolute; right: 10px; top: 15px;" class="show-icon-on-hover">
+                                <span ng-if="dashboard.editable" has-any-permission="['MODIFY_DASHBOARDS']" style="position: absolute; right: 15px; top: 10px;" class="show-icon-on-hover">
                                     <i style="font-size: 14px;" class="material-icons" toggle-menu="close" ng-click="showDashboardSettingsModal($event, dashboard);">edit</i>
                                 </span>
                             </li>
@@ -107,35 +109,35 @@
                 </a>
             </li>
             <li class="projects" toggle-menu>
-                    <a md-button aria-label="menu" ui-sref="projects.list" ng-click="$ctrl.loadProjects();">
-                        <div style="display: inline-block;">
-                            <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" squared="8" size="36" src="../../../../assets/images/project_photo.svg"
+                <a md-button aria-label="menu" ui-sref="projects.list" ng-click="$ctrl.loadProjects();">
+                    <p ng-if="$ctrl.selectedTempl" class="projects_selected">{{$ctrl.selectedTempl}}</p>
+                    <div style="display: inline-block;">
+                        <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" squared="8" size="36" src="../../../../assets/images/project_photo.svg"
                                     icon-visible="$ctrl.currentUser.isAdmin"></profile-photo>
-                        </div>
-                    </a>
-                        <ul class="auto-width width-icon" toggle-nav-bottom>
-                            <li class="sub-search search-menu">
-                                <ul>
-                                    <li class="close-button">
-                                        <md-icon toggle-menu="close" ng-click="">close</md-icon>
-                                    </li>
-                                    <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
-                                        <a class="nav__button _set"  ng-click="$ctrl.showUploadImageDialog($event)" aria-label="menu" href=""><i class="material-icons">insert_photo</i> Set new logo</a>
-                                    </li>
-                                    <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
-                                        <a class="nav__button _add" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
-                                    </li>
-                                    <li name="projectName" md-prevent-menu-close data-ng-repeat="project in $ctrl.projects | orderBy:'name'">
-                                        <a aria-label="menu" class="projects__item">
-                                            <md-checkbox md-prevent-menu-close ng-change="$ctrl.chooseProject();"
-                                                    ng-model="project.selected" aria-label="project {{ project.id }}"></md-checkbox>
-                                            <show-part limit="27" text='project.name'></show-part>
-                                        </a>
-                                    </li>
-                                </ul>
+                    </div>
+                </a>
+                <ul class="auto-width width-icon" toggle-nav-bottom>
+                    <li class="sub-search search-menu">
+                        <ul >
+                            <li class="nav-controls search_close-button">
+                                <md-icon toggle-menu="close">close</md-icon>
+                            </li>
+                            <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
+                                <a class="nav__button _add" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
+                            </li>
+                            <li name="projectName" class="projects__list" md-prevent-menu-close>
+                                <md-radio-group ng-model="project.selected" ng-change="$ctrl.chooseProject(project.selected);">
+                                    <md-radio-button id="0" class="projects__list-item md-primary" aria-label="project 0" value="0">Any</md-radio-button>
+                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name'" id="{{project.id}}" aria-label="project {{ project.id }}" class="projects__list-item md-primary" value="{{project.id}}" ng-click="">{{project.name}}</md-radio-button>
+                                </md-radio-group>
+                            </li>
+                            <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">
+                                <a ng-click="$ctrl.showUploadImageDialog($event)" href=""><i class="material-icons">add_a_photo</i>Upload new logo</a>
                             </li>
                         </ul>
                     </li>
+                </ul>
+            </li>
         </ul>
     </div>
 </aside>

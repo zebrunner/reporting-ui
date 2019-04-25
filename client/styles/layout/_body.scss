@@ -18,16 +18,6 @@ body > div {
 }
 */
 
-.create-view-button {
-    height: 35px !important;
-    text-align: center !important;
-    line-height: 23px !important;
-    border: 1px solid white !important;
-    margin: 0 5px !important;
-    border-radius: 20px !important;
-    padding: 5px 20px !important;
-}
-
 #vnc {
     margin: 0 auto;
     div {
@@ -2509,9 +2499,6 @@ $light-inprogress: #68c9fd;
         color: white;
         border-radius: 2px;
         padding: 2px 4px;
-       &_tag {
-
-       }
     }
 }
 
@@ -2532,10 +2519,10 @@ $light-inprogress: #68c9fd;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     
     @media(max-width: $screen-phone) {
-        width: calc(100% - 50px);
+        width: calc(100% - 60px);
         background-color: transparent;
         &-container {
-            &_title, &_title small, &_options i {
+            &_title, &_title small {
                 color: white !important;
             }
         }
@@ -2553,7 +2540,9 @@ $light-inprogress: #68c9fd;
         display: flex;
         align-items: center;
         justify-content: center;
-
+        @media(max-width: $screen-phone) {
+            padding-left: 50px;
+        }
         > div {
             white-space: nowrap;
             display: inline-block;
@@ -2645,8 +2634,9 @@ $light-inprogress: #68c9fd;
                         }
                     }
                     @media(max-width: $screen-phone) {
+                        
                         &.fixed-page-header__btn {
-                            &._launcher {
+                            &._launcher, &._dashboard {
                                 color: #ffffff;
                                 border: 1px solid #ffffff;
                                 background-color: $medium-teal-light-new;
@@ -2662,7 +2652,7 @@ $light-inprogress: #68c9fd;
 
                     @media(max-width: $breakpoint-mobile) {
                         &.fixed-page-header__btn {
-                            &._launcher, &._search {
+                            &._launcher, &._search, &._dashboard {
                                 border-radius: 8px;
                                 width: 32px;
                                 height: 32px;
@@ -2672,7 +2662,7 @@ $light-inprogress: #68c9fd;
                                 }
                             }
 
-                            &._launcher {
+                            &._launcher, &._dashboard {
                                 span {
                                     display: none;
                                 }
@@ -2726,6 +2716,9 @@ $light-inprogress: #68c9fd;
                     color: #b5b5b5;
                     font-size: 24px;
                     width: 21px;
+                    @media(max-width: $screen-phone) { 
+                        color: rgba(#ffffff, .5)
+                    }
                     &:not(:last-child) {
                         margin-right: 26px;
                         @media(max-width: $screen-phone) {
@@ -2737,12 +2730,6 @@ $light-inprogress: #68c9fd;
                         @media(max-width: $screen-phone) {
                             margin-left: 0;
                         }
-                    }
-                    &:last-child {
-                        //padding-right: 24px;
-                        //@media(max-width: $screen-phone) {
-                        //    padding-right: 6px;
-                        //}
                     }
 
                     &:hover {

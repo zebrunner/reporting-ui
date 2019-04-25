@@ -64,8 +64,6 @@ html {
             }
 
         }
-
-        .top-header {}
     }
 
     > .main-container {
@@ -79,7 +77,7 @@ html {
             position: absolute;
             display: block;
             width: 100%;
-            max-width: inherit; //
+            max-width: inherit;
             top: 0;
             bottom: 0;
             background-color: $main_container_bg;
@@ -93,7 +91,6 @@ html {
         }
 
         > .nav-container {
-            //display: none;
             z-index: $zindex-fixed; // should be highter than top header
             position: fixed;
             left: 0;
@@ -101,14 +98,8 @@ html {
             box-shadow: none;
             float: left;
             width: 220px;
-            height: calc(100% - 48px); // 48px - header height
-            //transition: width .25s ease-in-out;
-            // border-width: 0 1px 0 0;
-            // border-style: solid;
-            // border-color: darken($sidebar_bg, 10%);
-            //@media (min-width:$screen-sm) {
-                display: block;
-            //}
+            height: calc(100% - 60px); // 48px - header height
+            display: block;
             @media (max-width: $screen-phone) {
                 top: 0;
                 height: 100%;
@@ -146,10 +137,6 @@ html {
             margin-left: 0;
             margin-top: 0;
             transition: margin-left .25s ease-in-out;
-            /*@media (min-width:$screen-sm) {
-                margin-left: 60px;
-                padding-top: 64px;
-            }*/
 
             @media (min-width:$screen-phone) {
                 margin-left: 60px;
