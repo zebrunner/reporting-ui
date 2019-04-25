@@ -15,7 +15,9 @@
         .show-part {
             display: flex;
             align-items: center;
-            max-width: 280px;
+            @media (min-width: $screen-phone + 1) {
+                max-width: 280px;
+            }
             p {
                 margin: 0;
                 max-width: 80%;
