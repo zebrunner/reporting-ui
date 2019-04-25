@@ -25,6 +25,7 @@
                             flex-grow: 1;
                             @media(max-width: $breakpoint-mobile) {
                                 overflow-x: scroll;
+                                display: none;
                             }
                         }
                         &._right {
