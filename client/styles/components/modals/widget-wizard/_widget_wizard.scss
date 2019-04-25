@@ -72,7 +72,30 @@ $wizard-white:          #ffffff;
                 height: 164px;
                 margin: 0 $inner-padding $inner-padding 0;
 
+                $parent: &;
+                &:not(.zf-checked):hover {
+                    > label::before {
+                        border: 2px solid rgba(1, 22, 39, 0.4) !important;
+                    }
+                    #{$parent}_icon {
+                        i, md-icon {
+                            color: rgba(1, 22, 39, 0.4);
+                        }
+                    }
+                }
+
                 &_add {
+
+                    &:hover {
+                        &:before {
+                            display: block;
+                            content: '';
+                            position: absolute;
+                            height: 100%;
+                            width: 100%;
+                            border: 2px solid rgba(1, 22, 39, 0.4) !important;
+                        }
+                    }
 
                     background-color: rgba(31,36,42, 0.1) !important;
                     border-radius: 4px;

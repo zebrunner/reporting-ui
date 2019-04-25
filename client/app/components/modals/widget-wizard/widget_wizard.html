@@ -194,7 +194,6 @@
                 <div class="widget-wizard_container_elements_personal">
                     <ng-form class="form-validation" name="info">
                         <zf-input-container>
-                            <label>Set name for widget</label>
                             <div class="zf-display-table">
                                 <div class="widget-wizard_container_elements_personal_item">
                                     <div class="zf-label">Name</div>
@@ -256,7 +255,7 @@
                 {{widget.widgetTemplate.name}}
             </div>
             <div class="widget-wizard_container-helper_picture_empty-caption" ng-if="! widget.data.dataset">
-                Choose template
+                {{card.title}}
             </div>
         </div>
         <div class="widget-wizard_container-helper_actions">
