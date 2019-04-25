@@ -5,7 +5,7 @@ import fileUploadController from './file-upload-modal/file-upload-modal.controll
 
 const integrationsController = function integrationsController($scope, $rootScope, $state, $mdConstant,
                                                                $stateParams, $mdDialog, UploadService,
-                                                               SettingsService, toolsService, $q, $timeout) {
+                                                               SettingsService, toolsService, $q) {
     'ngInject';
 
     const SORT_POSTFIXES = {
@@ -32,18 +32,21 @@ const integrationsController = function integrationsController($scope, $rootScop
         changeStatus,
         saveTool,
         showUploadFileDialog,
+        isToolConnected: toolsService.isToolConnected,
     };
 
     function saveTool(tool) {
+        tool.connectionChecking = true;
+
         toolsService.updateSettings(tool.settings)
             .then(rs => {
                 if (rs.success) {
-                    tool.connected = rs.data.connected;
-                    toolsService.setToolStatus(tool.name, tool.connected);
+                    toolsService.setToolStatus(tool.name, rs.data.connected);
                     alertify.success('Tool ' + tool.name + ' was changed');
                 } else {
                     alertify.error(rs.message);
                 }
+                tool.connectionChecking = false;
         });
     }
 
@@ -63,11 +66,11 @@ const integrationsController = function integrationsController($scope, $rootScop
         const statusSetting = {...tool.statusSetting};
 
         statusSetting.value = tool.enabled ? 'true' : 'false';
+        tool.enabled && (tool.connectionChecking = true);
         toolsService.updateSettings([statusSetting])
             .then(function (rs) {
                 if (rs.success) {
-                    tool.connected = rs.data.connected;
-                    toolsService.setToolStatus(tool.name, tool.connected);
+                    toolsService.setToolStatus(tool.name, rs.data.connected);
 
                     if (tool.enabled) {
                         alertify.success('Tool ' + tool.name + ' is enabled');
@@ -77,6 +80,8 @@ const integrationsController = function integrationsController($scope, $rootScop
                 } else {
                     alertify.error('Unable to change ' + tool.name + ' state');
                 }
+
+                tool.enabled && (tool.connectionChecking = false);
             });
     }
 
@@ -111,15 +116,17 @@ const integrationsController = function integrationsController($scope, $rootScop
                 return -1;
             } else if(aSortOrder === false && bSortOrder === true) {
                 return 1;
-            } else
+            } else {
                 return 0;
+            }
         } else {
             if (aSortOrder < bSortOrder) {
                 return -1;
             } else if (aSortOrder > bSortOrder) {
                 return 1;
-            } else
+            } else {
                 return 0;
+            }
         }
     }
 
@@ -148,11 +155,20 @@ const integrationsController = function integrationsController($scope, $rootScop
                     settingName,
                 }
             })
-            .then(() => {
-                fillToolSettings(tool)
-                    .then(() => {
-                        checkToolConnectionStatus(tool);
-                    });
+            .then((data) => {
+                toolsService.setToolStatus(tool.name, data.connected);
+
+                const statusSetting = getStatusSetting(tool.name, data.settingList);
+
+                tool.settings = data.settingList
+                    .filter(setting => {
+                        setting.notEditable = NOT_EDITABLE_SETTINGS.indexOf(setting.name) !== -1;
+
+                        return setting !== statusSetting;
+                    })
+                    .sort(compareBySettingSortOrder);
+                tool.enabled = statusSetting.value === 'true';
+                tool.statusSetting = statusSetting;
             })
             .catch(() => {});
     }
@@ -187,33 +203,6 @@ const integrationsController = function integrationsController($scope, $rootScop
                 } else {
                     console.error(`Failed to load ${tool.name} settings`);
                 }
-            });
-    }
-
-    function checkToolConnectionStatus(tool) {
-        const start = Date.now();
-        let delay = 0;
-
-        tool.connectionChecking = true;
-
-        return toolsService.fetchToolConnectionStatus(tool.name)
-            .then(toolResponse => {
-                const finish = Date.now();
-
-                if (toolResponse.success) {
-                    tool.connected = toolResponse.data;
-                    toolsService.setToolStatus(tool.name, tool.connected);
-                }
-
-                //get rid of ugly blinking of loader
-                if (finish - start < 500) {
-                    delay = 1000;
-                }
-
-                $timeout(() => {
-                    tool.connectionChecking = false;
-                }, delay);
-
             });
     }
 

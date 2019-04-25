@@ -20,12 +20,12 @@
                     <div class="col-md-4 integration-tool__item-wrapper" data-ng-repeat="tool in ::$ctrl.tools track by tool.name">
                         <div class="card bg-white integration-tool__item" zafira-background-theme ng-show="!$ctrl.isLoading">
                             <div ng-class="{'large-card-content': tool.enabled}" class="card-content">
-                                <i ng-class="{'highlight_red': !tool.connected && tool.enabled, 'highlight_green': tool.connected && tool.enabled, 'highlight_gray': !tool.enabled}"
+                                <i ng-class="{'highlight_red': !$ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_gray': !tool.enabled}"
                                    ng-if="!tool.connectionChecking"
                                    class="material-icons material-icon-16px integration-tool__item-icon">fiber_manual_record</i>
                                 <md-progress-circular md-diameter="16px"
                                                       ng-if="tool.connectionChecking"
-                                                      ng-class="{'highlight_red': !tool.connected && tool.enabled, 'highlight_green': tool.connected && tool.enabled, 'highlight_gray': !tool.enabled}"
+                                                      ng-class="{'highlight_red': !$ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_gray': !tool.enabled}"
                                                       class="integration-tool__item-loader"></md-progress-circular>
                                 <span name="toolName" class="card-title">{{ ::tool.name }}</span>
                                 <md-input-container has-any-permission="['MODIFY_INTEGRATIONS']" style="float: right; margin-top: 0">

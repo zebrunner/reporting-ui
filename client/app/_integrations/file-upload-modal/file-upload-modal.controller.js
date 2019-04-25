@@ -1,23 +1,23 @@
 'use strict';
 
-const fileUploadModalController = ($scope, $mdDialog, toolName, settingName, UtilService, UploadService) => {
+const fileUploadModalController = ($scope, $mdDialog, toolName, settingName, UtilService, toolsService) => {
     'ngInject';
 
     function uploadFile(multipartFile) {
-        UploadService.uploadSettingFile(multipartFile, toolName, settingName)
+        toolsService.uploadSettingFile(multipartFile, toolName, settingName)
             .then(function (rs) {
                 if (rs.success) {
                     alertify.success('File was uploaded');
-                    closeModal(true);
+                    closeModal(rs.data);
                 } else {
                     alertify.error(rs.message);
                 }
             });
     }
 
-    function closeModal(success) {
-        if (success) {
-            $mdDialog.hide();
+    function closeModal(data) {
+        if (data) {
+            $mdDialog.hide(data);
         } else {
             $mdDialog.cancel();
         }

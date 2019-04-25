@@ -15,6 +15,7 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         fetchToolSettings,
         updateSettings,
         fetchToolConnectionStatus,
+        uploadSettingFile,
 
         // fillToolSettings,
         setToolStatus,
@@ -89,6 +90,10 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
 
     function fetchToolConnectionStatus(name) {
         return $httpMock.get(API_URL + '/api/settings/tools/' + name).then(UtilService.handleSuccess, UtilService.handleError('Unable to get tool connection'));
+    }
+
+    function uploadSettingFile(multipartFile, tool, settingName) {
+        return $httpMock.post(API_URL + '/api/settings/tools?tool=' + tool + '&name=' + settingName + '&file=', multipartFile, {headers: {'Content-Type': undefined}, transformRequest : angular.identity}).then(UtilService.handleSuccess, UtilService.handleError('Unable to upload file'));
     }
 
     return service;
