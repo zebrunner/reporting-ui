@@ -3,6 +3,14 @@
         <zf-sub-header-title>
             User profile
         </zf-sub-header-title>
+        <zf-sub-header-options ng-class="{'header-option-selected': MODE === 'WIDGET_PLACEMENT'}">
+            <div>
+                <i class="material-icons" ui-sref="logout">
+                    exit_to_app
+                    <md-tooltip md-direction="bottom">Logout</md-tooltip>
+                </i>
+            </div>
+        </zf-sub-header-options>
     </zf-sub-header>
     <header class="profile-header">
         <div class="profile-img">
@@ -209,8 +217,5 @@
                 </div>
             </section>
         </div>
-    </div>
-    <div layout="row" layout-align="center center">
-        <md-button aria-label="menu" ui-sref="logout" class="md-raised btn-w-md md-primary logout">Logout</md-button>
     </div>
 </div>

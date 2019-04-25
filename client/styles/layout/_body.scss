@@ -2735,6 +2735,10 @@ $light-inprogress: #68c9fd;
                     &:hover {
                         color: rgba(0, 0, 0, 0.5);
                         opacity: 0.9;
+                        @media(max-width: $screen-phone) {
+                            color: rgba(#ffffff, 0.8);
+                            opacity: 1;
+                        }
                     }
                 }
                 md-menu {
