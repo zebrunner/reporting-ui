@@ -50,20 +50,21 @@
                 <a md-button aria-label="menu" ui-sref="views" data-ng-click="loadViews();">
                     <i class="material-icons">remove_red_eye</i><span>Views</span>
                 </a>
-                <ul class="auto-width width-icon">
-                    <li class="sub-search nav-search" toggle-nav-bottom>
+                <ul class="auto-width width-icon" toggle-nav-bottom>
+                    <li class="nav-controls search_close-button">
+                        <md-icon toggle-menu="close">close</md-icon>
+                    </li>
+                    <li toggle-menu="close" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
+                        <a class="nav__button _add" aria-label="menu" href="" data-ng-click="showViewDialog($event)"><i class="material-icons">add</i>Add view</a>
+                    </li>
+                    <li class="sub-search nav-search">
                         <md-input-container class="no-margin no-padding">
                             <label>Search</label>
                             <input name="search" ng-model="navSCView.name" autocomplete="off"/>
                             <md-icon>search</md-icon>
                         </md-input-container>
-                        <md-icon toggle-menu="close" class="search_close-button" ng-click="">close</md-icon>
                     </li>
                     <li class="sub-search search-menu">
-                        <ul toggle-nav-bottom>
-                            <li>
-                                <a class="create-view-button" md-button aria-label="menu" href="" toggle-menu="close" data-ng-click="showViewDialog($event)"></i>New view +</a>
-                            </li>
                             <li data-ng-repeat="view in views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })">
                                     <show-part limit="27" text="view.name"></show-part>

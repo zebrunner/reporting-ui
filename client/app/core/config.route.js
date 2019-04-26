@@ -441,7 +441,8 @@
                     url: '/runs/:testRunId/info/:testId',
                     component: 'testRunInfoComponent',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
+                        classes: 'p-tests-run-info'
                     },
                     resolve: {
                         testRun: ($stateParams, $q, $state, TestRunService, $timeout) => {

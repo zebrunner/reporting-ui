@@ -56,7 +56,7 @@
 
     &__wrapper {
         &.non-empty-filters {
-            padding-top: 60px;
+            padding-top: 48px;
         }
 
         &-panel-body {   
@@ -195,6 +195,7 @@
         border: 1px solid rgba(#1f242a, .1);
         border-right: 0;
         border-left: 0;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         @media (min-width: 481px) { 
             left: 60px; 
         }

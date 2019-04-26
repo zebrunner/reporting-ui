@@ -3,12 +3,9 @@
 .testrun-info {
     background-color: #fff;
     .fixed-page-header {
-        height: 54px;
         &-container {
             justify-content: space-between;
-            padding-left: 0;
             &_title {
-                padding-left: 20px;
                 max-width: 85%;
             }
         }
@@ -25,6 +22,15 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 80%;
+            &._mobile {
+                display: none;
+            }
+            @media screen and (max-width: $screen-phone) {
+                display: none;
+                &._mobile {
+                    display: inline-block;
+                }
+            }
         }
 
         .back_button {
@@ -39,12 +45,15 @@
             &:hover {
                 background-color: none;
             }
+
+            @media screen and (max-width: $screen-phone) {
+                display: none;
+            }
         }
     }
 
     &__container {
-        padding-top: 54px !important;
-        height: calc(100vh - 48px);
+        height: calc(100vh - #{$header_height});
     }
 
     &__section {
