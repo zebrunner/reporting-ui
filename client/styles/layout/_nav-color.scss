@@ -94,13 +94,16 @@
         .nav {
 
             a {
-                color: #ccc;
-                color: rgba(255,255,255,.4);
-                &.show-on-hover, &.show-part {
-                    color: rgba(#ffffff, .8);
+                color: $dark_bg_link_color;
+                &.show-on-hover,
+                &.show-part {
+                    color: $dark_bg_link_hover_color;
                     &:hover {
-                        color: #ffffff;
+                        color: #fff;
                     }
+                }
+                &._light {
+                    color: $dark_bg_link_active_color;
                 }
             }
 
@@ -114,18 +117,20 @@
 
 
             > li {
+                &.active,
                 &:hover {
                     > a {
-                        background-color: $dark_bg_link_hover_bg;
                         color: $dark_bg_link_hover_color;
-                        > .icon-has-ul { color: $dark_bg_link_hover_color; }
+                        &._light {
+                            color: $dark_bg_link_color_light_hover;
+                        }
                     }
                     > .icon-has-ul-h { color: $dark_bg_link_hover_color; }
                 }
-                &.active {
+                &:hover {
                     > a {
-                        // background-color: $dark_bg_link_active_bg;
-                        color: $dark_bg_link_active_color;
+                        background-color: $dark_bg_link_hover_bg;
+                        > .icon-has-ul { color: $dark_bg_link_hover_color; }
                     }                        
                     > .icon-has-ul { color: $dark_bg_link_active_color; }
                 }

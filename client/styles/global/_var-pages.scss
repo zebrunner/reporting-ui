@@ -30,9 +30,12 @@ $light_bg_sub_nav_bg:                $light_bg_link_active_bg;
 $light_bg_sub_link_active_color:     $brand-primary;
 
 $dark_bg_link_hover_bg:              transparent;
-$dark_bg_link_hover_color:           rgba(255,255,255,.8);
+$dark_bg_link_hover_color:           rgba(255,255,255, .8);
+$dark_bg_link_color:                 rgba(255,255,255, .4);
+$dark_bg_link_color_light:           $dark_bg_link_hover_color;
+$dark_bg_link_color_light_hover:     #fff;
 $dark_bg_link_active_bg:             darken($dark, 3%);
-$dark_bg_link_active_color:          rgba(255,255,255,.8);
+$dark_bg_link_active_color:          $dark_bg_link_hover_color;
 $dark_bg_link_open_bg:               $dark_bg_link_active_bg;      // vertical nav only
 $dark_bg_link_open_color:            $dark_bg_link_active_color;   // vertical nav only
 $dark_bg_sub_nav_bg:                 $dark_bg_link_active_bg;
