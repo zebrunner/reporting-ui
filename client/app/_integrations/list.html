@@ -17,7 +17,7 @@
         <div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-4 integration-tool__item-wrapper" data-ng-repeat="tool in ::$ctrl.tools track by tool.name">
+                    <div class="col-md-4 integration-tool__item-wrapper" data-ng-repeat="tool in $ctrl.tools track by tool.name">
                         <div class="card bg-white integration-tool__item" zafira-background-theme ng-show="!$ctrl.isLoading">
                             <div ng-class="{'large-card-content': tool.enabled}" class="card-content">
                                 <i ng-class="{'highlight_red': !$ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_gray': !tool.enabled}"
