@@ -15,7 +15,7 @@
                     <li class="nav-controls search_close-button">
                         <md-icon toggle-menu="close">close</md-icon>
                     </li>
-                    <li  has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
+                    <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
                         <a class="nav__button _add" aria-label="menu" href="" data-ng-click="showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
                     </li>
                     <li class="sub-search nav-search">
