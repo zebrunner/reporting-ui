@@ -4,7 +4,7 @@ import uploadImageModalController from '../shared/modals/upload-image-modal/uplo
 import uploadImageModalTemplate from '../shared/modals/upload-image-modal/upload-image-modal.html';
 
 const UserProfileController = function UserProfileController($mdDialog, UserService, DashboardService, UtilService,
-                                                             AuthService, appConfig, $q) {
+                                                             AuthService, appConfig, $q, $state) {
     'ngInject';
 
     const vm = {
@@ -31,9 +31,14 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         generateAccessToken,
         validations: UtilService.validations,
         untouchForm: UtilService.untouchForm,
+        goToState,
 
         get currentUser() { return UserService.currentUser; },
     };
+
+    function goToState(state) {
+        $state.go(state);
+    }
 
     function isIntervalSelected(interval) {
         return vm.currentUser && vm.currentUser.refreshInterval === interval;

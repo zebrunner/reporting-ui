@@ -67,18 +67,11 @@
             }
         }
 
-        /*.content-container {
-            margin-left: 60px;
-        }*/
-
-        &:not(.body-wide) #content {
-            padding-top: $header_height;
-        }
-
         #nav-wrapper {
             overflow: visible !important;
         }
         #nav {
+            overflow: visible !important;
             .sidebar-menu-button {
                 display: none;
                 @media (max-width: $screen-phone) {
@@ -86,9 +79,7 @@
                     height: $header_height;
                 }
             }
-            overflow: visible !important;
             > li {
-                // width: 50px;
                 &.li-small {
                     > a > i {
                         font-size: 12px;
@@ -96,25 +87,14 @@
                 }
                 > a,
                 > .menu-btn {
-                    padding: 15px 15px;
                     text-align: center;
-
-                    @media (max-width: $screen-phone) {
-                        height: 100%;
-                        padding: 15px 10px;
-                    }
 
                     > i {
                         margin: 0;
-                        //@media(min-width: $screen-phone) {
-                            font-size: 22px;
-                        //}
+                        font-size: 22px;
                     }
                     > span {
                         display: none;
-                        // opacity: 0;
-                        // visibility: hidden;
-                        // margin-left: -150px;
                     }
                 }
 
@@ -127,27 +107,24 @@
                 }
 
                 > ul {
-
                     z-index: 9;
                     position: absolute;
-                    height: 95%;
+                    height: 100%;
                     left: 100%;
                     top: 0;
-                    min-width: 240px;
+                    min-width: 280px;
 
                     @media (max-width: $screen-phone) {
                         position: fixed;
                         left: $sidebar_phone_width;
                         top: $header_height;
-                        width: calc(100% - 48px) !important;
-                        //height: 100%;
+                        width: calc(100% - 60px) !important;
+                        min-width: auto;
                     }
 
-                    //overflow: auto;
                     @include border-right-radius($border-radius-base);
                     box-shadow: 1px 1px 3px rgba(0,0,0,.2);
                     li.search-menu {
-                        //margin-top: 6px;
                         > ul {
                             height: 100%;
                             overflow: auto;
@@ -155,71 +132,15 @@
                         .fa-angle-down {
                             display: none !important;
                         }
-                        /*li:first-child {
-                            margin-top: 6px;
-                        }*/
                     }
 
                     > li:not(.nav-search):not(.nav-controls) {
-                        height: calc(95% - 40px);
-                        @media (max-width:$screen-sm) {
-                            height: calc(95% - 60px);
-                        }
-                    }
-
-                    > li {
-                        &.nav-search {
-                            height: 5%;
-                            margin-left: 16px !important;
-                            margin-top: 6px;
-                            margin-bottom: 18px;
-                            md-input-container {
-                                label {
-                                    font-size: 12px;
-                                    @media(max-width: $screen-phone) {
-                                        font-size: 16px;
-                                    }
-                                    color: #4e5259;
-                                }
-                                &.md-input-focused, &.md-input-has-value {
-                                    label {
-                                        display: none !important;
-                                    }
-                                }
-                                input {
-                                    width: 160px;
-                                    @media(max-width: $screen-phone) {
-                                        width: 200px;
-                                    }
-                                    border-color: #4e5259;
-                                    color: #4e5259;
-                                    margin-bottom: 12px !important;
-                                }
-                                md-icon {
-                                    font-size: 18px;
-                                }
-                            }
-                            md-icon {
-                                color: #4e5259;
-                                font-size: 17px;
-                            }
-                            .search_close-button {
-                                position: relative;
-                                left: 34px;
-
-                                @media (max-width: $screen-phone) {
-                                    position: absolute;
-                                    left: 90%;
-                                    top: 8px;
-                                }
-                            }
-                        }
+                        height: 100%;
                     }
                 }
 
-                //&:hover,
                 &.open {
-                    > ul, li.search-menu > ul {
+                    > ul, li.search-menu > ul:not(.projects__wrapper) {
                         display: block !important;
                     }
                 }

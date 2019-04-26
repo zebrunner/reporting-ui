@@ -1,5 +1,6 @@
 body {
     background: $main_container_bg;
+    min-width: 320px;
 
     &.menu-toggled {
         overflow: hidden !important;
@@ -16,16 +17,6 @@ body > div {
     max-height: 100%;
 }
 */
-
-.create-view-button {
-    height: 35px !important;
-    text-align: center !important;
-    line-height: 23px !important;
-    border: 1px solid white !important;
-    margin: 0 5px !important;
-    border-radius: 20px !important;
-    padding: 5px 20px !important;
-}
 
 #vnc {
     margin: 0 auto;
@@ -622,6 +613,13 @@ section.zaf-light .article-title {
 
 .background-green {
     background-color: #26a69a !important;
+}
+
+.top-header.background-green {
+    background-color: #edeff1 !important;
+    @media (max-width: $screen-phone) {
+        background-color: #26a69a !important;
+    }
 }
 
 .background-darkgreen {
@@ -2501,9 +2499,6 @@ $light-inprogress: #68c9fd;
         color: white;
         border-radius: 2px;
         padding: 2px 4px;
-       &_tag {
-
-       }
     }
 }
 
@@ -2514,17 +2509,28 @@ $light-inprogress: #68c9fd;
 }
 
 .fixed-page-header {
+    top: 0;
     position: fixed;
     height: $header-height;
     width: calc(100% - 60px);
     right: 0;
     background-color: white;
-    top: 48px;
-    z-index: 5;
+    z-index: 79;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-
+    
     @media(max-width: $screen-phone) {
-        width: 100%;
+        width: calc(100% - 60px);
+        background-color: transparent;
+        &-container {
+            &_title, &_title small {
+                color: white !important;
+            }
+        }
+    }
+
+    @media(max-width: $breakpoint-mobile) {
+        
+        box-shadow: none;
     }
 
     &-container {
@@ -2534,7 +2540,9 @@ $light-inprogress: #68c9fd;
         display: flex;
         align-items: center;
         justify-content: center;
-
+        @media(max-width: $screen-phone) {
+            padding-left: 50px;
+        }
         > div {
             white-space: nowrap;
             display: inline-block;
@@ -2550,12 +2558,16 @@ $light-inprogress: #68c9fd;
             small {
                 color: #7f7f7f;
             }
+            @media(max-width: $screen-phone) {
+                text-align: center;
+            }
         }
 
         &_button {
             > i {
                 color: $dark;
             }
+            >a.md-button,
             button {
                 &:not(.zf-header-button) {
                     box-shadow: none !important;
@@ -2577,12 +2589,14 @@ $light-inprogress: #68c9fd;
                     border-radius: 16px;
                     border: 1px solid $medium-teal-light-new;
                     background-color: white;
+                    transition: all .25s;
 
                     .material-icons {
                         color: $medium-teal-light-new;
                         font-size: 22px;
                         line-height: 18px;
                         margin: 0 2px 2px 0;
+                        transition: color .25s;
                     }
 
                     span {
@@ -2606,6 +2620,11 @@ $light-inprogress: #68c9fd;
                             background-color: rgba(31, 36, 42, 0.3);
                             color: #000;
                         }
+
+                        @media(max-width: $breakpoint-mobile) {
+                            max-width: 65px;
+                            min-width: 65px;
+                        }
                     }
 
                     &:hover {
@@ -2617,25 +2636,32 @@ $light-inprogress: #68c9fd;
                             color: $medium-teal-light-new-hover;
                         }
                     }
+                    @media(max-width: $screen-phone) {
+                        &.fixed-page-header__btn {
+                            color: #ffffff;
+                            border: 1px solid #ffffff;
+                            background-color: $medium-teal-light-new;
+                            md-icon {
+                                color: #ffffff;
+                            }
+                            span {
+                                display: none;
+                            }
+                        }
+                    }
 
                     @media(max-width: $breakpoint-mobile) {
                         &.fixed-page-header__btn {
-                            &._launcher, &._search {
-                                border-radius: 8px;
-                                width: 32px;
-                                height: 32px;
-                                padding: 0;
-
-                                .material-icons {
-                                    margin: 0;
-                                    line-height: 24px;
-                                }
+                            border-radius: 8px;
+                            width: 32px;
+                            height: 32px;
+                            padding: 0;
+                            md-icon {
+                                padding: 4px 0 0 2px;
                             }
 
-                            &._launcher {
-                                span {
-                                    display: none;
-                                }
+                            span {
+                                display: none;
                             }
 
                             &._search {
@@ -2686,6 +2712,9 @@ $light-inprogress: #68c9fd;
                     color: #b5b5b5;
                     font-size: 24px;
                     width: 21px;
+                    @media(max-width: $screen-phone) { 
+                        color: rgba(#ffffff, .5)
+                    }
                     &:not(:last-child) {
                         margin-right: 26px;
                         @media(max-width: $screen-phone) {
@@ -2694,17 +2723,18 @@ $light-inprogress: #68c9fd;
                     }
                     &:first-child {
                         margin-left: 30px;
-                    }
-                    &:last-child {
-                        //padding-right: 24px;
-                        //@media(max-width: $screen-phone) {
-                        //    padding-right: 6px;
-                        //}
+                        @media(max-width: $screen-phone) {
+                            margin-left: 0;
+                        }
                     }
 
                     &:hover {
                         color: rgba(0, 0, 0, 0.5);
                         opacity: 0.9;
+                        @media(max-width: $screen-phone) {
+                            color: rgba(#ffffff, 0.8);
+                            opacity: 1;
+                        }
                     }
                 }
                 md-menu {
