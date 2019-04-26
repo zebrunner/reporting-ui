@@ -14,16 +14,16 @@
 
                         <fieldset>
                             <md-input-container class="md-block">
-                                <label class="placeholder-label">Username</label>
+                                <label class="placeholder-label">Username or email</label>
                                 <input
                                     type="text"
                                     name="username"
                                     id="username"
                                     required
-                                    ng-model="credentials.username"/>
+                                    ng-model="credentials.usernameOrEmail"/>
                                 <div ng-messages="signin_form.username.$error" ng-if="signin_form.username.$dirty">
                                     <div ng-message="required">
-                                        <span>Username required</span>
+                                        <span>Username or email required</span>
                                     </div>
                                 </div>
                             </md-input-container>
