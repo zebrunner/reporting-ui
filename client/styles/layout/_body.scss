@@ -2567,6 +2567,7 @@ $light-inprogress: #68c9fd;
             > i {
                 color: $dark;
             }
+            >a.md-button,
             button {
                 &:not(.zf-header-button) {
                     box-shadow: none !important;
@@ -2588,12 +2589,14 @@ $light-inprogress: #68c9fd;
                     border-radius: 16px;
                     border: 1px solid $medium-teal-light-new;
                     background-color: white;
+                    transition: all .25s;
 
                     .material-icons {
                         color: $medium-teal-light-new;
                         font-size: 22px;
                         line-height: 18px;
                         margin: 0 2px 2px 0;
+                        transition: color .25s;
                     }
 
                     span {
@@ -2634,38 +2637,31 @@ $light-inprogress: #68c9fd;
                         }
                     }
                     @media(max-width: $screen-phone) {
-                        
                         &.fixed-page-header__btn {
-                            &._launcher, &._dashboard {
+                            color: #ffffff;
+                            border: 1px solid #ffffff;
+                            background-color: $medium-teal-light-new;
+                            md-icon {
                                 color: #ffffff;
-                                border: 1px solid #ffffff;
-                                background-color: $medium-teal-light-new;
-                                md-icon {
-                                    color: #ffffff;
-                                }
-                                span {
-                                    display: none;
-                                }
+                            }
+                            span {
+                                display: none;
                             }
                         }
                     }
 
                     @media(max-width: $breakpoint-mobile) {
                         &.fixed-page-header__btn {
-                            &._launcher, &._search, &._dashboard {
-                                border-radius: 8px;
-                                width: 32px;
-                                height: 32px;
-                                padding: 0;
-                                md-icon {
-                                    padding: 4px 0 0 2px;
-                                }
+                            border-radius: 8px;
+                            width: 32px;
+                            height: 32px;
+                            padding: 0;
+                            md-icon {
+                                padding: 4px 0 0 2px;
                             }
 
-                            &._launcher, &._dashboard {
-                                span {
-                                    display: none;
-                                }
+                            span {
+                                display: none;
                             }
 
                             &._search {
