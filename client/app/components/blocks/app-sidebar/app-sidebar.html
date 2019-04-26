@@ -101,7 +101,7 @@
                 </a>
             </li>
             <li style="flex-grow: 1"></li>
-            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('users.profile')}">
+            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('users.profile')}" toggle-nav-bottom>
                 <a md-button aria-label="menu" ui-sref="users.profile">
                     <div>
                         <profile-photo ng-model="$ctrl.currentUser.photoURL" squared="8" size="32" auto-resize="false"></profile-photo>
