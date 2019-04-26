@@ -65,6 +65,7 @@
                         </md-input-container>
                     </li>
                     <li class="sub-search search-menu">
+                        <ul toggle-nav-bottom>
                             <li data-ng-repeat="view in views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })">
                                     <show-part limit="27" text="view.name"></show-part>
