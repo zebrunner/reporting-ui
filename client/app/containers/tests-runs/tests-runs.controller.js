@@ -36,8 +36,8 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         showCiHelperDialog: showCiHelperDialog,
         resetFilter: resetFilter,
         displaySearch: displaySearch,
-        selectAllTestRuns,
-        selectTestRun,
+        selectAllTestRuns: selectAllTestRuns,
+        selectTestRun: selectTestRun,
         isToolConnected: toolsService.isToolConnected,
     };
 
@@ -110,6 +110,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     }
 
     function getTestRuns(page, pageSize) {
+        vm.selectedAll = false;
         vm.projects = $cookieStore.get('projects');
 
         vm.projects && vm.projects.length && testsRunsService.setSearchParam('projects', vm.projects);
