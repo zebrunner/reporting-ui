@@ -24,8 +24,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             fullscreen: false
         },
         getActiveSearchType: testsRunsService.getActiveSearchType,
-        onSearchChange: onSearchChange,
-        selectSearchType: selectSearchType,
         searchParams: testsRunsService.getLastSearchParams(),
         onChangeSearchCriteria: onChangeSearchCriteria,
         openDatePicker: openDatePicker,
@@ -84,10 +82,15 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
     }
 
+    let applyTimer;
+    const timeoutOnChange = 800;
+
     function onApply() {
-        $timeout(function() {
+        $timeout.cancel(applyTimer);
+        applyTimer = $timeout(function() {
             vm.onFilterChange();
-        }, 0);
+            applyTimer = null;
+        }, timeoutOnChange);
     }
 
     function loadFilters() {
@@ -177,22 +180,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         return criteria && SELECT_CRITERIAS.indexOf(criteria.name) >= 0;
     }
 
-    function onSearchChange() {
-        const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
-        if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
-
-        !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
-        testsRunsService.getSearchTypes().forEach(function(type) {
-            if (vm.fastSearch[type]) {
-                testsRunsService.setSearchParam(type, vm.fastSearch[type]);
-            } else if (testsRunsService.getSearchParam(type)) {
-                testsRunsService.deleteSearchParam(type);
-            }
-        });
-        vm.onApply();
-    }
-
     function onChangeSearchCriteria(name) {//TODO: refactor this fn and onSearchChange for "DRY"
         const activeFilteringTool = testsRunsService.getActiveFilteringTool();
 
@@ -206,12 +193,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             testsRunsService.deleteSearchParam(name);
         }
         vm.onApply();
-    }
-
-    function selectSearchType(type) {
-        if (vm.getActiveSearchType() === type) { return; }
-
-        testsRunsService.setActiveSearchType(type);
     }
 
     function openDatePicker($event, showTemplate) {

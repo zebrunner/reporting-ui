@@ -6,7 +6,7 @@
                 <div class="tests-runs-filter__search-panel-body _row-wrapper">
                     <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
                     <input type="text" id="search-input" class="form-control pull-left" placeholder="Search items"
-                        ng-model="$ctrl.fastSearch[$ctrl.getActiveSearchType()]" ng-change="$ctrl.onSearchChange()"
+                        ng-model="$ctrl.searchParams.query" ng-change="$ctrl.onChangeSearchCriteria('query')"
                         ng-model-options="{debounce: 500}" aria-label="Search items" aria-describedby="basic-addon2">
                     <div class="search-wrapper" role="button" ng-if="$ctrl.isMobile()">
                         <i class="material-icons">
@@ -22,17 +22,9 @@
                     <ng-transclude></ng-transclude>
                     <div layout="row" flex="auto" layout-xs="column">
                         <input type="text" id="search-input" ng-if="!$ctrl.isMobile()" class="form-control pull-left"
-                            placeholder="Search items" ng-model="$ctrl.fastSearch[$ctrl.getActiveSearchType()]"
-                            ng-change="$ctrl.onSearchChange()" ng-model-options="{debounce: 200}" aria-label="Search items"
+                            placeholder="Search items" ng-model="$ctrl.searchParams.query"
+                            ng-change="$ctrl.onChangeSearchCriteria('query')" ng-model-options="{debounce: 200}" aria-label="Search items"
                             aria-describedby="basic-addon2">
-                        <div class="btn-check" layout-xs="row">
-                            <button type="button" ng-class="{'default-blue': $ctrl.fastSearch['testSuite'] && $ctrl.fastSearch['testSuite'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'testSuite'}"
-                                ng-click="$ctrl.selectSearchType('testSuite')" class="btn btn-default">Test Suite <i class="material-icons">short_text</i></button>
-                            <button type="button" ng-class="{'default-blue': $ctrl.fastSearch['executionURL'] && $ctrl.fastSearch['executionURL'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'executionURL'}"
-                                ng-click="$ctrl.selectSearchType('executionURL')" class="btn btn-default">Job URL<i class="material-icons">short_text</i></button>
-                            <button type="button" ng-class="{'default-blue': $ctrl.fastSearch['appVersion'] && $ctrl.fastSearch['appVersion'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'appVersion'}"
-                                ng-click="$ctrl.selectSearchType('appVersion')" class="btn btn-default"> App Version<i class="material-icons">short_text</i></button>
-                        </div>
                     </div>
                 </div>
                 <div class="row-wrapper" layout="row" layout-sm="column" layout-xs="column">

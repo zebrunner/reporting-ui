@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('TestRunService', ['$httpMock', 'UtilService', 'API_URL', TestRunService])
+        .factory('TestRunService', ['$httpMock', 'UtilService', 'API_URL', '$httpParamSerializer', TestRunService])
 
-    function TestRunService($httpMock, UtilService, API_URL) {
+    function TestRunService($httpMock, UtilService, API_URL, $httpParamSerializer) {
         var service = {
             searchTestRuns: searchTestRuns,
             abortTestRun: abortTestRun,
@@ -31,9 +31,10 @@
 
         return service;
 
-        function searchTestRuns(criteria, filterQuery) {
-            var endpoint = filterQuery ? '/api/tests/runs/search' + filterQuery : '/api/tests/runs/search';
-            return $httpMock.post(API_URL + endpoint, criteria).then(UtilService.handleSuccess, UtilService.handleError('Unable to search test runs'));
+        function searchTestRuns(criteria) {
+            var path = $httpParamSerializer(criteria);
+            var endpoint = '/api/tests/runs/search?' + path;
+            return $httpMock.get(API_URL + endpoint, criteria).then(UtilService.handleSuccess, UtilService.handleError('Unable to search test runs'));
         }
 
         function abortTestRun(id, ciRunId, comment) {
