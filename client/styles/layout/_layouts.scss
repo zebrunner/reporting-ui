@@ -5,6 +5,7 @@
 @import 'images-viewer';
 @import 'issue-modal';
 @import 'test-runs-search';
+@import 'app-sidebar';
 
 .layout-boxed {
     > .header-container {
@@ -63,8 +64,6 @@ html {
             }
 
         }
-
-        .top-header {}
     }
 
     > .main-container {
@@ -78,7 +77,7 @@ html {
             position: absolute;
             display: block;
             width: 100%;
-            max-width: inherit; //
+            max-width: inherit;
             top: 0;
             bottom: 0;
             background-color: $main_container_bg;
@@ -92,25 +91,19 @@ html {
         }
 
         > .nav-container {
-            //display: none;
             z-index: $zindex-fixed; // should be highter than top header
             position: fixed;
             left: 0;
             top: $header_height;
             box-shadow: none;
-            @media (max-width: $screen-phone) {
-                top: 0;
-            }
             float: left;
             width: 220px;
-            height: 100vh;
-            //transition: width .25s ease-in-out;
-            // border-width: 0 1px 0 0;
-            // border-style: solid;
-            // border-color: darken($sidebar_bg, 10%);
-            //@media (min-width:$screen-sm) {
-                display: block;
-            //}
+            height: calc(100% - 60px); // 48px - header height
+            display: block;
+            @media (max-width: $screen-phone) {
+                top: 0;
+                height: 100%;
+            }
             &:before {
                 z-index: -1; // so that it is beneath top header
                 content: " ";
@@ -144,14 +137,9 @@ html {
             margin-left: 0;
             margin-top: 0;
             transition: margin-left .25s ease-in-out;
-            /*@media (min-width:$screen-sm) {
-                margin-left: 60px;
-                padding-top: 64px;
-            }*/
 
             @media (min-width:$screen-phone) {
                 margin-left: 60px;
-                padding-top: 64px;
             }
         }
 
@@ -162,10 +150,6 @@ html {
     &.sidebar-toggled {
         > .main-container {
             > .content-container {
-                @media (max-width: $screen-phone) {
-                    //margin-left: 60px;
-                    padding-top: 64px;
-                }
                 .btn-check {
                     display: inline-block;
                     button {
