@@ -7,7 +7,7 @@
                     <i class="material-icons nav-close-icon">close</i>
                 </a>
             </li>
-            <li toggle-menu ng-class="{'active':$state.includes('dashboard')}">
+            <li toggle-menu ng-class="{'active':$ctrl.$state.includes('dashboard')}">
                 <a md-button aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards();">
                     <i class="material-icons">equalizer</i><span>Boards</span>
                 </a>
@@ -40,7 +40,7 @@
                     </li>
                 </ul>
             </li>
-            <li ng-class="{'active':$state.includes('tests')}" toggle-nav-bottom>
+            <li ng-class="{'active':$ctrl.$state.includes('tests')}" toggle-nav-bottom>
                 <a md-button aria-label="menu" ui-sref="tests.runs">
                     <i class="material-icons">play_circle_outline</i>
                     <span>Runs</span>
@@ -82,7 +82,7 @@
                   <span>Cases</span>
                 </a>
             </li-->
-            <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$state.includes('users')}" toggle-nav-bottom>
+            <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$ctrl.$state.includes('users')}" toggle-nav-bottom>
                 <a md-button aria-label="menu" ui-sref="users.list"  has-any-permission="['VIEW_USERS']">
                     <i class="material-icons">supervisor_account</i>
                     <span>Users</span>
@@ -101,7 +101,7 @@
                 </a>
             </li>
             <li style="flex-grow: 1"></li>
-            <li class="profile">
+            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('users.profile')}">
                 <a md-button aria-label="menu" ui-sref="users.profile">
                     <div>
                         <profile-photo ng-model="$ctrl.currentUser.photoURL" squared="8" size="32" auto-resize="false"></profile-photo>
