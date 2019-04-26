@@ -1,6 +1,7 @@
 <span>
     <img alt="avatar" ng-src="{{ngModel}}" ng-class="{'imageRotateHorizontal': rotateHorizontal}" class="img-circle profile-hovered" ng-if="ngModel && ngModel.length && ngModel.split('?')[0]" style="width: {{imageSize}}px; border-radius: {{squared}}px">
-    <i class="material-icons profile-hovered" style="font-size: {{size}}px; vertical-align: middle; color: #777777" ng-if="icon && iconVisible && !(ngModel && ngModel.length && ngModel.split('?')[0])">{{icon}}</i>
+    <i class="material-icons profile-hovered" style="font-size: {{size}}px; vertical-align: middle; color: #777777"  ng-if="!squared && icon && iconVisible && !(ngModel && ngModel.length && ngModel.split('?')[0])">{{icon}}</i>
+    <i class="material-icons profile-hovered" style="font-size: {{size}}px; vertical-align: middle; color: #011627; background-color: #d2d2d778; border-radius: 8px;" ng-if="squared && icon && iconVisible && !(ngModel && ngModel.length && ngModel.split('?')[0])">{{icon}}</i>
     <md-icon class="profile-hovered profile-hovered-full" ng-if="src && !icon && iconVisible && !(ngModel && ngModel.length && ngModel.split('?')[0])" md-svg-src="{{src}}" aria-label="icon" style="width: {{imageSize}}px; height: {{imageSize}}px; color: white;"></md-icon>
     <md-tooltip ng-if="label" md-direction="right">{{ label }}</md-tooltip>
 </span>
