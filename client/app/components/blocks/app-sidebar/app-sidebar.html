@@ -7,7 +7,7 @@
                     <i class="material-icons nav-close-icon">close</i>
                 </a>
             </li>
-            <li toggle-menu ng-class="{'active':$state.includes('dashboard')}">
+            <li toggle-menu ng-class="{'active':$ctrl.$state.includes('dashboard')}">
                 <a md-button aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards();">
                     <i class="material-icons">equalizer</i><span>Boards</span>
                 </a>
@@ -15,7 +15,7 @@
                     <li class="nav-controls search_close-button">
                         <md-icon toggle-menu="close">close</md-icon>
                     </li>
-                    <li  has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
+                    <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
                         <a class="nav__button _add" aria-label="menu" href="" data-ng-click="showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
                     </li>
                     <li class="sub-search nav-search">
@@ -40,7 +40,7 @@
                     </li>
                 </ul>
             </li>
-            <li ng-class="{'active':$state.includes('tests')}" toggle-nav-bottom>
+            <li ng-class="{'active':$ctrl.$state.includes('tests')}" toggle-nav-bottom>
                 <a md-button aria-label="menu" ui-sref="tests.runs">
                     <i class="material-icons">play_circle_outline</i>
                     <span>Runs</span>
@@ -50,20 +50,22 @@
                 <a md-button aria-label="menu" ui-sref="views" data-ng-click="loadViews();">
                     <i class="material-icons">remove_red_eye</i><span>Views</span>
                 </a>
-                <ul class="auto-width width-icon">
-                    <li class="sub-search nav-search" toggle-nav-bottom>
+                <ul class="auto-width width-icon" toggle-nav-bottom>
+                    <li class="nav-controls search_close-button">
+                        <md-icon toggle-menu="close">close</md-icon>
+                    </li>
+                    <li toggle-menu="close" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
+                        <a class="nav__button _add" aria-label="menu" href="" data-ng-click="showViewDialog($event)"><i class="material-icons">add</i>Add view</a>
+                    </li>
+                    <li class="sub-search nav-search">
                         <md-input-container class="no-margin no-padding">
                             <label>Search</label>
                             <input name="search" ng-model="navSCView.name" autocomplete="off"/>
                             <md-icon>search</md-icon>
                         </md-input-container>
-                        <md-icon toggle-menu="close" class="search_close-button" ng-click="">close</md-icon>
                     </li>
                     <li class="sub-search search-menu">
                         <ul toggle-nav-bottom>
-                            <li>
-                                <a class="create-view-button" md-button aria-label="menu" href="" toggle-menu="close" data-ng-click="showViewDialog($event)"></i>New view +</a>
-                            </li>
                             <li data-ng-repeat="view in views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })">
                                     <show-part limit="27" text="view.name"></show-part>
@@ -82,7 +84,7 @@
                   <span>Cases</span>
                 </a>
             </li-->
-            <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$state.includes('users')}" toggle-nav-bottom>
+            <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$ctrl.$state.includes('users')}" toggle-nav-bottom>
                 <a md-button aria-label="menu" ui-sref="users.list"  has-any-permission="['VIEW_USERS']">
                     <i class="material-icons">supervisor_account</i>
                     <span>Users</span>
@@ -101,7 +103,7 @@
                 </a>
             </li>
             <li style="flex-grow: 1"></li>
-            <li class="profile">
+            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('users.profile')}" toggle-nav-bottom>
                 <a md-button aria-label="menu" ui-sref="users.profile">
                     <div>
                         <profile-photo ng-model="$ctrl.currentUser.photoURL" squared="8" size="32" auto-resize="false"></profile-photo>
@@ -109,8 +111,8 @@
                 </a>
             </li>
             <li class="projects" toggle-menu>
-                <a md-button aria-label="menu" ui-sref="projects.list" ng-click="$ctrl.loadProjects();">
-                    <p ng-if="$ctrl.selectedTempl" class="projects_selected">{{$ctrl.selectedTempl}}</p>
+                <a md-button aria-label="menu" class="_light" ui-sref="projects.list">
+                    <div class="projects_selected">{{$ctrl.selectedProjectShortName}}</div>
                     <div style="display: inline-block;">
                         <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" squared="8" size="36" src="../../../../assets/images/project_photo.svg"
                                     icon-visible="$ctrl.currentUser.isAdmin"></profile-photo>
@@ -126,9 +128,12 @@
                                 <a class="nav__button _add" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
                             </li>
                             <li name="projectName" class="projects__list" md-prevent-menu-close>
-                                <md-radio-group ng-model="project.selected" ng-change="$ctrl.chooseProject(project.selected);">
-                                    <md-radio-button id="0" class="projects__list-item md-primary" aria-label="project 0" value="0">Any</md-radio-button>
-                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name'" id="{{project.id}}" aria-label="project {{ project.id }}" class="projects__list-item md-primary" value="{{project.id}}" ng-click="">{{project.name}}</md-radio-button>
+                                <md-radio-group ng-model="$ctrl.selectedProject" ng-change="$ctrl.chooseProject();">
+                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name'"
+                                                     id="{{project.id}}"
+                                                     aria-label="project {{ project.id }}"
+                                                     class="projects__list-item md-primary"
+                                                     value="{{project.id}}">{{project.name}}</md-radio-button>
                                 </md-radio-group>
                             </li>
                             <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">

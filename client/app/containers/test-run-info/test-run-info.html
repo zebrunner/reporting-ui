@@ -1,16 +1,17 @@
 <div id="testrun-info-page" class="testrun-info page page-profile no-padding no-margin">
     <zf-sub-header>
         <zf-sub-header-title>
-            <h2 id="testrun-info-title" class="testrun-info__title">
+            <h1 id="testrun-info-title" class="testrun-info__title">
                 <md-button name="testInfoBackBtn" aria-label="Go back"
                     ng-click="goToTestRuns();" class="material-icons back_button">
                     <md-icon class="material-icons">keyboard_backspace</md-icon>
                 </md-button>
                 <span class="testrun-info__title-name">{{ test.name }}</span>
+                <span class="testrun-info__title-name _mobile">Test details</span>
                 <span class="recording-icon" ng-if="MODE.name == 'live'">
                     <div class="red-point" ng-class="{'flash-point': true}"></div>
                 </span>
-            </h2>
+            </h1>
         </zf-sub-header-title>
         <zf-sub-header-button>
             <button class="fixed-page-header__btn _launcher" ng-click="downloadAll();">

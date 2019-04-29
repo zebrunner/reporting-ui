@@ -2646,6 +2646,12 @@ $light-inprogress: #68c9fd;
                             span {
                                 display: none;
                             }
+
+                            &._no-icon {
+                                span {
+                                    display: inline-block;
+                                }
+                            }
                         }
                     }
 
@@ -2745,7 +2751,13 @@ $light-inprogress: #68c9fd;
     }
 
     + div {
-        padding-top: $header_height;
+        padding-top: calc(#{$header_height} + 20px);
+
+        .p-tests-run-info &,
+        .p-tests-run-details &,
+        .p-tests-runs & {
+            padding-top: $header_height;
+        }
     }
 }
 
