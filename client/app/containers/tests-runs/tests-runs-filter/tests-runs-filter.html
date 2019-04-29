@@ -170,8 +170,7 @@
                         </div>
                 </div>
             </div>
-            <div id="filter-mobile" ng-if="$ctrl.isMobile() && $ctrl.filters.length" ng-hide="$ctrl.isMobileSearchActive || $ctrl.isSearchActive()"
-                    class="md-row tests-runs-filter__filter-mobile">
+            <div id="filter-mobile" ng-if="$ctrl.isMobile() && $ctrl.filters.length" class="md-row tests-runs-filter__filter-mobile">
                     <div class="tests-runs-filter__wrapper-panel-body no-padding-t">
                         <div layout="row" layout-xs="column" ng-show="$ctrl.filterBlockExpand">
                             <md-chips class="filter-chip custom-filter" ng-model="$ctrl.filters" md-removable="false"
@@ -189,7 +188,8 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
+        <div class="tests-runs-filter__modal-bg" ng-if="$ctrl.isMobileSearchActive"></div>
     </div>
-    <div class="tests-runs-filter__modal-bg" ng-if="$ctrl.isMobileSearchActive"></div>
 </div>

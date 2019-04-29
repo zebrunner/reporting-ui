@@ -138,9 +138,9 @@
         function deleteSearchParam(name) {
             delete _searchParams[name];
 
-            if (Object.keys(DEFAULT_SC).length === Object.keys(_searchParams).length) {
+            /*if (Object.keys(DEFAULT_SC).length === Object.keys(_searchParams).length) {
                 resetFilteringState(true);
-            }
+            }*/
         }
 
         function setActiveFilteringTool(tool) {

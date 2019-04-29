@@ -13,9 +13,19 @@
                             search
                         </i>
                     </div>
+                    <div class="search-wrapper_close" role="button" ng-show="$ctrl.searchParams.query && $ctrl.searchParams.query.length" ng-click="$ctrl.resetSearchQuery()" ng-if="$ctrl.isMobile()">
+                        <i class="material-icons">
+                            close
+                        </i>
+                    </div>
+                    <div class="search-wrapper_filters" ng-class="{'__active' : $ctrl.showAdvancedSearchFilters}" role="button" ng-click="$ctrl.showSearchFilters()" ng-if="$ctrl.isMobile()">
+                        <i class="material-icons">
+                            filter_list
+                        </i>
+                    </div>
                 </div>
             </div>
-            <div id="search-select" class="tests-runs-filter__search-select" layout="row" layout-md="column" layout-sm="column"
+            <div id="search-select" class="tests-runs-filter__search-select" ng-show="$ctrl.showAdvancedSearchFilters" layout="row" layout-md="column" layout-sm="column"
                 layout-xs="column">
                 <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
                 <div id="search-container" flex="auto" layout="row">
@@ -31,27 +41,25 @@
                     <div layout="row" class="search-fields _main" layout-xs="column">
                         <div layout="row">
                             <button class="quadro-btn pull-left reviewed" data-ng-class="{'label-blank': !$ctrl.searchParams.reviewed, 'label-primary': !!$ctrl.searchParams.reviewed}"
-                                ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed; $ctrl.onChangeSearchCriteria('reviewed')">R
+                                ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed;">R
                                 <md-tooltip md-direction="bottom">Reviewed</md-tooltip>
                             </button>
                             <md-input-container class="searchable select pull-left no-padding" flex="nogrow">
-                                <md-select id="searchStatus" ng-change="$ctrl.onChangeSearchCriteria('status')"
-                                    ng-model="$ctrl.searchParams.status" name="status" placeholder="Status">
+                                <md-select id="searchStatus" ng-model="$ctrl.searchParams.status" name="status" placeholder="Status">
                                     <md-option value="">None</md-option>
                                     <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
                         <md-input-container class="searchable select pull-left no-padding no-margin-l" flex="grow">
-                            <md-select id="searchEnv" ng-change="$ctrl.onChangeSearchCriteria('environment')" ng-model="$ctrl.searchParams.environment"
+                            <md-select id="searchEnv" ng-model="$ctrl.searchParams.environment"
                                 name="environment" placeholder="Environment">
                                 <md-option value="">None</md-option>
                                 <md-option ng-repeat="env in $ctrl.environments" ng-value="env">{{env}}</md-option>
                             </md-select>
                         </md-input-container>
                         <md-input-container class="searchable select selectPlatform pull-left" flex="grow">
-                            <md-select id="searchPlatform" ng-change="$ctrl.onChangeSearchCriteria('platform')"
-                                ng-model="$ctrl.searchParams.platform" name="platform" placeholder="Platform">
+                            <md-select id="searchPlatform" ng-model="$ctrl.searchParams.platform" name="platform" placeholder="Platform">
                                 <md-option value="">None</md-option>
                                 <md-option ng-repeat="platform in $ctrl.platforms" ng-value="platform">{{platform}}</md-option>
                             </md-select>
@@ -65,8 +73,8 @@
                             <md-button id="searchCalendar" ng-click="$ctrl.openDatePicker($event, true)">
                             </md-button>
                         </md-input-container>
-                        <button id="reset" class="search-reset-btn md-button md-raised md-warn md-ink-ripple pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></button>
                     </div>
+                    <button id="apply" class="search-apply-btn md-button md-raised md-primary md-ink-ripple pull-right" type="button" ng-click="$ctrl.onChangeSearchCriteria()"><span>APPLY</span></button>
                 </div>
             </div>
         </div>

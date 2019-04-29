@@ -30,6 +30,9 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         toggleMobileSearch: toggleMobileSearch,
         onReset: onReset,
         onApply: onApply,
+        showSearchFilters: showSearchFilters,
+        resetSearchQuery: resetSearchQuery,
+        showAdvancedSearchFilters: false,
     };
 
     vm.$onInit = init;
@@ -175,18 +178,19 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         return criteria && SELECT_CRITERIAS.indexOf(criteria.name) >= 0;
     }
 
-    function onChangeSearchCriteria(name) {//TODO: refactor this fn and onSearchChange for "DRY"
+    function onChangeSearchCriteria() {//TODO: refactor this fn and onSearchChange for "DRY"
         const activeFilteringTool = testsRunsService.getActiveFilteringTool();
 
-        if (!name) { return; }
         if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
 
         !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
-        if (vm.searchParams[name]) {
-            testsRunsService.setSearchParam(name, vm.searchParams[name]);
-        } else {
-            testsRunsService.deleteSearchParam(name);
-        }
+        angular.forEach(vm.searchParams, function (value, name) {
+            if (vm.searchParams[name]) {
+                testsRunsService.setSearchParam(name, value);
+            } else {
+                testsRunsService.deleteSearchParam(name);
+            }
+        });
         vm.onApply();
     }
 
@@ -217,10 +221,18 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                         testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
                     }
                 }
-                vm.onApply();
             }
         })
     }
+
+    function resetSearchQuery() {
+        vm.searchParams.query = null;
+        vm.onChangeSearchCriteria('query');
+    };
+
+    function showSearchFilters() {
+        vm.showAdvancedSearchFilters = ! vm.showAdvancedSearchFilters;
+    };
 }
 
 export default TestsRunsSearchController;
