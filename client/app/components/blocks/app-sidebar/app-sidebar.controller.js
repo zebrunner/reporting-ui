@@ -33,6 +33,7 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         showProjectDialog,
         showUploadImageDialog,
         chooseProject,
+        showDashboardSettingsModal,
         selectedProjectShortName: '',
 
         get companyLogo() { return $rootScope.companyLogo; },
@@ -56,13 +57,10 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
     function getViews(){
         return $q(function (resolve, reject) {
             ViewService.getAllViews().then(function(rs) {
-                if(rs.success)
-                {
+                if (rs.success) {
                     vm.views = rs.data;
-                    resolve(rs.data);
-                }
-                else
-                {
+                    resolve(vm.views);
+                } else {
                     reject(rs.message);
                 }
             });
@@ -70,24 +68,24 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
     };
 
 
-    $scope.showViewDialog = function(event, view) {
-        $mdDialog.show({
-            controller: ViewController,
-            template: require('./view_modal.html'), //TODO: move to separate component
-            parent: angular.element(document.body),
-            targetEvent: event,
-            clickOutsideToClose:true,
-            fullscreen: true,
-            locals: {
-                view: view
-            }
-        })
-            .then(function(answer) {
-            }, function() {
-            });
-    };
+    // $scope.showViewDialog = function(event, view) {
+    //     $mdDialog.show({
+    //         controller: ViewController,
+    //         template: require('./view_modal.html'), //TODO: move to separate component
+    //         parent: angular.element(document.body),
+    //         targetEvent: event,
+    //         clickOutsideToClose:true,
+    //         fullscreen: true,
+    //         locals: {
+    //             view: view
+    //         }
+    //     })
+    //         .then(function(answer) {
+    //         }, function() {
+    //         });
+    // };
 
-    $scope.showDashboardSettingsModal = function (event, dashboard, isNew) {
+    function showDashboardSettingsModal(event, dashboard, isNew) {
         $mdDialog.show({
             controller: dashboardSettingsModalController,
             template: dashboardSettingsModalTemplate,
@@ -120,14 +118,15 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
                 }
             }, function () {
             });
-    };
+    }
 
     function loadViews() {
         vm.viewsLoaded = false;
-        getViews().then(function (response) {
-            vm.viewsLoaded = true;
-        });
-    };
+        getViews()
+            .then(function() {
+                vm.viewsLoaded = true;
+            });
+    }
 
     function loadDashboards() {
         vm.dashboardsLoaded = false;
