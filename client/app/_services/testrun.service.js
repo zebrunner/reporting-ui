@@ -32,8 +32,9 @@
         return service;
 
         function searchTestRuns(criteria) {
-            var path = $httpParamSerializer(criteria);
-            var endpoint = '/api/tests/runs/search?' + path;
+            const path = $httpParamSerializer(criteria);
+            const endpoint = '/api/tests/runs/search?' + path;
+
             return $httpMock.get(API_URL + endpoint, criteria).then(UtilService.handleSuccess, UtilService.handleError('Unable to search test runs'));
         }
 

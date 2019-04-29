@@ -82,15 +82,10 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
     }
 
-    let applyTimer;
-    const timeoutOnChange = 800;
-
     function onApply() {
-        $timeout.cancel(applyTimer);
-        applyTimer = $timeout(function() {
+        $timeout(function() {
             vm.onFilterChange();
-            applyTimer = null;
-        }, timeoutOnChange);
+        }, 0);
     }
 
     function loadFilters() {
