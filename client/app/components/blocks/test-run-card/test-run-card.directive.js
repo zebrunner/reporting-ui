@@ -46,7 +46,6 @@
                     checkFilePresence: checkFilePresence,
                     downloadApplication: downloadApplication,
                     goToTestRun: goToTestRun,
-                    onBackClick: onBackClick,
                     isToolConnected: toolsService.isToolConnected,
 
                     get tools() { return toolsService.tools; },
@@ -85,10 +84,6 @@
 
                 function goToTestRun() {
                     $state.go('tests.runDetails', {testRunId: vm.testRun.id});
-                }
-
-                function onBackClick() {
-                    $state.go('tests.runs', {activeTestRunId: vm.testRun.id});
                 }
 
                 function copyLink() {

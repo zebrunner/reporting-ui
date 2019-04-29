@@ -3,7 +3,7 @@
 .p-tests-run-details {
     &__sticky-header {
         position: sticky;
-        top: 48px;
+        top: $header_height;
         z-index: 4;
         box-shadow: 0 4px 8px 0 rgba(4, 0, 0, 0.2);
         .test-run-group-row {
