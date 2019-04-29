@@ -47,7 +47,7 @@
                 </a>
             </li>
             <li has-any-permission="['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS']" toggle-menu ui-sref-active="active">
-                <a md-button aria-label="menu" ui-sref="views" data-ng-click="loadViews();">
+                <a md-button aria-label="menu" ui-sref="views" data-ng-click="$ctrl.loadViews();">
                     <i class="material-icons">remove_red_eye</i><span>Views</span>
                 </a>
                 <ul class="auto-width width-icon" toggle-nav-bottom>
@@ -55,7 +55,7 @@
                         <md-icon toggle-menu="close">close</md-icon>
                     </li>
                     <li toggle-menu="close" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
-                        <a class="nav__button _add" aria-label="menu" href="" data-ng-click="showViewDialog($event)"><i class="material-icons">add</i>Add view</a>
+                        <a class="nav__button _add" aria-label="menu" href="" data-ng-click="$ctrl.showViewDialog($event)"><i class="material-icons">add</i>Add view</a>
                     </li>
                     <li class="sub-search nav-search">
                         <md-input-container class="no-margin no-padding">
@@ -66,12 +66,12 @@
                     </li>
                     <li class="sub-search search-menu">
                         <ul toggle-nav-bottom>
-                            <li data-ng-repeat="view in views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
+                            <li data-ng-repeat="view in $ctrl.views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })">
                                     <show-part limit="27" text="view.name"></show-part>
                                 </a>
                                 <span style="position: absolute; right: 10px; top: 15px;" class="show-icon-on-hover">
-                                    <i style="font-size: 14px;" class="material-icons" toggle-menu="close" data-ng-click="showViewDialog($event, view)" has-any-permission="['MODIFY_TEST_RUN_VIEWS']">edit</i>
+                                    <i style="font-size: 14px;" class="material-icons" toggle-menu="close" data-ng-click="$ctrl.showViewDialog($event, view)" has-any-permission="['MODIFY_TEST_RUN_VIEWS']">edit</i>
                                 </span>
                             </li>
                         </ul>
