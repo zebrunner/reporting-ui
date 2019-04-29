@@ -1073,10 +1073,6 @@ ul.profile-image-actions {
     width: auto !important;
 }
 
-.auto-width.width-icon a {
-    padding-right: 15px !important;
-}
-
 .tickets-font {
     font-weight: normal
 }
@@ -2528,8 +2524,7 @@ $light-inprogress: #68c9fd;
         }
     }
 
-    @media(max-width: $breakpoint-mobile) {
-        
+    @media(max-width: $screen-phone) {
         box-shadow: none;
     }
 
@@ -2539,31 +2534,64 @@ $light-inprogress: #68c9fd;
         padding-right: 20px;
         display: flex;
         align-items: center;
-        justify-content: center;
+
         @media(max-width: $screen-phone) {
-            padding-left: 50px;
+            padding-left: 60px;
         }
-        > div {
-            white-space: nowrap;
-            display: inline-block;
-            margin: 0;
-            font-size: 0;
+
+        .back_button {
+            min-width: auto;
+            min-height: auto;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            width: 32px;
+            height: 32px;
+            margin: 0 5px 0 0;
+            .material-icons {
+                color: black;
+            }
+            &:hover {
+                background-color: none;
+            }
+
+            @media screen and (max-width: $screen-phone) {
+                display: none;
+            }
         }
 
         &_title {
-            font-size: 20px !important;
+            font-size: 20px ;
             word-break: normal;
             color: black;
-            width: 100%;
+            flex-grow: 1;
+            flex-shrink: 1;
+            margin: 0;
+            overflow: hidden;
             small {
                 color: #7f7f7f;
             }
+            &._flex {
+                display: flex;
+                align-items: center;
+            }
+            ~ .fixed-page-header-container_button {
+                margin-left: 10px;
+            }
             @media(max-width: $screen-phone) {
                 text-align: center;
+                max-width: calc(100% - 42px); //42px - 32px button wodth + 10px margin
+                overflow: hidden;
+                text-overflow: ellipsis;
+                &._flex {
+                    justify-content: center;
+                }
             }
         }
 
         &_button {
+            flex-shrink: 0;
+            flex-grow: 0;
             > i {
                 color: $dark;
             }
@@ -2696,9 +2724,6 @@ $light-inprogress: #68c9fd;
                         }
                     }
                 }
-            }
-            & + & {
-                margin-left: 10px;
             }
         }
 

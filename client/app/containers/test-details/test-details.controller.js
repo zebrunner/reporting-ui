@@ -37,6 +37,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         changeTestStatus: changeTestStatus,
         showDetailsDialog: showDetailsDialog,
         goToTestDetails: goToTestDetails,
+        onBackClick,
         updateTest,
         get empty() {
             return !Object.keys(vm.testRun.tests || {}).length ;
@@ -113,6 +114,10 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         }
 
         vm.testRun.browserVersion = version;
+    }
+
+    function onBackClick() {
+        $state.go('tests.runs', {activeTestRunId: vm.testRun.id});
     }
 
     /**

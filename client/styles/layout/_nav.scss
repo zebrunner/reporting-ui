@@ -155,7 +155,8 @@
                     display: block;
                     padding: 12px 0 12px 24px;
                     @media(max-width: $screen-phone) {
-                        padding: 16px 0 16px 24px;
+                        padding-top: 16px;
+                        padding-bottom: 16px;
                     }
                     transition: all $nav-transition_duration ease-in-out;
                     &:first-child {
@@ -173,6 +174,20 @@
                         position: absolute;
                         right: 8px;
                         top: 12px;
+                    }
+                }
+
+                > a {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 100%;
+                }
+            }
+            &.auto-width.width-icon {
+                li {
+                    > a {
+                        padding-right: 32px;
                     }
                 }
             }

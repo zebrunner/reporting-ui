@@ -15,15 +15,21 @@
         .show-part {
             display: flex;
             align-items: center;
+
             @media (min-width: $screen-phone + 1) {
                 max-width: 280px;
             }
-            p {
+            .menu-link__text {
                 margin: 0;
-                max-width: 80%;
+                max-width: 200px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                display: inline-block;
+
+                @media (max-width: $screen-phone) {
+                    max-width: 100%;
+                }
             }
         }
         .projects {
