@@ -1,6 +1,11 @@
 .form-validation .ng-valid.ng-dirty{
     border-color:  #CBD5DD;
 }
+.body-wide.body-auth {
+    #content {
+        padding: 0;
+    }
+}
 .page-signin,
 .page-signup,
 .page-forgot,
@@ -41,6 +46,10 @@
             min-height: auto;
         }
 
+        @media(max-width: 376px) {
+            margin: 0;
+        }
+
         .card {
             display: flex;
             width: 100%;
@@ -54,6 +63,7 @@
 
             @media(max-width: 749px) {
                 flex-direction: column;
+                min-height: 100vh;
             }
         }
 
@@ -92,6 +102,7 @@
         font-size: 10px;
         @media(max-width: 749px){
             margin-bottom: -12px;
+            max-width: 167px;
         }
     }
 
@@ -169,6 +180,7 @@
             background-color: white;
             padding-bottom: 0;
             min-height: auto;
+            flex-grow: 1;
         }
         padding: 30px;
         width: 50%;
@@ -189,7 +201,7 @@
                 margin-left: 15px;
                 margin-bottom: 7px;
             }
-            @media(max-width: 356px) {
+            @media(max-width: 345px) {
                 margin-left: 0;
             }
         }
@@ -223,10 +235,10 @@
                     @media(max-width: 749px){
                         margin: 0;
                         max-width: 180px;
-                        margin-left: 15px;
+                        margin-left: 17px;
                         line-height: 1.39;
                     }
-                    @media(max-width: 356px) {
+                    @media(max-width: 345px) {
                         margin-left: 0;
                     }
                 }
@@ -246,7 +258,7 @@
                     left: 40px;
                     opacity: .25;
                 }
-                @media(max-width: 356px) {
+                @media(max-width: 345px) {
                     left: 15px;
                 }
             }
@@ -261,11 +273,11 @@
                     margin-bottom: -2px;
                     height: 145px;
                     position: absolute;
-                    right: 8px;
+                    right: 2px;
                     bottom: 0;
                 }
-                @media(max-width: 356px) {
-                    right: -20px;
+                @media(max-width: 345px) {
+                    right: -10px;
                 }
             }
         }        
