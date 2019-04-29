@@ -136,17 +136,17 @@
         }
         .search_close-button {
             position: absolute;
-            right: 18px;
+            right: 12px;
             top: 12px;
             cursor: pointer;
             md-icon {
                 color: rgba(#ffffff, .4);
                 font-size: 20px;
-                height: 14px;
-                width: 14px;
-                min-height: 14px;
-                min-width: 14px;
-                line-height: 14px;
+                height: 20px;
+                width: 20px;
+                min-height: 20px;
+                min-width: 20px;
+                line-height: 20px;
             }
             &:hover md-icon{
                 color: rgba(#ffffff, .5);

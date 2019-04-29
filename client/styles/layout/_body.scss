@@ -2631,8 +2631,10 @@ $light-inprogress: #68c9fd;
                         color: $medium-teal-light-new-hover;
                         background-color: white;
 
-                        .material-icons {
-                            color: $medium-teal-light-new-hover;
+                        @media(min-width: $screen-phone + 1) {
+                            .material-icons {
+                                color: $medium-teal-light-new-hover;
+                            }
                         }
                     }
                     @media(max-width: $screen-phone) {
