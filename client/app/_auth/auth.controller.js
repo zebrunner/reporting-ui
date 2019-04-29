@@ -95,7 +95,7 @@ const authController = function authController($scope, $rootScope, $location, $s
     })();
 
     $scope.signin = function(credentials) {
-        AuthService.Login(credentials.username, credentials.password)
+        AuthService.Login(credentials.usernameOrEmail, credentials.password)
             .then(function(rs) {
                 if (rs.success) {
                     var payload = {

@@ -32,9 +32,6 @@
             setActiveFilter: setActiveFilter,
             resetActiveFilter:resetActiveFilter,
             isFilterActive: isFilterActive,
-            setActiveSearchType: setActiveSearchType,
-            getActiveSearchType: getActiveSearchType,
-            resetActiveSearchType: resetActiveSearchType,
             isSearchActive: isSearchActive,
             setSearchParam: setSearchParam,
             getSearchParam: getSearchParam,
@@ -56,6 +53,7 @@
 
         function fetchTestRuns() {
             const filter = _activeFilterId ? '?filterId=' + _activeFilterId : undefined;
+            _searchParams.filterId = _activeFilterId;
 
             // save search params
             deleteStoredParams();
@@ -63,7 +61,7 @@
             _lastParams = angular.copy(_searchParams);
             _lastFilters = filter;
 
-            return TestRunService.searchTestRuns(_searchParams, filter)
+            return TestRunService.searchTestRuns(_searchParams)
                 .then(function(rs) {
                     if (rs.success) {
                         const data = rs.data;
@@ -123,18 +121,6 @@
             return _activeFilterId;
         }
 
-        function setActiveSearchType(type) {
-            _activeSearchType = type;
-        }
-
-        function getActiveSearchType() {
-            return _activeSearchType;
-        }
-
-        function resetActiveSearchType() {
-            _activeSearchType = searchTypes[0];
-        }
-
         function resetSearchParams() {
             _searchParams = angular.copy(DEFAULT_SC);
             _lastParams = null;
@@ -179,7 +165,6 @@
 
         function resetFilteringState(keepSearchType) {
             !keepSearchType && deleteActiveFilteringTool();
-            !keepSearchType && resetActiveSearchType();
             resetSearchParams();
             resetActiveFilter();
         }

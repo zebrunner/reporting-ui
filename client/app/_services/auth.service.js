@@ -27,9 +27,9 @@
             getAuthData,
         };
 
-        function Login(username, password) {
+        function Login(usernameOrEmail, password) {
             return $httpMock.post(API_URL + '/api/auth/login', {
-                'username': username,
+                'username': usernameOrEmail,
                 'password': password
             }).then(UtilService.handleSuccess, UtilService.handleError('Invalid credentials'));
         }
