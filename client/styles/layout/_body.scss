@@ -2801,6 +2801,17 @@ $light-inprogress: #68c9fd;
         }
 
         &_options {
+            .fixed-page-header__tooltip-btn {
+                border: none;
+                background: transparent;
+                width: 32px;
+                height: 32px;
+                padding: 0;
+                margin-left: 26px;
+                i.material-icons {
+                    margin: 0;
+                }
+            }
             &.header-option-selected {
                 > div {
                     i {
