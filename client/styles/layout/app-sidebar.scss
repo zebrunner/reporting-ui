@@ -15,15 +15,21 @@
         .show-part {
             display: flex;
             align-items: center;
+
             @media (min-width: $screen-phone + 1) {
                 max-width: 280px;
             }
-            p {
+            .menu-link__text {
                 margin: 0;
-                max-width: 80%;
+                max-width: 200px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                display: inline-block;
+
+                @media (max-width: $screen-phone) {
+                    max-width: 100%;
+                }
             }
         }
         .projects {
@@ -136,17 +142,17 @@
         }
         .search_close-button {
             position: absolute;
-            right: 18px;
+            right: 12px;
             top: 12px;
             cursor: pointer;
             md-icon {
                 color: rgba(#ffffff, .4);
                 font-size: 20px;
-                height: 14px;
-                width: 14px;
-                min-height: 14px;
-                min-width: 14px;
-                line-height: 14px;
+                height: 20px;
+                width: 20px;
+                min-height: 20px;
+                min-width: 20px;
+                line-height: 20px;
             }
             &:hover md-icon{
                 color: rgba(#ffffff, .5);

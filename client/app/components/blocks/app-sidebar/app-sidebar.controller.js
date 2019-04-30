@@ -27,12 +27,13 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         $state: $state,
         selectedProject: fakeProjectAll.id,
         hasHiddenDashboardPermission,
-        loadViews: loadViews,
-        loadDashboards: loadDashboards,
-        showViewDialog: showViewDialog,
-        showProjectDialog: showProjectDialog,
-        showUploadImageDialog: showUploadImageDialog,
-        chooseProject: chooseProject,
+        loadViews,
+        loadDashboards,
+        showViewDialog,
+        showProjectDialog,
+        showUploadImageDialog,
+        chooseProject,
+        showDashboardSettingsModal,
         selectedProjectShortName: '',
 
         get companyLogo() { return $rootScope.companyLogo; },
@@ -56,38 +57,17 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
     function getViews(){
         return $q(function (resolve, reject) {
             ViewService.getAllViews().then(function(rs) {
-                if(rs.success)
-                {
+                if (rs.success) {
                     vm.views = rs.data;
-                    resolve(rs.data);
-                }
-                else
-                {
+                    resolve(vm.views);
+                } else {
                     reject(rs.message);
                 }
             });
         });
     };
 
-
-    $scope.showViewDialog = function(event, view) {
-        $mdDialog.show({
-            controller: ViewController,
-            template: require('./view_modal.html'), //TODO: move to separate component
-            parent: angular.element(document.body),
-            targetEvent: event,
-            clickOutsideToClose:true,
-            fullscreen: true,
-            locals: {
-                view: view
-            }
-        })
-            .then(function(answer) {
-            }, function() {
-            });
-    };
-
-    $scope.showDashboardSettingsModal = function (event, dashboard, isNew) {
+    function showDashboardSettingsModal(event, dashboard, isNew) {
         $mdDialog.show({
             controller: dashboardSettingsModalController,
             template: dashboardSettingsModalTemplate,
@@ -120,14 +100,15 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
                 }
             }, function () {
             });
-    };
+    }
 
     function loadViews() {
         vm.viewsLoaded = false;
-        getViews().then(function (response) {
-            vm.viewsLoaded = true;
-        });
-    };
+        getViews()
+            .then(function() {
+                vm.viewsLoaded = true;
+            });
+    }
 
     function loadDashboards() {
         vm.dashboardsLoaded = false;
@@ -174,7 +155,6 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
                 view: view
             }
         });
-        $scope.hide();
     };
 
     function showProjectDialog(event) {
@@ -282,72 +262,64 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         'ngInject';
 
         $scope.view = {};
-        if(view)
-        {
+
+        if (view) {
             $scope.view.id = view.id;
             $scope.view.name = view.name;
             $scope.view.projectId = view.project.id;
         }
 
-        ConfigService.getConfig("projects").then(function(rs) {
-            if(rs.success)
-            {
-                $scope.projects = rs.data;
-            }
-            else
-            {
-            }
-        });
-
-        $scope.createView = function(view){
-            ViewService.createView(view).then(function(rs) {
-                if(rs.success)
-                {
-                    alertify.success("View created successfully");
-                }
-                else
-                {
-                    alertify.error(rs.message);
+        ConfigService.getConfig('projects')
+            .then(function(rs) {
+                if (rs.success) {
+                    $scope.projects = rs.data;
                 }
             });
+
+        $scope.createView = function(view) {
+            ViewService.createView(view)
+                .then(function(rs) {
+                    if (rs.success) {
+                        alertify.success("View created successfully");
+                    } else {
+                        alertify.error(rs.message);
+                    }
+                });
+
             $scope.hide();
         };
 
         $scope.updateView = function(view){
-            ViewService.updateView(view).then(function(rs) {
-                if(rs.success)
-                {
-                    alertify.success("View updated successfully");
-                }
-                else
-                {
-                    alertify.error(rs.message);
-                }
-            });
+            ViewService.updateView(view)
+                .then(function(rs) {
+                    if (rs.success) {
+                        alertify.success("View updated successfully");
+                    } else {
+                        alertify.error(rs.message);
+                    }
+                });
             $scope.hide();
         };
 
         $scope.deleteView = function(view){
-            ViewService.deleteView(view.id).then(function(rs) {
-                if(rs.success)
-                {
-                    alertify.success("View deleted successfully");
-                }
-                else
-                {
-                    alertify.error(rs.message);
-                }
-            });
+            ViewService.deleteView(view.id)
+                .then(function(rs) {
+                    if (rs.success) {
+                        alertify.success("View deleted successfully");
+                    } else {
+                        alertify.error(rs.message);
+                    }
+                });
             $scope.hide();
         };
+
         $scope.hide = function() {
             $mdDialog.hide();
         };
+
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
-        (function initController() {
-        })();
     }
 
     return vm;

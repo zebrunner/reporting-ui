@@ -16,7 +16,7 @@
                         <md-icon toggle-menu="close">close</md-icon>
                     </li>
                     <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
-                        <a class="nav__button _add" aria-label="menu" href="" data-ng-click="showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
+                        <a class="nav__button _add" aria-label="menu" href="" data-ng-click="$ctrl.showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
                     </li>
                     <li class="sub-search nav-search">
                         <md-input-container class="no-margin no-padding">
@@ -30,10 +30,10 @@
                             <li data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy:'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">
                                 <a toggle-menu="close" md-button aria-label="menu" class="show-part" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
                                     <i data-ng-if="dashboard.hidden == true" style="font-size: 14px;" class="material-icons">visibility_off</i>
-                                    <p>{{dashboard.title}}</p>
+                                    <span class="menu-link__text">{{::dashboard.title}}</span>
                                 </a>
-                                <span ng-if="dashboard.editable" has-any-permission="['MODIFY_DASHBOARDS']" style="position: absolute; right: 15px; top: 10px;" class="show-icon-on-hover">
-                                    <i style="font-size: 14px;" class="material-icons" toggle-menu="close" ng-click="showDashboardSettingsModal($event, dashboard);">edit</i>
+                                <span has-any-permission="['MODIFY_DASHBOARDS']" style="position: absolute; right: 15px; top: 10px;" class="show-icon-on-hover">
+                                    <i style="font-size: 14px;" class="material-icons" toggle-menu="close" ng-click="$ctrl.showDashboardSettingsModal($event, dashboard);">edit</i>
                                 </span>
                             </li>
                         </ul>
@@ -68,7 +68,7 @@
                         <ul toggle-nav-bottom>
                             <li data-ng-repeat="view in $ctrl.views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })">
-                                    <show-part limit="27" text="view.name"></show-part>
+                                    <span class="menu-link__text">{{::view.name}}</span>
                                 </a>
                                 <span style="position: absolute; right: 10px; top: 15px;" class="show-icon-on-hover">
                                     <i style="font-size: 14px;" class="material-icons" toggle-menu="close" data-ng-click="$ctrl.showViewDialog($event, view)" has-any-permission="['MODIFY_TEST_RUN_VIEWS']">edit</i>
@@ -129,11 +129,11 @@
                             </li>
                             <li name="projectName" class="projects__list" md-prevent-menu-close>
                                 <md-radio-group ng-model="$ctrl.selectedProject" ng-change="$ctrl.chooseProject();">
-                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name'"
-                                                     id="{{project.id}}"
-                                                     aria-label="project {{ project.id }}"
+                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id"
+                                                     id="{{::project.id}}"
+                                                     aria-label="project {{ ::project.id }}"
                                                      class="projects__list-item md-primary"
-                                                     value="{{project.id}}">{{project.name}}</md-radio-button>
+                                                     value="{{::project.id}}">{{::project.name}}</md-radio-button>
                                 </md-radio-group>
                             </li>
                             <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">

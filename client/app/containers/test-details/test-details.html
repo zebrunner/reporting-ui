@@ -1,7 +1,12 @@
 <div class="page-wrapper">
     <zf-sub-header>
-        <zf-sub-header-title>
-            Test results
+        <zf-sub-header-button>
+            <md-button name="testRunBackBtn" aria-label="Go back" class="md-icon-button  back_button" ng-click="$ctrl.onBackClick()">
+                <md-icon class="material-icons">keyboard_backspace</md-icon>
+            </md-button>
+        </zf-sub-header-button>
+        <zf-sub-header-title class="_with-back-button">
+            <span>Test results</span>
         </zf-sub-header-title>
     </zf-sub-header>
     <div class="page">
