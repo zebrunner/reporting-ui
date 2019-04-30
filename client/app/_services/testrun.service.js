@@ -32,6 +32,12 @@
         return service;
 
         function searchTestRuns(criteria) {
+            if(criteria.projects && criteria.projects.length) {
+                criteria.projectNames = criteria.projects.map(function (project) {
+                    return project.name;
+                });
+                delete criteria.projects;
+            }
             const path = $httpParamSerializer(criteria);
             const endpoint = '/api/tests/runs/search?' + path;
 
