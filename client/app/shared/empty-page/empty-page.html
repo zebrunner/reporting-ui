@@ -1,0 +1,16 @@
+<div class="page__empty">
+    <div class="page__empty-wrapper">
+        <div class="page__empty-image {{$ctrl.page}}" >
+        </div>
+        <p class="page__empty-text">
+            {{$ctrl.text}}
+        </p>
+        <div layout="row" layout-align="center" ng-if="$ctrl.buttonText && $ctrl.href">
+            <a md-button class="page__empty-button form-button md-raised btn-w-md md-primary" href="{{$ctrl.href}}">
+                {{$ctrl.buttonText}}
+            </a>
+        </div>
+    </div>
+    <div class="page__empty-arrow">
+    </div>
+</div>

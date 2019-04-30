@@ -1,3 +1,4 @@
+@import "../global/_var-pages";
 
 // Old browsers
 .lt-ie9-bg {
@@ -512,6 +513,81 @@
         table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
             padding-right: 0;
         }
+    }
+}
+
+.page__empty {
+    height: calc(100vh - #{$header_height} - 20px * 2); 
+    &-wrapper {
+        padding: 20px 0;
+        max-width: 368px;
+        margin: auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    &-image {
+        margin: 0 auto 48px;
+        width: 301px;
+        height: 169px;
+        min-height: 169px;
+        opacity: .25;
+        background-size: contain;
+        &._dashboards {
+            background: url('../assets/images/empty-pages/empty_screen_dashboards.svg') center no-repeat;
+        }
+        &._users {
+            background: url('../assets/images/empty-pages/empty_screen_users.svg') center no-repeat;
+        }
+    }
+    &-text {
+        font-weight: normal;
+        line-height: 1.5;
+        letter-spacing: 0.5px;
+        text-align: center;
+        color: rgba($dark-new, 0.4);
+        font-size: 20px;
+        margin-bottom: 40px;
+    }
+    &-button {
+        border-radius: 4px;
+        box-shadow: none !important;
+        padding: 9px 13px;
+    }
+    &-arrow {
+        width: 122px;
+        height: 114px;
+        background: url('../assets/images/empty-pages/empty_screen_arrow.svg') center no-repeat;
+        background-size: contain;
+        right: 70px;
+        top: calc(#{$header_height} + 30px);
+        position: absolute;
+    }
+    @media (max-width: $screen-phone) {
+        &-wrapper {
+            max-width: 100%;
+            padding: 20px 8px;
+        }
+        &-image {
+            max-width: 150px;
+            max-height: 84px;
+            min-height: 84px;
+        }
+        &-text {
+            font-size: 18px;
+        }
+        &-button {
+            padding: 9px 16px;
+        }
+    }
+    @media (max-width: $screen-tablet) {
+        &-arrow {
+            display: none;
+        }
+    }
+    @media (max-height: 460px) and (min-width: $screen-phone) {
+        height: calc(100vh + #{$header_height}); 
     }
 }
 

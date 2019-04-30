@@ -1,7 +1,7 @@
 <div>
     <zf-sub-header>
         <zf-sub-header-title>{{dashboard.title}}</zf-sub-header-title>
-        <zf-sub-header-button hide-phone="true">
+        <zf-sub-header-button>
             <div ng-if="MODE !== 'WIDGET_PLACEMENT'">
                 <button has-any-permission="['MODIFY_WIDGETS']" class="fixed-page-header__btn _dashboard zf-header-button" ng-click="showWidgetWizardDialog($event, {model : '{}'}, dashboard);">
                     <md-icon class="material-icons">add</md-icon>
@@ -19,19 +19,28 @@
         </zf-sub-header-button>
         <zf-sub-header-options ng-class="{'header-option-selected': MODE === 'WIDGET_PLACEMENT'}">
             <div>
-                <i class="material-icons" data-ng-if="$ctrl.isToolConnected('EMAIL') && MODE !== 'WIDGET_PLACEMENT'" ng-click="showEmailDialog($event);">
+                <button class="fixed-page-header__tooltip-btn" data-ng-if="$ctrl.isToolConnected('EMAIL') && MODE !== 'WIDGET_PLACEMENT' && dashboard.widgets.length" ng-click="showEmailDialog($event);">
+                    <i class="material-icons">
                     send
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </i>
-                <i class="material-icons hide-phone" ng-if="isGridStackEvailableToEdit();" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
-                    dashboard
-                    <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
-                </i>
+                </button>
+                <button class="fixed-page-header__tooltip-btn  hide-phone" ng-if="isGridStackEvailableToEdit() && dashboard.widgets.length" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
+                    <i class="material-icons">
+                        dashboard
+                        <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
+                    </i>
+                </button>
             </div>
         </zf-sub-header-options>
     </zf-sub-header>
     <div id="dashboard_content" class="page page-dashboard">
-	    <div class="row">
+        <empty-page-component ng-if="!dashboard.widgets.length"
+                                text="No widget added. Use button at the top or watch tutorial to learn more."
+                                button-text="Watch tutorial"
+                                page="_dashboards"
+                                href="/"></empty-page-component>
+	    <div class="row" ng-if="dashboard.widgets.length">
 	         <div class="col-lg-12">
 	         	<ul class="nav nav-pills">
 					<md-button data-ng-class="{'md-raised md-primary': dashboard.active == true}" data-ng-repeat="dashboard in dashboards | orderBy:'position' track by dashboard.id"
@@ -42,7 +51,7 @@
 	         </div>
 	    </div>
 	    <br/>
-		<div class="row">
+		<div class="row" ng-if="dashboard.widgets.length">
 			<input type="hidden" id="dashboard_title" value="{{dashboard.title}}" />
             <div gridstack class="grid-stack" options="gridstackOptions"
                  on-change="" on-drag-start="" on-drag-stop="" on-resize-start="" on-resize-stop="" style="margin-bottom: 20px">
@@ -125,6 +134,6 @@
                     </div>
                 </div>
             </div>
-		</div>
+        </div>
 	</div>
 </div>
