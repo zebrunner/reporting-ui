@@ -63,7 +63,7 @@
     }
 
     &__container {
-        height: calc(100vh - #{$header_height});
+        height: 100vh;
     }
 
     &__section {
