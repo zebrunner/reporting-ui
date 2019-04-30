@@ -13,10 +13,8 @@
                                 </md-chip>
                             </md-chips>
                         </div>
-                        <md-chips class="filter-chip custom-filter" ng-class="{'_wide': !$ctrl.matchMode(['APPLY'])}" ng-model="$ctrl.filters" md-removable="false"
+                        <md-chips class="filter-chip custom-filter" ng-class="{'_wide': !$ctrl.isFilterActive()}" ng-model="$ctrl.filters" md-removable="false"
                             readonly="true">
-                            <!--TODO: for what this empty disabled input-->
-                            <input disabled>
                             <md-chip-template>
                                 <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.searchByFilter($chip, $index)">
                                     <span>{{$chip.name}}</span>
@@ -28,7 +26,7 @@
                         </md-chips>
                         </div>
                         <div class="tests-runs-filter__actions">
-                            <button ng-if="$ctrl.matchMode(['APPLY'])" id="reset" class="filter-reset-btn md-button md-raised md-warn md-ink-ripple pull-right"
+                            <button ng-if="$ctrl.isFilterActive()" id="reset" class="filter-reset-btn md-button md-raised md-warn md-ink-ripple pull-right"
                                 type="button" ng-click="$ctrl.onReset();">
                                 <span>RESET</span>
                             </button>

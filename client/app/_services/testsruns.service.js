@@ -52,14 +52,12 @@
         }
 
         function fetchTestRuns() {
-            const filter = _activeFilterId ? '?filterId=' + _activeFilterId : undefined;
-            _searchParams.filterId = _activeFilterId;
+            _activeFilterId && (_searchParams.filterId = _activeFilterId);
 
             // save search params
             deleteStoredParams();
             storeParams();
             _lastParams = angular.copy(_searchParams);
-            _lastFilters = filter;
 
             return TestRunService.searchTestRuns(_searchParams)
                 .then(function(rs) {
@@ -124,7 +122,6 @@
         function resetSearchParams() {
             _searchParams = angular.copy(DEFAULT_SC);
             _lastParams = null;
-            _lastFilters = null;
         }
 
         function setSearchParam(name, value) {
@@ -137,10 +134,6 @@
 
         function deleteSearchParam(name) {
             delete _searchParams[name];
-
-            /*if (Object.keys(DEFAULT_SC).length === Object.keys(_searchParams).length) {
-                resetFilteringState(true);
-            }*/
         }
 
         function setActiveFilteringTool(tool) {
@@ -156,11 +149,11 @@
         }
 
         function isFilterActive() {
-            return _activeFilteringTool === 'filter';
+            return _searchParams.hasOwnProperty('filterId');
         }
 
         function isSearchActive() {
-            return _activeFilteringTool === 'search';
+            return !isFilterActive() && !angular.equals(_searchParams, DEFAULT_SC);
         }
 
         function resetFilteringState(keepSearchType) {
@@ -183,18 +176,20 @@
 
         function readStoredParams() {
             const params = sessionStorage.getItem('searchParams');
-            const filteringTool = sessionStorage.getItem('activeFilteringTool');
+            // const filteringTool = sessionStorage.getItem('activeFilteringTool');
+
+            // console.log(filteringTool);
 
             params && (_searchParams = angular.fromJson(params)) && (_lastParams = _searchParams);
 
-            if (filteringTool) {
-                setActiveFilteringTool(filteringTool);
-                if (filteringTool === 'filter') {
-                    const filterId = sessionStorage.getItem('activeFilterId');
-
-                    filterId && setActiveFilter(+filterId);
-                }
-            }
+            // if (filteringTool) {
+            //     setActiveFilteringTool(filteringTool);
+            //     if (filteringTool === 'filter') {
+            //         const filterId = sessionStorage.getItem('activeFilterId');
+            //
+            //         filterId && setActiveFilter(+filterId);
+            //     }
+            // }
         }
 
         function addNewTestRun(testRun) {

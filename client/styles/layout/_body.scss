@@ -1235,7 +1235,8 @@ button#resetFilter {
 }
 
 /*Filters*/
-#filter, #filter-editor, #search {
+#filter,
+#filter-editor {
   position: relative;
 
     md-input-container {
@@ -1295,6 +1296,85 @@ button#resetFilter {
         .md-select-value {
             border-bottom-style: none;
             min-width: 36px !important;
+            width: 100%;
+            height: 100%;
+        }
+        .md-select-icon {
+            display: none;
+        }
+    }
+    i.date-picker-icon {
+        font-size: 17px;
+        position: absolute;
+        top: 9px;
+        right: 5px;
+    }
+    span.label {
+        //font-size: 100%;
+    }
+}
+
+
+.tests-runs-search {
+    position: relative;
+
+    md-input-container {
+        height: 36px;
+        margin: 0;
+        padding: 0;
+        font-size: 14.5px;
+    }
+    md-radio-button {
+        display: inline-block;
+        padding-right: 10px;
+    }
+    .filter-criteria {
+        padding-right: 0;
+    }
+    .filter-option {
+        padding-left: 0;
+        md-select {
+            background-color: rgba(0, 0, 0, 0.12);
+        }
+    }
+    .filter-value {
+        padding-left: 0;
+    }
+    i.material-icons {
+        color: rgba(0, 0, 0, 0.8);
+    }
+    md-chips-wrap {
+        display: inline-block;
+        box-shadow: 0 0;
+        padding: 0;
+        .md-chip-input-container {
+            display: none;
+        }
+        i.custom-chip-action {
+            color: rgb(97,97,97);
+            font-size: 18px;
+        }
+        md-chip {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+    }
+    .right-switch {
+        position: absolute;
+        right: 0;
+        padding-right: 20px;
+        padding-top: 15px;
+    }
+    md-date-range {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        .md-select-value {
+            border-bottom-style: none;
+            min-width: 36px;
             width: 100%;
             height: 100%;
         }
@@ -1455,10 +1535,10 @@ md-chip md-chip-template.bg-primary {
     margin-bottom: 8px;
 }
 
-#search .form-control {
-    height: 36px;
-    border-color: $custom-gray !important;
-}
+//#search .form-control {
+//    height: 36px;
+//    border-color: $custom-gray !important;
+//}
 
 .search-filter-body{
   width: 100%;
@@ -1683,9 +1763,9 @@ div[aria-selected='true'] span.ng-binding {
     padding: 0 !important;
 }
 
-#search .form-control:not(.inner-input), .block-control {
-    margin-right: 8px;
-}
+//#search .form-control:not(.inner-input), .block-control {
+//    margin-right: 8px;
+//}
 
 #search-container .form-control {
     padding-right: 236px;
@@ -1777,21 +1857,21 @@ button#add-button{
     font-size: 9px;
 }
 
-#search {
-    & .md-select-value, & .md-select-value.md-select-placeholder, & .date-picker-container span{
-      color: $coal !important;
-      font-weight: 500;
-    }
-
-    & .form-control,
-    & .reviewed,
-    & md-select,
-    & .date-picker-container{
-      &:hover{
-        border-color: #000 !important;
-      }
-    }
-}
+//#search {
+//    & .md-select-value, & .md-select-value.md-select-placeholder, & .date-picker-container span{
+//      color: $coal !important;
+//      font-weight: 500;
+//    }
+//
+//    & .form-control,
+//    & .reviewed,
+//    & md-select,
+//    & .date-picker-container{
+//      &:hover{
+//        border-color: #000 !important;
+//      }
+//    }
+//}
 
 .highlight_test {
     transition: background-color 0.8s linear;

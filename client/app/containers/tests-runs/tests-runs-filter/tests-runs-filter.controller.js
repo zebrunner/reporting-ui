@@ -108,7 +108,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         loadPublicFilters().then(function() {
             $timeout(function() {
                 if (vm.isFilterActive()) {
-                    const activeFilterId = testsRunsService.getActiveFilter();
+                    const activeFilterId = testsRunsService.getSearchParam('filterId');
 
                     activeFilterId && vm.chipsCtrl && vm.filters.find(function(filter, index) {
                         if (+activeFilterId === filter.id) {
@@ -334,14 +334,6 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             }
         }
 
-        if (testsRunsService.isFilterActive() && testsRunsService.getActiveFilter()) {
-            mode.push('APPLY');
-        }
-
-        if (testsRunsService.isSearchActive()) {
-            mode.push('SEARCH');
-        }
-
         return mode;
     }
 
@@ -353,7 +345,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         vm.selectedRange.selectedTemplateName = null;
         vm.searchParams = angular.copy(DEFAULT_SC);
         vm.fastSearch = {};
-        testsRunsService.resetFilteringState();
+        testsRunsService.deleteSearchParam('filterId');
         vm.onFilterChange();
         vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
         // reset filter form
@@ -385,6 +377,9 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
                 alertify.success('Filter was updated');
                 vm.filters[vm.filters.indexOfField('id', rs.data.id)] = rs.data;
                 clearAndOpenFilterBlock(false);
+                if (rs.data.id === testsRunsService.getSearchParam('filterId')) {
+                    vm.onFilterChange();
+                }
             } else {
                 alertify.error(rs.message);
             }
@@ -401,7 +396,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             if (rs.success) {
                 alertify.success('Filter was deleted');
                 vm.filters.splice(vm.filters.indexOfField('id', id), 1);
-                if (id !== testsRunsService.getActiveFilter()) {
+                if (id !== testsRunsService.getSearchParam('filterId')) {
                     clearAndOpenFilterBlock(false);
                 } else {
                     onReset();
@@ -415,18 +410,11 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     function selectFilterForEdit(filter) {
         vm.collapseFilter = true;
         vm.filter = angular.copy(filter);
-        !vm.isFilterActive() && testsRunsService.setActiveFilteringTool('filter');
     }
 
     function clearAndOpenFilterBlock(value) {
         clearFilter();
         vm.collapseFilter = value;
-
-        if (value) {
-            !vm.isFilterActive() && testsRunsService.setActiveFilteringTool('filter');
-        } else if (!testsRunsService.getActiveFilter() && vm.isFilterActive()) {
-            testsRunsService.deleteActiveFilteringTool();
-        }
     }
 
     function clearFilterSlice() {
@@ -436,13 +424,12 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     }
 
     function searchByFilter(filter, index) {
-        //return if click on already selected filter
-        if (testsRunsService.getActiveFilter() === filter.id) { return; }
         //return if search tool activated
         if (vm.isSearchActive()) { return; }
+        //return if click on already selected filter
+        if (testsRunsService.getActiveFilter() === filter.id) { return; } //TODO: reset filtering
 
-        !vm.isFilterActive() && testsRunsService.setActiveFilteringTool('filter');
-        testsRunsService.setActiveFilter(filter.id);
+        testsRunsService.setSearchParam('filterId', filter.id);
         vm.chipsCtrl.selectedChip = index;
         // fire fetch data event;
         vm.onFilterChange();
