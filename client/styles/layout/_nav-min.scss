@@ -113,6 +113,7 @@
                     left: 100%;
                     top: 0;
                     min-width: 280px;
+                    padding-top: 24px;
 
                     @media (max-width: $screen-phone) {
                         position: fixed;
@@ -120,6 +121,7 @@
                         top: $header_height;
                         width: calc(100% - 60px) !important;
                         min-width: auto;
+                        padding-top: 7px;
                     }
 
                     @include border-right-radius($border-radius-base);

@@ -15,6 +15,7 @@
         .show-part {
             display: flex;
             align-items: center;
+            line-height: 1;
 
             @media (min-width: $screen-phone + 1) {
                 max-width: 280px;
@@ -86,10 +87,10 @@
             }
         }
         &-search {
-            margin: 20px 56px 18px 24px;
+            margin: 3px 56px 18px 24px;
             max-height: 28px;
             @media(max-width: $screen-phone) {
-                margin: 20px 67px 18px 24px;
+                margin: 13px 67px 18px 24px;
             }
             md-input-container, md-input-container.md-input-focused  {
                 width: 100%;
@@ -145,21 +146,16 @@
             right: 12px;
             top: 12px;
             cursor: pointer;
+            z-index: 2;
             md-icon {
                 color: rgba(#ffffff, .4);
-                font-size: 20px;
-                height: 20px;
-                width: 20px;
-                min-height: 20px;
-                min-width: 20px;
-                line-height: 20px;
             }
             &:hover md-icon{
                 color: rgba(#ffffff, .5);
             }
         }
         &__button {
-            margin: 24px 56px 0 24px;
+            margin: 0 56px 17px 24px;
             max-height: 32px;
             border: 1px #ffffff;
             i.material-icons {

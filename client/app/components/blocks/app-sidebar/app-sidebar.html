@@ -67,7 +67,7 @@
                     <li class="sub-search search-menu">
                         <ul toggle-nav-bottom>
                             <li data-ng-repeat="view in $ctrl.views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })" class="show-part">
                                     <span class="menu-link__text">{{::view.name}}</span>
                                 </a>
                                 <span style="position: absolute; right: 10px; top: 15px;" class="show-icon-on-hover">
@@ -90,20 +90,23 @@
                     <span>Users</span>
                 </a>
                 <ul class="auto-width width-icon">
+                    <li class="nav-controls search_close-button">
+                        <md-icon toggle-menu="close">close</md-icon>
+                    </li>
                     <li class="sub-search search-menu">
                         <ul toggle-nav-bottom>
                             <li style="position: relative;" has-any-permission="['MODIFY_USERS', 'VIEW_USERS']">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.list">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.list" class="show-part">
                                     <span>Users</span>
                                 </a>
                             </li>
                             <li style="position: relative;" has-any-permission="['MODIFY_USER_GROUPS']">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="groups.list">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="groups.list" class="show-part">
                                     <span>Groups</span>
                                 </a>
                             </li>
                             <li style="position: relative;" has-any-permission="['INVITE_USERS', 'MODIFY_INVITATIONS']">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="invitations.list">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="invitations.list" class="show-part">
                                     <span>Invitations</span>
                                 </a>
                             </li>
