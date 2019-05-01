@@ -44,11 +44,11 @@
             password: [
                 {
                     name: 'minlength',
-                    message: 'Password must be between 8 and 40 characters'
+                    message: 'Password must be between 8 and 50 characters'
                 },
                 {
                     name: 'maxlength',
-                    message: 'Password must be between 8 and 40 characters'
+                    message: 'Password must be between 8 and 50 characters'
                 },
                 {
                     name: 'pattern',
@@ -63,11 +63,11 @@
             confirmPwd: [
                 {
                     name: 'minlength',
-                    message: 'Password must be between 8 and 40 characters'
+                    message: 'Password must be between 8 and 50 characters'
                 },
                 {
                     name: 'maxlength',
-                    message: 'Password must be between 8 and 40 characters'
+                    message: 'Password must be between 8 and 50 characters'
                 },
                 {
                     name: 'pattern',
