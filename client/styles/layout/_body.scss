@@ -2661,6 +2661,7 @@ $light-inprogress: #68c9fd;
                 max-width: calc(100% - 42px); //42px - 32px button wodth + 10px margin
                 overflow: hidden;
                 text-overflow: ellipsis;
+                white-space: nowrap;
                 &._flex {
                     justify-content: center;
                 }
