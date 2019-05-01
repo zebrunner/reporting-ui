@@ -350,7 +350,7 @@
                                 testsRunsService.deleteStoredParams();
                             }
 
-                            testsRunsService.setSearchParam('projects', projects);
+                            projects && projects.length && testsRunsService.setSearchParam('projects', projects);
 
                             return testsRunsService.fetchTestRuns().catch(function(err) {
                                 err && err.message && alertify.error(err.message);

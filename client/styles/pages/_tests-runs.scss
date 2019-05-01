@@ -1,6 +1,9 @@
 @import "../global/var";
 
 .p-tests-runs {
+    &__content-wrapper {
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12), 0 4px 4px 0 rgba(0, 0, 0, 0.12);
+    }
     &__section {
         #noData {
             padding: 15px;
@@ -10,12 +13,9 @@
             box-shadow: none;
         }
     }
-    @media screen and (max-width: $breakpoint-mobile) {
+    @media screen and (max-width: 599px) {
         .page {
-            padding: 48px 0 0;
-        }
-        ._search-active {
-            padding-top: 48px;
+            padding: 0;
         }
         &__section {
             background-color: white;

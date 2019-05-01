@@ -3,7 +3,7 @@
 
     angular
         .module('app.services')
-        .factory('TestRunService', ['$httpMock', 'UtilService', 'API_URL', '$httpParamSerializer', TestRunService])
+        .factory('TestRunService', ['$httpMock', 'UtilService', 'API_URL', '$httpParamSerializer', TestRunService]);
 
     function TestRunService($httpMock, UtilService, API_URL, $httpParamSerializer) {
         var service = {
@@ -27,21 +27,20 @@
             getEnvironments: getEnvironments,
             getPlatforms: getPlatforms,
             getConsoleOutput: getConsoleOutput,
-        }
+        };
 
         return service;
 
-        function searchTestRuns(criteria) {
-            if(criteria.projects && criteria.projects.length) {
-                criteria.projectNames = criteria.projects.map(function (project) {
+        function searchTestRuns(params) {
+            //TODO: refactor this and prepare correct projectNames before calling this method
+            if(params.projects && params.projects.length) {
+                params.projectNames = params.projects.map(function (project) {
                     return project.name;
                 });
-                delete criteria.projects;
+                delete params.projects;
             }
-            const path = $httpParamSerializer(criteria);
-            const endpoint = '/api/tests/runs/search?' + path;
 
-            return $httpMock.get(API_URL + endpoint, criteria).then(UtilService.handleSuccess, UtilService.handleError('Unable to search test runs'));
+            return $httpMock.get(`${API_URL}/api/tests/runs/search?${$httpParamSerializer(params)}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to search test runs'));
         }
 
         function abortTestRun(id, ciRunId, comment) {

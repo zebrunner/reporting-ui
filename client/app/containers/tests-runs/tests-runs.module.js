@@ -2,7 +2,7 @@
 
 import testsRunsFilter from './tests-runs-filter/tests-runs-filter.directive';
 import testsRunsComponent from './tests-runs.component';
-import testsRunsSearch from './tests-runs-filter/tests-runs-search/tests-runs-search.directive';
+import testsRunsSearch from './tests-runs-search/tests-runs-search.directive';
 
 export const testsRunsModule = angular.module('app.testsRuns', ['ui.ace'])
     .directive({ testsRunsFilter })

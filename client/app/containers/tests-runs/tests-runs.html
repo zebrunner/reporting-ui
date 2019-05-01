@@ -3,19 +3,6 @@
         <zf-sub-header-title>
             Test runs
         </zf-sub-header-title>
-        <zf-sub-header-button ng-if="$ctrl.isMobile() && $ctrl.isFilterActive()">
-            <button ng-click="$ctrl.resetFilter();" class="fixed-page-header__btn _no-icon zf-header-button _filter-reset md-button md-primary md-ink-ripple">
-                <span>reset</span>
-            </button>
-        </zf-sub-header-button>
-        <zf-sub-header-button ng-if="$ctrl.isMobile()"
-                              ng-hide="$ctrl.isFilterActive()">
-            <button ng-click="$ctrl.displaySearch();"
-                    class="fixed-page-header__btn _search zf-header-button"
-                    ng-class="{ '_active': $ctrl.isSearchActive() }">
-                <md-icon class="material-icons">search</md-icon>
-            </button>
-        </zf-sub-header-button>
         <zf-sub-header-button>
             <button has-any-permission="['MODIFY_LAUNCHERS', 'VIEW_LAUNCHERS']"
                     class="fixed-page-header__btn _launcher zf-header-button"
@@ -26,7 +13,7 @@
         </zf-sub-header-button>
     </zf-sub-header>
 
-    <div class="page" ng-class="{ '_search-active': $ctrl.isSearchActive() }">
+    <div class="page">
         <md-fab-speed-dial id="main-fab" ng-if="$ctrl.selectedTestRuns.length > 0" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
@@ -58,7 +45,8 @@
         </md-fab-speed-dial>
 
         <tests-runs-filter on-filter-change="$ctrl.getTestRuns(1)"></tests-runs-filter>
-        <tests-runs-search on-filter-change="$ctrl.getTestRuns(1)">
+        <div class="p-tests-runs__content-wrapper">
+            <tests-runs-search on-filter-change="$ctrl.getTestRuns(1)">
             <span>
                 <md-checkbox name="testRunSearchCheckbox"
                              data-ng-model="$ctrl.selectedAll"
@@ -69,18 +57,19 @@
                              data-ng-false-value="false">
                 </md-checkbox>
             </span>
-        </tests-runs-search>
-        <div class="p-tests-runs__section _content row ui-section no-margin">
-            <div class="col-md-12 no-padding">
-                <article class="article">
-                    <md-card class="no-margin-h">
-                        <test-run-card test-run="testRun" ng-repeat="testRun in $ctrl.testRuns | orderObjectBy:'startedAt':true track by testRun.id" single-mode="false" on-select="$ctrl.selectTestRun(testRun)" on-delete="$ctrl.deleteSingleTestRun(testRun)"></test-run-card>
-                        <div ng-if="($ctrl.testRuns && !$ctrl.testRuns.length)">
-                            <div id="noData" class="text-center">No test runs</div>
-                        </div>
-                        <md-table-pagination id="pagination" zafira-background-theme="pagination" ng-if="!$ctrl.isTestRunsEmpty()" md-limit="$ctrl.pageSize" md-limit-options=false md-page="$ctrl.currentPage" md-total="{{$ctrl.totalResults}}" md-page-select=false md-boundary-links=true md-on-paginate="$ctrl.getTestRuns"></md-table-pagination>
-                    </md-card>
-                </article>
+            </tests-runs-search>
+            <div class="p-tests-runs__section _content row ui-section no-margin">
+                <div class="col-md-12 no-padding">
+                    <article class="article">
+                        <md-card class="no-margin-h">
+                            <test-run-card test-run="testRun" ng-repeat="testRun in $ctrl.testRuns | orderObjectBy:'startedAt':true track by testRun.id" single-mode="false" on-select="$ctrl.selectTestRun(testRun)" on-delete="$ctrl.deleteSingleTestRun(testRun)"></test-run-card>
+                            <div ng-if="($ctrl.testRuns && !$ctrl.testRuns.length)">
+                                <div id="noData" class="text-center">No test runs</div>
+                            </div>
+                            <md-table-pagination id="pagination" zafira-background-theme="pagination" ng-if="!$ctrl.isTestRunsEmpty()" md-limit="$ctrl.pageSize" md-limit-options=false md-page="$ctrl.currentPage" md-total="{{$ctrl.totalResults}}" md-page-select=false md-boundary-links=true md-on-paginate="$ctrl.getTestRuns"></md-table-pagination>
+                        </md-card>
+                    </article>
+                </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,73 @@
+<div id="search"
+     class="md-row tests-runs-search"
+     layout="row"
+     layout-md="column"
+     layout-sm="column"
+     layout-xs="column"
+     ng-class="{ '_mobile': $ctrl.isMobile(), '_active': $ctrl.isMobile() && $ctrl.showAdvancedSearchFilters }">
+    <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
+    <div class="tests-runs-search__top-section" flex="auto" layout="row">
+        <ng-transclude></ng-transclude>
+        <label class="tests-runs-search__input-label">
+            <input class="form-control pull-left tests-runs-search__input-field"
+                   placeholder="Search items"
+                   ng-model-options="{debounce: 700}"
+                   ng-model="$ctrl.searchParams.query"
+                   ng-change="$ctrl.onChangeSearchCriteria('query')"
+                   aria-label="Search items"
+                   aria-describedby="basic-addon2">
+            <i class="material-icons tests-runs-search__input-icon">
+                search
+            </i>
+        </label>
+        <button class="tests-runs-search__input-btn"
+                ng-class="{'_active' : $ctrl.showAdvancedSearchFilters || !$ctrl.showAdvancedSearchFilters && $ctrl.isOnlyAdditionalSearchActive() }"
+                role="button"
+                ng-click="$ctrl.showSearchFilters()"
+                ng-if="$ctrl.isMobile()">
+            <md-icon class="material-icons" role="img" aria-label="play_arrow">filter_list</md-icon>
+        </button>
+    </div>
+
+    <div class="tests-runs-search__bottom-section"
+         layout="row"
+         layout-sm="column"
+         layout-xs="column">
+        <div layout="row" class="tests-runs-search__helpers search-fields _main">
+            <button class="quadro-btn pull-left reviewed" data-ng-class="{'label-blank': !$ctrl.searchParams.reviewed, 'label-primary': !!$ctrl.searchParams.reviewed}"
+                    ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed; $ctrl.onChangeSearchCriteria()">R
+                <md-tooltip ng-if="!$ctrl.isMobile()" md-direction="bottom">Reviewed</md-tooltip>
+            </button>
+            <md-input-container class="searchable select pull-left no-padding" flex="grow">
+                <md-select id="searchStatus" ng-model="$ctrl.searchParams.status" ng-change="$ctrl.onChangeSearchCriteria()" name="status" placeholder="Status">
+                    <md-option value="">None</md-option>
+                    <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="searchable select pull-left no-padding no-margin-l" flex="grow">
+                <md-select id="searchEnv" ng-model="$ctrl.searchParams.environment"
+                           ng-change="$ctrl.onChangeSearchCriteria()"
+                           name="environment" placeholder="Environment">
+                    <md-option value="">None</md-option>
+                    <md-option ng-repeat="env in $ctrl.environments" ng-value="env">{{env}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="searchable select selectPlatform pull-left" flex="grow">
+                <md-select id="searchPlatform" ng-model="$ctrl.searchParams.platform" name="platform" placeholder="Platform" ng-change="$ctrl.onChangeSearchCriteria()">
+                    <md-option value="">None</md-option>
+                    <md-option ng-repeat="platform in $ctrl.platforms" ng-value="platform">{{platform}}</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div layout="row" layout-align="none end" layout-align-sm="space-between end" class="tests-runs-search__helpers search-fields _additional" layout-xs="column">
+            <md-input-container class="date-picker-container" flex="grow" flex-sm="33" flex-xs="100">
+                <span data-ng-if="!$ctrl.selectedRange.dateStart && !$ctrl.selectedRange.dateEnd">Date</span>
+                <span data-ng-if="$ctrl.selectedRange.dateStart && $ctrl.selectedRange.dateEnd && !$ctrl.isEqualDate()">{{$ctrl.selectedRange.dateStart | date : 'dd MMM'}} - </span>
+                <span>{{$ctrl.selectedRange.dateEnd | date : 'dd MMM'}}</span>
+                <i class="material-icons">date_range</i>
+                <md-button id="searchCalendar" ng-click="$ctrl.openDatePicker($event, true)"></md-button>
+            </md-input-container>
+            <button ng-show="$ctrl.isSearchActive()" class="tests-runs-search__reset-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></button>
+        </div>
+    </div>
+</div>
