@@ -1235,8 +1235,8 @@ button#resetFilter {
 }
 
 /*Filters*/
-#filter,
-#filter-editor {
+.tests-runs-filter,
+.tests-runs-filter__editor {
   position: relative;
 
     md-input-container {
@@ -1266,8 +1266,8 @@ button#resetFilter {
     }
     md-chips-wrap {
         display: inline-block;
-        box-shadow: 0 0 !important;
-        padding: 0 !important;
+        box-shadow: none;
+        padding: 0;
         .md-chip-input-container {
             display: none;
         }
@@ -1277,7 +1277,7 @@ button#resetFilter {
         }
         md-chip {
             margin-top: 0;
-            margin-bottom: 8px;
+            //margin-bottom: 8px;
         }
     }
     .right-switch {
@@ -1316,8 +1316,6 @@ button#resetFilter {
 
 
 .tests-runs-search {
-    position: relative;
-
     md-input-container {
         height: 36px;
         margin: 0;
@@ -1749,12 +1747,6 @@ div[aria-selected='true'] span.ng-binding {
         transform: none !important;
       }
   }
-
-    & i {
-        float: right;
-        font-size: 17px;
-        color: $gray-light !important;
-    }
 }
 
 #search-container, .filter-input-container {
@@ -1817,7 +1809,8 @@ button#add-button{
 }
 
 .md-select-value .md-select-icon {
-    margin: 0 8px 0 4px;
+    margin: 0 11px 0 4px;
+    color: currentColor;
 }
 
 .log-demo {
@@ -1853,7 +1846,8 @@ button#add-button{
     color: $gray-light !important;
 }
 
-#filter-editor .md-select-icon:after, #search .md-select-icon:after {
+#filter-editor .md-select-icon:after,
+#search .md-select-icon:after {
     font-size: 9px;
 }
 
@@ -2619,6 +2613,10 @@ $light-inprogress: #68c9fd;
             padding-left: 60px;
         }
 
+        @media(max-width: 599px) {
+            padding-right: 16px;
+        }
+
         .back_button {
             min-width: auto;
             min-height: auto;
@@ -2864,6 +2862,16 @@ $light-inprogress: #68c9fd;
         .p-tests-run-details &,
         .p-tests-runs & {
             padding-top: $header_height;
+        }
+
+        @media screen and (max-width: 599px) {
+            .p-tests-runs & {
+                padding-top: calc(#{$header-height}  + 72px + 78px); // 72px - filters; 78px - search
+            }
+
+            .p-tests-runs._no-filters & {
+                padding-top: calc(#{$header-height} + 78px); // 72px - filters; 78px - search
+            }
         }
     }
 }

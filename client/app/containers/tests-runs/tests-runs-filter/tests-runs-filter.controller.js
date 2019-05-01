@@ -2,7 +2,7 @@
 
 const TestsRunsFilterController = function TestsRunsFilterController($scope, FilterService, DEFAULT_SC, TestRunService, $q, ProjectService,
                                        testsRunsService, $cookieStore, UserService, $timeout, $mdDateRangePicker,
-                                       windowWidthService, $rootScope) {
+                                       windowWidthService) {
     'ngInject';
 
     const subjectName = 'TEST_RUN';
@@ -40,8 +40,6 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         filter: angular.copy(DEFAULT_FILTER_VALUE),
         filters: [],
         filterBlockExpand: false,
-        fastSearchBlockExpand: false,
-        fastSearch: {},
         collapseFilter: false,
         isFilterActive: testsRunsService.isFilterActive,
         isSearchActive: testsRunsService.isSearchActive,
@@ -82,8 +80,6 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         isMobileSearchActive: false,
 
         matchMode: matchMode,
-        onReset: onReset,
-        onApply: onApply,
         addChip: addChip,
         createFilter: createFilter,
         updateFilter: updateFilter,
@@ -91,10 +87,8 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         clearAndOpenFilterBlock: clearAndOpenFilterBlock,
         searchByFilter: searchByFilter,
         selectFilterForEdit: selectFilterForEdit,
-        toggleMobileSearch: toggleMobileSearch,
         onFilterSliceUpdate: onFilterSliceUpdate,
         onSelect: onSelect,
-        clearPickFilter: clearPickFilter,
     };
 
     vm.$onInit = init;
@@ -103,35 +97,31 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
 
     function init() {
         vm.filterBlockExpand = true;
-        vm.fastSearchBlockExpand = true;
         loadFilters();
-        loadPublicFilters().then(function() {
-            $timeout(function() {
-                if (vm.isFilterActive()) {
-                    const activeFilterId = testsRunsService.getSearchParam('filterId');
+        loadPublicFilters()
+            .then(function() {
+                $timeout(function() {
+                    if (vm.isFilterActive()) {
+                        const activeFilterId = testsRunsService.getSearchParam('filterId');
 
-                    activeFilterId && vm.chipsCtrl && vm.filters.find(function(filter, index) {
-                        if (+activeFilterId === filter.id) {
-                            vm.chipsCtrl.selectedChip = index;
-                        }
-                    });
-                }
+                        activeFilterId && vm.chipsCtrl && vm.filters.find(function(filter, index) {
+                            if (+activeFilterId === filter.id) {
+                                vm.chipsCtrl.selectedChip = index;
+                            }
+                        });
+                    }
+                });
+
+                handleBodyClass();
             });
-        });
-        readStoredParams();
-        if (vm.isMobile()) {
-            $rootScope.$on('tr-filter-apply', onApply);
-            $rootScope.$on('tr-filter-open-search', toggleMobileSearch);
-        }
         $scope.$watch('$ctrl.selectedFilterRange.dateStart', function (oldValue, newVal) {
             if(oldValue) {
                 vm.currentValue.value = angular.copy(vm.selectedFilterRange.dateStart);
-                vm.clearPickFilter();
+                clearPickFilter();
                 closeDatePickerMenu();
             }
         });
     }
-
 
     function onSelect(dates) {
         return vm.selectedFilterRange.selectedTemplateName;
@@ -151,28 +141,6 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         vm.selectedFilterRange.dateEnd = null;
     }
 
-    function readStoredParams() {
-        if (vm.isSearchActive()) {
-            let fromDate = testsRunsService.getSearchParam('fromDate');
-            let toDate = testsRunsService.getSearchParam('toDate');
-            const date = testsRunsService.getSearchParam('date');
-
-            date && (fromDate = toDate = date);
-            fromDate && (vm.selectedRange.dateStart = new Date(fromDate));
-            toDate && (vm.selectedRange.dateEnd = new Date(toDate));
-
-            testsRunsService.getSearchTypes().forEach(function(type) {
-                const searchValue = testsRunsService.getSearchParam(type);
-
-                searchValue && (vm.fastSearch[type] = searchValue);
-            });
-        }
-    }
-
-    function toggleMobileSearch() {
-        vm.isMobileSearchActive = !vm.isMobileSearchActive;
-    }
-
     function loadFilters() {
         const loadFilterDataPromises = [];
 
@@ -186,11 +154,12 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     }
 
     function loadPublicFilters() {
-        return FilterService.getAllPublicFilters().then(function (rs) {
-            if (rs.success) {
-                vm.filters = rs.data;
-            }
-        });
+        return FilterService.getAllPublicFilters()
+            .then(function (rs) {
+                if (rs.success) {
+                    vm.filters = rs.data;
+                }
+            });
     }
 
     function loadEnvironments() {
@@ -275,8 +244,8 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             case 'VALUE':
             default:
                 break;
-        };
-    };
+        }
+    }
 
     function onFilterSliceUpdate(slice) {
         clearFilterCriterias(slice);
@@ -298,16 +267,16 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
                 break;
             default:
                 break;
-        };
-    };
+        }
+    }
 
     function isDateCriteria(criteria) {
         return criteria && DATE_CRITERIAS.indexOf(criteria.name) >= 0;
-    };
+    }
 
     function isDatePickerOperator(operator) {
         return operator && DATE_CRITERIAS_PICKER_OPERATORS.indexOf(operator) >= 0;
-    };
+    }
 
     function isSelectCriteria(criteria) {
         return criteria && SELECT_CRITERIAS.indexOf(criteria.name) >= 0;
@@ -338,25 +307,15 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     }
 
     function onReset() {
-        $rootScope.$emit('tr-filter-reset');
         vm.selectedRange.dateStart = null;
         vm.selectedRange.dateEnd = null;
         vm.selectedRange.selectedTemplate = null;
         vm.selectedRange.selectedTemplateName = null;
-        vm.searchParams = angular.copy(DEFAULT_SC);
-        vm.fastSearch = {};
         testsRunsService.deleteSearchParam('filterId');
         vm.onFilterChange();
         vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
         // reset filter form
         clearAndOpenFilterBlock(false);
-    }
-
-    function onApply() {
-        $timeout(function() {
-            vm.onFilterChange();
-        }, 0);
-
     }
 
     function createFilter() {
@@ -365,6 +324,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
                 alertify.success('Filter was created');
                 vm.filters.push(rs.data);
                 clearAndOpenFilterBlock(false);
+                handleBodyClass();
             } else {
                 alertify.error(rs.message);
             }
@@ -380,6 +340,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
                 if (rs.data.id === testsRunsService.getSearchParam('filterId')) {
                     vm.onFilterChange();
                 }
+                handleBodyClass();
             } else {
                 alertify.error(rs.message);
             }
@@ -401,6 +362,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
                 } else {
                     onReset();
                 }
+                handleBodyClass();
             } else {
                 alertify.error(rs.message);
             }
@@ -427,7 +389,11 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         //return if search tool activated
         if (vm.isSearchActive()) { return; }
         //return if click on already selected filter
-        if (testsRunsService.getActiveFilter() === filter.id) { return; } //TODO: reset filtering
+        if (testsRunsService.getSearchParam('filterId') === filter.id) {
+            onReset();
+
+            return;
+        }
 
         testsRunsService.setSearchParam('filterId', filter.id);
         vm.chipsCtrl.selectedChip = index;
@@ -442,6 +408,14 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             value: vm.currentValue.value && vm.currentValue.value.value ? vm.currentValue.value.value : vm.currentValue.value
         });
         clearFilterSlice();
+    }
+
+    function handleBodyClass() {
+        if (vm.filters && vm.filters.length) {
+            document.body.classList.remove('_no-filters');
+        } else {
+            document.body.classList.add('_no-filters');
+        }
     }
 };
 

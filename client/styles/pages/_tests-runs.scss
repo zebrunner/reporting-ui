@@ -13,12 +13,9 @@
             box-shadow: none;
         }
     }
-    @media screen and (max-width: $breakpoint-mobile) {
+    @media screen and (max-width: 599px) {
         .page {
-            padding: 48px 0 0;
-        }
-        ._search-active {
-            padding-top: 48px;
+            padding: 0;
         }
         &__section {
             background-color: white;

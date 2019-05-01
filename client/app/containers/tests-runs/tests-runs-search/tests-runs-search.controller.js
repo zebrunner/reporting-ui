@@ -13,6 +13,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         fastSearchBlockExpand: false,
         isFilterActive: testsRunsService.isFilterActive,
         isSearchActive: testsRunsService.isSearchActive,
+        isOnlyAdditionalSearchActive: testsRunsService.isOnlyAdditionalSearchActive,
         fastSearch: {},
         statuses: STATUSES,
         selectedRange: {
@@ -27,9 +28,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         searchParams: testsRunsService.getLastSearchParams(),
         onChangeSearchCriteria: onChangeSearchCriteria,
         openDatePicker: openDatePicker,
-        toggleMobileSearch: toggleMobileSearch,
         onReset: onReset,
-        onApply: onApply,
         showSearchFilters: showSearchFilters,
         resetSearchQuery: resetSearchQuery,
         showAdvancedSearchFilters: false,
@@ -43,12 +42,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         vm.fastSearchBlockExpand = true;
         loadFilters();
         readStoredParams();
-        if (vm.isMobile()) {
-            // $rootScope.$on('tr-filter-apply', onApply);
-            $rootScope.$on('tr-filter-open-search', toggleMobileSearch);
-            $rootScope.$on('tr-filter-close', toggleMobileSearch);
-        }
-        $rootScope.$on('tr-filter-reset', onReset);
     }
 
     function readStoredParams() {
@@ -67,10 +60,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                 searchValue && (vm.fastSearch[type] = searchValue);
             });
         }
-    }
-
-    function toggleMobileSearch() {
-        vm.isMobileSearchActive = !vm.isMobileSearchActive;
     }
 
     function onReset() {
@@ -178,12 +167,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         return criteria && SELECT_CRITERIAS.indexOf(criteria.name) >= 0;
     }
 
-    function onChangeSearchCriteria() {//TODO: refactor this fn and onSearchChange for "DRY"
-        const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
-        if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
-
-        !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
+    function onChangeSearchCriteria() {
         angular.forEach(vm.searchParams, function (value, name) {
             if (vm.searchParams[name]) {
                 testsRunsService.setSearchParam(name, value);
@@ -191,7 +175,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                 testsRunsService.deleteSearchParam(name);
             }
         });
-        vm.onApply();
+        onApply();
     }
 
     function openDatePicker($event, showTemplate) {
@@ -205,10 +189,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         })
         .then(function(result) {
             if (result) {
-                const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
                 vm.selectedRange = result;
-                !vm.isSearchActive() && testsRunsService.setActiveFilteringTool('search');
                 if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
                     if (vm.selectedRange.dateStart.getTime() !==
                         vm.selectedRange.dateEnd.getTime()) {

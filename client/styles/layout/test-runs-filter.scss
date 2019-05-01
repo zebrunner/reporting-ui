@@ -184,27 +184,24 @@
     }
 
     &__filter-mobile {
-        background-color: #fff;
+        background-color: $main_container_bg;
         position: fixed;
-        top: 60px;
+        top: $header-height;
         left: 0;
         right: 0;
-        width: 100%;
+        max-width: 100%;
         z-index: 5;
-        height: 48px;
-        border: 1px solid rgba(#1f242a, .1);
-        border-right: 0;
-        border-left: 0;
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        border: 0;
+
         @media (min-width: 481px) { 
-            left: 60px; 
+            left: $sidebar_width;
         }
     }
     
     @media screen and (max-width: $breakpoint-mobile) {
         &__wrapper{
             &-panel-body {
-                padding: 10px 12px;
+                padding: 20px 0;
             }
         }
 
@@ -269,35 +266,84 @@
         }
         
         md-chips-wrap.md-chips{
-            display: flex !important;
+            display: flex;
             align-items: center;
             height: 100%;
             md-chip {
                 background-color: transparent !important;
                 letter-spacing: 0.1px;
                 border-radius: 8px;
-                color: black !important;
+                color: $dark-new !important;
                 font-size: 14px;
                 font-weight: 500;
                 border: solid 1px rgba(#011627, .2);
-                margin-bottom: 2px !important;
-                margin-left: 0px;
+                margin-bottom: 2px;
+                margin-left: 0;
                 margin-right: 8px;
                 max-height: 32px;
+                position: relative;
+
                 &.md-focused {
                     background-color: #011627 !important;
                     color: white !important;
-                }
-                @media screen and (max-width: $breakpoint-mobile) {
-                    font-size: 11px;
-                    max-height: 28px;
-                    line-height: 28px;
-                    &.md-focused {
-                        & i ,
-                        &:hover i {
-                            display: none !important;
+                    padding-right: 36px;
+
+                    .close-button {
+                        position: absolute;
+                        top: 50%;
+                        right: 8px;
+                        transform: translateY(-50%);
+                        border: 2px solid #fff;
+                        background: transparent;
+                        border-radius: 50%;
+                        padding: 8px;
+                        cursor: pointer;
+                        margin: 0 auto 0 8px;
+                        height: 20px;
+                        width: 20px;
+                        display: inline-block;
+                        opacity: .5;
+
+                        &:after,
+                        &:before {
+                            position: absolute;
+                            top: 3px;
+                            right: 3px;
+                            bottom: 0;
+                            left: 50%;
+                            transform: rotate(45deg) translateX(0) translateY(0);
+                            height: 10px;
+                            width: 2px;
+                            background-color: #fff;
+                            content: '';
+                            display: block;
+                            margin: 0 0 0 -1px;
+                        }
+                        &:before {
+                            transform: rotate(-45deg) translateX(0) translateY(0);
                         }
                     }
+                }
+            }
+
+            @media screen and (max-width: 599px) {
+                display: inline-block;
+                white-space: nowrap;
+                padding: 0 16px;
+                box-shadow: none;
+                line-height: 0;
+
+                md-chip {
+                    margin: 0;
+                    float: none;
+                    display: inline-block;
+                    font-size: 14px;
+                    max-height: 32px;
+                    line-height: 32px;
+                }
+
+                md-chip + md-chip {
+                    margin-left: 8px;
                 }
             }
         }
