@@ -2,7 +2,7 @@
 <zf-modal class="widget-wizard">
     <zf-modal-content-container class="widget-wizard_container">
         <div class="widget-wizard_container_title">
-            <div class="widget-wizard_container_title_common">{{card.stepCount}}/3 {{card.title}}</div>
+            <div class="widget-wizard_container_title_common">{{card.stepCount}}/{{cardProps.stepsCount}} {{card.title}}</div>
             <div ng-show="[0, 1].indexOf(getCurrentCard()) !== -1" class="widget-wizard_container_title_search">
                 <md-input-container class="no-margin no-padding">
                     <label>Search</label>

@@ -5,6 +5,10 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
     $scope.START_MODE = widget && widget.id ? 'UPDATE' : 'NEW';
     var MODE = $scope.START_MODE === 'UPDATE' ? 'UPDATE' : 'ADD';
 
+    $scope.cardProps = {
+        stepsCount: MODE === 'UPDATE' ? 2 : 3,
+    };
+
     const CARDS = {
         currentItem: 0,
         items: [
@@ -23,7 +27,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                         DashboardService.GetWidgets().then(function (rs) {
                             if (rs.success) {
                                 $scope.widgets = rs.data.filter(function (widget) {
-                                    return widget.widgetTemplate;
+                                    return widget.widgetTemplate && ! widget.widgetTemplate.hidden;
                                 });
                                 updateWidgetsToAdd();
                             } else {
@@ -65,7 +69,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             },
             {
                 index: 3,
-                stepCount: 2,
+                stepCount: MODE === 'UPDATE' ? 1 : 2,
                 id: 'set',
                 title: 'Set parameters',
                 nextDisabled: function (form) {
@@ -84,7 +88,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             },
             {
                 index: 4,
-                stepCount: 3,
+                stepCount: MODE === 'UPDATE' ? 2 : 3,
                 id: 'save',
                 title: 'Save',
                 nextDisabled: function (form) {
@@ -98,6 +102,10 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 }
             }
         ]
+    };
+
+    function getCardIndexById(id) {
+        return CARDS.items.indexOfField('id', id);
     };
 
     $scope.chartActions = [];
@@ -438,9 +446,15 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
 
     (function initController() {
         if(widget.id) {
+            if($scope.START_MODE === 'UPDATE') {
+                CARDS.currentItem = getCardIndexById('set');
+                $scope.card = CARDS.items[CARDS.currentItem];
+            }
             $scope.widget = angular.copy(widget);
             $scope.onChange().then(function (rs) {
-                CARDS.currentItem = getNextCard().index - 1;
+                if($scope.START_MODE !== 'UPDATE') {
+                    CARDS.currentItem = getNextCard().index - 1;
+                }
                 initCard(CARDS.items[CARDS.currentItem]);
             });
         } else {
