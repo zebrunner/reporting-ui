@@ -1,8 +1,10 @@
+@import "../global/var";
+
 .form-validation .ng-valid.ng-dirty{
     border-color:  #CBD5DD;
 }
-.body-wide.body-auth {
-    #content {
+.app.body-wide.body-auth .main-container .content-container {
+    @media(max-width: 749px) {
         padding: 0;
     }
 }
@@ -46,7 +48,8 @@
             min-height: auto;
         }
 
-        @media(max-width: 376px) {
+        @media(max-width: $screen-phone) {
+            max-width: 100%;
             margin: 0;
         }
 
@@ -189,7 +192,7 @@
         background-size: cover;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-end;
         .version-container{
             max-height: 35px;
             margin-top: -7px;
