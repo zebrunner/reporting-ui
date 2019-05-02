@@ -534,12 +534,6 @@
         min-height: 169px;
         opacity: .25;
         background-size: contain;
-        &._dashboards {
-            background: url('../assets/images/empty-pages/empty_screen_dashboards.svg') center no-repeat;
-        }
-        &._users {
-            background: url('../assets/images/empty-pages/empty_screen_users.svg') center no-repeat;
-        }
     }
     &-text {
         font-weight: normal;

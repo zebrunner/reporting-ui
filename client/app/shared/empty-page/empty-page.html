@@ -1,13 +1,13 @@
 <div class="page__empty">
     <div class="page__empty-wrapper">
-        <div class="page__empty-image {{$ctrl.page}}" >
+        <div class="page__empty-image" style="background: url({{$ctrl.content.imageUrl}}) center no-repeat">
         </div>
         <p class="page__empty-text">
-            {{$ctrl.text}}
+            {{$ctrl.content.text}}
         </p>
-        <div layout="row" layout-align="center" ng-if="$ctrl.buttonText && $ctrl.href">
-            <a md-button class="page__empty-button form-button md-raised btn-w-md md-primary" href="{{$ctrl.href}}">
-                {{$ctrl.buttonText}}
+        <div layout="row" layout-align="center" ng-if="$ctrl.content.buttonText && $ctrl.content.link">
+            <a md-button class="page__empty-button form-button md-raised btn-w-md md-primary" href="{{$ctrl.content.link}}">
+                {{$ctrl.content.buttonText}}
             </a>
         </div>
     </div>

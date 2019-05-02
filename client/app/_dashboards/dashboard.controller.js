@@ -19,6 +19,13 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         isToolConnected: toolsService.isToolConnected,
     };
 
+    $scope.emptyContent = {
+        text: "No widget added. Use button at the top or watch tutorial to learn more.",
+        buttonText: "Watch tutorial",
+        imageUrl: require("../../assets/images/empty-pages/empty_screen_dashboards.svg"),
+        link: "/",
+    }
+
     $scope.currentUserId = $location.search().userId;
 
     $scope.ECHART_TYPES = ['echart', 'PIE', 'LINE', 'BAR', 'TABLE', 'OTHER'];

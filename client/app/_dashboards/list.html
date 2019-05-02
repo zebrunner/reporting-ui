@@ -21,25 +21,21 @@
             <div>
                 <button class="fixed-page-header__tooltip-btn" data-ng-if="$ctrl.isToolConnected('EMAIL') && MODE !== 'WIDGET_PLACEMENT' && dashboard.widgets.length" ng-click="showEmailDialog($event);">
                     <i class="material-icons">
-                    send
+                        send
+                    </i>
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
-                </i>
                 </button>
                 <button class="fixed-page-header__tooltip-btn  hide-phone" ng-if="isGridStackEvailableToEdit() && dashboard.widgets.length" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
                     <i class="material-icons">
                         dashboard
-                        <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
                     </i>
+                    <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
                 </button>
             </div>
         </zf-sub-header-options>
     </zf-sub-header>
     <div id="dashboard_content" class="page page-dashboard">
-        <empty-page-component ng-if="!dashboard.widgets.length"
-                                text="No widget added. Use button at the top or watch tutorial to learn more."
-                                button-text="Watch tutorial"
-                                page="_dashboards"
-                                href="/"></empty-page-component>
+        <empty-page-component ng-if="!dashboard.widgets.length" content="emptyContent"></empty-page-component>
 	    <div class="row" ng-if="dashboard.widgets.length">
 	         <div class="col-lg-12">
 	         	<ul class="nav nav-pills">
