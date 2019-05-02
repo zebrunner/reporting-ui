@@ -2591,6 +2591,7 @@ $light-inprogress: #68c9fd;
     @media(max-width: $screen-phone) {
         width: calc(100% - 60px);
         background-color: transparent;
+        box-shadow: none;
         &-container {
             &_title, &_title small {
                 color: white !important;
@@ -2598,8 +2599,10 @@ $light-inprogress: #68c9fd;
         }
     }
 
-    @media(max-width: $screen-phone) {
-        box-shadow: none;
+    @media screen and (max-width: 599px) {
+        &__additional-text {
+            display: none;
+        }
     }
 
     &-container {
