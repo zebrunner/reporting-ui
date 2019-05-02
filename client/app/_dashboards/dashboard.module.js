@@ -21,7 +21,6 @@ require('echarts/lib/component/calendar');
 require('../../vendors/ngecharts');
 
 import emptyPageComponent from '../shared/empty-page/empty-page.component';
-
 import ScreenshotService from './screenshot.util';
 import dashboardComponent from './dashboard.component';
 
