@@ -119,9 +119,9 @@
                         position: fixed;
                         left: $sidebar_phone_width;
                         top: $header_height;
-                        width: calc(100% - 60px) !important;
+                        width: calc(100% - #{$sidebar_phone_width});
                         min-width: auto;
-                        padding-top: 7px;
+                        padding-top: 12px;
                     }
 
                     @include border-right-radius($border-radius-base);
