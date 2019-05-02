@@ -19,6 +19,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
         takeOff: takeOff,
         retryInvite: retryInvite,
         searchUser: searchUser,
+        isFiltered: false,
         sc: angular.copy(DEFAULT_SC),
         sr: {},
         search: search,
@@ -105,13 +106,15 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
                 alertify.error(rs.message);
             }
         });
+        vm.isFiltered = true;
     };
 
     function reset() {
-        vm.sc = angular.copy(DEFAULT_SC);
-        search();
-        vm.searchActive = false;
-        vm.isFiltered = false;
+        if(vm.isFiltered) {
+            vm.sc = angular.copy(DEFAULT_SC);
+            search();
+            vm.isFiltered = false;
+        }
     };
 
     function initController() {

@@ -104,10 +104,12 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
     };
 
     function reset() {
-        vm.sc = angular.copy(DEFAULT_SC);
-        search();
-        vm.searchActive = false;
-        vm.isFiltered = false;
+        if(vm.isFiltered) {
+            vm.sc = angular.copy(DEFAULT_SC);
+            search();
+            vm.searchActive = false;
+            vm.isFiltered = false;
+        }
     };
 
     function showCreateUserDialog(event) {
