@@ -109,8 +109,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
 
     function reset() {
         vm.sc = angular.copy(DEFAULT_SC);
-        $location.url($location.path());
-        vm.search();
+        search();
         vm.searchActive = false;
         vm.isFiltered = false;
     };
