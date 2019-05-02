@@ -91,7 +91,7 @@
             top: $header_height;
             z-index: 5;
             padding: 20px 16px;
-            
+            border-bottom: 2px solid $main_container_bg;
         }
         &-input {
             position: relative;
