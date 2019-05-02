@@ -43,56 +43,86 @@
 }
 
 .p-users {
-    & &__header-actions {
-        min-height: 52px;
-        .md-button {
-            margin: auto 0 auto 16px;
-            border-radius: 4px;
-            box-shadow: none;
-            font-size: 14px;
-            &._white {
-                color: $coal;
-                background-color: #fff;
-                &:hover {
-                    background-color: rgba(#fff, .75);
+    .fixed-page-header-container_options {
+        md-input-container {
+            margin: 0 14px 0 0;
+            &.md-input-focused {
+                .md-input {
+                    border-color: rgba(0,0,0,0.25);
+                    border-width: 0 0 1px;
                 }
-                &:active {
-                    box-shadow: 0 4px 8px 0 rgba(0,0,0,.4);
+                label {
+                    display: none;
                 }
             }
-        }
-    }
-
-    .fixed-page-header-container_options {
-        md-input-container{
             label {
                 font-size: 14px;
                 letter-spacing: 0.1px;
                 opacity: 0.35;
                 color: rgba(0, 0, 0, 0.35);
+                padding-left: 20px;
+                padding-bottom: 2px;
+                font-weight: normal;
             }
-            input {
+            .md-input {
                 width: 200px;
+                padding-left: 20px;
+                border-color: rgba(0,0,0,0.25);
             }
             md-icon {
                 left: 0;
                 font-size: 18px;
+                opacity: 0.35;
                 color: rgba(0, 0, 0, 0.35);
             }
         }
+        @media (max-width: $screen-phone) {
+            display: none;
+        }
     }
+}
 
-    ._page-card {
-        padding-top: 20px !important;
-
-        th.md-column {
-            font-size: 13px !important;
-            font-weight: 500;
-            letter-spacing: 0.1px !important;
-            color: #666666 !important;
-
-            i.material-icons {
-                vertical-align: middle;
+.user-view-page {
+    &__search {
+        &-header {
+            max-height: 80px;
+            background: white;
+            position: sticky;
+            top: $header_height;
+            z-index: 5;
+            padding: 20px 16px;
+            
+        }
+        &-input {
+            position: relative;
+            .form-control {
+                padding: 0 36px;
+                border-radius: 4px;
+            }
+            .material-icons {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #999;
+                &.search-icon {
+                    pointer-events: none;
+                    left: 12px;
+                }
+                &.close-icon {
+                    right: 12px;
+                }
+            }
+        }
+    }
+    @media (max-width: $screen-phone) {
+        &.page {
+            padding: $header_height 0 0;
+        }
+    }
+    @media (min-width: $screen-phone + 1) {
+        &__search {
+            &-header {
+                display: none;
             }
         }
     }

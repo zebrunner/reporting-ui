@@ -22,6 +22,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
         sc: angular.copy(DEFAULT_SC),
         sr: {},
         search: search,
+        reset: reset,
         get tools() {return toolsService.tools;},
         get groups() {return GroupService.groups;},
     };
@@ -104,6 +105,13 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
                 alertify.error(rs.message);
             }
         });
+    };
+
+    function reset() {
+        vm.sc = angular.copy(DEFAULT_SC);
+        search();
+        vm.searchActive = false;
+        vm.isFiltered = false;
     };
 
     function initController() {

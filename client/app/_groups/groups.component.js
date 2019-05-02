@@ -1,4 +1,4 @@
-import template from './list.html';
+import template from './groups.html';
 import controller from './groups.controller';
 
 const groupsComponent = {

@@ -105,8 +105,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
 
     function reset() {
         vm.sc = angular.copy(DEFAULT_SC);
-        $location.url($location.path());
-        vm.search();
+        search();
         vm.searchActive = false;
         vm.isFiltered = false;
     };

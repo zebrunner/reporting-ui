@@ -98,7 +98,7 @@ html {
             box-shadow: none;
             float: left;
             width: 220px;
-            height: calc(100% - 60px); // 48px - header height
+            height: calc(100% - #{$header_height}); // 60px - header height
             display: block;
             @media (max-width: $screen-phone) {
                 top: 0;
@@ -167,6 +167,14 @@ html {
             > .content-container {
                 padding: 0;
                 margin: 0;
+            }
+        }
+    }
+
+    &.p-users {
+        > .main-container {
+            > .content-container {
+                overflow: visible;
             }
         }
     }

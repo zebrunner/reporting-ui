@@ -1,4 +1,4 @@
-import template from './list.html';
+import template from './invitations.html';
 import controller from './invitations.controller';
 
 const invitationsComponent = {

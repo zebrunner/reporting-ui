@@ -4,6 +4,13 @@
             Invitations
             <small id="itemsCount">({{ $ctrl.sr.totalResults }})</small>
         </zf-sub-header-title>
+        <zf-sub-header-options>
+            <md-input-container class="no-padding">
+                <label>Search</label>
+                <input ng-model="$ctrl.sc.query" ng-model-options="{debounce: 700}" ng-change="$ctrl.search();" autocomplete="off"/>
+                <md-icon>search</md-icon>
+            </md-input-container>
+        </zf-sub-header-options>
         <zf-sub-header-button>
             <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="$ctrl.showInviteUsersDialog($event)" has-any-permission="['INVITE_USERS']">
                 <md-icon class="material-icons">add</md-icon>
@@ -13,12 +20,15 @@
     </zf-sub-header>
     <div class="page user-view-page">
         <div class="ui-section">
-            <md-input-container class="no-margin no-padding">
-                <label>Search</label>
-                <input ng-model="$ctrl.sc.query" ng-change="$ctrl.search();" autocomplete="off"/>
-                <md-icon>search</md-icon>
-            </md-input-container>
-            <div ng-cloak class="col-md-12 no-padding _page-card">
+            <div class="user-view-page__search-header">
+                <div class="user-view-page__search-input">
+                    <md-icon class="search-icon">search</md-icon>
+                    <input type="text" class="form-control"
+                            placeholder="Search items" ng-model-options="{debounce: 700}" ng-model="$ctrl.sc.query" ng-change="$ctrl.search();" aria-label="Search items">
+                    <md-icon class="close-icon" ng-click="$ctrl.reset();">close</md-icon>
+                 </div>
+            </div>
+            <div ng-cloak>
                 <article class="article">
                     <md-card class="no-margin-h">
                         <md-table-container>

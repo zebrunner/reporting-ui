@@ -1,4 +1,4 @@
-import template from './list.html';
+import template from './users.html';
 import controller from './users.controller';
 
 const usersComponent = {
