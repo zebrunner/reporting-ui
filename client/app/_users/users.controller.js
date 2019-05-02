@@ -37,6 +37,10 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
                 showTemplate: null
             }
         },
+        emptyContent: {
+            text: "No user added. Use button at the top to create a team.",
+            imageUrl: require("../../assets/images/empty-pages/empty_screen_users.svg"),
+        },
         pick: pick,
         get currentUser() { return UserService.currentUser; },
     };
