@@ -1907,53 +1907,6 @@ md-input-container.md-input-focused:not([md-no-float]) .md-select-placeholder sp
     padding-bottom: 8px;
 }
 
-.page.user-view-page {
-    md-tabs [role="tabpanel"] {
-        transition: none;
-    }
-    @media (max-width: $screen-phone) {
-        padding: 60px 0 0;
-    }
-   /* md-tabs md-ink-bar {
-        transition: none;
-    }*/
-}
-.user-view-page {
-    &__search {
-        &-header {
-            max-height: 80px;
-            background: white;
-            position: sticky;
-            top: 60px;
-            z-index: 5;
-            padding: 20px 16px;
-            @media (min-width: $screen-phone + 1) {
-                display: none;
-            }
-        }
-        &-input {
-            position: relative;
-            .form-control {
-                padding: 0 36px;
-                border-radius: 4px;
-            }
-            .material-icons {
-                position: absolute;
-                top: 50%;
-                -webkit-transform: translateY(-50%);
-                transform: translateY(-50%);
-                color: #999!important;
-                &.search-icon {
-                    pointer-events: none;
-                    left: 12px;
-                }
-                &.close-icon {
-                    right: 12px;
-                }
-            }
-        }
-    }
-}
 
 md-ink-bar {
     color: #26a69a !important;
