@@ -18,6 +18,9 @@
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page user-view-page">
+        <empty-page-component ng-if="!$ctrl.sr.results.length"
+                                text="No user added. Use button at the top to create a team."
+                                page="_users"></empty-page-component>
         <div class="ui-section">
             <div class="user-view-page__search-header">
                 <div class="user-view-page__search-input">
