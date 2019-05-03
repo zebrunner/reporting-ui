@@ -122,8 +122,10 @@
                                     </td>
                                     <td class="test-label">
                                         <span data-ng-repeat="issue in test.workItems" class="work-items">
-                                          <a name="taskTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</a>
-                                          <a name="bugTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</a>
+                                          <a name="taskTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.isToolConnected('JIRA') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</a>
+                                          <span name="taskTicket" data-ng-if="!$ctrl.isToolConnected('JIRA') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</span>
+                                          <a name="bugTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.isToolConnected('JIRA') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</a>
+                                          <span name="bugTicket" data-ng-if="!$ctrl.isToolConnected('JIRA') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</span>
                                         </span>
                                     </td>
                                     <td class="test-settings">

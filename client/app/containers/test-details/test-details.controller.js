@@ -44,6 +44,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             return !Object.keys(vm.testRun.tests || {}).length ;
         },
         get jira() { return jiraSettings; },
+        isToolConnected: toolsService.isToolConnected,
         openImagesViewerModal,
     };
 
