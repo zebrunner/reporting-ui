@@ -114,6 +114,7 @@
             }
         }
     }
+
     @media (max-width: $screen-phone) {
         &.page {
             padding: $header_height 0 0;
@@ -124,6 +125,274 @@
             &-header {
                 display: none;
             }
+        }
+    }
+
+    .mobile-only {
+        display: none;
+    }
+
+    //Tables
+    @media screen and (min-width: 960px) and (max-width: 1279px) { //material MD breakpoint
+        table.md-table:not(.md-row-select) td.md-cell:first-child,
+        table.md-table:not(.md-row-select) th.md-column:first-child {
+            padding: 0 15px;
+        }
+        table.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2),
+        table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
+            padding-right: 3%;
+        }
+        table.md-table td.md-cell:last-child,
+        table.md-table th.md-column:last-child {
+            padding-right: 15px;
+        }
+
+        table.md-table {
+            td.md-cell {
+                &[data-title="Username"] {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    min-width: 100px;
+                }
+                &[data-title="Email"] {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    min-width: 110px;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 959px) { //up to material SM breakpoint
+        table {
+            &.md-table {
+                display: block;
+
+                thead {
+                    display: none;
+                }
+
+                tbody {
+                    &.md-body {
+                        display: flex;
+                        flex-wrap: wrap;
+
+                        > tr {
+                            &.md-row {
+                                height: auto;
+                            }
+                        }
+                    }
+                }
+
+                tfoot {
+                    &.md-foot {
+                        > tr {
+                            &.md-row {
+                                height: auto;
+                            }
+                        }
+                    }
+                }
+
+                tr {
+                  &.md-row {
+                      display: block;
+                      flex: 0 0 50%;
+                      max-width: 50%;
+                      padding: 25px 16px;
+                      border-right: 1px solid transparent;
+                      border-bottom: 2px solid $main_container_bg;
+                      position: relative;
+
+                      &:nth-child(2n+1) {
+                          border-right-color: $main_container_bg;
+                      }
+
+                      &:last-child,
+                      &:nth-last-child(2):nth-child(odd) {
+                          border-bottom-color: transparent;
+                      }
+                  }
+                }
+
+                td {
+                    &.md-cell {
+                        display: block;
+                        padding: 0;
+                        border: 0;
+                        margin-bottom: 16px;
+                        font-size: 14px;
+                        line-height: 24px;
+
+                        &[data-title] {
+                            display: flex;
+                            align-items: flex-start;
+
+                            &:before {
+                                content: attr(data-title);
+                                color: rgba(0,0,0,.5);
+                                opacity: .5;
+                                font-size: 12px;
+                                font-weight: 500;
+                                line-height: inherit;
+                                flex: 0 0 30%;
+                                min-width: 120px;
+                            }
+                            .label {
+                                display: inline-block;
+                                padding: 0;
+                                font-size: inherit;
+                                line-height: inherit;
+                            }
+                        }
+
+                        &[data-title="ID"] {
+                            &:before {
+                                display: none;
+                            }
+                        }
+
+                        &[data-title="Registration date"] {
+                            span {
+                                display: block;
+                            }
+                        }
+
+                        &:first-child {
+                            padding: 0;
+                        }
+
+                        &:last-child {
+                            padding: 0;
+                            margin-bottom: 0;
+
+                            .md-button {
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                z-index: 1;
+                                margin: 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.table-hover {
+                > tbody {
+                    > tr:hover {
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+
+        table.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2),
+        table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
+            padding-right: 0;
+        }
+    }
+
+    @media screen and (max-width: 699px) {
+        table {
+            &.md-table {
+                tbody {
+                    &.md-body {
+                        display: block;
+                    }
+                }
+
+                tr {
+                    &.md-row {
+                        max-width: 100%;
+                        border-right: 0;
+
+                        &:nth-last-child(2):nth-child(odd) {
+                            border-bottom-color: $main_container_bg;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 599px) { //up to material SM breakpoint
+        table {
+            &.md-table {
+                td {
+                    &.md-cell {
+                        display: block;
+                        padding: 0;
+                        border: 0;
+                        margin-bottom: 16px;
+
+                        &[data-title] {
+                            display: flex;
+                            align-items: flex-start;
+
+                            &:before {
+                                content: attr(data-title);
+                                color: rgba(0,0,0,.5);
+                                opacity: .5;
+                                font-weight: 500;
+                                flex: 0 0 30%;
+                                min-width: 120px;
+                            }
+                            span {
+                                display: inline-block;
+                                padding: 0;
+                                font-size: inherit;
+                                line-height: inherit;
+                            }
+                        }
+
+                        &[data-title="ID"] {
+                            .desktop-only {
+                                display: none;
+                            }
+                            .mobile-only {
+                                display: initial;
+                                font-weight: 500;
+                            }
+                            &:before {
+                                display: inline-block;
+                            }
+                        }
+
+                        &:first-child {
+                            padding: 0;
+                        }
+
+                        &:last-child {
+                            padding: 0;
+                            margin-bottom: 0;
+
+                            .md-button {
+                                position: absolute;
+                                top: 5px;
+                                right: 0;
+                                z-index: 1;
+                                margin: 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.table-hover {
+                > tbody {
+                    > tr:hover {
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+        table.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2),
+        table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
+            padding-right: 0;
         }
     }
 }
