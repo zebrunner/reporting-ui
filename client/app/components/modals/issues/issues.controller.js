@@ -312,7 +312,7 @@ const IssuesModalController = function IssuesModalController(
                     const setting = rs.data.find(({ name }) => name === 'JIRA_CLOSED_STATUS');
 
                     if (setting) {
-                        vm.closedStatusName = setting.toUpperCase();
+                        vm.closedStatusName = setting.value.toUpperCase();
                     }
                 } else {
                     alertify.error(rs.message);
