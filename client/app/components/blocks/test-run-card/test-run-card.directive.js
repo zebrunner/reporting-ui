@@ -48,7 +48,6 @@
                     goToTestRun: goToTestRun,
                     isToolConnected: toolsService.isToolConnected,
 
-                    get tools() { return toolsService.tools; },
                     get currentOffset() { return $rootScope.currentOffset; },
                 };
 

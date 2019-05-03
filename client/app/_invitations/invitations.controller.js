@@ -24,7 +24,6 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
         sr: {},
         search: search,
         reset: reset,
-        get tools() {return toolsService.tools;},
         get groups() {return GroupService.groups;},
     };
 
@@ -42,7 +41,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
             fullscreen: true,
             locals: {
                 groups: GroupService.groups,
-                isLDAPConnected: vm.tools['LDAP']
+                isLDAPConnected: toolsService.isToolConnected('LDAP'),
             }
         })
             .then(function (invitations) {

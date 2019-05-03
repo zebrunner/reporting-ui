@@ -55,19 +55,19 @@
                                 </thead>
                                 <tbody md-body>
                                 <tr md-row ng-repeat="invite in $ctrl.sr.results">
-                                    <td md-cell>
+                                    <td data-title="Email" md-cell>
                                         <b>{{ invite.email }}</b>
                                     </td>
-                                    <td md-cell>
+                                    <td data-title="Group" md-cell>
                                         {{ $ctrl.groups[$ctrl.groups.indexOfField('id', invite.groupId)].name }}
                                     </td>
-                                    <td md-cell>
+                                    <td data-title="Date" md-cell>
                                         {{ invite.createdAt | date:'dd MMM, yyyy' }}
                                     </td>
-                                    <td md-cell>
+                                    <td data-title="Sent by" md-cell>
                                         {{ invite.createdBy.username }}
                                     </td>
-                                    <td md-cell>
+                                    <td data-title="Status" md-cell>
                                         <span ng-class="{'text-success': invite.status == 'ACCEPTED', 'text-info': invite.status == 'PENDING'}" class="label">{{ invite.status }}</span>
                                     </td>
                                     <td md-cell>
