@@ -33,7 +33,6 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
         showChangePasswordDialog: showChangePasswordDialog,
         showCreateUserDialog: showCreateUserDialog,
         usersSearchCriteria: {},
-        currentUser: null,
         searchValue: {
             selectedRange: {
                 showTemplate: null
@@ -42,7 +41,8 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
         pick: pick,
         get tools() {
             return toolsService.tools;
-        }
+        },
+        get currentUser() { return UserService.currentUser; },
     };
 
     vm.$onInit = initController;
@@ -318,8 +318,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
 
     function initController() {
         vm.search(1);
-        vm.currentUser = UserService.currentUser;
-    };
+    }
 
 };
 

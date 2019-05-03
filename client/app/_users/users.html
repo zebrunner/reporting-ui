@@ -19,16 +19,6 @@
     </zf-sub-header>
     <div class="page user-view-page">
         <div class="ui-section">
-            <!--<div layout="row" layout-xs="column" class="no-padding fixed-search-column users__header-actions">
-                <div class="header-actions">
-                    <button id="search" class="md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.search();">
-                        <b>Search</b>
-                    </button>
-                    <button id="clear" class="md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.reset();">
-                        <b>Reset</b>
-                    </button>
-                </div>
-            </div>-->
             <div class="user-view-page__search-header">
                 <div class="user-view-page__search-input">
                     <md-icon class="search-icon">search</md-icon>
@@ -58,8 +48,8 @@
                                     <tbody md-body name="usersTable">
                                         <tr md-row ng-repeat="user in $ctrl.sr.results">
                                             <td data-title="ID" md-cell>
-                                                <profile-photo name="userPhoto" ng-model="user.photoURL" size="35" class="grey-icon desktop-only" label="#{{user.id}}"></profile-photo>
-                                                <span class="mobile-only">{{user.id}}</span>
+                                                <profile-photo name="userPhoto" ng-model="user.photoURL" size="35" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
+                                                <span class="mobile-only">{{::user.id}}</span>
                                             </td>
                                             <td data-title="Username" md-cell>
                                                 <b name="userUsername">{{user.username}}</b>
@@ -70,11 +60,11 @@
                                                 <span name="status" ng-class="{'text-success': user.status == 'ACTIVE', 'text-error': user.status == 'INACTIVE'}" class="label">{{ user.status}}</span>
                                             </td>
                                             <td data-title="Source" md-cell>
-                                                <span name="status" class="label black_font">{{ user.source}}</span>
+                                                <span name="status" class="label black_font">{{::user.source}}</span>
                                             </td>
                                             <td data-title="Registration date" md-cell style="padding-right: 0;">
                                                 <div>
-                                                    <span name="userCreated">{{user.createdAt | date}}</span>
+                                                    <span name="userCreated">{{::user.createdAt | date}}</span>
                                                     <span class="time" data-ng-if="user.lastLogin">last login <time name="lastLogin" am-time-ago="user.lastLogin" title="{{ main.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time></span>
                                                     <span class="time" data-ng-if="!user.lastLogin">never logged in</span>
                                                 </div>
@@ -98,7 +88,7 @@
                                                                 Change password
                                                             </md-button>
                                                         </md-menu-item>
-                                                        <md-menu-item>
+                                                        <md-menu-item ng-if="$ctrl.currentUser.pefrDashboardId">
                                                             <md-button name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })" style="padding-top: 12px">
                                                                 <md-icon class="material-icons">timeline</md-icon>
                                                                 Performance
