@@ -12,6 +12,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         statuses: [],
         tags: []
     };
+    let jiraSettings = {};
     let TENANT;
     const vm = {
         currentMode: 'ONE',
@@ -42,7 +43,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         get empty() {
             return !Object.keys(vm.testRun.tests || {}).length ;
         },
-        get jira() { return toolsService.jira; },
+        get jira() { return jiraSettings; },
+        isToolConnected: toolsService.isToolConnected,
         openImagesViewerModal,
     };
 
@@ -53,11 +55,23 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
     function controlInit() {
         TENANT = $rootScope.globals.auth.tenant;
 
+        initJiraSettings();
         initTestGroups();
         initWebsocket();
         initTests();
         fillTestRunMetadata();
         bindEvents();
+    }
+
+    function initJiraSettings() {
+        toolsService.fetchToolSettings('JIRA')
+            .then(function(settings) {
+                if (settings.success) {
+                    jiraSettings = UtilService.settingsAsMap(settings.data);
+
+                    jiraSettings['JIRA_URL'] && (jiraSettings['JIRA_URL'] = jiraSettings['JIRA_URL'].replace(/\/$/,''));
+                }
+            });
     }
 
     function updateTest(test, isPassed) {
