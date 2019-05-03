@@ -202,6 +202,8 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                         testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
                     }
                 }
+
+                onChangeSearchCriteria();
             }
         })
     }
