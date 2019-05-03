@@ -1,8 +1,7 @@
 'use strict';
 
 const UsersController = function UserViewController($scope, $rootScope, $location, $state, $mdDialog, $mdDateRangePicker,
-                                                    UserService, GroupService, InvitationService,
-                                                    AuthService, toolsService) {
+                                                    UserService) {
     'ngInject';
 
     let DEFAULT_SC = {
@@ -39,9 +38,6 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
             }
         },
         pick: pick,
-        get tools() {
-            return toolsService.tools;
-        },
         get currentUser() { return UserService.currentUser; },
     };
 

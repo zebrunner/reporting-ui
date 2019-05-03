@@ -82,6 +82,60 @@
     }
 }
 
+.p-users-groups {
+    .page md-card {
+        min-height: calc(100vh - #{$header-height} - 40px); // 40px - paddings of .page
+        margin-bottom: 0;
+    }
+    .users-groups {
+        &__item {
+            padding: 20px 25px 30px;
+            position: relative;
+
+            &._empty {
+                text-align: center;
+            }
+
+            @media screen and (max-width: 599px) {
+                border-bottom: 2px solid $main_container_bg;
+
+                &:last-child {
+                    border-bottom: 0;
+                }
+            }
+
+            &-header {
+                margin-bottom: 16px;
+            }
+
+            &-chips {
+                md-chips-wrap {
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+
+                    .md-chip-input-container {
+                        min-width: 300px;
+
+                        @media screen and (max-width: 599px) {
+                            min-width: 0;
+                            width: 100%;
+                            margin-top: 30px;
+                        }
+                    }
+                }
+            }
+
+            .md-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                margin: 0;
+            }
+        }
+    }
+}
+
 .user-view-page {
     &__search {
         &-header {

@@ -265,7 +265,7 @@
                     component: 'groupsComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-users'
+                        classes: 'p-users-groups'
                     },
                     lazyLoad: ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
