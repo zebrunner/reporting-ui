@@ -132,7 +132,7 @@ $red: #d2333b;
     md-checkbox {
         margin: 0;
         .md-container {
-            color: #1f242a;
+            color: $coal;
             opacity: 0.5;
         }
         &.md-checked .md-icon {

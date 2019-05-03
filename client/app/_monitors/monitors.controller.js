@@ -97,7 +97,7 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
     var stopCriteria = '########';
 
     function querySearch(criteria, monitor) {
-        $scope.usersSearchCriteria.email = criteria;
+        $scope.usersSearchCriteria.query = criteria;
         currentText = criteria;
         if (!criteria.includes(stopCriteria)) {
             stopCriteria = '########';
