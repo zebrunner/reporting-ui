@@ -1,3 +1,5 @@
+@import "../global/var";
+
 body {
     background: $main_container_bg;
     min-width: 320px;
@@ -521,8 +523,12 @@ span.light_text, div.light_text {
 }
 
 .highlight_red {
-  color: red !important;
+  color: $red-for-highlight !important;
 }
+
+.highlight_black {
+    color: $dark-new !important;
+  }
 
 #dashboard_content {
     padding-bottom: 0;
