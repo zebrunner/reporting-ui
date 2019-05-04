@@ -236,7 +236,7 @@
                     }
                 })
                 .state('users.list', {
-                    url: '',
+                    url: '/list',
                     component: 'usersComponent',
                     data: {
                         requireLogin: true,
@@ -252,16 +252,8 @@
                             });
                     }
                 })
-                .state('groups', {
-                    url: '/users/groups',
-                    abstract: true,
-                    template: '<ui-view />',
-                    data: {
-                        requireLogin: true
-                    }
-                })
-                .state('groups.list', {
-                    url: '',
+                .state('users.groups', {
+                    url: '/groups',
                     component: 'groupsComponent',
                     data: {
                         requireLogin: true,
@@ -277,16 +269,8 @@
                             });
                     }
                 })
-                .state('invitations', {
-                    url: '/users/invitations?query&page&pageSize&orderBy&sortOrder',
-                    abstract: true,
-                    template: '<ui-view />',
-                    data: {
-                        requireLogin: true
-                    }
-                })
-                .state('invitations.list', {
-                    url: '',
+                .state('users.invitations', {
+                    url: '/invitations',
                     component: 'invitationsComponent',
                     data: {
                         requireLogin: true,
@@ -302,7 +286,7 @@
                             });
                     }
                 })
-                .state('users.profile', {
+                .state('userProfile', {
                     url: '/profile',
                     component: 'userComponent',
                     data: {
