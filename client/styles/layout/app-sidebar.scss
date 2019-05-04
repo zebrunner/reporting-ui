@@ -16,6 +16,7 @@
             display: flex;
             align-items: center;
             line-height: 1;
+            min-height: 40px;
 
             @media (min-width: $screen-phone + 1) {
                 max-width: 280px;
@@ -31,6 +32,14 @@
                 @media (max-width: $screen-phone) {
                     max-width: 100%;
                 }
+            }
+        }
+        .edit {
+            position: absolute;
+            right: 16px;
+            top: 12px;
+            @media (max-width: $screen-phone) {
+                display: none !important;
             }
         }
         .projects {
@@ -87,8 +96,8 @@
             }
         }
         &-search {
-            margin: 3px 56px 18px 24px;
-            max-height: 28px;
+            margin: 8px 56px 0px 24px;
+            max-height: 40px;
             @media(max-width: $screen-phone) {
                 margin: 8px 67px 18px 24px;
             }
@@ -97,7 +106,7 @@
                 label {
                     padding-left: 0;
                     line-height: 1;
-                    padding-bottom: 6px;
+                    padding-bottom: 5px;
                     font-size: 14px;
                     font-weight: normal;
                     color: rgba(255, 255, 255, 0.25);
@@ -112,6 +121,7 @@
                 }
                 input {
                     padding: 8px 0px;
+                    min-height: 32px;
                     font-size: 14px;
                     font-weight: normal;
                     border-bottom: 1px solid rgba(255, 255, 255, 0.25);
@@ -155,7 +165,7 @@
             }
         }
         &__button {
-            margin: 0 56px 17px 24px;
+            margin: 0px 56px 4px 24px;
             max-height: 32px;
             border: 1px #ffffff;
             i.material-icons {
