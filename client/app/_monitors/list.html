@@ -4,6 +4,13 @@
             Monitors
             <small id="itemsCount" class="fixed-page-header__additional-text" data-ng-if="sr.totalResults">({{sr.totalResults}})</small>
         </zf-sub-header-title>
+        <zf-sub-header-options>
+            <md-input-container class="no-padding">
+                <label>Search</label>
+                <input ng-model="sc.query" ng-model-options="{debounce: 700}" ng-change="search();" autocomplete="off"/>
+                <md-icon>search</md-icon>
+            </md-input-container>
+        </zf-sub-header-options>
         <zf-sub-header-button>
             <div has-any-permission="['MODIFY_MONITORS']">
                 <button class="fixed-page-header__btn _dashboard zf-header-button" ng-click="openMonitorDialog($event)">
@@ -13,98 +20,121 @@
             </div>
         </zf-sub-header-button>
     </zf-sub-header>
-    <div class="ui-section page">
-        <div layout="row" layout-xs="column" class="fixed-search-column no-padding" style="min-width: 320px;">
-            <div class="control-buttons header-actions" ng-if="searchActive || isFiltered">
-                <button id="search" class="md-button md-primary md-ink-ripple pull-right" type="button" ng-click="search();">
-                    <b>Search</b>
-                </button>
-                <button id="clear" class="md-button md-default md-ink-ripple pull-right" type="button" ng-click="reset(); UtilService.untouchForm(search_form);">
-                    <b>Reset</b>
-                </button>
+    <div class="page monitors-view-page">
+        <div class="ui-section">
+            <!-- <div layout="row" layout-xs="column" class="fixed-search-column no-padding" style="min-width: 320px;">
+                <div class="control-buttons header-actions" ng-if="searchActive || isFiltered">
+                    <button id="search" class="md-button md-primary md-ink-ripple pull-right" type="button" ng-click="search();">
+                        <b>Search</b>
+                    </button>
+                    <button id="clear" class="md-button md-default md-ink-ripple pull-right" type="button" ng-click="reset(); UtilService.untouchForm(search_form);">
+                        <b>Reset</b>
+                    </button>
+                </div>
+            </div> -->
+            <div class="monitors-view-page__search-header">
+                <div class="monitors-view-page__search-input">
+                    <md-icon class="search-icon">search</md-icon>
+                    <input type="text" class="form-control"
+                            placeholder="Search items" ng-model-options="{debounce: 700}" ng-model="$ctrl.sc.query" ng-change="$ctrl.search();" aria-label="Search items">
+                    <md-icon class="close-icon" ng-click="$ctrl.reset();">close</md-icon>
+                </div>
             </div>
-        </div>
-        <div class="col-md-12 no-padding">
-            <article class="article">
+            <div>
+                <article class="article">
                     <md-card class="no-margin-h">
-                        <md-table-container>
-                            <form ng-submit="search()" name="search_form">
-                            <table class="table-hover" md-table zafira-background-theme="table">
-                                <thead md-head style="position: parent;">
-                                <tr md-row>
-                                    <th md-column class="col-md-2">
-                                        <md-input-container class="searchable" flex>
-                                            <input id="searchName" type="text" ng-model="sc.name" name="name" ng-change="onSearchChange(search_form.$$controls)"
-                                            ng-model-options="{debounce: 200}" placeholder="Name"/>
-                                        </md-input-container>
-                                    </th>
-                                    <th md-column class="col-md-2">
-                                        <md-input-container class="searchable" flex>
-                                            <input id="searchURL" type="text" ng-model="sc.url" name="url" ng-change="onSearchChange(search_form.$$controls)"
-                                            ng-model-options="{debounce: 200}" placeholder="URL"/>
-                                        </md-input-container>
-                                    </th>
-                                    <th md-column class="col-md-1">
-                                        Type
-                                    </th>
-                                    <th md-column class="col-md-3" style="width: 100%;">
-                                        <md-input-container class="searchable" flex>
-                                            <input id="searchEnv" type="text" ng-model="sc.environment" name="env" ng-change="onSearchChange(search_form.$$controls)"
-                                            ng-model-options="{debounce: 200}" placeholder="Environment"/>
-                                        </md-input-container>
-                                        <md-input-container class="searchable" flex>
-                                            <input id="searchComment" type="text" ng-model="sc.comment" name="comment" ng-change="onSearchChange(search_form.$$controls)"
-                                            ng-model-options="{debounce: 200}" placeholder="Comment"/>
-                                        </md-input-container>
-                                    </th>
-                                    <th md-column class="col-md-1">
-                                        Cron expression
-                                    </th>
-                                    <th md-column class="col-md-1">
-                                        Expected code
-                                    </th>
-                                    <th md-column class="col-md-1" has-any-permission="['MODIFY_MONITORS']">
-                                        Monitor enabled
-                                    </th>
-                                    <th md-column class="col-md-1" has-any-permission="['MODIFY_MONITORS']"  ng-if="monitors.length != 0"></th>
-                                </tr>
-                                <md-button type="submit" class="hide">Search</md-button>
-                                </thead>
-                                <tbody md-body>
-                                <tr md-row ng-repeat="monitor in monitors | orderBy:['success', 'name']">
-                                    <td md-cell class="col-md-2">
-                                        <i name="monitorStatus" ng-class="{'highlight_green': monitor.success, 'highlight_red': !monitor.success, 'highlight_gray': !monitor.monitorEnabled}" class="material-icons material-icon-16px">fiber_manual_record</i>
-                                        <b name="monitorName">{{monitor.name}}</b>
-                                    </td>
-                                    <td name="monitorUrl" md-cell class="col-md-2">{{monitor.url}}</td>
-                                    <td name="monitorType" md-cell class="col-md-1">{{monitor.type}}</td>
-                                    <td name="monitorEnv" md-cell class="col-md-3">
-                                        <span class="label label-default">{{monitor.environment}}</span>
-                                        <span style="margin-left: 10px">
-                                            {{ monitor.comment | limitTo : 25 : 0 }}<span ng-if="monitor.comment.length > 25">....</span>
-                                        </span>
-                                    </td>
-                                    <td name="monitorCron" md-cell class="col-md-1">{{monitor.cronExpression}}</td>
-                                    <td name="monitorCode" md-cell class="col-md-1">{{monitor.expectedCode}}</td>
-                                    <td md-cell class="col-md-1" has-any-permission="['MODIFY_MONITORS']">
-                                        <md-switch name="monitorEnabled" style="margin: 0; padding: 0" class="md-primary" ng-change="update(monitor, false)" ng-model="monitor.monitorEnabled" aria-label="notif-switch"></md-switch>
-                                    </td>
-                                    <td md-cell class="col-md-1" has-any-permission="['MODIFY_MONITORS']" ng-if="monitors.length != 0">
-                                        <div class="pull-right">
-                                            <i name="editMonitor" data-ng-click="openMonitorDialog($event, monitor)" class="material-icons">edit</i>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr md-row data-ng-if="monitors.length == 0">
-                                    <td id="noData" md-cell colspan="7" class="text-center">No data</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            </form>
-                        </md-table-container>
-                        <md-table-pagination id="pagination" zafira-background-theme="pagination" ng-if="sr.results.length != 0" md-limit="sr.pageSize" md-limit-options=false md-page="sr.page" md-total="{{sr.totalResults}}" md-page-select=false md-boundary-links=true md-on-paginate="search"></md-table-pagination>
+                        <div>
+                            <md-table-container>
+                                <table class="table-hover" md-table zafira-background-theme="table">
+                                    <thead md-head style="position: parent;">
+                                        <tr md-row>
+                                            <th md-column>Name</th>
+                                            <th md-column>Url</th>
+                                            <th md-column>Type</th>
+                                            <th md-column>Environment</th>
+                                            <th md-column>Comment</th>
+                                            <th md-column>Cron expression</th>
+                                            <th md-column>Expected code</th>
+                                            <th md-column>Monitor enabled</th>
+                                            <th md-column></th>
+                                        </tr>
+                                    </thead>
+                                        <!-- <thead md-head style="position: parent;">
+                                        <tr md-row>
+                                            <th md-column class="col-md-2">
+                                                <md-input-container class="searchable" flex>
+                                                    <input id="searchName" type="text" ng-model="sc.name" name="name" ng-change="onSearchChange(search_form.$$controls)"
+                                                    ng-model-options="{debounce: 200}" placeholder="Name"/>
+                                                </md-input-container>
+                                            </th>
+                                            <th md-column class="col-md-2">
+                                                <md-input-container class="searchable" flex>
+                                                    <input id="searchURL" type="text" ng-model="sc.url" name="url" ng-change="onSearchChange(search_form.$$controls)"
+                                                    ng-model-options="{debounce: 200}" placeholder="URL"/>
+                                                </md-input-container>
+                                            </th>
+                                            <th md-column class="col-md-1">
+                                                Type
+                                            </th>
+                                            <th md-column class="col-md-3" style="width: 100%;">
+                                                <md-input-container class="searchable" flex>
+                                                    <input id="searchEnv" type="text" ng-model="sc.environment" name="env" ng-change="onSearchChange(search_form.$$controls)"
+                                                    ng-model-options="{debounce: 200}" placeholder="Environment"/>
+                                                </md-input-container>
+                                                <md-input-container class="searchable" flex>
+                                                    <input id="searchComment" type="text" ng-model="sc.comment" name="comment" ng-change="onSearchChange(search_form.$$controls)"
+                                                    ng-model-options="{debounce: 200}" placeholder="Comment"/>
+                                                </md-input-container>
+                                            </th>
+                                            <th md-column class="col-md-1">
+                                                Cron expression
+                                            </th>
+                                            <th md-column class="col-md-1">
+                                                Expected code
+                                            </th>
+                                            <th md-column class="col-md-1" has-any-permission="['MODIFY_MONITORS']">
+                                                Monitor enabled
+                                            </th>
+                                            <th md-column class="col-md-1" has-any-permission="['MODIFY_MONITORS']"  ng-if="monitors.length != 0"></th>
+                                        </tr>
+                                        <md-button type="submit" class="hide">Search</md-button>
+                                        </thead> -->
+                                    <tbody md-body>
+                                        <tr md-row ng-repeat="monitor in monitors | orderBy:['success', 'name']">
+                                            <td data-title="Name" md-cell>
+                                                <i name="monitorStatus" ng-class="{'highlight_green': monitor.success, 'highlight_red': !monitor.success, 'highlight_black': !monitor.monitorEnabled}" class="material-icons material-icon-16px">fiber_manual_record</i>
+                                                <b name="monitorName">{{monitor.name}}</b>
+                                            </td>
+                                            <td data-title="URL" name="monitorUrl" md-cell>{{monitor.url}}</td>
+                                            <td data-title="Type" name="monitorType" md-cell>{{monitor.type}}</td>
+                                            <td data-title="Environment" name="monitorEnv" md-cell class="env">
+                                                <span class="label label-default">{{monitor.environment}}</span>
+                                            </td>
+                                            <td data-title="Comment" name="monitorComment" md-cell>
+                                                <span>{{ monitor.comment | limitTo : 25 : 0 }}<span ng-if="monitor.comment.length > 25">....</span></span>
+                                            </td>
+                                            <td data-title="Cron expression" name="monitorCron" md-cell>{{monitor.cronExpression}}</td>
+                                            <td data-title="Expected code" name="monitorCode" md-cell>{{monitor.expectedCode}}</td>
+                                            <td data-title="Monitor enabled" md-cell has-any-permission="['MODIFY_MONITORS']">
+                                                <md-switch name="monitorEnabled" style="margin: 0; padding: 0" class="md-primary" ng-change="update(monitor, false)" ng-model="monitor.monitorEnabled" aria-label="notif-switch"></md-switch>
+                                            </td>
+                                            <td md-cell has-any-permission="['MODIFY_MONITORS']" ng-if="monitors.length != 0" class="editor">
+                                                <div>
+                                                    <i name="editMonitor" data-ng-click="openMonitorDialog($event, monitor)" class="material-icons">edit</i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr md-row data-ng-if="monitors.length == 0">
+                                            <td id="noData" md-cell colspan="7" class="text-center">No data</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                            <md-table-pagination id="pagination" zafira-background-theme="pagination" ng-if="sr.results.length != 0" md-limit="sr.pageSize" md-limit-options=false md-page="sr.page" md-total="{{sr.totalResults}}" md-page-select=false md-boundary-links=true md-on-paginate="search"></md-table-pagination>
+                        </div>
                     </md-card>
                 </article>
+            </div>
         </div>
     </div>
 </div>

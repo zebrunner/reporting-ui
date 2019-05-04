@@ -42,7 +42,7 @@
     }
 }
 
-.p-users {
+.p-users, .p-monitors {
     .fixed-page-header-container_options {
         md-input-container {
             margin: 0 14px 0 0;
@@ -136,7 +136,7 @@
     }
 }
 
-.user-view-page {
+.user-view-page, .monitors-view-page {
     &__search {
         &-header {
             max-height: 80px;
@@ -218,6 +218,70 @@
             }
         }
     }
+
+    .p-monitors & {
+        table {
+            &.md-table {
+                td {
+                    &.md-cell {
+                        &.env .label {
+                            padding: 4px 15px;
+                            border-radius: 10px;
+                            line-height: 1;
+                            font-size: 10px;
+                            text-transform: uppercase;
+                            background-color: $fog-gray;
+                            color: $coal;
+                        }
+                    }
+                }
+            }
+        }
+        @media screen and (min-width: 960px) and (max-width: 1024px) {
+            table.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2),
+            table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
+                padding-right: 1%;
+            }
+        }
+        @media screen and (max-width: 959px) { 
+            table {
+                &.md-table {
+                    tr {
+                        &.md-row {
+                            padding: 20px 16px;
+                        }
+                    }
+                    td {
+                        &.md-cell {
+                            &[data-title] {
+                                display: flex;
+                                align-items: center;
+                                &:before {
+                                    min-width: 110px;
+                                    max-width: 110px;
+                                }
+                            }
+                            color: $gray-base;
+                            &.env .label {
+                                padding: 6px 15px 4px;
+                            }
+                            &.editor {
+                                position: absolute;
+                                top: 16px;
+                                right: 16px;
+                                line-height: 1;
+                                opacity: 0.5;
+                            }
+                            &:nth-last-child(2) {
+                                margin-bottom: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 
     @media screen and (max-width: 959px) { //up to material SM breakpoint
         table {

@@ -540,7 +540,8 @@
                     url: '/monitors',
                     component: 'monitorsComponent',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
+                        classes: 'p-monitors'
                     },
                     lazyLoad: ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
