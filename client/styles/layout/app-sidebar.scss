@@ -39,7 +39,9 @@
             right: 16px;
             top: 12px;
             @media (max-width: $screen-phone) {
-                display: none !important;
+                i {
+                    display: none;
+                }
             }
         }
         .projects {
