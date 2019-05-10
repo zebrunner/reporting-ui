@@ -19,7 +19,7 @@
     </zf-sub-header>
     <div class="page user-view-page">
         <empty-page-component ng-if="!$ctrl.sr.results.length" content="$ctrl.emptyContent"></empty-page-component>
-        <div class="ui-section">
+        <div class="ui-section" ng-if="$ctrl.sr.results.length">
             <div class="user-view-page__search-header">
                 <div class="user-view-page__search-input">
                     <md-icon class="search-icon">search</md-icon>
