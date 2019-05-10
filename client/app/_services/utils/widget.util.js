@@ -16,7 +16,7 @@
             var config = JSON.parse(widget.widgetTemplate.paramsConfig);
             var envParams = getENVParams(dashboard, userId);
             angular.forEach(config, function (paramValue, paramName) {
-                var type = paramValue.type ? paramValue.type : paramValue.value ? getType(paramValue.value) :
+                var type = paramValue.type ? paramValue.type : paramValue.value !== undefined ? getType(paramValue.value) :
                     paramValue.values && angular.isArray(paramValue.values) ? 'array' : undefined;
                 var isExistingWidget = widget.id && widget.paramsConfig && widget.paramsConfig.length;
                 var value = getValue(widget.paramsConfig, paramName, paramValue, type, isExistingWidget, envParams);
@@ -120,5 +120,7 @@
         function getType(value) {
             return angular.isArray(value) ? 'array' : typeof value === "boolean" ? 'boolean' : typeof value === 'string' || value instanceof String ? 'string' : Number.isInteger(value) ? 'int' : 'none';
         };
+
     }
+
 })();
