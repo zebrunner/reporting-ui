@@ -21,9 +21,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
 
     $scope.emptyContent = {
         text: "No widget added. Use button at the top or watch tutorial to learn more.",
-        buttonText: "Watch tutorial",
-        imageUrl: require("../../assets/images/empty-pages/empty_screen_dashboards.svg"),
-        link: "/",
+        imageUrl: require("../../assets/images/empty-pages/empty_screen_dashboards.svg")
     }
 
     $scope.currentUserId = $location.search().userId;
