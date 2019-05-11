@@ -166,13 +166,16 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
         instance.password = password;
         instance.basic = getAuthorizationValue(user.value, password.value);
         if(url.includes('@') && ! user.value && ! password.value && ! user.value.length && ! password.value.length) {
-            var protocol_auth_slices = url.split('@')[0].split('://');
+            var domain_slices = url.split('@');
+            var protocol_auth_slices = domain_slices[0].split('://');
             if(protocol_auth_slices.length === 2 && protocol_auth_slices[1].includes(':')) {
                 var username_password_slices = protocol_auth_slices[1].split(':');
                 if(username_password_slices.length === 2) {
                     instance.basic = getAuthorizationValue(username_password_slices[0], username_password_slices[1]);
                 }
             }
+            let startOfUsernameSymbol = '://';
+            url  = url.split(startOfUsernameSymbol)[0] + startOfUsernameSymbol + domain_slices[1];
         }
 
         instance.search = function (params, callback) {
