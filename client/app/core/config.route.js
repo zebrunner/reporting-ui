@@ -229,11 +229,13 @@
                 })
                 .state('users', {
                     url: '/users',
-                    abstract: true,
                     template: '<ui-view />',
                     data: {
                         requireLogin: true
-                    }
+                    },
+                    redirectTo: (transisiton) => {
+                        return transisiton.router.stateService.target('users.list', {}, { location: 'replace' });
+                      },
                 })
                 .state('users.list', {
                     url: '/list',
