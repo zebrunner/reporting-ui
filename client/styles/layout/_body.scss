@@ -908,10 +908,14 @@ ul.profile-image-actions {
 .profile-img-content {
     display: none;
     height: 100%;
-    line-height: 120px;
+    line-height: 26px;
     text-align: center;
     font-size: 26px;
     color: white;
+
+    span {
+        cursor: pointer;
+    }
 }
 
 .profile-photo {
@@ -923,10 +927,6 @@ ul.profile-image-actions {
         height: 100%;
         width: 100%;
     }
-}
-
-.profile-img-content span {
-    cursor: pointer;
 }
 
 .profile-img {
