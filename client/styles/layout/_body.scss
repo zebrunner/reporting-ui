@@ -899,11 +899,22 @@ ul.profile-image-actions {
 /* Profile photo mask logic */
 .profile-img-content {
     display: none;
-    position: absolute;
-    top: 40%;
+    height: 100%;
+    line-height: 120px;
+    text-align: center;
     font-size: 26px;
-    left: 40%;
     color: white;
+}
+
+.profile-photo {
+    position: relative;
+
+    &_content {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
+    }
 }
 
 .profile-img-content span {
