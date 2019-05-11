@@ -1,4 +1,4 @@
-const MonitorsService =  function MonitorsService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+const MonitorsService =  function MonitorsService($httpMock, $cookies, $rootScope,  $httpParamSerializer, UtilService, API_URL) {
     'ngInject';
 
     return {
@@ -25,7 +25,8 @@ const MonitorsService =  function MonitorsService($httpMock, $cookies, $rootScop
     }
 
     function searchMonitors(sc) {
-        return $httpMock.post(API_URL + '/api/monitors/search', sc).then(UtilService.handleSuccess, UtilService.handleError('Unable to search monitors'));
+        var path = $httpParamSerializer({query: sc.query, page: sc.page, pageSize: sc.pageSize, orderBy: sc.orderBy, sortOrder: sc.sortOrder});
+        return $httpMock.get(API_URL + '/api/monitors/search?' + path).then(UtilService.handleSuccess, UtilService.handleError('Unable to search monitors'));
     }
 
     function getAllMonitors() {

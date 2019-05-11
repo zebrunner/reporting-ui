@@ -12,10 +12,11 @@
     </zf-sub-header>
     <header class="profile-header">
         <div class="profile-img">
-            <profile-photo ng-model="$ctrl.currentUser.photoURL"></profile-photo>
-            <div class="profile-img-content">
-                <span><i class="material-icons" ng-click="$ctrl.showUploadImageDialog($event)">settings</i></span>
-            </div>
+            <profile-photo ng-model="$ctrl.currentUser.photoURL">
+                <div class="profile-img-content">
+                    <i class="material-icons" ng-click="$ctrl.showUploadImageDialog($event)">add_a_photo</i>
+                </div>
+            </profile-photo>
         </div>
         <div class="profile-personal-info" ng-if="$ctrl.currentUser.firstName || $ctrl.currentUser.lastName">
             {{$ctrl.currentUser.firstName}} {{$ctrl.currentUser.lastName}}

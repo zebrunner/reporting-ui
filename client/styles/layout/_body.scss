@@ -1,3 +1,5 @@
+@import "../global/var";
+
 body {
     background: $main_container_bg;
     min-width: 320px;
@@ -521,8 +523,12 @@ span.light_text, div.light_text {
 }
 
 .highlight_red {
-  color: red !important;
+  color: $red-for-highlight !important;
 }
+
+.highlight_black {
+    color: $dark-new !important;
+  }
 
 #dashboard_content {
     padding-bottom: 0;
@@ -829,29 +835,31 @@ input[type="file"].content-input.not-empty{
     z-index: -1;
 }
 
-.page-profile .container {
-    padding: 0;
-    margin: 0;
-    margin-top: 10px;
-    display: block;
-    position: relative;
-    width: 800px;
-    @media (max-width: 959px) {
-        width: auto !important;
+.profile-container {
+    .container {
+        padding: 0;
+        margin: 0;
+        margin-top: 10px;
+        display: block;
+        position: relative;
+        width: 800px;
+        @media (max-width: 959px) {
+            width: auto !important;
+        }
+        border: 2px dashed #80CBC4 !important;
+        transition: opacity  0.1s linear;
+        border-top: 0;
     }
-    border: 2px dashed #80CBC4 !important;
-    transition: opacity  0.1s linear;
-    border-top: 0;
-}
 
-.page-profile .bottom-block {
-    display: block;
-    position: relative;
-    height: 400px;
-    width: 100%;
+    .bottom-block {
+        display: block;
+        position: relative;
+        height: 400px;
+        width: 100%;
 
-    @media (max-width: $screen-phone) {
-        display: table;
+        @media (max-width: $screen-phone) {
+            display: table;
+        }
     }
 }
 
@@ -899,11 +907,22 @@ ul.profile-image-actions {
 /* Profile photo mask logic */
 .profile-img-content {
     display: none;
-    position: absolute;
-    top: 40%;
+    height: 100%;
+    line-height: 120px;
+    text-align: center;
     font-size: 26px;
-    left: 40%;
     color: white;
+}
+
+.profile-photo {
+    position: relative;
+
+    &_content {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
+    }
 }
 
 .profile-img-content span {

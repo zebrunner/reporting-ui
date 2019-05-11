@@ -1,5 +1,5 @@
 const monitorsController = function monitorsController($scope, $q, $rootScope, $state, $mdConstant,
-                                                       $stateParams, $mdDialog, MonitorsService, UserService) {
+                                                       $stateParams, $mdDialog, MonitorsService, UserService, $location) {
     'ngInject';
 
     $scope.monitors = [];
@@ -38,23 +38,29 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
     };
 
     $scope.search = function (page) {
-
-        if(page)
-        {
+        if(page) {
             $scope.sc.page = page;
         }
 
+        var requestVariables = $location.search();
+        if (requestVariables) {
+            for (var key in requestVariables) {
+                if (key && requestVariables[key]) {
+                    $scope.sc[key] = requestVariables[key];
+                }
+            }
+        }
+        
         MonitorsService.searchMonitors($scope.sc).then(function(rs) {
-            if(rs.success)
-            {
+            if(rs.success) {
                 $scope.sr = rs.data;
                 $scope.monitors = rs.data.results;
             }
-            else
-            {
+            else {
                 alertify.error(rs.message);
             }
         });
+
         $scope.isFiltered = true;
     };
 

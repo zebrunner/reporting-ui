@@ -1,4 +1,4 @@
-import template from './list.html';
+import template from './monitors.html';
 import controller from './monitors.controller';
 
 const monitorsComponent = {

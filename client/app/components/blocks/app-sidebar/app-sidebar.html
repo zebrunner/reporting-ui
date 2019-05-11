@@ -32,7 +32,7 @@
                                     <i data-ng-if="dashboard.hidden == true" style="font-size: 14px;" class="material-icons">visibility_off</i>
                                     <span class="menu-link__text">{{::dashboard.title}}</span>
                                 </a>
-                                <span has-any-permission="['MODIFY_DASHBOARDS']" style="position: absolute; right: 15px; top: 10px;" class="show-icon-on-hover">
+                                <span has-any-permission="['MODIFY_DASHBOARDS']" class="edit show-icon-on-hover">
                                     <i style="font-size: 14px;" class="material-icons" toggle-menu="close" ng-click="$ctrl.showDashboardSettingsModal($event, dashboard);">edit</i>
                                 </span>
                             </li>
@@ -70,7 +70,7 @@
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })" class="show-part">
                                     <span class="menu-link__text">{{::view.name}}</span>
                                 </a>
-                                <span style="position: absolute; right: 10px; top: 15px;" class="show-icon-on-hover">
+                                <span class="edit show-icon-on-hover">
                                     <i style="font-size: 14px;" class="material-icons" toggle-menu="close" data-ng-click="$ctrl.showViewDialog($event, view)" has-any-permission="['MODIFY_TEST_RUN_VIEWS']">edit</i>
                                 </span>
                             </li>
@@ -101,12 +101,12 @@
                                 </a>
                             </li>
                             <li style="position: relative;" has-any-permission="['MODIFY_USER_GROUPS']">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="groups.list" class="show-part">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.groups" class="show-part">
                                     <span>Groups</span>
                                 </a>
                             </li>
                             <li style="position: relative;" has-any-permission="['INVITE_USERS', 'MODIFY_INVITATIONS']">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="invitations.list" class="show-part">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.invitations" class="show-part">
                                     <span>Invitations</span>
                                 </a>
                             </li>
@@ -127,8 +127,8 @@
                 </a>
             </li>
             <li style="flex-grow: 1"></li>
-            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('users.profile')}" toggle-nav-bottom>
-                <a md-button aria-label="menu" ui-sref="users.profile">
+            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-nav-bottom>
+                <a md-button aria-label="menu" ui-sref="userProfile">
                     <div>
                         <profile-photo ng-model="$ctrl.currentUser.photoURL" squared="8" size="32" auto-resize="false"></profile-photo>
                     </div>

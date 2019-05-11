@@ -370,7 +370,7 @@
             line-height: 18px;
             font-weight: 700;
             &._blockers {
-                color: #d95259; // TODO: use correct color after we defined set of defaults with designer
+                color: $red-for-highlight; // TODO: use correct color after we defined set of defaults with designer
                 border-color: currentColor;
             }
             &._reviewed {

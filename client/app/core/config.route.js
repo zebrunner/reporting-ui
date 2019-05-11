@@ -20,7 +20,7 @@
                     }
                 })
                 .state('dashboard.page', {
-                    url: '/:dashboardId?userId&currentUserId&currentUserName&testCaseId&testCaseName&hashcode',
+                    url: '/:dashboardId?userId&currentUserId&currentUserName&testCaseId&testCaseName&hashcode&PARENT_JOB&PARENT_BUILD',
                     component: 'dashboardComponent',
                     data: {
                         requireLogin: true
@@ -229,14 +229,16 @@
                 })
                 .state('users', {
                     url: '/users',
-                    abstract: true,
                     template: '<ui-view />',
                     data: {
                         requireLogin: true
-                    }
+                    },
+                    redirectTo: (transisiton) => {
+                        return transisiton.router.stateService.target('users.list', {}, { location: 'replace' });
+                      },
                 })
                 .state('users.list', {
-                    url: '',
+                    url: '/list',
                     component: 'usersComponent',
                     data: {
                         requireLogin: true,
@@ -252,16 +254,8 @@
                             });
                     }
                 })
-                .state('groups', {
-                    url: '/users/groups',
-                    abstract: true,
-                    template: '<ui-view />',
-                    data: {
-                        requireLogin: true
-                    }
-                })
-                .state('groups.list', {
-                    url: '',
+                .state('users.groups', {
+                    url: '/groups',
                     component: 'groupsComponent',
                     data: {
                         requireLogin: true,
@@ -277,16 +271,8 @@
                             });
                     }
                 })
-                .state('invitations', {
-                    url: '/users/invitations?query&page&pageSize&orderBy&sortOrder',
-                    abstract: true,
-                    template: '<ui-view />',
-                    data: {
-                        requireLogin: true
-                    }
-                })
-                .state('invitations.list', {
-                    url: '',
+                .state('users.invitations', {
+                    url: '/invitations',
                     component: 'invitationsComponent',
                     data: {
                         requireLogin: true,
@@ -302,7 +288,7 @@
                             });
                     }
                 })
-                .state('users.profile', {
+                .state('userProfile', {
                     url: '/profile',
                     component: 'userComponent',
                     data: {
@@ -540,7 +526,8 @@
                     url: '/monitors',
                     component: 'monitorsComponent',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
+                        classes: 'p-monitors'
                     },
                     lazyLoad: ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');

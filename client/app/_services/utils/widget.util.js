@@ -45,7 +45,7 @@
                 value = ['array', 'radio'].indexOf(type) !== -1 ? paramValue.multiple ? paramValue.values && paramValue.values.length ? required ? [paramValue.values[0]] : undefined : paramValue.values : required ? paramValue.values[0] : undefined : paramValue.value;
             }
             value = overrideWithEnvParams ?
-                ['array', 'radio'].indexOf(type) !== -1 &&  envParams && paramValue.values.indexOf(envParams[paramName]) !== -1 ?
+                (['array', 'radio'].indexOf(type) !== -1 &&  envParams && paramValue.values.indexOf(envParams[paramName]) !== -1) || ['string'].indexOfField(type) !== -1 ?
                     getValueByType(envParams[paramName], getType(value))
                     : value
                 : value;
