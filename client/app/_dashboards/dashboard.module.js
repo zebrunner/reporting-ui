@@ -20,6 +20,7 @@ require('echarts/lib/component/calendar');
 //TODO: fix DI and use as custom module
 require('../../vendors/ngecharts');
 
+import emptyPageComponent from '../shared/empty-page/empty-page.component';
 import ScreenshotService from './screenshot.util';
 import dashboardComponent from './dashboard.component';
 
@@ -30,4 +31,5 @@ export const dashboardModule = angular.module('app.dashboard', [
     'ngecharts',
     ])
     .component({ dashboardComponent })
+    .component({ emptyPageComponent })
     .service('$screenshot', ScreenshotService);
