@@ -20,7 +20,7 @@
                     }
                 })
                 .state('dashboard.page', {
-                    url: '/:dashboardId?userId&currentUserId&currentUserName&testCaseId&testCaseName&hashcode',
+                    url: '/:dashboardId?userId&currentUserId&currentUserName&testCaseId&testCaseName&hashcode&PARENT_JOB&PARENT_BUILD',
                     component: 'dashboardComponent',
                     data: {
                         requireLogin: true
