@@ -6,7 +6,7 @@
         border: 0;
     }
     #filter md-chips-wrap i.custom-chip-action {
-        color: rgba(#011627, .5) !important;
+        color: rgba($dark-new, .5) !important;
     }
     #filter md-chips-wrap .md-focused i.custom-chip-action {
         color: white !important;
@@ -33,7 +33,7 @@
         button#resetFilter, button#deleteFilter {
             background-color: transparent;
             &:hover {
-                background-color: rgba(#011627, 0.1);
+                background-color: rgba($dark-new, 0.1);
             }
         }
 
@@ -64,7 +64,7 @@
             }
             .manage-chip {
                 md-chips.filter-chip md-chips-wrap.md-chips md-chip {
-                    background-color: rgba(#011627, .5) !important;
+                    background-color: rgba($dark-new, .5) !important;
                     margin: 0 8px 0 0 !important;
                     width: 36px;
                     height: 36px;
@@ -82,7 +82,7 @@
     }
 
     &__editor {
-        background-color: rgba(#011627, .07) !important;
+        background-color: rgba($dark-new, .07) !important;
         margin-top: 18px;
         padding: 4px;
         form {
@@ -121,7 +121,7 @@
                 md-checkbox {
                     margin-bottom: 0;
                     &.md-checked .md-icon {
-                        background-color: #011627;
+                        background-color: $dark-new;
                     }
                 }
             }
@@ -141,13 +141,13 @@
             }
         }
         #add-button {
-            background-color: rgba(#011627, 0.2) !important;
+            background-color: rgba($dark-new, 0.2) !important;
             border-radius: 4px;
             min-width: 64px;
             color: black;
             margin-bottom: 15px;
             &[disabled] {
-                background-color: rgba(#011627, 0.1) !important;
+                background-color: rgba($dark-new, 0.1) !important;
             }
         }
         .panel-body {
@@ -155,7 +155,7 @@
             .filter-chip md-chip,
             .filter-chip md-chip:hover {
                 background-color: transparent !important;
-                border: 1px solid rgba(#011627, 0.2) !important;
+                border: 1px solid rgba($dark-new, 0.2) !important;
                 .md-chip-content {
                     line-height: 30px;
                 }
@@ -272,7 +272,7 @@
                 color: $dark-new !important;
                 font-size: 14px;
                 font-weight: 500;
-                border: solid 1px rgba(#011627, .2);
+                border: solid 1px rgba($dark-new, .2);
                 margin-bottom: 2px;
                 margin-left: 0;
                 margin-right: 8px;
@@ -280,7 +280,7 @@
                 position: relative;
 
                 &.md-focused {
-                    background-color: #011627 !important;
+                    background-color: $dark-new !important;
                     color: white !important;
                     padding-right: 36px;
 
