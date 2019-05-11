@@ -257,7 +257,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         isTable = isTable || widget.widgetTemplate ? widget.widgetTemplate.type === 'TABLE' : false;
 
         if(! $scope.widgetBuilder.paramsConfigObject) {
-            $scope.widgetBuilder.paramsConfigObject = $widget.build($scope.widget, dashboard, currentUserId);
+            $scope.widgetBuilder.paramsConfigObject = build($scope.widget, dashboard, currentUserId);
         }
 
         var sqlTemplateAdapter = {
@@ -290,6 +290,18 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             else {
                 alertify.error(rs.message);
             }
+        });
+    };
+
+    function build(widget, dashboard, currentUserId) {
+        let paramsConfigObject = $widget.build(widget, dashboard, currentUserId);
+        enableInputs(paramsConfigObject);
+        return paramsConfigObject;
+    };
+
+    function enableInputs(paramsConfigObject) {
+        angular.forEach(paramsConfigObject, function (paramValue, paramName) {
+            paramValue.input_enabled = paramValue.multiple ? !! paramValue.value && !! paramValue.value.length : ['title'].indexOf(paramValue.type) !== -1 ? false : !! paramValue.value;
         });
     };
 
