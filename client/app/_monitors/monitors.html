@@ -21,22 +21,12 @@
     </zf-sub-header>
     <div class="page monitors-view-page">
         <div class="ui-section">
-            <!-- <div layout="row" layout-xs="column" class="fixed-search-column no-padding" style="min-width: 320px;">
-                <div class="control-buttons header-actions" ng-if="searchActive || isFiltered">
-                    <button id="search" class="md-button md-primary md-ink-ripple pull-right" type="button" ng-click="search();">
-                        <b>Search</b>
-                    </button>
-                    <button id="clear" class="md-button md-default md-ink-ripple pull-right" type="button" ng-click="reset(); UtilService.untouchForm(search_form);">
-                        <b>Reset</b>
-                    </button>
-                </div>
-            </div> -->
             <div class="monitors-view-page__search-header">
                 <div class="monitors-view-page__search-input">
                     <md-icon class="search-icon">search</md-icon>
                     <input type="text" class="form-control"
-                            placeholder="Search items" ng-model-options="{debounce: 700}" ng-model="$ctrl.sc.query" ng-change="$ctrl.search();" aria-label="Search items">
-                    <md-icon class="close-icon" ng-click="$ctrl.reset();">close</md-icon>
+                            placeholder="Search items" ng-model-options="{debounce: 700}" ng-model="sc.query" ng-change="search();" aria-label="Search items">
+                    <md-icon class="close-icon" ng-click="reset();">close</md-icon>
                 </div>
             </div>
             <div>
@@ -58,46 +48,6 @@
                                             <th md-column></th>
                                         </tr>
                                     </thead>
-                                        <!-- <thead md-head style="position: parent;">
-                                        <tr md-row>
-                                            <th md-column class="col-md-2">
-                                                <md-input-container class="searchable" flex>
-                                                    <input id="searchName" type="text" ng-model="sc.name" name="name" ng-change="onSearchChange(search_form.$$controls)"
-                                                    ng-model-options="{debounce: 200}" placeholder="Name"/>
-                                                </md-input-container>
-                                            </th>
-                                            <th md-column class="col-md-2">
-                                                <md-input-container class="searchable" flex>
-                                                    <input id="searchURL" type="text" ng-model="sc.url" name="url" ng-change="onSearchChange(search_form.$$controls)"
-                                                    ng-model-options="{debounce: 200}" placeholder="URL"/>
-                                                </md-input-container>
-                                            </th>
-                                            <th md-column class="col-md-1">
-                                                Type
-                                            </th>
-                                            <th md-column class="col-md-3" style="width: 100%;">
-                                                <md-input-container class="searchable" flex>
-                                                    <input id="searchEnv" type="text" ng-model="sc.environment" name="env" ng-change="onSearchChange(search_form.$$controls)"
-                                                    ng-model-options="{debounce: 200}" placeholder="Environment"/>
-                                                </md-input-container>
-                                                <md-input-container class="searchable" flex>
-                                                    <input id="searchComment" type="text" ng-model="sc.comment" name="comment" ng-change="onSearchChange(search_form.$$controls)"
-                                                    ng-model-options="{debounce: 200}" placeholder="Comment"/>
-                                                </md-input-container>
-                                            </th>
-                                            <th md-column class="col-md-1">
-                                                Cron expression
-                                            </th>
-                                            <th md-column class="col-md-1">
-                                                Expected code
-                                            </th>
-                                            <th md-column class="col-md-1" has-any-permission="['MODIFY_MONITORS']">
-                                                Monitor enabled
-                                            </th>
-                                            <th md-column class="col-md-1" has-any-permission="['MODIFY_MONITORS']"  ng-if="monitors.length != 0"></th>
-                                        </tr>
-                                        <md-button type="submit" class="hide">Search</md-button>
-                                        </thead> -->
                                     <tbody md-body>
                                         <tr md-row ng-repeat="monitor in monitors | orderBy:['success', 'name']">
                                             <td data-title="Name" md-cell>
