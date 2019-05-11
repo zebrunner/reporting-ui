@@ -32,7 +32,7 @@
                                     <i data-ng-if="dashboard.hidden == true" style="font-size: 14px;" class="material-icons">visibility_off</i>
                                     <span class="menu-link__text">{{::dashboard.title}}</span>
                                 </a>
-                                <span has-any-permission="['MODIFY_DASHBOARDS']" style="position: absolute; right: 15px; top: 10px;" class="show-icon-on-hover">
+                                <span has-any-permission="['MODIFY_DASHBOARDS']" class="edit show-icon-on-hover">
                                     <i style="font-size: 14px;" class="material-icons" toggle-menu="close" ng-click="$ctrl.showDashboardSettingsModal($event, dashboard);">edit</i>
                                 </span>
                             </li>
@@ -70,7 +70,7 @@
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })" class="show-part">
                                     <span class="menu-link__text">{{::view.name}}</span>
                                 </a>
-                                <span style="position: absolute; right: 10px; top: 15px;" class="show-icon-on-hover">
+                                <span class="edit show-icon-on-hover">
                                     <i style="font-size: 14px;" class="material-icons" toggle-menu="close" data-ng-click="$ctrl.showViewDialog($event, view)" has-any-permission="['MODIFY_TEST_RUN_VIEWS']">edit</i>
                                 </span>
                             </li>
