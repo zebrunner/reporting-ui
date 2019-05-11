@@ -73,14 +73,14 @@
             height: 100%;
         }
 
-        >div,
+        > div,
         section,
         .tab-content,
         .history-tab,
         table {
             height: inherit;
 
-            >*:not(.testrun-info__tab-video-section) {
+            >*:not(.testrun-info__tab-video-section):not(thead):not(tbody) {
                 height: inherit;
             }
         }
