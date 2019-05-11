@@ -135,7 +135,7 @@
                 <ng-form name="notRequiredparams">
                     <table>
                         <tbody>
-                            <tr ng-if="! paramValue.required && ! paramValue.hidden" ng-show="showAdvanced || paramValue.input_enabled || paramValue.oldValue" class="widget-wizard_container_elements_input type-{{paramValue.type}}" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
+                            <tr ng-if="! paramValue.required && ! paramValue.hidden  && (showAdvanced || paramValue.input_enabled || paramValue.oldValue)" class="widget-wizard_container_elements_input type-{{paramValue.type}}" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
                                 <td ng-show="['title'].indexOf(paramValue.type) === -1" class="zf-label">{{paramName}}</td>
                                 <td ng-switch-default>
                                     <zf-input-container>
@@ -178,7 +178,7 @@
                                     <div class="zf-label">{{paramValue.value}}</div>
                                 </td>
                                 <td>
-                                    <md-switch ng-show="['title'].indexOf(paramValue.type) === -1" class="md-primary" ng-init="paramValue.input_enabled = paramValue.multiple ? !! paramValue.value && !! paramValue.value.length : ['title'].indexOf(paramValue.type) !== -1 ? false : !! paramValue.value" ng-model="paramValue.input_enabled" ng-change="switchInputEnabled(paramValue); buildConfigs(widget_form.params);" aria-label="extended_switch"></md-switch>
+                                    <md-switch ng-show="['title'].indexOf(paramValue.type) === -1" class="md-primary" ng-model="paramValue.input_enabled" ng-change="switchInputEnabled(paramValue); buildConfigs(widget_form.params);" aria-label="extended_switch"></md-switch>
                                 </td>
                             </tr>
                         </tbody>

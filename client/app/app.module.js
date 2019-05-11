@@ -441,7 +441,7 @@ const ngModule = angular.module('app', [
     "use strict";
     return {
         restrict: 'E',
-        template: '<div class="page-profile">\n' +
+        template: '<div class="profile-container">\n' +
             '                    <div class="container">\n' +
             '                        <div class="bottom-block" md-ink-ripple="grey">\n' +
             '                            <input type="file" id="fileInput" class="content-input" ng-class="{\'not-empty\': myImage}"/>\n' +
