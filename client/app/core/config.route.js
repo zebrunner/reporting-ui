@@ -379,14 +379,18 @@
                             const projects = projectsService.getSelectedProjects();
 
                             testsRunsService.resetFilteringState();
-                            // read saved search/filtering data only if we reload current page or returning from internal page
-                            if (!prevState || prevState === 'tests.runDetails' || prevState === 'tests.runs') {
+                            // read saved search/filtering data only if we returning from internal page
+                            if (prevState === 'tests.runDetails' || prevState === 'tests.runs') {
                                 testsRunsService.readStoredParams();
                             } else {
                                 testsRunsService.deleteStoredParams();
                             }
 
-                            projects && projects.length && testsRunsService.setSearchParam('projects', projects);
+                            if (projects && projects.length) {
+                                testsRunsService.setSearchParam('projectNames', projects.map(project => project.name));
+                            } else {
+                                testsRunsService.deleteSearchParam('projectNames');
+                            }
 
                             return testsRunsService.fetchTestRuns().catch(function(err) {
                                 err && err.message && alertify.error(err.message);
@@ -402,7 +406,7 @@
                                 return $q.resolve([]);
                             });
                         },
-                        activeTestRunId: function($stateParams, $q) { //TODO: use to implement highlighting opened tesRun
+                        activeTestRunId: function($stateParams, $q) {
                             'ngInject';
 
                             const id = $stateParams.activeTestRunId ? $stateParams.activeTestRunId : undefined;
