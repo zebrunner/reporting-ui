@@ -232,7 +232,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             }
         });
         $scope.MODE = '';
-        gridstack.disable();
+        gridstack && gridstack.disable();
         //gridstack.commit();
     };
 
