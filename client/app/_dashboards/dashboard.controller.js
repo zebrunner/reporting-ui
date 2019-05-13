@@ -153,12 +153,16 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     function getNextEmptyGridArea(defaultLocation) {
-        var gridstack = angular.element('.grid-stack').gridstack($scope.gridstackOptions).data('gridstack');
+        let gridstackElement = angular.element('.grid-stack');
+        var gridstack = gridstackElement.gridstack($scope.gridstackOptions).data('gridstack');
         var location = jsonSafeParse(defaultLocation);
-        while(! gridstack.isAreaEmpty(location.x, location.y, location.width, location.height)) {
-            location.y = location.y + 11;
-            if(location.y > 1100)
-                break;
+        // if at least one widget is present, grid stack element is not undefined
+        if(gridstack) {
+            while (!gridstack.isAreaEmpty(location.x, location.y, location.width, location.height)) {
+                location.y = location.y + 11;
+                if (location.y > 1100)
+                    break;
+            }
         }
         return jsonSafeStringify(location);
     }
