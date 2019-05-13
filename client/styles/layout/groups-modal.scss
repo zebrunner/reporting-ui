@@ -89,6 +89,11 @@
     }
     @media screen and (max-width: $breakpoint-mobile-small) {
         max-height: 100%;
+        form {
+            display: flex;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
         md-toolbar {
             display: none;
         }
