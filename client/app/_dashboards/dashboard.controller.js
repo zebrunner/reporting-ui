@@ -20,9 +20,9 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     $scope.emptyContent = {
-        text: "No widget added. Use button at the top or watch tutorial to learn more.",
-        imageUrl: require("../../assets/images/empty-pages/empty_screen_dashboards.svg")
-    }
+        text: 'No widgets added yet.',
+        imageUrl: require('../../assets/images/empty-pages/empty_screen_dashboards.svg')
+    };
 
     $scope.currentUserId = $location.search().userId;
 
@@ -236,7 +236,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             }
         });
         $scope.MODE = '';
-        gridstack.disable();
+        gridstack && gridstack.disable();
         //gridstack.commit();
     };
 

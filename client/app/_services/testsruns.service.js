@@ -3,17 +3,11 @@
 
     angular
         .module('app.services')
-    .factory('testsRunsService', [
-        'TestRunService',
-        '$q',
-        'DEFAULT_SC',
-        'SettingsService',
-        'UtilService',
-        'ConfigService',
-        testsRunsService]);
+        .factory({ testsRunsService });
 
-    function testsRunsService(TestRunService, $q, DEFAULT_SC, SettingsService, UtilService,
-                              ConfigService) {
+    function testsRunsService(TestRunService, $q, DEFAULT_SC, projectsService) {
+        'ngInject';
+
         const searchTypes = ['testSuite', 'executionURL', 'appVersion'];
         let _lastResult = null;
         let _lastParams = null;
@@ -118,7 +112,17 @@
         }
 
         function isSearchActive() {
-            return !isFilterActive() && !angular.equals(_searchParams, DEFAULT_SC);
+            let defaultCriteria = DEFAULT_SC;
+            const projects = projectsService.getSelectedProjects();
+
+            if (projects && projects.length) {
+                defaultCriteria = {
+                    ...defaultCriteria,
+                    projectNames: projects.map(project => project.name),
+                };
+            }
+
+            return !isFilterActive() && !angular.equals(_searchParams, defaultCriteria);
         }
 
         function isOnlyAdditionalSearchActive() {

@@ -70,7 +70,7 @@
                 <span class="label label-default" ng-if="$ctrl.testRun.env">{{$ctrl.testRun.env}}</span>
             </div>
             <div name="testRunPlatform" class="test-run-card__cell _platform">
-                <span data-ng-if="$ctrl.testRun.platform !== ''" class="platform-icon {{$ctrl.testRun.platform | lowercase}}" />
+                <span data-ng-if="$ctrl.testRun.platform !== ''" class="platform-icon {{$ctrl.testRun.platform | lowercase}}"></span>
                 <span data-ng-if="$ctrl.testRun.platform === ''" class="platform-icon unknown"></span>
                 <span data-ng-if="$ctrl.testRun.browserVersion" class="label label-default">{{$ctrl.testRun.browserVersion}}</span>
             </div>

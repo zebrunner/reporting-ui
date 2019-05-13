@@ -240,10 +240,18 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
                     });
                 });
             }
+            $scope.getCheckedBlocks();
         };
 
+        $scope.getCheckedBlocks = function() {
+            $scope.blocksChecked = {};
+            for (let block in $scope.blocks) {
+                $scope.blocksChecked[block] = $scope.isCheckedBlock(block);
+            }
+        }
+
         $scope.isCheckedBlock = function (blockName) {
-            return $scope.getCheckedPermissions(blockName).length === $scope.blocks[blockName].permissions.length;
+            return $scope.getCheckedPermissions(blockName).length !== 0;
         };
 
         $scope.getCheckedPermissions = function (blockName) {
@@ -259,10 +267,9 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
         };
 
         $scope.toggleAllPermissions = function (blockName) {
-            var checkedPermissionsCount = $scope.getCheckedPermissions(blockName).length;
-            if (checkedPermissionsCount === $scope.blocks[blockName].permissions.length) {
+            if (!$scope.blocksChecked[blockName]) {
                 $scope.setPermissionsValue(blockName, false);
-            } else if (checkedPermissionsCount === 0 || checkedPermissionsCount > 0) {
+            } else {
                 $scope.setPermissionsValue(blockName, true);
             }
         };

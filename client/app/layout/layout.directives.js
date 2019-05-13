@@ -52,17 +52,17 @@ export const toggleMenu = () => {
             var preserveClose = CLOSE_IGNORE.find(function (locator) {
                 return !! e.target.closest(locator);
             });
-            if(! preserveClose) {
+            if(!preserveClose) {
                 const isSliceOfSidebar = sidebar ? sidebar.find(e.target).length > 0 : false;
 
                 if (!isSliceOfSidebar) {
-                    closeMenu(scope, ele);
+                    closeMenu(scope, ele, angular.element('#nav-container'));
                 }
             }
         }
     }
 
-    function closeMenu(scope, element) {
+    function closeMenu(scope, element, sidebar) {
         const selector = 'li.open';
         const openElement = angular.element(selector);
 
@@ -73,7 +73,7 @@ export const toggleMenu = () => {
             openedMenu = null;
         }
         if (!element.hasClass('search_close-button')) {
-            sidebar.removeClass(toggleBottomClassName);
+            sidebar && sidebar.removeClass(toggleBottomClassName);
             $app.removeClass('sidebar-toggled');
         }
     }
