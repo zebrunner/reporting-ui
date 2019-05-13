@@ -6,7 +6,7 @@ import CiHelperTemplate from './ci-helper/ci-helper.html';
 const testsRunsController = function testsRunsController($cookieStore, $mdDialog, $timeout, $q, TestRunService,
                                                          UtilService, UserService, testsRunsService, $scope, API_URL,
                                                          $rootScope, $transitions, windowWidthService, TestService,
-                                                         toolsService) {
+                                                         toolsService, projectsService) {
     'ngInject';
 
     let TENANT;
@@ -111,9 +111,9 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function getTestRuns(page, pageSize) {
         vm.selectedAll = false;
-        vm.projects = $cookieStore.get('projects');
+        vm.projects = projectsService.getSelectedProjects();
 
-        vm.projects && vm.projects.length && testsRunsService.setSearchParam('projects', vm.projects);
+        vm.projects && vm.projects.length && testsRunsService.setSearchParam('projectNames', vm.projects.map(project => project.name));
         if (page) {
             testsRunsService.setSearchParam('page', page);
             page !== vm.currentPage && (vm.currentPage = page);
