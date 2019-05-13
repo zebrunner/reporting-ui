@@ -250,6 +250,7 @@
             }
             return url;
         };
+
         function setOffset(event) {
             const bottomHeight = $window.innerHeight - event.target.clientHeight - event.clientY;
 
