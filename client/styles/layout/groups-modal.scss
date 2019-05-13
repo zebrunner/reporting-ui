@@ -1,0 +1,162 @@
+@import '../global/var';
+
+.groups-modal {
+    max-width: 871px;
+    max-height: 607px;
+    &__form-fields {
+        padding: 30px 20px;
+        border-bottom: 1px solid rgba(#000000, .15);
+        .form-fields__input {
+            margin-right: 24px;
+        }
+    }
+    &__content-wrapper {
+        overflow: hidden;
+    }
+    &__block {
+        padding-left: 20px;
+        border-bottom: 1px solid rgba(#000000, .15);
+        &__name-wrapper {
+            padding: 22px 0;
+        }
+        &__name {
+            display: flex;
+            align-items: center;
+            min-width: 92px;
+            margin-right: 25px;
+            h5 {
+                margin: 0;
+            }
+            
+        }
+        md-switch {
+            margin: 0;
+            height: 20px;
+            .md-container {
+                margin-right: 80px;
+            }
+        }
+        &__permissions {
+            padding-top: 22px;
+            flex-wrap: wrap;
+            height: 100%;
+            transition: opacity .15s ease-in-out, visibility .15s ease-in-out, height .15s ease-out;
+            &.hidden-permissions {
+                visibility: hidden;
+                opacity: 0;
+                height: 0;
+            }
+            &__item {
+                min-width: 200px;
+                padding-bottom: 22px;
+                md-checkbox {
+                    .checkbox-clear-inline & {
+                        margin: 0 9px 0 0;
+                    }
+                    min-width: 18px;
+                    min-height: 18px;
+                    width: 18px;
+                    height: 18px;
+                    .md-container {
+                        width: 18px;
+                        height: 18px;
+                        .md-icon {
+                            height: 18px;
+                            width: 18px;
+                            &:after {
+                                left: 3.66667px;
+                                top: -1.22222px;
+                            }
+                        }
+                    }
+                }
+                .text-capitalize {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+    md-toolbar {
+        min-height: 56px;
+    }
+    md-dialog-actions {
+        padding-right: 20px;
+        padding-left: 20px;
+        min-height: 64px;
+        .cancel {
+            display: none;
+        }
+    }
+    @media screen and (max-width: $breakpoint-mobile-small) {
+        max-height: 100%;
+        form {
+            display: flex;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+        md-toolbar {
+            display: none;
+        }
+        &__form-fields {
+            padding: 24px 16px;
+            flex-direction: column;
+            .form-fields__input {
+                margin: 0 0 20px 0;
+            }
+        }
+        &__block {
+            padding: 17px 16px;
+            flex-direction: column;
+            &__name-wrapper {
+                width:  100%;
+                justify-content: space-between;
+                padding: 0;
+                md-switch {
+                    .md-container {
+                        margin-right: 0;
+                    }
+                }
+            }
+            &__permissions {
+                flex-direction: column;
+                width: 100%;
+                padding-top: 0;
+                &__item:first-child {
+                    padding: 20px 0 7px;
+                }
+                &__item:not(:last-child) {
+                    padding-bottom: 33px;
+                }
+                &__item:last-child {
+                    padding-bottom: 11px;
+                }
+            }
+        }
+        md-dialog-actions {
+            padding-right: 16px;
+            padding-left: 16px;
+            min-height: 68px;
+            overflow-x: hidden;
+            background: white;
+            width: 100%;
+            z-index: 2;
+            box-shadow: 0px -5px 7px 0 rgba(4, 0, 0, 0.15);
+            .cancel {
+                display: block;
+                background-color: #e8e9e9;
+                margin-right: 4px;
+            }
+        }
+    }
+    @media screen and (min-width: $breakpoint-mobile-small + 1) and (max-width: 530px) {
+        .form-fields {
+            &__input, &__select md-select-value {
+                min-width: unset;
+            }
+            &__input, &__select {
+                flex-grow: 1;
+                max-width: calc(50% - 12px);
+            }
+        }
+    }
+}
