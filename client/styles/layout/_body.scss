@@ -2780,7 +2780,7 @@ $light-inprogress: #68c9fd;
                         }
                     }
 
-                    @media(max-width: $breakpoint-mobile) {
+                    @media(max-width: $breakpoint-mobile - 1) {
                         &.fixed-page-header__btn {
                             border-radius: 8px;
                             width: 32px;
@@ -2815,6 +2815,10 @@ $light-inprogress: #68c9fd;
                                         color: currentColor;
                                     }
                                 }
+                            }
+
+                            &._dashboard {
+                                display: none !important; //TODO: find who add inline styles
                             }
                         }
                     }
