@@ -118,7 +118,7 @@
             margin-bottom: 0;
             table {
                 overflow: unset;
-                height: fit-content;
+                height: auto;
                 
                 tbody {
                     display: block;
@@ -257,7 +257,7 @@
             }
              &-table-wrapper {
                 table {
-                    height: 100%;
+                    height: auto;
                     overflow: auto;
                     td, th {
                         padding: 4px 15px !important;
