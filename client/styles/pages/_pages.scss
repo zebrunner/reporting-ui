@@ -134,6 +134,14 @@
             }
         }
     }
+    @media screen and (max-width: $breakpoint-mobile-small) {
+        .fixed-page-header, &.app > .main-container > .nav-container, .header-container {
+            z-index: 80;
+        }
+        .md-dialog-container {
+            padding-top: 60px;
+        }
+    }
 }
 
 .user-view-page {
