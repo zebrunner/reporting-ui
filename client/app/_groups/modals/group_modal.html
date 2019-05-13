@@ -29,9 +29,9 @@
                                 </div>
                                 <md-switch class="md-primary" ng-model="blocksChecked[key]" ng-change="toggleAllPermissions(key)" ng-required aria-label="integr-switch"></md-switch>
                             </div>
-                            <div layout="row" class="groups-modal__block__permissions" ng-class="{'hidden-permissions': !isCheckedBlock(key)}">
+                            <div layout="row" class="groups-modal__block__permissions" ng-class="{'hidden-permissions': !blocksChecked[key]}">
                                 <div class="groups-modal__block__permissions__item" ng-repeat="permission in value.permissions">
-                                    <md-checkbox ng-true-value="true" ng-false-value="false" ng-model="permission.value" ng-change="getCheckedBlocks()" aria-label="Block" class="md-primary"></md-checkbox>
+                                    <md-checkbox ng-true-value="true" ng-false-value="false" ng-model="permission.value" aria-label="Block" class="md-primary"></md-checkbox>
                                     <span name="permissionName" class="text-capitalize">{{ permission.name.split('_').join(' ') }}</span>
                                 </div>
                             </div>
