@@ -198,3 +198,29 @@
 .nav-vertical {
     box-shadow: 2px 0 2px 0 rgba(0,0,0,0.12);
 }
+
+.app-sidebar {
+
+    &__icon-wrapper {
+        &._squared {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #fff;
+            opacity: .4;
+            display: inline-block;
+            position: relative;
+            .material-icons {
+                color: $dark-new;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+
+    .profile-photo_content {
+        position: static;
+    }
+}
