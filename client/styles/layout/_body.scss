@@ -839,30 +839,61 @@ input[type="file"].content-input.not-empty{
 }
 
 .profile-container {
+    height: 100%;
+    div {
+        height: 100%;
+    }
     .container {
         padding: 0;
         margin: 0;
         margin-top: 10px;
         display: block;
         position: relative;
-        width: 800px;
-        @media (max-width: 959px) {
-            width: auto !important;
+        //width: 800px;
+        max-width: 75vw;
+        @media (max-width: $screen-tablet-2) {
+            width: 100%;
+            max-width: 100%;
         }
         border: 2px dashed #80CBC4 !important;
         transition: opacity  0.1s linear;
         border-top: 0;
+
+        img-crop {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     }
 
     .bottom-block {
         display: block;
         position: relative;
-        height: 400px;
+        //height: 400px;
         width: 100%;
+
+        @media (max-width: $screen-tablet-2) {
+            //height: 80vh;
+        }
 
         @media (max-width: $screen-phone) {
             display: table;
         }
+
+    }
+}
+
+.fullscreen-tablet-dialog {
+    height: inherit;
+    @media (max-width: $screen-tablet-2) {
+        height: 100vh;
+        width: 100vw;
+        max-height: none;
+        max-width: none;
+    }
+
+    > form, md-dialog-content, .md-dialog-content {
+        height: 100%;
     }
 }
 
