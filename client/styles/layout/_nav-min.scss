@@ -213,3 +213,20 @@
         transform: rotate(90deg);
     }
 }
+
+.drag-actor {
+    cursor: grab;
+    font-size: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    line-height: 40px;
+    vertical-align: baseline;
+    z-index: 100000;
+
+    &:active {
+        cursor: grabbing;
+    }
+
+}

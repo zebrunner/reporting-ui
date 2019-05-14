@@ -8,6 +8,9 @@ import uploadImageModalController
 import uploadImageModalTemplate
     from '../../../shared/modals/upload-image-modal/upload-image-modal.html';
 
+import 'jquery-ui/widgets/sortable';
+import 'angular-ui-sortable'
+
 const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDialog, $state, ViewService, ConfigService,
                                        ProjectService, projectsService, UtilService, UserService, DashboardService,
                                        AuthService, SettingsService, $timeout, windowWidthService) {
@@ -36,12 +39,43 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         showDashboardSettingsModal,
         selectedProjectShortName: '',
 
+        dashboardSortableOptions: {
+            stop: function(e, ui) {
+                updateDashboardPositions(ui.item.sortable.sourceModel);
+            },
+            disabled: true
+        },
+
+        activateSorter: activateDashboardsSorter,
+
         get companyLogo() { return $rootScope.companyLogo; },
         get currentUser() { return UserService.currentUser; },
         get isMobile() { return windowWidthService.isMobile(); },
     };
 
     vm.$onInit = initController;
+
+    function activateDashboardsSorter(activate) {
+        vm.dashboardSortableOptions.disabled = ! activate;
+    };
+
+    function updateDashboardPositions(dashboards) {
+        let dashboardPositions = {};
+        dashboards.forEach(function (dashboard, index) {
+            dashboard.position = index;
+            dashboardPositions[dashboard.id] = dashboard.position;
+        });
+        updatePositions(dashboardPositions);
+    };
+
+    function updatePositions(positions) {
+        DashboardService.UpdateDashboardOrders(positions).then(function (rs) {
+            if(rs.success) {
+            } else {
+                alertify.error(rs.message);
+            }
+        });
+    };
 
     function initController() {
         loadProjects()
@@ -67,7 +101,18 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         });
     };
 
+    function getNextEmptyPosition(dashboards) {
+        let result = 0;
+        dashboards.forEach(function (dashboard) {
+            if(dashboard.position > result) {
+                result = dashboard.position;
+            }
+        });
+        return result + 1;
+    };
+
     function showDashboardSettingsModal(event, dashboard, isNew) {
+        let position = isNew ? getNextEmptyPosition(vm.dashboardList) : dashboard.position;
         $mdDialog.show({
             controller: dashboardSettingsModalController,
             template: dashboardSettingsModalTemplate,
@@ -78,7 +123,8 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             autoWrap: false,
             locals: {
                 dashboard: dashboard,
-                isNew: isNew
+                isNew: isNew,
+                position : position
             }
         })
             .then(function (rs) {
@@ -86,12 +132,12 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
                     switch(rs.action) {
                         case 'CREATE':
                             $state.go('dashboard.page', {dashboardId: rs.id});
-                            $scope.dashboardList.splice(rs.position, 0, rs);
+                            vm.dashboardList.splice(rs.position, 0, rs);
                             break;
                         case 'UPDATE':
                             rs.widgets = $scope.dashboard.widgets;
                             $scope.dashboard = angular.copy(rs);
-                            $scope.dashboardList.splice(rs.position, 1, rs);
+                            vm.dashboardList.splice(rs.position, 1, rs);
                             break;
                         default:
                             break;

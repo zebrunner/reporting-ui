@@ -1,4 +1,4 @@
-const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, DashboardService, dashboard, isNew) {
+const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, DashboardService, dashboard, isNew, position) {
     'ngInject';
 
     $scope.isNew = isNew;
@@ -11,6 +11,7 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
     }
 
     $scope.createDashboard = function(dashboard){
+        dashboard.position = position;
         DashboardService.CreateDashboard(dashboard).then(function (rs) {
             if (rs.success) {
                 alertify.success("Dashboard created");
