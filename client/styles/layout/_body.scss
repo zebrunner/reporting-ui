@@ -1655,6 +1655,8 @@ md-chip md-chip-template.bg-primary {
         background-color: #fff;
         border: none;
         color: $coal !important;
+        border-radius: 4px;
+        max-height: 36px;
     }
     & .filter-name {
         width: 344px;
