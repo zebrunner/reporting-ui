@@ -116,6 +116,8 @@
 
         &-table-wrapper {
             margin-bottom: 0;
+            height: 100%;
+            overflow: auto;
             table {
                 overflow: unset;
                 height: auto;
