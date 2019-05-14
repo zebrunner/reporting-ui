@@ -46,7 +46,7 @@
             }
         }
         .projects {
-            &_selected {
+            &__selected {
                 min-width: 32px;
                 text-align: center;
                 position: absolute;
@@ -58,8 +58,16 @@
                 max-width: 100%;
                 text-transform: uppercase;
             }
+            &__wrapper {
+                display: flex !important;
+                flex-direction: column;
+                overflow: unset;
+                height: 100%;
+            }
             &__list {
                 margin-top: 10px;
+                overflow: auto;
+                flex-grow: 1;
                 @media (max-width: $screen-phone) {
                     margin-top: 15px;
                 }
@@ -196,10 +204,16 @@
                 }
             }
             &._upload {
-                position: absolute;
-                bottom: 0;
-                margin: 0 0 20px 0;
-                padding: 0;
+                margin: 0;
+                min-height: $sidebar-width;
+                background-color: #132336;
+                a {
+                    min-height: $sidebar-width;
+                    padding: 22px 0 22px 24px;
+                    @media (max-width: $screen-phone) {
+                        padding: 17px 0 17px 24px;
+                    }
+                }
             }
             @media (max-width: $screen-phone) {
                 margin: 8px 56px 17px 24px;

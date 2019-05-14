@@ -749,7 +749,7 @@ pre.code:after{
 }
 
 .large-card-content {
-    min-height: 500px !important;
+    min-height: 500px;
 }
 
 div.code {
@@ -1655,6 +1655,8 @@ md-chip md-chip-template.bg-primary {
         background-color: #fff;
         border: none;
         color: $coal !important;
+        border-radius: 4px;
+        max-height: 36px;
     }
     & .filter-name {
         width: 344px;
@@ -2849,7 +2851,7 @@ $light-inprogress: #68c9fd;
                             }
 
                             &._dashboard {
-                                display: none !important; //TODO: find who add inline styles
+                                display: none !important; //TODO: find who adds inline styles
                             }
                         }
                     }

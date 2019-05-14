@@ -1,4 +1,24 @@
+@import '../../styles/global/var';
+@import '../../styles/global/var-pages';
+
+.p-integrations {
+    @media screen and (max-width: 599px) {
+        .page {
+            padding-right: 16px;
+            padding-left: 16px;
+        }
+    }
+    @media screen and (max-width: $screen-phone) {
+        .page {
+            padding: $header_height 0 0;
+        }
+    }
+}
+
 .integration-tool {
+    &__list {
+        margin: 0 -10px;
+    }
     &__item {
         &-loader {
             display: inline-block;
@@ -6,6 +26,35 @@
             path {
                 stroke: currentColor
             }
+        }
+        &-wrapper {
+            padding: 10px;
+
+            @media screen and (max-width: $screen-phone) {
+                border-bottom: 2px solid $main_container_bg;
+                &:last-of-type {
+                    border-bottom: 0;
+                }
+                .card {
+                    margin: 0;
+                    box-shadow: none;
+                }
+
+            }
+        }
+    }
+
+    @media screen and (max-width: 599px) {
+        &__item {
+            &-wrapper {
+                padding: 0;
+                .large-card-content {
+                    min-height: 0;
+                }
+            }
+        }
+        &__list {
+            margin: 0;
         }
     }
 }

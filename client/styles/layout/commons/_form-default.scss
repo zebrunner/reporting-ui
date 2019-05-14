@@ -14,6 +14,9 @@
             border-color: rgba(1, 22, 39, 0.2) !important;
         } 
     }
+    &__select md-select-value.md-select-placeholder {
+        padding-left: 12px;
+    }
     &__input {
         padding-right: 12px;
     }   
