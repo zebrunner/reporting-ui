@@ -749,7 +749,7 @@ pre.code:after{
 }
 
 .large-card-content {
-    min-height: 500px !important;
+    min-height: 500px;
 }
 
 div.code {
@@ -2849,7 +2849,7 @@ $light-inprogress: #68c9fd;
                             }
 
                             &._dashboard {
-                                display: none !important; //TODO: find who add inline styles
+                                display: none !important; //TODO: find who adds inline styles
                             }
                         }
                     }
