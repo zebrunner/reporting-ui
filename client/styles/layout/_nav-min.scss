@@ -120,6 +120,7 @@
                         left: $sidebar_phone_width;
                         top: $header_height;
                         width: calc(100% - #{$sidebar_phone_width});
+                        height: calc(100vh - #{$sidebar_phone_width});
                         min-width: auto;
                         padding-top: 12px;
                     }
@@ -127,7 +128,7 @@
                     @include border-right-radius($border-radius-base);
                     box-shadow: 1px 1px 3px rgba(0,0,0,.2);
                     li.search-menu {
-                        > ul {
+                        > ul:not(.projects__wrapper) {
                             height: 100%;
                             overflow: auto;
                         }
