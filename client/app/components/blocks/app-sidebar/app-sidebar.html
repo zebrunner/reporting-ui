@@ -1,4 +1,4 @@
-<aside id="nav-container" class="nav-container nav-vertical bg-dark">
+<aside id="nav-container" class="app-sidebar nav-container nav-vertical bg-dark">
     <div class="nav-wrapper" xmlns:font-size="http://www.w3.org/1999/xhtml">
         <ul id="nav" class="nav" data-slim-scroll data-collapse-nav>
             <li class="sidebar-menu-button bg-dark">
@@ -130,7 +130,13 @@
             <li class="profile"  ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-nav-bottom>
                 <a md-button aria-label="menu" ui-sref="userProfile">
                     <div>
-                        <profile-photo ng-model="$ctrl.currentUser.photoURL" squared="8" size="32" auto-resize="false"></profile-photo>
+                        <profile-photo ng-model="$ctrl.currentUser.photoURL"
+                                       squared="8"
+                                       size="32"
+                                       icon-visible="false"
+                                       auto-resize="false">
+                            <span ng-if="!$ctrl.currentUser.photoURL" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">person</i></span>
+                        </profile-photo>
                     </div>
                 </a>
             </li>
@@ -138,8 +144,14 @@
                 <a md-button aria-label="menu" class="_light" ui-sref="projects.list">
                     <div class="projects_selected">{{$ctrl.selectedProjectShortName}}</div>
                     <div style="display: inline-block;">
-                        <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" squared="8" size="36" src="../../../../assets/images/project_photo.svg"
-                                    icon-visible="$ctrl.currentUser.isAdmin"></profile-photo>
+                        <profile-photo id="brandPhoto"
+                                       ng-model="$ctrl.companyLogo.value"
+                                       squared="8"
+                                       size="32"
+                                       auto-resize="false"
+                                       icon-visible="false">
+                            <span ng-if="!$ctrl.companyLogo.value" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">flag</i></span>
+                        </profile-photo>
                     </div>
                 </a>
                 <ul class="width-icon" toggle-nav-bottom>
