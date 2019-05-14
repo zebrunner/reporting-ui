@@ -442,7 +442,7 @@ const ngModule = angular.module('app', [
     return {
         restrict: 'E',
         template: '<div class="profile-container">\n' +
-            '                    <div class="container">\n' +
+            '                    <div class="profile-container_container">\n' +
             '                        <div class="bottom-block" md-ink-ripple="grey">\n' +
             '                            <input type="file" id="fileInput" class="content-input" ng-class="{\'not-empty\': myImage}"/>\n' +
             '                            <div ng-if="!fileName || !fileName.length" class="upload-zone-label">Click or drop here</div>' +
