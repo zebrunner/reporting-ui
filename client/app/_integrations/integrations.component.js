@@ -1,4 +1,4 @@
-import template from './list.html';
+import template from './integrations.html';
 import controller from './integrations.controller';
 
 const integrationsComponent = {
