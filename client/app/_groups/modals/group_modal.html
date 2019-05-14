@@ -13,8 +13,8 @@
         <md-dialog-content>
             <div class="groups-modal__content-wrapper">
                 <div layout class="groups-modal__form-fields">
-                    <input id="groupName" class="form-fields__input" type="text" name="name" data-ng-model="group.name" required>
-                    <md-select id="groupRole" class="form-fields__select" name="role" ng-model="group.role" required>
+                    <input id="groupName" placeholder="Group name" class="form-fields__input" type="text" name="name" data-ng-model="group.name" required>
+                    <md-select id="groupRole" class="form-fields__select" name="role" ng-model="group.role" required placeholder="User role">
                         <md-option ng-repeat="role in roles" value="{{role}}">
                             {{role}}
                         </md-option>
