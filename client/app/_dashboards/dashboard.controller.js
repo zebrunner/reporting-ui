@@ -20,10 +20,12 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     $scope.emptyContent = {
-        text: 'No widgets added yet.',
+        text: 'No widget added. Use button at the top or watch tutorial to learn more.',
         imageUrl: require('../../assets/images/empty-pages/empty_screen_dashboards.svg')
     };
 
+    $scope.isLoading = true;
+    
     $scope.currentUserId = $location.search().userId;
 
     $scope.ECHART_TYPES = ['echart', 'PIE', 'LINE', 'BAR', 'TABLE', 'OTHER'];
@@ -534,6 +536,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                 if (rs.success) {
                     $scope.dashboard = rs.data;
                     $scope.getDataWithAttributes($scope.dashboard, false);
+                    $scope.isLoading = false;
                     resolve(rs.data);
                 } else {
                     reject(rs.message);
