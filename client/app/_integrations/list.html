@@ -6,7 +6,7 @@
         </zf-sub-header-title>
         <zf-sub-header-button>
             <div has-any-permission="['MODIFY_INTEGRATIONS']">
-                <button class="fixed-page-header__btn _dashboard zf-header-button"  data-ng-really-message="Do you really want to regenerate encrypt key? All values will be reencrypted!" data-ng-really-click="regenerateKey()">
+                <button class="fixed-page-header__btn _dashboard zf-header-button"  data-ng-really-message="Do you really want to regenerate encrypt key? All values will be reencrypted!" data-ng-really-click="$ctrl.regenerateKey()">
                     <md-icon class="material-icons">refresh</md-icon>
                     <span>Re-encrypt secrets</span>
                 </button>
