@@ -24,7 +24,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         imageUrl: require('../../assets/images/empty-pages/empty_screen_dashboards.svg')
     };
 
-    $scope.isLoading = true;
+    $scope.isPageLoading = true;
     
     $scope.currentUserId = $location.search().userId;
 
@@ -536,9 +536,10 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                 if (rs.success) {
                     $scope.dashboard = rs.data;
                     $scope.getDataWithAttributes($scope.dashboard, false);
-                    $scope.isLoading = false;
+                    $scope.isPageLoading = false;
                     resolve(rs.data);
                 } else {
+                    $scope.isPageLoading = false;
                     reject(rs.message);
                 }
             });
