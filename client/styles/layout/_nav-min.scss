@@ -120,7 +120,7 @@
                         left: $sidebar_phone_width;
                         top: $header_height;
                         width: calc(100% - #{$sidebar_phone_width});
-                        height: calc(100vh - #{$sidebar_phone_width});
+                        height: calc(100% - #{$sidebar_phone_width});
                         min-width: auto;
                         padding-top: 12px;
                     }
