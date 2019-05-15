@@ -69,7 +69,7 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
     };
 
     $scope.checkDuplicateAttributeKey = function(key, form) {
-        let duplicateAttribute = dashboard.attributes.find(function (attr) {
+        let duplicateAttribute = $scope.dashboard.attributes.find(function (attr) {
             return attr.key === key;
         });
         form.$setValidity('duplicateKey', ! duplicateAttribute);
