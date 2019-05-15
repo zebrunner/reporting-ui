@@ -13,6 +13,7 @@
         service.GetDashboardByTitle = GetDashboardByTitle;
         service.CreateDashboard = CreateDashboard;
         service.UpdateDashboard = UpdateDashboard;
+        service.UpdateDashboardOrders = UpdateDashboardOrders;
         service.DeleteDashboard = DeleteDashboard;
         service.CreateDashboardAttribute = CreateDashboardAttribute;
         service.CreateDashboardAttributes = CreateDashboardAttributes;
@@ -56,6 +57,10 @@
 
         function UpdateDashboard(dashboard) {
             return $httpMock.put(API_URL + '/api/dashboards', dashboard).then(UtilService.handleSuccess, UtilService.handleError('Unable to update dashboard'));
+        }
+
+        function UpdateDashboardOrders(positions) {
+            return $httpMock.put(API_URL + '/api/dashboards/order', positions).then(UtilService.handleSuccess, UtilService.handleError('Unable to update dashboards order'));
         }
 
         function DeleteDashboard(id) {

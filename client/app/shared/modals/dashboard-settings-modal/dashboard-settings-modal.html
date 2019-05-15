@@ -33,12 +33,6 @@
                         </div>
                     </md-input-container>
                 </div>
-                <div layout layout-sm="column">
-                    <md-input-container flex>
-                        <label>Position</label>
-                        <input type="text" ng-model="dashboard.position" name="position" required/>
-                    </md-input-container>
-                </div>
                 <div data-ng-if="!isNew">
                     <label>Attributes</label>
                     <div class="row attribute" data-ng-repeat="attribute in dashboard.attributes">

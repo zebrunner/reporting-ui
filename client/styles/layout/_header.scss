@@ -27,6 +27,12 @@
     }
 }
 
+.hide-tablet {
+    @media (max-width: $screen-tablet-2) {
+        display: none !important;
+    }
+}
+
 .show-phone {
     @media (min-width: $screen-phone + 1px) {
         display: none !important;
