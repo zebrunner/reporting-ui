@@ -3454,6 +3454,7 @@ users-component md-tab-item.md-disabled {
     $default-margin: 8px;
 
     font-size: 0;
+    margin-bottom: 16px;
 
     > div:not(:first-child) {
         margin-left: $default-margin;
@@ -3473,12 +3474,13 @@ users-component md-tab-item.md-disabled {
 
     &_key, &_value {
         width: $input-width;
-    }
 
-    &_key {
-    }
-
-    &_value {
+        *[ng-messages] {
+            position: absolute;
+            font-size: 12px;
+            color: red;
+            padding: 2px 0 0 2px
+        }
     }
 
     &_add-button {
@@ -3497,6 +3499,28 @@ users-component md-tab-item.md-disabled {
             &[disabled] {
                 background-color: rgba(1,22,39,.1)!important;
             }
+        }
+    }
+}
+
+.dashboard-attributes-items-container {
+    &_chips {
+
+        .md-chips {
+            box-shadow: none;
+
+            .md-chip-content {
+                padding: 0 !important;
+            }
+        }
+
+        &_template {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .md-chip-remove-container {
+            top: 0;
         }
     }
 }
