@@ -1,7 +1,7 @@
-const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, UtilService, DashboardService, dashboard, isNew, position) {
+const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, UtilService, DashboardService, dashboard, position) {
     'ngInject';
 
-    $scope.isNew = isNew;
+    $scope.isNew = ! dashboard.id;
     $scope.dashboard = angular.copy(dashboard);
     $scope.newAttribute = {};
 

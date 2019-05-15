@@ -35,9 +35,6 @@
                                     <i data-ng-if="dashboard.hidden == true" style="font-size: 14px;" class="material-icons">visibility_off</i>
                                     <span class="menu-link__text">{{::dashboard.title}}</span>
                                 </a>
-                                <span has-any-permission="['MODIFY_DASHBOARDS']" class="edit show-icon-on-hover">
-                                    <i style="font-size: 14px;" class="material-icons" toggle-menu="close" ng-click="$ctrl.showDashboardSettingsModal($event, dashboard);">edit</i>
-                                </span>
                             </li>
                         </ul>
                     </li>

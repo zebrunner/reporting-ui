@@ -25,6 +25,12 @@
                     </i>
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </button>
+                <button class="fixed-page-header__tooltip-btn" has-any-permission="['MODIFY_DASHBOARDS']" data-ng-if="dashboard.editable && MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                    <md-tooltip md-direction="bottom">Edit</md-tooltip>
+                </button>
                 <button class="fixed-page-header__tooltip-btn  hide-phone" ng-if="isGridStackEvailableToEdit() && dashboard.widgets.length" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
                     <i class="material-icons">
                         dashboard
