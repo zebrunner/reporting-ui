@@ -920,7 +920,6 @@ input[type="file"].content-input.not-empty{
 
 /* Profile info block */
 .page-profile .profile-header {
-    max-height: 180px !important;
     padding-top: 30px;
     padding-bottom: 30px;
     //background-image: url(../assets/images/signin_bg.jpg);
@@ -933,9 +932,9 @@ ul.profile-image-actions {
 }
 
 .profile-personal-info {
-    display: inline-block !important;
-    color: white !important;
-    font-size: 36px !important;
+    display: inline-block;
+    color: white;
+    font-size: 36px;
 }
 
 /* Profile photo mask logic */
