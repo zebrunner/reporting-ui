@@ -4,7 +4,7 @@
     "scripts": {
         "init": "npm install",
         "start": "npm run dev",
-        "dev": "webpack-dev-server --config ./webpack/webpack.dev.js",
+        "dev": "webpack-dev-server -d --config ./webpack/webpack.dev.js",
         "build": "webpack"
     },
     "devDependencies": {
