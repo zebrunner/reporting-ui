@@ -170,8 +170,53 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         return jsonSafeStringify(location);
     }
 
+    function getNextEmptyGridAreaV2(defaultLocation) {
+        var location = jsonSafeParse(defaultLocation);
+        let preparedLocation = angular.copy(location);
+        const gridstackElement = angular.element('.grid-stack');
+        const gridstack = gridstackElement.gridstack($scope.gridstackOptions).data('gridstack');
+
+        // if at least one widget is present, grid stack element is not undefined
+        if(gridstack) {
+            const grid = gridstack.grid;
+            const nodes = grid.nodes;
+
+            const maxYNodes = getMaxNodes(nodes, 'y');
+            const maxXYNodes = getMaxNodes(maxYNodes, 'x');
+            if (maxXYNodes.length === 1) {
+                const maxNode = maxXYNodes[0];
+                preparedLocation.x = maxNode.x + maxNode.width;
+                preparedLocation.y = maxNode.y;
+
+                const isEmpty = gridstack.isAreaEmpty(preparedLocation.x, preparedLocation.y, preparedLocation.width, preparedLocation.height);
+                const outOfWidth = preparedLocation.x + preparedLocation.width > grid.width;
+                if (! isEmpty || outOfWidth) {
+                    preparedLocation.x = location.x;
+                    preparedLocation.y = maxNode.y + location.height + 1;
+                }
+            }
+        }
+        return jsonSafeStringify(preparedLocation);
+    }
+
+    function getMaxNodes(nodes, key) {
+        let maxNodes = undefined;
+        let maxNodeValue = undefined;
+        nodes.forEach(function (node) {
+            const nodeValue = node[key];
+            if(maxNodeValue === undefined || (nodeValue > maxNodeValue[key])) {
+                maxNodes = [];
+                maxNodes.push(node);
+                maxNodeValue = node;
+            } else if(maxNodes !== undefined && (nodeValue === maxNodeValue[key])) {
+                maxNodes.push(node);
+            }
+        });
+        return maxNodes;
+    };
+
     $scope.addDashboardWidget = function (widget, hideSuccessAlert) {
-        widget.location = getNextEmptyGridArea(defaultWidgetLocation);
+        widget.location = getNextEmptyGridAreaV2(defaultWidgetLocation);
         var data = {"id": widget.id, "location": widget.location};
         return $q(function (resolve, reject) {
             DashboardService.AddDashboardWidget($stateParams.dashboardId, data).then(function (rs) {
