@@ -19,7 +19,7 @@
 
         <md-dialog-content>
             <div class="md-dialog-content">
-                <ng-form ng-if="dashboard.editable" name="info">
+                <ng-form ng-if="isNew || dashboard.editable" name="info">
                     <div layout layout-sm="column">
                         <md-input-container flex>
                             <label>Title</label>
@@ -71,7 +71,7 @@
             </div>
         </md-dialog-content>
 
-        <md-dialog-actions ng-if="dashboard.editable" layout="row">
+        <md-dialog-actions ng-if="isNew || dashboard.editable" layout="row">
             <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew" type="button"
                        class="md-raised btn-w-md md-warn"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="deleteDashboard(dashboard);">
