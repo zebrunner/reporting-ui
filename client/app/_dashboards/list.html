@@ -25,7 +25,7 @@
                     </i>
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </button>
-                <button class="fixed-page-header__tooltip-btn" has-any-permission="['MODIFY_DASHBOARDS']" data-ng-if="dashboard.editable && MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
+                <button class="fixed-page-header__tooltip-btn" has-any-permission="['MODIFY_DASHBOARDS']" data-ng-if="MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
                     <i class="material-icons">
                         edit
                     </i>
