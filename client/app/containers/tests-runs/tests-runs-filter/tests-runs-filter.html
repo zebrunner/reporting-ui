@@ -54,7 +54,7 @@
                                     <div layout-sm="column" layout-xs="column">
                                         <div layout="row">
                                             <md-input-container class="filter-input-container select">
-                                                <md-select id="filterCriteria" ng-change="$ctrl.onFilterSliceUpdate('CRITERIA');"
+                                                <md-select id="filterCriteria" ng-change="$ctrl.onFilterSliceUpdate('CRITERIA');" class="form-fields__select"
                                                            ng-model="$ctrl.currentCriteria.value" name="criteria" placeholder="CRITERIA">
                                                     <md-option ng-value>
                                                         <em>None</em>
@@ -66,7 +66,7 @@
                                                 </md-select>
                                             </md-input-container>
                                             <md-input-container class="filter-input-container select">
-                                                <md-select id="filterOperator" ng-change="$ctrl.onFilterSliceUpdate('OPERATOR');"
+                                                <md-select id="filterOperator" ng-change="$ctrl.onFilterSliceUpdate('OPERATOR');" class="form-fields__select"
                                                            ng-disabled="!$ctrl.currentCriteria.value" ng-model="$ctrl.currentOperator.value"
                                                            name="operator" placeholder="OPERATOR">
                                                     <md-option ng-value>
