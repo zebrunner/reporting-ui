@@ -551,6 +551,9 @@
         color: rgba($dark-new, 0.4);
         font-size: 20px;
         margin-bottom: 0;
+        &._mobile {
+            display: none;
+        }
         &:last-child() {
             margin-bottom: 40px;
         }
@@ -581,8 +584,11 @@
         }
         &-text {
             font-size: 18px;
-            &._desc {
+            &._desk {
                 display: none;
+            }
+            &._mobile {
+                display: block;
             }
         }
         &-button {
@@ -596,13 +602,6 @@
     }
     @media (max-height: 460px) and (min-width: $screen-phone) {
         height: calc(100vh + #{$header_height}); 
-    }
-    @media (min-width: $screen-phone + 1) {
-        &-text {
-            &._mobile {
-                display: none;
-            }
-        }
     }
 }
 
