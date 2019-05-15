@@ -157,7 +157,7 @@ module.exports = (env) => {
                                         sourceMap: isDev,
                                     },
                                 },
-                                'sass',
+                                { loader: 'sass', options: { sourceMap: isDev }},
                             ],
                         },
                         // "file" loader makes sure those assets get served by WebpackDevServer.

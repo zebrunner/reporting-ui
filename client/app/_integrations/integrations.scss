@@ -20,6 +20,34 @@
         margin: 0 -10px;
     }
     &__item {
+        padding: 20px 30px;
+        margin: 0;
+        &-content {
+            padding: 15px 0 0;
+            border-radius: 0;
+
+            md-input-container:not(.md-input-invalid).md-input-has-value label {
+                opacity: .5;
+            }
+        }
+        &-header {
+            md-input-container {
+                margin: 0 0 0 auto;
+            }
+            md-switch {
+                margin: 0;
+                .md-container {
+                    margin-right: 0;
+                }
+            }
+
+        }
+        &-title {
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            color: #000;
+        }
         &-loader {
             display: inline-block;
 
@@ -27,8 +55,45 @@
                 stroke: currentColor
             }
         }
+        &-icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 32px;
+            height: 32px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            margin-right: 10px;
+
+            &.email {
+                background-image: url(../../assets/images/_icons_tools/email.svg);
+            }
+            &.amazon {
+                background-image: url(../../assets/images/_icons_tools/amazon_s3.svg);
+            }
+            &.google {
+                background-image: url(../../assets/images/_icons_tools/google.svg);
+            }
+            &.jenkins {
+                background-image: url(../../assets/images/_icons_tools/jenkins.svg);
+            }
+            &.jira {
+                background-image: url(../../assets/images/_icons_tools/jira.svg);
+            }
+            &.ldap {
+                background-image: url(../../assets/images/_icons_tools/ldap.svg);
+            }
+            &.rabbitmq {
+                background-image: url(../../assets/images/_icons_tools/rabbitmq.svg);
+            }
+            &.slack {
+                background-image: url(../../assets/images/_icons_tools/slack.svg);
+            }
+        }
+        &-status {
+            margin-left: 5px;
+        }
         &-wrapper {
-            padding: 10px;
+            padding: 0 10px 20px;
 
             @media screen and (max-width: $screen-phone) {
                 border-bottom: 2px solid $main_container_bg;
@@ -44,8 +109,23 @@
         }
     }
 
+    @media screen and (max-width: 959px) {
+        &__item {
+            padding-right: 20px;
+            padding-left: 20px;
+            &-wrapper {
+                &:last-child,
+                &:nth-last-child(2):nth-child(odd) {
+                    padding-bottom: 0;
+                }
+            }
+        }
+    }
+
     @media screen and (max-width: 599px) {
         &__item {
+            padding-right: 16px;
+            padding-left: 16px;
             &-wrapper {
                 padding: 0;
                 .large-card-content {

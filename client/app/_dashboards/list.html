@@ -42,18 +42,7 @@
     </zf-sub-header>
     <div id="dashboard_content" class="page page-dashboard">
         <empty-page-component ng-if="!dashboard.widgets.length && !isPageLoading" content="emptyContent"></empty-page-component>
-	    <div class="row" ng-if="dashboard.widgets.length">
-	         <div class="col-lg-12">
-	         	<ul class="nav nav-pills">
-					<md-button data-ng-class="{'md-raised md-primary': dashboard.active == true}" data-ng-repeat="dashboard in dashboards | orderBy:'position' track by dashboard.id"
-							   data-ng-click="switchDashboard(dashboard.id)">
-						{{dashboard.title}}
-					</md-button>
-	         	</ul>
-	         </div>
-	    </div>
-	    <br/>
-		<div class="row" ng-if="dashboard.widgets.length">
+		<div class="dashboard__widgets-wrapper" ng-if="dashboard.widgets.length">
 			<input type="hidden" id="dashboard_title" value="{{dashboard.title}}" />
             <div gridstack class="grid-stack" options="gridstackOptions"
                  on-change="" on-drag-start="" on-drag-stop="" on-resize-start="" on-resize-stop="" style="margin-bottom: 20px">
