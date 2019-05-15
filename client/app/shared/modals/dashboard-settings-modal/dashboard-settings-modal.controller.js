@@ -1,7 +1,7 @@
-const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, DashboardService, dashboard, isNew, position) {
+const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, UtilService, DashboardService, dashboard, position) {
     'ngInject';
 
-    $scope.isNew = isNew;
+    $scope.isNew = ! dashboard.id;
     $scope.dashboard = angular.copy(dashboard);
     $scope.newAttribute = {};
 
@@ -54,17 +54,25 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
     };
 
      // Dashboard attributes
-    $scope.createAttribute = function(attribute){
+    $scope.createAttribute = function(attribute, form){
         DashboardService.CreateDashboardAttribute(dashboard.id, attribute).then(function (rs) {
             if (rs.success) {
                 $scope.dashboard.attributes = rs.data;
                 $scope.newAttribute = {};
+                UtilService.untouchForm(form);
                 alertify.success('Dashboard attribute created');
             }
             else {
                 alertify.error(rs.message);
             }
         });
+    };
+
+    $scope.checkDuplicateAttributeKey = function(key, form) {
+        let duplicateAttribute = dashboard.attributes.find(function (attr) {
+            return attr.key === key;
+        });
+        form.$setValidity('duplicateKey', ! duplicateAttribute);
     };
 
     $scope.updateAttribute = function(attribute){

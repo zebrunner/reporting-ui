@@ -124,7 +124,7 @@ $red: #d2333b;
             }
         }
     }
-    *[ng-messages] {
+    [ng-messages] {
         position: absolute;
         font-size: 12px;
         color: $red;
@@ -190,7 +190,7 @@ $red: #d2333b;
         color: #35393f;
     }
 
-    *[ng-messages] {
+    [ng-messages] {
         position: absolute;
         color: red;
         > * {

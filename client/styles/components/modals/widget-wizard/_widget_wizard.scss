@@ -346,6 +346,22 @@ $wizard-white:          #ffffff;
                         min-width: 151px;
                         padding-right: 24px;
                     }
+
+                    &.__description {
+                        .zf-label {
+                            line-height: 14px;
+                            vertical-align: sub;
+                        }
+                        textarea {
+                            resize: none;
+                            border-radius: 4px;
+                            background-color: #ffffff;
+                            border: 1px solid #ffffff;
+                            font-size: 14px;
+                            padding: 11px;
+                            color: inherit;
+                        }
+                    }
                 }
             }
             &_additional {

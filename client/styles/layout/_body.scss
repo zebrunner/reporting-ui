@@ -158,17 +158,36 @@ md-input-container.searchable.select {
     max-width: fit-content;
 }
 
-.widget-icon {
+md-menu.widget-icon {
+
+    position: absolute;
+    top: 3px;
+    right: 11px;
+    width: 24px;
+    border: none;
+
     font-size: 24px;
     padding: 1px;
     color: black;
     opacity: 0.25;
-    padding-right: 6px;
+    //padding-right: 6px;
 
     &:hover {
         opacity: 0.5;
     }
+
+    .md-icon-button {
+        width: 24px;
+        padding: 0;
+        margin: 0;
+
+        md-icon {
+            width: 24px;
+            min-width: 24px;
+        }
+    }
 }
+
 .expand-button {
     position: relative;
     z-index: 1;
@@ -3428,4 +3447,80 @@ $light-inprogress: #68c9fd;
 
 users-component md-tab-item.md-disabled {
     display: none;
+}
+
+.dashboard-attributes-container {
+
+    $default-margin: 8px;
+
+    font-size: 0;
+    margin-bottom: 16px;
+
+    > div:not(:first-child) {
+        margin-left: $default-margin;
+    }
+
+    &_key, &_value, &_add-button {
+        height: 38px;
+        display: inline-block;
+        font-size: 14px;
+        input {
+            width: 100%;
+        }
+    }
+
+    $button-width: 64px;
+    $input-width: calc((100% - #{$default-margin} * 2 - #{$button-width}) / 2);
+
+    &_key, &_value {
+        width: $input-width;
+
+        [ng-messages] {
+            position: absolute;
+            font-size: 12px;
+            color: red;
+            padding: 2px 0 0 2px
+        }
+    }
+
+    &_add-button {
+        width: $button-width;
+
+        button {
+            background-color: rgba(1,22,39,.2)!important;
+            border-radius: 4px;
+            border: none !important;
+            width: $button-width;
+            height: 100%;
+            color: #000;
+            line-height: 1.42857;
+            font-weight: 500;
+
+            &[disabled] {
+                background-color: rgba(1,22,39,.1)!important;
+            }
+        }
+    }
+}
+
+.dashboard-attributes-items-container {
+    &_chips {
+
+        .md-chips {
+            box-shadow: none;
+
+            .md-chip-content {
+                padding: 0 !important;
+            }
+        }
+
+        &_template {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .md-chip-remove-container {
+            top: 0;
+        }
+    }
 }

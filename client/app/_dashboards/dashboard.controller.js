@@ -6,6 +6,9 @@ import dashboardEmailModalTemplate from './dashboard-email-modal/dashboard-email
 import dashboardEmailModalController from './dashboard-email-modal/dashboard-email-modal.controller';
 import widgetWizardController from './../components/modals/widget-wizard/widget-wizard.controller';
 import widgetWizardModalTemplate from './../components/modals/widget-wizard/widget_wizard.html';
+import dashboardSettingsModalController
+    from "../shared/modals/dashboard-settings-modal/dashboard-settings-modal.controller";
+import dashboardSettingsModalTemplate from "../shared/modals/dashboard-settings-modal/dashboard-settings-modal.html";
 
 const dashboardController = function dashboardController($scope, $rootScope, $q, $timeout, $interval,
                                                          $cookies, $location, $state, $http, $mdConstant,
@@ -213,6 +216,30 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             }
         });
         return maxNodes;
+    };
+
+    $scope.showDashboardSettingsModal = function(event, dashboard) {
+        $mdDialog.show({
+            controller: dashboardSettingsModalController,
+            template: dashboardSettingsModalTemplate,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose: true,
+            fullscreen: true,
+            autoWrap: false,
+            locals: {
+                dashboard: dashboard,
+                position : dashboard.position
+            }
+        })
+            .then(function (rs) {
+                if(rs) {
+                    rs.widgets = $scope.dashboard.widgets;
+                    $scope.dashboard = angular.copy(rs);
+                    delete rs.action;
+                }
+            }, function () {
+            });
     };
 
     $scope.addDashboardWidget = function (widget, hideSuccessAlert) {

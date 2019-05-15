@@ -25,6 +25,12 @@
                     </i>
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </button>
+                <button class="fixed-page-header__tooltip-btn" has-any-permission="['MODIFY_DASHBOARDS']" data-ng-if="dashboard.editable && MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                    <md-tooltip md-direction="bottom">Edit</md-tooltip>
+                </button>
                 <button class="fixed-page-header__tooltip-btn  hide-phone" ng-if="isGridStackEvailableToEdit() && dashboard.widgets.length" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
                     <i class="material-icons">
                         dashboard
@@ -46,20 +52,44 @@
                     <div ng-attr-id="widget-container-{{ widget.id }}" class="panel panel-default grid-stack-item-content" zafira-background-theme="graph">
                         <div class="panel-heading">
                             {{widget.title}}
-                            <span class="show-icon-on-hover show-phone pull-right" data-html2canvas-ignore>
-                                <i class="material-icons widget-icon" data-ng-if="$ctrl.isToolConnected('EMAIL')" data-ng-click="showEmailDialog($event, widget.id)">
-                                    send
-                                    <md-tooltip md-direction="top">Send by email</md-tooltip>
-                                </i>
-                                <i class="material-icons widget-icon hide-phone" data-ng-click="showNeededWidgetModal($event, widget, false, dashboard)" has-any-permission="['MODIFY_WIDGETS']">
-                                    edit
-                                    <md-tooltip md-direction="top">Edit widget</md-tooltip>
-                                </i>
-                                <i class="material-icons widget-icon hide-phone" data-ng-click="deleteDashboardWidget(widget)" has-any-permission="['MODIFY_WIDGETS']">
-                                    delete
-                                    <md-tooltip md-direction="top">Delete from dashboard</md-tooltip>
-                                </i>
-                            </span>
+                            <md-menu class="show-icon-on-hover show-phone pull-right widget-icon" data-html2canvas-ignore>
+                                    <md-button name="widgetMenu" aria-label="Widget settings" class="md-icon-button"
+                                               data-ng-click="$mdMenu.open($event);">
+                                        <md-icon class="material-icons">more_vert</md-icon>
+                                    </md-button>
+                                    <md-menu-content width="2">
+                                        <md-menu-item>
+                                            <md-button name="sendEmail" data-ng-if="$ctrl.isToolConnected('EMAIL')" data-ng-click="showEmailDialog($event, widget.id)">
+                                                <md-icon class="material-icons">send</md-icon>
+                                                Send by email
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item class="hide-phone">
+                                            <md-button name="editWidget" data-ng-click="showNeededWidgetModal($event, widget, false, dashboard)" has-any-permission="['MODIFY_WIDGETS']">
+                                                <md-icon class="material-icons">edit</md-icon>
+                                                Edit widget
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item class="hide-phone">
+                                            <md-button name="editWidget" data-ng-click="deleteDashboardWidget(widget)" has-any-permission="['MODIFY_WIDGETS']">
+                                                <md-icon class="material-icons">delete</md-icon>
+                                                Delete from dashboard
+                                            </md-button>
+                                        </md-menu-item>
+                                    </md-menu-content>
+                                </md-menu>
+                           <!-- <i class="material-icons widget-icon" data-ng-if="$ctrl.isToolConnected('EMAIL')" data-ng-click="showEmailDialog($event, widget.id)">
+                                send
+                                <md-tooltip md-direction="top">Send by email</md-tooltip>
+                            </i>
+                            <i class="material-icons widget-icon hide-phone" data-ng-click="showNeededWidgetModal($event, widget, false, dashboard)" has-any-permission="['MODIFY_WIDGETS']">
+                                edit
+                                <md-tooltip md-direction="top">Edit widget</md-tooltip>
+                            </i>
+                            <i class="material-icons widget-icon hide-phone" data-ng-click="deleteDashboardWidget(widget)" has-any-permission="['MODIFY_WIDGETS']">
+                                delete
+                                <md-tooltip md-direction="top">Delete from dashboard</md-tooltip>
+                            </i>-->
                         </div>
                         <div data-ng-attr-id="{{ widget.id }}" align="center" class="panel-body" data-ng-class="{'graph-box' :  (widget.type == 'linechart' || widget.type == 'piechart')}">
                             <md-progress-circular class = "progress-circular_align" md-mode="indeterminate" md-diameter="31px" ng-if="isLoading && widget.data.dataset != 0"></md-progress-circular>

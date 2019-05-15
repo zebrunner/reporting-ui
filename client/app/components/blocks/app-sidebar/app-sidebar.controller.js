@@ -111,8 +111,8 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         return result + 1;
     };
 
-    function showDashboardSettingsModal(event, dashboard, isNew) {
-        let position = isNew ? getNextEmptyPosition(vm.dashboardList) : dashboard.position;
+    function showDashboardSettingsModal(event, dashboard) {
+        let position = getNextEmptyPosition(vm.dashboardList);
         $mdDialog.show({
             controller: dashboardSettingsModalController,
             template: dashboardSettingsModalTemplate,
@@ -123,25 +123,13 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             autoWrap: false,
             locals: {
                 dashboard: dashboard,
-                isNew: isNew,
                 position : position
             }
         })
             .then(function (rs) {
                 if(rs) {
-                    switch(rs.action) {
-                        case 'CREATE':
-                            $state.go('dashboard.page', {dashboardId: rs.id});
-                            vm.dashboardList.splice(rs.position, 0, rs);
-                            break;
-                        case 'UPDATE':
-                            rs.widgets = $scope.dashboard.widgets;
-                            $scope.dashboard = angular.copy(rs);
-                            vm.dashboardList.splice(rs.position, 1, rs);
-                            break;
-                        default:
-                            break;
-                    }
+                    $state.go('dashboard.page', {dashboardId: rs.id});
+                    vm.dashboardList.splice(rs.position, 0, rs);
                     delete rs.action;
                 }
             }, function () {

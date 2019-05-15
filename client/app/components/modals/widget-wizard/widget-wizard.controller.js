@@ -94,10 +94,6 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 nextDisabled: function (form) {
                 },
                 onLoad: function () {
-                    if(!$scope.widget.id && !$scope.widget.title && !$scope.widget.description) {
-                        $scope.widget.title = angular.copy($scope.widget.widgetTemplate.name);
-                        $scope.widget.description = angular.copy($scope.widget.widgetTemplate.description);
-                    }
                     initLegendConfigObject();
                 }
             }
