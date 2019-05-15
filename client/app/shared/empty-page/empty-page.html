@@ -2,8 +2,11 @@
     <div class="page__empty-wrapper">
         <div class="page__empty-image" style="background: url({{$ctrl.content.imageUrl}}) center no-repeat">
         </div>
-        <p class="page__empty-text">
-            {{$ctrl.content.text}}
+        <p class="page__empty-text _desk" ng-repeat="text in $ctrl.content.text">
+            {{text}}
+        </p>
+        <p class="page__empty-text _mobile" ng-repeat="text in $ctrl.content.mobileText">
+            {{text}}
         </p>
         <div layout="row" layout-align="center" ng-if="$ctrl.content.buttonText && $ctrl.content.link">
             <a md-button class="page__empty-button form-button md-raised btn-w-md md-primary" href="{{$ctrl.content.link}}">

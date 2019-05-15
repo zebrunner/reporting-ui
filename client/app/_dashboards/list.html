@@ -35,7 +35,7 @@
         </zf-sub-header-options>
     </zf-sub-header>
     <div id="dashboard_content" class="page page-dashboard">
-        <empty-page-component ng-if="!dashboard.widgets.length" content="emptyContent"></empty-page-component>
+        <empty-page-component ng-if="!dashboard.widgets.length && !isPageLoading" content="emptyContent"></empty-page-component>
 	    <div class="row" ng-if="dashboard.widgets.length">
 	         <div class="col-lg-12">
 	         	<ul class="nav nav-pills">

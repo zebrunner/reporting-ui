@@ -550,7 +550,13 @@
         text-align: center;
         color: rgba($dark-new, 0.4);
         font-size: 20px;
-        margin-bottom: 40px;
+        margin-bottom: 0;
+        &._mobile {
+            display: none;
+        }
+        &:last-child() {
+            margin-bottom: 40px;
+        }
     }
     &-button {
         border-radius: 4px;
@@ -578,6 +584,12 @@
         }
         &-text {
             font-size: 18px;
+            &._desk {
+                display: none;
+            }
+            &._mobile {
+                display: block;
+            }
         }
         &-button {
             padding: 9px 16px;
