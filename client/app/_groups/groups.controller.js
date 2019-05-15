@@ -2,7 +2,7 @@
 
 const GroupsController = function GroupsController($scope, $rootScope, $location, $state, $mdDialog,
                                                        UserService, GroupService, InvitationService,
-                                                       AuthService, toolsService) {
+                                                       AuthService, toolsService, messageService) {
     'ngInject';
 
     const vm = {
@@ -184,7 +184,7 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
             GroupService.createGroup(group).then(function (rs) {
                 if (rs.success) {
                     $scope.cancel(rs.data);
-                    alertify.success('Group "' + group.name + '" was created');
+                    messageService.success('Group "' + group.name + '" was created');
                 }
                 else {
                     alertify.error(rs.message);
