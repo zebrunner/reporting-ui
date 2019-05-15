@@ -3448,3 +3448,55 @@ $light-inprogress: #68c9fd;
 users-component md-tab-item.md-disabled {
     display: none;
 }
+
+.dashboard-attributes-container {
+
+    $default-margin: 8px;
+
+    font-size: 0;
+
+    > div:not(:first-child) {
+        margin-left: $default-margin;
+    }
+
+    &_key, &_value, &_add-button {
+        height: 38px;
+        display: inline-block;
+        font-size: 14px;
+        input {
+            width: 100%;
+        }
+    }
+
+    $button-width: 64px;
+    $input-width: calc((100% - #{$default-margin} * 2 - #{$button-width}) / 2);
+
+    &_key, &_value {
+        width: $input-width;
+    }
+
+    &_key {
+    }
+
+    &_value {
+    }
+
+    &_add-button {
+        width: $button-width;
+
+        button {
+            background-color: rgba(1,22,39,.2)!important;
+            border-radius: 4px;
+            border: none !important;
+            width: $button-width;
+            height: 100%;
+            color: #000;
+            line-height: 1.42857;
+            font-weight: 500;
+
+            &[disabled] {
+                background-color: rgba(1,22,39,.1)!important;
+            }
+        }
+    }
+}

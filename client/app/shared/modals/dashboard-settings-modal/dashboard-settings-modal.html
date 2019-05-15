@@ -63,19 +63,25 @@
 	                        </button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-5"><input placeholder="key" type="text" class="form-control" data-ng-model="newAttribute.key"></input></div>
-                        <div class="col-lg-5"><input placeholder="value" type="text" class="form-control" data-ng-model="newAttribute.value"></input></div>
-                        <div class="col-lg-2" align="right">
-                            <button type="button" class="btn btn-outline btn-primary" data-ng-click="createAttribute(newAttribute)" data-ng-disabled="!newAttribute.key">Add</button>
+                    <ng-form name="attributes">
+                        <div class="dashboard-attributes-container">
+                            <div class="dashboard-attributes-container_key">
+                                <input placeholder="key" type="text" class="form-control" data-ng-model="newAttribute.key" ng-required="true"/>
+                            </div>
+                            <div class="dashboard-attributes-container_value">
+                                <input placeholder="value" type="text" class="form-control" data-ng-model="newAttribute.value" ng-required="true"/>
+                            </div>
+                            <div class="dashboard-attributes-container_add-button">
+                                <button type="submit" data-ng-click="createAttribute(newAttribute)" data-ng-disabled="attributes.$invalid">ADD</button>
+                            </div>
                         </div>
-                    </div>
+                    </ng-form>
                 </div>
             </div>
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew" type="submit"
+            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew" type="button"
                        class="md-raised btn-w-md md-warn"
                        ng-disabled="dashboard_form.$invalid" data-ng-click="deleteDashboard(dashboard);">
                 Delete
