@@ -1623,9 +1623,11 @@ md-chip md-chip-template.bg-primary {
     }
 
     & md-select.md-default-theme[disabled] .md-select-value,
-    & md-select[disabled] .md-select-value {
-      border: none;
+    & md-select[disabled] .md-select-value,
+    & input[disabled] {
+      border-color: transparent;
       background-image: none;
+      opacity: .8;
     }
 }
 
@@ -1668,21 +1670,15 @@ md-chip md-chip-template.bg-primary {
     }
 
     & .value-input {
-        width: 152px !important;
+        width: 144px;
+        position: relative;
+        margin: 0 12px 0 0;
 
-        & input, & md-input-container, & md-select{
-          float: left;
-          border: none;
-        }
         & div, & md-select {
-          width: 100%;
+            width: 100%;
         }
     }
 
-    & .filter-date{
-      width: 100%;
-      background: #fff;
-    }
 
     & md-chip{
       min-width: 148px;

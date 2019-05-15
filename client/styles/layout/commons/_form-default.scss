@@ -1,12 +1,12 @@
 .form-fields {
     &__input, &__select md-select-value {
-        min-width: 232px;
+        width: 100%;
         font-size: 14px;
         line-height: 1;
         border-radius: 4px;
         border: solid 1px;
         border-color: rgba(1, 22, 39, 0.1);
-        padding-left: 12px;
+        padding: 2px 2px 2px 12px;
         height: 36px;
         color: #000000;
         background: #ffffff;

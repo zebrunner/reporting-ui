@@ -7,7 +7,11 @@
         padding: 30px 20px;
         border-bottom: 1px solid rgba(#000000, .15);
         .form-fields__input {
+            max-width: 232px;
             margin-right: 24px;
+        }
+        .form-fields__select {
+            min-width: 232px;
         }
     }
     &__content-wrapper {
@@ -85,6 +89,7 @@
             padding: 24px 16px;
             flex-direction: column;
             .form-fields__input {
+                max-width: unset;
                 margin: 0 0 20px 0;
             }
         }
@@ -134,10 +139,8 @@
     }
     @media screen and (min-width: $breakpoint-mobile-small + 1) and (max-width: 530px) {
         .form-fields {
-            &__input, &__select md-select-value {
-                min-width: unset;
-            }
             &__input, &__select {
+                min-width: unset;
                 flex-grow: 1;
                 max-width: calc(50% - 12px);
             }
