@@ -3475,7 +3475,7 @@ users-component md-tab-item.md-disabled {
     &_key, &_value {
         width: $input-width;
 
-        *[ng-messages] {
+        [ng-messages] {
             position: absolute;
             font-size: 12px;
             color: red;
