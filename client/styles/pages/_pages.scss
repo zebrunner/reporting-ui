@@ -550,7 +550,10 @@
         text-align: center;
         color: rgba($dark-new, 0.4);
         font-size: 20px;
-        margin-bottom: 40px;
+        margin-bottom: 0;
+        &:last-child() {
+            margin-bottom: 40px;
+        }
     }
     &-button {
         border-radius: 4px;
@@ -578,6 +581,9 @@
         }
         &-text {
             font-size: 18px;
+            &._desc {
+                display: none;
+            }
         }
         &-button {
             padding: 9px 16px;
@@ -590,6 +596,13 @@
     }
     @media (max-height: 460px) and (min-width: $screen-phone) {
         height: calc(100vh + #{$header_height}); 
+    }
+    @media (min-width: $screen-phone + 1) {
+        &-text {
+            &._mobile {
+                display: none;
+            }
+        }
     }
 }
 

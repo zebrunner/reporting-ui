@@ -20,7 +20,8 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     $scope.emptyContent = {
-        text: 'No widget added. Use button at the top or watch tutorial to learn more.',
+        text: ['No widget added. Use button at the top or watch tutorial to learn more.'],
+        mobileText: ['No widget added.', 'Go to desktop version for more options or watch tutorial to learn more.'],
         imageUrl: require('../../assets/images/empty-pages/empty_screen_dashboards.svg')
     };
 
@@ -536,12 +537,11 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                 if (rs.success) {
                     $scope.dashboard = rs.data;
                     $scope.getDataWithAttributes($scope.dashboard, false);
-                    $scope.isPageLoading = false;
                     resolve(rs.data);
                 } else {
-                    $scope.isPageLoading = false;
                     reject(rs.message);
                 }
+                $scope.isPageLoading = false;
             });
         });
     }
