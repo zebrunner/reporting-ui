@@ -66,22 +66,7 @@
     }
 
     md-checkbox {
-        min-width: 18px;
-        min-height: 100%;
         margin: 0 8px 0 4px;
-        width: 18px;
-        height: 18px;
-        .md-container,
-        .md-icon {
-            width: 18px;
-            height: 18px;
-        }
-        .md-icon {
-            &:after {
-                left: 3.66667px;
-                top: -0.77778px;
-            }
-        }
     }
 
     .reviewed {
@@ -299,18 +284,7 @@
 //                width: 100%;
 //
 //                md-checkbox {
-//                    min-width: 18px;
-//                    min-height: 100%;
 //                    margin: 0 8px 0 4px;
-//                    .md-container,
-//                    .md-icon {
-//                        width: 18px;
-//                        height: 18px;
-//                    }
-//                    .md-icon:after {
-//                        left: 3.66667px;
-//                        top: -0.77778px;
-//                    }
 //                    @media (max-width: 1279px) {
 //                        margin-left: 12px;
 //                        margin-right: 7px;
