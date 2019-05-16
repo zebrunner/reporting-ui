@@ -22,7 +22,6 @@ require('../vendors/angular-timer'); //TODO: This file is changed locally, see g
 require('textangular/dist/textAngular-sanitize.min');
 require('textangular');
 
-require('angular-loading-bar');
 require('angular-scroll');
 require('ng-img-crop/compile/minified/ng-img-crop');
 require('../vendors/md-date-range-picker'); //TODO: can't use npm  package because this file has custom changes

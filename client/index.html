@@ -58,5 +58,7 @@
                              'bg-page-grey zaf-light': darkThemes.indexOf(main.skin) === -1}"></section>
         </div>
     </div>
+
+    <md-progress-linear class="pending-progress-bar" md-mode="indeterminate" ng-if="progressbarService.isPending"></md-progress-linear>
     </body>
 </html>
