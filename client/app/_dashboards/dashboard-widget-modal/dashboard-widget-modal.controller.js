@@ -1,4 +1,4 @@
-const dashboardWidgetModalController = function dashboardWidgetModalController($scope, $mdDialog, DashboardService, widget, dashboardId, isNew) {
+const dashboardWidgetModalController = function dashboardWidgetModalController($scope, $mdDialog, DashboardService, widget, dashboardId, isNew, messageService) {
     'ngInject';
 
     $scope.isNew = isNew;
@@ -12,11 +12,11 @@ const dashboardWidgetModalController = function dashboardWidgetModalController($
     $scope.addDashboardWidget = function (widget) {
         DashboardService.AddDashboardWidget(dashboardId, widget).then(function (rs) {
             if (rs.success) {
-                alertify.success("Widget added");
+                messageService.success("Widget added");
                 $scope.hide(rs.data, 'CREATE');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -26,11 +26,11 @@ const dashboardWidgetModalController = function dashboardWidgetModalController($
         if (confirmedDelete) {
             DashboardService.DeleteDashboardWidget(dashboardId, widget.id).then(function (rs) {
                 if (rs.success) {
-                    alertify.success("Widget deleted");
+                    messageService.success("Widget deleted");
                     $scope.hide(rs.data, 'DELETE');
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         }
@@ -43,11 +43,11 @@ const dashboardWidgetModalController = function dashboardWidgetModalController($
             "position": widget.location
         }).then(function (rs) {
             if (rs.success) {
-                alertify.success("Widget updated");
+                messageService.success("Widget updated");
                 $scope.hide(rs.data, 'UPDATE');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };

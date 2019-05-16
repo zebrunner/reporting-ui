@@ -3,7 +3,7 @@
 
     angular.module('app').controller('SpreadsheetController', SpreadsheetController);
 
-    function SpreadsheetController($scope, $mdDialog, $mdConstant, UserService, TestRunService, testRuns) {
+    function SpreadsheetController($scope, $mdDialog, $mdConstant, UserService, TestRunService, testRuns, messageService) {
         'ngInject';
 
         $scope.recipients = [];
@@ -23,7 +23,7 @@
                     }
                     else
                     {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             });
@@ -52,7 +52,7 @@
                     }
                     else
                     {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             }

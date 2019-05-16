@@ -5,7 +5,7 @@ import fileUploadController from './file-upload-modal/file-upload-modal.controll
 
 const integrationsController = function integrationsController($scope, $rootScope, $state, $mdConstant,
                                                                $stateParams, $mdDialog, UploadService,
-                                                               SettingsService, toolsService, $q) {
+                                                               SettingsService, toolsService, $q, messageService) {
     'ngInject';
 
     const SORT_POSTFIXES = {
@@ -42,9 +42,9 @@ const integrationsController = function integrationsController($scope, $rootScop
             .then(rs => {
                 if (rs.success) {
                     toolsService.setToolStatus(tool.name, rs.data.connected);
-                    alertify.success('Tool ' + tool.name + ' was changed');
+                    messageService.success('Tool ' + tool.name + ' was changed');
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
                 tool.connectionChecking = false;
         });
@@ -55,9 +55,9 @@ const integrationsController = function integrationsController($scope, $rootScop
             .then(rs => {
                 if (rs.success) {
                     $state.reload();
-                    alertify.success('Encrypt key was regenerated');
+                    messageService.success('Encrypt key was regenerated');
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
     }
@@ -73,12 +73,12 @@ const integrationsController = function integrationsController($scope, $rootScop
                     toolsService.setToolStatus(tool.name, rs.data.connected);
 
                     if (tool.enabled) {
-                        alertify.success('Tool ' + tool.name + ' is enabled');
+                        messageService.success('Tool ' + tool.name + ' is enabled');
                     } else {
-                        alertify.success('Tool ' + tool.name + ' is disabled');
+                        messageService.success('Tool ' + tool.name + ' is disabled');
                     }
                 } else {
-                    alertify.error('Unable to change ' + tool.name + ' state');
+                    messageService.error('Unable to change ' + tool.name + ' state');
                 }
 
                 tool.enabled && (tool.connectionChecking = false);

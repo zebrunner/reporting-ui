@@ -1,7 +1,7 @@
 'use strict';
 
 const UsersController = function UserViewController($scope, $rootScope, $location, $state, $mdDialog, $mdDateRangePicker,
-                                                    UserService) {
+                                                    UserService, messageService) {
     'ngInject';
 
     let DEFAULT_SC = {
@@ -87,7 +87,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
                 vm.sr = rs.data;
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
         vm.isFiltered = true;
@@ -110,7 +110,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
 
     function showCreateUserDialog(event) {
         $mdDialog.show({
-            controller: function ($scope, $mdDialog, UtilService) {
+            controller: function ($scope, $mdDialog, UtilService, messageService) {
                 'ngInject';
 
                 $scope.UtilService = UtilService;
@@ -118,10 +118,10 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
                     UserService.createOrUpdateUser($scope.user).then(function (rs) {
                         if (rs.success) {
                             $scope.hide(rs.data);
-                            alertify.success('User created');
+                            messageService.success('User created');
                         }
                         else {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 };
@@ -210,7 +210,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
 
     function showChangePasswordDialog($event, user) {
         $mdDialog.show({
-            controller: function ($scope, $mdDialog, UtilService) {
+            controller: function ($scope, $mdDialog, UtilService, messageService) {
                 'ngInject';
 
                 $scope.UtilService = UtilService;
@@ -222,10 +222,10 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
                             if (rs.success) {
                                 $scope.changePassword = {};
                                 $scope.hide();
-                                alertify.success('Password changed');
+                                messageService.success('Password changed');
                             }
                             else {
-                                alertify.error(rs.message);
+                                messageService.error(rs.message);
                             }
                         });
                 };
@@ -254,7 +254,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
 
     function showEditProfileDialog(event, user, index) {
         $mdDialog.show({
-            controller: function ($scope, $mdDialog, UtilService) {
+            controller: function ($scope, $mdDialog, UtilService, messageService) {
 
                 'ngInject';
 
@@ -266,7 +266,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
                         if (rs.success) {
                             $scope.cancel(rs.data.status);
                         } else {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 };
@@ -274,10 +274,10 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
                     UserService.createOrUpdateUser($scope.user).then(function (rs) {
                         if (rs.success) {
                             $scope.hide(rs.data);
-                            alertify.success('Profile changed');
+                            messageService.success('Profile changed');
                         }
                         else {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 };

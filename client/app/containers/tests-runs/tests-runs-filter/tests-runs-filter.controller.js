@@ -2,7 +2,7 @@
 
 const TestsRunsFilterController = function TestsRunsFilterController($scope, FilterService, DEFAULT_SC, TestRunService, $q, ProjectService,
                                        testsRunsService, $cookieStore, UserService, $timeout, $mdDateRangePicker,
-                                       windowWidthService) {
+                                       windowWidthService, messageService) {
     'ngInject';
 
     const subjectName = 'TEST_RUN';
@@ -171,7 +171,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
 
                 return vm.environments;
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
                 $q.reject(rs.message);
             }
         });
@@ -186,7 +186,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
 
                 return vm.platforms;
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
 
                 return $q.reject(rs.message);
             }
@@ -321,12 +321,12 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     function createFilter() {
         FilterService.createFilter(vm.filter).then(function (rs) {
             if (rs.success) {
-                alertify.success('Filter was created');
+                messageService.success('Filter was created');
                 vm.filters.push(rs.data);
                 clearAndOpenFilterBlock(false);
                 handleBodyClass();
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }
@@ -334,7 +334,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     function updateFilter() {
         FilterService.updateFilter(vm.filter).then(function (rs) {
             if (rs.success) {
-                alertify.success('Filter was updated');
+                messageService.success('Filter was updated');
                 vm.filters[vm.filters.indexOfField('id', rs.data.id)] = rs.data;
                 clearAndOpenFilterBlock(false);
                 if (rs.data.id === testsRunsService.getSearchParam('filterId')) {
@@ -342,7 +342,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
                 }
                 handleBodyClass();
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }
@@ -355,7 +355,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     function deleteFilter(id) {
         FilterService.deleteFilter(id).then(function (rs) {
             if (rs.success) {
-                alertify.success('Filter was deleted');
+                messageService.success('Filter was deleted');
                 vm.filters.splice(vm.filters.indexOfField('id', id), 1);
                 if (id !== testsRunsService.getSearchParam('filterId')) {
                     clearAndOpenFilterBlock(false);
@@ -364,7 +364,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
                 }
                 handleBodyClass();
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }

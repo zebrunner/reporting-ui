@@ -2,7 +2,7 @@
 
 const JSZip = require('jszip');
 const ImagesViewerController = function ImagesViewerController($scope, $mdDialog, $q, DownloadService, $timeout,
-                                    activeArtifactId, TestRunService, test) {
+                                    activeArtifactId, TestRunService, test, messageService) {
     'ngInject';
 
     const local = {
@@ -100,7 +100,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
                 downloadZipFile(name, formattedData);
             })
             .catch(() => {
-                alertify.error('Unable to download all files, please try again.');
+                messageService.error('Unable to download all files, please try again.');
             });
     }
 

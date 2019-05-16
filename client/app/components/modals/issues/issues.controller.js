@@ -1,6 +1,6 @@
 'use strict';
 const IssuesModalController = function IssuesModalController(
-        $scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService) {
+        $scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService, messageService) {
     'ngInject';
         
     const vm = {
@@ -56,7 +56,7 @@ const IssuesModalController = function IssuesModalController(
                 vm.changeStatusIsVisible = false;
                 message = 'Test was marked as ' + test.status;
                 addTestEvent(message);
-                alertify.success(message);
+                messageService.success(message);
             }
             else {
                 console.error(rs.message);
@@ -124,7 +124,7 @@ const IssuesModalController = function IssuesModalController(
                 initAttachedWorkItems();
                 vm.isNewIssue = !(jiraId ===
                     vm.attachedIssue.jiraId);
-                alertify.success(message);
+                messageService.success(message);
             }
             else {
                 if (vm.isNewIssue) {
@@ -134,7 +134,7 @@ const IssuesModalController = function IssuesModalController(
                     message = generateActionResultMessage(workItemType,
                         jiraId, "update", false);
                 }
-                alertify.error(message);
+                messageService.error(message);
             }
         });
     };
@@ -153,11 +153,11 @@ const IssuesModalController = function IssuesModalController(
                     initAttachedWorkItems();
                     initNewIssue();
                     vm.selectedIssue = false;
-                    alertify.success(message);
+                    messageService.success(message);
                 } else {
                     message = generateActionResultMessage(workItem.type,
                         workItem.jiraId, "unassign", false);
-                    alertify.error(message);
+                    messageService.error(message);
                 }
                 vm.issueJiraIdExists = false;
             });
@@ -298,7 +298,7 @@ const IssuesModalController = function IssuesModalController(
                         angular.copy(vm.attachedIssue, vm.newIssue);
                     }
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
     };
@@ -315,7 +315,7 @@ const IssuesModalController = function IssuesModalController(
                         vm.closedStatusName = setting.value.toUpperCase();
                     }
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
     }
@@ -363,7 +363,7 @@ const IssuesModalController = function IssuesModalController(
             then(function(rs) {
                 if (rs.success) {
                 } else {
-                    alertify.error('Failed to add event test "' + test.id);
+                    messageService.error('Failed to add event test "' + test.id);
                 }
             })
     };

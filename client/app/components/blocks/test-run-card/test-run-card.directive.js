@@ -8,7 +8,7 @@
                                                        testsRunsService, $rootScope, UtilService,
                                                        $state, $timeout, $mdDialog, $mdToast,
                                                        SlackService, TestRunService, UserService,
-                                                       $interval, DownloadService, toolsService) {
+                                                       $interval, DownloadService, toolsService, messageService) {
                 'ngInject';
 
                 const local = {
@@ -188,7 +188,7 @@
                         if (rs.success) {
                             downloadFromByteArray(vm.testRun.testSuite.name.split(' ').join('_') + '.html', rs, 'html');
                         } else {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 }
@@ -276,18 +276,18 @@
                                                     $timeout.cancel(disconnectDebugTimeout);
                                                     $interval.cancel(parseLogsInterval);
                                                     mdToast.hide();
-                                                    alertify.success('Tests started in debug');
+                                                    messageService.success('Tests started in debug');
                                                 }
                                             }
                                         });
                                     } else {
                                         stopDebugMode();
-                                        alertify.error(rs.message);
+                                        messageService.error(rs.message);
                                     }
                                 });
                             }, 10000);
                             const connectDebugTimeout = $timeout(function() {
-                                alertify.error('Problems with starting debug mode occurred, disabling');
+                                messageService.error('Problems with starting debug mode occurred, disabling');
                                 stopDebugMode();
                             }, 60 * 10 * 1000);
 
@@ -298,7 +298,7 @@
                             };
 
                         } else {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 }
@@ -336,7 +336,7 @@
                         local.testRunInDebugMode = null;
                         local.debugHost = null;
                         local.debugPort = null;
-                        alertify.warning('Debug mode is disabled');
+                        messageService.warning('Debug mode is disabled');
                     }
                 }
 
@@ -350,17 +350,17 @@
                                 TestRunService.abortTestRun(debuggedTestRun.id, debuggedTestRun.ciRunId, abortCause).then(function(rs) {
                                     if (rs.success) {
                                         debuggedTestRun.status = 'ABORTED';
-                                        alertify.success('Testrun ' + debuggedTestRun.testSuite.name + ' is aborted');
+                                        messageService.success('Testrun ' + debuggedTestRun.testSuite.name + ' is aborted');
                                     } else {
-                                        alertify.error(rs.message);
+                                        messageService.error(rs.message);
                                     }
                                 });
                             } else {
-                                alertify.error(rs.message);
+                                messageService.error(rs.message);
                             }
                         });
                     } else {
-                        alertify.error('Unable connect to jenkins');
+                        messageService.error('Unable connect to jenkins');
                     }
                 }
 
@@ -388,17 +388,17 @@
                                 TestRunService.abortTestRun(vm.testRun.id, vm.testRun.ciRunId, abortCause).then(function(rs) {
                                     if (rs.success){
                                         vm.testRun.status = 'ABORTED';
-                                        alertify.success('Testrun ' + vm.testRun.testSuite.name + ' is aborted');
+                                        messageService.success('Testrun ' + vm.testRun.testSuite.name + ' is aborted');
                                     } else {
-                                        alertify.error(rs.message);
+                                        messageService.error(rs.message);
                                     }
                                 });
                             } else {
-                                alertify.error(rs.message);
+                                messageService.error(rs.message);
                             }
                         });
                     } else {
-                        alertify.error('Unable connect to jenkins');
+                        messageService.error('Unable connect to jenkins');
                     }
                 }
 
@@ -436,7 +436,7 @@
                             if (rs.success) {
                                 vm.testRun.appVersionValid = rs.data;
                             } else {
-                                //alertify.error(rs.message);
+                                //messageService.error(rs.message);
                             }
                             delete vm.testRun.appVersionLoading;
 
@@ -452,7 +452,7 @@
                         if (rs.success) {
                             downloadFromByteArray(appVersion, rs.res);
                         } else {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 }

@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('UtilService', ['$rootScope', '$mdToast', '$timeout', '$q', '$window', '$httpParamSerializer', UtilService])
+        .factory('UtilService', ['$rootScope', '$mdToast', '$timeout', '$q', '$window', '$httpParamSerializer', 'messageService', UtilService])
 
-    function UtilService($rootScope, $mdToast, $timeout, $q, $window, $httpParamSerializer) {
+    function UtilService($rootScope, $mdToast, $timeout, $q, $window, $httpParamSerializer, messageService) {
         var service = {};
 
         service.untouchForm = untouchForm;
@@ -306,10 +306,10 @@
 
             message = buildMessage(keysToDelete, results, errors);
             if (message.message) {
-                alertify.success(message.message);
+                messageService.success(message.message);
             }
             if(message.errorMessage) {
-                alertify.error(message.errorMessage);
+                messageService.error(message.errorMessage);
             }
         }
     }

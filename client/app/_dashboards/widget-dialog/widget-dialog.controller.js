@@ -1,4 +1,4 @@
-const widgetDialogController = function widgetDialogController($scope, $rootScope, $mdDialog, DashboardService, widget, isNew, dashboard, currentUserId, projectsService) {
+const widgetDialogController = function widgetDialogController($scope, $rootScope, $mdDialog, DashboardService, widget, isNew, dashboard, currentUserId, projectsService, messageService) {
     'ngInject';
 
     $scope.widget = {};
@@ -28,11 +28,11 @@ const widgetDialogController = function widgetDialogController($scope, $rootScop
     $scope.createWidget = function(widget){
         DashboardService.CreateWidget(widget).then(function (rs) {
             if (rs.success) {
-                alertify.success("Widget created");
+                messageService.success("Widget created");
                 $scope.hide(rs.data, 'CREATE');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -40,12 +40,12 @@ const widgetDialogController = function widgetDialogController($scope, $rootScop
     $scope.updateWidget = function(widget){
         DashboardService.UpdateWidget(widget).then(function (rs) {
             if (rs.success) {
-                alertify.success("Widget updated");
+                messageService.success("Widget updated");
                 $rootScope.$broadcast("$event:widgetIsUpdated");
                 $scope.hide(rs.data, 'UPDATE');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -55,7 +55,7 @@ const widgetDialogController = function widgetDialogController($scope, $rootScop
             $scope.loadModalWidget($scope.widget, $scope.dashboard.attributes, true);
         }
         else {
-            alertify.warning('Add SQL query');
+            messageService.warning('Add SQL query');
         }
     });
 
@@ -65,11 +65,11 @@ const widgetDialogController = function widgetDialogController($scope, $rootScop
                 $scope.loadModalWidget($scope.widget, $scope.dashboard.attributes);
             }
             else {
-                alertify.warning('Choose widget type');
+                messageService.warning('Choose widget type');
             }
          }
         else {
-            alertify.warning('Add SQL query');
+            messageService.warning('Add SQL query');
         }
     });
 
@@ -106,7 +106,7 @@ const widgetDialogController = function widgetDialogController($scope, $rootScop
                 $scope.showWidget = true;
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };

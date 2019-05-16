@@ -1,3 +1,4 @@
+@import "../global/var";
 // Dialog
 md-backdrop.md-dialog-backdrop{
     z-index: $zindex-modal-background;
@@ -34,6 +35,15 @@ md-toast {
         > .md-toast-content {
             background-color: $brand-primary;
         }
+    }
+    &.md-success-theme .md-toast-content {
+        color: $brand-success;
+    }
+    &.md-error-theme .md-toast-content {
+        color: $brand-danger;
+    }
+    &.md-warning-theme .md-toast-content {
+        color: $brand-warning
     }
 }
 

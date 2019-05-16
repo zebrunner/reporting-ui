@@ -1,4 +1,4 @@
-const dashboardEmailModalController = function dashboardEmailModalController($scope, $rootScope, $q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId) {
+const dashboardEmailModalController = function dashboardEmailModalController($scope, $rootScope, $q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService) {
     'ngInject';
 
     var TYPE = widgetId ? 'WIDGET' : 'DASHBOARD';
@@ -39,7 +39,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
             if (currentText && currentText.length) {
                 $scope.email.recipients.push(currentText);
             } else {
-                alertify.error('Add a recipient!');
+                messageService.error('Add a recipient!');
                 return;
             }
         }
@@ -54,10 +54,10 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
             $screenshot.take(locator).then(function (multipart) {
                 DashboardService.SendDashboardByEmail(multipart, $scope.email).then(function (rs) {
                     if (rs.success) {
-                        alertify.success('Email was successfully sent!');
+                        messageService.success('Email was successfully sent!');
                     }
                     else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                     resolve(rs);
                 });

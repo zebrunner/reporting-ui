@@ -5,7 +5,7 @@
 
     function TestInfoController($scope, $rootScope, $mdDialog, $interval,  toolsService,
                                 TestService, test, isNewIssue, isNewTask, isConnectedToJira,
-                                isJiraEnabled) {
+                                isJiraEnabled, messageService) {
         'ngInject';
 
         $scope.jiraId;
@@ -47,7 +47,7 @@
                     $scope.changeStatusIsVisible = false;
                     message = 'Test was marked as ' + test.status;
                     addTestEvent(message);
-                    alertify.success(message);
+                    messageService.success(message);
                 }
                 else {
                     console.error(rs.message);
@@ -154,7 +154,7 @@
                     updateWorkItemList(rs.data);
                     initAttachedWorkItems();
                     $scope.isNewIssue = !(jiraId === $scope.attachedIssue.jiraId);
-                    alertify.success(message);
+                    messageService.success(message);
                 }
                 else {
                     if($scope.isNewIssue){
@@ -162,7 +162,7 @@
                     } else {
                         message = generateActionResultMessage(workItemType, jiraId, "update", false);
                     }
-                    alertify.error(message);
+                    messageService.error(message);
                 }
             });
         };
@@ -188,7 +188,7 @@
                     updateWorkItemList(rs.data);
                     initAttachedWorkItems();
                     $scope.isNewTask = !(jiraId === $scope.attachedTask.jiraId);
-                    alertify.success(message);
+                    messageService.success(message);
                 }
                 else {
                     if($scope.isNewTask){
@@ -196,7 +196,7 @@
                     } else {
                         message = generateActionResultMessage(workItemType, jiraId, "update", false);
                     }
-                    alertify.error(message);
+                    messageService.error(message);
                 }
             });
         };
@@ -212,10 +212,10 @@
                     deleteWorkItemFromTestWorkItems(workItem);
                     initAttachedWorkItems();
                     initNewIssue();
-                    alertify.success(message);
+                    messageService.success(message);
                 } else {
                     message = generateActionResultMessage(workItem.type, workItem.jiraId, "unassign", false);
-                    alertify.error(message);
+                    messageService.error(message);
                 }
             });
         };
@@ -231,10 +231,10 @@
                     deleteWorkItemFromTestWorkItems(workItem);
                     initAttachedWorkItems();
                     initNewTask();
-                    alertify.success(message);
+                    messageService.success(message);
                 } else {
                     message = generateActionResultMessage(workItem.type, workItem.jiraId, "unassign", false);
-                    alertify.error(message);
+                    messageService.error(message);
                 }
             });
         };
@@ -355,7 +355,7 @@
                     $scope.isNewIssue = !($scope.newIssue.jiraId === $scope.attachedIssue.jiraId);
                     $scope.issueTabDisabled = false;
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -381,7 +381,7 @@
                     $scope.isNewTask = !($scope.newTask.jiraId === $scope.attachedTask.jiraId);
                     $scope.taskTabDisabled = false;
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -450,7 +450,7 @@
                         angular.copy($scope.attachedIssue, $scope.newIssue);
                     }
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -465,7 +465,7 @@
                         angular.copy($scope.attachedTask, $scope.newTask);
                     }
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -482,7 +482,7 @@
                             vm.closedStatusName = setting.value.toUpperCase();
                         }
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
         };
@@ -551,10 +551,10 @@
                     $scope.testComments.push(rs.data);
                     eventMessage = generateActionResultMessage(testComment.type, '', 'create', true);
                     addTestEvent(eventMessage);
-                    alertify.success(eventMessage);
+                    messageService.success(eventMessage);
                 } else {
                     eventMessage = generateActionResultMessage(testComment.type, '', 'create', false);
-                    alertify.error('Failed to create comment for test "' + test.id);
+                    messageService.error('Failed to create comment for test "' + test.id);
                 }
                 $scope.testCommentText = '';
             })
@@ -569,7 +569,7 @@
             TestService.createTestWorkItem(test.id, testEvent).then(function(rs){
                 if(rs.success) {
                 } else {
-                    alertify.error('Failed to add event test "' + test.id);
+                    messageService.error('Failed to add event test "' + test.id);
                 }
             })
         };

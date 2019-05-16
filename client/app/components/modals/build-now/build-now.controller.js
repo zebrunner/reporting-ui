@@ -3,7 +3,7 @@
 
     angular.module('app').controller('BuildNowController', BuildNowController);
 
-    function BuildNowController($scope, $mdDialog, TestRunService, testRun) {
+    function BuildNowController($scope, $mdDialog, TestRunService, testRun, messageService) {
         'ngInject';
 
         $scope.title = testRun.testSuite.name;
@@ -20,11 +20,11 @@
             TestRunService.buildTestRun($scope.testRun.id, jobParametersMap).then(function(rs) {
                 if(rs.success)
                 {
-                    alertify.success('CI job is building, it may take some time before status is updated');
+                    messageService.success('CI job is building, it may take some time before status is updated');
                 }
                 else
                 {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -54,7 +54,7 @@
                 else
                 {
                     $scope.hide();
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
