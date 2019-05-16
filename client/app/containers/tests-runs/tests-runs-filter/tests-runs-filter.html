@@ -36,7 +36,7 @@
                                 <form class="form-validation no-padding" id="filterForm" name="filter_form" ng-cloak>
                                     <div class="tests-runs-filter__editor-text" layout="row" layout-xs="column">
                                         <div class="filter-name" layout-xs="column">
-                                            <input id="filterName" type="text" class="form-control" placeholder="Name" flex="none" ng-model="$ctrl.filter.name" required/>
+                                            <input id="filterName" type="text" class="form-fields__input" placeholder="Name" flex="none" ng-model="$ctrl.filter.name" required/>
                                         </div>
                                         <div id="filterState" class="filter-state">
                                             <label>Public</label>
@@ -54,7 +54,7 @@
                                     <div layout-sm="column" layout-xs="column">
                                         <div layout="row">
                                             <md-input-container class="filter-input-container select">
-                                                <md-select id="filterCriteria" ng-change="$ctrl.onFilterSliceUpdate('CRITERIA');"
+                                                <md-select id="filterCriteria" ng-change="$ctrl.onFilterSliceUpdate('CRITERIA');" class="form-fields__select"
                                                            ng-model="$ctrl.currentCriteria.value" name="criteria" placeholder="CRITERIA">
                                                     <md-option ng-value>
                                                         <em>None</em>
@@ -66,7 +66,7 @@
                                                 </md-select>
                                             </md-input-container>
                                             <md-input-container class="filter-input-container select">
-                                                <md-select id="filterOperator" ng-change="$ctrl.onFilterSliceUpdate('OPERATOR');"
+                                                <md-select id="filterOperator" ng-change="$ctrl.onFilterSliceUpdate('OPERATOR');" class="form-fields__select"
                                                            ng-disabled="!$ctrl.currentCriteria.value" ng-model="$ctrl.currentOperator.value"
                                                            name="operator" placeholder="OPERATOR">
                                                     <md-option ng-value>
@@ -81,7 +81,7 @@
                                         </div>
                                         <div layout="row">
                                             <md-input-container class="filter-input-container select value-input" ng-if="$ctrl.currentCriteria.type.indexOf('SELECT') >= 0">
-                                                <md-select ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-disabled="!$ctrl.currentOperator.value"
+                                                <md-select ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-disabled="!$ctrl.currentOperator.value" class="form-fields__select"
                                                            ng-model="$ctrl.currentValue.value.value" name="value" placeholder="Value">
                                                     <md-option ng-value>
                                                         <em>None</em>
@@ -93,12 +93,12 @@
                                                 </md-select>
                                             </md-input-container>
                                             <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0 || (!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length)"
-                                                 class="filter-input-container value-input">
-                                                <input type="text" class="form-control" placeholder="Value" ng-disabled="!$ctrl.currentOperator.value"
+                                                 class="value-input">
+                                                <input type="text" class="form-fields__input" placeholder="Value" ng-disabled="!$ctrl.currentOperator.value"
                                                        ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-model="$ctrl.currentValue.value"
                                                        ng-if="!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length" />
                                                 <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0">
-                                                    <md-input-container class="date-picker-container no-padding filter-date pull-left no-margin"
+                                                    <md-input-container class="form-fields__input date-picker-container no-padding pull-left no-margin"
                                                                         flex="auto">
                                                         <span>{{$ctrl.currentValue.value | date : 'dd MMM'}}</span>
                                                         <i class="material-icons md-18 date-picker-icon">today</i>

@@ -1310,12 +1310,6 @@ button#resetFilter {
 .tests-runs-filter__editor {
   position: relative;
 
-    md-input-container {
-        height: 36px !important;
-        margin: 0;
-        padding: 0;
-        font-size: 14.5px;
-    }
     md-radio-button {
         display: inline-block;
         padding-right: 10px;
@@ -1627,26 +1621,12 @@ md-chip md-chip-template.bg-primary {
       }
     }
 
-    & md-select {
-        height: 36px;
-        border: 1px solid $custom-gray;
-        border-radius: 2px;
-        padding: 0 0 0 12px !important;
-    }
     & md-select.md-default-theme[disabled] .md-select-value,
-    & md-select[disabled] .md-select-value {
-      border: none;
+    & md-select[disabled] .md-select-value,
+    & input[disabled] {
+      border-color: transparent;
       background-image: none;
-    }
-
-    & md-select.md-default-theme:not([disabled]):focus .md-select-value,
-    & md-select:not([disabled]):focus .md-select-value,
-    & .md-select-value {
-        border-bottom-color: $input-border;
-        border-bottom: 1px;
-        border-radius: 2px;
-        font-family: Roboto;
-        font-size: 14.5px;
+      opacity: .8;
     }
 }
 
@@ -1669,23 +1649,9 @@ md-chip md-chip-template.bg-primary {
       float: left;
     }
 
-    & md-select, & .form-control {
-        background-color: #fff;
-        border: none;
-        color: $coal !important;
-        border-radius: 4px;
-        max-height: 36px;
-    }
     & .filter-name {
         width: 344px;
         margin-right: 8px;
-    }
-
-    & .filter-input-container {
-        width: 168px;
-        float: left;
-        margin-right: 8px !important;
-        border: none;
     }
 
     & .filter-select{
@@ -1703,21 +1669,15 @@ md-chip md-chip-template.bg-primary {
     }
 
     & .value-input {
-        width: 152px !important;
+        width: 144px;
+        position: relative;
+        margin: 0 12px 0 0;
 
-        & input, & md-input-container, & md-select{
-          float: left;
-          border: none;
-        }
         & div, & md-select {
-          width: 100%;
+            width: 100%;
         }
     }
 
-    & .filter-date{
-      width: 100%;
-      background: #fff;
-    }
 
     & md-chip{
       min-width: 148px;
@@ -1822,7 +1782,7 @@ div[aria-selected='true'] span.ng-binding {
   }
 }
 
-#search-container, .filter-input-container {
+#search-container {
     position: relative;
     margin: 0 !important;
     padding: 0 !important;

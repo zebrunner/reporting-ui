@@ -112,6 +112,9 @@
         .filter {
             &-input-container {
                 min-width: 184px;
+                margin: 0 12px 0 0;
+                margin-bottom: 15px;
+                padding: 0;
             }
             &-state {
                 padding: 7px 20px;
@@ -167,12 +170,6 @@
                     }
                 }
             }
-        }
-
-        md-input-container.filter-input-container.select {
-            width: 144px !important;
-            border-radius: 4px;
-            margin-bottom: 15px !important;
         }
     }
 
