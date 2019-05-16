@@ -12,7 +12,7 @@ const messageService = function messageService($mdToast) {
     function success(text, options) {
         var toast = $mdToast.simple()
                             .content(text)
-                            .theme(options && options.theme ? options.theme : "success")
+                            .theme(options && options.theme ? options.theme : 'success')
                             .position(options && options.position ? options.position : 'bottom right');
         $mdToast.show(toast);
     }
@@ -20,16 +20,16 @@ const messageService = function messageService($mdToast) {
     function error(text, options) {
         var toast = $mdToast.simple()
                             .content(text)
-                            .theme(options && options.theme ? options.theme : "error")
-                            .position(options && options.position ? options.position :'bottom right');
+                            .theme(options && options.theme ? options.theme : 'error')
+                            .position(options && options.position ? options.position : 'bottom right');
         $mdToast.show(toast);
     }
 
     function warning(text, options) {
         var toast = $mdToast.simple()
                             .content(text)
-                            .theme(options && options.theme ? options.theme : "warning")
-                            .position(options && options.position ? options.position :'bottom right');
+                            .theme(options && options.theme ? options.theme : 'warning')
+                            .position(options && options.position ? options.position : 'bottom right');
         $mdToast.show(toast);
     }
 };
