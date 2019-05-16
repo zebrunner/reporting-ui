@@ -14,7 +14,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                                                          $cookies, $location, $state, $http, $mdConstant,
                                                          $stateParams, $mdDialog, $mdToast, UtilService,
                                                          DashboardService, projectsService, UserService,
-                                                         $widget, $mapper, toolsService) {
+                                                         $widget, $mapper, toolsService, messageService) {
     'ngInject';
 
     const vm = {
@@ -78,10 +78,10 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             if (rs.success) {
                 angular.copy(rs.data, $scope.pristineWidgets);
                 $scope.resetGrid();
-                alertify.success("Widget positions were updated");
+                messageService.success("Widget positions were updated");
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
             $scope.MODE = '';
         });
@@ -146,7 +146,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                 }
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }
@@ -251,11 +251,11 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     $scope.dashboard.widgets.push(widget);
                     loadDashboardData($scope.dashboard, false);
                     if(! hideSuccessAlert) {
-                        alertify.success("Widget added");
+                        messageService.success("Widget added");
                     }
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
                 resolve(rs);
             });
@@ -272,10 +272,10 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                         widget.location = jsonSafeStringify(widget.location);
                     });
                     loadDashboardData($scope.dashboard, false);
-                    alertify.success("Widget deleted");
+                    messageService.success("Widget deleted");
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         }
@@ -379,10 +379,10 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     if($scope.dashboard.widgets.indexOfId(widget.id) >= 0) {
                         $scope.dashboard.widgets.splice($scope.dashboard.widgets.indexOfId(widget.id), 1);
                     }
-                    alertify.success("Widget deleted");
+                    messageService.success("Widget deleted");
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         }
@@ -411,12 +411,12 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         if (confirmedDelete) {
             DashboardService.DeleteDashboard(dashboard.id).then(function (rs) {
                 if (rs.success) {
-                    alertify.success("Dashboard deleted");
+                    messageService.success("Dashboard deleted");
                     var mainDashboard = $location.$$absUrl.substring(0, $location.$$absUrl.lastIndexOf('/'));
                     window.open(mainDashboard, '_self');
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         }

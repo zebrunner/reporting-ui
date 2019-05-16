@@ -5,7 +5,7 @@ import 'brace/mode/json';
 import 'brace/theme/eclipse';
 import 'angular-ui-ace';
 
-const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, LauncherService, ScmService) {
+const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, LauncherService, ScmService, messageService) {
     'ngInject';
 
     $scope.ciOptions = {};
@@ -211,7 +211,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                     if (rs.success) {
                         $scope.launchers.splice(index, 1, rs.data);
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             } else {
@@ -220,7 +220,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                         $scope.launcher = rs.data;
                         $scope.launchers.push(rs.data);
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             }
@@ -261,9 +261,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                     $scope.launchers.splice(index, 1);
                     $scope.launcher = {};
                     $scope.cardNumber = 0;
-                    alertify.success('Launcher was deleted');
+                    messageService.success('Launcher was deleted');
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         }
@@ -280,7 +280,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                 if(rs.success) {
                     resolve(rs.data);
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                     reject();
                 }
             });
@@ -292,7 +292,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if(rs.success) {
                 $scope.launchers.splice(index, 1, rs.data);
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -302,7 +302,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if(rs.success) {
                 $scope.launchers.splice(index, 1);
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -394,7 +394,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                     onAddNewGithubRepoClose();
                 }
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -423,10 +423,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         launcher.model = JSON.stringify($scope.builtLauncher.model, null, 2);
         LauncherService.buildLauncher(launcher).then(function (rs) {
             if(rs.success) {
-                alertify.success("Job is in progress");
+                messageService.success("Job is in progress");
                 $scope.hide();
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -455,7 +455,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                     });
                 }
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     })();

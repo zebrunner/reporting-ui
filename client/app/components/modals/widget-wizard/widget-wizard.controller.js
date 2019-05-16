@@ -1,4 +1,4 @@
-const widgetWizardController = function WidgetWizardController($scope, $mdDialog, $q, $location, $widget, $mapper, DashboardService, UtilService, projectsService, widget, dashboard, currentUserId) {
+const widgetWizardController = function WidgetWizardController($scope, $mdDialog, $q, $location, $widget, $mapper, DashboardService, UtilService, projectsService, widget, dashboard, currentUserId, messageService) {
 
     'ngInject';
 
@@ -31,7 +31,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                                 });
                                 updateWidgetsToAdd();
                             } else {
-                                alertify.error(rs.message);
+                                messageService.error(rs.message);
                             }
                         });
                     }
@@ -57,7 +57,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                             if (rs.success) {
                                 $scope.templates = rs.data;
                             } else {
-                                alertify.error(rs.message);
+                                messageService.error(rs.message);
                             }
                         });
                     }
@@ -125,10 +125,10 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                         dashboard.widgets.splice(dashboard.widgets.indexOfId(widget.id), 1);
                     }
                     updateWidgetsToAdd();
-                    alertify.success("Widget deleted");
+                    messageService.success("Widget deleted");
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         }
@@ -169,7 +169,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 $scope.buildConfigs();
                 resolve();
             }, function (rs) {
-                alertify.error(rs);
+                messageService.error(rs);
                 reject();
             });
         });
@@ -284,7 +284,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                 };
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -325,10 +325,10 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         var widgetType = prepareWidget();
         DashboardService.CreateWidget(widgetType).then(function (rs) {
             if(rs.success) {
-                alertify.success('Widget was created');
+                messageService.success('Widget was created');
                 $scope.hide('CREATE', rs.data);
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -339,14 +339,14 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         DashboardService.UpdateWidget(widgetType).then(function (rs) {
             if(rs.success) {
                 if(MODE === 'ADD') {
-                    alertify.success('Widget was added');
+                    messageService.success('Widget was added');
                     $scope.hide('ADD', rs.data);
                 } else {
-                    alertify.success('Widget was updated');
+                    messageService.success('Widget was updated');
                     $scope.hide('UPDATE', rs.data);
                 }
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
