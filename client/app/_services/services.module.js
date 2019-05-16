@@ -1,11 +1,13 @@
 'use strict';
 
 import toolsService from './tools/tools.service';
+import progressbarService from './progressbar/progressbar.service';
 import messageService from './messages/message.service';
 
 angular.module('app.services', [])
     .service({ toolsService })
-    .service({ messageService });
+    .service({ messageService })
+    .service({ progressbarService });
 
 require('./auth.intercepter');
 require('./utils/HttpMockResolver');

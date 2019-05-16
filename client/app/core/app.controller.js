@@ -5,7 +5,7 @@
         .controller('AppCtrl', AppCtrl); // overall control
 	    function AppCtrl($scope, $rootScope, $templateCache, $state, httpBuffer, $window, $cookies, $q, appConfig,
                          AuthService, UserService, SettingsService, ConfigService, AuthIntercepter, UtilService,
-                         SettingProvider, $timeout, toolsService, UI_VERSION) {
+                         SettingProvider, $timeout, toolsService, UI_VERSION, progressbarService) {
             'ngInject';
 
 	        $scope.pageTransitionOpts = appConfig.pageTransitionOpts;
@@ -40,6 +40,7 @@
             };
 
 	        $scope.initSession = toolsService.getTools;
+	        $scope.progressbarService = progressbarService;
 
 	        $rootScope.$on("event:auth-loginSuccess", function(ev, payload){
                 AuthService.SetCredentials(payload.auth);

@@ -7,18 +7,18 @@ body {
     &.menu-toggled {
         overflow: hidden !important;
     }
-    /*overflow: hidden;
-    max-width:100%;
-    max-height:100%;*/
 }
-/*
 
-body > div {
-    overflow: auto;
-    display: block;
-    max-height: 100%;
+.pending-progress-bar {
+    position: fixed;
+    z-index: 10002;
+    top: 0;
+    left: 0;
+    width: 100%;
+    .md-container {
+        height: 3px;
+    }
 }
-*/
 
 #vnc {
     margin: 0 auto;

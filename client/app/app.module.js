@@ -1,6 +1,7 @@
 'use strict';
 
 import '../styles/main.scss';
+import progressbarInterceptor from './http-interceptors/progressbar.interceptor';
 
 const ngModule = angular.module('app', [
     // Core modules
@@ -19,7 +20,6 @@ const ngModule = angular.module('app', [
     'validation.match',
     'timer',
     'ngSanitize',
-    'angular-loading-bar',
     'textAngular',
     'ngMaterialDateRangePicker',
     'angular-jwt',
@@ -161,6 +161,8 @@ const ngModule = angular.module('app', [
     String.prototype.getValidFilename = function () {
         return this.replace(/[/\\?%*:|"<>]/g, '-');
     };
+
+    $httpProvider.interceptors.push(progressbarInterceptor);
 })
 .directive('ngReallyClick', [function() {
     return {
