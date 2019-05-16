@@ -22,7 +22,6 @@ require('../vendors/angular-timer'); //TODO: This file is changed locally, see g
 require('textangular/dist/textAngular-sanitize.min');
 require('textangular');
 
-window.alertify = require('alertifyjs/build/alertify.min');
 require('angular-loading-bar');
 require('angular-scroll');
 require('ng-img-crop/compile/minified/ng-img-crop');
