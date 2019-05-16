@@ -1,4 +1,4 @@
-const settingsController = function settingsController($scope, $rootScope, $state, $mdConstant, $stateParams, $mdDialog, SettingsService) {
+const settingsController = function settingsController($scope, $rootScope, $state, $mdConstant, $stateParams, $mdDialog, SettingsService, messageService) {
     'ngInject';
 
     $scope.settings = [];
@@ -6,7 +6,7 @@ const settingsController = function settingsController($scope, $rootScope, $stat
 
     $scope.showSettingsDialog = function(event, setting) {
         $mdDialog.show({
-            controller: function ($scope, $mdDialog) {
+            controller: function ($scope, $mdDialog, messageService) {
                 'ngInject';
 
                 $scope.setting = {};
@@ -21,11 +21,11 @@ const settingsController = function settingsController($scope, $rootScope, $stat
                         if(rs.success)
                         {
                             $scope.hide();
-                            alertify.success('Setting created');
+                            messageService.success('Setting created');
                         }
                         else
                         {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 };
@@ -35,11 +35,11 @@ const settingsController = function settingsController($scope, $rootScope, $stat
                         if(rs.success)
                         {
                             $scope.hide();
-                            alertify.success('Setting updated');
+                            messageService.success('Setting updated');
                         }
                         else
                         {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 };
@@ -49,11 +49,11 @@ const settingsController = function settingsController($scope, $rootScope, $stat
                         if(rs.success)
                         {
                             $scope.hide();
-                            alertify.success('Setting deleted');
+                            messageService.success('Setting deleted');
                         }
                         else
                         {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     });
                 };

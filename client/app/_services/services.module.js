@@ -1,9 +1,11 @@
 'use strict';
 
 import toolsService from './tools/tools.service';
+import messageService from './messages/message.service';
 
 angular.module('app.services', [])
-    .service({ toolsService });
+    .service({ toolsService })
+    .service({ messageService });
 
 require('./auth.intercepter');
 require('./utils/HttpMockResolver');

@@ -1,5 +1,5 @@
 const monitorsController = function monitorsController($scope, $q, $rootScope, $state, $mdConstant,
-                                                       $stateParams, $mdDialog, MonitorsService, UserService, $location) {
+                                                       $stateParams, $mdDialog, MonitorsService, UserService, $location, messageService) {
     'ngInject';
 
     $scope.monitors = [];
@@ -57,7 +57,7 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
                 $scope.monitors = rs.data.results;
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
 
@@ -175,16 +175,16 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
                     if(switchJob)
                     {
                         var status = rs.data.monitorEnabled ? 'ran': 'stopped';
-                        alertify.success("Monitor was " + status);
+                        messageService.success("Monitor was " + status);
                     } else {
-                        alertify.success('Monitor was updated');
+                        messageService.success('Monitor was updated');
                     }
                     resolve();
                 } else {
                     if(rs.error.status == 400) {
                         $scope.errorResponse = rs;
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                     reject();
                 }
@@ -194,7 +194,7 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
 
     $scope.openMonitorDialog = function ($event, monitor) {
         $mdDialog.show({
-            controller: function ($scope, $mdDialog, monitor, toolsService) {
+            controller: function ($scope, $mdDialog, monitor, toolsService, messageService) {
                 'ngInject';
 
                 if(!monitor) {
@@ -222,13 +222,13 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
                                 rs.data.emailList = [];
                             }
                             $scope.monitors.push(rs.data);
-                            alertify.success('Monitor was created successfully');
+                            messageService.success('Monitor was created successfully');
                             $scope.hide();
                         } else {
                             if(rs.error.status == 400) {
                                 $scope.errorResponse = rs;
                             } else {
-                                alertify.error(rs.message);
+                                messageService.error(rs.message);
                             }
                         }
                     })
@@ -246,7 +246,7 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
                                 $scope.monitor.success = rs.data.success;
                             }
                         } else {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     })
                 };
@@ -267,10 +267,10 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
                                 }
                                 return true;
                             });
-                            alertify.success('Monitor was deleted');
+                            messageService.success('Monitor was deleted');
                             $scope.hide();
                         } else {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         }
                     })
                 };

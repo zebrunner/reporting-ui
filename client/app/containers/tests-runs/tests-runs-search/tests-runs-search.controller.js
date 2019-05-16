@@ -1,6 +1,6 @@
 'use strict'
 
-const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout) {
+const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService) {
     'ngInject';
 
     const subjectName = 'TEST_RUN';
@@ -101,7 +101,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
 
                 return vm.environments;
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
                 $q.reject(rs.message);
             }
         });
@@ -116,7 +116,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
 
                 return vm.platforms;
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
 
                 return $q.reject(rs.message);
             }

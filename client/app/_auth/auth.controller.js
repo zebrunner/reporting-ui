@@ -1,7 +1,7 @@
 'use strict';
 
 const authController = function authController($scope, $rootScope, $location, $state, $cookies, $templateCache, AuthService, UserService,
-                            UtilService, InvitationService) {
+                            UtilService, InvitationService, messageService) {
     'ngInject';
 
     $scope.UtilService = UtilService;
@@ -44,7 +44,7 @@ const authController = function authController($scope, $rootScope, $location, $s
                 $scope.forgotPassword = {};
                 $scope.forgotPasswordEmailWasSent = true;
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -61,10 +61,10 @@ const authController = function authController($scope, $rootScope, $location, $s
         credentials.userId = 0;
         AuthService.resetPassword(credentials, token).then(function (rs) {
             if(rs.success) {
-                alertify.success('Your password was changed successfully');
+                messageService.success('Your password was changed successfully');
                 $state.go('signin');
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -120,7 +120,7 @@ const authController = function authController($scope, $rootScope, $location, $s
                 } else {
                     UtilService.resolveError(rs, form, 'validationError', 'username').then(function (rs) {
                     }, function (rs) {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     });
                 }
             });

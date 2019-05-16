@@ -26,7 +26,7 @@
                         requireLogin: true
                     },
                     resolve: {
-                        dashboard: ($transition$, $state, DashboardService, $q, $timeout) => {
+                        dashboard: ($transition$, $state, DashboardService, $q, $timeout, messageService) => {
                             'ngInject';
 
                             const { dashboardId } = $transition$.params();
@@ -39,7 +39,7 @@
                                         //TODO: dashboards is a home page. If we redirect to dashboards we can get infinity loop. We need to add simple error page;
                                         const message = rs && rs.message || `Can\'t fetch dashboard with id: ${dashboardId}`;
 
-                                        alertify.error(message);
+                                        messageService.error(message);
 
                                         return $q.reject(message);
                                     }
@@ -71,7 +71,7 @@
                         requireLogin: true
                     },
                     resolve: {
-                        dashboardId: (AuthService, DashboardService, UserService, $state, $q, $timeout) => {
+                        dashboardId: (AuthService, DashboardService, UserService, $state, $q, $timeout, messageService) => {
                             'ngInject';
 
                             const currentUser = UserService.currentUser;
@@ -99,7 +99,7 @@
                                             //TODO: dashboards is a home page. If we redirect to dashboards we can get infinity loop. We need to add simple error page;
                                             const message = 'Can\'t fetch default dashboard';
 
-                                            alertify.error(message);
+                                            messageService.error(message);
 
                                             return $q.reject(message);
                                         }
@@ -107,7 +107,7 @@
                                         //TODO: dashboards is a home page. If we redirect to dashboards we can get infinity loop. We need to add simple error page;
                                         const message = rs && rs.message || 'Can\'t fetch dashboards';
 
-                                        alertify.error(message);
+                                        messageService.error(message);
 
                                         return $q.reject(message);
                                     }
@@ -372,7 +372,7 @@
                         classes: 'p-tests-runs'
                     },
                     resolve: {
-                        resolvedTestRuns: function($state, testsRunsService, $q, projectsService) {
+                        resolvedTestRuns: function($state, testsRunsService, $q, projectsService, messageService) {
                             'ngInject';
 
                             const prevState = $state.current.name;
@@ -393,7 +393,7 @@
                             }
 
                             return testsRunsService.fetchTestRuns().catch(function(err) {
-                                err && err.message && alertify.error(err.message);
+                                err && err.message && messageService.error(err.message);
                                 //1st approach: if can't load with user/cached searchParams reset them and reload page
                                 // if (!force) {
                                 //     testsRunsService.deleteStoredParams();
@@ -551,12 +551,12 @@
                         classes: 'p-integrations'
                     },
                     resolve: {
-                        toolsServicePrepare: (toolsService, $timeout, $state) => {
+                        toolsServicePrepare: (toolsService, $timeout, $state, messageService) => {
                             'ngInject';
 
                             return toolsService.getTools()
                                 .catch((err) => {
-                                    err && err.message && alertify.error(err.message);
+                                    err && err.message && messageService.error(err.message);
                                     // Timeout to avoid digest issues
                                     $timeout(() => {
                                         $state.go('home');

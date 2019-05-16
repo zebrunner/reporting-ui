@@ -2,7 +2,7 @@
 
 const GroupsController = function GroupsController($scope, $rootScope, $location, $state, $mdDialog,
                                                        UserService, GroupService, InvitationService,
-                                                       AuthService, toolsService) {
+                                                       AuthService, toolsService, messageService) {
     'ngInject';
 
     const vm = {
@@ -51,13 +51,13 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
             if (rs.success) {
                 vm.groups.splice(vm.groups.indexOfField('id', group.id), 1);
                 $scope.count--;
-                alertify.success('Group "' + group.name + '" was deleted');
+                messageService.success('Group "' + group.name + '" was deleted');
             }
             else {
                 if (rs.error && rs.error.data && rs.error.data.error && rs.error.data.error.code == 403 && rs.error.data.error.message) {
-                    alertify.error(rs.error.data.error.message);
+                    messageService.error(rs.error.data.error.message);
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             }
         });
@@ -66,10 +66,10 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
     function addUserToGroup(user, group) {
         UserService.addUserToGroup(user, group.id).then(function (rs) {
             if (rs.success) {
-                alertify.success('User "' + user.username + '" was added to group "' + group.name + '"');
+                messageService.success('User "' + user.username + '" was added to group "' + group.name + '"');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -77,10 +77,10 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
     function deleteUserFromGroup(user, group) {
         UserService.deleteUserFromGroup(user.id, group.id).then(function (rs) {
             if (rs.success) {
-                alertify.success('User "' + user.username + '" was deleted from group "' + group.name + '"');
+                messageService.success('User "' + user.username + '" was deleted from group "' + group.name + '"');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -92,7 +92,7 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
                 return rs.data.results.filter(searchFilter(group));
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         }).finally(function (rs) {
         });
@@ -124,7 +124,7 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
                 vm.count = rs.data;
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -135,7 +135,7 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
     };
 
     // **************************************************************************
-    function GroupController($scope, $mdDialog, GroupService, PermissionService, UtilService, group) {
+    function GroupController($scope, $mdDialog, GroupService, PermissionService, UtilService, group, messageService) {
 
         'ngInject';
 
@@ -151,7 +151,7 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
                     $scope.roles = rs.data;
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -161,7 +161,7 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
                     $scope.count = rs.data;
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -173,7 +173,7 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
                     collectPermissions();
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -184,10 +184,10 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
             GroupService.createGroup(group).then(function (rs) {
                 if (rs.success) {
                     $scope.cancel(rs.data);
-                    alertify.success('Group "' + group.name + '" was created');
+                    messageService.success('Group "' + group.name + '" was created');
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -197,7 +197,7 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
                     $scope.group = rs.data;
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -208,10 +208,10 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
             GroupService.updateGroup(group).then(function (rs) {
                 if (rs.success) {
                     $scope.cancel(rs.data);
-                    alertify.success('Group updated');
+                    messageService.success('Group updated');
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };

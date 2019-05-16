@@ -1,4 +1,4 @@
-const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, UtilService, DashboardService, dashboard, position) {
+const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, UtilService, DashboardService, dashboard, position, messageService) {
     'ngInject';
 
     $scope.isNew = ! dashboard.id;
@@ -14,11 +14,11 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
         dashboard.position = position;
         DashboardService.CreateDashboard(dashboard).then(function (rs) {
             if (rs.success) {
-                alertify.success("Dashboard created");
+                messageService.success("Dashboard created");
                 $scope.hide(rs.data, 'CREATE');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -27,11 +27,11 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
         dashboard.widgets = null;
         DashboardService.UpdateDashboard(dashboard).then(function (rs) {
             if (rs.success) {
-                alertify.success("Dashboard updated");
+                messageService.success("Dashboard updated");
                 $scope.hide(rs.data, 'UPDATE');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -41,12 +41,12 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
         if (confirmedDelete) {
             DashboardService.DeleteDashboard(dashboard.id).then(function (rs) {
                 if (rs.success) {
-                    alertify.success("Dashboard deleted");
+                    messageService.success("Dashboard deleted");
                     var mainDashboard = $location.$$absUrl.substring(0, $location.$$absUrl.lastIndexOf('/'));
                     window.open(mainDashboard, '_self');
                 }
                 else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         }
@@ -60,10 +60,10 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
                 $scope.dashboard.attributes = rs.data;
                 $scope.newAttribute = {};
                 UtilService.untouchForm(form);
-                alertify.success('Dashboard attribute created');
+                messageService.success('Dashboard attribute created');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -79,10 +79,10 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
         DashboardService.UpdateDashboardAttribute(dashboard.id, attribute).then(function (rs) {
             if (rs.success) {
                 $scope.dashboard.attributes = rs.data;
-                alertify.success('Dashboard attribute updated');
+                messageService.success('Dashboard attribute updated');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -91,10 +91,10 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
         DashboardService.DeleteDashboardAttribute(dashboard.id, attribute.id).then(function (rs) {
             if (rs.success) {
                 $scope.dashboard.attributes = rs.data;
-                alertify.success('Dashboard attribute removed');
+                messageService.success('Dashboard attribute removed');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };

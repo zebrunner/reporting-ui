@@ -1,6 +1,6 @@
 'use strict';
 
-const elasticsearchService = function elasticsearchService($http, $q, $location, toolsService, UtilService) {
+const elasticsearchService = function elasticsearchService($http, $q, $location, toolsService, UtilService, messageService) {
     'ngInject';
 
     let instance;
@@ -125,7 +125,7 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
                     instance = rs;
                     resolve(instance);
                 }, function(rs) {
-                    alertify.error(rs.errorMessage);
+                    messageService.error(rs.errorMessage);
                     reject();
                 });
             }

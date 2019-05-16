@@ -3,7 +3,7 @@
 
     angular.module('app').controller('EmailController', EmailController);
 
-    function EmailController($scope, $mdDialog, $mdConstant, UserService, TestRunService, testRuns) {
+    function EmailController($scope, $mdDialog, $mdConstant, UserService, TestRunService, testRuns, messageService) {
         'ngInject';
 
         $scope.email = {};
@@ -13,7 +13,7 @@
 
         $scope.sendEmail = function () {
             if($scope.users.length == 0) {
-                alertify.error('Add a recipient!')
+                messageService.error('Add a recipient!')
                 return;
             }
             $scope.hide();
@@ -23,11 +23,11 @@
                 TestRunService.sendTestRunResultsEmail(testRun.id, $scope.email).then(function(rs) {
                     if(rs.success)
                     {
-                        alertify.success('Email was successfully sent!');
+                        messageService.success('Email was successfully sent!');
                     }
                     else
                     {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             });
@@ -56,7 +56,7 @@
                     }
                     else
                     {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             }

@@ -1,6 +1,6 @@
 'use strict';
 
-const testCaseListController = function testCaseListController($scope, $rootScope, $location, $mdDateRangePicker, TestService, TestCaseService, UtilService, projectsService) {
+const testCaseListController = function testCaseListController($scope, $rootScope, $location, $mdDateRangePicker, TestService, TestCaseService, UtilService, projectsService, messageService) {
         'ngInject';
 
         const vm = {
@@ -43,7 +43,7 @@ const testCaseListController = function testCaseListController($scope, $rootScop
         		}
         		else
         		{
-        			alertify.error(rs.message);
+        			messageService.error(rs.message);
         		}
 			});
         };
@@ -67,7 +67,7 @@ const testCaseListController = function testCaseListController($scope, $rootScop
             		}
             		else
             		{
-            			alertify.error(rs.message);
+            			messageService.error(rs.message);
             		}
     			});
         	}
@@ -139,7 +139,7 @@ const testCaseListController = function testCaseListController($scope, $rootScop
         return vm;
 	};
 
-const metricController = function metricController($scope, $stateParams, $q, TestCaseService) {
+const metricController = function metricController($scope, $stateParams, $q, TestCaseService, messageService) {
         'ngInject';
 
         $scope.metrics = {};
@@ -162,7 +162,7 @@ const metricController = function metricController($scope, $stateParams, $q, Tes
                         $scope.metrics = collectByOperation(rs.data);
                         resolve(rs);
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                         reject(rs.message);
                     }
                 })

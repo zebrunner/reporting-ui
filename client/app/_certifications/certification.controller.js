@@ -1,4 +1,4 @@
-const certificationController = function certificationController($scope, $rootScope, $cookies, $location, $state, $http, $mdConstant, $stateParams, CertificationService) {
+const certificationController = function certificationController($scope, $rootScope, $cookies, $location, $state, $http, $mdConstant, $stateParams, CertificationService, messageService) {
     'ngInject';
 
     $scope.certificationDetails = null;
@@ -12,7 +12,7 @@ const certificationController = function certificationController($scope, $rootSc
             }
             else
             {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     })();

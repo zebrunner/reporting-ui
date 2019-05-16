@@ -6,7 +6,7 @@ import CiHelperTemplate from './ci-helper/ci-helper.html';
 const testsRunsController = function testsRunsController($cookieStore, $mdDialog, $timeout, $q, TestRunService,
                                                          UtilService, UserService, testsRunsService, $scope, API_URL,
                                                          $rootScope, $transitions, windowWidthService, TestService,
-                                                         toolsService, projectsService) {
+                                                         toolsService, projectsService, messageService) {
     'ngInject';
 
     let TENANT;
@@ -133,7 +133,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             })
             .catch(function(err) {
                 console.error(err.message);
-                alertify.error(err.message);
+                messageService.error(err.message);
 
                 return $q.resolve([]);
             });
@@ -181,9 +181,9 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             TestRunService.rerunTestRun(testRun.id, rerunFailures).then(function(rs) {
                 if (rs.success) {
                     testRun.status = 'IN_PROGRESS';
-                    alertify.success('Rebuild triggered in CI service');
+                    messageService.success('Rebuild triggered in CI service');
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         } else {
@@ -217,7 +217,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
                 }
             });
         } else {
-            alertify.error('Unable connect to jenkins');
+            messageService.error('Unable connect to jenkins');
         }
     }
 
@@ -231,14 +231,14 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
                 TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause).then(function(rs) {
                     if (rs.success){
                         testRun.status = 'ABORTED';
-                        alertify.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
+                        messageService.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }

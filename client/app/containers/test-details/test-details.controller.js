@@ -5,7 +5,7 @@ import IssuesModalController from '../../components/modals/issues/issues.control
 
 const testDetailsController = function testDetailsController($scope, $rootScope, $q, TestService, API_URL,
                                                              modalsService, $state, $transitions,
-                                                             UtilService, $mdDialog, toolsService) {
+                                                             UtilService, $mdDialog, toolsService, messageService) {
     'ngInject';
 
     const testGroupDataToStore = {
@@ -87,7 +87,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             if (rs.success) {
                 message = 'Test was marked as ' + test.status;
                 addTestEvent(message, test);
-                alertify.success(message);
+                messageService.success(message);
             }
             else {
                 console.error(rs.message);
@@ -105,7 +105,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             then(function(rs) {
                 if (rs.success) {
                 } else {
-                    alertify.error('Failed to add event test "' + test.id);
+                    messageService.error('Failed to add event test "' + test.id);
                 }
             })
     }
@@ -448,7 +448,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             TestService.updateTest(test)
             .then(function(rs) {
                 if (rs.success) {
-                    alertify.success('Test was marked as ' + status);
+                    messageService.success('Test was marked as ' + status);
                 } else {
                     console.error(rs.message);
                 }

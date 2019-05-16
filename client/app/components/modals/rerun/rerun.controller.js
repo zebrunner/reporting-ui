@@ -3,7 +3,7 @@
 
     angular.module('app').controller('TestRunRerunController', TestRunRerunController);
 
-    function TestRunRerunController($scope, $mdDialog, TestRunService, testRun, toolsService) {
+    function TestRunRerunController($scope, $mdDialog, TestRunService, testRun, toolsService, messageService) {
         'ngInject';
 
         $scope.rerunFailures = true;
@@ -15,11 +15,11 @@
                     if(rs.success)
                     {
                         testRun.status = 'IN_PROGRESS';
-                        alertify.success("Rebuild triggered in CI service");
+                        messageService.success("Rebuild triggered in CI service");
                     }
                     else
                     {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             }

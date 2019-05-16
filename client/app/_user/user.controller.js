@@ -4,7 +4,7 @@ import uploadImageModalController from '../shared/modals/upload-image-modal/uplo
 import uploadImageModalTemplate from '../shared/modals/upload-image-modal/upload-image-modal.html';
 
 const UserProfileController = function UserProfileController($mdDialog, UserService, DashboardService, UtilService,
-                                                             AuthService, appConfig, $q, $state) {
+                                                             AuthService, appConfig, $q, $state, messageService) {
     'ngInject';
 
     const vm = {
@@ -48,10 +48,10 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         UserService.deleteUserProfilePhoto().then(function (rs) {
             if (rs.success) {
                 vm.currentUser.photoURL = '';
-                alertify.success('Photo was deleted');
+                messageService.success('Photo was deleted');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }
@@ -69,9 +69,9 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
                 if (rs.success) {
                     vm.user = rs.data;
                     UserService.currentUser = Object.assign({}, vm.currentUser, vm.user);
-                    alertify.success('User profile updated');
+                    messageService.success('User profile updated');
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
     }
@@ -102,7 +102,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         selection.removeAllRanges();
         document.body.removeChild(node);
 
-        alertify.success('Access token copied to clipboard');
+        messageService.success('Access token copied to clipboard');
     }
 
     function fetchDashboards() {
@@ -121,9 +121,9 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             .then(function (rs) {
                 if (rs.success) {
                     vm.changePassword = {};
-                    alertify.success('Password changed');
+                    messageService.success('Password changed');
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
     }
@@ -140,7 +140,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
                         fetchDefaultPreferences();
                     }
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
     }
@@ -150,7 +150,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             if (rs.success) {
                     vm.preferences = rs.data;
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
     }
@@ -174,10 +174,10 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
                 if (rs.data && rs.data.length) {
                     UserService.setDefaultPreferences(rs.data);
                 }
-                alertify.success('User preferences are successfully updated');
+                messageService.success('User preferences are successfully updated');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }
@@ -190,10 +190,10 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
                 preferenceForm.refreshInterval = vm.currentUser.refreshInterval;
                 preferenceForm.defaultDashboard = vm.currentUser.defaultDashboard;
                 vm.main.skin = vm.currentUser.theme;
-                alertify.success('Preferences are set to default');
+                messageService.success('Preferences are set to default');
             }
             else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }
@@ -232,11 +232,11 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
                         return UserService.updateUserProfile(profile).then((prs) => {
                             if (prs.success) {
                                 vm.currentUser.photoURL = `${url}?${(new Date()).getTime()}`;
-                                alertify.success('Profile was successfully updated');
+                                messageService.success('Profile was successfully updated');
 
                                 return true;
                             } else {
-                                alertify.error(prs.message);
+                                messageService.error(prs.message);
 
                                 return false;
                             }

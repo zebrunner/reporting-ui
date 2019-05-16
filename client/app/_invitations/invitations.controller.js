@@ -2,7 +2,7 @@
 
 const InvitationsController = function InvitationsController($scope, $rootScope, $location, $state, $mdDialog,
                                                    UserService, GroupService, InvitationService,
-                                                   AuthService, toolsService) {
+                                                   AuthService, toolsService, messageService) {
 
     'ngInject';
 
@@ -58,9 +58,9 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
         InvitationService.deleteInvitation(invite.id).then(function (rs) {
             if (rs.success) {
                 vm.sr.results.splice(index, 1);
-                alertify.success('Invitation was taken off successfully.');
+                messageService.success('Invitation was taken off successfully.');
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -69,9 +69,9 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
         InvitationService.retryInvite(invite).then(function (rs) {
             if (rs.success) {
                 vm.sr.results.splice(index, 1, rs.data);
-                alertify.success('Invitation was sent successfully.');
+                messageService.success('Invitation was sent successfully.');
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -102,7 +102,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
             if (rs.success) {
                 vm.sr = rs.data;
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
         vm.isFiltered = true;
@@ -124,7 +124,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
     };
 
     // **************************************************************************
-    function InviteController($scope, $mdDialog, InvitationService, UtilService, groups, isLDAPConnected) {
+    function InviteController($scope, $mdDialog, InvitationService, UtilService, groups, isLDAPConnected, messageService) {
         'ngInject';
 
         $scope.isLDAPConnected = isLDAPConnected;
@@ -165,7 +165,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
                 InvitationService.invite(invitationTypes).then(function (rs) {
                     if (rs.success) {
                         var message = emails.length > 1 ? "Invitations were sent." : "Invitation was sent.";
-                        alertify.success(message);
+                        messageService.success(message);
                         if (!startedEmail) {
                             $scope.cancel(rs.data);
                         } else {
@@ -177,7 +177,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
                     } else {
                         UtilService.resolveError(rs, form, 'validationError', 'email').then(function (rs) {
                         }, function (rs) {
-                            alertify.error(rs.message);
+                            messageService.error(rs.message);
                         });
                     }
                     $scope.tryInvite = false;

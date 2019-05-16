@@ -1,7 +1,7 @@
 'use strict';
 
 const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilService, urlHandler,
-                                    fileTypes) => {
+                                    fileTypes, messageService) => {
     'ngInject';
 
     const local = {
@@ -17,14 +17,14 @@ const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilS
     function uploadImage(multipartFile) {
         UploadService.upload(multipartFile, local.FILE_TYPES).then(function (rs) {
             if (rs.success) {
-                alertify.success('Image was uploaded');
+                messageService.success('Image was uploaded');
                 if (urlHandler) {
                     urlHandler(rs.data.url).then((result) => {
                         result && $mdDialog.hide();
                     });
                 }
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     }

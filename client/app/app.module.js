@@ -1137,7 +1137,7 @@ const ngModule = angular.module('app', [
 // __ZAFIRA_UI_VERSION__ variable will be replaced by webpack
 .constant('UI_VERSION', __ZAFIRA_UI_VERSION__)
 .run(function($rootScope, $location, $cookies, $http, $transitions, AuthService, $document,
-              UserService) {
+              UserService, messageService) {
     'ngInject';
 
     const rejectTypes = { // https://ui-router.github.io/ng1/docs/latest/enums/transition.rejecttype.html
@@ -1153,7 +1153,7 @@ const ngModule = angular.module('app', [
             if (!res.success) {
                 const fullMessage = `${res.message} Try to login once again.`;
 
-                alertify.error(fullMessage);
+                messageService.error(fullMessage);
                 //If user isAuthorized but we can't get profile data and therefore cn't redirect to dashboard, lets logout
                 AuthService.ClearCredentials();
 
@@ -1224,11 +1224,6 @@ angular.injector(['ng']).get('$http').get('./config.json')
         angular.element(document).ready(function() {
             angular.bootstrap(document, ['app']);
         });
-    })
-    .catch((err) => {
-        //Display error message if couldn't get config
-        alertify.set('notifier','delay', 0);
-        alertify.error('Can\'t get app config, please try to reload page');
     });
 
 

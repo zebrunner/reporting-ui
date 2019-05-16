@@ -1,16 +1,16 @@
 'use strict';
 
-const fileUploadModalController = ($scope, $mdDialog, toolName, settingName, UtilService, toolsService) => {
+const fileUploadModalController = ($scope, $mdDialog, toolName, settingName, UtilService, toolsService, messageService) => {
     'ngInject';
 
     function uploadFile(multipartFile) {
         toolsService.uploadSettingFile(multipartFile, toolName, settingName)
             .then(function (rs) {
                 if (rs.success) {
-                    alertify.success('File was uploaded');
+                    messageService.success('File was uploaded');
                     closeModal(rs.data);
                 } else {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
     }

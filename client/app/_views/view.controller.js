@@ -7,7 +7,7 @@
 
     // **************************************************************************
     function ViewController($scope, $location, $state, $mdDialog, $stateParams, UtilService, toolsService,
-                            TestRunService, JobService, ViewService, TestService, API_URL) {
+                            TestRunService, JobService, ViewService, TestService, API_URL, messageService) {
         'ngInject';
 
         $scope.view = {};
@@ -270,11 +270,11 @@
                     if(rs.success)
                     {
                         testRun.status = 'IN_PROGRESS';
-                        alertify.success("Rebuild triggered in CI service");
+                        messageService.success("Rebuild triggered in CI service");
                     }
                     else
                     {
-                    		alertify.error(rs.message);
+                    		messageService.error(rs.message);
                     }
                 });
             }
@@ -326,7 +326,7 @@
     }
 
     // **************************************************************************
-    function JobsViewController($scope, $mdDialog, $state, $stateParams, JobService, viewId, jobs, existingJobView) {
+    function JobsViewController($scope, $mdDialog, $state, $stateParams, JobService, viewId, jobs, existingJobView, messageService) {
         'ngInject';
 
         $scope.edit = existingJobView != null;
@@ -370,11 +370,11 @@
                 {
                     $scope.hide();
                     $state.reload();
-                    alertify.success('Job view created successfully');
+                    messageService.success('Job view created successfully');
                 }
                 else
                 {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -391,11 +391,11 @@
                 {
                     $scope.hide();
                     $state.reload();
-                    alertify.success('Job view updated successfully');
+                    messageService.success('Job view updated successfully');
                 }
                 else
                 {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };
@@ -406,11 +406,11 @@
                 {
                     $scope.hide();
                     $state.reload();
-                    alertify.success('Job view deleted successfully');
+                    messageService.success('Job view deleted successfully');
                 }
                 else
                 {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
         };

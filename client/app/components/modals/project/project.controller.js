@@ -3,7 +3,7 @@
 
     angular.module('app').controller('ProjectController', ProjectController);
 
-    function ProjectController($scope, $mdDialog, ProjectService, UtilService) {
+    function ProjectController($scope, $mdDialog, ProjectService, UtilService, messageService) {
         'ngInject';
 
         $scope.project = {};
@@ -12,10 +12,10 @@
         $scope.createProject = function(project){
             ProjectService.createProject(project).then(function(rs) {
                 if (rs.success) {
-                    alertify.success("Project created successfully");
+                    messageService.success("Project created successfully");
                 } else
                 {
-                    alertify.error(rs.message);
+                    messageService.error(rs.message);
                 }
             });
             $scope.hide();

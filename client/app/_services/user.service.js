@@ -5,7 +5,7 @@
         .module('app.services')
         .service('UserService', UserService);
 
-    function UserService($httpMock, $cookies, UtilService, API_URL, $q) {
+    function UserService($httpMock, $cookies, UtilService, API_URL, $q, messageService) {
         'ngInject';
 
         let _currentUser = null;
@@ -112,19 +112,19 @@
 
                         service.currentUser.pefrDashboardId = rs.data['performanceDashboardId'];
                         if (!service.currentUser.pefrDashboardId) {
-                            alertify.error('\'User Performance\' dashboard is unavailable!');
+                            messageService.error('\'User Performance\' dashboard is unavailable!');
                         }
 
                         service.currentUser.personalDashboardId = rs.data['personalDashboardId'];
                         if (!service.currentUser.personalDashboardId) {
-                            alertify.error('\'Personal\' dashboard is unavailable!');
+                            messageService.error('\'Personal\' dashboard is unavailable!');
                         }
 
                         service.currentUser.stabilityDashboardId = rs.data['stabilityDashboardId'];
 
                         service.currentUser.defaultDashboardId = rs.data['defaultDashboardId'];
                         if (!service.currentUser.defaultDashboardId) {
-                            alertify.warning('Default Dashboard is unavailable!');
+                            messageService.warning('Default Dashboard is unavailable!');
                         }
 
                         return service.currentUser;

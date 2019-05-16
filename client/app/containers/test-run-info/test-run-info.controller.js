@@ -8,7 +8,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
                                                              elasticsearchService, TestRunService, UtilService,
                                                              ArtifactService, DownloadService, $stateParams, OFFSET,
                                                              API_URL, $state, $httpMock, TestRunsStorage,
-                                                             TestService, $transitions) {
+                                                             TestService, $transitions, messageService) {
     'ngInject';
 
     const TENANT = $rootScope.globals.auth.tenant;
@@ -468,7 +468,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
                 downloadZipFile(name, formattedData);
             })
             .catch(() => {
-                alertify.error('Unable to download all files, please try again.');
+                messageService.error('Unable to download all files, please try again.');
             });
     };
 
