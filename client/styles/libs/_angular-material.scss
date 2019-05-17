@@ -36,18 +36,37 @@ md-toast {
             background-color: $brand-primary;
         }
     }
-    .md-toast-content {
-        background-color: white;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    }
-    &.md-success-theme .md-toast-content {
-        color: $brand-success;
-    }
-    &.md-error-theme .md-toast-content {
-        color: $brand-danger;
-    }
-    &.md-warning-theme .md-toast-content {
-        color: $brand-warning
+    &.message-toast {
+        opacity: 0.9;
+        border-radius: 4px;
+        //&._success {
+        //    color: $brand-success;
+        //}
+        &._error {
+            .md-toast-content {
+                color: $brand-danger;
+            }
+        }
+        &._warning {
+            .md-toast-content {
+                color: $brand-warning;
+            }
+        }
+
+        .md-toast-content {
+            background-color: white;
+            color: #000;
+            font-weight: 500;
+            box-shadow: 0 0 5.6px 0.4px rgba(5, 0, 0, 0.25);
+        }
+
+        @media screen and (max-width: 959px) {
+            border-radius: 0;
+            box-shadow: 0 0 5.6px 0.4px rgba(5, 0, 0, 0.25);
+            .md-toast-content {
+                border-radius: 0;
+            }
+        }
     }
 }
 

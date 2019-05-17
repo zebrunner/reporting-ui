@@ -3,6 +3,11 @@
 const messageService = function messageService($mdToast) {
     'ngInject';
 
+    const mainCSSClass = 'message-toast';
+    const defOptions = {
+        position: 'bottom right',
+    };
+
     return {
         success,
         error,
@@ -10,26 +15,24 @@ const messageService = function messageService($mdToast) {
     };
 
     function success(text, options) {
-        var toast = $mdToast.simple()
-                            .content(text)
-                            .theme(options && options.theme ? options.theme : 'success')
-                            .position(options && options.position ? options.position : 'bottom right');
-        $mdToast.show(toast);
+        showToast(text, options, '_success');
     }
 
+
     function error(text, options) {
-        var toast = $mdToast.simple()
-                            .content(text)
-                            .theme(options && options.theme ? options.theme : 'error')
-                            .position(options && options.position ? options.position : 'bottom right');
-        $mdToast.show(toast);
+        showToast(text, options, '_error');
     }
 
     function warning(text, options) {
-        var toast = $mdToast.simple()
-                            .content(text)
-                            .theme(options && options.theme ? options.theme : 'warning')
-                            .position(options && options.position ? options.position : 'bottom right');
+        showToast(text, options, '_warning');
+    }
+
+    function showToast(text, options = {}, localCSSClass = '') {
+        const toast = $mdToast.simple().content(text);
+
+        toast._options = {...toast._options, ...defOptions, ...options};
+        toast._options.toastClass = [toast._options.toastClass, mainCSSClass, localCSSClass].join(' ');
+
         $mdToast.show(toast);
     }
 };

@@ -60,7 +60,8 @@ $brand-success:         #8BC34A !default; // Light Green 500
 $brand-info:            #00BCD4 !default; // Cyan 500
 $brand-info-alt:        #7E57C2 !default; // Deep Purple 400
 $brand-warning:         #FFCA28 !default; // Amber 400
-$brand-danger:          #F44336 !default; // Red 500
+//$brand-danger:          #F44336 !default; // Red 500
+$brand-danger:          $red-new !default; // Red 500
 
 $skin:                  $brand-primary;
 $skin-light:            #5C6BC0;
