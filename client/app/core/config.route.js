@@ -23,7 +23,8 @@
                     url: '/:dashboardId?userId&currentUserId&currentUserName&testCaseId&testCaseName&hashcode&PARENT_JOB&PARENT_BUILD',
                     component: 'dashboardComponent',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
+                        classes: 'p-dashboard'
                     },
                     resolve: {
                         dashboard: ($transition$, $state, DashboardService, $q, $timeout, messageService) => {

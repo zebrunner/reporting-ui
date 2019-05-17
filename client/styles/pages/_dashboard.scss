@@ -1,3 +1,33 @@
+.p-dashboard {
+    @media screen and (max-width: 599px) {
+        .page {
+            padding-right: 16px;
+            padding-left: 16px;
+        }
+    }
+    @media screen and (max-width: $screen-phone) {
+        .page {
+            padding: $header_height 0 0;
+        }
+        .grid-stack.grid-stack-one-column-mode {
+            margin-bottom: 0 !important;
+
+            > .grid-stack-item {
+                margin-bottom: 0;
+                .panel {
+                    box-shadow: none;
+                    border: 0;
+                    border-bottom: 2px solid $main_container_bg;
+                }
+                &:last-of-type {
+                    .panel {
+                        border-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+}
 .page-dashboard {
 
     h3 {
