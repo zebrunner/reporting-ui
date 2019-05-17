@@ -116,8 +116,8 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             });
         $scope.$watch('$ctrl.selectedFilterRange.dateStart', function (oldValue, newVal) {
             if(oldValue) {
-                const offset = - new Date().getTimezoneOffset() / 60;
-                vm.selectedFilterRange.dateStart.setHours(offset);
+                const offset = new Date().getTimezoneOffset() / 60;
+                vm.selectedFilterRange.dateStart.setHours(- offset);
                 vm.currentValue.value = angular.copy(vm.selectedFilterRange.dateStart);
                 clearPickFilter();
                 closeDatePickerMenu();
