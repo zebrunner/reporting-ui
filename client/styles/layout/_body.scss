@@ -640,14 +640,7 @@ section.zaf-light .article-title {
 }
 
 .background-green {
-    background-color: #26a69a !important;
-}
-
-.top-header.background-green {
-    background-color: #edeff1 !important;
-    @media (max-width: $screen-phone) {
-        background-color: #26a69a !important;
-    }
+    background-color: $brand-light !important;
 }
 
 .background-darkgreen {
@@ -1942,8 +1935,8 @@ md-input-container.md-input-focused:not([md-no-float]) .md-select-placeholder sp
 
 
 md-ink-bar {
-    color: #26a69a !important;
-    background: #26a69a !important;
+    color: $brand-light !important;
+    background: $brand-light !important;
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) {
@@ -2610,12 +2603,10 @@ $light-inprogress: #68c9fd;
     right: 0;
     background-color: white;
     z-index: 79;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     
     @media(max-width: $screen-phone) {
         width: calc(100% - 60px);
         background-color: transparent;
-        box-shadow: none;
         &-container {
             &_title, &_title small {
                 color: white !important;
