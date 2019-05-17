@@ -2,13 +2,13 @@
     <div class="nav-wrapper" xmlns:font-size="http://www.w3.org/1999/xhtml">
         <ul id="nav" class="nav" data-slim-scroll data-collapse-nav>
             <li class="sidebar-menu-button bg-dark">
-                <a md-button class="menu-btn toggle-min" toggle-nav-bottom aria-label="menu toggle-nul-collapsed-min">
+                <a md-button  class="app-sidebar__link menu-btn toggle-min" toggle-nav-bottom aria-label="menu toggle-nul-collapsed-min">
                     <i class="material-icons nav-menu-icon">menu</i>
                     <i class="material-icons nav-close-icon">close</i>
                 </a>
             </li>
             <li toggle-menu ng-class="{'active':$ctrl.$state.includes('dashboard')}">
-                <a md-button aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards();">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards();">
                     <i class="material-icons">equalizer</i><span>Boards</span>
                 </a>
                 <ul class="width-icon" toggle-nav-bottom>
@@ -41,13 +41,13 @@
                 </ul>
             </li>
             <li ng-class="{'active':$ctrl.$state.includes('tests')}" toggle-nav-bottom>
-                <a md-button aria-label="menu" ui-sref="tests.runs">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="tests.runs">
                     <i class="material-icons">play_circle_outline</i>
                     <span>Runs</span>
                 </a>
             </li>
             <li has-any-permission="['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS']" toggle-menu ui-sref-active="active">
-                <a md-button aria-label="menu" ui-sref="views" data-ng-click="$ctrl.loadViews();">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="views" data-ng-click="$ctrl.loadViews();">
                     <i class="material-icons">remove_red_eye</i><span>Views</span>
                 </a>
                 <ul class="width-icon" toggle-nav-bottom>
@@ -85,7 +85,7 @@
                 </a>
             </li-->
             <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$ctrl.$state.includes('users')}" toggle-menu>
-                <a md-button aria-label="menu" ui-sref="users.list"  has-any-permission="['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS']">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="users.list"  has-any-permission="['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS']">
                     <i class="material-icons">supervisor_account</i>
                     <span>Users</span>
                 </a>
@@ -115,20 +115,20 @@
                 </ul>
             </li>
             <li ui-sref-active="active" toggle-nav-bottom>
-                <a md-button aria-label="menu" ui-sref="monitors" has-any-permission="['VIEW_MONITORS']">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="monitors" has-any-permission="['VIEW_MONITORS']">
                     <i class="material-icons">laptop_chromebook</i>
                     <span>Monitors</span>
                 </a>
             </li>
             <li ui-sref-active="active" toggle-nav-bottom>
-                <a md-button aria-label="menu" ui-sref="integrations" has-any-permission="['VIEW_INTEGRATIONS']">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="integrations" has-any-permission="['VIEW_INTEGRATIONS']">
                     <i class="material-icons">settings_input_component</i>
                     <span>Integrations</span>
                 </a>
             </li>
             <li style="flex-grow: 1"></li>
             <li class="profile"  ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-nav-bottom>
-                <a md-button aria-label="menu" ui-sref="userProfile">
+                <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="userProfile">
                     <div>
                         <profile-photo ng-model="$ctrl.currentUser.photoURL"
                                        squared="8"
@@ -141,7 +141,7 @@
                 </a>
             </li>
             <li class="projects" toggle-menu>
-                <a md-button aria-label="menu" class="_light" ui-sref="projects.list">
+                <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="projects.list">
                     <div class="projects__selected">{{$ctrl.selectedProjectShortName}}</div>
                     <div style="display: inline-block;">
                         <profile-photo id="brandPhoto"
@@ -173,7 +173,7 @@
                                 </md-radio-group>
                             </li>
                             <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">
-                                <a ng-click="$ctrl.showUploadImageDialog($event)" href=""><i class="material-icons">add_a_photo</i>Upload new logo</a>
+                                <a ng-click="$ctrl.showUploadImageDialog($event)" href=""><i class="material-icons">add_circle_outline</i><span>Upload new logo</span></a>
                             </li>
                         </ul>
                     </li>

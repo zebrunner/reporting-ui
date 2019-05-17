@@ -210,6 +210,13 @@
                 a {
                     min-height: $sidebar-width;
                     padding: 22px 0 22px 24px;
+                    line-height: 20px;
+                    i.material-icons {
+                        line-height: 20px;
+                    }
+                    span {
+                        vertical-align: middle;
+                    }
                     @media (max-width: $screen-phone) {
                         padding: 17px 0 17px 24px;
                     }

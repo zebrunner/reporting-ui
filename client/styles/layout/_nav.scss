@@ -200,6 +200,26 @@
 }
 
 .app-sidebar {
+    .open &__link &,
+    .active &__link &,
+    &__link:hover & {
+        &__icon-wrapper._squared {
+            opacity: .8;
+        }
+    }
+    .open &__link,
+    .active &__link,
+    &__link:hover {
+        .profile-photo {
+            opacity: 1;
+        }
+    }
+    &__link {
+        .profile-photo {
+            transition: opacity .25s ease-in-out;
+            opacity: .75;
+        }
+    }
 
     &__icon-wrapper {
         &._squared {
@@ -210,6 +230,7 @@
             opacity: .4;
             display: inline-block;
             position: relative;
+            transition: opacity .25s ease-in-out;
             .material-icons {
                 color: $dark-new;
                 position: absolute;
