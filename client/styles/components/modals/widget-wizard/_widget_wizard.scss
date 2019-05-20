@@ -19,7 +19,7 @@ $wizard-white:          #ffffff;
         min-width: 300px !important;
         height: 576px;
         overflow-y: auto !important;
-        padding: 28px 8px 34px 24px !important;
+        padding: 28px 24px 34px 24px !important;
 
         @media(max-width: $screen-phone) {
             height: 100%;
@@ -64,12 +64,14 @@ $wizard-white:          #ffffff;
             }
         }
 
+        $wizard-item-height: 164px;
+
         &_elements {
             font-size: 0;
             &_item {
                 width: calc((100% - (#{$inner-padding} * 2)) / 2);
                 //max-width: 252px;
-                height: 164px;
+                height: $wizard-item-height;
                 margin: 0 $inner-padding $inner-padding 0;
 
                 $parent: &;
@@ -109,39 +111,49 @@ $wizard-white:          #ffffff;
                         position: relative;
 
                         md-icon {
+                            width: 48px !important;
+                            height: 48px !important;
                             position: absolute;
-                            right: calc((100% - 64px) / 2);
-                            bottom: 16px;
+                            right: calc((100% - 48px) / 2);
+                            top: 28px;
                             color: rgba(1, 22, 39, 0.4) !important;
                         }
 
                         &.item-icon-back {
-                            height: 74%;
+                            height: 100%;
+                            top: 0;
                             position: relative;
+                            display: inline;
 
                             md-icon {
-                                position: absolute;
+                                position: relative;
                                 height: 29px !important;
-                                left: 22px;
-                                right: auto;
-                                bottom: 16px;
+                                right: 8px;
+                                top: 0;
+                                width: 18px !important;
+                                min-width: 18px;
                                 color: rgba(1, 22, 39, 0.4) !important;
                             }
                         }
                     }
 
                     &_title {
-                        height: 26px;
+                        position: absolute;
+                        top: 36px;
+                        left: 0;
+                        height: 100%;
+                        width: 100%;
                         font-size: 14px;
                         font-weight: 500;
                         letter-spacing: normal;
                         color: rgba(1, 22, 39, 0.6);
                         opacity: 0.6;
+                        line-height: $wizard-item-height;
 
                         &.item-title-back {
-                            position: relative;
-                            bottom: 38px;
-                            left: 14px;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
                         }
                     }
 
@@ -203,14 +215,14 @@ $wizard-white:          #ffffff;
 
                 &_icon {
                     position: absolute;
-                    bottom: 0;
-                    left: 0;
+                    bottom: -3px;
+                    left: -3px;
                     padding: 0 0 $inner-padding $inner-padding;
 
                     md-icon, i {
-                        width: 34px;
-                        height: 34px;
-                        font-size: 34px;
+                        width: 26px;
+                        height: 26px;
+                        font-size: 26px;
                         color: rgba(0, 0, 0, 0.2);
                     }
 
@@ -218,8 +230,8 @@ $wizard-white:          #ffffff;
 
                 &_additional {
                     position: absolute;
-                    bottom: 0;
-                    right: 15px;
+                    bottom: -2px;
+                    right: 13px;
                     padding: 0 0 $inner-padding $inner-padding;
                     letter-spacing: 0.1px;
                     font-size: 12px;
@@ -330,6 +342,34 @@ $wizard-white:          #ffffff;
 
                     &:hover {
                         background-color: transparent !important;
+                    }
+                }
+            }
+
+            &_warning {
+
+                padding: 24px 24px 20px 20px;
+                margin-bottom: 30px;
+                background-color: rgba(#eb4454, 0.1);
+
+                font-size: 14px;
+                font-weight: 500;
+                letter-spacing: 0.1px;
+                color: #bf3744;
+
+                &_body {
+
+                }
+
+                &_list {
+                    margin-top: 8px;
+                    ul {
+                        padding-left: 16px;
+                        margin: 0;
+
+                        li {
+                            color: #000000;
+                        }
                     }
                 }
             }

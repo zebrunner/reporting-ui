@@ -13,7 +13,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         changePassword: {},
         preferences: [],
         preferenceForm: {},
-        dashboards: [],
+        get dashboards() {return DashboardService.dashboards;},
         pefrDashboardId: null,
         accessToken: null,
         widgetRefreshIntervals: [0, 30000, 60000, 120000, 300000],
@@ -54,10 +54,6 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
                 messageService.error(rs.message);
             }
         });
-    }
-
-    function canSeeHiddenDashboards() {
-        return AuthService.UserHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
     }
 
     function updateUserProfile() {
@@ -106,11 +102,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function fetchDashboards() {
-        DashboardService.GetDashboards(canSeeHiddenDashboards()).then(function (rs) {
-            if (rs.success) {
-                vm.dashboards = rs.data;
-            }
-        });
+        DashboardService.RetrieveDashboards();
     }
 
     function updateUserPassword() {

@@ -158,32 +158,68 @@ md-input-container.searchable.select {
     max-width: fit-content;
 }
 
-md-menu.widget-icon {
+md-chip:not(:hover) .show-icon-on-hover,
+.show-on-hover:not(:hover) .show-icon-on-hover {
+    display: none !important;
+}
 
-    position: absolute;
-    top: 3px;
-    right: 11px;
-    width: 24px;
-    border: none;
-
-    font-size: 24px;
-    padding: 1px;
-    color: black;
-    opacity: 0.25;
-    //padding-right: 6px;
-
-    &:hover {
-        opacity: 0.5;
+.hide-phone {
+    @media (max-width: $screen-phone) {
+        display: none !important;
     }
+}
 
-    .md-icon-button {
+.hide-tablet {
+    @media (max-width: $screen-tablet-2) {
+        display: none !important;
+    }
+}
+
+.show-phone {
+    @media (min-width: $screen-phone + 1px) {
+        display: none !important;
+    }
+}
+
+.grid-stack-item {
+    &:not(:hover) {
+        .widget-icon {
+            @media (min-width: $screen-tablet-2 + 1) {
+                display: none;
+            }
+        }
+    }
+    md-menu.widget-icon {
+
+        position: absolute;
+        top: 3px;
+        right: 11px;
         width: 24px;
-        padding: 0;
-        margin: 0;
+        border: none;
 
-        md-icon {
+        font-size: 24px;
+        padding: 1px;
+        color: black;
+        opacity: 0.25;
+        //padding-right: 6px;
+
+        &:hover {
+            opacity: 0.5;
+        }
+
+        @media (max-width: $screen-tablet-2) {
+            display: inline;
+        }
+
+        .md-icon-button {
             width: 24px;
-            min-width: 24px;
+            padding: 0;
+            margin: 0;
+
+            md-icon {
+                width: 24px;
+                min-width: 24px;
+            }
         }
     }
 }
@@ -209,12 +245,6 @@ tr.result:hover .expand-button {
   opacity: 1;
 }*/
 
-@media(min-width: $screen-md) {
-    .show-icon-on-hover {
-        display: none !important;
-    }
-}
-
 .grid-stack-item {
     .panel-default > .panel-heading {
         background-color: inherit !important;
@@ -226,11 +256,6 @@ tr.result:hover .expand-button {
             padding-right: 5px;
         }
     }
-}
-
-md-chip:hover .show-icon-on-hover,
-.show-on-hover:hover .show-icon-on-hover{
-   display: inline-block !important;
 }
 
 .tests-loading-spinner {
