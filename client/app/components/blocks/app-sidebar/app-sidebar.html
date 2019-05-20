@@ -28,7 +28,7 @@
                     <li class="sub-search search-menu">
                         <ul ui-sortable="$ctrl.dashboardSortableOptions" ng-model="$ctrl.dashboardList">
                             <li data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy: 'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">
-                                <span has-any-permission="['MODIFY_DASHBOARDS']">
+                                <span has-any-permission="['MODIFY_DASHBOARDS']" ng-if="$ctrl.dashboardList.length > 1">
                                     <i class="material-icons show-icon-on-hover drag-actor hide-tablet" ng-mouseup="$ctrl.activateSorter(false)" ng-mousedown="$ctrl.activateSorter(true)">drag_indicator</i>
                                 </span>
                                 <a toggle-menu="close" md-button aria-label="menu" class="show-part" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
