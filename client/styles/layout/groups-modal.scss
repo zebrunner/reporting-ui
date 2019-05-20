@@ -2,7 +2,6 @@
 
 .groups-modal {
     max-width: 871px;
-    max-height: 607px;
     &__form-fields {
         padding: 30px 20px;
         border-bottom: 1px solid rgba(#000000, .15);
@@ -145,5 +144,8 @@
                 max-width: calc(50% - 12px);
             }
         }
+    }
+    @media screen and (min-height: 607px) {
+        max-height: 607px;
     }
 }
