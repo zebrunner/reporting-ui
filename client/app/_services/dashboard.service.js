@@ -3,7 +3,7 @@
 
     angular
         .module('app.services')
-        .factory('DashboardService', ['$httpMock', '$cookies', '$rootScope', '$location', '$q', 'UtilService', 'AuthService', '$httpParamSerializer', 'API_URL', DashboardService])
+        .service('DashboardService', DashboardService);
 
     function DashboardService($httpMock, $cookies, $rootScope, $location, $q, UtilService, AuthService, $httpParamSerializer, API_URL) {
 
