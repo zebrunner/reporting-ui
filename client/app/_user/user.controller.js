@@ -13,7 +13,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         changePassword: {},
         preferences: [],
         preferenceForm: {},
-        dashboards: [],
+        get dashboards() {return DashboardService.dashboards;},
         pefrDashboardId: null,
         accessToken: null,
         widgetRefreshIntervals: [0, 30000, 60000, 120000, 300000],
@@ -102,9 +102,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function fetchDashboards() {
-        DashboardService.RetrieveDashboards().then(function (rs) {
-            DashboardService.dashboards = rs.data;
-        });
+        DashboardService.RetrieveDashboards();
     }
 
     function updateUserPassword() {

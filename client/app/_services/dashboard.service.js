@@ -7,9 +7,11 @@
 
     function DashboardService($httpMock, $cookies, $rootScope, $location, $q, UtilService, AuthService, $httpParamSerializer, API_URL) {
 
+        'ngInject';
+
         let dashboards = [];
 
-        var service = {
+        const service = {
 
             GetDashboards: GetDashboards,
             RetrieveDashboards: RetrieveDashboards,
@@ -158,7 +160,7 @@
                     GetDashboards().then(function (rs) {
                         if (rs.success) {
                             dashboards = rs.data;
-                            resolve(rs.data);
+                            resolve(dashboards);
                         } else {
                             reject(rs.message);
                         }
@@ -168,7 +170,7 @@
                     GetDashboards(true).then(function (rs) {
                         if (rs.success) {
                             dashboards = rs.data;
-                            resolve(rs.data);
+                            resolve(dashboards);
                         } else {
                             reject(rs.message);
                         }

@@ -11,7 +11,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             id: 'choose',
             title: 'Choose template',
             nextDisabled: function (form) {
-                return ! $scope.widget.widgetTemplate;
+                return !$scope.widget.widgetTemplate;
             },
             onLoad: function () {
                 if(! $scope.templates) {
@@ -31,7 +31,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             id: 'choose-create',
             title: 'Choose widget',
             nextDisabled: function (form) {
-                return ! $scope.widget.widgetTemplate;
+                return !$scope.widget.widgetTemplate;
             },
             onLoad: function () {
                 if(! $scope.widgets) {

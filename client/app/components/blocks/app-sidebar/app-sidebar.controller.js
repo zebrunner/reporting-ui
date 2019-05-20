@@ -148,6 +148,8 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         vm.dashboardsLoaded = false;
         DashboardService.RetrieveDashboards().then(function (response) {
             vm.dashboardsLoaded = true;
+        }, function (rs) {
+            vm.dashboardsLoaded = true;
         });
     };
 
