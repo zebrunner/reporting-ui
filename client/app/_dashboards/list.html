@@ -52,7 +52,7 @@
                     <div ng-attr-id="widget-container-{{ widget.id }}" class="panel panel-default grid-stack-item-content" zafira-background-theme="graph">
                         <div class="panel-heading">
                             {{widget.title}}
-                            <md-menu class="show-icon-on-hover show-phone pull-right widget-icon" data-html2canvas-ignore>
+                            <md-menu class="pull-right widget-icon" data-html2canvas-ignore>
                                     <md-button name="widgetMenu" aria-label="Widget settings" class="md-icon-button"
                                                data-ng-click="$mdMenu.open($event);">
                                         <md-icon class="material-icons">more_vert</md-icon>
@@ -72,7 +72,7 @@
                                         </md-menu-item>
                                         <md-menu-item class="hide-phone">
                                             <md-button name="editWidget" data-ng-click="deleteDashboardWidget(widget)" has-any-permission="['MODIFY_WIDGETS']">
-                                                <md-icon class="material-icons">delete</md-icon>
+                                                <md-icon class="material-icons">remove_circle_outline</md-icon>
                                                 Delete from dashboard
                                             </md-button>
                                         </md-menu-item>

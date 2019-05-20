@@ -56,10 +56,6 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         });
     }
 
-    function canSeeHiddenDashboards() {
-        return AuthService.UserHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
-    }
-
     function updateUserProfile() {
         const profile = angular.copy(vm.user);
 
@@ -106,10 +102,8 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function fetchDashboards() {
-        DashboardService.GetDashboards(canSeeHiddenDashboards()).then(function (rs) {
-            if (rs.success) {
-                vm.dashboards = rs.data;
-            }
+        DashboardService.RetrieveDashboards().then(function (rs) {
+            DashboardService.dashboards = rs.data;
         });
     }
 

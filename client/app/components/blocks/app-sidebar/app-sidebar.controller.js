@@ -24,7 +24,6 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
     const vm = {
         DashboardService: DashboardService,
         version: null,
-        dashboardList: [],
         views: [],
         projects: [],
         $state: $state,
@@ -51,6 +50,7 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         get companyLogo() { return $rootScope.companyLogo; },
         get currentUser() { return UserService.currentUser; },
         get isMobile() { return windowWidthService.isMobile(); },
+        get dashboardList() { return DashboardService.dashboards; },
     };
 
     vm.$onInit = initController;
@@ -129,7 +129,7 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             .then(function (rs) {
                 if(rs) {
                     $state.go('dashboard.page', {dashboardId: rs.id});
-                    vm.dashboardList.splice(rs.position, 0, rs);
+                    DashboardService.dashboards.splice(rs.position, 0, rs);
                     delete rs.action;
                 }
             }, function () {
@@ -146,34 +146,8 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
 
     function loadDashboards() {
         vm.dashboardsLoaded = false;
-        getDashboards().then(function (response) {
+        DashboardService.RetrieveDashboards().then(function (response) {
             vm.dashboardsLoaded = true;
-        });
-    };
-
-    function getDashboards() {
-        return $q(function (resolve, reject) {
-            if (vm.hasHiddenDashboardPermission()) {
-                DashboardService.GetDashboards().then(function (rs) {
-                    if (rs.success) {
-                        vm.dashboardList = rs.data;
-                        resolve(rs.data);
-                    } else {
-                        reject(rs.message);
-                    }
-                });
-            }
-            else {
-                var hidden = true;
-                DashboardService.GetDashboards(hidden).then(function (rs) {
-                    if (rs.success) {
-                        vm.dashboardList = rs.data;
-                        resolve(rs.data);
-                    } else {
-                        reject(rs.message);
-                    }
-                });
-            }
         });
     };
 

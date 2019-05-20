@@ -3,37 +3,48 @@
 
     angular
         .module('app.services')
-        .factory('DashboardService', ['$httpMock', '$cookies', '$rootScope', '$location', 'UtilService', '$httpParamSerializer', 'API_URL', DashboardService])
+        .factory('DashboardService', ['$httpMock', '$cookies', '$rootScope', '$location', '$q', 'UtilService', 'AuthService', '$httpParamSerializer', 'API_URL', DashboardService])
 
-    function DashboardService($httpMock, $cookies, $rootScope, $location, UtilService, $httpParamSerializer, API_URL) {
+    function DashboardService($httpMock, $cookies, $rootScope, $location, $q, UtilService, AuthService, $httpParamSerializer, API_URL) {
 
-    	var service = {};
+        let dashboards = [];
 
-        service.GetDashboards = GetDashboards;
-        service.GetDashboardByTitle = GetDashboardByTitle;
-        service.CreateDashboard = CreateDashboard;
-        service.UpdateDashboard = UpdateDashboard;
-        service.UpdateDashboardOrders = UpdateDashboardOrders;
-        service.DeleteDashboard = DeleteDashboard;
-        service.CreateDashboardAttribute = CreateDashboardAttribute;
-        service.CreateDashboardAttributes = CreateDashboardAttributes;
-        service.UpdateDashboardAttribute = UpdateDashboardAttribute;
-        service.DeleteDashboardAttribute = DeleteDashboardAttribute;
-        service.GetDashboardById = GetDashboardById;
-        service.AddDashboardWidget = AddDashboardWidget;
-        service.UpdateDashboardWidget = UpdateDashboardWidget;
-        service.UpdateDashboardWidgets = UpdateDashboardWidgets;
-        service.DeleteDashboardWidget = DeleteDashboardWidget;
-        service.SendDashboardByEmail = SendDashboardByEmail;
-        service.GetWidgets = GetWidgets;
-        service.CreateWidget = CreateWidget;
-        service.UpdateWidget = UpdateWidget;
-        service.DeleteWidget = DeleteWidget;
-        service.ExecuteWidgetSQL = ExecuteWidgetSQL;
+        var service = {
 
-        service.GetWidgetTemplates = GetWidgetTemplates;
-        service.PrepareWidgetTemplate = PrepareWidgetTemplate;
-        service.ExecuteWidgetTemplateSQL = ExecuteWidgetTemplateSQL;
+            GetDashboards: GetDashboards,
+            RetrieveDashboards: RetrieveDashboards,
+            GetDashboardByTitle: GetDashboardByTitle,
+            CreateDashboard: CreateDashboard,
+            UpdateDashboard: UpdateDashboard,
+            UpdateDashboardOrders: UpdateDashboardOrders,
+            DeleteDashboard: DeleteDashboard,
+            CreateDashboardAttribute: CreateDashboardAttribute,
+            CreateDashboardAttributes: CreateDashboardAttributes,
+            UpdateDashboardAttribute: UpdateDashboardAttribute,
+            DeleteDashboardAttribute: DeleteDashboardAttribute,
+            GetDashboardById: GetDashboardById,
+            AddDashboardWidget: AddDashboardWidget,
+            UpdateDashboardWidget: UpdateDashboardWidget,
+            UpdateDashboardWidgets: UpdateDashboardWidgets,
+            DeleteDashboardWidget: DeleteDashboardWidget,
+            SendDashboardByEmail: SendDashboardByEmail,
+            GetWidgets: GetWidgets,
+            CreateWidget: CreateWidget,
+            UpdateWidget: UpdateWidget,
+            DeleteWidget: DeleteWidget,
+            ExecuteWidgetSQL: ExecuteWidgetSQL,
+
+            GetWidgetTemplates: GetWidgetTemplates,
+            PrepareWidgetTemplate: PrepareWidgetTemplate,
+            ExecuteWidgetTemplateSQL: ExecuteWidgetTemplateSQL,
+
+            get dashboards() {
+                return dashboards;
+            },
+            set dashboards(data) {
+                dashboards = data;
+            }
+        };
 
         return service;
 
@@ -140,5 +151,35 @@
             var url = UtilService.buildURL(API_URL + '/api/widgets/templates/sql', queryParams);
             return $httpMock.post(url, sqlTemplateAdapter).then(UtilService.handleSuccess, UtilService.handleError('Unable to execute SQL'));
         }
+
+        function RetrieveDashboards() {
+            return $q(function (resolve, reject) {
+                if (hasHiddenDashboardPermission()) {
+                    GetDashboards().then(function (rs) {
+                        if (rs.success) {
+                            dashboards = rs.data;
+                            resolve(rs.data);
+                        } else {
+                            reject(rs.message);
+                        }
+                    });
+                }
+                else {
+                    GetDashboards(true).then(function (rs) {
+                        if (rs.success) {
+                            dashboards = rs.data;
+                            resolve(rs.data);
+                        } else {
+                            reject(rs.message);
+                        }
+                    });
+                }
+            });
+        };
+
+        function hasHiddenDashboardPermission(){
+            return AuthService.UserHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
+        };
+
     }
 })();
