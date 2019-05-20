@@ -19,7 +19,7 @@
                             <md-icon md-svg-src="../../../../assets/images/select_widget.svg"></md-icon>
                         </div>
                         <div class="widget-wizard_container_elements_item_add_title">
-                            Select from existing widgets
+                            Choose from existing widgets
                         </div>
                     </zf-radio-button-body>
                 </zf-radio-button>
@@ -203,7 +203,7 @@
                     </div>
                     <div class="widget-wizard_container_elements_warning_list">
                         <ul>
-                            <li ng-repeat="d in ::dashboards | orderBy: 'title' track by $index">
+                            <li ng-repeat="d in ::dashboards | orderBy: 'title' track by d.id">
                                 {{d.title}}
                             </li>
                         </ul>
