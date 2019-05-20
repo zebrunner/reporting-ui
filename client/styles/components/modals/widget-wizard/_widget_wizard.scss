@@ -19,7 +19,7 @@ $wizard-white:          #ffffff;
         min-width: 300px !important;
         height: 576px;
         overflow-y: auto !important;
-        padding: 28px 24px 34px 24px !important;
+        padding: 28px 8px 34px 24px !important;
 
         @media(max-width: $screen-phone) {
             height: 100%;
@@ -350,6 +350,7 @@ $wizard-white:          #ffffff;
 
                 padding: 24px 24px 20px 20px;
                 margin-bottom: 30px;
+                margin-right: 16px;
                 background-color: rgba(#eb4454, 0.1);
 
                 font-size: 14px;
@@ -488,8 +489,9 @@ $wizard-white:          #ffffff;
     }
 
     button {
-        min-width: 88px;
+        min-width: 80px;
         border-radius: 4px;
+        box-shadow: none !important;
     }
 
     @media(min-width: $screen-desktop) {
