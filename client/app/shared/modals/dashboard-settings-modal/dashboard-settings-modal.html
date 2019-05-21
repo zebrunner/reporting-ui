@@ -1,4 +1,4 @@
-<md-dialog flex="50" aria-label="User profile" zafira-background-theme="modal">
+<md-dialog class="dashboard-dialog" flex="50" aria-label="Dashboard settings" zafira-background-theme="modal">
     <form class="form-validation" name="dashboard_form" ng-submit="UtilService.untouchForm(dashboard_form)" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -18,21 +18,16 @@
         </md-toolbar>
 
         <md-dialog-content>
-            <div class="md-dialog-content">
+            <div class="md-dialog-content dashboard-dialog-container">
                 <ng-form ng-if="isNew || dashboard.editable" name="info">
                     <div layout layout-sm="column">
-                        <md-input-container flex>
-                            <label>Title</label>
-                            <input type="text" ng-model="dashboard.title" name="title" autofocus="true" required/>
-                        </md-input-container>
+                        <input placeholder="Set title" class="form-fields__input" type="text" name="title" data-ng-model="dashboard.title" autofocus="true" required>
                     </div>
                     <div layout layout-sm="column">
-                        <md-input-container style="float: right; margin-top: 0" flex>
-                            <span>Hidden</span>
-                            <div class="layout">
-                                <md-switch style="margin-top: 0" class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch"></md-switch>
-                            </div>
-                        </md-input-container>
+                        <div class="dashboard-dialog-container_hidden">
+                            <div class="dashboard-dialog-container_hidden_label">Hidden</div>
+                            <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch"></md-switch>
+                        </div>
                     </div>
                 </ng-form>
                 <div data-ng-if="!isNew">
@@ -73,17 +68,17 @@
 
         <md-dialog-actions ng-if="isNew || dashboard.editable" layout="row">
             <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew" type="button"
-                       class="md-raised btn-w-md md-warn"
+                       class="md-raised btn-w-md md-warn zf-button-md"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="deleteDashboard(dashboard);">
                 Delete
             </md-button>
              <md-button id="create" data-ng-if="isNew" type="submit"
-                       class="md-raised btn-w-md md-primary"
+                       class="md-raised btn-w-md md-primary zf-button-md"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="createDashboard(dashboard)">
                 Create
             </md-button>
             <md-button id="save" data-ng-if="!isNew" type="submit"
-                       class="md-raised btn-w-md md-primary"
+                       class="md-raised btn-w-md md-primary zf-button-md"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="updateDashboard(dashboard)">
                 Save
             </md-button>
