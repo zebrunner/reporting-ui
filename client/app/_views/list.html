@@ -7,8 +7,8 @@
                     <span>New view</span>
                 </button>
         </zf-sub-header-button>
-        <zf-sub-header-button>
-                <button ng-if="isToolConnected('JENKINS')" class="fixed-page-header__btn zf-header-button" ng-click="rebuildJobs()">
+        <zf-sub-header-button ng-if="isToolConnected('JENKINS')">
+                <button class="fixed-page-header__btn zf-header-button" ng-click="rebuildJobs()">
                     <md-icon class="material-icons">autorenew</md-icon>
                     <span>Rerun</span>
                     <md-tooltip md-direction="bottom">Rerun</md-tooltip>

@@ -2695,7 +2695,7 @@ $light-inprogress: #68c9fd;
                 align-items: center;
             }
             ~ .fixed-page-header-container_button {
-                margin-left: 10px;
+                margin-left: 22px;
             }
             @media(max-width: $screen-phone) {
                 text-align: center;
@@ -2721,9 +2721,11 @@ $light-inprogress: #68c9fd;
                     border-radius: 4px;
                     height: 32px;
                     min-height: 32px;
+                    min-width: 80px;
+                    width: 80px;
 
                     &:not(:last-child) {
-                        margin-right: 10px;
+                        margin-right: 8px;
                     }
                 }
                 &.zf-header-button {
@@ -2858,9 +2860,10 @@ $light-inprogress: #68c9fd;
                 width: 32px;
                 height: 32px;
                 padding: 0;
-                margin-left: 26px;
+                margin-left: 16px;
                 i.material-icons {
                     margin: 0;
+                    vertical-align: middle;
                 }
             }
             &.header-option-selected {
@@ -2875,6 +2878,7 @@ $light-inprogress: #68c9fd;
             }
             > div {
                 text-align: end;
+                font-size: 0;
                 i {
                     color: #b5b5b5;
                     font-size: 24px;
@@ -3415,6 +3419,12 @@ $light-inprogress: #68c9fd;
 
     .md-select-value {
         background-image: none !important;
+    }
+}
+
+.fixed-page-header._widget-placement {
+    .fixed-page-header-container_button {
+        margin-left: 13px;
     }
 }
 
