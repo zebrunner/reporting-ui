@@ -1,6 +1,28 @@
 <div class="page-wrapper">
-    <zf-sub-header>
+    <zf-sub-header ng-class="{'_widget-placement': MODE === 'WIDGET_PLACEMENT'}">
         <zf-sub-header-title>{{dashboard.title}}</zf-sub-header-title>
+        <zf-sub-header-options ng-class="{'header-option-selected': MODE === 'WIDGET_PLACEMENT'}">
+            <div>
+                <button class="fixed-page-header__tooltip-btn" data-ng-if="MODE !== 'WIDGET_PLACEMENT' && $ctrl.isToolConnected('EMAIL') && dashboard.widgets.length" ng-click="showEmailDialog($event);">
+                    <i class="material-icons">
+                        send
+                    </i>
+                    <md-tooltip md-direction="bottom">Send by email</md-tooltip>
+                </button>
+                <button class="fixed-page-header__tooltip-btn  hide-phone" ng-if="isGridStackEvailableToEdit() && dashboard.widgets.length" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
+                    <i class="material-icons">
+                        dashboard
+                    </i>
+                    <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
+                </button>
+                <button class="fixed-page-header__tooltip-btn hide-phone" has-any-permission="['MODIFY_DASHBOARDS']" data-ng-if="MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                    <md-tooltip md-direction="bottom">Edit</md-tooltip>
+                </button>
+            </div>
+        </zf-sub-header-options>
         <zf-sub-header-button>
             <div ng-if="MODE !== 'WIDGET_PLACEMENT'">
                 <button has-any-permission="['MODIFY_WIDGETS']" class="fixed-page-header__btn _dashboard zf-header-button" ng-click="showWidgetWizardDialog($event, {model : '{}'}, dashboard);">
@@ -9,7 +31,7 @@
                 </button>
             </div>
             <div ng-if="MODE === 'WIDGET_PLACEMENT'">
-                <md-button id="discard" class="md-raised" style="background-color: rgba(0, 0, 0, .1)" ng-click="resetGrid();">
+                <md-button id="discard" ng-click="resetGrid();">
                     Cancel
                 </md-button>
                 <md-button id="apply" class="md-primary md-raised" ng-click="updateWidgetsPosition()">
@@ -17,28 +39,6 @@
                 </md-button>
             </div>
         </zf-sub-header-button>
-        <zf-sub-header-options ng-class="{'header-option-selected': MODE === 'WIDGET_PLACEMENT'}">
-            <div>
-                <button class="fixed-page-header__tooltip-btn" data-ng-if="$ctrl.isToolConnected('EMAIL') && MODE !== 'WIDGET_PLACEMENT' && dashboard.widgets.length" ng-click="showEmailDialog($event);">
-                    <i class="material-icons">
-                        send
-                    </i>
-                    <md-tooltip md-direction="bottom">Send by email</md-tooltip>
-                </button>
-                <button class="fixed-page-header__tooltip-btn hide-phone" has-any-permission="['MODIFY_DASHBOARDS']" data-ng-if="MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                    <md-tooltip md-direction="bottom">Edit</md-tooltip>
-                </button>
-                <button class="fixed-page-header__tooltip-btn  hide-phone" ng-if="isGridStackEvailableToEdit() && dashboard.widgets.length" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                    <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
-                </button>
-            </div>
-        </zf-sub-header-options>
     </zf-sub-header>
     <div id="dashboard_content" class="page page-dashboard">
         <empty-page-component ng-if="!dashboard.widgets.length && !isPageLoading" content="emptyContent"></empty-page-component>

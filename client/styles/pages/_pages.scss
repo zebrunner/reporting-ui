@@ -46,7 +46,7 @@
 .p-users, .p-monitors {
     .fixed-page-header-container_options {
         md-input-container {
-            margin: 0 14px 0 0;
+            margin: 0;
             &.md-input-focused, &.md-input-has-value {
                 .md-input {
                     border-color: rgba(0,0,0,0.25);
@@ -568,9 +568,10 @@
         height: 114px;
         background: url('../assets/images/empty-pages/empty_screen_arrow.svg') center no-repeat;
         background-size: contain;
-        right: 120px;
+        right: 68px;
         top: calc(#{$header_height} + 30px);
         position: absolute;
+        opacity: .5;
     }
     @media (max-width: $screen-phone) {
         &-wrapper {

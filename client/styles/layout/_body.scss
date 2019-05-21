@@ -193,8 +193,7 @@ md-chip:not(:hover) .show-icon-on-hover,
 
         position: absolute;
         top: 3px;
-        right: 11px;
-        width: 24px;
+        right: 0;
         border: none;
 
         font-size: 24px;
@@ -212,7 +211,6 @@ md-chip:not(:hover) .show-icon-on-hover,
         }
 
         .md-icon-button {
-            width: 24px;
             padding: 0;
             margin: 0;
 
@@ -2697,7 +2695,7 @@ $light-inprogress: #68c9fd;
                 align-items: center;
             }
             ~ .fixed-page-header-container_button {
-                margin-left: 10px;
+                margin-left: 24px;
             }
             @media(max-width: $screen-phone) {
                 text-align: center;
@@ -2723,9 +2721,11 @@ $light-inprogress: #68c9fd;
                     border-radius: 4px;
                     height: 32px;
                     min-height: 32px;
+                    min-width: 80px;
+                    width: 80px;
 
                     &:not(:last-child) {
-                        margin-right: 10px;
+                        margin-right: 8px;
                     }
                 }
                 &.zf-header-button {
@@ -2860,27 +2860,37 @@ $light-inprogress: #68c9fd;
                 width: 32px;
                 height: 32px;
                 padding: 0;
-                margin-left: 26px;
+                margin-left: 16px;
+                border-radius: 8px;
                 i.material-icons {
                     margin: 0;
+                    vertical-align: middle;
+                }
+
+                &:hover {
+                    background-color: rgba(1,22,39, 0.1);
                 }
             }
             &.header-option-selected {
                 > div {
-                    i {
-                        color: rgba(0, 0, 0, 0.5);
-                        opacity: 0.9;
-                        width: 21px;
-                        box-sizing: content-box;
+                    button {
+                        background-color: rgba(1,22,39, 0.1);
+                        i {
+                            color: rgba(0, 0, 0, 1);
+                            opacity: 0.9;
+                            width: 24px;
+                            box-sizing: content-box;
+                        }
                     }
                 }
             }
             > div {
                 text-align: end;
+                font-size: 0;
                 i {
                     color: #b5b5b5;
                     font-size: 24px;
-                    width: 21px;
+                    width: 24px;
                     @media(max-width: $screen-phone) { 
                         color: rgba(#ffffff, .5)
                     }
@@ -3420,6 +3430,12 @@ $light-inprogress: #68c9fd;
     }
 }
 
+.fixed-page-header._widget-placement {
+    .fixed-page-header-container_button {
+        margin-left: 17px;
+    }
+}
+
 users-component md-tab-item.md-disabled {
     display: none;
 }
@@ -3498,4 +3514,47 @@ users-component md-tab-item.md-disabled {
             top: 0;
         }
     }
+}
+
+.dashboard-dialog {
+    .dashboard-dialog-container {
+        padding: 20px !important;
+
+        .form-fields__input {
+            max-width: 340px;
+            height: 40px;
+        }
+
+        [ng-messages] {
+            height: 100%;
+            vertical-align: middle;
+            line-height: 40px;
+            margin-left: 20px;
+            color: red;
+        }
+
+        &_hidden {
+            margin-top: 15px;
+            display: flex;
+
+            &_label {
+                vertical-align: baseline;
+                line-height: 30px;
+            }
+        }
+
+        md-switch {
+            margin: 0;
+            margin-left: 16px;
+        }
+    }
+
+    md-dialog-actions{
+        padding: 0 20px 12px 20px;
+    }
+}
+
+.zf-button-md {
+    min-width: 80px;
+    width: 80px;
 }
