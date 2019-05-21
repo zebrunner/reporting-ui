@@ -132,7 +132,7 @@
 
         function isModalSearchActive() {
             let size = Object.keys(_searchParams).length;
-            if(size > 3 || size === 3 && (_searchParams.reviewed === true || (!_searchParams.hasOwnProperty('reviewed') &&  !_searchParams.hasOwnProperty('query')))) {
+            if(size > Object.keys(DEFAULT_SC).length || size === Object.keys(DEFAULT_SC).length && (_searchParams.reviewed === true || (!_searchParams.hasOwnProperty('reviewed') &&  !_searchParams.hasOwnProperty('query')))) {
                 return true;
             }
             else {

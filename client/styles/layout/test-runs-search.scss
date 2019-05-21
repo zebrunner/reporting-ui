@@ -57,6 +57,19 @@
         }
     }
 
+    .search-fab {
+        margin: auto;
+        height: 20px;
+        filter: invert(100%);
+        width: 20px;
+        &._list {
+            background: url('../assets/images/list.svg') center no-repeat;
+        }
+        &._checked-list {
+            background: url('../assets/images/check_list.svg') center no-repeat;
+        }
+    }
+
     md-checkbox {
         margin: 0 20px 0 4px;
         @media (max-width: $screen-phone) {
@@ -94,23 +107,23 @@
     }
 
     &, &__modal {
-    .reviewed {
-        min-width: 36px;
-        border-radius: 4px;
-        border-width: 1px;
-        background-color: transparent;
-        color: $dark-new;
-        font-weight: normal;
-        border-color: rgba($dark-new, .15);
-        &:hover {
-            border-color: rgba($dark-new, .25) !important;
-        }
-        &.label-primary {
-            background-color: $medium-teal-light-new;
-            color: #fff;
+        .reviewed {
+            min-width: 36px;
+            border-radius: 4px;
+            border-width: 1px;
+            background-color: transparent;
+            color: $dark-new;
+            font-weight: normal;
+            border-color: rgba($dark-new, .15);
+            &:hover {
+                border-color: rgba($dark-new, .25) !important;
+            }
+            &.label-primary {
+                background-color: $medium-teal-light-new;
+                color: #fff;
+            }
         }
     }
-}
 
     .date-picker-container {
         i.material-icons {

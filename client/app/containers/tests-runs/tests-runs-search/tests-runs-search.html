@@ -66,7 +66,7 @@
     <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile() && !$ctrl.isFilterActive()" md-direction="up" class="md-scale md-fab-bottom-right">
         <md-fab-trigger>
             <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" ng-click="$ctrl.showSearchDialog($event)" md-visible="tooltipVisible">
-                <span ng-class="{'fa fa-bars': $ctrl.isModalSearchActive()}" aria-hidden="true"></span>
+                <div class="search-fab" ng-class="{' _list': !$ctrl.isModalSearchActive(), '_checked-list': $ctrl.isModalSearchActive()}" aria-hidden="true"></div>
             </md-button>
         </md-fab-trigger>
     </md-fab-speed-dial>
