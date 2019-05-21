@@ -1,21 +1,12 @@
 'use strict'
-import SearchModalController from './modal/search-modal.controller';
 
-const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService, $mdDialog) {
+const SearchModalController = function SearchModalController(onApply, onReset, testsRunsService, windowWidthService, DEFAULT_SC, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, $mdDialog) {
     'ngInject';
-
     const subjectName = 'TEST_RUN';
     const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS'];
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
-
     const vm = {
         isMobile: windowWidthService.isMobile,
-        isMobileSearchActive: false,
-        fastSearchBlockExpand: false,
-        isFilterActive: testsRunsService.isFilterActive,
-        isSearchActive: testsRunsService.isSearchActive,
-        isOnlyAdditionalSearchActive: testsRunsService.isOnlyAdditionalSearchActive,
-        fastSearch: {},
         statuses: STATUSES,
         selectedRange: {
             selectedTemplate: null,
@@ -25,19 +16,14 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             showTemplate: false,
             fullscreen: false
         },
-        getActiveSearchType: testsRunsService.getActiveSearchType,
         searchParams: testsRunsService.getLastSearchParams(),
-        isModalSearchActive: testsRunsService.isModalSearchActive,
-        onChangeSearchCriteria: onChangeSearchCriteria,
-        openDatePicker: openDatePicker,
+        onChangeSearchCriteria,
+        openDatePicker,
+        closeModal,
+        onModalReset,
         onReset: onReset,
-        showSearchFilters: showSearchFilters,
-        resetSearchQuery: resetSearchQuery,
-        showAdvancedSearchFilters: false,
-        closeModal: closeModal,
-        showSearchDialog: showSearchDialog,
         onApply: onApply,
-        onModalReset: onModalReset,
+        onModalApply
     };
 
     vm.$onInit = init;
@@ -45,79 +31,24 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
     return vm;
 
     function init() {
-        vm.fastSearchBlockExpand = true;
         loadFilters();
-        readStoredParams();
     }
 
     function closeModal() {
         $mdDialog.cancel();
     };
 
-    
-    function showSearchDialog(event) {
-        $mdDialog.show({
-            controller: SearchModalController,
-            template: require('./modal/search-modal.html'),
-            parent: angular.element(document.body),
-            targetEvent: event,
-            fullscreen: true,
-            controllerAs: '$ctrl',
-            bindToController: true,
-            locals: {
-                onReset: vm.onModalReset,
-                onApply: vm.onApply,
-            }
-        });
+    function onModalApply() {
+        vm.onApply()
+        vm.closeModal();
     }
-
-    function readStoredParams() {
-        if (vm.isSearchActive()) {
-            let fromDate = testsRunsService.getSearchParam('fromDate');
-            let toDate = testsRunsService.getSearchParam('toDate');
-            const date = testsRunsService.getSearchParam('date');
-
-            date && (fromDate = toDate = date);
-            fromDate && (vm.selectedRange.dateStart = new Date(fromDate));
-            toDate && (vm.selectedRange.dateEnd = new Date(toDate));
-
-            testsRunsService.getSearchTypes().forEach(function(type) {
-                const searchValue = testsRunsService.getSearchParam(type);
-
-                searchValue && (vm.fastSearch[type] = searchValue);
-            });
-        }
-    }
-
-    function onReset() {
+    function onModalReset() {
         vm.selectedRange.dateStart = null;
         vm.selectedRange.dateEnd = null;
         vm.selectedRange.selectedTemplate = null;
         vm.selectedRange.selectedTemplateName = null;
         vm.searchParams = angular.copy(DEFAULT_SC);
-        vm.fastSearch = {};
-        testsRunsService.resetFilteringState();
-        vm.onFilterChange();
-        vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
-    }
-
-    function onModalReset() {
-        if (vm.searchParams.query) {
-            let queryTemplate = vm.searchParams.query;
-            vm.onReset();
-            vm.searchParams.query = queryTemplate;
-            vm.onChangeSearchCriteria();
-            vm.onApply();
-        }
-        else {
-            vm.onReset();
-        }
-    }
-
-    function onApply() {
-        $timeout(function() {
-            vm.onFilterChange();
-        }, 0);
+        vm.onReset();
     }
 
     function loadFilters() {
@@ -131,6 +62,15 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             loadSubjectBuilder();
         });
     }
+    function onChangeSearchCriteria() {
+        angular.forEach(vm.searchParams, function (value, name) {
+            if (vm.searchParams[name]) {
+                testsRunsService.setSearchParam(name, value);
+            } else {
+                testsRunsService.deleteSearchParam(name);
+            }
+        });
+    }
 
     function loadEnvironments() {
         return TestRunService.getEnvironments().then(function(rs) {
@@ -141,7 +81,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
 
                 return vm.environments;
             } else {
-                messageService.error(rs.message);
+                alertify.error(rs.message);
                 $q.reject(rs.message);
             }
         });
@@ -156,7 +96,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
 
                 return vm.platforms;
             } else {
-                messageService.error(rs.message);
+                alertify.error(rs.message);
 
                 return $q.reject(rs.message);
             }
@@ -207,22 +147,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         return criteria && SELECT_CRITERIAS.indexOf(criteria.name) >= 0;
     }
 
-    function onChangeSearchCriteria() {
-        angular.forEach(vm.searchParams, function (value, name) {
-            if (vm.searchParams[name]) {
-                testsRunsService.setSearchParam(name, value);
-            } else {
-                testsRunsService.deleteSearchParam(name);
-            }
-        });
-        vm.onApply();
-        if (vm.searchParams.query === '' && !testsRunsService.isModalSearchActive() && vm.isMobile()) {
-            vm.onReset();
-        }
-    }
-
     function openDatePicker($event, showTemplate) {
-        if (vm.isFilterActive()) { return; }
 
         vm.selectedRange.showTemplate = showTemplate;
 
@@ -246,19 +171,10 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                     }
                 }
 
-                onChangeSearchCriteria();
+                vm.onChangeSearchCriteria();
             }
         })
     }
-
-    function resetSearchQuery() {
-        vm.searchParams.query = null;
-        vm.onChangeSearchCriteria('query');
-    };
-
-    function showSearchFilters() {
-        vm.showAdvancedSearchFilters = ! vm.showAdvancedSearchFilters;
-    };
 }
 
-export default TestsRunsSearchController;
+export default SearchModalController;

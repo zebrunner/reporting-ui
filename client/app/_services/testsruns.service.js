@@ -30,6 +30,7 @@
             addNewTestRun: addNewTestRun,
             updateTestRun: updateTestRun,
             isOnlyAdditionalSearchActive: isOnlyAdditionalSearchActive,
+            isModalSearchActive: isModalSearchActive,
         };
 
         function getSearchTypes() {
@@ -127,6 +128,16 @@
 
         function isOnlyAdditionalSearchActive() {
             return isSearchActive() && !_searchParams.hasOwnProperty('query');
+        }
+
+        function isModalSearchActive() {
+            let size = Object.keys(_searchParams).length;
+            if(size > 3 || size === 3 && (_searchParams.reviewed === true || (!_searchParams.hasOwnProperty('reviewed') &&  !_searchParams.hasOwnProperty('query')))) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
 
         function resetFilteringState() {

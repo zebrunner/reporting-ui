@@ -1,3 +1,5 @@
+@import "../../global/var";
+
 .form-fields {
     &__input, &__select md-select-value {
         width: 100%;
@@ -5,30 +7,66 @@
         line-height: 1;
         border-radius: 4px;
         border: solid 1px;
-        border-color: rgba(1, 22, 39, 0.1);
         padding: 2px 2px 2px 12px;
+        border-color: rgba($dark-new, .15);
         height: 36px;
-        color: #000000;
+        color: $dark-new;
         background: #ffffff;
         box-sizing: border-box;
-        &:hover {
-            border-color: rgba(1, 22, 39, 0.2) !important;
-        } 
-    }
-    &__select md-select-value.md-select-placeholder {
-        padding-left: 12px;
+        &:hover:not([disabled]) {
+            border-color: rgba($dark-new, .25) !important;
+        }
     }
     &__input {
         padding-right: 12px;
+        &-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999 !important;
+            pointer-events: none;
+        }
+        &._with-icon {
+            padding-left: 36px;
+        }
+        &::-webkit-input-placeholder {
+            color: $dark-new;
+        }
+        .md-select-icon:after {
+            font-size: 9px;
+        }
+        &[disabled] {
+            &::-webkit-input-placeholder {
+                color: rgba($dark-new, .5);
+            }
+            border: solid 1px rgba($dark-new, .1);
+        }
+        
     }   
     &__select {
         margin: 0;
         &:not([disabled]):focus .md-select-value {
             border: solid 1px;
-            border-color: rgba(1, 22, 39, 0.1);
+            border-color: rgba($dark-new, .25);
         }   
         .md-select-value span:not(.md-select-icon):after {
             display: none;
+        }
+        md-select-value.md-select-placeholder{
+            padding-left: 12px;
+            color: $dark-new;
+        }
+        md-input-container.md-input-focused:not(.md-input-has-value) & .md-select-value.md-select-placeholder {
+            color: $dark-new;
+        }
+        &.md-default-theme[disabled],
+        &[disabled] {
+            color: rgba($dark-new, .5);
+            .md-select-value {
+                border: solid 1px rgba($dark-new, .1);
+                background-image: none;
+            }
         }
     }   
 }
