@@ -4,12 +4,14 @@
     &__content-wrapper {
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12), 0 4px 4px 0 rgba(0, 0, 0, 0.12);
     }
-    &__section {
-        #noData {
-            padding: 15px;
-            background-color: white;
+    &__no-content {
+        padding: 15px;
+        background-color: white;
+        @media (min-width:$breakpoint-mobile + 1) {
             border-top: 1px rgba(0, 0, 0, 0.12) solid;
         }
+    }
+    &__section {
         md-card {
             box-shadow: none;
         }
