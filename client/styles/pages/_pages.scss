@@ -571,6 +571,7 @@
         right: 68px;
         top: calc(#{$header_height} + 30px);
         position: absolute;
+        opacity: .5;
     }
     @media (max-width: $screen-phone) {
         &-wrapper {
