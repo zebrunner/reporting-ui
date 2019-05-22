@@ -26,6 +26,8 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
         }
     };
 
+    let currentText;
+
     $scope.title = EMAIL_TYPES[TYPE].title;
     $scope.subjectRequired = true;
     $scope.textRequired = true;
@@ -41,7 +43,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     $scope.keys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.SPACE];
 
     $scope.aceOptions = {
-        useWrapMode : false,
+        useWrapMode: false,
         showGutter: false,
         theme:'eclipse',
         mode: 'text',
@@ -57,8 +59,6 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
             editor.setHighlightActiveLine(false);
         }, 0);
     };
-
-    let currentText;
 
     $scope.sendEmail = function () {
         if (! $scope.users.length) {

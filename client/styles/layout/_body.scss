@@ -3651,6 +3651,7 @@ users-component md-tab-item.md-disabled {
 
     &_subject-container {
         input {
+            // 80px - padding between two inputs (for now we have only one) - pseudo padding
             width: calc((100% - 80px) / 2);
         }
     }
