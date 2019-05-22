@@ -57,18 +57,13 @@
         function buildLegend(widget) {
             var legendConfig = {};
             if(widget.widgetTemplate.legendConfig) {
-                legendConfig.legend = JSON.parse(widget.widgetTemplate.legendConfig).legend;
+                const parsedWidgetTemplateLegendConfig = JSON.parse(widget.widgetTemplate.legendConfig);
+                legendConfig.legend = parsedWidgetTemplateLegendConfig.legend;
                 legendConfig.legendItems = {};
-                var legendConfigObject = JSON.parse(widget.widgetTemplate.legendConfig);
+                const parsedConfig = widget.legendConfig ? JSON.parse(widget.legendConfig) : null;
                 angular.forEach(legendConfig.legend, function (legendName) {
-                    var existingParams;
-                    var useExistingWidgetLegendConfig = widget.id && legendConfigObject.legend.find(function (legendItem) {
-                        return legendItem === legendName;
-                    }) && widget.legendConfig;
-                    if(useExistingWidgetLegendConfig) {
-                        existingParams = JSON.parse(widget.legendConfig);
-                    }
-                    legendConfig.legendItems[legendName] = useExistingWidgetLegendConfig ? existingParams[legendName] : true;
+                    var useExistingWidgetLegendConfig = !! (widget.id && parsedConfig[legendName] !== undefined && widget.legendConfig);
+                    legendConfig.legendItems[legendName] = useExistingWidgetLegendConfig && parsedConfig ? parsedConfig[legendName] : true;
                 });
             }
             return legendConfig;
