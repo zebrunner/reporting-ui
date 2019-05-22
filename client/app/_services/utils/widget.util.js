@@ -13,7 +13,7 @@
         };
 
         function build(widget, dashboard, userId) {
-            var config = JSON.parse(widget.widgetTemplate.paramsConfig);
+            const config = JSON.parse(widget.widgetTemplate.paramsConfig);
             var envParams = getENVParams(dashboard, userId);
             angular.forEach(config, function (paramValue, paramName) {
                 var type = paramValue.type ? paramValue.type : paramValue.value !== undefined ? getType(paramValue.value) :
