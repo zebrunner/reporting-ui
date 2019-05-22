@@ -1,3 +1,10 @@
+'use strict';
+
+import 'brace';
+import 'brace/mode/text';
+import 'brace/theme/eclipse';
+import 'angular-ui-ace';
+
 const dashboardEmailModalController = function dashboardEmailModalController($scope, $rootScope, $q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService) {
     'ngInject';
 
@@ -19,20 +26,39 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
         }
     };
 
+    let currentText;
+
     $scope.title = EMAIL_TYPES[TYPE].title;
     $scope.subjectRequired = true;
     $scope.textRequired = true;
 
-    $scope.email = {};
-    $scope.email.subject = EMAIL_TYPES[TYPE].subject;
-    $scope.email.text = "This is auto-generated email, please do not reply!";
-    $scope.email.hostname = document.location.hostname;
-    $scope.email.urls = [document.location.href];
-    $scope.email.recipients = [];
+    $scope.email = {
+        subject: EMAIL_TYPES[TYPE].subject,
+        text: "This is auto-generated email, please do not reply!",
+        hostname: document.location.hostname,
+        urls: [document.location.href],
+        recipients: []
+    };
     $scope.users = [];
     $scope.keys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.SPACE];
 
-    var currentText;
+    $scope.aceOptions = {
+        useWrapMode: false,
+        showGutter: false,
+        theme:'eclipse',
+        mode: 'text',
+        rendererOptions: {
+            fontSize: '14px'
+        }
+    };
+
+    $scope.initEditorInstance = function () {
+        setTimeout(function () {
+            const editor = ace.edit('editor');
+            editor.renderer.setScrollMargin(10, 10, 10, 10);
+            editor.setHighlightActiveLine(false);
+        }, 0);
+    };
 
     $scope.sendEmail = function () {
         if (! $scope.users.length) {

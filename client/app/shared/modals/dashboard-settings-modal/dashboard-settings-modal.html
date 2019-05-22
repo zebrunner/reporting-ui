@@ -1,5 +1,5 @@
-<md-dialog class="dashboard-dialog" flex="50" aria-label="Dashboard settings" zafira-background-theme="modal">
-    <form class="form-validation" name="dashboard_form" ng-submit="UtilService.untouchForm(dashboard_form)" ng-cloak>
+<md-dialog class="dashboard-dialog" ng-class="{'__new-dialog': isNew, '__editable-dashboard': dashboard.editable}" flex="50" aria-label="Dashboard settings" zafira-background-theme="modal">
+    <form class="form-validation" novalidate name="dashboard_form" ng-submit="UtilService.untouchForm(dashboard_form)" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle">
@@ -19,9 +19,9 @@
 
         <md-dialog-content>
             <div class="md-dialog-content dashboard-dialog-container">
-                <ng-form ng-if="isNew || dashboard.editable" name="info">
+                <ng-form name="info">
                     <div>
-                        <input placeholder="Set title" class="form-fields__input form-control" type="text" name="title" data-ng-model="dashboard.title" ng-change="checkDuplicateDashboardTitle(dashboard.title, dashboard_form.info)" autofocus="true" ng-required="true">
+                        <input placeholder="Set title" class="form-fields__input form-control" type="text" name="title" data-ng-model="dashboard.title" ng-change="checkDuplicateDashboardTitle(dashboard.title, dashboard_form.info)" autofocus="true" ng-required="true" ng-disabled="!isNew && !dashboard.editable">
                         <div ng-messages="dashboard_form.info.$error" role="alert" ng-if="dashboard_form.info.$dirty">
                             <div ng-message="required">Title required</div>
                             <div ng-message="duplicateKey">Duplicate title forbidden</div>
@@ -29,59 +29,55 @@
                     </div>
                     <div class="dashboard-dialog-container_hidden">
                         <div class="dashboard-dialog-container_hidden_label">Hidden</div>
-                        <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch"></md-switch>
+                        <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch" ng-disabled="!isNew && !dashboard.editable"></md-switch>
                     </div>
                 </ng-form>
-                <div data-ng-if="!isNew">
-                    <label>Attributes</label>
-                    <ng-form name="attributes">
-                        <div class="dashboard-attributes-container">
-                            <div class="dashboard-attributes-container_key">
-                                <input placeholder="Key" type="text" ng-change="checkDuplicateAttributeKey(newAttribute.key, dashboard_form.attributes);" class="form-control" data-ng-model="newAttribute.key" ng-required="true"/>
-                                <div ng-messages="dashboard_form.attributes.$error">
-                                    <div ng-message="duplicateKey">Duplicate key forbidden</div>
-                                </div>
-                            </div>
-                            <div class="dashboard-attributes-container_value">
-                                <input placeholder="Value" type="text" class="form-control" data-ng-model="newAttribute.value" ng-required="true"/>
-                            </div>
-                            <div class="dashboard-attributes-container_add-button">
-                                <button type="submit" data-ng-click="createAttribute(newAttribute, dashboard_form.attributes);" data-ng-disabled="dashboard_form.attributes.$invalid">ADD</button>
+            </div>
+            <div class="md-dialog-content dashboard-dialog-attributes--container" data-ng-if="!isNew">
+                <label>Add new attributes</label>
+                <ng-form name="attributes">
+                    <div class="dashboard-attributes-container">
+                        <div class="dashboard-attributes-container_key">
+                            <input placeholder="Key" type="text" ng-change="checkDuplicateAttributeKey(newAttribute.key, dashboard_form.attributes);" class="form-control" data-ng-model="newAttribute.key" ng-required="true"/>
+                            <div ng-messages="dashboard_form.attributes.$error">
+                                <div ng-message="duplicateKey">Duplicate key forbidden</div>
                             </div>
                         </div>
-                    </ng-form>
-                    <div class="dashboard-attributes-items-container">
-                        <md-chips class="dashboard-attributes-items-container_chips" ng-model="dashboard.attributes" md-on-remove="deleteAttribute($chip)" md-removable="true" readonly="true">
-                            <md-chip-template>
-                                <div class="dashboard-attributes-items-container_chips_template" ng-click="">
-                                    <span>{{$chip.key}} = {{$chip.value}}</span>
-                                </div>
-                                <div class="md-chip-remove-container ng-scope" tabindex="-1">
-                                    <button md-chip-remove class="md-primary md-chip-remove filter-slice-chip-button ng-scope" tabindex="-1" aria-hidden="true">
-                                        <md-icon aria-label="Close dialog" class="material-icons" role="img">close</md-icon>
-                                    </button>
-                                </div>
-                            </md-chip-template>
-                        </md-chips>
+                        <div class="dashboard-attributes-container_value">
+                            <input placeholder="Value" type="text" class="form-control" data-ng-model="newAttribute.value" ng-required="true"/>
+                        </div>
+                        <div class="dashboard-attributes-container_add-button">
+                            <button type="submit" data-ng-click="createAttribute(newAttribute, dashboard_form.attributes);" data-ng-disabled="dashboard_form.attributes.$invalid">ADD</button>
+                        </div>
                     </div>
+                </ng-form>
+                <div class="dashboard-attributes-items-container">
+                    <md-chips class="dashboard-attributes-items-container_chips" ng-model="dashboard.attributes" md-on-remove="deleteAttribute($chip)" md-removable="true" readonly="true">
+                        <md-chip-template>
+                            <div class="dashboard-attributes-items-container_chips_template" ng-click="">
+                                <span>{{$chip.key}} = {{$chip.value}}</span>
+                            </div>
+                            <div class="md-chip-remove-container ng-scope" tabindex="-1">
+                                <button md-chip-remove class="md-primary md-chip-remove filter-slice-chip-button ng-scope" tabindex="-1" aria-hidden="true">
+                                    <md-icon aria-label="Close dialog" class="material-icons" role="img">close</md-icon>
+                                </button>
+                            </div>
+                        </md-chip-template>
+                    </md-chips>
                 </div>
             </div>
         </md-dialog-content>
 
-        <md-dialog-actions ng-if="isNew || dashboard.editable" layout="row">
-            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew" type="button"
-                       class="md-raised btn-w-md md-warn zf-button-md"
+        <md-dialog-actions layout="row">
+            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew && dashboard.editable" type="button" class="md-raised btn-w-md zf-button-md __delete_button"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="deleteDashboard(dashboard);">
                 Delete
             </md-button>
-             <md-button id="create" data-ng-if="isNew" type="submit"
-                       class="md-raised btn-w-md md-primary zf-button-md"
+             <md-button id="create" data-ng-if="isNew" type="submit" class="md-raised btn-w-md md-primary zf-button-md"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="createDashboard(dashboard)">
                 Create
             </md-button>
-            <md-button id="save" data-ng-if="!isNew" type="submit"
-                       class="md-raised btn-w-md md-primary zf-button-md"
-                       ng-disabled="dashboard_form.info.$invalid" data-ng-click="updateDashboard(dashboard)">
+            <md-button id="save" data-ng-if="!isNew" type="submit" class="md-raised btn-w-md md-primary zf-button-md" ng-disabled="dashboard_form.info.$invalid" data-ng-click="updateDashboard(dashboard)">
                 Save
             </md-button>
         </md-dialog-actions>

@@ -1,4 +1,4 @@
-<md-dialog flex="50" aria-label="User profile" zafira-background-theme="modal">
+<md-dialog flex="50" class="dashboard-email-dialog" aria-label="User profile" zafira-background-theme="modal">
     <form class="form-validation" name="email_form" ng-submit="sendEmail(); UtilService.untouchForm(email_form)" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -12,15 +12,12 @@
 
         <md-dialog-content>
             <div class="md-dialog-content">
-                <div layout layout-sm="column">
-                    <md-input-container flex>
-                        <label>Subject</label>
-                        <input name="subject" type="text" data-ng-model="email.subject" required/>
-                    </md-input-container>
+                <div layout layout-sm="column" class="dashboard-email-dialog_subject-container">
+                    <input placeholder="Subject" class="form-fields__input form-control" name="subject" type="text" data-ng-model="email.subject" required/>
                 </div>
-                <div layout layout-sm="column">
+                <div layout layout-sm="column" ng-cloak>
                     <md-input-container flex>
-                        <text-angular name="text" data-ng-model="email.text" required></text-angular>
+                        <div id="editor" ng-init="initEditorInstance()" ui-ace="{{aceOptions}}" ng-model="email.text" required></div>
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column">
@@ -44,7 +41,7 @@
                                 md-items="user in querySearch(searchText, users)"
                                 md-item-text="user.email"
                                 md-selected-item="currentUser"
-                                placeholder="add email">
+                                placeholder="Add email">
                                 <md-item-template name="suggestion">
                                     <span>
                                         <profile-photo ng-model="user.photoURL" size="40"></profile-photo>
@@ -62,7 +59,7 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="send" class="btn btn-primary" data-ng-click="sendEmail()" data-ng-disabled="email_form.$invalid">
+            <md-button id="send" class="md-raised btn-w-md md-primary zf-button-md" data-ng-click="sendEmail()" data-ng-disabled="email_form.$invalid">
                 Send
             </md-button>
         </md-dialog-actions>

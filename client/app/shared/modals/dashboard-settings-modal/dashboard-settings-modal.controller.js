@@ -24,6 +24,10 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
     };
 
     $scope.updateDashboard = function(dashboard){
+        if (!dashboard.editable) {
+            $scope.hide();
+            return;
+        }
         dashboard.widgets = null;
         DashboardService.UpdateDashboard(dashboard).then(function (rs) {
             if (rs.success) {
