@@ -2721,8 +2721,11 @@ $light-inprogress: #68c9fd;
                     border-radius: 4px;
                     height: 32px;
                     min-height: 32px;
-                    min-width: 80px;
-                    width: 80px;
+
+                    &:not(.zf-icon-button) {
+                        min-width: 80px;
+                        width: 80px;
+                    }
 
                     &:not(:last-child) {
                         margin-right: 8px;
