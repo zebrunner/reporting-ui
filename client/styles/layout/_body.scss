@@ -3529,11 +3529,18 @@ users-component md-tab-item.md-disabled {
         }
 
         [ng-messages] {
-            height: 100%;
+            position: absolute;
+            height: 16px;
             vertical-align: middle;
             line-height: 40px;
-            margin-left: 20px;
+            margin-left: 2px;
             color: red;
+            font-size: 12px;
+
+            [ng-message] {
+                height: 16px;
+                line-height: 16px;
+            }
         }
 
         &_hidden {

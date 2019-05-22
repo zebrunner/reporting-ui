@@ -154,9 +154,9 @@
             return $httpMock.post(url, sqlTemplateAdapter).then(UtilService.handleSuccess, UtilService.handleError('Unable to execute SQL'));
         }
 
-        function RetrieveDashboards() {
+        function RetrieveDashboards(hidden) {
             return $q(function (resolve, reject) {
-                if (hasHiddenDashboardPermission()) {
+                if (hidden || hasHiddenDashboardPermission()) {
                     GetDashboards().then(function (rs) {
                         if (rs.success) {
                             dashboards = rs.data;

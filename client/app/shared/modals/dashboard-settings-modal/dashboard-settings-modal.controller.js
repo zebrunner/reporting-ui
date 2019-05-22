@@ -75,6 +75,14 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
         form.$setValidity('duplicateKey', ! duplicateAttribute);
     };
 
+    $scope.checkDuplicateDashboardTitle = function(title, form) {
+        const dashboards = DashboardService.dashboards.length ? DashboardService.dashboards : DashboardService.RetrieveDashboards(true);
+        let duplicateAttribute = dashboards.find(function (d) {
+            return d.title === title;
+        });
+        form.$setValidity('duplicateKey', ! duplicateAttribute);
+    };
+
     $scope.updateAttribute = function(attribute){
         DashboardService.UpdateDashboardAttribute(dashboard.id, attribute).then(function (rs) {
             if (rs.success) {

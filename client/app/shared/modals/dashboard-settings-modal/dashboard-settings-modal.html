@@ -20,14 +20,16 @@
         <md-dialog-content>
             <div class="md-dialog-content dashboard-dialog-container">
                 <ng-form ng-if="isNew || dashboard.editable" name="info">
-                    <div layout layout-sm="column">
-                        <input placeholder="Set title" class="form-fields__input" type="text" name="title" data-ng-model="dashboard.title" autofocus="true" required>
-                    </div>
-                    <div layout layout-sm="column">
-                        <div class="dashboard-dialog-container_hidden">
-                            <div class="dashboard-dialog-container_hidden_label">Hidden</div>
-                            <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch"></md-switch>
+                    <div>
+                        <input placeholder="Set title" class="form-fields__input form-control" type="text" name="title" data-ng-model="dashboard.title" ng-change="checkDuplicateDashboardTitle(dashboard.title, dashboard_form.info)" autofocus="true" ng-required="true">
+                        <div ng-messages="dashboard_form.info.$error" role="alert" ng-if="dashboard_form.info.$dirty">
+                            <div ng-message="required">Title required</div>
+                            <div ng-message="duplicateKey">Duplicate title forbidden</div>
                         </div>
+                    </div>
+                    <div class="dashboard-dialog-container_hidden">
+                        <div class="dashboard-dialog-container_hidden_label">Hidden</div>
+                        <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch"></md-switch>
                     </div>
                 </ng-form>
                 <div data-ng-if="!isNew">
