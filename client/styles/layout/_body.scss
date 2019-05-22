@@ -3613,10 +3613,11 @@ users-component md-tab-item.md-disabled {
             }
 
             &.__delete_button {
-                background-color: rgba(1, 22, 39, .2)!important;
+                background-color: transparent !important;
                 border-radius: 4px;
+                letter-spacing: 0.1px;
                 border: none !important;
-                color: #000;
+                color: #bf3744;
                 line-height: 1.42857;
                 font-weight: 500;
 
