@@ -1,5 +1,5 @@
 <md-dialog class="dashboard-dialog" ng-class="{'__new-dialog': isNew, '__editable-dashboard': dashboard.editable}" flex="50" aria-label="Dashboard settings" zafira-background-theme="modal">
-    <form class="form-validation" name="dashboard_form" ng-submit="UtilService.untouchForm(dashboard_form)" ng-cloak>
+    <form class="form-validation" novalidate name="dashboard_form" ng-submit="UtilService.untouchForm(dashboard_form)" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle">
@@ -18,10 +18,10 @@
         </md-toolbar>
 
         <md-dialog-content>
-            <div class="md-dialog-content dashboard-dialog-container" ng-if="isNew || dashboard.editable">
+            <div class="md-dialog-content dashboard-dialog-container">
                 <ng-form name="info">
                     <div>
-                        <input placeholder="Set title" class="form-fields__input form-control" type="text" name="title" data-ng-model="dashboard.title" ng-change="checkDuplicateDashboardTitle(dashboard.title, dashboard_form.info)" autofocus="true" ng-required="true">
+                        <input placeholder="Set title" class="form-fields__input form-control" type="text" name="title" data-ng-model="dashboard.title" ng-change="checkDuplicateDashboardTitle(dashboard.title, dashboard_form.info)" autofocus="true" ng-required="true" ng-disabled="!isNew && !dashboard.editable">
                         <div ng-messages="dashboard_form.info.$error" role="alert" ng-if="dashboard_form.info.$dirty">
                             <div ng-message="required">Title required</div>
                             <div ng-message="duplicateKey">Duplicate title forbidden</div>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="dashboard-dialog-container_hidden">
                         <div class="dashboard-dialog-container_hidden_label">Hidden</div>
-                        <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch"></md-switch>
+                        <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch" ng-disabled="!isNew && !dashboard.editable"></md-switch>
                     </div>
                 </ng-form>
             </div>
@@ -68,8 +68,8 @@
             </div>
         </md-dialog-content>
 
-        <md-dialog-actions ng-if="isNew || dashboard.editable" layout="row">
-            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew" type="button" class="md-raised btn-w-md zf-button-md"
+        <md-dialog-actions layout="row">
+            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew && dashboard.editable" type="button" class="md-raised btn-w-md zf-button-md __delete_button"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="deleteDashboard(dashboard);">
                 Delete
             </md-button>

@@ -3481,7 +3481,7 @@ users-component md-tab-item.md-disabled {
         width: $button-width;
 
         button {
-            background-color: rgba(1,22,39,.2)!important;
+            background-color: rgba(1, 22, 39, .2)!important;
             border-radius: 4px;
             border: none !important;
             width: $button-width;
@@ -3491,7 +3491,8 @@ users-component md-tab-item.md-disabled {
             font-weight: 500;
 
             &[disabled] {
-                background-color: rgba(1,22,39,.1)!important;
+                background-color: rgba(1, 22, 39, .1)!important;
+                color: rgba(0,0,0,0.38);
             }
         }
     }
@@ -3541,6 +3542,13 @@ users-component md-tab-item.md-disabled {
         .form-fields__input {
             max-width: 340px;
             height: 40px;
+
+            &:disabled {
+                color: rgba(0, 0, 0, 0.8);
+                &::placeholder {
+                    color: rgba(0, 0, 0, 0.8);
+                }
+            }
         }
 
         [ng-messages] {
@@ -3603,12 +3611,30 @@ users-component md-tab-item.md-disabled {
             &:first-child {
                 margin-left: 0;
             }
+
+            &.__delete_button {
+                background-color: rgba(1, 22, 39, .2)!important;
+                border-radius: 4px;
+                border: none !important;
+                color: #000;
+                line-height: 1.42857;
+                font-weight: 500;
+
+                &[disabled] {
+                    background-color: rgba(1, 22, 39, .1)!important;
+                }
+            }
         }
     }
 
     &:not(.__new-dialog) {
         md-dialog-actions {
             background-color: #edeff1;
+        }
+    }
+
+    &.__editable-dashboard {
+        md-dialog-actions {
             justify-content: space-between;
         }
     }
@@ -3617,4 +3643,33 @@ users-component md-tab-item.md-disabled {
 .zf-button-md {
     min-width: 80px;
     width: 80px;
+}
+
+.dashboard-email-dialog {
+
+
+    &_subject-container {
+        input {
+            width: calc((100% - 80px) / 2);
+        }
+    }
+
+    .md-dialog-content {
+        padding: 20px;
+
+        .ace_editor {
+            height: 132px;
+            border-radius: 4px;
+            border: 1px solid rgba(1, 22, 39, 0.1);
+        }
+    }
+
+    md-dialog-actions {
+        padding: 0 20px 20px 20px;
+
+        button {
+            margin: 0;
+            box-shadow: none !important;
+        }
+    }
 }
