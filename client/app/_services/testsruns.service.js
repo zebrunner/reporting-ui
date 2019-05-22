@@ -131,8 +131,7 @@
         }
 
         function isModalSearchActive() {
-            let size = Object.keys(_searchParams).length;
-            if(size > Object.keys(DEFAULT_SC).length || size === Object.keys(DEFAULT_SC).length && (_searchParams.reviewed === true || (!_searchParams.hasOwnProperty('reviewed') &&  !_searchParams.hasOwnProperty('query')))) {
+            if(Object.keys(_searchParams).length > Object.keys(DEFAULT_SC).length + 1 || isOnlyAdditionalSearchActive()) {
                 return true;
             }
             else {
