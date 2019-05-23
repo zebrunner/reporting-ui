@@ -185,21 +185,23 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         max-height: 100%;
         height: 100%;
         border-radius: 0;
-        .md-date-range-picker__calendar-wrapper {
-            width: 100%;
-            min-width: unset;
-            margin: auto;
-        }
-        .md-date-range-picker__calendar__grid {
-            width: 43px;
-        }
-        .md-date-range-picker__week {
-            display: flex;
-            justify-content: center;
-        }
-        .md-date-range-picker__calendar {
-            max-width: 305px;
-            margin: 0 auto;
+        .md-date-range-picker {
+            &__calendar-wrapper {
+                width: 100%;
+                min-width: unset;
+                margin: auto;
+            }
+            &__calendar__grid {
+                width: 43px;
+            }
+            &__week {
+                display: flex;
+                justify-content: center;
+            }
+            &__calendar {
+                max-width: 305px;
+                margin: 0 auto;
+            }
         }
         md-date-range-picker .md-date-range-picker {
             box-shadow: none;
