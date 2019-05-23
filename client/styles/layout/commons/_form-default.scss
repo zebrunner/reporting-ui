@@ -120,3 +120,58 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         }
     }
 }
+
+.reviewed {
+    min-width: 36px;
+    border-radius: 4px;
+    border-width: 1px;
+    background-color: transparent;
+    color: $dark-new;
+    font-weight: normal;
+    border-color: rgba($dark-new, .15);
+    &:hover {
+        border-color: rgba($dark-new, .25) !important;
+    }
+    &.label-primary {
+        background-color: $medium-teal-light-new;
+        color: #fff;
+    }
+}
+
+.form-button {
+    max-height: 36px;
+    border-radius: 4px;
+    box-shadow: none;
+    margin-right: 0;
+    margin-left: 12px;
+    font-size: 14px;
+    min-width: 80px;
+    &._reset-btn {
+        background-color: $fog-gray;
+        color: $dark-coal-new;
+        &:hover {
+            background-color: rgba($dark-coal-new, .3);
+        }
+    }
+    &._apply-btn {
+        background-color: $medium-teal-light-new;
+        color: white;
+        &:not([disabled]):hover,
+        &:hover {
+            background-color: $medium-teal-light-new;
+        }
+    }
+}
+
+.search-fab {
+    margin: auto;
+    height: 20px;
+    filter: invert(100%);
+    width: 20px;
+    &._list {
+        background: url('../assets/images/list.svg') center no-repeat;
+    }
+    &._checked-list {
+        background: url('../assets/images/check_list.svg') center no-repeat;
+    }
+}

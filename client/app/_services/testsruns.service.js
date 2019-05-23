@@ -131,12 +131,12 @@
         }
 
         function isModalSearchActive() {
-            if(Object.keys(_searchParams).length > Object.keys(DEFAULT_SC).length + 1 || isOnlyAdditionalSearchActive()) {
-                return true;
-            }
-            else {
-                return false;
-            }
+            const allSearchActive = isSearchActive();
+            const querySearchActive = _searchParams.hasOwnProperty('query');
+            const minimalLengthForSearch = Object.keys(DEFAULT_SC).length + 1;
+            const currentSearchLength = Object.keys(_searchParams).length;
+
+            return ((allSearchActive && !querySearchActive) || (allSearchActive && querySearchActive && currentSearchLength > minimalLengthForSearch));
         }
 
         function resetFilteringState() {

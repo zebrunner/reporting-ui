@@ -22,7 +22,7 @@
         </label>
     </div>
 
-    <div class="tests-runs-search__bottom-section _not-modal" ng-if="!$ctrl.isMobile()"
+    <div class="tests-runs-search__bottom-section" ng-if="!$ctrl.isMobile()"
          layout="row"
          layout-sm="column"
          layout-xs="column">
@@ -60,7 +60,7 @@
                 <i class="material-icons">date_range</i>
                 <md-button id="searchCalendar" ng-click="$ctrl.openDatePicker($event, true)"></md-button>
             </md-input-container>
-            <button ng-show="$ctrl.isSearchActive()" class="tests-runs-search__reset-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></button>
+            <button ng-show="$ctrl.isSearchActive()" class="form-button _reset-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></button>
         </div>
     </div>
     <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile() && !$ctrl.isFilterActive()" md-direction="up" class="md-scale md-fab-bottom-right">

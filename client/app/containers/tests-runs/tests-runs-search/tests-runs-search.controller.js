@@ -1,5 +1,6 @@
 'use strict'
 import SearchModalController from './modal/search-modal.controller';
+import modalTemplate from './modal/search-modal.html';
 
 const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService, $mdDialog) {
     'ngInject';
@@ -58,7 +59,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
     function showSearchDialog(event) {
         $mdDialog.show({
             controller: SearchModalController,
-            template: require('./modal/search-modal.html'),
+            template: modalTemplate,
             parent: angular.element(document.body),
             targetEvent: event,
             fullscreen: true,
@@ -67,6 +68,9 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             locals: {
                 onReset: vm.onModalReset,
                 onApply: vm.onApply,
+                environments: vm.environments,
+                platforms: vm.platforms,
+                allProjects: vm.allProjects,
             }
         });
     }
@@ -108,8 +112,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             vm.searchParams.query = queryTemplate;
             vm.onChangeSearchCriteria();
             vm.onApply();
-        }
-        else {
+        } else {
             vm.onReset();
         }
     }
