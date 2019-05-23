@@ -23,7 +23,7 @@
                 </button>
             </div>
         </zf-sub-header-options>
-        <zf-sub-header-button>
+        <zf-sub-header-button class="hide-phone">
             <div ng-if="MODE !== 'WIDGET_PLACEMENT'">
                 <button has-any-permission="['MODIFY_WIDGETS']" class="fixed-page-header__btn _dashboard zf-header-button" ng-click="showWidgetWizardDialog($event, {model : '{}'}, dashboard);">
                     <md-icon class="material-icons">add</md-icon>
