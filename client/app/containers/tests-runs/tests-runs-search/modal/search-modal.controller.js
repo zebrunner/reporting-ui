@@ -69,7 +69,8 @@ const SearchModalController = function SearchModalController(onApply, environmen
 
         $mdDateRangePicker.show({
             targetEvent: $event,
-            model: vm.selectedRange
+            model: vm.selectedRange,
+            multiple: true,
         })
         .then(function(result) {
             if (result) {

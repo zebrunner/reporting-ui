@@ -809,7 +809,8 @@
                 parent: angular.element(document.body),
                 targetEvent: config.targetEvent,
                 clickOutsideToClose: true,
-                fullscreen: config.model.fullscreen
+                fullscreen: config.model.fullscreen,
+                multiple: config.multiple,
             });
         }
     }
