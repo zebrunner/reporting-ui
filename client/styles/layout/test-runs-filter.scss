@@ -316,7 +316,7 @@
                 }
             }
 
-            @media screen and (max-width: 599px) {
+            @media screen and (max-width: $breakpoint-mobile) {
                 display: inline-block;
                 white-space: nowrap;
                 padding: 0 16px;

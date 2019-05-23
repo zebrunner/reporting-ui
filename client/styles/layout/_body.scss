@@ -2838,7 +2838,7 @@ $light-inprogress: #68c9fd;
             padding-top: $header_height;
         }
 
-        @media screen and (max-width: 599px) {
+        @media (max-width: 480px) {
             .p-tests-runs & {
                 padding-top: calc(#{$header-height}  + 72px + 78px); // 72px - filters; 78px - search
             }

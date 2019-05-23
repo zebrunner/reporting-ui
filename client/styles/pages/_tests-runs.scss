@@ -16,9 +16,12 @@
             box-shadow: none;
         }
     }
-    @media screen and (max-width: 599px) {
-        .page {
-            padding: 0;
+    @media screen and (max-width: $breakpoint-mobile) {
+        .fixed-page-header + .page {
+            padding-top: calc(60px + 72px + 78px);
+        }
+        &__content-wrapper {
+            box-shadow: none;
         }
         &__section {
             background-color: white;
@@ -52,6 +55,11 @@
         #itemsCount {
             opacity: 0.5;
             font-size: 18px;
+        }
+    }
+    @media screen and (max-width: $screen-xs) {
+        .page {
+            padding: 0;
         }
     }
 }
