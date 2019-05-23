@@ -11,7 +11,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     var TYPE = widgetId ? 'WIDGET' : 'DASHBOARD';
 
     var CURRENT_DASHBOARD_TITLE = angular.element('#dashboard_title')[0].value + ' dashboard';
-    var CURRENT_WIDGET_TITLE = TYPE == 'WIDGET' ? CURRENT_DASHBOARD_TITLE + ' - ' + angular.element('#widget-title-' + widgetId)[0].value + ' widget' : '';
+    var CURRENT_WIDGET_TITLE = TYPE === 'WIDGET' ? CURRENT_DASHBOARD_TITLE + ' - ' + angular.element('#widget-title-' + widgetId)[0].value + ' widget' : '';
 
     var EMAIL_TYPES = {
         'DASHBOARD': {
@@ -57,6 +57,8 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
             const editor = ace.edit('editor');
             editor.renderer.setScrollMargin(10, 10, 10, 10);
             editor.setHighlightActiveLine(false);
+            editor.session.setUseSoftTabs(false);
+            //editor.indent();
         }, 0);
     };
 
