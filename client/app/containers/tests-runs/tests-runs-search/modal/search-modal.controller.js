@@ -11,8 +11,8 @@ const SearchModalController = function SearchModalController(onApply, environmen
             selectedTemplate: null,
             selectedTemplateName: null,
             dateStart: null,
-            dateEnd: null,
-            showTemplate: false,
+            dateEnd:  null,
+            showTemplate: true,
             fullscreen: false
         },
         searchParams: testsRunsService.getLastSearchParams(),
@@ -33,6 +33,17 @@ const SearchModalController = function SearchModalController(onApply, environmen
     return vm;
 
     function init() {
+        readStoredDate();
+    }
+
+    function readStoredDate() {
+        let fromDate = testsRunsService.getSearchParam('fromDate');
+        let toDate = testsRunsService.getSearchParam('toDate');
+        const date = testsRunsService.getSearchParam('date');
+
+        date && (fromDate = toDate = date);
+        fromDate && (vm.selectedRange.dateStart = new Date(fromDate));
+        toDate && (vm.selectedRange.dateEnd = new Date(toDate));
     }
 
     function closeModal() {
