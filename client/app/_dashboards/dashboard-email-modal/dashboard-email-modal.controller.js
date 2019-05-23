@@ -55,10 +55,10 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     $scope.initEditorInstance = function () {
         setTimeout(function () {
             const editor = ace.edit('editor');
-            editor.renderer.setScrollMargin(10, 10, 10, 10);
+            editor.renderer.setScrollMargin(10, 10);
+            editor.renderer.setPadding(10);
             editor.setHighlightActiveLine(false);
             editor.session.setUseSoftTabs(false);
-            //editor.indent();
         }, 0);
     };
 

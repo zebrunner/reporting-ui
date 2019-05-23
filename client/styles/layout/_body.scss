@@ -3512,6 +3512,8 @@ users-component md-tab-item.md-disabled {
 
                 .md-chip-content {
                     padding: 0 !important;
+                    height: 30px;
+                    line-height: 30px;
                 }
             }
         }
@@ -3675,3 +3677,10 @@ users-component md-tab-item.md-disabled {
         }
     }
 }
+
+// Important
+/*
+.ace_editor, .ace_text-input, .ace_editor div{
+    font-family : monospace !important;
+}
+*/
