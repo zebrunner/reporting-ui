@@ -175,3 +175,38 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         background: url('../assets/images/check_list.svg') center no-repeat;
     }
 }
+
+@media (max-width: $screen-xs) {
+    [aria-label = "Date Range Picker"] {
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        width: 100%;
+        max-height: 100%;
+        height: 100%;
+        border-radius: 0;
+        .md-date-range-picker__calendar-wrapper {
+            width: 100%;
+            min-width: unset;
+            margin: auto;
+        }
+        .md-date-range-picker__calendar__grid {
+            width: 43px;
+        }
+        .md-date-range-picker__week {
+            display: flex;
+            justify-content: center;
+        }
+        .md-date-range-picker__calendar {
+            max-width: 305px;
+            margin: 0 auto;
+        }
+        md-date-range-picker .md-date-range-picker {
+            box-shadow: none;
+        }
+        md-dialog-content {
+            flex-grow: 1;
+        }
+    }
+}
+
