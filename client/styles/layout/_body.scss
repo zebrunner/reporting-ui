@@ -3180,7 +3180,11 @@ $light-inprogress: #68c9fd;
             padding-bottom: 60px;
 
             @media(max-width: $screen-phone) {
-                &, input, md-input-container, md-select {
+                display: block !important;
+                height: 100%;
+                overflow: auto;
+
+                input, md-input-container, md-select {
                     width: 100% !important;
                     height: 44px !important;
                 }
@@ -3192,6 +3196,10 @@ $light-inprogress: #68c9fd;
 
                 > .zf-label {
                     line-height: 36px !important;
+                }
+
+                @media (max-width: $screen-sm) {
+                    display: block !important;
                 }
 
                 @media (max-width: $screen-sm) {
