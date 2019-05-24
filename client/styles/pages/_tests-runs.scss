@@ -7,7 +7,7 @@
     &__no-content {
         padding: 15px;
         background-color: white;
-        @media (min-width:$breakpoint-mobile + 1) {
+        @media (min-width:$breakpoint-mobile) {
             border-top: 1px rgba(0, 0, 0, 0.12) solid;
         }
     }
@@ -16,10 +16,7 @@
             box-shadow: none;
         }
     }
-    @media screen and (max-width: $breakpoint-mobile) {
-        .fixed-page-header + .page {
-            padding-top: calc(60px + 72px + 78px);
-        }
+    @media screen and (max-width: $breakpoint-mobile - 1) {
         &__content-wrapper {
             box-shadow: none;
         }

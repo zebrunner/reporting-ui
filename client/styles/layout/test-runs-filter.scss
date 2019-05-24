@@ -188,7 +188,7 @@
         }
     }
     
-    @media screen and (max-width: $breakpoint-mobile) {
+    @media screen and (max-width: $breakpoint-mobile - 1) {
         &__wrapper{
             &-panel-body {
                 padding: 20px 0;
@@ -236,7 +236,7 @@
 
 %chips-scrolling {
     md-chips.filter-chip.custom-filter {
-        @media screen and (min-width: $breakpoint-mobile + 1) {
+        @media screen and (min-width: $breakpoint-mobile) {
             min-width: auto;
             padding-top: 2px;
             overflow-x: auto;
@@ -246,7 +246,7 @@
                 max-width: calc(100vw - 155px);
             }
         }
-        @media screen and (max-width: $breakpoint-mobile) {
+        @media screen and (max-width: $breakpoint-mobile - 1) {
             overflow-x: scroll;
             -ms-overflow-style: none;
             overflow: -moz-scrollbars-none;
@@ -316,10 +316,9 @@
                 }
             }
 
-            @media screen and (max-width: $breakpoint-mobile) {
+            @media screen and (max-width: $breakpoint-mobile - 1) {
                 display: inline-block;
                 white-space: nowrap;
-                padding: 0 16px;
                 box-shadow: none;
                 line-height: 0;
 
@@ -336,6 +335,15 @@
                     margin-left: 8px;
                 }
             }
+
+            @media screen and (max-width: $breakpoint-mobile-small - 1) {
+                padding: 0 16px;
+            }
+
+            @media screen and (min-width: $breakpoint-mobile-small) and (max-width: $breakpoint-mobile - 1) {
+                padding: 0 20px;
+            }
+
         }
     }
 }

@@ -219,9 +219,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             }
         });
         vm.onApply();
-        if (vm.searchParams.query === '' && !testsRunsService.isModalSearchActive() && vm.isMobile()) {
-            vm.onReset();
-        }
     }
 
     function openDatePicker($event, showTemplate) {

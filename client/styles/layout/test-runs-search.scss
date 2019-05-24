@@ -78,7 +78,7 @@
         }
     }
 
-    @media (min-width: $breakpoint-mobile + 1) and (max-width: 1279px) {
+    @media (min-width: $breakpoint-mobile ) and (max-width: 1279px) {
         &__top-section {
             margin-bottom: 8px;
         }
@@ -89,7 +89,7 @@
         }
     }
 
-    @media (min-width: 481px) and (max-width: $breakpoint-mobile) {
+    @media (min-width: 481px) and (max-width: $breakpoint-mobile - 1) {
         &__input {
             &-label {
                 margin-right: 0;
@@ -97,7 +97,7 @@
         }
     }
 
-    @media (max-width: $breakpoint-mobile) {
+    @media (max-width: $breakpoint-mobile - 1) {
         box-shadow: none;
         position: fixed;
         top: calc(#{$header_height} + 72px); // 72px - filter section height
@@ -157,7 +157,7 @@
         }
     }
 
-    @media (min-width: 481px) and (max-width: $breakpoint-mobile) {
+    @media (min-width: 481px) and (max-width: $breakpoint-mobile - 1) {
         left: $sidebar_width;
         margin: 0 20px;
     }
