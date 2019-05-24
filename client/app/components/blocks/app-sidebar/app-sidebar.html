@@ -11,9 +11,9 @@
                 <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards();">
                     <i class="material-icons">equalizer</i><span>Boards</span>
                 </a>
-                <ul class="width-icon" toggle-nav-bottom>
+                <ul class="width-icon">
                     <li class="nav-controls search_close-button">
-                        <md-icon toggle-menu="close">close</md-icon>
+                        <md-icon toggle-nav-bottom toggle-menu="close">close</md-icon>
                     </li>
                     <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
                         <a class="nav__button _add" aria-label="menu" href="" data-ng-click="$ctrl.showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
@@ -27,7 +27,7 @@
                     </li>
                     <li class="sub-search search-menu">
                         <ul ui-sortable="$ctrl.dashboardSortableOptions" ng-model="$ctrl.dashboardList">
-                            <li data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy: 'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">
+                            <li toggle-nav-bottom data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy: 'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">
                                 <span has-any-permission="['MODIFY_DASHBOARDS']" ng-if="$ctrl.dashboardList.length > 1">
                                     <i class="material-icons show-icon-on-hover drag-actor hide-tablet" ng-mouseup="$ctrl.activateSorter(false)" ng-mousedown="$ctrl.activateSorter(true)">drag_indicator</i>
                                 </span>
@@ -50,9 +50,9 @@
                 <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="views" data-ng-click="$ctrl.loadViews();">
                     <i class="material-icons">remove_red_eye</i><span>Views</span>
                 </a>
-                <ul class="width-icon" toggle-nav-bottom>
+                <ul class="width-icon">
                     <li class="nav-controls search_close-button">
-                        <md-icon toggle-menu="close">close</md-icon>
+                        <md-icon toggle-nav-bottom toggle-menu="close">close</md-icon>
                     </li>
                     <li toggle-menu="close" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
                         <a class="nav__button _add" aria-label="menu" href="" data-ng-click="$ctrl.showViewDialog($event)"><i class="material-icons">add</i>Add view</a>
@@ -65,8 +65,8 @@
                         </md-input-container>
                     </li>
                     <li class="sub-search search-menu">
-                        <ul toggle-nav-bottom>
-                            <li data-ng-repeat="view in $ctrl.views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
+                        <ul>
+                            <li toggle-nav-bottom data-ng-repeat="view in $ctrl.views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })" class="show-part">
                                     <span class="menu-link__text">{{::view.name}}</span>
                                 </a>
@@ -94,18 +94,18 @@
                         <md-icon toggle-menu="close">close</md-icon>
                     </li>
                     <li class="sub-search search-menu">
-                        <ul toggle-nav-bottom>
-                            <li style="position: relative;" has-any-permission="['MODIFY_USERS', 'VIEW_USERS']">
+                        <ul>
+                            <li toggle-nav-bottom style="position: relative;" has-any-permission="['MODIFY_USERS', 'VIEW_USERS']">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.list" class="show-part">
                                     <span>Users</span>
                                 </a>
                             </li>
-                            <li style="position: relative;" has-any-permission="['MODIFY_USER_GROUPS']">
+                            <li toggle-nav-bottom style="position: relative;" has-any-permission="['MODIFY_USER_GROUPS']">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.groups" class="show-part">
                                     <span>Groups</span>
                                 </a>
                             </li>
-                            <li style="position: relative;" has-any-permission="['INVITE_USERS', 'MODIFY_INVITATIONS']">
+                            <li toggle-nav-bottom style="position: relative;" has-any-permission="['INVITE_USERS', 'MODIFY_INVITATIONS']">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.invitations" class="show-part">
                                     <span>Invitations</span>
                                 </a>

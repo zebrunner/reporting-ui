@@ -100,10 +100,14 @@ export const toggleNavBottom = () => {
     function link(scope, ele, attrs) {
         const sidebar = angular.element('#nav-container');
 
-        ele.on('click', function () {
+        ele.on('click', function (e) {
             if (sidebar.hasClass(toggleBottomClassName)) {
-                sidebar.removeClass(toggleBottomClassName);
-                $app.removeClass('sidebar-toggled');
+                const isSameElement = ele[0] === e.target;
+                const isChildOfSameElement = angular.element(e.target).closest(ele).length > 0;//ele.find(e.target);
+                if(isSameElement || isChildOfSameElement) {
+                    sidebar.removeClass(toggleBottomClassName);
+                    $app.removeClass('sidebar-toggled');
+                }
             } else {
                 sidebar.addClass(toggleBottomClassName);
                 $app.addClass('sidebar-toggled');
