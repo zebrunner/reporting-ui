@@ -1,0 +1,22 @@
+<md-dialog flex="50" aria-label="Test details modal filter" zafira-background-theme="modal" class="filter-modal main-modal modal-min-width">
+    <div class="main-modal__wrapper">
+        <md-button id="close" class="md-icon-button main-modal__close-btn" ng-click="$ctrl.cancel()">
+            <md-icon aria-label="Close dialog">close</md-icon>
+        </md-button>
+        <md-dialog-content>
+            <div class="main-modal__heade no-padding" ng-if="$ctrl.tags.length">
+                <h2 class="main-modal__header-text">Tags</h2>
+                <span flex></span>
+            </div>
+            <chips-array class="filter-modal__chips" ng-if="$ctrl.tags.length" chips="$ctrl.tags" options="$ctrl.testsTagsOptions" count-to-show="$ctrl.tags.length" multi="$ctrl.testGroupMode === 'PLAIN'" on-select="$ctrl.onTagSelect($tags);"></chips-array>
+            <div class="main-modal__header no-padding">
+                <h2 class="main-modal__header-text">Status</h2>
+            </div>
+            <status-buttons on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <button class="form-button _reset-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.resetTestsGrouping();"><span>RESET</span></button>
+            <button class="form-button _apply-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.onApply(true);"><span>APPLY</span></button>
+        </md-dialog-actions>
+    </div>
+</md-dialog>

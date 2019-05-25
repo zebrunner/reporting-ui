@@ -1,13 +1,13 @@
-<md-dialog flex="50" class="search-modal" aria-label="Tests runs modal" zafira-background-theme="modal" class="modal-min-width">
-    <div class="search-modal__wrapper">
-        <div class="search-modal__header">
-            <h2 class="search-modal__header-text">Parameters</h2>
-            <md-button id="close" class="md-icon-button search-modal__header-close-btn" ng-click="$ctrl.closeModal()">
-                <md-icon aria-label="Close dialog">close</md-icon>
-            </md-button>
-        </div>
+<md-dialog flex="50" class="search-modal main-modal modal-min-width" aria-label="Tests runs modal" zafira-background-theme="modal">
+    <div class="main-modal__wrapper">
+        <md-button id="close" class="md-icon-button main-modal__close-btn" ng-click="$ctrl.closeModal()">
+            <md-icon aria-label="Close dialog">close</md-icon>
+        </md-button>
         <md-dialog-content>
-            <div class="search-modal__content">
+            <div class="main-modal__header">
+                <h2 class="main-modal__header-text">Parameters</h2>
+            </div>
+            <div class="search-modal__content main-modal__content">
                 <div layout="column" class="search-fields">
                     <div layout="row">
                         <button class="quadro-btn reviewed" data-ng-class="{'label-blank': !$ctrl.searchParams.reviewed, 'label-primary': !!$ctrl.searchParams.reviewed}"
