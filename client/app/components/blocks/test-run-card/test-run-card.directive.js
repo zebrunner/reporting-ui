@@ -57,8 +57,8 @@
                     vm.onSelect && vm.onSelect(vm.testRun);
                 }
 
-                function showDetails(value) {
-                    vm.singleWholeInfo = value;
+                function showDetails() {
+                    vm.singleWholeInfo = !vm.singleWholeInfo;
                 }
 
                 function initMenuRights() {
@@ -461,7 +461,8 @@
                 singleMode: '=',
                 testRun: '=',
                 onSelect: '&',
-                onDelete: '&'
+                onDelete: '&',
+                back: '&'
             },
             controllerAs: '$ctrl',
             restrict: 'E',
