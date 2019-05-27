@@ -136,10 +136,11 @@
             const querySearchActive = _searchParams.hasOwnProperty('query');
             let minimalLengthForSearch = Object.keys(DEFAULT_SC).length + 1;
             const currentSearchLength = Object.keys(_searchParams).length;
-            const projectSelected = _searchParams.projectNames;
-            if (projectSelected) {
+
+            if (_searchParams.projectNames) {
                 minimalLengthForSearch ++;
             }
+
             return ((allSearchActive && !querySearchActive) || (allSearchActive && querySearchActive && currentSearchLength > minimalLengthForSearch));
         }
 
