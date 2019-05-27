@@ -119,6 +119,7 @@
             if (projects && projects.length) {
                 defaultCriteria = {
                     ...defaultCriteria,
+                    page: _searchParams.page,
                     projectNames: projects.map(project => project.name),
                 };
             }
@@ -133,9 +134,12 @@
         function isModalSearchActive() {
             const allSearchActive = isSearchActive();
             const querySearchActive = _searchParams.hasOwnProperty('query');
-            const minimalLengthForSearch = Object.keys(DEFAULT_SC).length + 1;
+            let minimalLengthForSearch = Object.keys(DEFAULT_SC).length + 1;
             const currentSearchLength = Object.keys(_searchParams).length;
-
+            const projectSelected = _searchParams.projectNames;
+            if (projectSelected) {
+                minimalLengthForSearch ++;
+            }
             return ((allSearchActive && !querySearchActive) || (allSearchActive && querySearchActive && currentSearchLength > minimalLengthForSearch));
         }
 
