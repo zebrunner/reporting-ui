@@ -14,6 +14,44 @@ md-backdrop.md-dialog-backdrop{
     }
 }
 
+md-dialog-actions {
+    .md-button {
+        border-radius: 4px;
+        box-shadow: none;
+        margin-right: 0;
+        margin-left: 12px;
+        font-size: 14px;
+        min-width: 80px;
+        &.md-primary {
+            &,
+            &.md-raised {
+                background-color: $medium-teal-light-new;
+                color: white;
+            }
+            &.md-raised {
+                &:not([disabled]) {
+                    box-shadow: none;
+                    &.md-focused,
+                    &:hover {
+                        background-color: $medium-teal-light-new;
+                    }
+                }
+            }
+        }
+        &.md-raised {
+            background-color: $fog-gray;
+            color: $dark-coal-new;
+            &:not([disabled]) {
+                box-shadow: none;
+                &.md-focused,
+                &:hover {
+                    background-color: rgba($dark-coal-new, .3);
+                }
+            }
+        }
+    }
+}
+
 // Z-index
 // Menu, Select
 .md-open-menu-container {
@@ -123,4 +161,15 @@ md-toast {
     }
 }
 
-
+//md-date-range-picker
+.md-date-range-picker {
+    &__calendar__selected {
+        background-color: $brand-primary;
+    }
+    &__month-year {
+        font-size: 15px;
+    }
+    &__templates {
+        padding-top: 9px;
+    }
+}

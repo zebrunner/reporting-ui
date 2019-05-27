@@ -4,33 +4,30 @@
     background-color: white;
     padding: 18px 20px;
     position: relative;
-
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12), 0 4px 4px 0 rgba(0, 0, 0, 0.12);
+    
     &__top-section {
         align-items: center;
         max-width: 550px;
     }
 
+    md-input-container.select-wrapper {
+        margin-top: 0px;
+        margin-left: 12px;
+        padding-top: 0px;
+        margin-bottom: 0;
+        width: 144px;
+    }
+
     &__input {
         &-label {
             position: relative;
-            margin: 0 8px 0 0;
+            margin: 0 12px 0 0;
             font-weight: normal;
             flex-grow: 1;
             flex-shrink: 1;
         }
-        &-field {
-            padding-left: 36px;
-            margin: 0;
-            height: 36px;
-        }
-        &-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999 !important;
-            pointer-events: none;
-        }
+        
         &-btn {
             font-size: 0;
             line-height: 1;
@@ -61,56 +58,10 @@
         }
     }
 
-    .form-control {
-        @extend %select;
-    }
-
     md-checkbox {
-        margin: 0 8px 0 4px;
-    }
-
-    .reviewed {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px;
-        border-radius: 4px;
-        border-width: 1px;
-        background-color: transparent;
-        color: black;
-        border-color: rgba($dark-new, .1);
-        &:hover {
-            border-color: rgba($dark-new, .2) !important;
-        }
-        &.label-primary {
-            background-color: $medium-teal-light-new;
-            color: #fff;
-        }
-    }
-
-    md-input-container {
-        @extend %select;
-        font-weight: 500;
-
-        md-select {
-            border: none;
-            margin-top: -1px;
-            height: 36px;
-            padding: 0 0 0 12px;
-            md-select-value {
-                padding: 0;
-                border-bottom: transparent;
-                color: currentColor !important;
-                .md-select-icon:after {
-                    font-size: 15px !important;
-                }
-            }
-            &:not([disabled]) {
-                &:focus {
-                    md-select-value {
-                        border-bottom: transparent;
-                    }
-                }
-            }
+        margin: 0 20px 0 4px;
+        @media (max-width: $screen-phone) {
+            margin: 0 8px 0 4px;
         }
     }
 
@@ -121,28 +72,13 @@
         }
     }
 
-    &__reset-btn {
-        max-height: 36px;
-        border-radius: 4px;
-        box-shadow: none;
-        margin-right: 0;
-        margin-left: 12px;
-        font-size: 14px;
-        min-width: 80px;
-        background-color: $fog-gray;
-        color: $dark-coal-new;
-        &:hover {
-            background-color: rgba($dark-coal-new, .3);
-        }
-    }
-
     @media (max-width: 1279px) {
         &__top-section {
             max-width: 100%;
         }
     }
 
-    @media (min-width: 600px) and (max-width: 1279px) {
+    @media (min-width: $breakpoint-mobile ) and (max-width: 1279px) {
         &__top-section {
             margin-bottom: 8px;
         }
@@ -153,7 +89,7 @@
         }
     }
 
-    @media (min-width: 481px) and (max-width: 599px) {
+    @media (min-width: 481px) and (max-width: $breakpoint-mobile - 1) {
         &__input {
             &-label {
                 margin-right: 0;
@@ -161,14 +97,15 @@
         }
     }
 
-    @media (max-width: 599px) {
+    @media (max-width: $breakpoint-mobile - 1) {
+        box-shadow: none;
         position: fixed;
         top: calc(#{$header_height} + 72px); // 72px - filter section height
         left: 0;
         right: 0;
         z-index: 3;
         border-bottom: 2px solid $main_container_bg;
-        padding: 20px 16px 20px 12px;
+        padding: 20px 16px;
 
         ._no-filters & {
             top: $header-height;
@@ -189,41 +126,10 @@
             transition: opacity .25s ease-in-out, visibility .25s ease-in-out;
         }
 
-        &._active {
-            &:before {
-                visibility: visible;
-                opacity: 1;
-            }
-        }
-
-        &._active & {
-            &__bottom-section {
-                visibility: visible;
-                opacity: 1;
-                pointer-events: all;
-            }
-        }
-
         &__input {
             &-label {
-                margin-right: 12px;
+                margin-right: 0;
             }
-        }
-
-
-        &__bottom-section {
-            position: absolute;
-            top: calc(100% + 2px); //2px - border
-            left: 0;
-            right: 0;
-            background: #fff;
-            box-shadow: 0 10px 15px 0 rgba(4, 0, 0, 0.15);
-            padding: 24px 16px 20px;
-            max-width: 100%;
-            visibility: hidden;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .25s ease-in-out, visibility .25s ease-in-out;
         }
 
         &__helpers {
@@ -251,8 +157,9 @@
         }
     }
 
-    @media (min-width: 481px) and (max-width: 599px) {
+    @media (min-width: 481px) and (max-width: $breakpoint-mobile - 1) {
         left: $sidebar_width;
+        margin: 0 20px;
     }
 }
 
@@ -568,14 +475,3 @@
 //    }
 //}
 
-%select {
-    border-radius: 4px;
-    border: solid 1px ;
-    border-color: rgba($dark-new, .1);
-    font-size: 14px !important;
-    color: #000;
-    letter-spacing: 0.28px;
-    &:hover {
-        border-color: rgba($dark-new, .2) !important;
-    }
-}

@@ -1,3 +1,5 @@
+@import "../../global/var";
+
 .form-fields {
     &__input, &__select md-select-value {
         width: 100%;
@@ -5,30 +7,66 @@
         line-height: 1;
         border-radius: 4px;
         border: solid 1px;
-        border-color: rgba(1, 22, 39, 0.1);
         padding: 2px 2px 2px 12px;
+        border-color: rgba($dark-new, .15);
         height: 36px;
-        color: #000000;
+        color: $dark-new;
         background: #ffffff;
         box-sizing: border-box;
-        &:hover {
-            border-color: rgba(1, 22, 39, 0.2) !important;
-        } 
-    }
-    &__select md-select-value.md-select-placeholder {
-        padding-left: 12px;
+        &:hover:not([disabled]) {
+            border-color: rgba($dark-new, .25) !important;
+        }
     }
     &__input {
         padding-right: 12px;
+        &-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999 !important;
+            pointer-events: none;
+        }
+        &._with-icon {
+            padding-left: 36px;
+        }
+        &::-webkit-input-placeholder {
+            color: $dark-new;
+        }
+        .md-select-icon:after {
+            font-size: 9px;
+        }
+        &[disabled] {
+            &::-webkit-input-placeholder {
+                color: rgba($dark-new, .5);
+            }
+            border: solid 1px rgba($dark-new, .1);
+        }
+        
     }   
     &__select {
         margin: 0;
         &:not([disabled]):focus .md-select-value {
             border: solid 1px;
-            border-color: rgba(1, 22, 39, 0.1);
+            border-color: rgba($dark-new, .25);
         }   
         .md-select-value span:not(.md-select-icon):after {
             display: none;
+        }
+        md-select-value.md-select-placeholder{
+            padding-left: 12px;
+            color: $dark-new;
+        }
+        md-input-container.md-input-focused:not(.md-input-has-value) & .md-select-value.md-select-placeholder {
+            color: $dark-new;
+        }
+        &.md-default-theme[disabled],
+        &[disabled] {
+            color: rgba($dark-new, .5);
+            .md-select-value {
+                border: solid 1px rgba($dark-new, .1);
+                background-image: none;
+            }
         }
     }   
 }
@@ -82,3 +120,95 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         }
     }
 }
+
+.reviewed {
+    min-width: 36px;
+    border-radius: 4px;
+    border-width: 1px;
+    background-color: transparent;
+    color: $dark-new;
+    font-weight: normal;
+    border-color: rgba($dark-new, .15);
+    &:hover {
+        border-color: rgba($dark-new, .25) !important;
+    }
+    &.label-primary {
+        background-color: $medium-teal-light-new;
+        color: #fff;
+    }
+}
+
+.form-button {
+    max-height: 36px;
+    border-radius: 4px;
+    box-shadow: none;
+    margin-right: 0;
+    margin-left: 12px;
+    font-size: 14px;
+    min-width: 80px;
+    &._reset-btn {
+        background-color: $fog-gray;
+        color: $dark-coal-new;
+        &:hover {
+            background-color: rgba($dark-coal-new, .3);
+        }
+    }
+    &._apply-btn {
+        background-color: $medium-teal-light-new;
+        color: white;
+        &:not([disabled]):hover,
+        &:hover {
+            background-color: $medium-teal-light-new;
+        }
+    }
+}
+
+.search-fab {
+    margin: auto;
+    height: 20px;
+    filter: invert(100%);
+    width: 20px;
+    &._list {
+        background: url('../assets/images/list.svg') center no-repeat;
+    }
+    &._checked-list {
+        background: url('../assets/images/check_list.svg') center no-repeat;
+    }
+}
+
+@media (max-width: $screen-xs) {
+    [aria-label = "Date Range Picker"] {
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        width: 100%;
+        max-height: 100%;
+        height: 100%;
+        border-radius: 0;
+        .md-date-range-picker {
+            &__calendar-wrapper {
+                width: 100%;
+                min-width: unset;
+                margin: auto;
+            }
+            &__calendar__grid {
+                width: 43px;
+            }
+            &__week {
+                display: flex;
+                justify-content: center;
+            }
+            &__calendar {
+                max-width: 305px;
+                margin: 0 auto;
+            }
+        }
+        md-date-range-picker .md-date-range-picker {
+            box-shadow: none;
+        }
+        md-dialog-content {
+            flex-grow: 1;
+        }
+    }
+}
+

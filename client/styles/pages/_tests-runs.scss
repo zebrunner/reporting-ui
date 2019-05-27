@@ -7,7 +7,7 @@
     &__no-content {
         padding: 15px;
         background-color: white;
-        @media (min-width:$breakpoint-mobile + 1) {
+        @media (min-width:$breakpoint-mobile) {
             border-top: 1px rgba(0, 0, 0, 0.12) solid;
         }
     }
@@ -16,9 +16,9 @@
             box-shadow: none;
         }
     }
-    @media screen and (max-width: 599px) {
-        .page {
-            padding: 0;
+    @media screen and (max-width: $breakpoint-mobile - 1) {
+        &__content-wrapper {
+            box-shadow: none;
         }
         &__section {
             background-color: white;
@@ -52,6 +52,11 @@
         #itemsCount {
             opacity: 0.5;
             font-size: 18px;
+        }
+    }
+    @media screen and (max-width: $screen-xs) {
+        .page {
+            padding: 0;
         }
     }
 }

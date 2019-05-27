@@ -30,6 +30,7 @@
             addNewTestRun: addNewTestRun,
             updateTestRun: updateTestRun,
             isOnlyAdditionalSearchActive: isOnlyAdditionalSearchActive,
+            isModalSearchActive: isModalSearchActive,
         };
 
         function getSearchTypes() {
@@ -118,6 +119,7 @@
             if (projects && projects.length) {
                 defaultCriteria = {
                     ...defaultCriteria,
+                    page: _searchParams.page,
                     projectNames: projects.map(project => project.name),
                 };
             }
@@ -127,6 +129,19 @@
 
         function isOnlyAdditionalSearchActive() {
             return isSearchActive() && !_searchParams.hasOwnProperty('query');
+        }
+
+        function isModalSearchActive() {
+            const allSearchActive = isSearchActive();
+            const querySearchActive = _searchParams.hasOwnProperty('query');
+            let minimalLengthForSearch = Object.keys(DEFAULT_SC).length + 1;
+            const currentSearchLength = Object.keys(_searchParams).length;
+
+            if (_searchParams.projectNames) {
+                minimalLengthForSearch ++;
+            }
+
+            return ((allSearchActive && !querySearchActive) || (allSearchActive && querySearchActive && currentSearchLength > minimalLengthForSearch));
         }
 
         function resetFilteringState() {

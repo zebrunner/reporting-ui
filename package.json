@@ -82,6 +82,7 @@
         "jquery-ui": "^1.12.1",
         "jszip": "^3.1.5",
         "lodash": "^4.17.11",
+        "md-date-range-picker": "^0.8.4",
         "moment": "^2.9.0",
         "n3-charts": "^2.0.28",
         "ng-img-crop": "^0.2.0",

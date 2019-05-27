@@ -1,0 +1,51 @@
+.search-modal {
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+        md-dialog-content {
+            flex-grow: 1;
+        }
+        md-dialog-actions {
+            padding: 16px;
+            .md-button {
+                margin: 0 0 0 12px;
+            }
+        }
+    }
+    &__header {
+        max-height: 60px;
+        padding: 0 16px;
+        &-text{
+            font-size: 18px;
+            font-weight: 400;
+        }
+        &-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 0;
+        }
+    }
+    &__content {
+        padding: 24px 16px 20px;
+        md-input-container {
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+        .reviewed {
+            margin-right: 12px;
+        }
+        .date-picker-container {
+            width: 100%;
+
+            i.material-icons {
+                display: inline-block;
+                position: absolute;
+                right: 8px;
+                top: 9px;
+                font-size: 20px;
+            }
+        }
+    }
+}

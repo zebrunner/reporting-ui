@@ -15,7 +15,7 @@
     </zf-sub-header>
 
     <div class="page">
-        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.selectedTestRuns.length > 0" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
+        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.selectedTestRuns.length > 0" md-direction="up" class="tests-runs-options md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
                     <span class="fa fa-bars" aria-hidden="true"></span>
@@ -45,20 +45,24 @@
             </md-fab-actions>
         </md-fab-speed-dial>
 
-        <tests-runs-filter on-filter-change="$ctrl.getTestRuns(1)"></tests-runs-filter>
-        <div class="p-tests-runs__content-wrapper">
+        <div>
+            <tests-runs-filter on-filter-change="$ctrl.getTestRuns(1)"></tests-runs-filter>
             <tests-runs-search on-filter-change="$ctrl.getTestRuns(1)">
-            <span>
-                <md-checkbox name="testRunSearchCheckbox"
-                             data-ng-model="$ctrl.selectedAll"
-                             ng-change="$ctrl.selectAllTestRuns()"
-                             class="md-primary"
-                             aria-label="Select"
-                             data-ng-true-value="true"
-                             data-ng-false-value="false">
-                </md-checkbox>
-            </span>
+                <span>
+                    <md-checkbox name="testRunSearchCheckbox"
+                                data-ng-model="$ctrl.selectedAll"
+                                ng-change="$ctrl.selectAllTestRuns()"
+                                class="md-primary"
+                                aria-label="Select"
+                                data-ng-true-value="true"
+                                data-ng-false-value="false">
+                    </md-checkbox>
+                </span>
             </tests-runs-search>
+        </div>
+        
+        <div class="p-tests-runs__content-wrapper">
+            
             <div class="p-tests-runs__section _content row ui-section no-margin">
                 <div class="col-md-12 no-padding">
                     <article class="article">

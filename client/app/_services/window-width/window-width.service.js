@@ -18,7 +18,7 @@
         return srv;
 
         function isMobile() {
-            return srv.windowWidth <= mediaBreakpoints.mobile;
+            return srv.windowWidth < mediaBreakpoints.mobile;
         }
     }
 })();

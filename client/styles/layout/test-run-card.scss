@@ -124,7 +124,7 @@
             @media(min-width: $breakpoint-mid-tablet + 1) and (max-width: 1120px){
                 flex-grow: 0;
             }
-            @media(min-width: $breakpoint-mobile + 1) and (max-width: 630px){
+            @media(min-width: $breakpoint-mobile) and (max-width: 630px){
                 flex-grow: 1;
             }
         }
@@ -164,7 +164,7 @@
             flex-grow: 1;
             width: 15%;
             min-width: 140px;
-            @media (max-width: $breakpoint-mobile) {
+            @media (max-width: $breakpoint-mobile - 1) {
                 justify-content: flex-start;
             }
             @media(min-width: $breakpoint-mid-tablet + 1) and (max-width: 1120px){
@@ -389,7 +389,7 @@
             font-size: 24px;
         }
     }
-    @media(min-width: $breakpoint-mobile + 1) and (max-width:  $breakpoint-mid-tablet) {
+    @media(min-width: $breakpoint-mobile) and (max-width:  $breakpoint-mid-tablet) {
         &__wrapper {
             &-left {
                 position: relative;
@@ -444,13 +444,13 @@
     &._single {
         background-color: white;
         z-index: 2;
-        @media (min-width: $breakpoint-mobile + 1) {
+        @media (min-width: $breakpoint-mobile) {
             padding: 2px 0;
         }
         .back {
             margin-top: 3px;
             cursor: pointer;
-            @media (max-width: $breakpoint-mobile) {
+            @media (max-width: $breakpoint-mobile - 1) {
                 margin-top: -3px;
             }
         }
@@ -463,7 +463,7 @@
         &__wrapper {
             min-height: 45px;
             height: auto;
-            @media (min-width: $breakpoint-mobile + 1) {
+            @media (min-width: $breakpoint-mobile) {
                 margin: 0 2px;
                 padding: 0 15px;
             }
@@ -499,7 +499,7 @@
                 display: none;
             }
             &._env {
-                @media(min-width: $breakpoint-mobile + 1) and (max-width:  $breakpoint-mid-tablet){
+                @media(min-width: $breakpoint-mobile) and (max-width:  $breakpoint-mid-tablet){
                     margin: 0;
                 }
             }

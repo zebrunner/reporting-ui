@@ -1,6 +1,8 @@
 'use strict'
+import SearchModalController from './modal/search-modal.controller';
+import modalTemplate from './modal/search-modal.html';
 
-const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService) {
+const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService, $mdDialog) {
     'ngInject';
 
     const subjectName = 'TEST_RUN';
@@ -26,12 +28,17 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         },
         getActiveSearchType: testsRunsService.getActiveSearchType,
         searchParams: testsRunsService.getLastSearchParams(),
+        isModalSearchActive: testsRunsService.isModalSearchActive,
         onChangeSearchCriteria: onChangeSearchCriteria,
         openDatePicker: openDatePicker,
         onReset: onReset,
         showSearchFilters: showSearchFilters,
         resetSearchQuery: resetSearchQuery,
         showAdvancedSearchFilters: false,
+        closeModal: closeModal,
+        showSearchDialog: showSearchDialog,
+        onApply: onApply,
+        onModalReset: onModalReset,
     };
 
     vm.$onInit = init;
@@ -42,6 +49,30 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         vm.fastSearchBlockExpand = true;
         loadFilters();
         readStoredParams();
+    }
+
+    function closeModal() {
+        $mdDialog.cancel();
+    };
+
+    
+    function showSearchDialog(event) {
+        $mdDialog.show({
+            controller: SearchModalController,
+            template: modalTemplate,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            fullscreen: true,
+            controllerAs: '$ctrl',
+            bindToController: true,
+            locals: {
+                onReset: vm.onModalReset,
+                onApply: vm.onApply,
+                environments: vm.environments,
+                platforms: vm.platforms,
+                allProjects: vm.allProjects,
+            }
+        });
     }
 
     function readStoredParams() {
@@ -72,6 +103,18 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         testsRunsService.resetFilteringState();
         vm.onFilterChange();
         vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
+    }
+
+    function onModalReset() {
+        if (vm.searchParams.query) {
+            let queryTemplate = vm.searchParams.query;
+            vm.onReset();
+            vm.searchParams.query = queryTemplate;
+            vm.onChangeSearchCriteria();
+            vm.onApply();
+        } else {
+            vm.onReset();
+        }
     }
 
     function onApply() {
@@ -175,7 +218,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                 testsRunsService.deleteSearchParam(name);
             }
         });
-        onApply();
+        vm.onApply();
     }
 
     function openDatePicker($event, showTemplate) {

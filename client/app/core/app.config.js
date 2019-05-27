@@ -5,7 +5,7 @@
         .factory('appConfig', [appConfig])
         .config(['$mdThemingProvider', mdConfig])
         .constant('OFFSET', new Date().getTimezoneOffset() * 60 * 1000)
-        .constant('DEFAULT_SC', { 'page': 1, 'pageSize': 20, 'reviewed': null });
+        .constant('DEFAULT_SC', { 'page': 1, 'pageSize': 20 });
 
     function appConfig() {
         var pageTransitionOpts = [
