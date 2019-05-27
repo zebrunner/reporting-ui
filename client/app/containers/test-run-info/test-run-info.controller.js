@@ -308,9 +308,14 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
     };
 
     function getLogsStartErrorTime(duration, logs) {
-        var logsDuration = logs[logs.length - 1].timestamp - logs[0].timestamp;
+        let logsDuration = 0;
+
+        if (logs.length) {
+            logsDuration = logs[logs.length - 1].timestamp - logs[0].timestamp;
+        }
+
         return duration * 1000 - logsDuration;
-    };
+    }
 
     function loadVideo(videoElement, timeout) {
         $timeout(function () {
