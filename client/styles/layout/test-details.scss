@@ -6,13 +6,17 @@
         top: $header_height;
         z-index: 4;
         box-shadow: 0 4px 8px 0 rgba(4, 0, 0, 0.2);
+        @media (max-width: $breakpoint-mobile - 1) { 
+            box-shadow: none;
+            margin-bottom: 2px;
+        }
         .test-run-group-row {
             height: auto !important;
             border-top: 1px solid #edeff1;
             background-color: white;
             .sort-new.test-run-group-column {
                 padding: 12px 24px !important;
-                @media(max-width: $breakpoint-mobile) {
+                @media(max-width: $breakpoint-mobile - 1) {
                     padding: 0 10px !important;
                 }
                 .test-run-group {
@@ -23,7 +27,7 @@
                         align-items: center;
                         &._left {
                             flex-grow: 1;
-                            @media(max-width: $breakpoint-mobile) {
+                            @media(max-width: $breakpoint-mobile - 1) {
                                 overflow-x: scroll;
                                 display: none;
                             }
@@ -49,7 +53,7 @@
                         @media (max-width: 998px) {
                             margin-right: 10px;
                         }
-                        @media(max-width: $breakpoint-mobile) {
+                        @media(max-width: $breakpoint-mobile - 1) {
                             display: none;
                         }
                         button {
@@ -371,7 +375,7 @@
             }
         }
     }
-    @media (min-width: $breakpoint-mobile + 1) {
+    @media (min-width: $breakpoint-mobile) {
         .ui-section {
             padding: 0 20px;
         }

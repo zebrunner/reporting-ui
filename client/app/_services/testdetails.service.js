@@ -32,7 +32,7 @@ const testDetailsService = function testDetailsService() {
     }
 
     function isDetailsFilterActive() {
-        return _statuses || _tags;
+        return (_statuses && _statuses.length) || (_tags && _tags.length);
     }
 
     function clearDataCache() {

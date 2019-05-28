@@ -280,7 +280,7 @@
             <div class="test-run-card__clickable" ng-class="{ '_highlighting': $ctrl.testRun.highlighting }" ng-click="$ctrl.goToTestRun()"></div>
         </div>
 
-        <div class="test-run-card__row _wrapper _middle" ng-hide="$ctrl.singleMode && !$ctrl.singleWholeInfo">
+        <div class="test-run-card__row _wrapper _middle">
             <div class="test-run-card__row _app-file" ng-hide="!$ctrl.singleMode && ! $ctrl.testRun.appVersion">
                 <div class="test-run-card__app-icon">
                     <md-icon class="material-icons testrun-appversion-icon" data-ng-if="!$ctrl.testRun.appVersionValid && $ctrl.testRun.appVersion">insert_drive_file</md-icon>

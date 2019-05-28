@@ -1,6 +1,6 @@
 'use strict';
 
-const testDetailsFilterController = function testDetailsFilterController(testDetailsService, onTagSelectParent, $mdDialog, tags, testsTagsOptions, testGroupMode, testsStatusesOptions, onStatusButtonClickParent) {
+const testDetailsFilterController = function testDetailsFilterController(onStatusButtonClickGetSelected, onTagClickGetSelected, testDetailsService, onTagSelectParent, $mdDialog, tags, testsTagsOptions, testGroupMode, testsStatusesOptions, onStatusButtonClickParent, windowWidthService, $scope) {
     'ngInject';
 
     const vm = {
@@ -10,12 +10,12 @@ const testDetailsFilterController = function testDetailsFilterController(testDet
         testGroupMode: testGroupMode,
         testsStatusesOptions: testsStatusesOptions,
         onStatusButtonClickParent: onStatusButtonClickParent,
-        onStatusButtonClick,
-        onTagSelect: onTagSelect,
+        onTagSelect: onTagClickGetSelected,
         resetTestsGrouping: resetTestsGrouping,
-        recentlySelectedTags: testDetailsService.getStoredTags() || null,
-        resentlySelectedStatuses: testDetailsService.getStoredStatuses() || null,
+        recentlySelectedTags: testDetailsService.getStoredTags() || [],
+        resentlySelectedStatuses: testDetailsService.getStoredStatuses() || [],
         onTagSelectParent: onTagSelectParent,
+        onStatusButtonClick: onStatusButtonClickGetSelected,
         onApply,
     };
 
@@ -24,40 +24,7 @@ const testDetailsFilterController = function testDetailsFilterController(testDet
     return vm;
 
     function controlInit() {
-        readingStoredTags();
-        readingStoredStatuses();
-    }
 
-    function readingStoredTags() {
-        let chips = null;
-        angular.element(document).ready(function () {
-            chips =  Array.from(document.querySelectorAll('md-chip'));
-            if(vm.recentlySelectedTags) {
-                chips.map((el, index) => {
-                    vm.recentlySelectedTags.forEach((tag) => {
-                        if(el.innerText.slice(1) === tag) {
-                            el.classList.add('md-focused');
-                        }
-                    })
-                })
-            }
-        })
-    }
-    
-    function readingStoredStatuses() {
-        let chips = null;
-        angular.element(document).ready(function () {
-            chips = Array.from(document.querySelectorAll('.test-run-group_group-items_item'));
-            if(vm.resentlySelectedStatuses) {
-                chips.map((el) => {
-                        vm.resentlySelectedStatuses.forEach((status) => {
-                            if(el.getAttribute('name') === status) {
-                                el.classList.add('item-checked');
-                            }
-                        })
-                })
-            }
-        })
     }
 
     function resettingStoredStatuses() {
@@ -71,8 +38,6 @@ const testDetailsFilterController = function testDetailsFilterController(testDet
     }
 
     function resetTestsGrouping() {
-        vm.resentlySelectedStatuses = null;
-        vm.recentlySelectedTags = null;
         testDetailsService.clearDataCache();
         resettingStoredStatuses();
         resettingStoredTags();
@@ -84,25 +49,11 @@ const testDetailsFilterController = function testDetailsFilterController(testDet
     };
 
     function onApply(needClosing) {
-        vm.onTagSelectParent(vm.recentlySelectedTags);
-        vm.onStatusButtonClickParent(vm.resentlySelectedStatuses);
+        vm.onTagSelectParent(vm.onTagSelect());
+        vm.onStatusButtonClickParent(vm.onStatusButtonClick());
         if(needClosing) {
             vm.cancel();
         }
-    }
-
-    function onStatusButtonClick() {
-        vm.resentlySelectedStatuses = [];
-        let chips = Array.from(document.querySelectorAll('.item-checked'));
-        chips.map((chip) => { vm.resentlySelectedStatuses.push(chip.getAttribute('name')); })
-        testDetailsService.setStatuses(vm.resentlySelectedStatuses);
-    }
-
-    function onTagSelect() {
-        vm.recentlySelectedTags = [];
-        let chips = Array.from(document.querySelectorAll('.md-focused'));
-        chips.map((chip) => { vm.recentlySelectedTags.push(chip.innerText.slice(1)); })
-        testDetailsService.setTags(vm.recentlySelectedTags);
     }
 
 };

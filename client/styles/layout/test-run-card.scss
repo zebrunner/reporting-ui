@@ -682,10 +682,21 @@
 
     &._mobile._single & {
         &__wrapper {
-            padding: 15px 12px 20px;
+            padding: 0;
             margin-bottom: 0;
             display: flex;
             justify-content: space-between;
+            &.PASSED .test-run-card__row._middle {
+                border-left-color: $green-new;
+            }
+
+            &.FAILED  .test-run-card__row._middle {
+                border-left-color: $red-new;
+            }
+
+            &.IN_PROGRESS .test-run-card__row._middle {
+                border-left-color: $blue-new;
+            }
         }
         &__row {
             .expand-button {
@@ -703,17 +714,32 @@
                     }
                 }
             }
+            &._top {
+                padding: 15px 12px 20px;
+                z-index: 3;
+                background: #ffffff;
+                width: 100%;
+                height: 100%;
+            }
             &._middle {
+                transition: .1s ease-in;
                 height: auto;
-                top: 84px;
+                top: 100%;
+                transform: translateY(-100%);
+                border-left: 4px solid #777;
+                padding: 10px 12px;
+                box-shadow: none;
                 .md-icon {
                     margin: 0 auto;
                 }
             }
             &._bottom {
+                background: #ffffff;
                 padding: 0;
                 align-items: start;
-                margin-top: -2px;
+                margin-top: 10px;
+                padding-right: 10px;
+                z-index: 4;
                 .comments-area {
                     color: rgba(0,0,0,.5);
                 }
@@ -734,6 +760,7 @@
             border: none;
             opacity: .5;
             height: 30px;
+            z-index: 4;
         }
 
         &__back-btn {
@@ -755,6 +782,9 @@
             }
             &._close-info {
                 margin: 0 12px 0 0;
+            }
+            @media (min-width: $screen-phone + 1) {
+                display: none;
             }
         }
 
@@ -787,24 +817,17 @@
                     font-size: 20px;
                 }
             }
-            &.PASSED .test-run-card__row._middle {
-                border-left-color: $green-new;
-            }
-
-            &.FAILED  .test-run-card__row._middle {
-                border-left-color: $red-new;
-            }
-
-            &.IN_PROGRESS .test-run-card__row._middle {
-                border-left-color: $blue-new;
-            }
+            
         }
         &__row {
             &._middle {
-                top: 84px;
-                border-left: 4px solid #777;
-                padding: 10px 12px;
+                border-top: 1px solid rgba(#000000, .1);
+                transform: translateY(0);
+                box-shadow: 0 4px 8px 0 rgba(0,0,0,.25);
             }
+        }
+        &__show-more {
+            transform: translate(-50%, -25%) rotate(180deg);
         }
     }
 

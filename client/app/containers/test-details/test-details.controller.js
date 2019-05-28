@@ -431,6 +431,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             vm.testGroups.apply = true;
         };
 
+        onTagClickGetSelected();
         onTestGroupingMode(fnPlain, fgGroups);
         testGroupDataToStore.tags = angular.copy(chips);
     }
@@ -443,8 +444,27 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             showTestsByStatuses(vm.testRun.tests, statuses);
         };
 
+        onStatusButtonClickGetSelected();
         onTestGroupingMode(fnPlain, fgGroups);
         testGroupDataToStore.statuses = angular.copy(statuses);
+    }
+
+    function onStatusButtonClickGetSelected() {
+        let resentlySelectedStatuses = [];
+        let chips = Array.from(document.querySelectorAll('.item-checked'));
+        chips.map((chip) => { resentlySelectedStatuses.push(chip.getAttribute('name')); })
+        testDetailsService.setStatuses(resentlySelectedStatuses);
+        vm.testsStatusesOptions.initValues = testDetailsService.getStoredStatuses();
+        return resentlySelectedStatuses;
+    }
+
+    function onTagClickGetSelected() {
+        let recentlySelectedTags = [];
+        let chips = Array.from(document.querySelectorAll('.md-focused'));
+        chips.map((chip) => { recentlySelectedTags.push(chip.innerText.slice(1)); })
+        testDetailsService.setTags(recentlySelectedTags);
+        vm.testsTagsOptions.initValues = testDetailsService.getStoredTags();
+        return recentlySelectedTags;
     }
 
     function changeTestStatus(test, status) {
@@ -484,6 +504,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
     }
 
     function showFilterDialog(event) {
+        vm.testsStatusesOptions.initValues = testDetailsService.getStoredStatuses();
+        vm.testsTagsOptions.initValues = testDetailsService.getStoredTags();
         $mdDialog.show({
             controller: testDetailsFilterController,
             template: testDetailsTemplate,
@@ -501,6 +523,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
                 onStatusButtonClickParent: vm.onStatusButtonClick,
                 onTagSelectParent: vm.onTagSelect,
                 resetTestsGrouping: vm.resetTestsGrouping,
+                onStatusButtonClickGetSelected: onStatusButtonClickGetSelected,
+                onTagClickGetSelected: onTagClickGetSelected,
             }
         });
     }
@@ -604,6 +628,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
 
             if (toState.name !== 'tests.runInfo') {
                 TestService.clearDataCache();
+                testDetailsService.clearDataCache();
             }
 
             onTransStartSubscription();
