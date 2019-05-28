@@ -2,8 +2,8 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 import IssuesModalController from '../../components/modals/issues/issues.controller';
-import testDetailsFilterController from './test-details-modal/test-details-filter.controller';
-import testDetailsTemplate from './test-details-modal/test-details-filter.html';
+import testDetailsFilterController from './test-details-modal/filter-modal.contoller';
+import testDetailsTemplate from './test-details-modal/filter-modal.html';
 
 const testDetailsController = function testDetailsController($scope, $rootScope, $q, TestService, API_URL,
                                                              modalsService, $state, $transitions,
