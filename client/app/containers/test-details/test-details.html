@@ -12,7 +12,7 @@
     <div class="page">
         <div class="p-tests-run-details__sticky-header">
             <test-run-card test-run="$ctrl.testRun" back="$ctrl.onBackClick()" single-mode="true"></test-run-card>
-            <div data-ng-hide="!$ctrl.testRun.tests" ng-if="!$ctrl.isMobile">
+            <div data-ng-hide="!$ctrl.testRun.tests" ng-if="!$ctrl.isMobile()">
                 <div class="test-run-group-row">
                     <div class="sort-new test-run-group-column" colspan="4">
                         <div class="test-run-group">
