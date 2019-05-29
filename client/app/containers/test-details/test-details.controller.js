@@ -10,6 +10,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
                                                              UtilService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
     'ngInject';
 
+    const mobileWidth = 600;
     const testGroupDataToStore = {
         statuses: [],
         tags: []
@@ -66,6 +67,12 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         initTests();
         fillTestRunMetadata();
         bindEvents();
+
+        $(window).resize(function() { 
+            if ($(window).width() >= mobileWidth && document.querySelector('.filter-modal')) {
+                $mdDialog.cancel();
+            }
+        })
     }
 
     function initJiraSettings() {
