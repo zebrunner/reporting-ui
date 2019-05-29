@@ -8,9 +8,9 @@ const testDetailsService = function testDetailsService() {
 
     return  {
         setTags,
-        getStoredTags,
+        getTags,
         setStatuses,
-        getStoredStatuses,
+        getStatuses,
         isDetailsFilterActive,
         clearDataCache,
     };
@@ -19,7 +19,7 @@ const testDetailsService = function testDetailsService() {
         _tags = tags;
     }
 
-    function getStoredTags() {
+    function getTags() {
         return _tags;
     }
 
@@ -27,7 +27,7 @@ const testDetailsService = function testDetailsService() {
         _statuses = statuses;
     }
 
-    function getStoredStatuses() {
+    function getStatuses() {
         return _statuses;
     }
 

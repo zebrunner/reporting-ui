@@ -1,6 +1,6 @@
 'use strict';
 
-const testDetailsFilterController = function testDetailsFilterController(onStatusButtonClickGetSelected, onTagClickGetSelected, testDetailsService, onTagSelectParent, $mdDialog, tags, testsTagsOptions, testGroupMode, testsStatusesOptions, onStatusButtonClickParent, windowWidthService, $scope) {
+const testDetailsFilterController = function testDetailsFilterController(onStatusButtonClickGetSelected, onTagClickGetSelected, testDetailsService, onTagSelectParent, $mdDialog, tags, testsTagsOptions, testGroupMode, testsStatusesOptions, onStatusButtonClickParent) {
     'ngInject';
 
     const vm = {
@@ -12,8 +12,6 @@ const testDetailsFilterController = function testDetailsFilterController(onStatu
         onStatusButtonClickParent: onStatusButtonClickParent,
         onTagSelect: onTagClickGetSelected,
         resetTestsGrouping: resetTestsGrouping,
-        recentlySelectedTags: testDetailsService.getStoredTags() || [],
-        resentlySelectedStatuses: testDetailsService.getStoredStatuses() || [],
         onTagSelectParent: onTagSelectParent,
         onStatusButtonClick: onStatusButtonClickGetSelected,
         onApply,

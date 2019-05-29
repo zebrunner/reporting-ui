@@ -461,7 +461,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         let chips = Array.from(document.querySelectorAll('.item-checked'));
         chips.map((chip) => { resentlySelectedStatuses.push(chip.getAttribute('name')); })
         testDetailsService.setStatuses(resentlySelectedStatuses);
-        vm.testsStatusesOptions.initValues = testDetailsService.getStoredStatuses();
+        vm.testsStatusesOptions.initValues = testDetailsService.getStatuses();
         return resentlySelectedStatuses;
     }
 
@@ -470,7 +470,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         let chips = Array.from(document.querySelectorAll('.md-focused'));
         chips.map((chip) => { recentlySelectedTags.push(chip.innerText.slice(1)); })
         testDetailsService.setTags(recentlySelectedTags);
-        vm.testsTagsOptions.initValues = testDetailsService.getStoredTags();
+        vm.testsTagsOptions.initValues = testDetailsService.getTags();
         return recentlySelectedTags;
     }
 
@@ -511,8 +511,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
     }
 
     function showFilterDialog(event) {
-        vm.testsStatusesOptions.initValues = testDetailsService.getStoredStatuses();
-        vm.testsTagsOptions.initValues = testDetailsService.getStoredTags();
+        vm.testsStatusesOptions.initValues = testDetailsService.getStatuses();
+        vm.testsTagsOptions.initValues = testDetailsService.getTags();
         $mdDialog.show({
             controller: testDetailsFilterController,
             template: testDetailsTemplate,
