@@ -63,10 +63,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         $rootScope.$broadcast('tr-filter-reset');
     }
 
-    // function applySearch() {
-    //     $rootScope.$broadcast('tr-filter-apply');
-    // }
-
     function highlightTestRun() {
         const activeTestRun = getTestRunById(vm.activeTestRunId);
 
@@ -166,28 +162,72 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function batchRerun() {
         const rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
+        const resultsCounter = {success: 0, fail: 0};
+        const promises = vm.testRuns
+            .filter(testRun => testRun.selected)
+            .map(function(testRun) {
+                return rebuild(testRun, rerunFailures, resultsCounter);
+            });
 
-        vm.testRuns.forEach(function(testRun) {
-            testRun.selected && rebuild(testRun, rerunFailures);
-        });
+        $q.all(promises)
+            .finally(() => {
+                let delay = 0;
+
+                if (vm.selectedAll && resultsCounter.success) {
+                    vm.selectedAll = false;
+                }
+                updateSelectedTestRuns();
+
+                switch (true) {
+                    case !!resultsCounter.success:
+                        delay = 2500;
+                        messageService.success(`(${resultsCounter.success}x) Rebuild triggered in CI service`, {hideDelay: delay});
+                        if (!resultsCounter.fail) {
+                            break;
+                        }
+                    case !!resultsCounter.fail:
+                        $timeout(() => {
+                            messageService.error(`(${resultsCounter.fail}x) Failed to trigger rebuild in CI service`);
+                        }, delay);
+                }
+            });
     }
 
-    function rebuild(testRun, rerunFailures) {
+    function rebuild(testRun, rerunFailures, resultsCounter) {
         if (vm.isToolConnected('JENKINS')) {
-            if (!rerunFailures) {
+            if (typeof rerunFailures === 'undefined') {
                 rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
             }
 
-            TestRunService.rerunTestRun(testRun.id, rerunFailures).then(function(rs) {
+            return TestRunService.rerunTestRun(testRun.id, rerunFailures).then(function(rs) {
                 if (rs.success) {
                     testRun.status = 'IN_PROGRESS';
-                    messageService.success('Rebuild triggered in CI service');
+                    if (resultsCounter) {
+                        testRun.selected && (testRun.selected = false);
+                        resultsCounter.success += 1;
+                    } else {
+                        messageService.success('Rebuild triggered in CI service');
+                    }
                 } else {
-                    messageService.error(rs.message);
+                    if (resultsCounter) {
+                        resultsCounter.fail += 1;
+                    } else {
+                        messageService.error(rs.message);
+                    }
                 }
             });
         } else {
-            window.open(testRun.jenkinsURL + '/rebuild/parameterized', '_blank');
+            if (testRun.jenkinsURL) {
+                resultsCounter && (resultsCounter.success += 1);
+                window.open(testRun.jenkinsURL + '/rebuild/parameterized', '_blank');
+
+                return $q.resolve();
+            } else {
+                resultsCounter && (resultsCounter.fail += 1);
+
+                return $q.reject();
+            }
+
         }
     }
 
