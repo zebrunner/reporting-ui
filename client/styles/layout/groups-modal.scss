@@ -82,7 +82,12 @@
             justify-content: space-between;
         }
         md-toolbar {
-            display: none;
+            background-color: #ffffff;
+            color: #000000;
+            box-shadow: 0px 4px 5px 0 rgba(4, 0, 0, 0.15);
+            md-icon {
+                color: rgba(#000000, .5);
+            }
         }
         &__form-fields {
             padding: 24px 16px;
