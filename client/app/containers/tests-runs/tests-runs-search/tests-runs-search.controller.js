@@ -50,12 +50,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         vm.fastSearchBlockExpand = true;
         loadFilters();
         readStoredParams();
-
-        $(window).resize(function() { 
-            if ($(window).width() >= mobileWidth && document.querySelector('.search-modal')) {
-                vm.closeModal();
-            }
-        })
     }
 
     function closeModal() {
@@ -72,6 +66,16 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             fullscreen: true,
             controllerAs: '$ctrl',
             bindToController: true,
+            onComplete: () => {
+                $(window).on('resize.searchDialog',() => { 
+                    if ($(window).width() >= mobileWidth) {
+                        vm.closeModal();
+                    }
+                })
+            },
+            onRemoving: () => {
+                $(window).off('resize.searchDialog');
+            },
             locals: {
                 onReset: vm.onModalReset,
                 onApply: vm.onApply,

@@ -1,44 +1,30 @@
 'use strict';
 
-const testDetailsFilterController = function testDetailsFilterController(onStatusButtonClickGetSelected, onTagClickGetSelected, testDetailsService, onTagSelectParent, $mdDialog, tags, testsTagsOptions, testGroupMode, testsStatusesOptions, onStatusButtonClickParent) {
+const testDetailsFilterController = function testDetailsFilterController(resetTestsGroupingParent, testDetailsService, sortByTags, $mdDialog, tags, testsTagsOptions, testGroupMode, testsStatusesOptions, sortByStatus) {
     'ngInject';
 
     const vm = {
         cancel,
-        tags: tags,
-        testsTagsOptions: testsTagsOptions,
-        testGroupMode: testGroupMode,
-        testsStatusesOptions: testsStatusesOptions,
-        onStatusButtonClickParent: onStatusButtonClickParent,
-        onTagSelect: onTagClickGetSelected,
-        resetTestsGrouping: resetTestsGrouping,
-        onTagSelectParent: onTagSelectParent,
-        onStatusButtonClick: onStatusButtonClickGetSelected,
+        tags,
+        testsTagsOptions,
+        testGroupMode,
+        testsStatusesOptions,
+        sortByStatus,
+        resetTestsGroupingParent,
+        resetTestsGrouping,
+        sortByTags,
+        onTagSelect,
         onApply,
+        resentlySelectedStatuses: [],
+        recentlySelectedTags: [],
+        onStatusButtonClick,
     };
-
-    vm.$onInit = controlInit;
 
     return vm;
 
-    function controlInit() {
-
-    }
-
-    function resettingStoredStatuses() {
-        let chips = Array.from(document.querySelectorAll('.test-run-group_group-items_item'));
-        chips.forEach((chip) => {chip.classList.remove('item-checked')});
-    }
-
-    function resettingStoredTags() {
-        let chips = document.querySelectorAll('md-chip');
-        chips.forEach((chip) => {chip.classList.remove('md-focused')});
-    }
-
     function resetTestsGrouping() {
         testDetailsService.clearDataCache();
-        resettingStoredStatuses();
-        resettingStoredTags();
+        vm.resetTestsGroupingParent();
         vm.onApply(false);
     }
 
@@ -47,11 +33,19 @@ const testDetailsFilterController = function testDetailsFilterController(onStatu
     };
 
     function onApply(needClosing) {
-        vm.onTagSelectParent(vm.onTagSelect());
-        vm.onStatusButtonClickParent(vm.onStatusButtonClick());
-        if(needClosing) {
+        vm.sortByTags(vm.recentlySelectedTags);
+        vm.sortByStatus(vm.resentlySelectedStatuses);
+        if (needClosing) {
             vm.cancel();
         }
+    }
+
+    function onTagSelect($tags) {
+        vm.recentlySelectedTags = $tags;
+    }
+
+    function onStatusButtonClick($statuses) {
+        vm.resentlySelectedStatuses = $statuses;
     }
 
 };

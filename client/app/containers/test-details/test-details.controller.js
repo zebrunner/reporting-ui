@@ -12,8 +12,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
 
     const mobileWidth = 600;
     const testGroupDataToStore = {
-        statuses: [],
-        tags: []
+        statuses: testDetailsService.getStatuses() || [],
+        tags: testDetailsService.getTags() || []
     };
     let jiraSettings = {};
     let TENANT;
@@ -27,8 +27,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         testRun: null,
         testsLoading: true,
         testsFilteredEmpty: true,
-        testsTagsOptions: {},
-        testsStatusesOptions: {},
+        testsTagsOptions: {initValues: testDetailsService.getTags() || []},
+        testsStatusesOptions: {initValues: testDetailsService.getStatuses() || []},
         subscriptions: {},
         zafiraWebsocket: null,
         showRealTimeEvents: true,
@@ -67,12 +67,6 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         initTests();
         fillTestRunMetadata();
         bindEvents();
-
-        $(window).resize(function() { 
-            if ($(window).width() >= mobileWidth && document.querySelector('.filter-modal')) {
-                $mdDialog.cancel();
-            }
-        })
     }
 
     function initJiraSettings() {
@@ -187,8 +181,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         loadTests(vm.testRun.id)
         .then(function () {
             vm.testGroups.group.common.data.all = vm.testRun.tests;
-            showTestsByTags(vm.testRun.tests);
-            showTestsByStatuses(vm.testRun.tests);
+            showTestsByTags(vm.testRun.tests, testGroupDataToStore.tags);
+            showTestsByStatuses(vm.testRun.tests, testGroupDataToStore.statuses);
             vm.testRun.tags = collectTags(vm.testRun.tests);
         })
         .finally(() => {
@@ -438,7 +432,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             vm.testGroups.apply = true;
         };
 
-        onTagClickGetSelected();
+        testDetailsService.setTags(chips);
+        vm.testsTagsOptions.initValues = testDetailsService.getTags();
         onTestGroupingMode(fnPlain, fgGroups);
         testGroupDataToStore.tags = angular.copy(chips);
     }
@@ -450,28 +445,11 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         var fgGroups = function() {
             showTestsByStatuses(vm.testRun.tests, statuses);
         };
-
-        onStatusButtonClickGetSelected();
+        
+        testDetailsService.setStatuses(statuses);
+        vm.testsStatusesOptions.initValues = testDetailsService.getStatuses();
         onTestGroupingMode(fnPlain, fgGroups);
         testGroupDataToStore.statuses = angular.copy(statuses);
-    }
-
-    function onStatusButtonClickGetSelected() {
-        let resentlySelectedStatuses = [];
-        let chips = Array.from(document.querySelectorAll('.item-checked'));
-        chips.map((chip) => { resentlySelectedStatuses.push(chip.getAttribute('name')); })
-        testDetailsService.setStatuses(resentlySelectedStatuses);
-        vm.testsStatusesOptions.initValues = testDetailsService.getStatuses();
-        return resentlySelectedStatuses;
-    }
-
-    function onTagClickGetSelected() {
-        let recentlySelectedTags = [];
-        let chips = Array.from(document.querySelectorAll('.md-focused'));
-        chips.map((chip) => { recentlySelectedTags.push(chip.innerText.slice(1)); })
-        testDetailsService.setTags(recentlySelectedTags);
-        vm.testsTagsOptions.initValues = testDetailsService.getTags();
-        return recentlySelectedTags;
     }
 
     function changeTestStatus(test, status) {
@@ -522,16 +500,24 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             fullscreen: true,
             bindToController: true,
             controllerAs: '$ctrl',
+            onComplete: () => {
+                $(window).on('resize.filterDialog', () => {
+                    if ($(window).width() >= mobileWidth) {
+                        $mdDialog.hide();
+                    }
+                })
+            },
+            onRemoving: () => {
+                $(window).off('resize.filterDialog');
+            },
             locals: {
                 tags: vm.testRun.tags,
                 testsTagsOptions: vm.testsTagsOptions,
                 testGroupMode: vm.testGroupMode,
                 testsStatusesOptions: vm.testsStatusesOptions,
-                onStatusButtonClickParent: vm.onStatusButtonClick,
-                onTagSelectParent: vm.onTagSelect,
-                resetTestsGrouping: vm.resetTestsGrouping,
-                onStatusButtonClickGetSelected: onStatusButtonClickGetSelected,
-                onTagClickGetSelected: onTagClickGetSelected,
+                sortByStatus: vm.onStatusButtonClick,
+                sortByTags: vm.onTagSelect,
+                resetTestsGroupingParent: vm.resetTestsGrouping,
             }
         });
     }
