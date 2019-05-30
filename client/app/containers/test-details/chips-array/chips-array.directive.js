@@ -24,8 +24,10 @@ const chipsArrayDirective = function($timeout) {
                     if (!onSwitch) {
                         angular.element('md-chip:has(.chip-item-template.item-default)').addClass('md-focused');
                     }
-                    scope.chips.filter((chip) => { return chip.default && !onSwitch; }).forEach(function (chip) {
-                        selectedTags[chip.name + chip.value] = chip.value;
+                    scope.chips.forEach((chip) => {
+                        if (chip.default && !onSwitch) {
+                            selectedTags[chip.name + chip.value] = chip.value;
+                        }
                     });
                     selectedTags = !onSwitch ? selectedTags : {};
                     scope.options.initValues = [];
@@ -34,7 +36,7 @@ const chipsArrayDirective = function($timeout) {
             });
 
             scope.selectGroup = (event, currentChip, index) => {
-                let chip = angular.element(event.target.closest('md-chip'));
+                const chip = angular.element(event.target.closest('md-chip'));
 
                 if (!scope.multi) {
                     scope.options.reset(true);
@@ -96,11 +98,12 @@ const chipsArrayDirective = function($timeout) {
             });
 
             scope.$watch('options.initValues', (newVal, oldVal) => {
-                if(newVal && newVal.length) {
+                if (newVal && newVal.length) {
                     $timeout(() => {
                         if (scope.options && scope.options.initValues) {
                             scope.options.initValues.forEach((value) => {
-                                let chipTemplates = angular.element('*[name = ' + value.split(' ').join('') + ']');
+                                let chipTemplates = angular.element('*[name = ' + '"' + value.replace(/ /g,"") + '"' + ']');
+
                                 angular.forEach(chipTemplates, (element) => {
                                     angular.element(element.closest('md-chip')).addClass('md-focused');
                                 });

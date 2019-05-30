@@ -25,8 +25,8 @@ const statusButtonsDirective = function($timeout) {
             });
 
             scope.changeStatus = (event) => {
-                let elementStatus = angular.element(event.target);
-                let value = elementStatus[0].attributes['name'].value;
+                const elementStatus = angular.element(event.target);
+                const value = elementStatus[0].attributes['name'].value;
                 let removed = null;
                 let values = null;
 
@@ -57,6 +57,7 @@ const statusButtonsDirective = function($timeout) {
                         result.push(element[0].attributes['name'].value);
                     } else if (!element) {
                         let index = result.indexOf(key);
+
                         if (index !== -1) {
                             result.splice(index, 1);
                         }
@@ -71,6 +72,7 @@ const statusButtonsDirective = function($timeout) {
                     if (scope.options && scope.options.initValues) {
                         scope.options.initValues.forEach((value) => {
                             let chipTemplates = angular.element('*[name = ' + value + ']');
+
                             chipTemplates.addClass('item-checked');
                         });
                         $timeout(() => {
