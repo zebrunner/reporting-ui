@@ -3,11 +3,13 @@
 import toolsService from './tools/tools.service';
 import progressbarService from './progressbar/progressbar.service';
 import messageService from './messages/message.service';
+import testDetailsService from './testdetails.service';
 
 angular.module('app.services', [])
     .service({ toolsService })
     .service({ messageService })
-    .service({ progressbarService });
+    .service({ progressbarService })
+    .service({ testDetailsService });
 
 require('./auth.intercepter');
 require('./utils/HttpMockResolver');

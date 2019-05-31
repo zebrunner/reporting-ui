@@ -5,6 +5,7 @@ import modalTemplate from './modal/search-modal.html';
 const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService, $mdDialog) {
     'ngInject';
 
+    const mobileWidth = 600;
     const subjectName = 'TEST_RUN';
     const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS'];
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
@@ -65,6 +66,16 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             fullscreen: true,
             controllerAs: '$ctrl',
             bindToController: true,
+            onComplete: () => {
+                $(window).on('resize.searchDialog',() => { 
+                    if ($(window).width() >= mobileWidth) {
+                        vm.closeModal();
+                    }
+                })
+            },
+            onRemoving: () => {
+                $(window).off('resize.searchDialog');
+            },
             locals: {
                 onReset: vm.onModalReset,
                 onApply: vm.onApply,

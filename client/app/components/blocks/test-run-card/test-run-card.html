@@ -194,6 +194,9 @@
                     </div>
                 </span>
             </div>
+            <button class="test-run-card__back-btn" ng-if="$ctrl.singleMode" ng-click="$ctrl.back()">
+                <md-icon>arrow_back</md-icon>
+            </button>
             <div name="testRunInfo" class="test-run-card__cell _info">
                 <div class="test-run-card__title">
                     {{$ctrl.testRun.testSuite.name}}
@@ -277,13 +280,8 @@
             <div class="test-run-card__clickable" ng-class="{ '_highlighting': $ctrl.testRun.highlighting }" ng-click="$ctrl.goToTestRun()"></div>
         </div>
 
-        <div class="test-run-card__row _wrapper _middle" ng-hide="$ctrl.singleMode && !$ctrl.singleWholeInfo">
+        <div class="test-run-card__row _wrapper _middle">
             <div class="test-run-card__row _app-file" ng-hide="!$ctrl.singleMode && ! $ctrl.testRun.appVersion">
-                <md-icon data-ng-click="$ctrl.showDetails(false)"
-                         class="test-run-card__back-btn _close-info"
-                         ng-if="$ctrl.singleMode && $ctrl.singleWholeInfo"
-                         aria-label="Back"
-                         aria-hidden="true">keyboard_return</md-icon>
                 <div class="test-run-card__app-icon">
                     <md-icon class="material-icons testrun-appversion-icon" data-ng-if="!$ctrl.testRun.appVersionValid && $ctrl.testRun.appVersion">insert_drive_file</md-icon>
                     <md-icon class="material-icons testrun-appversion-icon" data-ng-if="$ctrl.testRun.appVersionValid && $ctrl.testRun.appVersion">file_download</md-icon>
@@ -352,12 +350,6 @@
                 md-direction="right">Blockers</md-tooltip>
             </div>
             <div class="test-run-card__bottom-right-buttons" ng-if="$ctrl.singleMode">
-                <button class="test-run-card__info-btn"
-                        ng-click="$ctrl.showDetails(true)">
-                    <i class="material-icons">
-                        error_outline
-                    </i>
-                </button>
                 <md-menu md-offset="0 {{$ctrl.currentOffset}}">
                     <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button test-run-card__menu-btn" ng-click="$ctrl.openMenu($event, $mdMenu)">
                         <md-icon class="material-icons">more_vert</md-icon>
@@ -429,5 +421,11 @@
                 </md-menu>
             </div>
         </div>
+
+        <button class="test-run-card__show-more" ng-if="$ctrl.singleMode" ng-click="$ctrl.showDetails(true)">
+            <i class="material-icons">
+            keyboard_arrow_down
+            </i>
+        </button>
     </div>
 </div>

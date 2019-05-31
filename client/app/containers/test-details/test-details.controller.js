@@ -2,15 +2,18 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 import IssuesModalController from '../../components/modals/issues/issues.controller';
+import testDetailsFilterController from './test-details-modal/filter-modal.contoller';
+import testDetailsTemplate from './test-details-modal/filter-modal.html';
 
 const testDetailsController = function testDetailsController($scope, $rootScope, $q, TestService, API_URL,
                                                              modalsService, $state, $transitions,
-                                                             UtilService, $mdDialog, toolsService, messageService) {
+                                                             UtilService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
     'ngInject';
 
+    const mobileWidth = 600;
     const testGroupDataToStore = {
-        statuses: [],
-        tags: []
+        statuses: testDetailsService.getStatuses() || [],
+        tags: testDetailsService.getTags() || []
     };
     let jiraSettings = {};
     let TENANT;
@@ -24,12 +27,14 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         testRun: null,
         testsLoading: true,
         testsFilteredEmpty: true,
-        testsTagsOptions: {},
-        testsStatusesOptions: {},
+        testsTagsOptions: {initValues: testDetailsService.getTags() || []},
+        testsStatusesOptions: {initValues: testDetailsService.getStatuses() || []},
         subscriptions: {},
         zafiraWebsocket: null,
         showRealTimeEvents: true,
+        isMobile: windowWidthService.isMobile,
 
+        isDetailsFilterActive: testDetailsService.isDetailsFilterActive,
         onStatusButtonClick: onStatusButtonClick,
         onTagSelect: onTagSelect,
         resetTestsGrouping: resetTestsGrouping,
@@ -38,6 +43,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         changeTestStatus: changeTestStatus,
         showDetailsDialog: showDetailsDialog,
         goToTestDetails: goToTestDetails,
+        showFilterDialog: showFilterDialog,
         onBackClick,
         updateTest,
         get empty() {
@@ -175,8 +181,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         loadTests(vm.testRun.id)
         .then(function () {
             vm.testGroups.group.common.data.all = vm.testRun.tests;
-            showTestsByTags(vm.testRun.tests);
-            showTestsByStatuses(vm.testRun.tests);
+            showTestsByTags(vm.testRun.tests, testGroupDataToStore.tags);
+            showTestsByStatuses(vm.testRun.tests, testGroupDataToStore.statuses);
             vm.testRun.tags = collectTags(vm.testRun.tests);
         })
         .finally(() => {
@@ -426,6 +432,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             vm.testGroups.apply = true;
         };
 
+        testDetailsService.setTags(chips);
+        vm.testsTagsOptions.initValues = testDetailsService.getTags();
         onTestGroupingMode(fnPlain, fgGroups);
         testGroupDataToStore.tags = angular.copy(chips);
     }
@@ -437,7 +445,9 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         var fgGroups = function() {
             showTestsByStatuses(vm.testRun.tests, statuses);
         };
-
+        
+        testDetailsService.setStatuses(statuses);
+        vm.testsStatusesOptions.initValues = testDetailsService.getStatuses();
         onTestGroupingMode(fnPlain, fgGroups);
         testGroupDataToStore.statuses = angular.copy(statuses);
     }
@@ -474,6 +484,40 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         .catch(function(response) {
             if (response) {
                 vm.testRun.tests[test.id] = angular.copy(response);
+            }
+        });
+    }
+
+    function showFilterDialog(event) {
+        vm.testsStatusesOptions.initValues = testDetailsService.getStatuses();
+        vm.testsTagsOptions.initValues = testDetailsService.getTags();
+        $mdDialog.show({
+            controller: testDetailsFilterController,
+            template: testDetailsTemplate,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose:true,
+            fullscreen: true,
+            bindToController: true,
+            controllerAs: '$ctrl',
+            onComplete: () => {
+                $(window).on('resize.filterDialog', () => {
+                    if ($(window).width() >= mobileWidth) {
+                        $mdDialog.hide();
+                    }
+                })
+            },
+            onRemoving: () => {
+                $(window).off('resize.filterDialog');
+            },
+            locals: {
+                tags: vm.testRun.tags,
+                testsTagsOptions: vm.testsTagsOptions,
+                testGroupMode: vm.testGroupMode,
+                testsStatusesOptions: vm.testsStatusesOptions,
+                sortByStatus: vm.onStatusButtonClick,
+                sortByTags: vm.onTagSelect,
+                resetTestsGroupingParent: vm.resetTestsGrouping,
             }
         });
     }
@@ -577,6 +621,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
 
             if (toState.name !== 'tests.runInfo') {
                 TestService.clearDataCache();
+                testDetailsService.clearDataCache();
             }
 
             onTransStartSubscription();

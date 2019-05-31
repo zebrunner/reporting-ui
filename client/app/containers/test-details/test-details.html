@@ -11,8 +11,8 @@
     </zf-sub-header>
     <div class="page">
         <div class="p-tests-run-details__sticky-header">
-            <test-run-card test-run="$ctrl.testRun" single-mode="true"></test-run-card>
-            <div data-ng-hide="!$ctrl.testRun.tests">
+            <test-run-card test-run="$ctrl.testRun" back="$ctrl.onBackClick()" single-mode="true"></test-run-card>
+            <div data-ng-hide="!$ctrl.testRun.tests" ng-if="!$ctrl.isMobile()">
                 <div class="test-run-group-row">
                     <div class="sort-new test-run-group-column" colspan="4">
                         <div class="test-run-group">
@@ -43,6 +43,13 @@
                 </div>
             </div>
         </div>
+        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile()" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
+            <md-fab-trigger>
+                <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible" ng-click="$ctrl.showFilterDialog($event)">
+                        <div class="search-fab" ng-class="{'_list': !$ctrl.isDetailsFilterActive(), '_checked-list': $ctrl.isDetailsFilterActive()}" aria-hidden="true"></div>
+                </md-button>
+            </md-fab-trigger>
+        </md-fab-speed-dial>
         <div class="row ui-section no-margin">
             <div class="col-md-12 no-padding">
                 <article class="article">
@@ -61,7 +68,7 @@
                                             <div ng-if="$ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName" class="test-run-group_sorts">
                                                 <div name="sortElapsed" sort-item="{{$ctrl.testGroups.reverse}}" class="pointer col-sm-2" data-ng-click="$ctrl.testGroups.predicate = 'elapsed'; $ctrl.testGroups.reverse = !$ctrl.testGroups.reverse">Elapsed&nbsp;</div>
                                             </div>
-                                            <status-buttons ng-if="$ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName" on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
+                                            <status-buttons ng-if="$ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName && !$ctrl.isMobile" on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
                                         </div>
                                     </th>
                                 </tr>
