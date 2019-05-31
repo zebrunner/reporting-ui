@@ -199,7 +199,7 @@
                     text-align: center;
                 }
                 &:not(:nth-last-child(2)){
-                    border-bottom: 2px solid white;
+                    margin-bottom: 2px;
                 }
                 &__clickable-wrapper {
                     @media(min-width: $breakpoint-mobile + 1) {
@@ -351,6 +351,11 @@
                             white-space: nowrap;
                         }
                     }
+                    &__button {
+                        button {
+                            margin: 0 2px;
+                        }
+                    }
                     &__wrapper {
                         position: relative;
                         display: flex;
@@ -361,6 +366,16 @@
                             padding: 0;
                             margin: 0 -15px 0 0;
                             height: auto;
+                            @media (max-width: $breakpoint-mobile - 1) {
+                                md-icon {
+                                    font-size: 20px;
+                                    width: 20px;
+                                    height: 20px;
+                                    line-height: 20px;
+                                    min-width: 20px;
+                                    min-height: 20px;
+                                }
+                            }
                         }
                     }
                 }
@@ -445,6 +460,14 @@
                 text-transform: none;
             }
         }   
+    }
+    @media (max-width: $breakpoint-mobile - 1) {
+        .page {
+            padding: 0;
+            md-card {
+                box-shadow: none;
+            }
+        }
     }
 }
 

@@ -720,18 +720,29 @@
                 background: #ffffff;
                 width: 100%;
                 height: 100%;
+                transform: translate(0);
             }
             &._middle {
                 transition: transform .25s ease-in-out, opacity .25s ease-in-out;
                 height: auto;
-                top: calc(100% + 2px);
+                top: 100%;
                 opacity: 0;
-                transform: translateY(calc(-100% - 2px));
+                transform: translateY(-100%);
                 border-left: 4px solid #777;
                 padding: 10px 12px;
                 box-shadow: none;
                 .md-icon {
                     margin: 0 auto;
+                }
+                hr {
+                    height: 2px;
+                    border: none;
+                    background-color: #edeff1;
+                    margin: 0;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
                 }
             }
             &._bottom {
@@ -778,6 +789,7 @@
                 width: 20px;
                 height: 20px;
                 line-height: 20px;
+                min-height: 20px;
                 font-size: 24px;
             }
             &._close-info {
