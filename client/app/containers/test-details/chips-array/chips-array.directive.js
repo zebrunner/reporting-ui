@@ -20,16 +20,16 @@ const chipsArrayDirective = function($timeout) {
 
             angular.extend(scope.options, {
                 reset: (onSwitch) => {
+                    selectedTags = {};
                     angular.element('md-chip').removeClass('md-focused');
                     if (!onSwitch) {
                         angular.element('md-chip:has(.chip-item-template.item-default)').addClass('md-focused');
+                        scope.chips.forEach((chip) => {
+                            if (chip.default) {
+                                selectedTags[chip.name + chip.value] = chip.value;
+                            }
+                        });
                     }
-                    scope.chips.forEach((chip) => {
-                        if (chip.default && !onSwitch) {
-                            selectedTags[chip.name + chip.value] = chip.value;
-                        }
-                    });
-                    selectedTags = !onSwitch ? selectedTags : {};
                     scope.options.initValues = [];
                     scope.onSelect({'$tags': selectedTags});
                 }
