@@ -292,38 +292,78 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function abortSelectedTestRuns() {
         if (vm.isToolConnected('JENKINS')) {
-            vm.selectedTestRuns.forEach(testRun => {
+            const resultsCounter = {success: 0, fail: 0};
+            let selectedCount = 0;
+            let promises = [];
+
+            vm.selectedTestRuns = vm.selectedTestRuns.reduce((newSelection, testRun) => {
                 if (testRun.status === 'IN_PROGRESS') {
-                    abort(testRun);
+                    newSelection.push(testRun);
+                } else {
+                    testRun.selected = false;
                 }
+
+                return newSelection;
+            }, []);
+            updateSelectedTestRuns();
+            selectedCount = vm.selectedTestRuns.length;
+
+            promises = vm.selectedTestRuns.map(testRun => abort(testRun, resultsCounter));
+
+            $q.all(promises).finally(() => {
+                showBulkOperationMessages({
+                    action: 'aborted',
+                    succeeded: resultsCounter.success,
+                    failed: resultsCounter.fail,
+                    total: selectedCount,
+                });
             });
         } else {
             messageService.error('Unable connect to jenkins');
         }
     }
 
-    function abort(testRun) {
-        TestRunService.abortCIJob(testRun.id, testRun.ciRunId).then(function (rs) {
-            if (rs.success) {
-                const abortCause = {};
-                const currentUser = UserService.currentUser;
+    function abort(testRun, resultsCounter) {
+        return TestRunService.abortCIJob(testRun.id, testRun.ciRunId)
+            .then(function (rs) {
+                if (rs.success) {
+                    const abortCause = {};
+                    const currentUser = UserService.currentUser;
 
-                abortCause.comment = 'Aborted by ' + currentUser.username;
-                TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause).then(function(rs) {
-                    if (rs.success){
-                        testRun.status = 'ABORTED';
-                        messageService.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
+                    abortCause.comment = 'Aborted by ' + currentUser.username;
+
+                    return TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause)
+                        .then(function(rs) {
+                            if (rs.success){
+                                testRun.status = 'ABORTED';
+                                testRun.selected = false;
+                                if (resultsCounter) {
+                                    resultsCounter.success += 1;
+                                } else {
+                                    messageService.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
+                                }
+                            } else {
+                                if (resultsCounter) {
+                                    resultsCounter.fail += 1;
+                                } else {
+                                    messageService.error(rs.message);
+                                }
+                            }
+                        });
+                } else {
+                    if (resultsCounter) {
+                        resultsCounter.fail += 1;
                     } else {
                         messageService.error(rs.message);
                     }
-                });
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        });
+
+                    return $q.reject();
+                }
+            });
     }
 
+    //TODO: implement deselection on operation complete
+    //TODO: use common single message for bulk operation
     function batchEmail(event) {
         showEmailDialog(vm.selectedTestRuns, event);
     }
@@ -373,10 +413,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
                 UtilService.showDeleteMessage(messageData, [id], [], []);
                 if (rs.success) {
-                    //TODO: I think we need to clear only vm.selectedTestRuns
-                    // deselect any selected testRuns
                     vm.selectedAll = false;
-                    vm.selectAllTestRuns();
                     testsRunsService.clearDataCache();
                     //if it was last item on the page try to load previous page
                     if (vm.testRuns.length === 1 && vm.currentPage !== 1) {
