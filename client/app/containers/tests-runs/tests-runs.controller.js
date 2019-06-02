@@ -15,7 +15,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         totalResults: 0,
         pageSize: 20,
         currentPage: 1,
-        selectedTestRuns: {},
+        selectedTestRuns: [],
         zafiraWebsocket: null,
         subscriptions: {},
         isMobile: windowWidthService.isMobile,
@@ -62,10 +62,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     function resetFilter() {
         $rootScope.$broadcast('tr-filter-reset');
     }
-
-    // function applySearch() {
-    //     $rootScope.$broadcast('tr-filter-apply');
-    // }
 
     function highlightTestRun() {
         const activeTestRun = getTestRunById(vm.activeTestRunId);
@@ -166,83 +162,208 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function batchRerun() {
         const rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
+        const resultsCounter = {success: 0, fail: 0};
+        const promises = vm.testRuns
+            .filter(testRun => testRun.selected)
+            .map(function(testRun) {
+                return rebuild(testRun, rerunFailures, resultsCounter);
+            });
 
-        vm.testRuns.forEach(function(testRun) {
-            testRun.selected && rebuild(testRun, rerunFailures);
-        });
+        $q.all(promises)
+            .finally(() => {
+                let delay = 0;
+                const countOfSelectedTestRuns = vm.selectedTestRuns.length;
+
+                if (vm.selectedAll && resultsCounter.success) {
+                    vm.selectedAll = false;
+                }
+                if (!resultsCounter.fail) {
+                    vm.selectedTestRuns = [];
+                } else {
+                    updateSelectedTestRuns();
+                }
+
+                showBulkOperationMessages({
+                    action: 'rerun',
+                    succeeded: resultsCounter.success,
+                    failed: resultsCounter.fail,
+                    total: countOfSelectedTestRuns,
+                });
+            });
     }
 
-    function rebuild(testRun, rerunFailures) {
+    function rebuild(testRun, rerunFailures, resultsCounter) {
         if (vm.isToolConnected('JENKINS')) {
-            if (!rerunFailures) {
+            if (typeof rerunFailures === 'undefined') {
                 rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
             }
 
-            TestRunService.rerunTestRun(testRun.id, rerunFailures).then(function(rs) {
+            return TestRunService.rerunTestRun(testRun.id, rerunFailures).then(function(rs) {
                 if (rs.success) {
                     testRun.status = 'IN_PROGRESS';
-                    messageService.success('Rebuild triggered in CI service');
+                    if (resultsCounter) {
+                        testRun.selected && (testRun.selected = false);
+                        resultsCounter.success += 1;
+                    } else {
+                        messageService.success('Rebuild triggered in CI service');
+                    }
                 } else {
-                    messageService.error(rs.message);
+                    if (resultsCounter) {
+                        resultsCounter.fail += 1;
+                    } else {
+                        messageService.error(rs.message);
+                    }
                 }
             });
         } else {
-            window.open(testRun.jenkinsURL + '/rebuild/parameterized', '_blank');
+            if (testRun.jenkinsURL) {
+                resultsCounter && (resultsCounter.success += 1);
+                window.open(testRun.jenkinsURL + '/rebuild/parameterized', '_blank');
+
+                return $q.resolve();
+            } else {
+                resultsCounter && (resultsCounter.fail += 1);
+
+                return $q.reject();
+            }
+
         }
     }
 
     function batchDelete() {//TODO: why we don't use confirmation in this case?
         const selectedCount = vm.selectedTestRuns.length;
-        const promises = vm.selectedTestRuns.map(testRun => deleteTestRunFromQueue(testRun.id));
+        const resultsCounter = {success: 0, fail: 0};
+        const promises = vm.selectedTestRuns.map(testRun => deleteTestRunFromQueue(testRun, resultsCounter));
 
         $q.all(promises)
             .finally(function() {
-                vm.selectedAll = false;
-                vm.selectAllTestRuns();
-                testsRunsService.clearDataCache();
-                //load previous page if was selected all tests and it was a last but not single page
-                if (selectedCount === vm.testRuns.length  && vm.currentPage === Math.ceil(vm.totalResults / vm.pageSize) && vm.currentPage !== 1) {
-                    getTestRuns(vm.currentPage - 1);
+                const isAllTestsWasSelected = selectedCount === vm.testRuns.length;
+                const isLastPage = vm.currentPage === Math.ceil(vm.totalResults / vm.pageSize);
+                const isFirstPage = vm.currentPage === 1;
+
+                // reset selectAll if enabled and we have success responses
+                if (vm.selectedAll && resultsCounter.success) { vm.selectedAll = false; }
+                // update or reset selectedTestRuns object
+                if (resultsCounter.fail) {
+                    updateSelectedTestRuns();
                 } else {
-                    getTestRuns();
+                    vm.selectedTestRuns = [];
+                }
+
+                showBulkOperationMessages({
+                    action: 'deleted',
+                    succeeded: resultsCounter.success,
+                    failed: resultsCounter.fail,
+                    total: selectedCount,
+                });
+                testsRunsService.clearDataCache();
+                // load previous page if:
+                // 1) was selected all tests on page
+                // 2) it was a last page
+                // 3) it wasn't a single page
+                // 4) no failed operations
+                if (isAllTestsWasSelected  && isLastPage && !isFirstPage && !resultsCounter.fail) {
+                    getTestRuns(vm.currentPage - 1);
+                } else if (resultsCounter.success) {
+                    getTestRuns()
+                        .then((testRuns) => {
+                            // update new data statuses and reinitialize selectedTestRuns if not all selected test runs was removed
+                            if (resultsCounter.fail) {
+                                vm.selectedTestRuns = testRuns.reduce((newSelectedTestRuns, testRun) => {
+                                    if (vm.selectedTestRuns.length) {
+                                        const index = vm.selectedTestRuns.findIndex(({ id }) => id === testRun.id);
+
+                                        if (index !== -1) {
+                                            testRun.selected = true;
+                                            newSelectedTestRuns.push(testRun);
+                                            vm.selectedTestRuns.splice(index, 1);
+                                        }
+                                    }
+
+                                    return newSelectedTestRuns;
+                                }, []);
+                                // enable selectedAll if on the page left only previously selected test runs
+                                if (vm.selectedTestRuns.length === testRuns.length) { vm.selectedAll = true; }
+                            }
+                        });
                 }
             });
     }
 
     function abortSelectedTestRuns() {
         if (vm.isToolConnected('JENKINS')) {
-            vm.selectedTestRuns.forEach(testRun => {
+            const resultsCounter = {success: 0, fail: 0};
+            let selectedCount = 0;
+            let promises = [];
+
+            vm.selectedTestRuns = vm.selectedTestRuns.reduce((newSelection, testRun) => {
                 if (testRun.status === 'IN_PROGRESS') {
-                    abort(testRun);
+                    newSelection.push(testRun);
+                } else {
+                    testRun.selected = false;
                 }
+
+                return newSelection;
+            }, []);
+            updateSelectedTestRuns();
+            selectedCount = vm.selectedTestRuns.length;
+
+            promises = vm.selectedTestRuns.map(testRun => abort(testRun, resultsCounter));
+
+            $q.all(promises).finally(() => {
+                showBulkOperationMessages({
+                    action: 'aborted',
+                    succeeded: resultsCounter.success,
+                    failed: resultsCounter.fail,
+                    total: selectedCount,
+                });
             });
         } else {
             messageService.error('Unable connect to jenkins');
         }
     }
 
-    function abort(testRun) {
-        TestRunService.abortCIJob(testRun.id, testRun.ciRunId).then(function (rs) {
-            if (rs.success) {
-                const abortCause = {};
-                const currentUser = UserService.currentUser;
+    function abort(testRun, resultsCounter) {
+        return TestRunService.abortCIJob(testRun.id, testRun.ciRunId)
+            .then(function (rs) {
+                if (rs.success) {
+                    const abortCause = {};
+                    const currentUser = UserService.currentUser;
 
-                abortCause.comment = 'Aborted by ' + currentUser.username;
-                TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause).then(function(rs) {
-                    if (rs.success){
-                        testRun.status = 'ABORTED';
-                        messageService.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
+                    abortCause.comment = 'Aborted by ' + currentUser.username;
+
+                    return TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause)
+                        .then(function(rs) {
+                            if (rs.success){
+                                testRun.status = 'ABORTED';
+                                testRun.selected = false;
+                                if (resultsCounter) {
+                                    resultsCounter.success += 1;
+                                } else {
+                                    messageService.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
+                                }
+                            } else {
+                                if (resultsCounter) {
+                                    resultsCounter.fail += 1;
+                                } else {
+                                    messageService.error(rs.message);
+                                }
+                            }
+                        });
+                } else {
+                    if (resultsCounter) {
+                        resultsCounter.fail += 1;
                     } else {
                         messageService.error(rs.message);
                     }
-                });
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        });
+
+                    return $q.reject();
+                }
+            });
     }
 
+    //TODO: implement deselection on operation complete
+    //TODO: use common single message for bulk operation
     function batchEmail(event) {
         showEmailDialog(vm.selectedTestRuns, event);
     }
@@ -292,9 +413,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
                 UtilService.showDeleteMessage(messageData, [id], [], []);
                 if (rs.success) {
-                    // deselect any selected testRuns
                     vm.selectedAll = false;
-                    vm.selectAllTestRuns();
                     testsRunsService.clearDataCache();
                     //if it was last item on the page try to load previous page
                     if (vm.testRuns.length === 1 && vm.currentPage !== 1) {
@@ -307,11 +426,15 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         }
     }
 
-    function deleteTestRunFromQueue(id) {
-        return TestRunService.deleteTestRun(id).then(function(rs) {
-            const messageData = rs.success ? {success: rs.success, id: id, message: 'Test run{0} {1} removed'} : {id: id, message: 'Unable to delete test run{0} {1}'};
-
-            UtilService.showDeleteMessage(messageData, [id], [], []);
+    function deleteTestRunFromQueue(testRun, resultsCounter) {
+        return TestRunService.deleteTestRun(testRun.id)
+            .then(function(rs) {
+                if (rs.success) {
+                    testRun.selected = false;
+                    resultsCounter.success += 1;
+                } else {
+                    resultsCounter.fail += 1;
+                }
         });
     }
 
@@ -450,6 +573,40 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
+    }
+
+    function showBulkOperationMessages({ action, succeeded, failed, total }) {
+        let delay = 0;
+
+        switch (true) {
+            case !!succeeded:
+                delay = 2500;
+                showSuccessBulkOperationMessage({
+                    action,
+                    count: succeeded,
+                    total,
+                    options: {hideDelay: delay},
+                });
+                if (!failed) {
+                    break;
+                }
+            case !!failed:
+                $timeout(() => {
+                    showFailBulkOperationMessage({
+                        action,
+                        count: failed,
+                        total,
+                    });
+                }, delay);
+        }
+    }
+
+    function showSuccessBulkOperationMessage({ action, count, total, options = {} }) {
+        messageService.success(`${count} out of ${total} test runs have been successfully ${action}.`, options);
+    }
+
+    function showFailBulkOperationMessage({ action, count, total, options = {} }) {
+        messageService.error(`${count} out of ${total} test runs have failed to be ${action}. Please, try again.`, options);
     }
 };
 

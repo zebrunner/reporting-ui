@@ -18,7 +18,6 @@ const messageService = function messageService($mdToast) {
         showToast(text, options, '_success');
     }
 
-
     function error(text, options) {
         showToast(text, options, '_error');
     }
