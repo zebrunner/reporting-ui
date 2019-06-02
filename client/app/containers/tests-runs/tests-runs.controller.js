@@ -15,7 +15,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         totalResults: 0,
         pageSize: 20,
         currentPage: 1,
-        selectedTestRuns: {},
+        selectedTestRuns: [],
         zafiraWebsocket: null,
         subscriptions: {},
         isMobile: windowWidthService.isMobile,
@@ -172,24 +172,23 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         $q.all(promises)
             .finally(() => {
                 let delay = 0;
+                const countOfSelectedTestRuns = vm.selectedTestRuns.length;
 
                 if (vm.selectedAll && resultsCounter.success) {
                     vm.selectedAll = false;
                 }
-                updateSelectedTestRuns();
-
-                switch (true) {
-                    case !!resultsCounter.success:
-                        delay = 2500;
-                        messageService.success(`(${resultsCounter.success}x) Rebuild triggered in CI service`, {hideDelay: delay});
-                        if (!resultsCounter.fail) {
-                            break;
-                        }
-                    case !!resultsCounter.fail:
-                        $timeout(() => {
-                            messageService.error(`(${resultsCounter.fail}x) Failed to trigger rebuild in CI service`);
-                        }, delay);
+                if (!resultsCounter.fail) {
+                    vm.selectedTestRuns = [];
+                } else {
+                    updateSelectedTestRuns();
                 }
+
+                showBulkOperationMessages({
+                    action: 'rerun',
+                    succeeded: resultsCounter.success,
+                    failed: resultsCounter.fail,
+                    total: countOfSelectedTestRuns,
+                });
             });
     }
 
@@ -233,18 +232,60 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function batchDelete() {//TODO: why we don't use confirmation in this case?
         const selectedCount = vm.selectedTestRuns.length;
-        const promises = vm.selectedTestRuns.map(testRun => deleteTestRunFromQueue(testRun.id));
+        const resultsCounter = {success: 0, fail: 0};
+        const promises = vm.selectedTestRuns.map(testRun => deleteTestRunFromQueue(testRun, resultsCounter));
 
         $q.all(promises)
             .finally(function() {
-                vm.selectedAll = false;
-                vm.selectAllTestRuns();
-                testsRunsService.clearDataCache();
-                //load previous page if was selected all tests and it was a last but not single page
-                if (selectedCount === vm.testRuns.length  && vm.currentPage === Math.ceil(vm.totalResults / vm.pageSize) && vm.currentPage !== 1) {
-                    getTestRuns(vm.currentPage - 1);
+                const isAllTestsWasSelected = selectedCount === vm.testRuns.length;
+                const isLastPage = vm.currentPage === Math.ceil(vm.totalResults / vm.pageSize);
+                const isFirstPage = vm.currentPage === 1;
+
+                // reset selectAll if enabled and we have success responses
+                if (vm.selectedAll && resultsCounter.success) { vm.selectedAll = false; }
+                // update or reset selectedTestRuns object
+                if (resultsCounter.fail) {
+                    updateSelectedTestRuns();
                 } else {
-                    getTestRuns();
+                    vm.selectedTestRuns = [];
+                }
+
+                showBulkOperationMessages({
+                    action: 'deleted',
+                    succeeded: resultsCounter.success,
+                    failed: resultsCounter.fail,
+                    total: selectedCount,
+                });
+                testsRunsService.clearDataCache();
+                // load previous page if:
+                // 1) was selected all tests on page
+                // 2) it was a last page
+                // 3) it wasn't a single page
+                // 4) no failed operations
+                if (isAllTestsWasSelected  && isLastPage && !isFirstPage && !resultsCounter.fail) {
+                    getTestRuns(vm.currentPage - 1);
+                } else if (resultsCounter.success) {
+                    getTestRuns()
+                        .then((testRuns) => {
+                            // update new data statuses and reinitialize selectedTestRuns if not all selected test runs was removed
+                            if (resultsCounter.fail) {
+                                vm.selectedTestRuns = testRuns.reduce((newSelectedTestRuns, testRun) => {
+                                    if (vm.selectedTestRuns.length) {
+                                        const index = vm.selectedTestRuns.findIndex(({ id }) => id === testRun.id);
+
+                                        if (index !== -1) {
+                                            testRun.selected = true;
+                                            newSelectedTestRuns.push(testRun);
+                                            vm.selectedTestRuns.splice(index, 1);
+                                        }
+                                    }
+
+                                    return newSelectedTestRuns;
+                                }, []);
+                                // enable selectedAll if on the page left only previously selected test runs
+                                if (vm.selectedTestRuns.length === testRuns.length) { vm.selectedAll = true; }
+                            }
+                        });
                 }
             });
     }
@@ -332,6 +373,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
                 UtilService.showDeleteMessage(messageData, [id], [], []);
                 if (rs.success) {
+                    //TODO: I think we need to clear only vm.selectedTestRuns
                     // deselect any selected testRuns
                     vm.selectedAll = false;
                     vm.selectAllTestRuns();
@@ -347,11 +389,15 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         }
     }
 
-    function deleteTestRunFromQueue(id) {
-        return TestRunService.deleteTestRun(id).then(function(rs) {
-            const messageData = rs.success ? {success: rs.success, id: id, message: 'Test run{0} {1} removed'} : {id: id, message: 'Unable to delete test run{0} {1}'};
-
-            UtilService.showDeleteMessage(messageData, [id], [], []);
+    function deleteTestRunFromQueue(testRun, resultsCounter) {
+        return TestRunService.deleteTestRun(testRun.id)
+            .then(function(rs) {
+                if (rs.success) {
+                    testRun.selected = false;
+                    resultsCounter.success += 1;
+                } else {
+                    resultsCounter.fail += 1;
+                }
         });
     }
 
@@ -490,6 +536,40 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
+    }
+
+    function showBulkOperationMessages({ action, succeeded, failed, total }) {
+        let delay = 0;
+
+        switch (true) {
+            case !!succeeded:
+                delay = 2500;
+                showSuccessBulkOperationMessage({
+                    action,
+                    count: succeeded,
+                    total,
+                    options: {hideDelay: delay},
+                });
+                if (!failed) {
+                    break;
+                }
+            case !!failed:
+                $timeout(() => {
+                    showFailBulkOperationMessage({
+                        action,
+                        count: failed,
+                        total,
+                    });
+                }, delay);
+        }
+    }
+
+    function showSuccessBulkOperationMessage({ action, count, total, options = {} }) {
+        messageService.success(`${count} out of ${total} test runs have been successfully ${action}.`, options);
+    }
+
+    function showFailBulkOperationMessage({ action, count, total, options = {} }) {
+        messageService.error(`${count} out of ${total} test runs have failed to be ${action}. Please, try again.`, options);
     }
 };
 
