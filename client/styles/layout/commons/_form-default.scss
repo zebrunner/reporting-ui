@@ -157,14 +157,16 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
 
 .search-fab {
     margin: auto;
-    height: 20px;
+    height: 25px;
     filter: invert(100%);
-    width: 20px;
+    width: 18px;
     &._list {
         background: url('../assets/images/list.svg') center no-repeat;
+        background-size: cover;
     }
     &._checked-list {
         background: url('../assets/images/check_list.svg') center no-repeat;
+        background-size: cover;
     }
 }
 
