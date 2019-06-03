@@ -3,6 +3,8 @@
 import template from './chips-array.html';
 
 const chipsArrayDirective = function($timeout) {
+    'ngInject';
+
     return {
         restrict: 'E',
         scope: {
@@ -115,6 +117,6 @@ const chipsArrayDirective = function($timeout) {
             });
         }
     };
-}
+};
 
 export default chipsArrayDirective;

@@ -3,6 +3,8 @@
 import template from './status-buttons.html';
 
 const statusButtonsDirective = function($timeout) {
+    'ngInject';
+
     return {
         restrict: 'AE',
         scope: {
@@ -83,6 +85,6 @@ const statusButtonsDirective = function($timeout) {
             });
         }
     };
-}
+};
 
     export default statusButtonsDirective;
