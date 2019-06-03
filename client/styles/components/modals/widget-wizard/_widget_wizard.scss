@@ -337,12 +337,7 @@ $wizard-white:          #ffffff;
 
             &_show-more {
                 button {
-                    padding: 0;
-                    text-align: left;
-
-                    &:hover {
-                        background-color: transparent !important;
-                    }
+                    margin-left: -11px;
                 }
             }
 
@@ -486,12 +481,6 @@ $wizard-white:          #ffffff;
             width: 100%;
             padding: 0 $inner-padding $inner-padding $inner-padding;
         }
-    }
-
-    button {
-        min-width: 80px;
-        border-radius: 4px;
-        box-shadow: none !important;
     }
 
     @media(min-width: $screen-desktop) {

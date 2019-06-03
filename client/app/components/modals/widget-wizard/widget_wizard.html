@@ -191,7 +191,7 @@
                     </table>
                 </ng-form>
                 <div ng-show="hasEmptyOptionalParams(false)" class="widget-wizard_container_elements_show-more" md-no-ink>
-                    <md-button ng-init="showAdvanced === false" ng-click="showAdvanced = ! showAdvanced" class="btn-w-md md-primary md-n">
+                    <md-button ng-init="showAdvanced === false" ng-click="showAdvanced = ! showAdvanced" class="md-primary">
                         Show <span ng-if="! showAdvanced">more</span><span ng-if="showAdvanced">less</span>
                     </md-button>
                 </div>
@@ -277,19 +277,19 @@
             </div>
         </div>
         <div class="widget-wizard_container-helper_actions">
-            <md-button class="zf-button zf-info" ng-click="back();" ng-if="isBackButtonPresent()">
+            <md-button class="md-raised" ng-click="back();" ng-if="isBackButtonPresent()">
                 Back
             </md-button>
-            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="next();" ng-if="isNextButtonPresent() && ! isCardWithId('choose-create')" ng-disabled="card.nextDisabled(widget_form)">
+            <md-button class="md-raised md-primary pull-right" ng-click="next();" ng-if="isNextButtonPresent() && ! isCardWithId('choose-create')" ng-disabled="card.nextDisabled(widget_form)">
                 Next
             </md-button>
-            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="createWidget();" ng-if="isLastCard() && ! widget.id" ng-disabled="widget_form.info.$invalid">
+            <md-button class="md-raised md-primary pull-right" ng-click="createWidget();" ng-if="isLastCard() && ! widget.id" ng-disabled="widget_form.info.$invalid">
                 Add
             </md-button>
-            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="addToDashboard();" ng-if="isCardWithId('choose-create')" ng-disabled="!widget.id || widget.existing">
+            <md-button class="md-raised md-primary pull-right" ng-click="addToDashboard();" ng-if="isCardWithId('choose-create')" ng-disabled="!widget.id || widget.existing">
                 Add
             </md-button>
-            <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="updateWidget();" ng-if="isLastCard() && widget.id && START_MODE === 'UPDATE'" ng-disabled="widget_form.info.$invalid">
+            <md-button class="md-raised md-primary pull-right" ng-click="updateWidget();" ng-if="isLastCard() && widget.id && START_MODE === 'UPDATE'" ng-disabled="widget_form.info.$invalid">
                 Save
             </md-button>
         </div>

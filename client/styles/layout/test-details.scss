@@ -153,19 +153,9 @@
                         }
                     }
                     &_other-buttons {
-                        min-width: auto !important;
-                        width: auto !important;
                         margin-left: 40px;
                         @media (max-width: $breakpoint-mid-tablet) {
                             margin-left: 10px;
-                        }
-                        & #resetAllToggle {
-                            background-color: $dark-coal-light-new-op01;
-                            color: $dark-coal-light-new;
-                            &:hover,
-                            &:active {
-                                background-color: $dark-coal-light-new-op02;
-                            }
                         }
                     }
                 }

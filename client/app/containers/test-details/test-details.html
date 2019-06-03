@@ -33,9 +33,9 @@
                                     <div name="sortElapsed" sort-item="{{$ctrl.testGroups.reverse}}" class="pointer" data-ng-click="$ctrl.testGroups.predicate = 'elapsed'; $ctrl.testGroups.reverse = !$ctrl.testGroups.reverse">Elapsed&nbsp;</div>
                                 </div>
                                 <div class="test-run-group_other-buttons">
-                                    <button id="resetAllToggle" class="md-button md-ink-ripple" type="button" ng-click="$ctrl.resetTestsGrouping();">
+                                    <md-button id="resetAllToggle" class="md-raised" type="button" ng-click="$ctrl.resetTestsGrouping();">
                                         RESET
-                                    </button>
+                                    </md-button>
                                 </div>
                             </div>
                         </div>
