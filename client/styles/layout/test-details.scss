@@ -266,6 +266,7 @@
                         }
                     }
                     & .result_error {
+                        word-wrap: break-word;
                         [id^="more"], [id^="less"] {
                             z-index: 3;
                             position: relative;
