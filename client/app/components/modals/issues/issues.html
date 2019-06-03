@@ -49,20 +49,20 @@
                             data-ng-model="$ctrl.newIssue.description"></textarea>
                     </md-input-container>
                     <md-dialog-actions layout="row">
-                        <md-button ng-if="$ctrl.isNewIssue" class="form-button _light md-raised btn-w-md" ng-click="$ctrl.clearIssue()" ng-disabled="known_issue_form.$invalid">
+                        <md-button ng-if="$ctrl.isNewIssue" class="_light md-raised btn-w-md" ng-click="$ctrl.clearIssue()" ng-disabled="known_issue_form.$invalid">
                             Clear
                         </md-button>
-                        <md-button id="unassignIssue" ng-if="!$ctrl.isNewIssue" class="form-button _light md-raised btn-w-md"
+                        <md-button id="unassignIssue" ng-if="!$ctrl.isNewIssue" class="_light md-raised btn-w-md"
                             ng-really-message="Do you really want to delete known issue from current test?"
                             ng-really-click="$ctrl.unassignIssue($ctrl.newIssue)" ng-disabled="known_issue_form.$invalid">
                             Unassign
                         </md-button>
-                        <md-button id="updateIssue" ng-if="!$ctrl.isNewIssue" class="form-button md-raised btn-w-md md-primary"
+                        <md-button id="updateIssue" ng-if="!$ctrl.isNewIssue" class="md-raised btn-w-md md-primary"
                             ng-click="$ctrl.assignIssue($ctrl.newIssue, $ctrl.isNewIssue)"
                             ng-disabled="known_issue_form.$invalid">
                             Update
                         </md-button>
-                        <md-button id="assignIssue" ng-if="$ctrl.isNewIssue" class="form-button md-raised btn-w-md md-primary"
+                        <md-button id="assignIssue" ng-if="$ctrl.isNewIssue" class="md-raised btn-w-md md-primary"
                             ng-click="$ctrl.assignIssue($ctrl.newIssue, $ctrl.isNewIssue)" ng-disabled="known_issue_form.$invalid">
                             Assign
                         </md-button>

@@ -42,13 +42,13 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="cancel" class="form-button cancel md-raised btn-w-md" ng-click="cancel()">
+            <md-button id="cancel" class="cancel md-raised btn-w-md" ng-click="cancel()">
                 Cancel
             </md-button>
-            <md-button id="create" type="submit" class="form-button md-button md-raised btn-w-md md-primary md-ink-ripple pull-right" ng-disabled="group_form.$invalid" ng-if="! group.id">
+            <md-button id="create" type="submit" class="md-button md-raised btn-w-md md-primary md-ink-ripple pull-right" ng-disabled="group_form.$invalid" ng-if="! group.id">
                 Create
             </md-button>
-            <md-button id="update" class="form-button md-raised btn-w-md md-primary" ng-disabled="group_form.$invalid" ng-click="updateGroup(group)" ng-if="group.id">
+            <md-button id="update" class="md-raised btn-w-md md-primary" ng-disabled="group_form.$invalid" ng-click="updateGroup(group)" ng-if="group.id">
                 Update
             </md-button>
         </md-dialog-actions>

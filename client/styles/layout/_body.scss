@@ -1308,25 +1308,6 @@ button#reset {
     }
 }
 
-button#deleteFilter {
-    color: $faded-red !important;
-    background-color: $fog-gray;
-
-    &:hover {
-      background-color: #fcfcfc;
-    }
-}
-
-button#resetFilter {
-    color: $coal;
-    background-color: #fff;
-    box-shadow: 0 0 2px 0 rgba(4, 0, 0, 0.12), 0px 2px 2px 0 rgba(0, 0, 0, 0.24);
-
-    &:hover {
-      background-color: $gray-lighter;
-    }
-}
-
 /*Filters*/
 .tests-runs-filter,
 .tests-runs-filter__editor {
@@ -1533,11 +1514,6 @@ md-chip md-chip-template.bg-primary {
     width: 100%;
 }
 
-.fixed-search-column .md-button {
-    font-size: 13px;
-    height: 32px;
-}
-
 .page md-card{
     margin-top: 0;
     margin-bottom: 0;
@@ -1737,15 +1713,6 @@ div[aria-selected='true'] span.ng-binding {
 
 .quadro-btn.default-gray, .quadro-btn.label-primary {
     color: white;
-}
-
-button#add-button{
-  background-color: $dark;
-  color: #fff;
-
-  &:hover{
-    background-color: $coal;
-  }
 }
 
 .form-control{
@@ -2250,6 +2217,7 @@ $light-inprogress: #68c9fd;
                     height: 32px;
                     min-width: 80px;
                     min-height: 32px;
+                    padding: 0;
                     text-transform: none;
                     &:first-child {
                         border-radius: 3px 0 0 3px;
@@ -2381,19 +2349,6 @@ $light-inprogress: #68c9fd;
                     }
                 }
             }
-            &_other-buttons {
-                width: 10.52%;
-                @media(max-width: $screen-lg) {
-                    min-width: 16%;
-                }
-                text-align: end;
-                button {
-                    height: 32px;
-                    width: 96px;
-                    min-height: 32px;
-                    min-width: 98px;
-                }
-            }
         }
     }
 }
@@ -2477,12 +2432,6 @@ $light-inprogress: #68c9fd;
             &_group-items {
                 display: none;
             }
-            &_other-buttons {
-                width: 40%;
-                @media(max-width: $screen-lg) {
-                    width: 35%;
-                }
-            }
         }
     }
 }
@@ -2491,11 +2440,6 @@ $light-inprogress: #68c9fd;
     md-checkbox {
         margin-right: 15px !important;
     }
-}
-
-.md-dark {
-    background-color: $dark !important;
-    color: white !important;
 }
 
 .work-items {
@@ -2620,21 +2564,6 @@ $light-inprogress: #68c9fd;
                 color: $dark;
             }
             button {
-                &:not(.zf-header-button) {
-                    box-shadow: none !important;
-                    border-radius: 4px;
-                    height: 32px;
-                    min-height: 32px;
-
-                    &:not(.zf-icon-button) {
-                        min-width: 80px;
-                        width: 80px;
-                    }
-
-                    &:not(:last-child) {
-                        margin-right: 8px;
-                    }
-                }
                 &.zf-header-button {
                     float: right;
                     height: 32px;
@@ -3134,26 +3063,6 @@ $light-inprogress: #68c9fd;
                         }
                     }
                     button {
-                        &.md-add {
-                            width: 100px;
-                            min-width: 100px;
-                            height: 36px;
-                            background-color: $coal;
-                            opacity: .9;
-                            border-radius: 4px;
-                            color: #ffffff;
-                            font-size: 14px;
-                            font-weight: 500;
-                            letter-spacing: 0.2px;
-                            text-transform: uppercase;
-                            padding: 0;
-                            border: none;
-                            float: right;
-
-                            &:hover {
-                                opacity: 1;
-                            }
-                        }
                         &.zf-button {
                             margin-right: 8px;
                             float: left;
@@ -3241,18 +3150,6 @@ $light-inprogress: #68c9fd;
                 @media(max-width: $screen-phone) {
                     left: 0;
                     width: calc(100% - 224px);
-                }
-            }
-            button {
-                float: right;
-                height: 36px;
-                min-width: 88px;
-                min-height: 36px;
-                box-shadow: none !important;
-                border-radius: 4px;
-
-                &:not(:first-child) {
-                    margin-left: 8px;
                 }
             }
         }
@@ -3913,7 +3810,7 @@ users-component md-tab-item.md-disabled {
         }
     }
 
-    $button-width: 64px;
+    $button-width: 80px;
     $input-width: calc((100% - #{$default-margin} * 2 - #{$button-width}) / 2);
 
     &_key, &_value {
@@ -3928,23 +3825,7 @@ users-component md-tab-item.md-disabled {
     }
 
     &_add-button {
-        width: $button-width;
-
-        button {
-            background-color: rgba(1, 22, 39, .2)!important;
-            border-radius: 4px;
-            border: none !important;
-            width: $button-width;
-            height: 100%;
-            color: #000;
-            line-height: 1.42857;
-            font-weight: 500;
-
-            &[disabled] {
-                background-color: rgba(1, 22, 39, .1)!important;
-                color: rgba(0,0,0,0.38);
-            }
-        }
+        min-width: 80px;
     }
 }
 
@@ -4091,11 +3972,6 @@ users-component md-tab-item.md-disabled {
             justify-content: space-between;
         }
     }
-}
-
-.zf-button-md {
-    min-width: 80px;
-    width: 80px;
 }
 
 .dashboard-email-dialog {

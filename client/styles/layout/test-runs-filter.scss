@@ -18,43 +18,6 @@
     #filter-editor md-chip:hover span {
         color: black !important;
     }
-    &__actions {
-        button#reset, 
-        button#applySearch,
-        button#createFilter,
-        button#updateFilter,
-        button#resetFilter,
-        button#deleteFilter {
-            border-radius: 4px;
-            box-shadow: none;
-            margin-left: 16px;
-            font-size: 14px;
-            min-width: 80px;
-        }
-        button#resetFilter, button#deleteFilter {
-            background-color: transparent;
-            &:hover {
-                background-color: rgba($dark-new, 0.1);
-            }
-        }
-
-        button#reset {
-            background-color: $fog-gray;
-            color: $dark-coal-new;
-            &:hover {
-                background-color: rgba($dark-coal-new, .3);
-            }
-        }
-        .filter-reset-btn {
-            margin-right: 20px;
-        }
-
-        button#applySearch {
-            background-color: $medium-teal-bright-new;
-            color: #ffffff;
-        } 
-    }
-
     &__wrapper {
         &-panel-body {   
             padding: 24px 0 18px 0;
@@ -138,16 +101,6 @@
             }
             &-select {
                 max-width: 100% !important;
-            }
-        }
-        #add-button {
-            background-color: rgba($dark-new, 0.2) !important;
-            border-radius: 4px;
-            min-width: 64px;
-            color: black;
-            margin-bottom: 15px;
-            &[disabled] {
-                background-color: rgba($dark-new, 0.1) !important;
             }
         }
         .panel-body {

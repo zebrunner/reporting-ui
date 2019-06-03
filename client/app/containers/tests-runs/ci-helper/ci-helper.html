@@ -165,6 +165,21 @@
                     </md-button>
                 </div>
             </ng-form>
+<<<<<<< HEAD
+=======
+            <div class="ci-runner-container_content_actions">
+                <md-button ng-click="cancelLauncher();" class="md-raised">
+                    Cancel
+                </md-button>
+                <md-button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete the launcher?" class="md-warn" ng-if="launcher && launcher.id">
+                    Delete
+                </md-button>
+                <md-button class="md-raised md-primary pull-right" ng-click="saveLauncher(launcher);">
+                    Save
+                </md-button>
+                <div ng-if="launcher.errorMessage && launcher.errorMessage.length" class="ci-runner-container_content_actions_error">{{launcher.errorMessage}}</div>
+            </div>
+>>>>>>> ef82d16... applyed new styles for buttons
         </zf-modal-content-container>
         <zf-modal-content-container class="ci-runner-container_content" ng-if="cardNumber === 3 || cardNumber === 4" ng-show="launcher">
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
@@ -207,13 +222,18 @@
                 </div>
             </div>
             <div class="ci-runner-container_content_actions">
-                <button ng-click="cancelLauncher();" class="zf-button zf-info" ng-if="cardNumber === 2">
+                <md-button ng-click="cancelLauncher();" class="md-raised" ng-if="cardNumber === 2">
                     Cancel
+<<<<<<< HEAD
                 </button>
                 <md-button class="zf-button zf-info" ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
+=======
+                </md-button>
+                <md-button class="md-raised" ng-click="navigateBack();" ng-if="cardNumber === 3">
+>>>>>>> ef82d16... applyed new styles for buttons
                     Back
                 </md-button>
-                <md-button class="md-raised btn-w-md md-primary" ng-click="build(launcher);" ng-disabled="! launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">
+                <md-button class="md-raised md-primary pull-right" ng-click="build(launcher);" ng-disabled="! launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">
                     Launch
                 </md-button>
                 <div ng-if="! launcher.job.jobURL" class="ci-runner-container_content_actions_error">Launcher job is not configured, contact admin.</div>

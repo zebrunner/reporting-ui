@@ -127,31 +127,63 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     }
 }
 
-.form-button {
+.md-button, .md-button.md-focused {
     max-height: 36px;
     border-radius: 4px;
     box-shadow: none;
     margin-right: 0;
-    margin-left: 12px;
     font-size: 14px;
+    padding: 11px 12px;
+    line-height: 1;
+    letter-spacing: 0.4px;
     min-width: 80px;
-    &.md-button.md-raised:not([disabled]) {
-        box-shadow: none;
+    background-color: transparent;
+    color: #000000;
+    &:not([disabled]):hover {
+        background-color: rgba($dark-new, .07);
     }
-    &._reset-btn {
-        background-color: $fog-gray;
-        color: $dark-coal-new;
-        &:hover {
-            background-color: rgba($dark-coal-new, .3);
+    &[disabled], &[disabled]:hover {
+        background-color: transparent;
+        color: rgba(0, 0, 0, 0.25);
+    }
+    &.md-raised {
+        &:not([disabled]) {
+            &, &:active {
+                background-color: rgba($dark-new, .07);
+                box-shadow: none;
+                &:hover, md-dialog-actions &:hover {
+                    background-color: rgba($dark-new, .12);
+                }
+            }
         }
-    }
-    &._apply-btn {
-        background-color: $medium-teal-light-new;
-        color: white;
-        &:not([disabled]):hover,
-        &:hover {
+        &.md-primary {
             background-color: $medium-teal-light-new;
+            color: #fefefe;
+            &:not([disabled]):hover {
+                md-dialog-actions &, & {
+                    background-color: #20887f;
+                }
+            }
         }
+        &.md-warn {
+            background-color: #bf3744;
+            color: #ffffff;
+            &:not([disabled]):hover, md-dialog-actions &:not([disabled]):hover {
+                background-color: #9d2e38;
+            }
+        }
+        &, &.md-primary, &.md-warn {
+            &[disabled], &[disabled]:hover {
+                background-color: rgba($dark-new, .07);
+                color: rgba(0, 0, 0, 0.25);
+            }
+        }
+    }
+    &.md-primary {
+        color:  $medium-teal-light-new;
+    }
+    &.md-warn {
+        color:  #bf3744;
     }
 }
 

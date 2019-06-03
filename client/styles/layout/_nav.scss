@@ -104,7 +104,12 @@
                 padding: 20px 15px;
                 transition: all $nav-transition_duration ease-in-out;
                 height: $sidebar-width;
-
+                &, &.md-focused {
+                    max-height: $sidebar-width;
+                    max-width: $sidebar-width;
+                    min-width: $sidebar-width;
+                    color: #ffffff;
+                }
                 .badge {
                     position: absolute;
                     top: 16px;

@@ -47,7 +47,7 @@
                             <input placeholder="Value" type="text" class="form-control" data-ng-model="newAttribute.value" ng-required="true"/>
                         </div>
                         <div class="dashboard-attributes-container_add-button">
-                            <button type="submit" data-ng-click="createAttribute(newAttribute, dashboard_form.attributes);" data-ng-disabled="dashboard_form.attributes.$invalid">ADD</button>
+                            <md-button type="submit" data-ng-click="createAttribute(newAttribute, dashboard_form.attributes);" data-ng-disabled="dashboard_form.attributes.$invalid">ADD</md-button>
                         </div>
                     </div>
                 </ng-form>
@@ -69,15 +69,15 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew && dashboard.editable" type="button" class="md-raised btn-w-md zf-button-md __delete_button"
+            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew && dashboard.editable" type="button" class="md-warn"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="deleteDashboard(dashboard);">
                 Delete
             </md-button>
-             <md-button id="create" data-ng-if="isNew" type="submit" class="md-raised btn-w-md md-primary zf-button-md"
+             <md-button id="create" data-ng-if="isNew" type="submit" class="md-raised md-primary"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="createDashboard(dashboard)">
                 Create
             </md-button>
-            <md-button id="save" data-ng-if="!isNew" type="submit" class="md-raised btn-w-md md-primary zf-button-md" ng-disabled="dashboard_form.info.$invalid" data-ng-click="updateDashboard(dashboard)">
+            <md-button id="save" data-ng-if="!isNew" type="submit" class="md-raised md-primary" ng-disabled="dashboard_form.info.$invalid" data-ng-click="updateDashboard(dashboard)">
                 Save
             </md-button>
         </md-dialog-actions>

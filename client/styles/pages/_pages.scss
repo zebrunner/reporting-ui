@@ -546,14 +546,9 @@
         &._mobile {
             display: none;
         }
-        &:last-child() {
-            margin-bottom: 40px;
-        }
     }
     &-button {
-        border-radius: 4px;
-        box-shadow: none !important;
-        padding: 9px 13px;
+        margin-top: 40px;
     }
     &-arrow {
         width: 122px;
@@ -583,9 +578,6 @@
             &._mobile {
                 display: block;
             }
-        }
-        &-button {
-            padding: 9px 16px;
         }
     }
     @media (max-width: $screen-tablet) {

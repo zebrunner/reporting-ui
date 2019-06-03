@@ -19,6 +19,12 @@
         width: 144px;
     }
 
+    &__helpers {
+        .md-button {
+            margin-left: 12px;
+        }
+    }
+
     &__input {
         &-label {
             position: relative;

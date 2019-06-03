@@ -224,22 +224,6 @@ $red: #d2333b;
     letter-spacing: 0.1px;
     color: black;
 
-    &.zf-info {
-        background-color: rgba(31,36,42, .07);
-        float: left;
-        color: black;
-    }
-
-    &.zf-warn {
-        color: $red !important;
-        //width: 128px;
-        background-color: rgba(31,36,42, .1) !important;
-
-        &:hover {
-            background-color: rgba(31,36,42, .2) !important;
-        }
-    }
-
     &.zf-chip-button {
         width: 100% !important;
         min-width: 110px !important;
