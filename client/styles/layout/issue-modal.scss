@@ -113,17 +113,6 @@
         md-dialog-actions {
             min-height: 32px;
             padding: 0;
-            .form-button {
-                box-shadow: none !important;
-                border-radius: 4px;
-                min-width: 80px;
-                font-size: 14px;
-                min-height: 36px;
-                margin: 0 0 0 13px;
-                &._light {
-                    background-color: white;
-                }
-            }
         }
     }
     &__tickets {
@@ -141,6 +130,7 @@
         }
         .ticket-list {
             &-button {
+                max-height: unset;
                 padding: 0;
                 text-transform: none;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.15);
