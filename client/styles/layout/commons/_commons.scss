@@ -33,6 +33,7 @@ $red: #d2333b;
 
         .md-dialog-content > div[ng-transclude] {
             display: flex;
+            position: relative;
             min-height: 576px;
         }
 
@@ -50,7 +51,7 @@ $red: #d2333b;
         &_content {
             width: 66%;
             background-color: $modal-grey;
-            padding: 30px 20px 24px 24px;
+            padding: 30px 20px 20px 24px;
         }
 
         .md-dialog-content {
@@ -65,11 +66,11 @@ $red: #d2333b;
 
     .close-button {
         position: absolute;
-        right: 11px;
-        top: 11px;
-        height: 26px;
-        width: 26px;
-        font-size: 26px;
+        right: 15px;
+        top: 15px;
+        height: 24px;
+        width: 24px;
+        font-size: 24px;
         min-width: 14px;
         min-height: 14px;
         z-index: 1;
@@ -241,9 +242,9 @@ $red: #d2333b;
 
     &.zf-chip-button {
         width: 100% !important;
-        min-width: 128px !important;
+        min-width: 110px !important;
         height: 32px;
-        line-height: 28px !important;
+        line-height: 29px !important;
         border-radius: 16px;
         letter-spacing: normal !important;
         color: $modal-white;

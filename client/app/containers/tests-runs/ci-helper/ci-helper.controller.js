@@ -16,6 +16,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     $scope.testSuites = [];
     $scope.scmAccounts = [];
+    $scope.scmAccount = {};
+    $scope.launcherScan = {};
 
     $scope.jsonModel = {};
 
@@ -30,11 +32,15 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         }
     };
 
+    let prevLauncher;
+
     $scope.onLoad = function(editor) {
     };
 
     $scope.onChange = function(editor) {
     };
+
+    let gitHubPopUp;
 
     $scope.DEFAULT_TEMPLATES = {
         model: {},
@@ -82,6 +88,22 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     $scope.states.addGitRepo = false;
 
     var onAddNewGithubRepoClose;
+
+    $scope.switchFolder = function(e, element, forceExpand) {
+        const expandFolderClassName = 'expand-folder';
+        const expandFolderFinishClassName = 'expand-folder_finish';
+        const switchFolderElement = element ? element : angular.element(e.target);
+        const folderElement = angular.element(switchFolderElement.closest('.folder-container'));
+        if(folderElement.hasClass(expandFolderClassName) && ! forceExpand) {
+            folderElement.addClass(expandFolderFinishClassName);
+            folderElement.removeClass(expandFolderClassName);
+            $timeout(function () {
+                folderElement.removeClass(expandFolderFinishClassName);
+            }, 150);
+        } else {
+            folderElement.addClass(expandFolderClassName);
+        }
+    };
 
     $scope.addNewGithubRepo = function(element, forceClose) {
         $scope.states.addGitRepo = forceClose ? false : ! $scope.states.addGitRepo;
@@ -167,9 +189,67 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     $scope.addTemplate = function() {
-        $scope.cardNumber = 1;
+        $scope.cardNumber = 2;
         $scope.launcher = {};
         $scope.DEFAULT_TEMPLATES.model = {};
+    };
+
+    $scope.addRepo = function() {
+        $scope.repo = {};
+        $scope.connectToGitHub().then(function () {
+            clearPrevLauncherElement();
+            $scope.cardNumber = 1;
+        });
+    };
+
+    $scope.manageFolder = function (scmAccount) {
+        clearLauncher();
+        clearPrevLauncherElement();
+        $scope.cardNumber = 2;
+        $scope.scmAccount = angular.copy(scmAccount);
+        $scope.launcher.scmAccountType = angular.copy(scmAccount);
+    };
+
+    $scope.addLauncher = function(launcher) {
+        $scope.createLauncher(launcher).then(function (l) {
+            appendLauncher(l);
+            clearLauncher();
+            $scope.chooseLauncher(l);
+        });
+    };
+
+    $scope.toEditLauncher = function(launcher) {
+        clearLauncher();
+        $scope.launcher = angular.copy(launcher);
+        $scope.cardNumber = 2;
+    };
+
+    $scope.onFilterSearchChange = function(value) {
+        $timeout(function () {
+            const emptySearchClassName = '__empty-search';
+            //find all folder elements
+            const folders = angular.element('.folder-container');
+            angular.forEach(folders, function (folder) {
+                folder = angular.element(folder);
+                // if search value is not empty hide folders without elements and expand needed
+                // else if search value is empty show all hidden folders
+                if(value) {
+                    const hasItems = !! folder.find(".folder-container_item_list_item").length;
+                    if(! hasItems) {
+                        folder.addClass(emptySearchClassName);
+                    } else {
+                        const folderIcons = folder.find(".folder-container_folder_icon");
+                        angular.forEach(folderIcons, function (folderIcon) {
+                            $scope.switchFolder(null, folderIcon, true);
+                        });
+                    }
+                } else {
+                    if(folder.hasClass(emptySearchClassName)) {
+                        folder.removeClass(emptySearchClassName);
+                    }
+                }
+            });
+        }, 0, false);
     };
 
     $scope.launchers = [];
@@ -181,16 +261,32 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     $scope.editLauncher = function(launcher) {
         $scope.launcher = angular.copy(launcher);
-        $scope.cardNumber = 1;
+        $scope.cardNumber = 2;
         closeConnectGithubBlock();
     };
 
     $scope.chooseLauncher = function(launcher, skipBuilderApply) {
+        clearPrevLauncherElement();
+        chooseLauncherElement(launcher.id);
         $scope.launcher = angular.copy(launcher);
         $scope.DEFAULT_TEMPLATES.model = {};
         if(! skipBuilderApply) {
             $scope.applyBuilder(launcher);
-            $scope.cardNumber = 2;
+            $scope.cardNumber = 3;
+        }
+    };
+
+    function chooseLauncherElement(launcherId) {
+        const chosenLauncherClass = 'chosen-launcher';
+        const launcherElement = angular.element('.launcher-' + launcherId);
+        prevLauncher = launcherElement;
+        launcherElement.addClass(chosenLauncherClass)
+    };
+
+    function clearPrevLauncherElement() {
+        const chosenLauncherClass = 'chosen-launcher';
+        if(prevLauncher) {
+            prevLauncher.removeClass(chosenLauncherClass);
         }
     };
 
@@ -200,6 +296,83 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     $scope.navigateBack = function() {
         $scope.cardNumber = 1;
+    };
+
+    $scope.createLauncher = function(launcher) {
+        return $q(function (resolve, reject) {
+            LauncherService.createLauncher(launcher).then(function (rs) {
+                if (rs.success) {
+                    $scope.launcher = rs.data;
+                    $scope.launchers.push(rs.data);
+                    messageService.success('Launcher was created');
+                    resolve($scope.launcher);
+                } else {
+                    messageService.error(rs.message);
+                    reject();
+                }
+                $scope.applyBuilder(launcher);
+            });
+        });
+    };
+
+    $scope.updateLauncher = function(launcher) {
+        var index = $scope.launchers.indexOfField('id', launcher.id);
+        LauncherService.updateLauncher(launcher).then(function (rs) {
+            if (rs.success) {
+                const l = rs.data;
+                $scope.launchers.splice(index, 1, l);
+                const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
+                if(indexScmAccount !== -1) {
+                    const scmAccount = $scope.scmAccounts[indexScmAccount];
+                    const scmAccountLauncherIndex = scmAccount.launchers.indexOfField('id', l.id);
+                    scmAccount.launchers.splice(scmAccountLauncherIndex, 1, l);
+                }
+                messageService.success('Launcher was updated');
+            } else {
+                messageService.error(rs.message);
+            }
+            $scope.applyBuilder(launcher);
+        });
+    };
+
+    $scope.deleteLauncher = function (id) {
+        if(id) {
+            var index = $scope.launchers.indexOfField('id', id);
+            LauncherService.deleteLauncherById(id).then(function (rs) {
+                if (rs.success) {
+                    $scope.launchers.splice(index, 1);
+                    $scope.launcher = {};
+                    $scope.cardNumber = 0;
+
+                    const l = $scope.launchers[index];
+                    const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
+                    if(indexScmAccount !== -1) {
+                        const scmAccount = $scope.scmAccounts[indexScmAccount];
+                        const scmAccountLauncherIndex = scmAccount.launchers.indexOfField('id', id);
+                        scmAccount.launchers.splice(scmAccountLauncherIndex, 1);
+                    }
+
+                    messageService.success('Template was deleted');
+                } else {
+                    messageService.error(rs.message);
+                }
+            });
+        }
+    };
+
+    $scope.deleteRepository = function(scmAccountId) {
+        ScmService.deleteScmAccount(scmAccountId).then(function (rs) {
+            if(rs.success) {
+                const scmAccountIndex = $scope.scmAccounts.indexOfField('id', scmAccountId);
+                $scope.cardNumber = 0;
+                clearPrevLauncherElement();
+                clearLauncher();
+                $scope.scmAccounts.splice(scmAccountIndex, 1);
+                messageService.success('Repository was deleted');
+            } else {
+                messageService.error(rs.message);
+            }
+        });
     };
 
     $scope.saveLauncher = function (launcher) {
@@ -228,6 +401,60 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         }
     };
 
+    $scope.launcherLoaderStatus = {
+        determinateValue: 20,
+        started: false,
+        finished: false
+    };
+
+    $scope.scanRepository = function (launcherScan, rescan) {
+        if(launcherScan && launcherScan.branch && $scope.scmAccount.id) {
+            launcherScan.scmAccountId = $scope.scmAccount.id;
+            launcherScan.rescan = !! rescan;
+            LauncherService.scanRepository(launcherScan).then(function (rs) {
+                if (rs.success) {
+                    $scope.launcherLoaderStatus.started = true;
+                } else {
+                    $scope.launcherLoaderStatus.started = false;
+                    messageService.error(rs.message);
+                }
+            });
+        }
+    };
+
+    /*$timeout(function () {
+        $scope.launcherLoaderStatus.started = true;
+        $timeout(function () {
+            $scope.onScanRepositoryFinish();
+        }, 2000, false);
+    }, 0, false);*/
+
+    $scope.onScanRepositoryFinish = function () {
+        runPseudoDeterminateProgress(150, 5);
+        $scope.launcherLoaderStatus.started = false;
+        $scope.launcherLoaderStatus.finished = true;
+        $scope.launcherLoaderStatus.determinateValue = 20;
+    };
+
+    function runPseudoDeterminateProgress(millisToLoad, step) {
+        const timeout = Math.round(millisToLoad * step / (100 - $scope.launcherLoaderStatus.determinateValue));
+        const interval = $interval(function () {
+            if($scope.launcherLoaderStatus.determinateValue === 100) {
+                $interval.cancel(interval);
+                return;
+            }
+            $scope.launcherLoaderStatus.determinateValue += step;
+        }, timeout, 0, true);
+    };
+
+    $scope.backToLaunchersList = function () {
+        $scope.launcherLoaderStatus.finished = false;
+    };
+
+    $scope.backToLaunchersList = function () {
+        $scope.launcherLoaderStatus.finished = false;
+    };
+
     function buildError(launcher) {
         var messages = [];
         var errorMessage = '';
@@ -253,25 +480,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         return errorMessage;
     };
 
-    $scope.deleteLauncher = function (id) {
-        if(id) {
-            var index = $scope.launchers.indexOfField('id', id);
-            LauncherService.deleteLauncherById(id).then(function (rs) {
-                if (rs.success) {
-                    $scope.launchers.splice(index, 1);
-                    $scope.launcher = {};
-                    $scope.cardNumber = 0;
-                    messageService.success('Launcher was deleted');
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
-        }
-    };
-
     $scope.cancelLauncher = function () {
         $scope.cardNumber = 0;
         clearLauncher();
+        clearPrevLauncherElement();
     };
 
     function getAllLaunchers() {
@@ -287,15 +499,15 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         });
     };
 
-    $scope.updateLauncher = function(launcher, index) {
-        LauncherService.updateLauncher(launcher).then(function (rs) {
-            if(rs.success) {
-                $scope.launchers.splice(index, 1, rs.data);
-            } else {
-                messageService.error(rs.message);
-            }
-        });
-    };
+    // $scope.updateLauncher = function(launcher, index) {
+    //     LauncherService.updateLauncher(launcher).then(function (rs) {
+    //         if(rs.success) {
+    //             $scope.launchers.splice(index, 1, rs.data);
+    //         } else {
+    //             messageService.error(rs.message);
+    //         }
+    //     });
+    // };
 
     $scope.deleteLauncherById = function(id, index) {
         LauncherService.deleteLauncherById(id).then(function (rs) {
@@ -320,8 +532,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             });
         });
     };
-
-    var gitHubPopUp;
     $scope.clientId = '';
 
     $scope.connectToGitHub = function() {
@@ -329,7 +539,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if($scope.clientId) {
                 var host = $window.location.host;
                 var tenant = host.split('\.')[0];
-                var redirectURI = $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
+                var redirectURI = "http://localhost:3000/scm/callback";//;$window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
@@ -390,9 +600,15 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if(rs.success) {
                 $scope.scmAccounts.push(rs.data);
                 $scope.launcher.scmAccountType = rs.data;
-                if(onAddNewGithubRepoClose) {
-                    onAddNewGithubRepoClose();
-                }
+                $scope.organizations = [];
+                $scope.repositories = [];
+                $scope.cardNumber = 0;
+
+                // switch folder if new
+                $timeout(function () {
+                    const newScmAccountElement = angular.element('.folder-container-' + rs.data.id + ' .folder-container_folder_icon');
+                    $scope.switchFolder(null, newScmAccountElement, true);
+                }, 0, false);
             } else {
                 messageService.error(rs.message);
             }
@@ -431,6 +647,14 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         });
     };
 
+    function appendLauncher(launcher) {
+        $scope.launchers.push(launcher);
+        const scmAccountIndex = $scope.scmAccounts.indexOfField('id', launcher.scmAccountType.id);
+        const scmAccount = $scope.scmAccounts[scmAccountIndex];
+        scmAccount.launchers = scmAccount.launchers || [];
+        scmAccount.launchers.push(launcher);
+    };
+
     $scope.hide = function(testRun) {
         $mdDialog.hide(testRun);
     };
@@ -441,24 +665,41 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     (function initController() {
         clearLauncher();
-        getAllLaunchers().then(function (launchers) {
-            $scope.launchers = launchers;
+        const launchersPromise = getAllLaunchers().then(function (launchers) {
+            return $q(function (resolve, reject) {
+                $scope.launchers = launchers;
+                resolve();
+            });
         });
         getClientId().then(function (clientId) {
             $scope.clientId = clientId;
         });
-        ScmService.getAllScmAccounts().then(function (rs) {
-            if(rs.success) {
-                if(rs.data && rs.data.length) {
-                    $scope.scmAccounts = rs.data.filter(function (scmAccount) {
-                        return scmAccount.repositoryURL;
-                    });
+        const scmAccountsPromise = ScmService.getAllScmAccounts().then(function (rs) {
+            return $q(function (resolve, reject) {
+                if (rs.success) {
+                    if (rs.data && rs.data.length) {
+                        $scope.scmAccounts = rs.data.filter(function (scmAccount) {
+                            return scmAccount.repositoryURL;
+                        });
+                    }
+                    resolve();
+                } else {
+                    messageService.error(rs.message);
+                    reject();
                 }
-            } else {
-                messageService.error(rs.message);
-            }
+            });
+        });
+        $q.all([launchersPromise, scmAccountsPromise]).then(function (data) {
+            $scope.scmAccounts.forEach(function (scmAccount) {
+                $scope.launchers.forEach(function (launcher) {
+                    if(launcher.scmAccountType.id === scmAccount.id) {
+                        scmAccount.launchers = scmAccount.launchers || [];
+                        scmAccount.launchers.push(launcher);
+                    }
+                });
+            });
         });
     })();
-}
+};
 
 export default CiHelperController;

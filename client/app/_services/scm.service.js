@@ -14,6 +14,7 @@
         service.updateScmAccount = updateScmAccount;
         service.getClientId = getClientId;
         service.getAllScmAccounts = getAllScmAccounts;
+        service.deleteScmAccount = deleteScmAccount;
         service.exchangeCode = exchangeCode;
         service.getRepositories = getRepositories;
         service.getOrganizations = getOrganizations;
@@ -31,6 +32,10 @@
         function getAllScmAccounts() {
             return $http.get(API_URL + '/api/scm/accounts').then(UtilService.handleSuccess, UtilService.handleError('Unable to get list of scm accounts'));
         };
+
+        function deleteScmAccount(id) {
+            return $http.delete(API_URL + '/api/scm/accounts/' + id).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete repository'));
+        }
 
         function getRepositories(id, org) {
             return $http.get(API_URL + '/api/scm/github/repositories/' + id + '?org=' + org).then(UtilService.handleSuccess, UtilService.handleError('Unable to get client id'));
