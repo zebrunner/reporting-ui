@@ -14,7 +14,7 @@
         <md-menu-content class="test-run-group_menu" style="z-index:99;"  width="3">
             <md-list>
                 <md-list-item id="clearProject" class="md-2-line" ng-repeat="chip in chips" md-prevent-menu-close>
-                    <md-checkbox md-prevent-menu-close class="md-primary" ng-model="chip.checked" aria-label="tag"></md-checkbox>
+                    <md-checkbox md-prevent-menu-close ng-model="chip.checked" aria-label="tag"></md-checkbox>
                     <div class="md-list-item-text">
                         {{chip.value}}
                     </div>

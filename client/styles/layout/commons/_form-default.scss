@@ -76,7 +76,7 @@ md-checkbox {
     height: 18px;
     min-width: 18px;
     min-height: 18px;
-    &:not([disabled]).md-primary:not(.md-checked), &:not(.md-checked) {
+    &:not(.md-checked) {
         .md-icon {
             border-color: rgba(#000000, .5);
         }
@@ -86,14 +86,6 @@ md-checkbox {
             }
         }
     }
-    &:not([disabled]).md-primary.md-checked, &.md-checked {
-        .md-ink-ripple {
-            color: rgba(0,0,0,0.5);
-        }
-        .md-icon {
-            background-color: rgba(#000000, .9);
-        }
-    }
     
     .md-icon,
     .md-container {
@@ -101,7 +93,11 @@ md-checkbox {
         height: 18px;
     }
     &.md-checked {
+        .md-ink-ripple {
+            color: rgba(0,0,0,0.5);
+        }
         .md-icon {
+            background-color: rgba(#000000, .9);
             &::after {
                 left: 3.66667px;
                 top: -0.77778px;
