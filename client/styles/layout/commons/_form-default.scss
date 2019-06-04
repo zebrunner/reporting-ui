@@ -76,6 +76,25 @@ md-checkbox {
     height: 18px;
     min-width: 18px;
     min-height: 18px;
+    &:not([disabled]).md-primary:not(.md-checked), &:not(.md-checked) {
+        .md-icon {
+            border-color: rgba(#000000, .5);
+        }
+        &:hover {
+            .md-icon {
+                border-color: rgba(#000000, .7);
+            }
+        }
+    }
+    &:not([disabled]).md-primary.md-checked, &.md-checked {
+        .md-ink-ripple {
+            color: rgba(0,0,0,0.5);
+        }
+        .md-icon {
+            background-color: rgba(#000000, .9);
+        }
+    }
+    
     .md-icon,
     .md-container {
         width: 18px;
@@ -88,6 +107,20 @@ md-checkbox {
                 top: -0.77778px;
             }
         }
+    }
+}
+
+md-switch {
+    &.md-checked.md-primary {
+        .md-bar {
+            background-color: #92d2cc;
+        }
+        .md-thumb {
+            background-color: #26a69a;
+        }
+    }
+    .md-bar {
+        background-color: #b2b2b2;
     }
 }
 
@@ -107,6 +140,29 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
                 top: -0.77778px;
             }
         }
+    }
+}
+
+md-radio-button {
+    &:not([disabled]).md-primary.md-checked {
+        .md-off {
+            border-color: #ffffff;
+        }
+    }
+    .md-off {
+        border-color: rgba(#ffffff, .25);
+        &:hover {
+            border-color: rgba(#ffffff, .5);
+        }
+    }
+    &:not([disabled]).md-primary {
+        .md-on {
+            border-color: #ffffff;
+            background-color: #ffffff;
+        }
+    }
+    &[disabled] {
+        border-color: rgba(#ffffff, .25);
     }
 }
 
@@ -197,7 +253,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
                     }
                 }
             }
-            &[disabled = "disabled"]{
+            &[disabled]{
                 background-color: #edeff0;
                 color: rgba(0, 0, 0, 0.4);
                 .search-fab {
@@ -315,6 +371,71 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
 
             &._dashboard {
                 display: none !important; //TODO: find who adds inline styles
+            }
+        }
+    }
+}
+
+.tooltip-btn {
+    border: none;
+    background: transparent;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 8px;
+    i.material-icons {
+        color: rgba(#000000, .5);
+        margin: 0;
+        vertical-align: middle;
+    }
+
+    &:hover {
+        background-color: rgba(#011627, 0.1);
+        i.material-icons {
+            color: rgba(#000000, 0.9);
+        }
+    }
+    .fixed-page-header-container_options & {
+        margin-left: 16px;
+        i.material-icons {
+            @media(max-width: $screen-phone) { 
+                color: rgba(#ffffff, .5)
+            }
+            &:not(:last-child) {
+                margin-right: 26px;
+                @media(max-width: $screen-phone) {
+                    margin-right: 5px;
+                }
+            }
+            &:first-child {
+                @media(max-width: $screen-phone) {
+                    margin-left: 0;
+                }
+            }
+
+            &:hover {
+                @media(max-width: $screen-phone) {
+                    color: rgba(#ffffff, 0.8);
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.md-menu, .md-menu .md-open {
+    .md-icon-button {
+        min-width: 40px;
+        max-width: 40px;
+        padding: 0;
+        border-radius: 50%;
+        .material-icons {
+            transition: color .25s ease-in-out;
+            color: rgba(#000000, .5);
+        }
+        &:hover {
+            .material-icons {
+                color: rgba(#000000, .9);
             }
         }
     }

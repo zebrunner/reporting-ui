@@ -89,21 +89,6 @@
                         color: rgba(#ffffff, .8);
                         
                     }
-                    &.md-checked {
-                        .md-off {
-                            border-color: #ffffff !important;
-                        }
-                    }
-                    .md-off {
-                        border-color: rgba(#ffffff, .25) !important;
-                        &:hover {
-                            border-color: rgba(#ffffff, .5) !important;
-                        }
-                    }
-                    .md-on {
-                        border-color: #ffffff !important;
-                        background-color: #ffffff;
-                    }
                 }
             }
         }

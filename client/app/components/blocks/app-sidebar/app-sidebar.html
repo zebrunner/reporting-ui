@@ -165,7 +165,7 @@
                             </li>
                             <li name="projectName" class="projects__list" md-prevent-menu-close>
                                 <md-radio-group ng-model="$ctrl.selectedProject" ng-change="$ctrl.chooseProject();">
-                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id"
+                                    <md-radio-button disabled data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id"
                                                      id="{{::project.id}}"
                                                      aria-label="project {{ ::project.id }}"
                                                      class="projects__list-item md-primary"
