@@ -212,6 +212,114 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     }
 }
 
+.zf-header-button {
+    float: right;
+    height: 32px;
+    font-size: 0;
+    line-height: 1;
+    padding: 6px 13px 6px 6px;
+    color: $medium-teal-light-new;
+    border-radius: 16px;
+    border: 1px solid $medium-teal-light-new;
+    background-color: white;
+    transition: all .25s;
+
+    .material-icons {
+        color: $medium-teal-light-new;
+        font-size: 22px;
+        line-height: 18px;
+        margin: 0 2px 0 0;
+        max-height: 18px;
+        min-height: 18px;
+        transition: color .25s;
+    }
+
+    span {
+        vertical-align: middle;
+        line-height: 18px;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
+
+    &:hover {
+        border-color: $medium-teal-light-new-hover;
+        color: $medium-teal-light-new-hover;
+        background-color: white;
+
+        @media(min-width: $screen-phone + 1) {
+            .material-icons {
+                color: $medium-teal-light-new-hover;
+            }
+        }
+    }
+    @media(max-width: $screen-phone) {
+        &.fixed-page-header__btn {
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            background-color: $medium-teal-light-new;
+            md-icon {
+                
+                color: #ffffff;
+            }
+            span {
+                display: none;
+            }
+
+            &._no-icon {
+                span {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+
+    @media(max-width: $breakpoint-mobile - 1) {
+        &.fixed-page-header__btn {
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            md-icon {
+                padding: 4px 0 0 2px;
+                max-height: unset;
+            }
+
+            span {
+                display: none;
+            }
+
+            &._search {
+                border: 1px solid transparent;
+                background-color: rgba($coal, .1);
+                color: #000;
+
+                .material-icons {
+                    color: currentColor;
+                }
+
+                &:hover {
+                    border: 1px solid transparent;
+                }
+
+                &._active {
+                    background-color: $medium-teal-bright-new;
+                    color: #fff;
+
+                    .material-icons {
+                        color: currentColor;
+                    }
+                }
+            }
+
+            &._dashboard {
+                display: none !important; //TODO: find who adds inline styles
+            }
+        }
+    }
+}
+
 .search-fab {
     margin: auto;
     height: 25px;
