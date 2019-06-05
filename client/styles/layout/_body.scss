@@ -3445,6 +3445,10 @@ $light-inprogress: #68c9fd;
             flex-grow: 1;
             margin-top: 20px;
 
+            @media(max-width: $screen-tablet) {
+                height: calc(100% - 94px);
+            }
+
             @media(min-width: $screen-phone + 1px) {
                 margin-left: -10px;
                 padding-left: 10px;
