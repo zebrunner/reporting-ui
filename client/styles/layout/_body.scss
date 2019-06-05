@@ -2988,7 +2988,7 @@ $light-inprogress: #68c9fd;
                 opacity: 1;
             }
             &, > *, .zf-show-part > * {
-                font-weight: normal;
+                font-weight: 500 !important;
                 letter-spacing: 0.1px;
                 color: black;
                 font-size: 14px;
@@ -3426,11 +3426,10 @@ $light-inprogress: #68c9fd;
                 margin-top: 0;
             }
 
-
             .folder-container {
                 list-style-type: none;
                 margin: 0;
-                padding: 0 20px 0 16px;
+                padding: 0 20px 8px 16px;
 
                 &.__empty-search {
                     display: none;
@@ -3471,7 +3470,7 @@ $light-inprogress: #68c9fd;
                         padding: 0;
                         &_item, &_item-empty {
                             color: #7f7f7f;
-                            padding: 8px 0;
+                            padding: 7px 0;
                             position: relative;
 
                             &.chosen-launcher {

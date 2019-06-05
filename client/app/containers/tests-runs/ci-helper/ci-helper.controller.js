@@ -5,7 +5,7 @@ import 'brace/mode/json';
 import 'brace/theme/eclipse';
 import 'angular-ui-ace';
 
-const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, LauncherService, ScmService, messageService) {
+const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, LauncherService, UserService, ScmService, messageService, UtilService, API_URL) {
     'ngInject';
 
     $scope.ciOptions = {};
@@ -18,6 +18,16 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     $scope.scmAccounts = [];
     $scope.scmAccount = {};
     $scope.launcherScan = {};
+
+    const TENANT = $rootScope.globals.auth.tenant;
+
+    $scope.launcherLoaderStatus = {
+        determinateValue: 20,
+        started: false,
+        finished: false,
+        buildNumber: null,
+        rescan: false
+    };
 
     $scope.jsonModel = {};
 
@@ -219,8 +229,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     $scope.toEditLauncher = function(launcher) {
-        clearLauncher();
-        $scope.launcher = angular.copy(launcher);
+        //clearLauncher();
+        //$scope.launcher = angular.copy(launcher);
         $scope.cardNumber = 2;
     };
 
@@ -401,18 +411,15 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         }
     };
 
-    $scope.launcherLoaderStatus = {
-        determinateValue: 20,
-        started: false,
-        finished: false
-    };
-
     $scope.scanRepository = function (launcherScan, rescan) {
         if(launcherScan && launcherScan.branch && $scope.scmAccount.id) {
+            initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !! rescan;
             LauncherService.scanRepository(launcherScan).then(function (rs) {
                 if (rs.success) {
+                    $scope.launcherLoaderStatus.buildNumber = rs.data;
+                    $scope.launcherLoaderStatus.rescan = launcherScan.rescan;
                     $scope.launcherLoaderStatus.started = true;
                 } else {
                     $scope.launcherLoaderStatus.started = false;
@@ -422,14 +429,24 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         }
     };
 
-    /*$timeout(function () {
-        $scope.launcherLoaderStatus.started = true;
-        $timeout(function () {
-            $scope.onScanRepositoryFinish();
-        }, 2000, false);
-    }, 0, false);*/
+    $scope.cancelScanRepository = function() {
+        const buildNumber = $scope.launcherLoaderStatus.buildNumber;
+        const scmAccountId = $scope.scmAccount.id;
+        const rescan = $scope.launcherLoaderStatus.rescan;
+        LauncherService.abortScanRepository(buildNumber, scmAccountId, rescan).then(function (rs) {
+            disconnectWebsocket();
+            if(rs.success) {
+                $scope.launcherLoaderStatus.started = false;
+                $scope.launcherLoaderStatus.finished = false;
+                messageService.success('Repository scan was stopped');
+            } else {
+                messageService.error(rs.message);
+            }
+        });
+    };
 
     $scope.onScanRepositoryFinish = function () {
+        disconnectWebsocket();
         runPseudoDeterminateProgress(150, 5);
         $scope.launcherLoaderStatus.started = false;
         $scope.launcherLoaderStatus.finished = true;
@@ -453,6 +470,12 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     $scope.backToLaunchersList = function () {
         $scope.launcherLoaderStatus.finished = false;
+    };
+
+    $scope.hasAutoScannedLaunchers = function (launchers) {
+        return launchers && !! launchers.find(function (launcher) {
+            return launcher.autoScan;
+        });
     };
 
     function buildError(launcher) {
@@ -481,9 +504,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     $scope.cancelLauncher = function () {
-        $scope.cardNumber = 0;
-        clearLauncher();
-        clearPrevLauncherElement();
+        $scope.cardNumber = 3;
     };
 
     function getAllLaunchers() {
@@ -654,6 +675,60 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         scmAccount.launchers = scmAccount.launchers || [];
         scmAccount.launchers.push(launcher);
     };
+
+    let zafiraWebsocket;
+    let subscriptions = {};
+
+    function initWebsocket() {
+        const wsName = 'zafira';
+
+        zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
+        zafiraWebsocket.debug = null;
+        zafiraWebsocket.connect({withCredentials: false}, function () {
+            subscriptions.launchers = subscribeLaunchersTopic();
+            UtilService.websocketConnected(wsName);
+        }, function () {
+            UtilService.reconnectWebsocket(wsName, initWebsocket);
+        });
+    };
+
+    function subscribeLaunchersTopic() {
+        return zafiraWebsocket.subscribe('/topic/' + TENANT + '.launchers', function (data) {
+            const event = getEventFromMessage(data.body);
+
+            const success = event.success;
+            const userId = event.userId;
+            if(UserService.currentUser.id === userId && success) {
+                $scope.scmAccount.launchers.forEach(function (l) {
+                    const index = $scope.launchers.indexOfField('id', l.id);
+                    $scope.launchers.splice(index, 1);
+                });
+                Array.prototype.push.apply($scope.launchers, event.launchers);
+                const scmIndex = $scope.scmAccounts.indexOfField('id', $scope.scmAccount.id);
+                $scope.scmAccounts[scmIndex].launchers = event.launchers;
+            } else {
+                messageService.error('Unable to scan repository');
+            }
+            $scope.onScanRepositoryFinish();
+            $scope.$apply();
+        });
+    };
+
+    function getEventFromMessage(message) {
+        return JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+    };
+
+    function disconnectWebsocket() {
+        if(zafiraWebsocket && zafiraWebsocket.connected) {
+            subscriptions.launchers && subscriptions.launchers.unsubscribe();
+            zafiraWebsocket.disconnect();
+            UtilService.websocketConnected('zafira');
+        }
+    };
+
+    $scope.$on('$destroy', function () {
+        disconnectWebsocket();
+    });
 
     $scope.hide = function(testRun) {
         $mdDialog.hide(testRun);

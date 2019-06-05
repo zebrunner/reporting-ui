@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="ci-runner-container_helper_title show-phone">Choose template</div>
-            <div class="ci-runner-container_helper_search">
+            <div class="ci-runner-container_helper_search hide-phone">
                 <md-input-container class="no-margin no-padding">
                     <label>Search template</label>
                     <input name="search" ng-model="filerSc.name" ng-change="onFilterSearchChange(filerSc.name)" autocomplete="off"/>
@@ -37,18 +37,20 @@
                 <ul ng-if="! scmAccounts.length" class="folder-container-empty">
                     No repositories added
                 </ul>
-                <!--<div ng-repeat="l in launchers | orderBy:'name' track by l.id" class="ci-runner-container_helper_section_item" ng-class="{'ci-runner-container_helper_section_item_selected': launcher.id === l.id}">
-                    <div ng-click="chooseLauncher(l);" class="ci-runner-container_helper_section_item_container hide-phone">
-                        {{l.name}}
+                <!--<div> &lt;!&ndash;do scrollable&ndash;&gt;
+                    <div ng-repeat="l in launchers | orderBy:'name' track by l.id" class="ci-runner-container_helper_section_item show-phone" ng-class="{'ci-runner-container_helper_section_item_selected': launcher.id === l.id}">
+                        <div ng-click="chooseLauncher(l);" class="ci-runner-container_helper_section_item_container hide-phone">
+                            {{l.name}}
+                        </div>
+                        <div ng-click="chooseLauncherPhone(l);" class="ci-runner-container_helper_section_item_container show-phone">
+                            {{l.name}}
+                        </div>
+                        <i ng-click="editLauncher(l);" has-any-permission="['MODIFY_LAUNCHERS']" class="material-icons hide-phone">edit</i>
                     </div>
-                    <div ng-click="chooseLauncherPhone(l);" class="ci-runner-container_helper_section_item_container show-phone">
-                        {{l.name}}
-                    </div>
-                    <i ng-click="editLauncher(l);" has-any-permission="['MODIFY_LAUNCHERS']" class="material-icons hide-phone">edit</i>
                 </div>-->
             </div>
             <div class="ci-runner-container_content_actions show-phone">
-                <md-button class="md-raised btn-w-md md-primary" ng-click="applyBuilder(launcher, true);"
+                <md-button class="md-raised btn-w-md md-primary" ng-click="chooseLauncher(launcher);"
                            ng-disabled="! launcher.id">
                     Next
                 </md-button>
@@ -99,10 +101,10 @@
                             <label>Branch</label>
                             <input type="text" ng-model="launcherScan.branch" autofocus ng-required="true" />
                         </zf-input-container>
-                        <button class="md-button md-raised __brand-gray-button" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="! scmAccount.launchers" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <button class="md-button md-raised __brand-gray-button" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="! hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             SCAN
                         </button>
-                        <button class="md-button md-raised __brand-gray-button" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="scmAccount.launchers" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <button class="md-button md-raised __brand-gray-button" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             RE-SCAN
                         </button>
                     </div>
@@ -232,7 +234,7 @@
                     </div>
                 </div>
                 <div class="ci-runner-container_loader_container_action">
-                    <button ng-click="" class="md-button md-raised __brand-gray-button" ng-if="launcherLoaderStatus.started">
+                    <button ng-click="cancelScanRepository()" class="md-button md-raised __brand-gray-button" ng-if="launcherLoaderStatus.started">
                         CANCEL
                     </button>
                     <button ng-click="backToLaunchersList();" class="md-button md-raised md-primary btn-auto" ng-if="launcherLoaderStatus.finished">
