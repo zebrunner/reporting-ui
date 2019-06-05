@@ -164,7 +164,7 @@
                                         <md-input-container  class="md-block">
                                             <label>Password</label>
                                             <input id="userPassword" password-eye="mousedown - mouseup" type="password" ng-model="$ctrl.changePassword.password" name="password" required
-                                                   ng-minlength="8" ng-maxlength="50" ng-pattern="/^[A-Za-z0-9_@!]+$/"/>
+                                                   ng-minlength="8" ng-maxlength="50" ng-pattern="/^[A-Za-z0-9_@!#]+$/"/>
                                             <div ng-messages="password_form.password.$error" ng-if="password_form.password.$dirty">
                                                 <div ng-repeat="validation in $ctrl.validations.password" ng-message="{{validation.name}}">
                                                     <span ng-if="validation.additional">
