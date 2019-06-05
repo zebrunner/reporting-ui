@@ -3420,6 +3420,8 @@ $light-inprogress: #68c9fd;
             overflow: scroll;
             flex-grow: 1;
             margin-top: 20px;
+            margin-left: -10px;
+            padding-left: 10px;
 
             @media(max-width: $screen-phone) {
                 min-height: calc(100% - 124px);
@@ -3440,7 +3442,7 @@ $light-inprogress: #68c9fd;
                     &_icon {
                         $icon-color: rgba(0,0,0,0.87);
                         position: absolute;
-                        left: -20px;
+                        left: -26px;
                         height: 20px;
                         line-height: 20px;
                         font-size: 22px;
