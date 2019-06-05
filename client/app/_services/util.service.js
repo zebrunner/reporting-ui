@@ -53,7 +53,7 @@
                 {
                     name: 'pattern',
                     message: 'Password must have only latin letters, numbers or special symbols',
-                    additional: '@ ! _'
+                    additional: '@ ! _ #'
                 },
                 {
                     name: 'required',
