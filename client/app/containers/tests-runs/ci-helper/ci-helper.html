@@ -1,6 +1,6 @@
 <form name="launcher_form">
     <zf-modal class="ci-runner-container">
-        <zf-modal-helper-container class="ci-runner-container_helper">
+        <zf-modal-helper-container class="ci-runner-container_helper" ng-show="! isMobile || cardNumber === 0">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
                 <button ng-click="addRepo();" class="zf-button zf-chip-button">
@@ -9,22 +9,27 @@
                 </button>
             </div>
             <div class="ci-runner-container_helper_title show-phone">Choose template</div>
-            <div class="ci-runner-container_helper_search hide-phone">
+            <div class="ci-runner-container_helper_search">
                 <md-input-container class="no-margin no-padding">
                     <label>Search template</label>
-                    <input name="search" ng-model="filerSc.name" ng-change="onFilterSearchChange(filerSc.name)" autocomplete="off"/>
+                    <input name="search" ng-model="filerSc.name" ng-model-options="{debounce: 700}" ng-change="onFilterSearchChange(filerSc.name)" autocomplete="off"/>
                     <md-icon>search</md-icon>
                 </md-input-container>
             </div>
             <div class="ci-runner-container_helper_section">
                 <ul class="folder-container folder-container-{{scmAccount.id}}" ng-repeat="scmAccount in scmAccounts | orderBy: 'repositoryName' track by scmAccount.id">
                     <li class="folder-container_folder">
-                        <i class="material-icons folder-container_folder_icon" ng-click="switchFolder($event)">arrow_drop_down</i>
-                        <div class="folder-container_folder_name" ng-click="manageFolder(scmAccount)">{{scmAccount.repositoryName}}</div>
+                        <i class="material-icons folder-container_folder_icon hide-phone" ng-click="switchFolder($event)">arrow_drop_down</i>
+                        <div class="folder-container_folder_name hide-phone" ng-click="manageFolder(scmAccount)">{{scmAccount.repositoryName}}</div>
+                        <div class="folder-container_folder_name show-phone" ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
                     </li>
                     <li class="folder-container_item">
                         <ul class="folder-container_item_list">
-                            <li class="folder-container_item_list_item launcher-{{launcher.id}}" ng-click="chooseLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
+                            <li class="folder-container_item_list_item hide-phone launcher-{{launcher.id}}" ng-click="chooseLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
+                                <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../../assets/images/launcher_manual.svg"></md-icon>
+                                {{launcher.name}}
+                            </li>
+                            <li class="folder-container_item_list_item show-phone launcher-{{launcher.id}}" ng-click="selectLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../../assets/images/launcher_manual.svg"></md-icon>
                                 {{launcher.name}}
                             </li>
@@ -50,7 +55,7 @@
                 </div>-->
             </div>
             <div class="ci-runner-container_content_actions show-phone">
-                <md-button class="md-raised btn-w-md md-primary" ng-click="chooseLauncher(launcher);"
+                <md-button class="md-raised btn-w-md md-primary" ng-click="chooseLauncherPhone(launcher);"
                            ng-disabled="! launcher.id">
                     Next
                 </md-button>
@@ -159,7 +164,7 @@
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
                 <div class="ci-runner-container_content_title_action">
-                    <i ng-click="toEditLauncher(launcher);" class="material-icons">edit</i>
+                    <i ng-click="toEditLauncher(launcher);" class="material-icons hide-phone">edit</i>
                 </div>
             </div>
             <div class="ci-runner-container_content_builder zf-display-table">
@@ -167,8 +172,8 @@
                     <div class="zf-label">{{key}}</div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">
                         <zf-input-container>
-                            <input type="number" ng-if="builtLauncher.type[key] === 'int'" ng-model="builtLauncher.model[key]" placeholder="{{key}}"/>
-                            <input type="text" ng-if="builtLauncher.type[key] !== 'int'" ng-model="builtLauncher.model[key]" placeholder="{{key}}"/>
+                            <input type="number" ng-if="builtLauncher.type[key] === 'int'" ng-model="builtLauncher.model[key]"/>
+                            <input type="text" ng-if="builtLauncher.type[key] !== 'int'" ng-model="builtLauncher.model[key]"/>
                         </zf-input-container>
                     </div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">
@@ -194,9 +199,9 @@
                 <button ng-click="cancelLauncher();" class="zf-button zf-info" ng-if="cardNumber === 2">
                     Cancel
                 </button>
-                <!--<md-button class="zf-button zf-info" ng-click="navigateBack();" ng-if="cardNumber === 3">
+                <md-button class="zf-button zf-info" ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
                     Back
-                </md-button>-->
+                </md-button>
                 <md-button class="md-raised btn-w-md md-primary" ng-click="build(launcher);" ng-disabled="! launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">
                     Launch
                 </md-button>

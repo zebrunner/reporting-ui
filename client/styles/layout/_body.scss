@@ -3219,6 +3219,14 @@ $light-inprogress: #68c9fd;
                     line-height: 36px !important;
                     font-weight: normal;
                     color: black;
+
+                    @media(max-width: $screen-phone) {
+                        color: rgba(0, 0, 0, 0.6);
+                        letter-spacing: 0.2px;
+                        font-size: 11px;
+                        opacity: 0.6;
+                    }
+
                 }
 
                 @media (max-width: $screen-sm) {
@@ -3338,18 +3346,34 @@ $light-inprogress: #68c9fd;
             padding: 0 !important;
         }
         &_search {
+
             padding: 20px 20px 0 0;
+
+            @media(max-width: $screen-phone) {
+                padding: 30px 24px;
+            }
+
             md-input-container {
                 max-width: none;
                 width: 100%;
-                input {
+                input, label {
+                    font-weight: normal;
 
+                    @media(max-width: $screen-phone) {
+                        font-size: 16px;
+                    }
                 }
                 md-icon {
                     top: 6px;
                     right: -6px !important;
-                    font-size: 20px !important;
-                    color: rgba(127, 127, 127, 0.75);;
+                    font-size: 20px;
+                    color: rgba(127, 127, 127, 0.75);
+
+                    @media(max-width: $screen-phone) {
+                        font-size: 24px;
+                        top: 4px;
+                        right: -4px !important;
+                    }
                 }
                 .md-errors-spacer {
                     display: none;
@@ -3420,18 +3444,29 @@ $light-inprogress: #68c9fd;
             overflow: scroll;
             flex-grow: 1;
             margin-top: 20px;
-            margin-left: -10px;
-            padding-left: 10px;
+
+            @media(min-width: $screen-phone + 1px) {
+                margin-left: -10px;
+                padding-left: 10px;
+            }
 
             @media(max-width: $screen-phone) {
-                min-height: calc(100% - 124px);
+                min-height: calc(100% - 206px);
+                height: calc(100% - 206px);
                 margin-top: 0;
             }
 
             .folder-container {
+
+                $folder-container-phone-left-padding: 24px;
+
                 list-style-type: none;
                 margin: 0;
                 padding: 0 20px 8px 16px;
+
+                @media(max-width: $screen-phone) {
+                    padding: 0 24px 8px $folder-container-phone-left-padding;
+                }
 
                 &.__empty-search {
                     display: none;
@@ -3439,6 +3474,10 @@ $light-inprogress: #68c9fd;
 
                 &_folder {
                     position: relative;
+
+                    @media(max-width: $screen-phone) {
+                        padding-bottom: 8px;
+                    }
                     &_icon {
                         $icon-color: rgba(0,0,0,0.87);
                         position: absolute;
@@ -3457,29 +3496,56 @@ $light-inprogress: #68c9fd;
                         }
                     }
                     &_name {
-                        display: inline-block !important;
+                        display: inline-block;
                         font-size: 14px;
                         font-weight: 500;
                         height: 20px;
                         line-height: 20px;
+                        color: #7f7f7f;
+
+                        @media(max-width: $screen-phone) {
+                            font-size: 16px;
+                            color: black;
+                        }
+
+                        &.chosen-launcher {
+                            color: black;
+                        }
                     }
                 }
 
                 &_item {
                     &_list {
+                        $item-list-margin: 20px;
+
                         list-style-type: none;
-                        margin: 0 0 0 20px;
+                        margin: 0 0 0 $item-list-margin;
                         padding: 0;
                         &_item, &_item-empty {
                             color: #7f7f7f;
-                            padding: 7px 0;
+                            padding-top: 12px;
                             position: relative;
+
+                            @media(max-width: $screen-phone) {
+                                font-size: 16px;
+                                padding: 20px 0;
+                                height: 60px;
+                            }
 
                             &.chosen-launcher {
                                 color: black;
+
+                                @media(max-width: $screen-phone) {
+                                    background-color: rgba($dark-new, 0.05);
+                                }
                             }
                         }
                         &_item {
+                            @media(max-width: $screen-phone) {
+                                width: 100vw;
+                                left: calc(-#{$folder-container-phone-left-padding} - #{$item-list-margin});
+                                padding-left: calc(#{$folder-container-phone-left-padding} + #{$item-list-margin});
+                            }
                             &_icon {
                                 position: absolute;
                                 left: -23px;
@@ -3488,6 +3554,10 @@ $light-inprogress: #68c9fd;
                                 min-width: 20px;
                                 min-height: 20px;
                                 color: $brand-light;
+
+                                @media(max-width: $screen-phone) {
+                                    left: $item-list-margin;
+                                }
                             }
                         }
                         &_item-empty {

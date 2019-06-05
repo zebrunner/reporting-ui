@@ -5,7 +5,7 @@ import 'brace/mode/json';
 import 'brace/theme/eclipse';
 import 'angular-ui-ace';
 
-const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, LauncherService, UserService, ScmService, messageService, UtilService, API_URL) {
+const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, windowWidthService, LauncherService, UserService, ScmService, messageService, UtilService, API_URL) {
     'ngInject';
 
     $scope.ciOptions = {};
@@ -18,6 +18,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     $scope.scmAccounts = [];
     $scope.scmAccount = {};
     $scope.launcherScan = {};
+    $scope.isMobile = windowWidthService.isMobile();
 
     const TENANT = $rootScope.globals.auth.tenant;
 
@@ -43,6 +44,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     let prevLauncher;
+    let prevFolder;
 
     $scope.onLoad = function(editor) {
     };
@@ -115,6 +117,12 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         }
     };
 
+    $scope.switchFolderMobile = function(event, scmAccountId) {
+        $scope.switchFolder(event);
+        //$scope.highlightFolder(scmAccountId);
+        $scope.launcher = {};
+    };
+
     $scope.addNewGithubRepo = function(element, forceClose) {
         $scope.states.addGitRepo = forceClose ? false : ! $scope.states.addGitRepo;
         if($scope.states.addGitRepo) {
@@ -170,6 +178,11 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     $scope.applyBuilder = function(launcher, isPhone) {
+        applyBuilder(launcher);
+        $scope.cardNumber = isPhone ? 3 : 2;
+    };
+
+    function applyBuilder(launcher) {
         $scope.jsonModel = {};
         $scope.builtLauncher = {model: {}, type: {}};
         $scope.jsonModel = launcher.model.toJson();
@@ -179,7 +192,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             $scope.builtLauncher.model[key] = val;
             $scope.builtLauncher.type[key] = type;
         });
-        $scope.cardNumber = isPhone ? 3 : 2;
     };
 
     $scope.getType = function (value) {
@@ -208,13 +220,20 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         $scope.repo = {};
         $scope.connectToGitHub().then(function () {
             clearPrevLauncherElement();
+            clearPrevFolderElement();
             $scope.cardNumber = 1;
         });
     };
 
+    $scope.highlightFolder = function(id) {
+        clearPrevLauncherElement();
+        clearPrevFolderElement();
+        chooseFolderElement(id);
+    };
+
     $scope.manageFolder = function (scmAccount) {
         clearLauncher();
-        clearPrevLauncherElement();
+        $scope.highlightFolder(scmAccount.id);
         $scope.cardNumber = 2;
         $scope.scmAccount = angular.copy(scmAccount);
         $scope.launcher.scmAccountType = angular.copy(scmAccount);
@@ -248,6 +267,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                     if(! hasItems) {
                         folder.addClass(emptySearchClassName);
                     } else {
+                        folder.removeClass(emptySearchClassName);
                         const folderIcons = folder.find(".folder-container_folder_icon");
                         angular.forEach(folderIcons, function (folderIcon) {
                             $scope.switchFolder(null, folderIcon, true);
@@ -275,15 +295,26 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         closeConnectGithubBlock();
     };
 
+
     $scope.chooseLauncher = function(launcher, skipBuilderApply) {
-        clearPrevLauncherElement();
-        chooseLauncherElement(launcher.id);
+        highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
         $scope.DEFAULT_TEMPLATES.model = {};
         if(! skipBuilderApply) {
             $scope.applyBuilder(launcher);
             $scope.cardNumber = 3;
         }
+    };
+
+    $scope.selectLauncher = function (launcher) {
+        $scope.chooseLauncher(launcher, true);
+        applyBuilder(launcher);
+    };
+
+    function highlightLauncher(launcherId) {
+        clearPrevLauncherElement();
+        clearPrevFolderElement();
+        chooseLauncherElement(launcherId);
     };
 
     function chooseLauncherElement(launcherId) {
@@ -293,6 +324,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         launcherElement.addClass(chosenLauncherClass)
     };
 
+    function chooseFolderElement(folderId) {
+        const chosenFolderClass = 'chosen-launcher';
+        const folderElement = angular.element('.folder-container-' + folderId + ' .folder-container_folder_name');
+        prevFolder = folderElement;
+        folderElement.addClass(chosenFolderClass)
+    };
+
     function clearPrevLauncherElement() {
         const chosenLauncherClass = 'chosen-launcher';
         if(prevLauncher) {
@@ -300,12 +338,20 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         }
     };
 
+    function clearPrevFolderElement() {
+        const chosenFolderClass = 'chosen-launcher';
+        if(prevFolder) {
+            prevFolder.removeClass(chosenFolderClass);
+        }
+    };
+
     $scope.chooseLauncherPhone = function(launcher) {
         $scope.chooseLauncher(launcher, true);
+        $scope.cardNumber = 3;
     };
 
     $scope.navigateBack = function() {
-        $scope.cardNumber = 1;
+        $scope.cardNumber = 0;
     };
 
     $scope.createLauncher = function(launcher) {
@@ -376,6 +422,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                 const scmAccountIndex = $scope.scmAccounts.indexOfField('id', scmAccountId);
                 $scope.cardNumber = 0;
                 clearPrevLauncherElement();
+                clearPrevFolderElement();
                 clearLauncher();
                 $scope.scmAccounts.splice(scmAccountIndex, 1);
                 messageService.success('Repository was deleted');
@@ -560,7 +607,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if($scope.clientId) {
                 var host = $window.location.host;
                 var tenant = host.split('\.')[0];
-                var redirectURI = $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
+                var redirectURI = "http://localhost:3000/scm/callback";//;$window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
