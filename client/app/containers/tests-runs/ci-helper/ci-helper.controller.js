@@ -259,7 +259,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     function getScmAccountDefaultBranchName(id) {
         ScmService.getDefaultBranch(id).then(function (rs) {
             if(rs.success) {
-                $scope.launcherScan = rs.data;
+                $scope.launcherScan.branch = rs.data;
             }
         });
     };
