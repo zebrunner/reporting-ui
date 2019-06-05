@@ -699,10 +699,12 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             const success = event.success;
             const userId = event.userId;
             if(UserService.currentUser.id === userId && success) {
-                $scope.scmAccount.launchers.forEach(function (l) {
-                    const index = $scope.launchers.indexOfField('id', l.id);
-                    $scope.launchers.splice(index, 1);
-                });
+                if($scope.scmAccount.launchers) {
+                    $scope.scmAccount.launchers.forEach(function (l) {
+                        const index = $scope.launchers.indexOfField('id', l.id);
+                        $scope.launchers.splice(index, 1);
+                    });
+                }
                 Array.prototype.push.apply($scope.launchers, event.launchers);
                 const scmIndex = $scope.scmAccounts.indexOfField('id', $scope.scmAccount.id);
                 $scope.scmAccounts[scmIndex].launchers = event.launchers;
