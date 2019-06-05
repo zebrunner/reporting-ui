@@ -17,7 +17,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     $scope.testSuites = [];
     $scope.scmAccounts = [];
     $scope.scmAccount = {};
-    $scope.launcherScan = {};
+    $scope.launcherScan = {
+        branch: 'master'
+    };
     $scope.isMobile = windowWidthService.isMobile();
 
     const TENANT = $rootScope.globals.auth.tenant;
@@ -232,6 +234,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     $scope.manageFolder = function (scmAccount) {
+        getScmAccountDefaultBranchName(scmAccount.id);
         clearLauncher();
         $scope.highlightFolder(scmAccount.id);
         $scope.cardNumber = 2;
@@ -251,6 +254,14 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         //clearLauncher();
         //$scope.launcher = angular.copy(launcher);
         $scope.cardNumber = 2;
+    };
+
+    function getScmAccountDefaultBranchName(id) {
+        ScmService.getDefaultBranch(id).then(function (rs) {
+            if(rs.success) {
+                $scope.launcherScan = rs.data;
+            }
+        });
     };
 
     $scope.onFilterSearchChange = function(value) {
@@ -312,9 +323,11 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     function highlightLauncher(launcherId) {
-        clearPrevLauncherElement();
-        clearPrevFolderElement();
-        chooseLauncherElement(launcherId);
+        $timeout(function () {
+            clearPrevLauncherElement();
+            clearPrevFolderElement();
+            chooseLauncherElement(launcherId);
+        }, 0, false);
     };
 
     function chooseLauncherElement(launcherId) {

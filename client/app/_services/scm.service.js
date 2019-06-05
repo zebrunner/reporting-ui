@@ -14,6 +14,7 @@
         service.updateScmAccount = updateScmAccount;
         service.getClientId = getClientId;
         service.getAllScmAccounts = getAllScmAccounts;
+        service.getDefaultBranch = getDefaultBranch;
         service.deleteScmAccount = deleteScmAccount;
         service.exchangeCode = exchangeCode;
         service.getRepositories = getRepositories;
@@ -31,6 +32,10 @@
 
         function getAllScmAccounts() {
             return $http.get(API_URL + '/api/scm/accounts').then(UtilService.handleSuccess, UtilService.handleError('Unable to get list of scm accounts'));
+        };
+
+        function getDefaultBranch(id) {
+            return $http.get(API_URL + '/api/scm/accounts/' + id + '/defaultBranch').then(UtilService.handleSuccess, UtilService.handleError('Unable to get default branch'));
         };
 
         function deleteScmAccount(id) {
