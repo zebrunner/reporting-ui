@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const SearchModalController = function SearchModalController(onApply, environments, allProjects, platforms, onReset, testsRunsService, windowWidthService, DEFAULT_SC, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, $mdDialog) {
     'ngInject';

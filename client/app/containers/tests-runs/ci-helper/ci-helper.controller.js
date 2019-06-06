@@ -234,7 +234,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     $scope.manageFolder = function (scmAccount) {
-        getScmAccountDefaultBranchName(scmAccount.id);
+        if(scmAccount.id !== $scope.scmAccount.id) {
+            getScmAccountDefaultBranchName(scmAccount.id);
+        }
         clearLauncher();
         $scope.highlightFolder(scmAccount.id);
         $scope.cardNumber = 2;
@@ -312,9 +314,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         $scope.launcher = angular.copy(launcher);
         $scope.DEFAULT_TEMPLATES.model = {};
         if(! skipBuilderApply) {
-            $scope.applyBuilder(launcher);
-            $scope.cardNumber = 3;
+            switchToLauncherPreview(launcher);
         }
+    };
+
+    function switchToLauncherPreview(launcher) {
+        $scope.applyBuilder(launcher);
+        $scope.cardNumber = 3;
     };
 
     $scope.selectLauncher = function (launcher) {
@@ -396,6 +402,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                     const scmAccountLauncherIndex = scmAccount.launchers.indexOfField('id', l.id);
                     scmAccount.launchers.splice(scmAccountLauncherIndex, 1, l);
                 }
+                $timeout(function () {
+                    switchToLauncherPreview(l);
+                }, 0, false);
                 messageService.success('Launcher was updated');
             } else {
                 messageService.error(rs.message);
@@ -680,6 +689,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         ScmService.updateScmAccount(scmAccount).then(function (rs) {
             if(rs.success) {
                 $scope.scmAccounts.push(rs.data);
+                $scope.scmAccount = rs.data;
                 $scope.launcher.scmAccountType = rs.data;
                 $scope.organizations = [];
                 $scope.repositories = [];
@@ -688,6 +698,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                 // switch folder if new
                 $timeout(function () {
                     const newScmAccountElement = angular.element('.folder-container-' + rs.data.id + ' .folder-container_folder_icon');
+                    $scope.manageFolder($scope.scmAccount);
                     $scope.switchFolder(null, newScmAccountElement, true);
                 }, 0, false);
             } else {

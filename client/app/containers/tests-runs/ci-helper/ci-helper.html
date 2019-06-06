@@ -3,7 +3,7 @@
         <zf-modal-helper-container class="ci-runner-container_helper" ng-show="! isMobile || cardNumber === 0">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
-                <button ng-click="addRepo();" class="zf-button zf-chip-button">
+                <button type="button" ng-click="addRepo();" class="zf-button zf-chip-button">
                     <i class="material-icons">add</i>
                     ADD REPO
                 </button>
@@ -20,7 +20,8 @@
                 <ul class="folder-container folder-container-{{scmAccount.id}}" ng-repeat="scmAccount in scmAccounts | orderBy: 'repositoryName' track by scmAccount.id">
                     <li class="folder-container_folder">
                         <i class="material-icons folder-container_folder_icon hide-phone" ng-click="switchFolder($event)">arrow_drop_down</i>
-                        <div class="folder-container_folder_name hide-phone" ng-click="manageFolder(scmAccount)">{{scmAccount.repositoryName}}</div>
+                        <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount)">settings</i>
+                        <div class="folder-container_folder_name hide-phone" ng-click="switchFolder($event)">{{scmAccount.repositoryName}}</div>
                         <div class="folder-container_folder_name show-phone" ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
                     </li>
                     <li class="folder-container_item">
@@ -120,7 +121,7 @@
                 <div class="ci-runner-container_content_block __lancher-add">
                     <div class="ci-runner-container_content_block_title">
                         <span ng-if="! launcher.id">Add template manually</span>
-                        <span ng-if="launcher.id">Edit template</span>
+                        <span ng-if="launcher.id">{{launcher.name}}</span>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <zf-input-container class="__input-container">
@@ -130,6 +131,7 @@
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
                         <zf-input-container>
+                            <label>Model</label>
                             <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
                             <md-input-container>
                                 <label>Platform</label>
@@ -169,7 +171,11 @@
             </div>
             <div class="ci-runner-container_content_builder zf-display-table">
                 <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}" ng-repeat="(key, item) in jsonModel track by $index">
-                    <div class="zf-label">{{key}}</div>
+                    <div class="zf-label">
+                        <show-part text="key" limit="20">
+                            <md-tooltip md-direction="top">{{key}}</md-tooltip>
+                        </show-part>
+                    </div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">
                         <zf-input-container>
                             <input type="number" ng-if="builtLauncher.type[key] === 'int'" ng-model="builtLauncher.model[key]"/>
