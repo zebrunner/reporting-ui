@@ -119,10 +119,10 @@
             if (projects && projects.length) {
                 defaultCriteria = {
                     ...defaultCriteria,
-                    page: _searchParams.page,
                     projectNames: projects.map(project => project.name),
                 };
             }
+            defaultCriteria.page = _searchParams.page;
 
             return !isFilterActive() && !angular.equals(_searchParams, defaultCriteria);
         }
