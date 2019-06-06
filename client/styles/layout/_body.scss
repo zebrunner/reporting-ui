@@ -2859,7 +2859,6 @@ $light-inprogress: #68c9fd;
 }
 
 .ci-runner-container {
-    height: 576px !important;
     * {
         font-weight: 500;
         font-size: 14px;
@@ -3219,11 +3218,7 @@ $light-inprogress: #68c9fd;
         }
 
         &_builder {
-            //padding-bottom: 60px;
-            display: block !important;
-            overflow-y: auto;
-            // title top + button heights
-            height: calc(100% - 41px - 36px);
+            padding-bottom: 60px;
 
             @media(max-width: $screen-phone) {
                 display: block !important;

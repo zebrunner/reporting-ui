@@ -28,7 +28,7 @@ $red: #d2333b;
         font-size: 0 !important;
 
         @media(max-width: $screen-phone) {
-            height: 100%;
+            height: 100% !important;
         }
 
         .md-dialog-content > div[ng-transclude] {
