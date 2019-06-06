@@ -193,6 +193,13 @@
                 @media (max-width: 480px) {
                     width: 100vw;
                 }
+                &.active-highlight:before {
+                    content: "";
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    animation: change-color 3s ease-in-out 1;
+                }
                 &-empty,
                 &-loading {
                     padding: 20px !important;
@@ -496,4 +503,10 @@
         padding-top: 0 !important;
         padding-bottom: 0 !important;
     }
+}
+
+@keyframes change-color {
+    0% { background-color: transparent; }
+    25% { background-color: rgba(0,0,0,.05); }
+    100% { background-color: transparent; }
 }

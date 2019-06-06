@@ -7,27 +7,54 @@
 
     function TestService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
         const local = {
-            tests: null
+            tests: null,
+            previousUrl: null,
         }
         const service = {
-            searchTests: searchTests,
-            updateTest: updateTest,
-            getTestCaseWorkItemsByType: getTestCaseWorkItemsByType,
-            createTestWorkItem: createTestWorkItem,
-            deleteTestWorkItem: deleteTestWorkItem,
-            getJiraTicket: getJiraTicket,
-            getConnectionToJira: getConnectionToJira,
+            searchTests,
+            updateTest,
+            getTestCaseWorkItemsByType,
+            createTestWorkItem,
+            deleteTestWorkItem,
+            getJiraTicket,
+            getConnectionToJira,
+            subscribeUrlChanging,
             get getTests() {
                 return local.tests;
             },
             set setTests(tests) {
                 local.tests = tests;
             },
-            getTest: getTest,
-            clearDataCache: clearDataCache,
+            getTest,
+            clearDataCache,
+            locationChange: null,
+            clearUrlCache,
+            getPreviousUrl,
         }
 
         return service;
+
+        function subscribeUrlChanging() {
+            service.locationChange = $rootScope.$on("$locationChangeStart", function (event, newUrl, oldUrl) {
+                local.previousUrl = oldUrl;
+            })
+            
+        }
+
+        function getPreviousUrl() {
+            let url = local.previousUrl;
+
+            if (url) {
+                service.clearUrlCache();
+            }
+            
+            return url;
+        }
+
+        function clearUrlCache() {
+            local.previousUrl = null;
+            service.locationChange();
+        }
 
         function getTest(id) {
             return local.tests.find(function(test) {
@@ -40,7 +67,7 @@
         }
 
         function searchTests(criteria) {
-        	return $httpMock.post(API_URL + '/api/tests/search', criteria).then(UtilService.handleSuccess, UtilService.handleError('Unable to search tests'));
+            return $httpMock.post(API_URL + '/api/tests/search', criteria).then(UtilService.handleSuccess, UtilService.handleError('Unable to search tests'));
         }
 
         function updateTest(test) {

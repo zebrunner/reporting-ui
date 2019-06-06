@@ -738,12 +738,14 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
             vm.wsSubscription && vm.wsSubscription.unsubscribe();
             closeTestsWebsocket();
         });
+        TestService.subscribeUrlChanging();
 
         const onTransStartSubscription = $transitions.onStart({}, function(trans) {
             const toState = trans.to();
 
             if (toState.name !== 'tests.runDetails') {
                 TestService.clearDataCache();
+                TestService.clearUrlCache();
             }
             onTransStartSubscription();
         });
