@@ -61,7 +61,7 @@ body {
 
 #main-fab, .lonely-fab button {
     position: fixed;
-    z-index: 3;
+    z-index: 6;
     @media (min-width: $screen-sm) {
         right: 90px;
         bottom: 70px;
