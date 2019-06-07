@@ -16,39 +16,8 @@ md-backdrop.md-dialog-backdrop{
 
 md-dialog-actions {
     .md-button {
-        border-radius: 4px;
-        box-shadow: none;
         margin-right: 0;
         margin-left: 12px;
-        font-size: 14px;
-        min-width: 80px;
-        &.md-primary {
-            &,
-            &.md-raised {
-                background-color: $medium-teal-light-new;
-                color: white;
-            }
-            &.md-raised {
-                &:not([disabled]) {
-                    box-shadow: none;
-                    &.md-focused,
-                    &:hover {
-                        background-color: $medium-teal-light-new;
-                    }
-                }
-            }
-        }
-        &.md-raised {
-            background-color: $fog-gray;
-            color: $dark-coal-new;
-            &:not([disabled]) {
-                box-shadow: none;
-                &.md-focused,
-                &:hover {
-                    background-color: rgba($dark-coal-new, .3);
-                }
-            }
-        }
     }
 }
 
@@ -171,5 +140,96 @@ md-toast {
     }
     &__templates {
         padding-top: 9px;
+    }
+}
+
+//BUTTONS 
+@mixin default-button($background, $color, $hoverBg) {
+    &:not([disabled]) {
+        background-color: $background;
+        color: $color;
+        box-shadow: none;
+        &:hover {
+            background-color: $hoverBg;
+        }
+    }
+}
+
+.md-button, .md-button.md-focused {
+    border-radius: 4px;
+    margin-right: 0;
+    font-size: 14px;
+    padding: 11px 12px;
+    line-height: 1;
+    letter-spacing: 0.4px;
+    min-width: 80px;
+    @include default-button(transparent, $gray-base, rgba($dark-new, .07));
+    &[disabled], &[disabled]:hover {
+        background-color: transparent;
+        color: rgba($gray-base, 0.25);
+    }
+    &.md-raised {
+        &, &:active {
+            @include default-button(rgba($dark-new, .07), $gray-base, rgba($dark-new, .12));
+        }
+        &.md-primary {
+            @include default-button($medium-teal-light-new, $white, $brand-primary);
+        }
+        &.md-warn {
+            @include default-button($red-new, $white, $faded-red);
+        }
+        &[disabled], &[disabled]:hover {
+            background-color: rgba($dark-new, .07);
+            color: rgba($gray-base, 0.25);
+        }
+    }
+    &.md-primary {
+        @include default-button(transparent, $medium-teal-light-new, rgba($dark-new, .07));
+    }
+    &.md-warn {
+        @include default-button(transparent, $red-new, rgba($dark-new, .07));
+    }
+}
+
+md-dialog .md-actions, md-dialog md-dialog-actions {
+    padding: 0 20px 10px 20px;
+}
+
+//FAB BUTTONS
+.md-button.md-primary.md-fab {
+    &, &.md-focused {
+        font-size: 20px;
+        color: #ffffff;
+        border-radius: 50%;
+        height: 56px;
+        min-height: 56px;
+        width: 56px;
+        min-width: 56px;
+        background-color: #01a99a;
+        &, &:not([disabled]) {
+            &:hover {
+                background-color: #20887f;
+            }
+        }
+        &[disabled]{
+            background-color: #edeff0;
+            color: rgba(0, 0, 0, 0.4);
+            .search-fab {
+                filter: invert(0%);
+                opacity: .4;
+            }
+        }
+        .search-fab {
+            margin: auto;
+            height: 20px;
+            filter: invert(100%);
+            width: 20px;
+            &._list {
+                background: url('../assets/images/list.svg') center no-repeat;
+            }
+            &._checked-list {
+                background: url('../assets/images/check_list.svg') center no-repeat;
+            }
+        }
     }
 }
