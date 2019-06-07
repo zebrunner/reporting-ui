@@ -89,6 +89,18 @@ md-checkbox {
             }
         }
     }
+    &[disabled] {
+        &:not(.md-checked) {
+            .md-icon {
+                border-color: rgba(#000000, .25);
+            }
+        }
+        &.md-checked {
+            .md-icon {
+                background-color: rgba(#000000, .25);
+            }
+        }
+    }
 }
 
 md-select-menu[multiple] md-option.md-checkbox-enabled {
@@ -127,92 +139,21 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     }
 }
 
-.md-button, .md-button.md-focused {
-    max-height: 36px;
-    border-radius: 4px;
-    box-shadow: none;
-    margin-right: 0;
-    font-size: 14px;
-    padding: 11px 12px;
-    line-height: 1;
-    letter-spacing: 0.4px;
-    min-width: 80px;
-    background-color: transparent;
-    color: #000000;
-    &:not([disabled]):hover {
-        background-color: rgba($dark-new, .07);
-    }
-    &[disabled], &[disabled]:hover {
-        background-color: transparent;
-        color: rgba(0, 0, 0, 0.25);
-    }
-    &.md-raised {
-        &:not([disabled]) {
-            &, &:active {
-                background-color: rgba($dark-new, .07);
-                box-shadow: none;
-                &:hover, md-dialog-actions &:hover {
-                    background-color: rgba($dark-new, .12);
-                }
-            }
-        }
-        &.md-primary {
-            background-color: $medium-teal-light-new;
-            color: #fefefe;
-            &:not([disabled]):hover {
-                md-dialog-actions &, & {
-                    background-color: #20887f;
-                }
-            }
-        }
-        &.md-warn {
-            background-color: #bf3744;
-            color: #ffffff;
-            &:not([disabled]):hover, md-dialog-actions &:not([disabled]):hover {
-                background-color: #9d2e38;
-            }
-        }
-        &, &.md-primary, &.md-warn {
-            &[disabled], &[disabled]:hover {
-                background-color: rgba($dark-new, .07);
-                color: rgba(0, 0, 0, 0.25);
-            }
-        }
-    }
-    &.md-primary {
-        color:  $medium-teal-light-new;
-        &.md-fab {
-            &, &.md-focused {
-                font-size: 20px;
-                color: #ffffff;
-                border-radius: 50%;
-                height: 56px;
-                min-height: 56px;
-                width: 56px;
-                min-width: 56px;
-                background-color: #01a99a;
-                &, &:not([disabled]) {
-                    &:hover {
-                        background-color: #20887f;
-                    }
-                }
-            }
-            &[disabled = "disabled"]{
-                background-color: #edeff0;
-                color: rgba(0, 0, 0, 0.4);
-                .search-fab {
-                    filter: invert(0%);
-                    opacity: .4;
-                }
-            }
-        }
-    }
-    &.md-warn {
-        color:  #bf3744;
-    }
-}
+// .md-icon-button {
+//     &.close {
+//         md-icon {
+//             color: rgba(#000000, .5);
+//             &:hover {
+//                 color: rgba(#000000, .9);
+//             }
+//         }
+//         text-shadow: none;
+//     }
+//     min-width: 0;
+//     max-width: 40px;
+// }
 
-.zf-header-button {
+.zf-primary-button {
     float: right;
     height: 32px;
     font-size: 0;
@@ -223,7 +164,10 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     border: 1px solid $medium-teal-light-new;
     background-color: white;
     transition: all .25s;
-
+    
+    .page-profile & {
+        padding: 6px 13px 6px 10px;
+    }
     .material-icons {
         color: $medium-teal-light-new;
         font-size: 22px;
@@ -243,6 +187,25 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         text-transform: uppercase;
     }
 
+    .nav-container.bg-dark .nav & {
+        float: none;
+        color: $medium-teal-light-new;
+        border: 1px solid $medium-teal-light-new;
+        background-color: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 11px 18px 10px;
+        &:hover {
+            color: $medium-teal-light-new-hover;
+            border: solid 1px $medium-teal-light-new-hover;
+        }
+        .material-icons {
+            font-size: 22px;
+            line-height: 18px;
+            margin: 0 2px 0 0;
+        }
+    }
     &:hover {
         border-color: $medium-teal-light-new-hover;
         color: $medium-teal-light-new-hover;
@@ -317,21 +280,6 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
                 display: none !important; //TODO: find who adds inline styles
             }
         }
-    }
-}
-
-.search-fab {
-    margin: auto;
-    height: 25px;
-    filter: invert(100%);
-    width: 18px;
-    &._list {
-        background: url('../assets/images/list.svg') center no-repeat;
-        background-size: cover;
-    }
-    &._checked-list {
-        background: url('../assets/images/check_list.svg') center no-repeat;
-        background-size: cover;
     }
 }
 

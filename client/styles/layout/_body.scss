@@ -3658,7 +3658,10 @@ $light-inprogress: #68c9fd;
 
 .fixed-page-header._widget-placement {
     .fixed-page-header-container_button {
-        margin-left: 17px;
+        margin-left: 5px;
+        button {
+            margin-left: 12px;
+        }
     }
 }
 
@@ -3812,7 +3815,6 @@ users-component md-tab-item.md-disabled {
     }
 
     md-dialog-actions {
-        padding: 0 20px 12px 20px;
 
         button {
             box-shadow: none !important;
@@ -3871,7 +3873,6 @@ users-component md-tab-item.md-disabled {
     }
 
     md-dialog-actions {
-        padding: 0 20px 20px 20px;
 
         button {
             margin: 0;
