@@ -2529,7 +2529,7 @@ $light-inprogress: #68c9fd;
     width: calc(100% - 60px);
     right: 0;
     background-color: white;
-    z-index: 79;
+    z-index: $zindex-fixed;
     
     @media(max-width: $screen-phone) {
         width: calc(100% - 60px);
