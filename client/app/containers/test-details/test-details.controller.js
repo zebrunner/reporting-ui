@@ -243,7 +243,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
     function getSelectedTestId() {
         let successOldUrl = TestService.getPreviousUrl();
         
-        return successOldUrl && successOldUrl.includes('/info/') ? successOldUrl.split('/')[successOldUrl.split('/').length - 1] : successOldUrl;
+        return successOldUrl && successOldUrl.includes('/info/') ? successOldUrl.split('/').pop() : successOldUrl;
     }
 
     function loadTests(testRunId) {
