@@ -8,8 +8,8 @@ $red: #d2333b;
     overflow: auto !important;
     display: block;
     text-align: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-top: 80px;
+    padding-bottom: 20px;
 
     @media(max-width: $screen-phone) {
         padding: 0 !important;
@@ -34,7 +34,7 @@ $red: #d2333b;
         .md-dialog-content > div[ng-transclude] {
             display: flex;
             position: relative;
-            min-height: 576px;
+            min-height: 718px;
         }
 
         &_helper, &_content {
