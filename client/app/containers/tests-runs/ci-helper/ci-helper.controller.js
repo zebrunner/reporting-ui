@@ -234,13 +234,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     $scope.manageFolder = function (scmAccount) {
+        $scope.scmAccount = angular.copy(scmAccount);
         if(scmAccount.id !== $scope.scmAccount.id) {
             getScmAccountDefaultBranchName(scmAccount.id);
         }
         clearLauncher();
         $scope.highlightFolder(scmAccount.id);
         $scope.cardNumber = 2;
-        $scope.scmAccount = angular.copy(scmAccount);
         $scope.launcher.scmAccountType = angular.copy(scmAccount);
     };
 
@@ -629,8 +629,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if($scope.clientId) {
                 var host = $window.location.host;
                 var tenant = host.split('\.')[0];
-                var redirectURI = 'http://localhost:3000/scm/callback';//$window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
-                //var redirectURI = $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
+                var redirectURI = $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;

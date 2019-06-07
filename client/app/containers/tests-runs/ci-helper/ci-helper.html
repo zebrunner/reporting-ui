@@ -1,5 +1,5 @@
 <form name="launcher_form">
-    <zf-modal class="ci-runner-container">
+    <zf-modal modal-class="ci-runner" class="ci-runner-container">
         <zf-modal-helper-container class="ci-runner-container_helper" ng-show="! isMobile || cardNumber === 0">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
@@ -20,7 +20,7 @@
                 <ul class="folder-container folder-container-{{scmAccount.id}}" ng-repeat="scmAccount in scmAccounts | orderBy: 'repositoryName' track by scmAccount.id">
                     <li class="folder-container_folder">
                         <i class="material-icons folder-container_folder_icon hide-phone" ng-click="switchFolder($event)">arrow_drop_down</i>
-                        <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount)">settings</i>
+                        <i class="material-icons folder-container_folder_icon_settings hide-phone" ng-click="manageFolder(scmAccount)">settings</i>
                         <div class="folder-container_folder_name hide-phone" ng-click="switchFolder($event)">{{scmAccount.repositoryName}}</div>
                         <div class="folder-container_folder_name show-phone" ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
                     </li>
@@ -99,6 +99,9 @@
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-class="{'__info-edit-mode': launcher.id}" ng-if="cardNumber === 2">
             <ng-form ng-if="! launcher.id" name="scanInfo">
                 <div class="ci-runner-container_content_block">
+                    <div ng-if="scmAccount.id" class="ci-runner-container_content_block_title __ci-runner-lg-title __scan-repo">
+                        <span>{{scmAccount.repositoryName}}</span>
+                    </div>
                     <div class="ci-runner-container_content_block_title">
                         Select branch to add templates
                     </div>
@@ -119,8 +122,10 @@
             <div ng-if="! launcher.id" class="divider"></div>
             <ng-form name="manualInfo">
                 <div class="ci-runner-container_content_block __lancher-add">
-                    <div class="ci-runner-container_content_block_title">
-                        <span ng-if="! launcher.id">Add template manually</span>
+                    <div ng-if="! launcher.id" class="ci-runner-container_content_block_title">
+                        <span>Add template manually</span>
+                    </div>
+                    <div ng-if="launcher.id" class="ci-runner-container_content_block_title __ci-runner-lg-title">
                         <span ng-if="launcher.id">{{launcher.name}}</span>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
@@ -162,7 +167,7 @@
             </ng-form>
         </zf-modal-content-container>
         <zf-modal-content-container class="ci-runner-container_content" ng-if="cardNumber === 3 || cardNumber === 4" ng-show="launcher">
-            <div class="ci-runner-container_content_title">
+            <div class="ci-runner-container_content_title __ci-runner-lg-title">
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
                 <div class="ci-runner-container_content_title_action">

@@ -31,6 +31,9 @@
                 if(mdDialogContainerElement) {
                     mdDialogContainerElement.addClass('zf-md-dialog-container');
                 }
+                if(attrs.modalClass) {
+                    mdDialogContainerElement.addClass(attrs.modalClass);
+                }
             }
         };
 

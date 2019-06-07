@@ -2858,11 +2858,28 @@ $light-inprogress: #68c9fd;
     }
 }
 
+.ci-runner {
+    padding-top: 80px !important;
+    padding-bottom: 20px !important;
+}
+.__ci-runner-lg-title {
+    height: 20px !important;
+    line-height: 20px !important;
+    * {
+        font-size: 20px !important;
+        font-weight: normal !important;
+    }
+}
 .ci-runner-container {
+    //height: 576px !important;
     * {
         font-weight: 500;
         font-size: 14px;
         letter-spacing: 0.1px;
+    }
+
+    .md-dialog-content > [ng-transclude] {
+        min-height: 718px !important;
     }
 
     $container-margin-bottom: 12px;
@@ -2974,8 +2991,17 @@ $light-inprogress: #68c9fd;
         &_block {
             &_title {
                 height: 14px;
+                font-weight: normal;
                 line-height: 12px;
-                margin-bottom: 30px;
+                margin-bottom: 34px;
+
+                &.__scan-repo {
+                    margin-bottom: 24px;
+                }
+
+                * {
+                    font-weight: normal;
+                }
             }
 
             &.__lancher-add {
@@ -2997,7 +3023,7 @@ $light-inprogress: #68c9fd;
                 opacity: 1;
             }
             &, > *, .zf-show-part > * {
-                font-weight: 500 !important;
+                font-weight: normal !important;
                 letter-spacing: 0.1px;
                 color: black;
                 font-size: 14px;
@@ -3017,7 +3043,7 @@ $light-inprogress: #68c9fd;
                     font-size: 18px;
                     color: #7f7f7f;
                     left: 13px;
-                    top: -13px;
+                    top: -15px;
                 }
             }
 
@@ -3140,7 +3166,7 @@ $light-inprogress: #68c9fd;
                 margin-bottom: 8px !important;
             }
             &_editor {
-                min-height: 300px;
+                min-height: 197px;
             }
             .zf-input-container {
                 position: relative;
@@ -3219,6 +3245,13 @@ $light-inprogress: #68c9fd;
 
         &_builder {
             padding-bottom: 60px;
+            /*display: block !important;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            position: relative;
+            // title top + button heights
+            height: calc(100% - 41px - 36px);
+            margin-left: -20px;*/
 
             @media(max-width: $screen-phone) {
                 display: block !important;
