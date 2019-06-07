@@ -2880,6 +2880,10 @@ $light-inprogress: #68c9fd;
 
     .md-dialog-content > [ng-transclude] {
         min-height: 718px !important;
+
+        @media(max-width: $screen-phone) {
+            min-height: auto !important;
+        }
     }
 
     $container-margin-bottom: 12px;
