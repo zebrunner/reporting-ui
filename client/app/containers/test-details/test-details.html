@@ -72,31 +72,31 @@
                                         </div>
                                     </th>
                                 </tr>
-                                <tr ng-attr-id="test_{{test.id}}" class="test" ng-repeat-end="ng-repeat-end" ng-if="test.show && test.showByStatus && $ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName" data-ng-repeat="(id, test) in $ctrl.testGroupMode === 'PLAIN' ? $ctrl.testRun.tests : tests | orderObjectBy:$ctrl.testGroups.predicate:$ctrl.testGroups.reverse track by $index" ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED'}" data-ng-hide="$ctrl.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED'">
+                                <tr ng-attr-id="test_{{test.id}}" class="test" ng-repeat-end="ng-repeat-end" ng-if="test.show && test.showByStatus && $ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName" data-ng-repeat="(id, test) in $ctrl.testGroupMode === 'PLAIN' ? $ctrl.testRun.tests : tests | orderObjectBy:$ctrl.testGroups.predicate:$ctrl.testGroups.reverse track by $index" ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED', 'active-highlight': test.id === $ctrl.testId}" data-ng-hide="$ctrl.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED'">
                                     <td class="test-info">
                                         <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{test.name}}
                                             <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></p>
                                         <div class="test-info__wrapper">
-                      <span data-ng-if="test.finishTime && (test.finishTime - test.startTime)/1000 > 0 && test.status !== 'QUEUED'" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                        <i class="material-icons">schedule</i>
-                        <span>{{(test.finishTime - test.startTime)/1000 | number:0}} seconds</span>
-                      </span>
+                                            <span data-ng-if="test.finishTime && (test.finishTime - test.startTime)/1000 > 0 && test.status !== 'QUEUED'" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                <i class="material-icons">schedule</i>
+                                                <span>{{(test.finishTime - test.startTime)/1000 | number:0}} seconds</span>
+                                            </span>
                                             <span name="testOwner" data-ng-if="test.owner" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                        <i class="fa fa-user" aria-hidden="true"></i>
-                        {{test.owner}}
-                      </span>
+                                                <i class="fa fa-user" aria-hidden="true"></i>
+                                                {{test.owner}}
+                                            </span>
                                             <span name="secondaryOwner" data-ng-if="test.secondaryOwner" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                        <i class="fa fa-user" aria-hidden="true"></i>
-                        {{test.secondaryOwner}}</span>
+                                                <i class="fa fa-user" aria-hidden="true"></i>
+                                                {{test.secondaryOwner}}</span>
                                             <span name="device" data-ng-if="test.testConfig.device" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                        <i class="fa fa-mobile" aria-hidden="true"></i>
-                        {{test.testConfig.device}}</span>
+                                                <i class="fa fa-mobile" aria-hidden="true"></i>
+                                                {{test.testConfig.device}}</span>
                                         </div>
                                         <div ng-if="test.tags && test.tags.length" class="test-info_tags">
-                      <span class="test-info_tags_tag" ng-repeat="tag in test.tags">
-                        <span>#</span>
-                        {{tag.value}}
-                      </span>
+                                            <span class="test-info_tags_tag" ng-repeat="tag in test.tags">
+                                                <span>#</span>
+                                                {{tag.value}}
+                                            </span>
                                         </div>
                                         <div class="result_error {{test.status}} {{main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
                                             <div>
@@ -129,10 +129,10 @@
                                     </td>
                                     <td class="test-label">
                                         <span data-ng-repeat="issue in test.workItems" class="work-items">
-                                          <a name="taskTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.isToolConnected('JIRA') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</a>
-                                          <span name="taskTicket" data-ng-if="!$ctrl.isToolConnected('JIRA') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</span>
-                                          <a name="bugTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.isToolConnected('JIRA') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</a>
-                                          <span name="bugTicket" data-ng-if="!$ctrl.isToolConnected('JIRA') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</span>
+                                            <a name="taskTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.isToolConnected('JIRA') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</a>
+                                            <span name="taskTicket" data-ng-if="!$ctrl.isToolConnected('JIRA') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</span>
+                                            <a name="bugTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.isToolConnected('JIRA') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</a>
+                                            <span name="bugTicket" data-ng-if="!$ctrl.isToolConnected('JIRA') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</span>
                                         </span>
                                     </td>
                                     <td class="test-settings">
@@ -170,10 +170,10 @@
                                 </tr>
                                 <tr name="testLoading" md-row="md-row">
                                     <td md-cell="md-cell" colspan="4" class="test-loading" data-ng-show="$ctrl.testsLoading">
-                    <span>
-                      <md-progress-circular md-mode="indeterminate" md-diameter="20px" class="tests-loading-spinner"></md-progress-circular>
-                      Tests are loading...
-                    </span>
+                                        <span>
+                                        <md-progress-circular md-mode="indeterminate" md-diameter="20px" class="tests-loading-spinner"></md-progress-circular>
+                                        Tests are loading...
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && ($ctrl.empty || $ctrl.testsFilteredEmpty) && $ctrl.testRun.status !== 'IN_PROGRESS'">

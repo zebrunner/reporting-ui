@@ -5,7 +5,7 @@ import IssuesModalController from '../../components/modals/issues/issues.control
 import testDetailsFilterController from './test-details-modal/filter-modal.contoller';
 import testDetailsTemplate from './test-details-modal/filter-modal.html';
 
-const testDetailsController = function testDetailsController($scope, $rootScope, $q, TestService, API_URL,
+const testDetailsController = function testDetailsController($scope, $timeout, $rootScope, $q, TestService, API_URL,
                                                              modalsService, $state, $transitions,
                                                              UtilService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
     'ngInject';
@@ -32,6 +32,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         subscriptions: {},
         zafiraWebsocket: null,
         showRealTimeEvents: true,
+        testId: null,
         isMobile: windowWidthService.isMobile,
 
         isDetailsFilterActive: testDetailsService.isDetailsFilterActive,
@@ -67,6 +68,53 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         initTests();
         fillTestRunMetadata();
         bindEvents();
+    }
+
+    function highlightTest() {
+        const activeTest = getTestById(vm.testId);
+        
+        if (activeTest) {
+            $timeout(function() {
+                const el = document.getElementById('test_' + vm.testId);
+
+                vm.testId = parseInt(vm.testId);
+                if (!isElementInViewport(el)) {
+                    const testRunHeader = document.querySelector('.p-tests-run-details__sticky-header').offsetHeight;
+                    const pageHeader = document.querySelector('.fixed-page-header').offsetHeight;
+                    const headerOffset = testRunHeader + pageHeader;
+                    const elOffsetTop = $(el).offset().top;
+
+                    $('html,body').animate({ scrollTop: elOffsetTop - headerOffset }, 'slow');
+                } 
+                $timeout(function() {
+                    vm.testId = null;
+                }, 4000);
+            }, 500);
+        }
+    }
+
+    function getTestIndexById(id) {
+        return Object.keys(vm.testRun.tests).findIndex((testId) => { return testId === id; });
+    }
+
+    function getTestById(id) {
+        let test;
+        const index = getTestIndexById(id);
+        
+        index !== -1 && (test = vm.testRun.tests[id]);
+
+        return test;
+    }
+
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
     }
 
     function initJiraSettings() {
@@ -180,6 +228,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
 
         loadTests(vm.testRun.id)
         .then(function () {
+            vm.testId = getSelectedTestId();
+            vm.testId && highlightTest();
             vm.testGroups.group.common.data.all = vm.testRun.tests;
             showTestsByTags(vm.testRun.tests, testGroupDataToStore.tags);
             showTestsByStatuses(vm.testRun.tests, testGroupDataToStore.statuses);
@@ -188,6 +238,17 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         .finally(() => {
             vm.testsLoading = false;
         });
+    }
+
+    function getSelectedTestId() {
+        let successOldUrl = TestService.getPreviousUrl();
+
+        if (successOldUrl) {
+            TestService.clearPreviousUrl();
+            TestService.unsubscribeFromLocationChangeStart();
+        }
+        
+        return successOldUrl && successOldUrl.includes('/info/') ? successOldUrl.split('/').pop() : successOldUrl;
     }
 
     function loadTests(testRunId) {
