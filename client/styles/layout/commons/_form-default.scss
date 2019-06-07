@@ -159,7 +159,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
 }
 
 md-radio-button {
-    &:not([disabled]).md-primary.md-checked {
+    &:not([disabled]).md-checked {
         .md-off {
             border-color: rgba(#000000, .9);
         }
@@ -170,12 +170,34 @@ md-radio-button {
             border-color: rgba(#000000, .7);
         }
     }
-    &:not([disabled]).md-primary {
+    &:not([disabled]) {
         .md-on {
             border-color: rgba(#000000, .9);
             background-color: rgba(#000000, .9);
         }
     }
+
+    &.md-primary {
+        &:not([disabled]).md-checked {
+            .md-off {
+                border-color: rgba(#ffffff, .9);
+            }
+        }
+        .md-off {
+            border-color: rgba(#ffffff, .5);
+            &:hover {
+                border-color: rgba(#ffffff, .7);
+            }
+        }
+        
+        &:not([disabled]) {
+            .md-on {
+                border-color: rgba(#ffffff, .9);
+                background-color: rgba(#ffffff, .9);
+            }
+        }
+    }
+    
     &[disabled], &[disabled].md-primary,  &[disabled].md-primary.md-checked {
         border-color:#dfe3e5;
         .md-off {
