@@ -30,6 +30,7 @@
             locationChange: null,
             clearUrlCache,
             getPreviousUrl,
+            unsubscribeUrlChanging
         }
 
         return service;
@@ -42,18 +43,17 @@
         }
 
         function getPreviousUrl() {
-            let url = local.previousUrl;
-
-            if (url) {
-                service.clearUrlCache();
-            }
-            
-            return url;
+            return local.previousUrl;;
         }
 
         function clearUrlCache() {
             local.previousUrl = null;
-            service.locationChange();
+        }
+
+        function unsubscribeUrlChanging() {
+            if (service.locationChange) {
+                service.locationChange();
+            }
         }
 
         function getTest(id) {

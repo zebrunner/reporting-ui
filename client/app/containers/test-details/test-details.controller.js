@@ -680,6 +680,8 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
                 vm.subscriptions[vm.testRun.id] && vm.subscriptions[vm.testRun.id].unsubscribe();
                 vm.zafiraWebsocket.disconnect();
                 UtilService.websocketConnected('zafira');
+                TestService.clearUrlCache();
+                TestService.unsubscribeUrlChanging();
             }
         });
 

@@ -746,6 +746,8 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
             if (toState.name !== 'tests.runDetails') {
                 TestService.clearDataCache();
                 TestService.clearUrlCache();
+                TestService.unsubscribeUrlChanging();
+                TestService.clearUrlCache();
             }
             onTransStartSubscription();
         });
