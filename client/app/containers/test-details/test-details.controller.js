@@ -242,6 +242,11 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
 
     function getSelectedTestId() {
         let successOldUrl = TestService.getPreviousUrl();
+
+        if (successOldUrl) {
+            TestService.clearPreviousUrl();
+            TestService.unsubscribeFromLocationChangeStart();
+        }
         
         return successOldUrl && successOldUrl.includes('/info/') ? successOldUrl.split('/').pop() : successOldUrl;
     }
@@ -669,8 +674,6 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
                 vm.subscriptions[vm.testRun.id] && vm.subscriptions[vm.testRun.id].unsubscribe();
                 vm.zafiraWebsocket.disconnect();
                 UtilService.websocketConnected('zafira');
-                TestService.clearPreviousUrl();
-                TestService.unsubscribeFromLocationChangeStart();
             }
         });
 
