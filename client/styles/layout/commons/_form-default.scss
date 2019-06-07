@@ -245,7 +245,7 @@ md-radio-button {
     height: 32px;
     font-size: 0;
     line-height: 1;
-    padding: 6px 13px 6px 6px;
+    padding: 6px 14px 6px 8px;
     color: $medium-teal-light-new;
     border-radius: 16px;
     border: 1px solid $medium-teal-light-new;
@@ -259,7 +259,7 @@ md-radio-button {
         color: $medium-teal-light-new;
         font-size: 22px;
         line-height: 18px;
-        margin: 0 2px 0 0;
+        margin: 0;
         max-height: 18px;
         min-height: 18px;
         transition: color .25s;
@@ -274,6 +274,9 @@ md-radio-button {
         text-transform: uppercase;
     }
 
+    .nav-container.bg-dark .nav ul > li:hover & {
+        color: $medium-teal-light-new-hover;
+    }
     .nav-container.bg-dark .nav & {
         float: none;
         color: $medium-teal-light-new;
