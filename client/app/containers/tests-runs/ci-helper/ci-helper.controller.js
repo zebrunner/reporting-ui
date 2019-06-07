@@ -487,15 +487,24 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             launcherScan.rescan = !! rescan;
             LauncherService.scanRepository(launcherScan).then(function (rs) {
                 if (rs.success) {
-                    $scope.launcherLoaderStatus.buildNumber = rs.data;
+                    const queueItemUrl = rs.data.queueItemUrl;
                     $scope.launcherLoaderStatus.rescan = launcherScan.rescan;
                     $scope.launcherLoaderStatus.started = true;
+                    getBuildNumber(queueItemUrl);
                 } else {
                     $scope.launcherLoaderStatus.started = false;
                     messageService.error(rs.message);
                 }
             });
         }
+    };
+
+    function getBuildNumber(queueItemUrl) {
+        LauncherService.getBuildNumber(queueItemUrl).then(function (rs) {
+            if(rs.success) {
+                $scope.launcherLoaderStatus.buildNumber = rs.data
+            }
+        });
     };
 
     $scope.cancelScanRepository = function() {

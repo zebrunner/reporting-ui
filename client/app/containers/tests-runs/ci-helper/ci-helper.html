@@ -250,7 +250,7 @@
                     </div>
                 </div>
                 <div class="ci-runner-container_loader_container_action">
-                    <button ng-click="cancelScanRepository()" class="md-button md-raised __brand-gray-button" ng-if="launcherLoaderStatus.started">
+                    <button ng-click="cancelScanRepository()" class="md-button md-raised __brand-gray-button" ng-if="launcherLoaderStatus.started" ng-disabled="! launcherLoaderStatus.buildNumber">
                         CANCEL
                     </button>
                     <button ng-click="backToLaunchersList();" class="md-button md-raised md-primary btn-auto" ng-if="launcherLoaderStatus.finished">

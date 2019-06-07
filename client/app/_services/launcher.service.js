@@ -16,6 +16,7 @@
         service.deleteLauncherById = deleteLauncherById;
         service.buildLauncher = buildLauncher;
         service.scanRepository = scanRepository;
+        service.getBuildNumber = getBuildNumber;
         service.abortScanRepository = abortScanRepository;
 
         return service;
@@ -46,6 +47,10 @@
 
         function scanRepository(launcherScanner) {
             return $http.post(API_URL + '/api/launchers/scanner', launcherScanner).then(UtilService.handleSuccess, UtilService.handleError('Unable to scan repository'));
+        }
+
+        function getBuildNumber(queueItemUrl) {
+            return $http.get(API_URL + '/api/launchers/build/number', queueItemUrl).then(UtilService.handleSuccess, UtilService.handleError('Unable to get build number'));
         }
 
         function abortScanRepository(buildNumber, scmAccountId, rescan) {
