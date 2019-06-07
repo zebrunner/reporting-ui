@@ -18,7 +18,7 @@
             deleteTestWorkItem,
             getJiraTicket,
             getConnectionToJira,
-            subscribeUrlChanging,
+            subscribeOnLocationChangeStart,
             get getTests() {
                 return local.tests;
             },
@@ -28,14 +28,14 @@
             getTest,
             clearDataCache,
             locationChange: null,
-            clearUrlCache,
+            clearPreviousUrl,
             getPreviousUrl,
-            unsubscribeUrlChanging
+            unsubscribeFromLocationChangeStart
         }
 
         return service;
 
-        function subscribeUrlChanging() {
+        function subscribeOnLocationChangeStart() {
             service.locationChange = $rootScope.$on("$locationChangeStart", function (event, newUrl, oldUrl) {
                 local.previousUrl = oldUrl;
             })
@@ -46,11 +46,11 @@
             return local.previousUrl;;
         }
 
-        function clearUrlCache() {
+        function clearPreviousUrl() {
             local.previousUrl = null;
         }
 
-        function unsubscribeUrlChanging() {
+        function unsubscribeFromLocationChangeStart() {
             if (service.locationChange) {
                 service.locationChange();
             }

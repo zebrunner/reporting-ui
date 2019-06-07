@@ -738,16 +738,15 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
             vm.wsSubscription && vm.wsSubscription.unsubscribe();
             closeTestsWebsocket();
         });
-        TestService.subscribeUrlChanging();
+        TestService.subscribeOnLocationChangeStart();
 
         const onTransStartSubscription = $transitions.onStart({}, function(trans) {
             const toState = trans.to();
 
             if (toState.name !== 'tests.runDetails') {
                 TestService.clearDataCache();
-                TestService.clearUrlCache();
-                TestService.unsubscribeUrlChanging();
-                TestService.clearUrlCache();
+                TestService.clearPreviousUrl();
+                TestService.unsubscribeFromLocationChangeStart();
             }
             onTransStartSubscription();
         });

@@ -94,13 +94,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
     }
 
     function getTestIndexById(id) {
-        let index = -1;
-
-        Object.keys(vm.testRun.tests).some(function(testId, i) {
-            return testId === id && (index = i) && true;
-        });
-
-        return index;
+        return Object.keys(vm.testRun.tests).findIndex((testId) => { return testId === id; });
     }
 
     function getTestById(id) {
@@ -248,13 +242,8 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
 
     function getSelectedTestId() {
         let successOldUrl = TestService.getPreviousUrl();
-        let oldUrl = null;
-
-        if (successOldUrl && successOldUrl.includes('/info/')) {
-            oldUrl = successOldUrl.split('/');
-        }
         
-        return oldUrl ? oldUrl[oldUrl.length - 1] : oldUrl;
+        return successOldUrl && successOldUrl.includes('/info/') ? successOldUrl.split('/')[successOldUrl.split('/').length - 1] : successOldUrl;
     }
 
     function loadTests(testRunId) {
@@ -680,8 +669,8 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
                 vm.subscriptions[vm.testRun.id] && vm.subscriptions[vm.testRun.id].unsubscribe();
                 vm.zafiraWebsocket.disconnect();
                 UtilService.websocketConnected('zafira');
-                TestService.clearUrlCache();
-                TestService.unsubscribeUrlChanging();
+                TestService.clearPreviousUrl();
+                TestService.unsubscribeFromLocationChangeStart();
             }
         });
 
