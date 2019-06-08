@@ -50,7 +50,7 @@
         }
 
         function getBuildNumber(queueItemUrl) {
-            return $http.get(API_URL + '/api/launchers/build/number', queueItemUrl).then(UtilService.handleSuccess, UtilService.handleError('Unable to get build number'));
+            return $http.get(API_URL + '/api/launchers/build/number?queueItemUrl=' + queueItemUrl).then(UtilService.handleSuccess, UtilService.handleError('Unable to get build number'));
         }
 
         function abortScanRepository(buildNumber, scmAccountId, rescan) {
