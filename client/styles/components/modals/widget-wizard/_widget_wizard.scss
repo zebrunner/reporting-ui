@@ -3,10 +3,6 @@ $inner-padding:         16px;
 $wizard-dark-gray:      #7f7f7f;
 $wizard-white:          #ffffff;
 
-.zf-md-dialog-container {
-    padding-top: 132px;
-}
-
 .widget-wizard {
     min-width: $screen-tablet !important;
     > .md-dialog-content {
@@ -15,7 +11,7 @@ $wizard-white:          #ffffff;
         }
     }
     &_container {
-        min-height: 576px !important;
+        min-height: 718px !important;
         min-width: 300px !important;
         height: 576px;
         overflow-y: auto !important;

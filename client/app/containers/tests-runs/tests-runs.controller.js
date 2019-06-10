@@ -542,7 +542,8 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             targetEvent: event,
             clickOutsideToClose:false,
             fullscreen: true,
-            autoWrap: false
+            autoWrap: false,
+            escapeToClose:false
         });
     }
 

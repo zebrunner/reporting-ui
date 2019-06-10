@@ -250,8 +250,9 @@ const ngModule = angular.module('app', [
     "use strict";
     return {
         restrict: 'E',
-        template: '<span class="zf-show-part"><span>{{ text.substring(0, limit + 1) }}</span><span ng-if="text.length > limit">{{ symbols }}</span></span>',
+        template: '<span class="zf-show-part"><span>{{ text.substring(0, limit + 1) }}<span ng-if="text.length > limit" ng-transclude></span></span><span ng-if="text.length > limit">{{ symbols }}</span></span>',
         replace: true,
+        transclude: true,
         scope: {
             text: '=',
             limit: '=',
