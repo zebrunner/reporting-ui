@@ -3026,6 +3026,7 @@ $light-inprogress: #68c9fd;
                 top: 0;
                 left: 0;
                 height: 48px;
+                line-height: 18px;
                 box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
                 padding: 16px;
                 width: 100%;
@@ -3040,7 +3041,8 @@ $light-inprogress: #68c9fd;
 
                 @media(max-width: $screen-phone) {
                     color: black;
-                    letter-spacing: 0.4;
+                    letter-spacing: 0.4px;
+                    font-size: 18px !important;
                 }
             }
 
@@ -3502,7 +3504,7 @@ $light-inprogress: #68c9fd;
 
             @media(max-width: $screen-phone) {
                 font-size: 18px;
-                letter-spacing: 0.2px;
+                letter-spacing: 0.4px;
                 padding-left: 16px;
                 font-weight: normal;
                 justify-content: center;
