@@ -131,6 +131,7 @@
         .ticket-list {
             &-button {
                 max-height: unset;
+                border-radius: 0;
                 padding: 0;
                 text-transform: none;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.15);

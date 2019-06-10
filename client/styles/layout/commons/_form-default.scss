@@ -134,20 +134,31 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         border-color: rgba($dark-new, .25) !important;
     }
     &.label-primary {
-        background-color: $medium-teal-light-new;
+        background-color: $brand-light;
         color: #fff;
     }
 }
 
+.md-open-menu-container {
+    .md-button {
+        &, &.md-focused {
+            padding: 0 16px;
+            font-size: 14px;
+            border-radius: 0;
+        }
+    }
+}
+
 .zf-primary-button {
-    float: right;
+    display: flex;
+    align-items: center;
     height: 32px;
     font-size: 0;
     line-height: 1;
     padding: 6px 13px 6px 6px;
-    color: $medium-teal-light-new;
+    color: $brand-light;
     border-radius: 16px;
-    border: 1px solid $medium-teal-light-new;
+    border: 1px solid $brand-light;
     background-color: white;
     transition: all .25s;
     
@@ -155,7 +166,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         padding: 6px 13px 6px 10px;
     }
     .material-icons {
-        color: $medium-teal-light-new;
+        color: $brand-light;
         font-size: 22px;
         line-height: 18px;
         margin: 0 2px 0 0;
@@ -165,8 +176,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     }
 
     span {
-        vertical-align: middle;
-        line-height: 18px;
+        padding-top: 2px;
         font-size: 12px;
         font-weight: 500;
         letter-spacing: 0.3px;
@@ -175,16 +185,16 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
 
     .nav-container.bg-dark .nav & {
         float: none;
-        color: $medium-teal-light-new;
-        border: 1px solid $medium-teal-light-new;
+        color: $brand-light;
+        border: 1px solid $brand-light;
         background-color: transparent;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 11px 18px 10px;
         &:hover {
-            color: $medium-teal-light-new-hover;
-            border: solid 1px $medium-teal-light-new-hover;
+            color: $brand-light-hover;
+            border: solid 1px $brand-light-hover;
         }
         .material-icons {
             font-size: 22px;
@@ -192,14 +202,18 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
             margin: 0 2px 0 0;
         }
     }
+    .nav-container.bg-dark .nav ul >li:hover & {
+        color: $brand-light-hover;
+        border: solid 1px $brand-light-hover;
+    }
     &:hover {
-        border-color: $medium-teal-light-new-hover;
-        color: $medium-teal-light-new-hover;
+        border-color: $brand-light-hover;
+        color: $brand-light-hover;
         background-color: white;
 
         @media(min-width: $screen-phone + 1) {
             .material-icons {
-                color: $medium-teal-light-new-hover;
+                color: $brand-light-hover;
             }
         }
     }
@@ -207,7 +221,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         &.fixed-page-header__btn {
             color: #ffffff;
             border: 1px solid #ffffff;
-            background-color: $medium-teal-light-new;
+            background-color: $brand-light;
             md-icon {
                 
                 color: #ffffff;
@@ -231,7 +245,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
             height: 32px;
             padding: 0;
             md-icon {
-                padding: 4px 0 0 2px;
+                padding: 3.5px 0 0 3.5px;
                 max-height: unset;
             }
 

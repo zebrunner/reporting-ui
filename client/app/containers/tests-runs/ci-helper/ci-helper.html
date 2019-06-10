@@ -3,9 +3,9 @@
         <zf-modal-helper-container class="ci-runner-container_helper" ng-show="! isMobile || cardNumber === 0">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
-                <button type="button" ng-click="addRepo();" class="zf-button zf-chip-button">
+                <button type="button" ng-click="addRepo();" class="zf-primary-button">
                     <i class="material-icons">add</i>
-                    ADD REPO
+                    <span>ADD REPO</span>
                 </button>
             </div>
             <div class="ci-runner-container_helper_title show-phone">Choose template</div>
@@ -89,9 +89,9 @@
                                 </md-select>
                             </md-input-container>
                         </zf-input-container>
-                        <button class="md-button md-raised __brand-gray-button" md-no-ink ng-click="addScmAccount(scmAccount);" ng-disabled="! scmAccount.organization || !scmAccount.repository">
+                        <md-button class="md-raised" md-no-ink ng-click="addScmAccount(scmAccount);" ng-disabled="! scmAccount.organization || !scmAccount.repository">
                             Add
-                        </button>
+                        </md-button>
                     </div>
                 </div>
             </ng-form>
@@ -110,12 +110,12 @@
                             <label>Branch</label>
                             <input type="text" ng-model="launcherScan.branch" autofocus ng-required="true" />
                         </zf-input-container>
-                        <button class="md-button md-raised __brand-gray-button" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="! hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <md-button class="md-raised" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="! hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             SCAN
-                        </button>
-                        <button class="md-button md-raised __brand-gray-button" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                        </md-button>
+                        <md-button class="md-raised" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             RE-SCAN
-                        </button>
+                        </md-button>
                     </div>
                 </div>
             </ng-form>
@@ -148,38 +148,23 @@
                     </div>
                 </div>
                 <div class="ci-runner-container_content_actions">
-                    <button ng-really-click="deleteRepository(launcher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="zf-button md-warn zf-info btn-auto" ng-if="scmAccount.id && ! launcher.id">
+                    <md-button ng-really-click="deleteRepository(launcher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && ! launcher.id">
                         DELETE REPO
-                    </button>
-                    <button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete template?" class="zf-button md-warn zf-info btn-auto" ng-if="launcher.id">
+                    </md-button>
+                    <md-button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete template?" class="md-warn" ng-if="launcher.id">
                         DELETE
-                    </button>
-                    <button ng-click="cancelLauncher();" class="zf-button md-info zf-info" ng-if="launcher.id">
+                    </md-button>
+                    <md-button ng-click="cancelLauncher();" ng-if="launcher.id">
                         CANCEL
-                    </button>
-                    <md-button class="md-raised btn-w-md md-primary" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
+                    </md-button>
+                    <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
                         ADD
                     </md-button>
-                    <md-button class="md-raised btn-w-md md-primary" ng-click="updateLauncher(launcher);" ng-if="launcher.id" ng-disabled="!launcher.name || !launcher.model">
+                    <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="updateLauncher(launcher);" ng-if="launcher.id" ng-disabled="!launcher.name || !launcher.model">
                         SAVE
                     </md-button>
                 </div>
             </ng-form>
-<<<<<<< HEAD
-=======
-            <div class="ci-runner-container_content_actions">
-                <md-button ng-click="cancelLauncher();" class="md-raised">
-                    Cancel
-                </md-button>
-                <md-button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete the launcher?" class="md-warn" ng-if="launcher && launcher.id">
-                    Delete
-                </md-button>
-                <md-button class="md-raised md-primary pull-right" ng-click="saveLauncher(launcher);">
-                    Save
-                </md-button>
-                <div ng-if="launcher.errorMessage && launcher.errorMessage.length" class="ci-runner-container_content_actions_error">{{launcher.errorMessage}}</div>
-            </div>
->>>>>>> ef82d16... applyed new styles for buttons
         </zf-modal-content-container>
         <zf-modal-content-container class="ci-runner-container_content" ng-if="cardNumber === 3 || cardNumber === 4" ng-show="launcher">
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
@@ -224,13 +209,8 @@
             <div class="ci-runner-container_content_actions">
                 <md-button ng-click="cancelLauncher();" class="md-raised" ng-if="cardNumber === 2">
                     Cancel
-<<<<<<< HEAD
                 </button>
-                <md-button class="zf-button zf-info" ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
-=======
-                </md-button>
-                <md-button class="md-raised" ng-click="navigateBack();" ng-if="cardNumber === 3">
->>>>>>> ef82d16... applyed new styles for buttons
+                <md-button ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
                     Back
                 </md-button>
                 <md-button class="md-raised md-primary pull-right" ng-click="build(launcher);" ng-disabled="! launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">
@@ -270,12 +250,12 @@
                     </div>
                 </div>
                 <div class="ci-runner-container_loader_container_action">
-                    <button ng-click="cancelScanRepository()" class="md-button md-raised __brand-gray-button" ng-if="launcherLoaderStatus.started" ng-disabled="! launcherLoaderStatus.buildNumber">
+                    <md-button ng-click="cancelScanRepository()" class="md-raised" ng-if="launcherLoaderStatus.started" ng-disabled="! launcherLoaderStatus.buildNumber">
                         CANCEL
-                    </button>
-                    <button ng-click="backToLaunchersList();" class="md-button md-raised md-primary btn-auto" ng-if="launcherLoaderStatus.finished">
+                    </md-button>
+                    <md-button ng-click="backToLaunchersList();" class="md-raised md-primary" ng-if="launcherLoaderStatus.finished">
                         BACK TO LIST
-                    </button>
+                    </md-button>
                 </div>
             </div>
         </div>

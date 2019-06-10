@@ -14,10 +14,17 @@ md-backdrop.md-dialog-backdrop{
     }
 }
 
-md-dialog-actions {
-    .md-button {
-        margin-right: 0;
-        margin-left: 12px;
+md-dialog {
+    form {
+        flex-grow: 1;
+    }
+    md-dialog-content {
+        flex-grow: 1;
+    }
+    md-dialog-actions {
+        .md-button {
+            margin: 0 0 0 12px;
+        }
     }
 }
 
@@ -173,7 +180,7 @@ md-toast {
             @include default-button(rgba($dark-new, .07), $gray-base, rgba($dark-new, .12));
         }
         &.md-primary {
-            @include default-button($medium-teal-light-new, $white, $brand-primary);
+            @include default-button($brand-light, $white, $brand-light-hover);
         }
         &.md-warn {
             @include default-button($red-new, $white, $faded-red);
@@ -184,7 +191,7 @@ md-toast {
         }
     }
     &.md-primary {
-        @include default-button(transparent, $medium-teal-light-new, rgba($dark-new, .07));
+        @include default-button(transparent, $brand-light, rgba($dark-new, .07));
     }
     &.md-warn {
         @include default-button(transparent, $red-new, rgba($dark-new, .07));
@@ -192,7 +199,10 @@ md-toast {
 }
 
 md-dialog .md-actions, md-dialog md-dialog-actions {
-    padding: 0 20px 10px 20px;
+    padding: 0 20px 20px 20px;
+    @media (max-width: $breakpoint-mobile - 1) {
+        padding: 0 16px 16px 16px; 
+    }
 }
 
 //FAB BUTTONS

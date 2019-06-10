@@ -9,8 +9,8 @@ $bootstrap-sass-asset-helper: false !default;
 //## Gray and brand colors for use across Bootstrap.
 
 $medium-teal-new:           #009688;
-$medium-teal-light-new:     #26a69a;
-$medium-teal-light-new-hover: #20887f;
+$brand-light:     #26a69a;
+$brand-light-hover: #20887f;
 $medium-teal-bright-new:    #4ba69a;
 $medium-teal-lighter-new:   #dff2f0;
 
@@ -55,7 +55,6 @@ $gray:                   lighten($gray-base, 33.5%) !default; // #555
 $gray-light:             lighten($gray-base, 46.7%) !default; // #777 dark-gray
 $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
-$brand-light:           #26a69a !default;
 $brand-primary:         #009688 !default; // Teal 500
 $brand-success:         #8BC34A !default; // Light Green 500
 $brand-info:            #00BCD4 !default; // Cyan 500
@@ -76,7 +75,6 @@ $dark-light:            #3D4051;
 $dark-lighter:          #A0A2AA;
 $bright:                #fafafa;
 $reverse:               #ffffff;
-$dark-new:              #011627;
 $dark-light-new:        #132336;
 
 $coal:                  #1f242a;
@@ -961,3 +959,8 @@ $z-index-calendar-pane: 100 !default;
 $z-index-select: 90 !default;
 $zindex-modal-background: 79;
 $zindex-fixed: 78;
+
+//REFACTORING 
+$brand-light:           #26a69a !default; // Teal 400
+$brand-light-hover:     #20887f;
+$dark-new:              #011627;
