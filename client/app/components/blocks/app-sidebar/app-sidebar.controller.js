@@ -223,9 +223,11 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             projectsService.resetSelectedProjects();
         }
         vm.selectedProjectShortName = cutSelectedProjectName();
-        $timeout(() => {
-            $state.reload();
-        });
+        if ($state.current.name === 'tests.runs') {
+            $timeout(() => {
+                $state.reload();
+            });
+        }
     }
 
     function loadProjects() {
