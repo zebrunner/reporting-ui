@@ -175,7 +175,7 @@
                         },
                         controllerAs: '$ctrl',
                         template: '<md-toast>\n' +
-                            '    <a target="_blank" ng-repeat="link in links" ng-href="{{ link }}" class="md-toast-text" flex>Google spreadsheet</a>\n' +
+                            '    <a target="_blank" ng-repeat="link in $ctrl.links" ng-href="{{ link }}" class="md-toast-text" flex>Google spreadsheet</a>\n' +
                             '    <md-button id="close" ng-click="$ctrl.closeToast();">\n' +
                             '        Close\n' +
                             '    </md-button>\n' +

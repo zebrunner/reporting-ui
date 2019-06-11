@@ -451,8 +451,10 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
             return DownloadService.plainDownload(artifact.link)
                 .then(response => {
                     if (response.success) {
+                        const filename = getUrlFilename(artifact.link);
+                        artifact.extension = getUrlExtension(artifact.link);
                         return {
-                            fileName: `${artifact.name}.${artifact.extension}`,
+                            fileName: `${artifact.name}_${filename}.${artifact.extension}`,
                             fileData: response.res.data,
                         };
                     }
@@ -475,6 +477,15 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
             .catch(() => {
                 messageService.error('Unable to download all files, please try again.');
             });
+    };
+
+    function getUrlExtension(url) {
+        return url.split(/\#|\?/)[0].split('.').pop().trim();
+    };
+
+    function getUrlFilename(url) {
+        const urlSlices = url.split(/\#|\?/)[0].split('/');
+        return urlSlices[urlSlices.length - 1].split('.')[0].trim();
     };
 
     function downloadZipFile(name, data) {

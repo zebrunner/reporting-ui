@@ -3,7 +3,7 @@
         <zf-modal-helper-container class="ci-runner-container_helper" ng-show="! isMobile || cardNumber === 0">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
-                <button type="button" ng-click="addRepo();" class="zf-button zf-chip-button">
+                <button type="button" ng-click="addRepo();" has-any-permission="['MODIFY_LAUNCHERS']" class="zf-button zf-chip-button">
                     <i class="material-icons">add</i>
                     ADD REPO
                 </button>
@@ -20,7 +20,9 @@
                 <ul class="folder-container folder-container-{{scmAccount.id}}" ng-repeat="scmAccount in scmAccounts | orderBy: 'repositoryName' track by scmAccount.id">
                     <li class="folder-container_folder">
                         <i class="material-icons folder-container_folder_icon hide-phone" ng-click="switchFolder($event)">arrow_drop_down</i>
-                        <i class="material-icons folder-container_folder_icon_settings hide-phone" ng-click="manageFolder(scmAccount)">settings</i>
+                        <span has-any-permission="['MODIFY_LAUNCHERS']">
+                            <i class="material-icons folder-container_folder_icon_settings hide-phone" ng-click="manageFolder(scmAccount)">settings</i>
+                        </span>
                         <div class="folder-container_folder_name hide-phone" ng-click="switchFolder($event)">{{scmAccount.repositoryName}}</div>
                         <div class="folder-container_folder_name show-phone" ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
                     </li>
@@ -171,7 +173,7 @@
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
                 <div class="ci-runner-container_content_title_action">
-                    <i ng-click="toEditLauncher(launcher);" class="material-icons hide-phone">edit</i>
+                    <i ng-click="toEditLauncher(launcher);" has-any-permission="['MODIFY_LAUNCHERS']" class="material-icons hide-phone">edit</i>
                 </div>
             </div>
             <div class="ci-runner-container_content_builder zf-display-table">
