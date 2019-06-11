@@ -56,7 +56,7 @@
                 </div>-->
             </div>
             <div class="ci-runner-container_content_actions show-phone">
-                <md-button class="md-raised btn-w-md md-primary" ng-click="chooseLauncherPhone(launcher);"
+                <md-button class="md-raised md-primary pull-right" ng-click="chooseLauncherPhone(launcher);"
                            ng-disabled="! launcher.id">
                     Next
                 </md-button>
@@ -157,10 +157,10 @@
                     <md-button ng-click="cancelLauncher();" ng-if="launcher.id">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
+                    <md-button class="md-raised md-primary" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
                         ADD
                     </md-button>
-                    <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="updateLauncher(launcher);" ng-if="launcher.id" ng-disabled="!launcher.name || !launcher.model">
+                    <md-button class="md-raised md-primary" ng-click="updateLauncher(launcher);" ng-if="launcher.id" ng-disabled="!launcher.name || !launcher.model">
                         SAVE
                     </md-button>
                 </div>
@@ -209,8 +209,8 @@
             <div class="ci-runner-container_content_actions">
                 <md-button ng-click="cancelLauncher();" class="md-raised" ng-if="cardNumber === 2">
                     Cancel
-                </button>
-                <md-button ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
+                </md-button>
+                <md-button class="md-raised" ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
                     Back
                 </md-button>
                 <md-button class="md-raised md-primary pull-right" ng-click="build(launcher);" ng-disabled="! launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">

@@ -15,6 +15,12 @@ md-backdrop.md-dialog-backdrop{
 }
 
 md-dialog {
+    .md-dialog-content {
+        padding: 20px;
+        @media(max-width: $breakpoint-mobile - 1) {
+            padding: 16px;
+        }
+    }
     form {
         flex-grow: 1;
     }
@@ -170,31 +176,31 @@ md-toast {
     line-height: 1;
     letter-spacing: 0.4px;
     min-width: 80px;
-    @include default-button(transparent, $gray-base, rgba($dark-new, .07));
+    @include default-button(transparent, $dark-new, rgba($dark-new, .07));
     &[disabled], &[disabled]:hover {
         background-color: transparent;
-        color: rgba($gray-base, 0.25);
-    }
-    &.md-raised {
-        &, &:active {
-            @include default-button(rgba($dark-new, .07), $gray-base, rgba($dark-new, .12));
-        }
-        &.md-primary {
-            @include default-button($brand-light, $white, $brand-light-hover);
-        }
-        &.md-warn {
-            @include default-button($red-new, $white, $faded-red);
-        }
-        &[disabled], &[disabled]:hover {
-            background-color: rgba($dark-new, .07);
-            color: rgba($gray-base, 0.25);
-        }
+        color: rgba($dark-new, 0.35);
     }
     &.md-primary {
         @include default-button(transparent, $brand-light, rgba($dark-new, .07));
     }
     &.md-warn {
-        @include default-button(transparent, $red-new, rgba($dark-new, .07));
+        @include default-button(transparent, $brand-warning-new, rgba($dark-new, .07));
+    }
+    &.md-raised {
+        &, &:active {
+            @include default-button(rgba($dark-new, .07), $dark-new, rgba($dark-new, .12));
+        }
+        &.md-primary {
+            @include default-button($brand-light, $brand-white, $brand-light-hover);
+        }
+        &.md-warn {
+            @include default-button($brand-warning-new, $brand-white, $brand-warning-dark-new);
+        }
+        &[disabled], &[disabled]:hover {
+            background-color: rgba($dark-new, .07);
+            color: rgba($gray-base, 0.35);
+        }
     }
 }
 

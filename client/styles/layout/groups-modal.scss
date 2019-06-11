@@ -67,8 +67,8 @@
         min-height: 56px;
     }
     md-dialog-actions {
-        padding: 0 20px;
-        min-height: 64px;
+        padding: 20px;
+        min-height: 76px;
         .cancel {
             display: none;
         }
@@ -125,8 +125,7 @@
             }
         }
         md-dialog-actions {
-            padding-right: 16px;
-            padding-left: 16px;
+            padding: 16px;
             min-height: 68px;
             overflow-x: hidden;
             background: white;

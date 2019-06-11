@@ -45,7 +45,6 @@ $pink-bg-new:               #fdc1c2;
 $pink-bg-light-new:         #fee6e7;
 
 $green-bg-light-new:        #ecfbef;
-$white:                     #ffffff;
 
 
 $gray-base:              #000 !default;
@@ -961,6 +960,9 @@ $zindex-modal-background: 79;
 $zindex-fixed: 78;
 
 //REFACTORING 
-$brand-light:           #26a69a !default; // Teal 400
-$brand-light-hover:     #20887f;
-$dark-new:              #011627;
+$brand-light:            #26a69a !default; // Teal 400
+$brand-light-hover:      #20887f;
+$dark-new:               #011627;
+$brand-warning-new:      #bf3744;
+$brand-warning-dark-new: #9d2e38;
+$brand-white:            #ffffff;
