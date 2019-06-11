@@ -14,7 +14,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                                                          $cookies, $location, $state, $http, $mdConstant,
                                                          $stateParams, $mdDialog, $mdToast, UtilService,
                                                          DashboardService, projectsService, UserService,
-                                                         $widget, $mapper, toolsService, messageService) {
+                                                         $widget, $mapper, toolsService, messageService, AuthService) {
     'ngInject';
 
     const vm = {
@@ -23,10 +23,15 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     $scope.emptyContent = {
-        text: ['No widget added. Use button at the top or watch tutorial to learn more.'],
         mobileText: ['No widget added.', 'Go to desktop version for more options or watch tutorial to learn more.'],
-        imageUrl: require('../../assets/images/empty-pages/empty_screen_dashboards.svg')
+        imageUrl: require('../../assets/images/empty-pages/empty_screen_dashboards.svg'),
+        showArrow: AuthService.UserHasAnyPermission(['MODIFY_WIDGETS'])
     };
+
+    const emptyContentText = AuthService.UserHasAnyPermission(['MODIFY_WIDGETS']) ?
+        'No widget added. Use button at the top or watch tutorial to learn more.' :
+        'No widget added';
+    $scope.emptyContent.text = [emptyContentText];
 
     $scope.isPageLoading = true;
     
