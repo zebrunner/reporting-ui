@@ -2,7 +2,7 @@
     <div class="p-tests-runs__section _filters row ui-section no-margin">
         <div class="search-filter-body col-md-12 no-padding">
             <div id="filter" class="md-row tests-runs-filter__wrapper">
-                <div class="md-row tests-runs-filter__wrapper-panel-body no-padding-t" ng-class="{'_lighter': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()">
+                <div class="md-row tests-runs-filter__wrapper-panel-body no-padding-t" ng-class="{'_unactiveChips': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()">
                     <div ng-class="{'disable-layer _transparent': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()"></div>
                     <div layout="row" layout-xs="column" layout-align="space-between" ng-show="$ctrl.filterBlockExpand">
                         <div layout="row">
@@ -156,8 +156,8 @@
                     </div>
                 </div>
                 <div id="filter-mobile" ng-if="$ctrl.isMobile() && $ctrl.filters.length" class="md-row tests-runs-filter__filter-mobile">
-                    <div ng-class="{'disable-layer': $ctrl.isSearchActive()}"></div>
-                    <div class="tests-runs-filter__wrapper-panel-body no-padding-t">
+                    <div ng-class="{'disable-layer _transparent': $ctrl.isSearchActive()}"></div>
+                    <div class="tests-runs-filter__wrapper-panel-body no-padding-t" ng-class="{'_unactiveChips': $ctrl.isSearchActive()}">
                         <div layout="row" layout-xs="column" ng-show="$ctrl.filterBlockExpand">
                             <md-chips class="filter-chip custom-filter" ng-model="$ctrl.filters" md-removable="false"
                                       readonly="true">

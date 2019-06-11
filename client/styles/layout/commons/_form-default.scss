@@ -355,3 +355,142 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     }
 }
 
+.manage-chip {
+    position: relative;
+    md-chip {
+        width: 118px;
+        font-weight: bold;
+        text-transform: uppercase;
+        line-height: 2.3;
+        background-color: rgba($dark-new, .5);
+        margin: 0 8px 0 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        padding: 0;
+        md-icon {
+            margin-top: 3px;
+            margin-left: 6px;
+            font-size: 24px;
+            color: $brand-white;
+        }
+        ._unactiveChips & {
+            background-color: rgba($dark-new, .07);
+            md-icon {
+                color: rgba($dark-new, .25);
+            }
+        }
+        &:hover {
+            background-color: $dark-new;
+        }
+    }
+}
+
+md-chips.filter-chip.custom-filter {
+    @media screen and (min-width: $breakpoint-mobile) {
+        min-width: auto;
+        padding-top: 2px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-width: calc(100vw - 255px);
+        &._wide {
+            max-width: calc(100vw - 155px);
+        }
+    }
+    @media screen and (max-width: $breakpoint-mobile - 1) {
+        overflow-x: scroll;
+        -ms-overflow-style: none;
+        overflow: -moz-scrollbars-none;
+        &::-webkit-scrollbar { 
+            display: none;
+        }
+    }
+    
+    md-chips-wrap.md-chips{
+        display: flex;
+        align-items: center;
+        height: 100%;
+        md-chip {
+            background-color: transparent;
+            letter-spacing: 0.1px;
+            border-radius: 8px;
+            color: $dark-new;
+            font-size: 14px;
+            font-weight: 500;
+            border: solid 1px rgba($dark-new, .15);
+            margin-bottom: 2px;
+            margin-left: 0;
+            margin-right: 8px;
+            max-height: 32px;
+            position: relative;
+
+            ._unactiveChips & {
+                background-color: rgba($dark-new, .07);
+                color: rgba($dark-new, .25);
+                border-color: transparent;
+            }
+
+            &.md-focused {
+                background-color: $dark-new;
+                color: $brand-white;
+                padding-right: 36px;
+
+                .close-button {
+                    position: absolute;
+                    top: 50%;
+                    right: 8px;
+                    transform: translateY(-50%);
+                    border: 2px solid $brand-white;
+                    background: transparent;
+                    border-radius: 50%;
+                    padding: 8px;
+                    cursor: pointer;
+                    margin: 0 auto 0 8px;
+                    height: 20px;
+                    width: 20px;
+                    display: inline-block;
+                    opacity: .5;
+
+                    &:after,
+                    &:before {
+                        position: absolute;
+                        top: 3px;
+                        right: 3px;
+                        bottom: 0;
+                        left: 50%;
+                        transform: rotate(45deg) translateX(0) translateY(0);
+                        height: 10px;
+                        width: 2px;
+                        background-color: $brand-white;
+                        content: '';
+                        display: block;
+                        margin: 0 0 0 -1px;
+                    }
+                    &:before {
+                        transform: rotate(-45deg) translateX(0) translateY(0);
+                    }
+                }
+            }
+        }
+
+        @media screen and (max-width: $breakpoint-mobile - 1) {
+            display: inline-block;
+            white-space: nowrap;
+            box-shadow: none;
+            line-height: 0;
+
+            md-chip {
+                margin: 0;
+                float: none;
+                display: inline-block;
+                font-size: 14px;
+                max-height: 32px;
+                line-height: 32px;
+            }
+
+            md-chip + md-chip {
+                margin-left: 8px;
+            }
+        }
+    }
+}
