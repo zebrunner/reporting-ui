@@ -192,10 +192,6 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         justify-content: center;
         align-items: center;
         padding: 11px 18px 10px;
-        &:hover {
-            color: $brand-light-hover;
-            border: solid 1px $brand-light-hover;
-        }
         .material-icons {
             font-size: 22px;
             line-height: 18px;
@@ -203,8 +199,12 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         }
     }
     .nav-container.bg-dark .nav ul >li:hover & {
-        color: $brand-light-hover;
-        border: solid 1px $brand-light-hover;
+        color: $brand-light;
+        border: solid 1px $brand-light;
+        &:hover {
+            color: $brand-light-hover;
+            border: solid 1px $brand-light-hover;
+        }
     }
     &:hover {
         border-color: $brand-light-hover;
