@@ -248,14 +248,22 @@ tr.result:hover .expand-button {
 }*/
 
 .grid-stack-item {
-    .panel-default > .panel-heading {
-        background-color: inherit !important;
-        border-bottom-color: white !important;
-        font-weight: 500;
-        letter-spacing: 0.1px;
-        padding: 16px 20px 16px 23px;
-        @media(max-width: $screen-phone) {
-            padding-right: 5px;
+    .panel-default {
+        border: 0;
+        > .panel-heading {
+            background-color: inherit !important;
+            border-bottom-color: white !important;
+            font-weight: 500;
+            border: 0;
+            overflow: hidden;
+            // default container height - chart height - chart paddings
+            max-height: calc(420px - 320px - 15px * 2);
+            letter-spacing: 0.1px;
+            padding: 16px 20px 16px 23px;
+
+            @media(max-width: $screen-phone) {
+                padding-right: 5px;
+            }
         }
     }
 }
