@@ -128,9 +128,19 @@
                     @include border-right-radius($border-radius-base);
                     box-shadow: 1px 1px 3px rgba(0,0,0,.2);
                     li.search-menu {
-                        > ul:not(.projects__wrapper) {
+                        > ul:not(.projects__wrapper):not(.dashboards___list_wrapper) {
                             height: 100%;
                             overflow: auto;
+                        }
+                        > ul.dashboards___list_wrapper {
+                            // 100% - search height - search margin - add dashboard height
+                            height: calc(100% - 40px - 8px - 32px);
+                            overflow: auto;
+
+                            @media(max-width: $screen-phone) {
+                                // 100% - search height - search margins
+                                height: calc(100% - 40px - 8px - 18px);;
+                            }
                         }
                         .fa-angle-down {
                             display: none !important;
