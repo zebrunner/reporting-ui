@@ -205,9 +205,9 @@ md-toast {
 }
 
 md-dialog .md-actions, md-dialog md-dialog-actions {
-    padding: 0 20px 20px 20px;
+    padding: 10px 20px 20px 20px;
     @media (max-width: $breakpoint-mobile - 1) {
-        padding: 0 16px 16px 16px; 
+        padding: 8px 16px 16px 16px; 
     }
 }
 
