@@ -90,6 +90,12 @@
             padding-right: 0;
             md-checkbox {
                 margin-bottom: 0;
+                width: 40px;
+                height: 40px;
+                .md-container {
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
             }
             span {
                 z-index: 2;
@@ -590,9 +596,11 @@
                 width: 18px;
                 md-checkbox {
                     display: block;
-                    width: 18px;
+                    width: 30px;
+                    margin-top: -5px;
+                    margin-left: -5px;
+                    height: 30px;
                 }
-
             }
             &._actions {
                 z-index: 2;
