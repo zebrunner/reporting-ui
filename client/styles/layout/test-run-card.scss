@@ -85,40 +85,20 @@
         &._selection {
             justify-content: center;
             width: 6%;
-            min-width: 58px;
+            min-width: 53px;
             font-size: 14px;
-            padding: 0;
+            padding-right: 0;
+            md-checkbox {
+                margin-bottom: 0;
+            }
             span {
                 z-index: 2;
-                height: 100%;
-                width: 100%;
-                text-align: center;
-
-                md-checkbox {
-                    margin-bottom: 0;
-                    width: 100%;
-                    height: 100%;
-
-                    .md-container {
-                        // 100% - checkbox height / 2
-                        left: calc((100% - 18px) / 2);;
-                    }
-                }
-
-                .__test-run_progressbar {
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                }
             }
             .md-label {
                 margin: 0;
             }
         }
         &._info {
-            padding-left: 0;
             flex-grow: 1;
             flex-direction: column;
             align-items: flex-start;
@@ -552,14 +532,14 @@
             top: -15px;
             bottom: -1px;
             right: -12px;
-            left: 0;
+            left: -12px;
             z-index: 1;
             &:hover {
                 background-color: transparent;
             }
         }
         &__wrapper {
-            padding: 15px 12px 15px 0;
+            padding: 15px 12px;
             margin-bottom: 4px;
             display: block;
             position: relative;
@@ -588,9 +568,6 @@
             &._top {
                 position: relative;
             }
-            &._middle {
-                padding-left: 12px;
-            }
             &._bottom {
                 padding: 12px 0 0;
                 align-items: center;
@@ -609,29 +586,17 @@
                 display: none;
             }
             &._selection {
-                position: absolute;
-                min-width: 42px;
-                width: 42px;
-                // 100% + info container padding
-                height: calc(100% + 15px);
-                top: -15px;
+                min-width: 18px;
+                width: 18px;
                 md-checkbox {
                     display: block;
+                    width: 18px;
                 }
 
-                span {
-                    .__test-run_progressbar {
-                        height: 100%;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        align-items: center;
-                    }
-                }
             }
             &._actions {
                 z-index: 2;
-                width: 40px;
+                width: 20px;
                 flex-direction: column;
                 justify-content: space-between;
                 align-items: center;
@@ -646,8 +611,7 @@
                 flex-grow: 0;
             }
             &._info {
-                // 42px = 12px + checkbox width (18px) + 12px
-                padding: 0 12px 0 42px;
+                padding: 0 12px;
             }
             &._menu {
                 width: 20px;
@@ -698,22 +662,21 @@
             margin-left: 0;
         }
         &__menu-btn {
-            top: -9px;
-            width: 40px;
-            height: 40px;
+            width: 20px;
+            height: 20px;
             padding: 0;
-            min-width: 40px;
-            min-height: 40px;
+            min-width: 20px;
+            min-height: 20px;
             margin: 0;
-            line-height: 40px;
+            line-height: 20px;
             font-size: 20px;
             md-icon {
                 font-size: 20px;
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
-                min-width: 40px;
-                min-height: 40px;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                min-width: 20px;
+                min-height: 20px;
             }
         }
     }
