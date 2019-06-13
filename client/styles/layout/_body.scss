@@ -2848,7 +2848,7 @@ $light-inprogress: #68c9fd;
             padding-top: $header_height;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: $breakpoint-mobile - 1) {
             .p-tests-runs & {
                 padding-top: calc(#{$header-height}  + 72px + 78px); // 72px - filters; 78px - search
             }
