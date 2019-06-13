@@ -62,15 +62,11 @@ body {
 #main-fab, .lonely-fab button {
     position: fixed;
     z-index: 6;
-    @media (min-width: $screen-sm) {
-        right: 90px;
-        bottom: 70px;
-    }
-    right: 9px;
-    bottom: 25px;
+    right: 40px;
+    bottom: 40px;
     @media (max-width: $breakpoint-mobile) {
         &.tests-runs-options {
-            bottom: 100px;
+            bottom: 110px;
         }
     }
 }
@@ -2848,7 +2844,7 @@ $light-inprogress: #68c9fd;
             padding-top: $header_height;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: $breakpoint-mobile - 1) {
             .p-tests-runs & {
                 padding-top: calc(#{$header-height}  + 72px + 78px); // 72px - filters; 78px - search
             }
