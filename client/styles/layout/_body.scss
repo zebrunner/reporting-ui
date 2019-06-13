@@ -436,6 +436,7 @@ button.red {
     &.firefox {
         background-image: url(../assets/images/_icons_platform/firefox.svg);
     }
+    &.MicrosoftEdge,
     &.edge {
         background-image: url(../assets/images/_icons_platform/edge.svg);
     }
@@ -1563,7 +1564,7 @@ md-chip md-chip-template.bg-primary {
         margin-top: 0;
         margin-bottom: 16px;
       }
-    } 
+    }
 }
 
 #filter-editor {
@@ -2534,7 +2535,7 @@ $light-inprogress: #68c9fd;
     right: 0;
     background-color: white;
     z-index: $zindex-fixed;
-    
+
     @media(max-width: $screen-phone) {
         width: calc(100% - 60px);
         background-color: transparent;
@@ -2802,7 +2803,7 @@ $light-inprogress: #68c9fd;
                     color: #b5b5b5;
                     font-size: 24px;
                     width: 24px;
-                    @media(max-width: $screen-phone) { 
+                    @media(max-width: $screen-phone) {
                         color: rgba(#ffffff, .5)
                     }
                     &:not(:last-child) {
