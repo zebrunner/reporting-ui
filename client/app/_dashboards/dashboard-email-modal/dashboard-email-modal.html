@@ -29,6 +29,7 @@
                                   md-autocomplete-snap
                                   md-transform-chip="checkAndTransformRecipient($chip)"
                                   md-on-remove="removeRecipient($chip)"
+                                  md-add-on-blur="true"
                                   md-separator-keys="keys">
                             <md-chip-template name="chip">
                                 <profile-photo ng-model="$chip.photoURL" size="40" auto-resize="false"></profile-photo>
