@@ -576,7 +576,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             $timeout(function () {
                 var gridstack = angular.element('.grid-stack').gridstack($scope.gridstackOptions).data('gridstack');
                 $scope.gridstackOptions.disableResize = false;
-                var el = angular.element('#' + widget.id)[0];
+                var el = angular.element('#widget-container-body-' + widget.id)[0];
                 var gridstackEl = angular.element('#widget-' + widget.id)[0];
                 if(Object.size(widget.data.dataset) == 0) {
                     gridstack.resize(gridstackEl, widget.location.width, (Math.ceil(el.offsetHeight / $scope.gridstackOptions.cellHeight / 2)) + 2);
@@ -584,7 +584,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     gridstack.resize(gridstackEl, widget.location.width, (Math.ceil(el.offsetHeight / $scope.gridstackOptions.cellHeight / 2)) + 2);
                 }
                 $scope.gridstackOptions.disableResize = true;
-            }, 100);
+            }, 0, false);
         }
     };
 
