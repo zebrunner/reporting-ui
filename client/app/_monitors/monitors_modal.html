@@ -107,7 +107,7 @@
                 </div>
                 <div layout layout-sm="column" ng-if="monitor.notificationsEnabled && isToolConnected('EMAIL')">
                     <md-input-container flex>
-                        <label ng-if="monitor.emailList">Recepients ({{monitor.emailList.length}})</label>
+                        <label ng-if="monitor.emailList">Recipients ({{monitor.emailList.length}})</label>
                         <md-chips ng-model="monitor.emailList"
                                   filter-selected=true
                                   md-autocomplete-snap
