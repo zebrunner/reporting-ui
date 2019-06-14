@@ -64,14 +64,14 @@
                                                 Send by email
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item class="hide-phone">
-                                            <md-button name="editWidget" data-ng-click="showNeededWidgetModal($event, widget, false, dashboard)" has-any-permission="['MODIFY_WIDGETS']">
+                                        <md-menu-item ng-if="! isMobile" has-any-permission="['MODIFY_WIDGETS']">
+                                            <md-button name="editWidget" data-ng-click="showNeededWidgetModal($event, widget, false, dashboard)">
                                                 <md-icon class="material-icons">edit</md-icon>
                                                 Edit widget
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item class="hide-phone">
-                                            <md-button name="editWidget" data-ng-click="deleteDashboardWidget(widget)" has-any-permission="['MODIFY_WIDGETS']">
+                                        <md-menu-item ng-if="! isMobile" has-any-permission="['MODIFY_WIDGETS']">
+                                            <md-button name="editWidget" data-ng-click="deleteDashboardWidget(widget)">
                                                 <md-icon class="material-icons">remove_circle_outline</md-icon>
                                                 Remove from dashboard
                                             </md-button>

@@ -14,13 +14,15 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                                                          $cookies, $location, $state, $http, $mdConstant,
                                                          $stateParams, $mdDialog, $mdToast, UtilService,
                                                          DashboardService, projectsService, UserService,
-                                                         $widget, $mapper, toolsService, messageService, AuthService) {
+                                                         $widget, $mapper, toolsService, messageService, windowWidthService, AuthService) {
     'ngInject';
 
     const vm = {
         dashboard: null,
         isToolConnected: toolsService.isToolConnected,
     };
+
+    $scope.isMobile = windowWidthService.isMobile();
 
     $scope.emptyContent = {
         mobileText: ['No widget added.', 'Go to desktop version for more options or watch tutorial to learn more.'],
