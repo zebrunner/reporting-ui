@@ -172,6 +172,8 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             targetEvent: event,
             clickOutsideToClose:true,
             fullscreen: true
+        }).then(function (rs) {
+            vm.projects.push(rs);
         });
     }
 

@@ -13,16 +13,16 @@
             ProjectService.createProject(project).then(function(rs) {
                 if (rs.success) {
                     messageService.success("Project created successfully");
+                    $scope.hide(rs.data);
                 } else
                 {
                     messageService.error(rs.message);
                 }
             });
-            $scope.hide();
         };
 
-        $scope.hide = function() {
-            $mdDialog.hide();
+        $scope.hide = function(rs) {
+            $mdDialog.hide(rs);
         };
 
         $scope.cancel = function() {
