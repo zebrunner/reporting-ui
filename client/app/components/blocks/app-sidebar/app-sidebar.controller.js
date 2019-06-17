@@ -223,7 +223,7 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             projectsService.resetSelectedProjects();
         }
         vm.selectedProjectShortName = cutSelectedProjectName();
-        if ($state.current.name === 'tests.runs') {
+        if ($state.current.name === 'tests.runs' || $state.current.name === 'dashboard.page') {
             $timeout(() => {
                 $state.reload();
             });
