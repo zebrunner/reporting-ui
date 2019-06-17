@@ -2175,21 +2175,15 @@ $light-inprogress: #68c9fd;
                     min-width: 20%;
                 }
                 button {
-                    width: 80px;
-                    height: 32px;
-                    min-width: 80px;
-                    min-height: 32px;
-                    padding: 0;
                     text-transform: none;
                     &:first-child {
-                        border-radius: 3px 0 0 3px;
+                        border-radius: 4px 0 0 4px;
                     }
                     &:last-child {
-                        border-radius: 0 3px 3px 0;
+                        border-radius: 0 4px 4px 0;
                     }
                     &:not(:first-child) {
                         position: relative;
-                        left: -3px;
                     }
                     * {
                         font-size: 14px;
@@ -3766,7 +3760,7 @@ users-component md-tab-item.md-disabled {
     }
 
     .md-dialog-content {
-        padding: 20px;
+        padding: 20px 20px 10px;
 
         .ace_editor {
             height: 132px;

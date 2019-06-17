@@ -157,10 +157,10 @@
                     <md-button ng-click="cancelLauncher();" ng-if="launcher.id">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
                         ADD
                     </md-button>
-                    <md-button class="md-raised md-primary" ng-click="updateLauncher(launcher);" ng-if="launcher.id" ng-disabled="!launcher.name || !launcher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher(launcher);" ng-if="launcher.id" ng-disabled="!launcher.name || !launcher.model">
                         SAVE
                     </md-button>
                 </div>

@@ -49,10 +49,10 @@
                             data-ng-model="$ctrl.newIssue.description"></textarea>
                     </md-input-container>
                     <md-dialog-actions layout="row">
-                        <md-button ng-if="$ctrl.isNewIssue" class="md-raised" ng-click="$ctrl.clearIssue()" ng-disabled="known_issue_form.$invalid">
+                        <md-button ng-if="$ctrl.isNewIssue" ng-click="$ctrl.clearIssue()" ng-disabled="known_issue_form.$invalid">
                             Clear
                         </md-button>
-                        <md-button id="unassignIssue" ng-if="!$ctrl.isNewIssue" class="md-raised"
+                        <md-button id="unassignIssue" ng-if="!$ctrl.isNewIssue"
                             ng-really-message="Do you really want to delete known issue from current test?"
                             ng-really-click="$ctrl.unassignIssue($ctrl.newIssue)" ng-disabled="known_issue_form.$invalid">
                             Unassign

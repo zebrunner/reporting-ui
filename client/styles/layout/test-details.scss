@@ -56,13 +56,6 @@
                         @media(max-width: $breakpoint-mobile - 1) {
                             display: none;
                         }
-                        button {
-                            box-shadow: none;
-                            background-color: $dark-coal-light-new-op01;
-                            &.md-primary {
-                                background-color: $brand-light;
-                            }
-                        }
                     }
                     &_sorts {
                         @extend %detailsItems;
