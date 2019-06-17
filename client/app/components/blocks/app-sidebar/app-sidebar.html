@@ -165,11 +165,16 @@
                             </li>
                             <li name="projectName" class="projects__list" md-prevent-menu-close>
                                 <md-radio-group ng-model="$ctrl.selectedProject" ng-change="$ctrl.chooseProject();">
-                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id"
+                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id" ng-if="project.name === 'ALL'"
                                                      id="{{::project.id}}"
                                                      aria-label="project {{ ::project.id }}"
                                                      class="projects__list-item md-primary"
                                                      value="{{::project.id}}">{{::project.name}}</md-radio-button>
+                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id" ng-if="project.name !== 'ALL'"
+                                                     id="{{::project.id}}"
+                                                     aria-label="project {{ ::project.id }}"
+                                                     class="projects__list-item md-primary"
+                                                     value="{{::project.id}}">{{::project.name}}</md-radio-button>                 
                                 </md-radio-group>
                             </li>
                             <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">
