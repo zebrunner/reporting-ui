@@ -574,22 +574,23 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     $scope.optimizeWidget = function (widget, index) {
-        if (['table', 'TABLE'].indexOf(widget.type) !== -1 && (Object.size(widget.data.dataset) == 0 || Object.size(widget.data.dataset) == index + 1)) {
+        if (['table', 'TABLE'].indexOf(widget.type) !== -1 && (Object.size(widget.data.dataset) === 0 || Object.size(widget.data.dataset) === index + 1)) {
+            $scope.gridstackOptions.disableResize = false;
+            const gridstack = angular.element('.grid-stack').gridstack($scope.gridstackOptions).data('gridstack');
+            const el = angular.element('#widget-container-body-' + widget.id)[0];
+            const gridstackEl = angular.element('#widget-' + widget.id)[0];
             $timeout(function () {
-                var gridstack = angular.element('.grid-stack').gridstack($scope.gridstackOptions).data('gridstack');
-                $scope.gridstackOptions.disableResize = false;
-                var el = angular.element('#widget-container-body-' + widget.id)[0];
-                var gridstackEl = angular.element('#widget-' + widget.id)[0];
-                if(Object.size(widget.data.dataset) == 0) {
-                    gridstack.resize(gridstackEl, widget.location.width, (Math.ceil(el.offsetHeight / $scope.gridstackOptions.cellHeight / 2)) + 2);
+                const height = (Math.ceil(el.offsetHeight / $scope.gridstackOptions.cellHeight / 2)) + 2;
+                console.log(el.offsetHeight);
+                if(Object.size(widget.data.dataset) === 0) {
+                    gridstack.resize(gridstackEl, widget.location.width, height);
                 } else {
-                    gridstack.resize(gridstackEl, widget.location.width, (Math.ceil(el.offsetHeight / $scope.gridstackOptions.cellHeight / 2)) + 2);
+                    gridstack.resize(gridstackEl, widget.location.width, height);
                 }
                 $scope.gridstackOptions.disableResize = true;
             }, 0, false);
         }
     };
-
 
     var refreshIntervalInterval;
 
