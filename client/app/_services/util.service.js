@@ -146,9 +146,10 @@
 
         function reconnectWebsocket(name, func) {
             if(! $rootScope.disconnectedWebsockets) {
-                $rootScope.disconnectedWebsockets = {};
-                $rootScope.disconnectedWebsockets.websockets = {};
-                $rootScope.disconnectedWebsockets.toastOpened = false;
+                $rootScope.disconnectedWebsockets = {
+                    websockets: {},
+                    toastOpened: false
+                };
             }
             var attempt = $rootScope.disconnectedWebsockets.websockets[name] ? $rootScope.disconnectedWebsockets.websockets[name].attempt - 1 : 3;
             $rootScope.disconnectedWebsockets.websockets[name] = {function: func, attempt: attempt};

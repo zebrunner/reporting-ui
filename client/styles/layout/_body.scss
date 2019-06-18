@@ -62,11 +62,11 @@ body {
 #main-fab, .lonely-fab button {
     position: fixed;
     z-index: 6;
-    right: 40px;
-    bottom: 40px;
+    right: 60px;
+    bottom: 60px;
     @media (max-width: $breakpoint-mobile) {
         &.tests-runs-options {
-            bottom: 110px;
+            bottom: 130px;
         }
     }
 }
