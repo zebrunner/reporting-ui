@@ -100,13 +100,10 @@
     @media (max-width: $breakpoint-mobile - 1) {
         box-shadow: none;
         position: fixed;
-        top: calc(#{$header_height} + 72px); // 72px - filter section height
         left: 0;
         right: 0;
         z-index: 3;
-        border-bottom: 2px solid $main_container_bg;
-        padding: 20px 16px;
-
+        padding: 0;
         ._no-filters & {
             top: $header-height;
         }
