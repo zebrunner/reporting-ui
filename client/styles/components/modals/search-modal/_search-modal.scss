@@ -19,4 +19,11 @@
             }
         }
     }
+    &__input-wrapper {
+            position: relative;
+            margin: 0 0 24px 0;
+            font-weight: normal;
+            flex-grow: 1;
+            flex-shrink: 1;
+    }
 }

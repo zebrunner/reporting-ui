@@ -6,14 +6,13 @@
      layout-xs="column"
      ng-class="{ '_mobile': $ctrl.isMobile(), '_active': $ctrl.isMobile() && $ctrl.showAdvancedSearchFilters }">
     <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
-    <div class="tests-runs-search__top-section" flex="auto" layout="row">
+    <div class="tests-runs-search__top-section" flex="auto" layout="row" ng-if="!$ctrl.isMobile()">
         <ng-transclude ng-if="!$ctrl.isMobile()"></ng-transclude>
         <label class="tests-runs-search__input-label">
             <input class="form-fields__input _with-icon"
                    placeholder="Search items"
-                   ng-model-options="{debounce: 700}"
                    ng-model="$ctrl.searchParams.query"
-                   ng-change="$ctrl.onChangeSearchCriteria('query')"
+                   ng-change="$ctrl.onChangeSearchCriteria()"
                    aria-label="Search items"
                    aria-describedby="basic-addon2">
             <i class="material-icons form-fields__input-icon">

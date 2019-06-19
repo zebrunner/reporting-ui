@@ -29,17 +29,15 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         },
         getActiveSearchType: testsRunsService.getActiveSearchType,
         searchParams: testsRunsService.getLastSearchParams(),
-        isModalSearchActive: testsRunsService.isModalSearchActive,
+        isModalSearchActive: testsRunsService.isSearchActive,
         onChangeSearchCriteria: onChangeSearchCriteria,
         openDatePicker: openDatePicker,
         onReset: onReset,
         showSearchFilters: showSearchFilters,
-        resetSearchQuery: resetSearchQuery,
         showAdvancedSearchFilters: false,
         closeModal: closeModal,
         showSearchDialog: showSearchDialog,
         onApply: onApply,
-        onModalReset: onModalReset,
     };
 
     vm.$onInit = init;
@@ -77,7 +75,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                 $(window).off('resize.searchDialog');
             },
             locals: {
-                onReset: vm.onModalReset,
+                onReset: vm.onReset,
                 onApply: vm.onApply,
                 environments: vm.environments,
                 platforms: vm.platforms,
@@ -114,18 +112,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         testsRunsService.resetFilteringState();
         vm.onFilterChange();
         vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
-    }
-
-    function onModalReset() {
-        if (vm.searchParams.query) {
-            let queryTemplate = vm.searchParams.query;
-            vm.onReset();
-            vm.searchParams.query = queryTemplate;
-            vm.onChangeSearchCriteria();
-            vm.onApply();
-        } else {
-            vm.onReset();
-        }
     }
 
     function onApply() {
@@ -261,11 +247,6 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             }
         })
     }
-
-    function resetSearchQuery() {
-        vm.searchParams.query = null;
-        vm.onChangeSearchCriteria('query');
-    };
 
     function showSearchFilters() {
         vm.showAdvancedSearchFilters = ! vm.showAdvancedSearchFilters;

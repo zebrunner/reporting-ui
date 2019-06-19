@@ -233,6 +233,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         }
     }
     &__close-btn {
+        z-index: 1;
         position: absolute;
         top: 10px;
         right: 0;
