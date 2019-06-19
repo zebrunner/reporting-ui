@@ -85,24 +85,10 @@
                         }
                     }
                     .md-label {
+                        line-height: 20px;
                         margin-left: 12px;
                         color: rgba(#ffffff, .8);
                         
-                    }
-                    &.md-checked {
-                        .md-off {
-                            border-color: #ffffff !important;
-                        }
-                    }
-                    .md-off {
-                        border-color: rgba(#ffffff, .25) !important;
-                        &:hover {
-                            border-color: rgba(#ffffff, .5) !important;
-                        }
-                    }
-                    .md-on {
-                        border-color: #ffffff !important;
-                        background-color: #ffffff;
                     }
                 }
             }
@@ -170,10 +156,10 @@
             cursor: pointer;
             z-index: 2;
             md-icon {
-                color: rgba(#ffffff, .4);
+                color: rgba(#ffffff, .8);
             }
             &:hover md-icon{
-                color: rgba(#ffffff, .5);
+                color: #ffffff;
             }
         }
         &__button {

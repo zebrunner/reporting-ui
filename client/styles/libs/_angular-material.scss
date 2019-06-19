@@ -156,6 +156,126 @@ md-toast {
     }
 }
 
+md-checkbox {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    &:not(.md-checked) {
+        .md-icon {
+            border-color: rgba($dark-new, .5);
+        }
+        &:hover {
+            .md-icon {
+                border-color: rgba($dark-new, .9);
+            }
+        }
+    }
+    
+    .md-icon,
+    .md-container {
+        width: 18px;
+        height: 18px;
+    }
+    &.md-checked {
+        .md-ink-ripple {
+            color: rgba($dark-new ,0.9);
+        }
+        .md-icon {
+            background-color: rgba($dark-new, .9);
+            &::after {
+                left: 4px;
+                top: -1px;
+            }
+        }
+        &[disabled], &[disabled]:hover {
+            .md-icon {
+                background-color: rgba($dark-new, .25);
+            } 
+        }
+    }
+    &[disabled], &[disabled]:hover {
+        &:not(.md-checked) .md-icon {
+            border-color: rgba($dark-new, .25);
+        } 
+    }
+}
+
+md-switch {
+    &.md-checked.md-primary {
+        .md-bar {
+            background-color: $brand-light-blue;
+        }
+        .md-thumb {
+            background-color: $brand-light;
+        }
+        &:hover {
+            .md-bar {
+                background-color: $brand-bright-blue;
+            }
+        }
+    }
+    .md-bar {
+        background-color: #d9dcdf;
+    }
+    &:hover {
+        .md-bar {
+            background-color: #bfc5c9;
+        }
+    }
+    &[disabled] {
+        &.md-checked.md-primary {
+            .md-bar {
+                background-color: #d9dcdf;
+            }
+            .md-thumb {
+                background-color: #b2b9be;
+            }
+            &:hover {
+                .md-bar {
+                    background-color: #d9dcdf;
+                }
+            }
+        }
+        &:hover {
+            .md-bar {
+                background-color: #d9dcdf;
+            }
+        }
+    }
+}
+
+md-select-menu[multiple] md-option.md-checkbox-enabled {
+    .md-icon,
+    .md-container {
+        width: 18px;
+        height: 18px;
+    }
+    .md-container {
+        margin-left: 10px;
+    }
+    .md-icon {
+        border-color: rgba($dark-new, .5);
+    }
+    &:hover {
+        .md-icon {
+            border-color: rgba($dark-new, .9);
+        }
+    }
+    &[selected] {
+        .md-ink-ripple {
+            color: rgba($dark-new ,0.9);
+        }
+        .md-icon {
+            background-color: rgba($dark-new, .9);
+            &::after {
+                left: 4px;
+                top: -1px;
+            }
+        }
+    }
+}
+
 //BUTTONS 
 @mixin default-button($background, $color, $hoverBg) {
     &:not([disabled]) {
@@ -245,6 +365,87 @@ md-dialog .md-actions, md-dialog md-dialog-actions {
             }
             &._checked-list {
                 background: url('../assets/images/check_list.svg') center no-repeat;
+            }
+        }
+    }
+}
+md-radio-button {
+    &.md-checked {
+        .md-off {
+            border-color: rgba($dark-new, .5);
+        }
+    }
+    .md-off {
+        border-color: rgba($dark-new, .5);
+    }
+    .md-on {
+        border-color: rgba($dark-new, .5);
+        background-color: rgba($dark-new, .5);
+    }
+    &:hover {
+        &.md-checked .md-off, .md-off {
+                border-color: rgba($dark-new, .9);
+        }
+        .md-on {
+            border-color: rgba($dark-new, .9);
+            background-color: rgba($dark-new, .9);
+        }
+    }
+
+    &.md-primary {
+        &:not([disabled]).md-checked {
+            .md-off {
+                border-color: #ffffff;
+            }
+        }
+        .md-off {
+            border-color: rgba(#ffffff, .25);
+            &:hover {
+                border-color: #ffffff;
+            }
+        }
+        
+        &:not([disabled]) {
+            .md-on {
+                border-color: #ffffff;
+                background-color: #ffffff;
+            }
+        }
+    }
+    
+    &[disabled], &[disabled].md-primary,  &[disabled].md-primary.md-checked, &[disabled].md-checked {
+        border-color:rgba($dark-new, .25);
+        .md-off {
+            border-color: rgba($dark-new, .25);
+            &:hover {
+                border-color: rgba($dark-new, .25);
+            }
+        }
+        .md-on {
+            border-color: rgba($dark-new, .25);
+            background-color: rgba($dark-new, .25);
+        }
+    }
+}
+
+.md-menu, .md-menu .md-open {
+    .md-icon-button {
+        min-width: 40px;
+        max-width: 40px;
+        padding: 0;
+        border-radius: 50%;
+        .material-icons {
+            transition: color .25s ease-in-out;
+            color: rgba($dark-new, .5);
+        }
+        &:hover {
+            .material-icons {
+                color: rgba($dark-new, .9);
+            }
+        }
+        &[disabled] {
+            .material-icons {
+                color: rgba($dark-new, .25);
             }
         }
     }
