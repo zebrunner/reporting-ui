@@ -3215,10 +3215,10 @@ $light-inprogress: #68c9fd;
         }
         &_actions {
             position: absolute;
-            padding: 0 20px 0 calc(34% + 20px);
+            padding: 0 20px 0 0;
             min-height: 36px;
-            width: 100%;
-            left: 0;
+            width: calc(66% - 20px);
+            left: calc(34% + 20px);
             bottom: 20px;
 
             @media(max-width: $screen-phone) {
