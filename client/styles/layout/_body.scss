@@ -2847,12 +2847,13 @@ $light-inprogress: #68c9fd;
         }
 
         @media (max-width: $breakpoint-mobile - 1) {
-            .p-tests-runs & {
-                padding-top: calc(#{$header-height}  + 72px + 78px); // 72px - filters; 78px - search
-            }
 
+            .p-tests-runs & {
+                padding-top: calc(#{$header-height} + 72px); // 72px - filters;
+            }
+            
             .p-tests-runs._no-filters & {
-                padding-top: calc(#{$header-height} + 78px); // 72px - filters; 78px - search
+                padding-top: #{$header-height};
             }
         }
     }

@@ -10,6 +10,20 @@
             <div class="search-modal__content main-modal__content">
                 <div layout="column" class="search-fields">
                     <div layout="row">
+                        <label class="search-modal__input-wrapper">
+                            <input class="form-fields__input _with-icon"
+                                placeholder="Search items"
+                                ng-model-options="{debounce: 700}"
+                                ng-model="$ctrl.searchParams.query"
+                                ng-change="$ctrl.onChangeSearchCriteria()"
+                                aria-label="Search items"
+                                aria-describedby="basic-addon2">
+                            <i class="material-icons form-fields__input-icon">
+                                search
+                            </i>
+                        </label>
+                    </div>
+                    <div layout="row">
                         <button class="quadro-btn reviewed" data-ng-class="{'label-blank': !$ctrl.searchParams.reviewed, 'label-primary': !!$ctrl.searchParams.reviewed}"
                                 ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed; $ctrl.onChangeSearchCriteria()">R
                         </button>

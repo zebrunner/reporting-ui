@@ -411,7 +411,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         });
         clearFilterSlice();
     }
-
+    
     function handleBodyClass() {
         if (vm.filters && vm.filters.length) {
             document.body.classList.remove('_no-filters');
