@@ -210,7 +210,9 @@ md-input-container  {
                 [disabled] &, [disabled]:hover & {
                     background: rgba($dark-new, .07);
                     border-color: transparent;
-                    color: rgba($dark-new, .35);
+                    & ~ label:not(.md-no-float):not(.md-container-ignore) {
+                        color: rgba($dark-new, .35);
+                    }
                 }
             }
         }
@@ -219,7 +221,12 @@ md-input-container  {
             label:not(.md-no-float):not(.md-container-ignore) {
                 color: rgba($dark-new, .8);
             }
-        }
+            .md-input[disabled] {
+                    & ~ label:not(.md-no-float):not(.md-container-ignore) {
+                        color: rgba($dark-new, .35);
+                    }
+                }
+            }
 
         .md-errors-spacer {
             min-height: 0;

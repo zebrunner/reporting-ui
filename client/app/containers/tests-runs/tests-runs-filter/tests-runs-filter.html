@@ -95,10 +95,11 @@
                                             </md-input-container>
                                             <md-input-container ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0 || (!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length)"
                                                  class="value-input _gray-bg _without-animation">
-                                                <label class="placeholder-label">Value</label>
+                                                
                                                 <input type="text" ng-disabled="!$ctrl.currentOperator.value"
                                                        ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-model="$ctrl.currentValue.value"
                                                        ng-if="!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length" />
+                                                       <label class="placeholder-label">Value</label>
                                                 <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0">
                                                     <md-input-container class="form-fields__input date-picker-container no-padding pull-left no-margin"
                                                                         flex="auto">
