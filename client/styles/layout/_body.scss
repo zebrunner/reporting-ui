@@ -956,13 +956,6 @@ input[type="file"].content-input.not-empty{
     }
 }
 
-/* Profile info block */
-.page-profile .profile-header {
-    padding-top: 30px;
-    padding-bottom: 30px;
-    //background-image: url(../assets/images/signin_bg.jpg);
-}
-
 ul.profile-image-actions {
     position: absolute !important;
     top: 0;
@@ -970,11 +963,9 @@ ul.profile-image-actions {
 }
 
 .profile-personal-info {
-    display: inline-block;
-    padding-top: 20px;
-    color: white;
-    font-size: 36px;
-    line-height: 1.1;
+    font-size: 16px;
+    font-weight: normal;
+    color: $dark-new;
 }
 
 /* Profile photo mask logic */
@@ -2665,7 +2656,7 @@ $light-inprogress: #68c9fd;
                 height: 14px;
                 font-weight: normal;
                 line-height: 12px;
-                margin-bottom: 34px;
+                margin-bottom: 14px;
 
                 &.__scan-repo {
                     margin-bottom: 24px;
@@ -2809,7 +2800,6 @@ $light-inprogress: #68c9fd;
             }
         }
         &_code {
-            padding-top: 24px;
             padding-bottom: 20px;
 
             label {
@@ -2822,13 +2812,14 @@ $light-inprogress: #68c9fd;
             &_editor {
                 min-height: 297px;
             }
-            .zf-input-container {
+            md-input-container {
                 position: relative;
                 md-input-container {
                     position: absolute;
-                    top: 29px;
+                    top: 10px;
                     right: 10px;
                     z-index: 1;
+                    max-width: 120px;
                     md-select {
                         width: 120px;
                         height: 28px;
@@ -3020,12 +3011,20 @@ $light-inprogress: #68c9fd;
         &_launcher-add {
             font-size: 0;
             display: flex;
-            margin-bottom: 30px;
+            align-items: center;
+            margin-bottom: 6px;
+            md-input-container {
+                max-width: 228px;
+                margin-right: 12px;
+            }
         }
 
         &_manual-launcher-add {
             font-size: 0;
             display: flex;
+            md-input-container {
+                max-width: 228px;
+            }
         }
 
         .divider {
@@ -3069,18 +3068,18 @@ $light-inprogress: #68c9fd;
                         font-size: 16px;
                     }
                 }
-                md-icon {
-                    top: 6px;
-                    right: -6px !important;
-                    font-size: 20px;
-                    color: rgba(127, 127, 127, 0.75);
+                // md-icon {
+                //     top: 6px;
+                //     right: -6px !important;
+                //     font-size: 20px;
+                //     color: rgba(127, 127, 127, 0.75);
 
-                    @media(max-width: $screen-phone) {
-                        font-size: 24px;
-                        top: 4px;
-                        right: -4px !important;
-                    }
-                }
+                //     @media(max-width: $screen-phone) {
+                //         font-size: 24px;
+                //         top: 4px;
+                //         right: -4px !important;
+                //     }
+                // }
                 .md-errors-spacer {
                     display: none;
                 }
@@ -3511,11 +3510,12 @@ users-component md-tab-item.md-disabled {
 
     $default-margin: 8px;
 
+    align-items: center;
     font-size: 0;
     margin-bottom: 8px;
 
-    > div:not(:first-child) {
-        margin-left: $default-margin;
+    md-input-container {
+        margin-right: $default-margin;
     }
 
     &_key, &_value, &_add-button {
@@ -3525,6 +3525,9 @@ users-component md-tab-item.md-disabled {
         input {
             width: 100%;
         }
+        label {
+            margin: 0;
+        } 
     }
 
     $button-width: 80px;
@@ -3587,37 +3590,10 @@ users-component md-tab-item.md-disabled {
 .dashboard-dialog {
     .dashboard-dialog-container {
         padding: 20px !important;
-        margin-bottom: 10px;
-
-        .form-fields__input {
-            max-width: 340px;
-            height: 40px;
-
-            &:disabled {
-                color: rgba(0, 0, 0, 0.8);
-                &::placeholder {
-                    color: rgba(0, 0, 0, 0.8);
-                }
-            }
-        }
-
-        [ng-messages] {
-            position: absolute;
-            height: 16px;
-            vertical-align: middle;
-            line-height: 40px;
-            margin-left: 2px;
-            color: red;
-            font-size: 12px;
-
-            [ng-message] {
-                height: 16px;
-                line-height: 16px;
-            }
-        }
 
         &_hidden {
-            margin-top: 15px;
+            margin-left: 22px;
+            align-items: center;
             display: flex;
 
             &_label {
@@ -3634,22 +3610,7 @@ users-component md-tab-item.md-disabled {
 
     .dashboard-dialog-attributes--container {
         background-color: #edeff1;
-    }
-
-    .dashboard-dialog-attributes--container {
-        padding: 27px 20px 20px 20px;
-
-        input {
-            border: none;
-            border-radius: 4px;
-            padding-left: 14px;
-
-        }
-
-        label {
-            line-height: 14px;
-            margin-bottom: 18px;
-        }
+        padding: 20px;
     }
 
     md-dialog-actions {
@@ -3704,9 +3665,13 @@ users-component md-tab-item.md-disabled {
         padding: 20px 20px 10px;
 
         .ace_editor {
-            height: 132px;
+            margin-bottom: 25px;
+            height: 96px;
             border-radius: 4px;
             border: 1px solid rgba(1, 22, 39, 0.1);
+            .ace_print-margin {
+                width: 0;
+            }
         }
     }
 

@@ -91,6 +91,7 @@
 .md-open-menu-container {
     .md-button {
         &, &.md-focused {
+            max-height: unset;
             padding: 0 16px;
             font-size: 14px;
             border-radius: 0;

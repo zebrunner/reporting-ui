@@ -1,22 +1,22 @@
+@import '../global/var-pages';
+@import '../global/var';
+
 .page-profile {
 
-    padding-top: 60px;
+    padding: 60px 10px 20px 10px;
+    max-width: 600px;
+    margin: 0 auto;
 
     .profile-header {
-        position: relative;
-        margin: 0 -30px 15px;
-        padding: 50px 30px 90px;
-        background: url('#{$image_path}/background/p-profile-bg-lg.jpg') no-repeat 0 0;
-        background-size: cover;
+        padding: 40px 0;
     }
 
     .profile-img {
-        display: inline-block;
-        margin: 0 20px 0 0;
+        padding-right: 16px;
         img {
-            max-width: 120px;
-            height: auto;
-            box-shadow: 0 0 0 5px rgba(255,255,255,.5), 0 0 10px rgba(0,0,0,.2);
+            border-radius: 8px;
+            max-width: 48px;
+            max-height: 48px;
         }
     }
 
@@ -26,6 +26,45 @@
             margin-right: 15px;
             box-shadow: 0 0 5px rgba(0,0,0,.2);
         }
+    }
+
+    .profile__form {
+        &-wrapper {
+            padding: 48px 0 40px;
+            justify-content: space-between;
+            border-top: 1px solid rgba($dark-new, .15);
+        }
+        &-title {
+            font-size: 16px;
+            font-weight: normal;
+            line-height: 1.5;
+            letter-spacing: 0.16px;
+            color: $dark-new;
+            max-width: 70px;
+        }
+        &-row {
+            margin-bottom: 12px;
+            width: 434px;
+            &:nth-child(2) {
+                margin-bottom: 22px;
+            }
+            md-input-container {
+                &:nth-child(2) {
+                    margin-left: 25px;
+                }
+                width: 100%;
+            }
+        }
+    }
+
+    .label {
+        height: 16px;
+        background-color: rgba($dark-new, .1);
+        border-radius: 8px;
+        padding: 3px 8px;
+        font-size: 8px;
+        font-weight: normal;
+        color: $dark-new;
     }
 
     .profile-info {
@@ -51,15 +90,33 @@
         border-radius: $border-radius-base;
     }
 
-    @media (max-width: $screen-lg) {
+    @media(max-width: $breakpoint-mobile) {
+        padding: 60px 0 20px 0;
         .profile-header {
-            background-image: url('#{$image_path}/background/p-profile-bg-md.jpg');
+            padding: 24px 16px;
         }
-    }
-
-    @media (max-width: $screen-sm) {
-        .profile-header {
-            background-image: url('#{$image_path}/background/p-profile-bg-sm.jpg');
+        .profile__form {
+            &-wrapper {
+                flex-direction: column;
+                padding: 24px 16px 28px;
+            }
+            &-title {
+                max-width: unset;
+                width: 100%;
+                margin-bottom: 12px;
+            }
+            &-row {
+                margin-bottom: 12px;
+                flex-direction: column;
+                width: 100%;
+                margin-bottom: 12px;
+                md-input-container {
+                    &:nth-child(2) {
+                        margin-left: 0;
+                    }
+                    width: 100%;
+                }
+            }
         }
     }
 }

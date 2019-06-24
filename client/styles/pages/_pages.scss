@@ -45,38 +45,6 @@
 
 .p-users, .p-monitors {
     .fixed-page-header-container_options {
-        md-input-container {
-            margin: 0;
-            &.md-input-focused, &.md-input-has-value {
-                .md-input {
-                    border-color: rgba(0,0,0,0.25);
-                    border-width: 0 0 1px;
-                }
-                label {
-                    display: none;
-                }
-            }
-            label {
-                font-size: 14px;
-                letter-spacing: 0.1px;
-                opacity: 0.35;
-                color: rgba(0, 0, 0, 0.35);
-                padding-left: 20px;
-                padding-bottom: 2px;
-                font-weight: normal;
-            }
-            .md-input {
-                width: 200px;
-                padding-left: 20px;
-                border-color: rgba(0,0,0,0.25);
-            }
-            md-icon {
-                left: 0;
-                font-size: 18px;
-                opacity: 0.35;
-                color: rgba(0, 0, 0, 0.35);
-            }
-        }
         @media (max-width: $screen-phone) {
             display: none;
         }

@@ -37,7 +37,7 @@
                     </div>
                     <div ng-class="{'large-card-content': tool.enabled}" class="integration-tool__item-content" data-ng-if="tool.enabled">
                         <div ng-repeat="setting in tool.settings track by setting.id">
-                            <md-input-container class="md-block" style="margin-bottom: 0">
+                            <md-input-container>
                                 <label name="settingNameLabel">{{ ::setting.name.replace(tool.name + '_', '') }}</label>
                                 <input name="settingName" type="text" ng-if="!setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.enabled || setting.notEditable" />
                                 <input name="settingName" type="password" ng-if="setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.enabled || setting.notEditable" autocomplete="new-password" />
