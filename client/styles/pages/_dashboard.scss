@@ -139,5 +139,38 @@
     &__widgets-wrapper {
         margin-right: -10px;
         margin-left: -10px;
+
+        &_widget-no-data {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            z-index: -1;
+
+            &_icon, &_text {
+                position: relative;
+                transform: translateY(-50%);
+            }
+
+            &_icon {
+                top: 50%;
+                md-icon {
+                    height: 77px;
+                    width: 77px;
+                    color: rgba(#011627, 0.1);
+                }
+            }
+            &_text {
+                top: calc(50% - 22px);
+                color: rgba(#011627, 0.1);
+                font-size: 16px;
+                line-height: 16px;
+                font-weight: 500;
+                letter-spacing: normal;
+            }
+        }
+
     }
 }
