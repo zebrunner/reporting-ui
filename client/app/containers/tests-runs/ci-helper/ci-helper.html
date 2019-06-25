@@ -10,10 +10,11 @@
             </div>
             <div class="ci-runner-container_helper_title show-phone">Choose template</div>
             <div class="ci-runner-container_helper_search">
-                <md-input-container class="no-margin no-padding">
+                <md-input-container class="no-margin no-padding _search">
                     <label>Search template</label>
                     <input name="search" ng-model="filerSc.name" ng-model-options="{debounce: 700}" ng-change="onFilterSearchChange(filerSc.name)" autocomplete="off"/>
-                    <md-icon>search</md-icon>
+                    <md-icon class="input-search-icon">search</md-icon>
+                    <md-icon class="input-close-icon" ng-click="onFilterSearchChange(filerSc.name = '')">close</md-icon>
                 </md-input-container>
             </div>
             <div class="ci-runner-container_helper_section">
@@ -106,10 +107,10 @@
                         Select branch to add templates
                     </div>
                     <div class="ci-runner-container_content_launcher-add ci-runner-container_inline-input">
-                        <zf-input-container>
-                            <label>Branch</label>
+                        <md-input-container class="_gray-bg">
+                            <label class="placeholder-label">Branch</label>
                             <input type="text" ng-model="launcherScan.branch" autofocus ng-required="true" />
-                        </zf-input-container>
+                        </md-input-container>
                         <md-button class="md-raised" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="! hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             SCAN
                         </md-button>
@@ -129,22 +130,21 @@
                         <span ng-if="launcher.id">{{launcher.name}}</span>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
-                        <zf-input-container class="__input-container">
-                            <label>Name</label>
+                        <md-input-container class="_gray-bg">
+                            <label class="placeholder-label">Name</label>
                             <input type="text" ng-model="launcher.name" />
-                        </zf-input-container>
+                        </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
-                        <zf-input-container>
-                            <label>Model</label>
+                        <md-input-container class="_gray-bg no-margin">
                             <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
-                            <md-input-container>
+                            <md-input-container class="no-margin">
                                 <label>Platform</label>
                                 <md-select ng-change="mergeTemplate(DEFAULT_TEMPLATES.model.json);" ng-model="DEFAULT_TEMPLATES.model">
                                     <md-option ng-repeat="dt in DEFAULT_TEMPLATES.variants track by $index" ng-value="dt">{{dt.name}}</md-option>
                                 </md-select>
                             </md-input-container>
-                        </zf-input-container>
+                        </md-input-container>
                     </div>
                 </div>
                 <div class="ci-runner-container_content_actions">
@@ -182,10 +182,10 @@
                         </show-part>
                     </div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">
-                        <zf-input-container>
+                        <md-input-container class="_gray-bg no-margin">
                             <input type="number" ng-if="builtLauncher.type[key] === 'int'" ng-model="builtLauncher.model[key]"/>
                             <input type="text" ng-if="builtLauncher.type[key] !== 'int'" ng-model="builtLauncher.model[key]"/>
-                        </zf-input-container>
+                        </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">
                         <zf-input-container>

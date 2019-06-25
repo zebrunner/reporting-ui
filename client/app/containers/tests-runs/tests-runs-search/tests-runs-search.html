@@ -8,18 +8,17 @@
     <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
     <div class="tests-runs-search__top-section" flex="auto" layout="row">
         <ng-transclude ng-if="!$ctrl.isMobile()"></ng-transclude>
-        <label class="tests-runs-search__input-label">
-            <input class="form-fields__input _with-icon"
-                   placeholder="Search items"
-                   ng-model-options="{debounce: 700}"
+        <md-input-container class="tests-runs-search__input-label _with-icon _without-animation ">
+            <label class="placeholder-label">Search items</label>
+            <input ng-model-options="{debounce: 700}"
                    ng-model="$ctrl.searchParams.query"
                    ng-change="$ctrl.onChangeSearchCriteria('query')"
                    aria-label="Search items"
                    aria-describedby="basic-addon2">
-            <i class="material-icons form-fields__input-icon">
+            <i class="material-icons">
                 search
             </i>
-        </label>
+        </md-input-container>
     </div>
 
     <div class="tests-runs-search__bottom-section" ng-if="!$ctrl.isMobile()"

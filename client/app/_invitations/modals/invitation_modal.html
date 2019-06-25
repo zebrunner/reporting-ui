@@ -11,7 +11,7 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-content class="autocomplete" layout="column" style="background-color: transparent">
+                <md-content class="autocomplete md-padding" layout="column" style="background-color: transparent">
                     <md-select ng-show="isLDAPConnected" id="source" name="source" ng-model="source" placeholder="Choose source...." required>
                         <md-option ng-repeat="s in SOURCES" ng-value="s">
                             {{s}}

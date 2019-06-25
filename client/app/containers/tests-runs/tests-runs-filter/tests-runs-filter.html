@@ -35,9 +35,10 @@
                             <div layout-lg="row" layout="column">
                                 <form class="form-validation no-padding" id="filterForm" name="filter_form" ng-cloak>
                                     <div class="tests-runs-filter__editor-text" layout="row" layout-xs="column">
-                                        <div class="filter-name" layout-xs="column">
-                                            <input id="filterName" type="text" class="form-fields__input" placeholder="Name" flex="none" ng-model="$ctrl.filter.name" required/>
-                                        </div>
+                                        <md-input-container class="filter-name _gray-bg _without-animation no-margin" layout-xs="column">
+                                            <label class="placeholder-label">Name</label>
+                                            <input id="filterName" type="text" flex="none" ng-model="$ctrl.filter.name" required/>
+                                        </md-input-container>
                                         <div id="filterState" class="filter-state">
                                             <label>Public</label>
                                             <md-checkbox
@@ -92,11 +93,13 @@
                                                     </md-option>
                                                 </md-select>
                                             </md-input-container>
-                                            <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0 || (!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length)"
-                                                 class="value-input">
-                                                <input type="text" class="form-fields__input" placeholder="Value" ng-disabled="!$ctrl.currentOperator.value"
+                                            <md-input-container ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0 || (!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length)"
+                                                 class="value-input _gray-bg _without-animation">
+                                                
+                                                <input type="text" ng-disabled="!$ctrl.currentOperator.value"
                                                        ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-model="$ctrl.currentValue.value"
                                                        ng-if="!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length" />
+                                                       <label class="placeholder-label">Value</label>
                                                 <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0">
                                                     <md-input-container class="form-fields__input date-picker-container no-padding pull-left no-margin"
                                                                         flex="auto">
@@ -106,7 +109,7 @@
                                                     <md-date-range selected-template="TD" ng-model="$ctrl.selectedFilterRange"
                                                                    one-panel="true" auto-confirm="true" show-template="false" md-on-select="selectedDates = $dates; $ctrl.onSelect($dates)"></md-date-range>
                                                 </div>
-                                            </div>
+                                            </md-input-container>
                                             <md-button ng-disabled="!$ctrl.currentOperator.value || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') === -1) || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') >= 0 && $ctrl.currentOperator.type.indexOf('DATE') >= 0)"
                                                     ng-click="$ctrl.addChip()" id="add-button" class="md-raised">ADD</md-button>
                                         </div>

@@ -19,14 +19,15 @@
 
         <md-dialog-content>
             <div class="md-dialog-content dashboard-dialog-container">
-                <ng-form name="info">
-                    <div>
-                        <input placeholder="Set title" class="form-fields__input form-control" type="text" name="title" data-ng-model="dashboard.title" ng-change="checkDuplicateDashboardTitle(dashboard.title, dashboard_form.info)" autofocus="true" ng-required="true" ng-disabled="!isNew && !dashboard.editable">
+                <ng-form name="info" layout="row">
+                    <md-input-container>
+                        <label class="placeholder-label">Name</label>
+                        <input type="text" name="title" data-ng-model="dashboard.title" ng-change="checkDuplicateDashboardTitle(dashboard.title, dashboard_form.info)" autofocus="true" ng-required="true" ng-disabled="!isNew && !dashboard.editable">
                         <div ng-messages="dashboard_form.info.$error" role="alert" ng-if="dashboard_form.info.$dirty">
                             <div ng-message="required">Title required</div>
                             <div ng-message="duplicateKey">Duplicate title forbidden</div>
                         </div>
-                    </div>
+                    </md-input-container>
                     <div class="dashboard-dialog-container_hidden">
                         <div class="dashboard-dialog-container_hidden_label">Hidden</div>
                         <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch" ng-disabled="!isNew && !dashboard.editable"></md-switch>
@@ -34,18 +35,19 @@
                 </ng-form>
             </div>
             <div class="md-dialog-content dashboard-dialog-attributes--container" data-ng-if="!isNew">
-                <label>Add new attributes</label>
                 <ng-form name="attributes">
-                    <div class="dashboard-attributes-container">
-                        <div class="dashboard-attributes-container_key">
-                            <input placeholder="Key" type="text" ng-change="checkDuplicateAttributeKey(newAttribute.key, dashboard_form.attributes);" class="form-control" data-ng-model="newAttribute.key" ng-required="true"/>
+                    <div class="dashboard-attributes-container" layout="row">
+                        <md-input-container class="dashboard-attributes-container_key _gray-bg">
+                            <label>Key</label>
+                            <input type="text" ng-change="checkDuplicateAttributeKey(newAttribute.key, dashboard_form.attributes);" data-ng-model="newAttribute.key" ng-required="true"/>
                             <div ng-messages="dashboard_form.attributes.$error">
                                 <div ng-message="duplicateKey">Duplicate key forbidden</div>
                             </div>
-                        </div>
-                        <div class="dashboard-attributes-container_value">
-                            <input placeholder="Value" type="text" class="form-control" data-ng-model="newAttribute.value" ng-required="true"/>
-                        </div>
+                        </md-input-container>
+                        <md-input-container class="dashboard-attributes-container_value _gray-bg">
+                            <label>Value</label>
+                            <input type="text" data-ng-model="newAttribute.value" ng-required="true"/>
+                        </md-input-container>
                         <div class="dashboard-attributes-container_add-button">
                             <md-button type="submit" class="md-raised" data-ng-click="createAttribute(newAttribute, dashboard_form.attributes);" data-ng-disabled="dashboard_form.attributes.$invalid">ADD</md-button>
                         </div>
