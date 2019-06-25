@@ -383,6 +383,9 @@ md-input-container  {
         }
     }
     &.chips-input-container {
+        &:not(.md-input-invalid).md-input-focused md-icon {
+            color: rgb(97, 97, 97);
+        }
         input {
             font-size: 14px;
         }
