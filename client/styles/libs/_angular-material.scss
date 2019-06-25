@@ -260,10 +260,12 @@ md-input-container  {
         }
 
         &._search {
+            padding: 6px 0 4px;
             &.md-input-focused, & {
                 label:not(.md-no-float):not(.md-container-ignore) {
                     transition: opacity .25s ease-in-out, color .25s ease-in-out;
                     padding-left: 0;
+                    line-height: 1;
                 }
                 .md-input {
                     background-color: transparent;
@@ -271,7 +273,7 @@ md-input-container  {
                     border-color: rgba($dark-new, .5);
                     border-radius: 0;
                     padding-left: 0;
-                    height: 32px;
+                    height: 26px;
                 }
                 md-icon {
                     font-size: 18px;
@@ -280,8 +282,7 @@ md-input-container  {
                     width: 18px;
                     min-height: 18px;
                     min-width: 18px;
-                    top: auto;
-                    bottom: 3px;
+                    bottom: 5px;
                     right: 2px;
                     left: auto;
                     transition: opacity .25s ease-in-out;
