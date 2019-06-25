@@ -2,20 +2,20 @@
     <zf-sub-header ng-class="{'_widget-placement': MODE === 'WIDGET_PLACEMENT'}">
         <zf-sub-header-title>{{dashboard.title}}</zf-sub-header-title>
         <zf-sub-header-options ng-class="{'header-option-selected': MODE === 'WIDGET_PLACEMENT'}">
-            <div>
+            <div class="hide-phone">
                 <button class="fixed-page-header__tooltip-btn" data-ng-if="MODE !== 'WIDGET_PLACEMENT' && $ctrl.isToolConnected('EMAIL') && dashboard.widgets.length" ng-click="showEmailDialog($event);">
                     <i class="material-icons">
                         send
                     </i>
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </button>
-                <button class="fixed-page-header__tooltip-btn  hide-phone" ng-if="isGridStackEvailableToEdit() && dashboard.widgets.length" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
+                <button class="fixed-page-header__tooltip-btn" ng-if="isGridStackEvailableToEdit() && dashboard.widgets.length" has-any-permission="['MODIFY_WIDGETS']" ng-click="startEditWidgets();">
                     <i class="material-icons">
                         dashboard
                     </i>
                     <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
                 </button>
-                <button class="fixed-page-header__tooltip-btn hide-phone" has-any-permission="['MODIFY_DASHBOARDS']" data-ng-if="MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
+                <button class="fixed-page-header__tooltip-btn" has-any-permission="['MODIFY_DASHBOARDS']" data-ng-if="MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
                     <i class="material-icons">
                         edit
                     </i>
@@ -52,7 +52,7 @@
                     <div ng-attr-id="widget-container-{{ widget.id }}" class="panel panel-default grid-stack-item-content" zafira-background-theme="graph">
                         <div class="panel-heading">
                             {{widget.title}}
-                            <md-menu class="pull-right widget-icon" data-html2canvas-ignore>
+                            <md-menu class="pull-right widget-icon hide-phone" data-html2canvas-ignore>
                                     <md-button name="widgetMenu" aria-label="Widget settings" class="md-icon-button"
                                                data-ng-click="$mdMenu.open($event);">
                                         <md-icon class="material-icons">more_vert</md-icon>
@@ -64,13 +64,13 @@
                                                 Send by email
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item ng-if="! isMobile" has-any-permission="['MODIFY_WIDGETS']">
+                                        <md-menu-item has-any-permission="['MODIFY_WIDGETS']">
                                             <md-button name="editWidget" data-ng-click="showNeededWidgetModal($event, widget, false, dashboard)">
                                                 <md-icon class="material-icons">edit</md-icon>
                                                 Edit widget
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item ng-if="! isMobile" has-any-permission="['MODIFY_WIDGETS']">
+                                        <md-menu-item has-any-permission="['MODIFY_WIDGETS']">
                                             <md-button name="editWidget" data-ng-click="deleteDashboardWidget(widget)">
                                                 <md-icon class="material-icons">remove_circle_outline</md-icon>
                                                 Remove from dashboard
@@ -93,9 +93,6 @@
                         </div>
                         <div ng-attr-id="widget-container-body-{{ widget.id }}" align="center" class="panel-body" data-ng-class="{'graph-box' :  (widget.type == 'linechart' || widget.type == 'piechart')}">
                             <md-progress-circular class = "progress-circular_align" md-mode="indeterminate" md-diameter="31px" ng-if="isLoading && widget.data.dataset != 0"></md-progress-circular>
-                            <div align="center center" class="text-center" data-ng-if="widget.data.dataset == 0 && widget.type != 'table'">
-                                <span>No data</span>
-                            </div>
                             <linechart data-ng-if="widget.type == 'linechart' && widget.data.dataset !== 0" data="widget.data" options="widget.model"></linechart>
                              <div data-ng-if="widget.type == 'piechart'" class="pie-chart">
                                 <pie-chart data="widget.data.dataset" options="widget.model"></pie-chart>
@@ -116,9 +113,6 @@
                                                 <span ng-switch-when="true" data-ng-bind-html="asString(row[column])"></span>
                                                 <span ng-switch-default>{{row[column]}}</span>
                                             </td>
-                                        </tr>
-                                        <tr ng-init="optimizeWidget(widget)" class="text-center" data-ng-if="widget.data.dataset == 0">
-                                            <td colspan="{{widget.model.columns.length}}">No data</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -145,6 +139,14 @@
                                     </tbody>
                                 </table>
                              </div>
+                        </div>
+                        <div class="dashboard__widgets-wrapper_widget-no-data" ng-if="widget.data.dataset == 0">
+                            <div  class="dashboard__widgets-wrapper_widget-no-data_icon">
+                                <md-icon md-svg-src="../../assets/images/chart_no_data.svg"></md-icon>
+                            </div>
+                            <div class="dashboard__widgets-wrapper_widget-no-data_text">
+                                No chart to display
+                            </div>
                         </div>
                     </div>
                 </div>
