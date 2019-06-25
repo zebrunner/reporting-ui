@@ -190,6 +190,12 @@ md-input-container  {
             }
         }
 
+        &.md-input-invalid {
+            .md-input {
+                border-color: #bf3744;
+            }
+        }
+
         &.md-input-has-value {
             .md-input {
                 color:$dark-new;
