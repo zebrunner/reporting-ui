@@ -677,24 +677,65 @@ md-radio-button {
     }
 }
 
-.md-menu, .md-menu .md-open {
-    .md-icon-button {
-        min-width: 40px;
-        max-width: 40px;
+.md-button.md-icon-button {
+    md-date-range-picker & {
+        padding: 6px;
+    }
+    &:not(._toolbar-btn) {
+        border: none;
+        background: transparent;
+        width: 32px;
+        height: 32px;
+        min-height: 32px;
+        max-height: 32px;
+        max-width: 32px;
+        min-width: 32px;
         padding: 0;
-        border-radius: 50%;
-        .material-icons {
-            transition: color .25s ease-in-out;
+        border-radius: 8px;
+        i.material-icons, md-icon {
+            font-size: 20px;
+            height: 20px;
+            min-height: 20px;
+            width: 20px;
+            min-width: 20px;
+            max-width: 20px;
             color: rgba($dark-new, .5);
+            vertical-align: middle;
         }
-        &:hover {
-            .material-icons {
-                color: rgba($dark-new, .9);
+        &[disabled], &[disabled]:hover {
+            background: transparent;
+            i.material-icons, md-icon {
+                color: rgba($dark-new, .25);
             }
         }
-        &[disabled] {
-            .material-icons {
-                color: rgba($dark-new, .25);
+        &:not([disabled]):hover {
+            background-color: rgba($dark-new, 0.1);
+            i.material-icons, md-icon {
+                color: rgba($dark-new, 0.9);
+            }
+        }
+    }
+    .fixed-page-header-container_options & {
+        i.material-icons {
+            @media(max-width: $screen-phone) { 
+                color: rgba(#ffffff, .5)
+            }
+            &:not(:last-child) {
+                @media(max-width: $screen-phone) {
+                    margin-right: 5px;
+                }
+            }
+            &:first-child {
+                @media(max-width: $screen-phone) {
+                    margin-left: 0;
+                }
+            }
+
+            &:hover {
+                @media(max-width: $screen-phone) {
+                    color: rgba(#ffffff, 0.8);
+                    opacity: 1;
+                }
             }
         }
     }
