@@ -17,11 +17,15 @@
                         <label>Group name</label>
                         <input id="groupName" type="text" name="name" data-ng-model="group.name" required>
                     </md-input-container>
-                    <md-select id="groupRole" class="form-fields__select" name="role" ng-model="group.role" required placeholder="User role">
-                        <md-option ng-repeat="role in roles" value="{{role}}">
-                            {{role}}
-                        </md-option>
-                    </md-select>
+                    <md-input-container>
+                        <label>User role</label>
+                        <md-select id="groupRole" class="form-fields__select" name="role" ng-model="group.role" required>
+                            <md-option ng-repeat="role in roles" value="{{role}}">
+                                {{role}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    
                 </div>
                 <div>
                     <div ng-repeat="(key, value) in blocks" ng-if="(group.role !== 'ROLE_ADMIN' && ['users', 'invitations'].indexOf(key.toLowerCase()) === -1) || group.role === 'ROLE_ADMIN'" class="checkbox-clear-inline">
