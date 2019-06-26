@@ -243,7 +243,7 @@ md-input-container  {
             font-size: 14px;
             letter-spacing: 0.1px;
             font-weight: normal;
-            padding-left: 15px;
+            padding-left: 13px;
             transform: translate3d(0, 28px, 0) scale(1);
             &:after {
                 color: rgba($dark-new, .6);
@@ -255,7 +255,7 @@ md-input-container  {
         &.md-input-has-value {
             label:not(.md-no-float) {
                 color: rgba($dark-new, .8);
-                transform: translate3d(-11px, 0, 0) scale(.785);
+                transform: translate3d(-10px, 0, 0) scale(.785);
             }
         }
 
