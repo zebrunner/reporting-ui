@@ -407,6 +407,14 @@ md-input-container  {
     }
 }
 
+md-chips {
+    .md-chips {
+        &.md-focused {
+            box-shadow: 0 1px $brand-primary;
+        }
+    }
+}
+
 md-checkbox {
     width: 18px;
     height: 18px;
