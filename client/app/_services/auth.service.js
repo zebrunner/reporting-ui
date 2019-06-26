@@ -25,6 +25,7 @@
             UserHasAnyPermission,
             isAuthorized,
             getAuthData,
+            getTenant
         };
 
         function Login(usernameOrEmail, password) {
@@ -32,6 +33,10 @@
                 'username': usernameOrEmail,
                 'password': password
             }).then(UtilService.handleSuccess, UtilService.handleError('Invalid credentials'));
+        }
+
+        function getTenant() {
+            return $httpMock.get(API_URL + '/api/auth/tenant').then(UtilService.handleSuccess, UtilService.handleError('Unable to get tenant info'));
         }
 
         function Invite(emails) {
