@@ -12,16 +12,20 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <md-content class="autocomplete md-padding" layout="column" style="background-color: transparent">
-                    <md-select ng-show="isLDAPConnected" id="source" name="source" ng-model="source" placeholder="Choose source...." required>
-                        <md-option ng-repeat="s in SOURCES" ng-value="s">
-                            {{s}}
-                        </md-option>
-                    </md-select>
-                    <md-select id="userGroup" name="projectId" data-ng-model="userGroup" placeholder="Choose group...." required>
-                        <md-option ng-repeat="group in groups" ng-if="group.invitable" ng-value="group.id">
-                            {{group.name}}
-                        </md-option>
-                    </md-select>
+                    <md-input-container ng-show="isLDAPConnected">
+                        <md-select id="source" name="source" ng-model="source" placeholder="Choose source...." required>
+                            <md-option ng-repeat="s in SOURCES" ng-value="s">
+                                {{s}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container>
+                        <md-select id="userGroup" name="projectId" data-ng-model="userGroup" placeholder="Choose group...." required>
+                            <md-option ng-repeat="group in groups" ng-if="group.invitable" ng-value="group.id">
+                                {{group.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
                     <md-chips ng-model="emails"
                               name="email"
                               filter-selected=false

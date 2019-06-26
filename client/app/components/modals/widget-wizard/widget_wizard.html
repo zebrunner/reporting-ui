@@ -122,13 +122,11 @@
                                     </md-input-container>
                                 </td>
                                 <td ng-switch-when="radio">
-                                    <zf-input-container>
-                                        <md-input-container>
-                                            <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)">
-                                                <md-radio-button ng-value="val" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
-                                            </md-radio-group>
-                                        </md-input-container>
-                                    </zf-input-container>
+                                    <md-input-container>
+                                        <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)">
+                                            <md-radio-button ng-value="val" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
+                                        </md-radio-group>
+                                    </md-input-container>
                                 </td>
                                 <td ng-switch-when="title" colspan="3">
                                     <div class="zf-label">{{paramValue.value}}</div>
@@ -169,13 +167,11 @@
                                     </md-input-container>
                                 </td>
                                 <td ng-switch-when="radio">
-                                    <zf-input-container>
-                                        <md-input-container>
-                                            <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-disabled="! paramValue.input_enabled">
-                                                <md-radio-button ng-value="val" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
-                                            </md-radio-group>
-                                        </md-input-container>
-                                    </zf-input-container>
+                                    <md-input-container>
+                                        <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-disabled="! paramValue.input_enabled">
+                                            <md-radio-button ng-value="val" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
+                                        </md-radio-group>
+                                    </md-input-container>
                                 </td>
                                 <td ng-switch-when="title" colspan="3">
                                     <div class="zf-label">{{paramValue.value}}</div>
