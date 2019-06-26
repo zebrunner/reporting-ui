@@ -13,7 +13,7 @@ import 'angular-ui-sortable'
 
 const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDialog, $state, ViewService, ConfigService,
                                        ProjectService, projectsService, UtilService, UserService, DashboardService,
-                                       AuthService, SettingsService, $timeout, windowWidthService) {
+                                       AuthService, SettingsService, $timeout, windowWidthService, mainMenuService) {
     'ngInject';
 
     const fakeProjectAll = {
@@ -51,6 +51,7 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         get currentUser() { return UserService.currentUser; },
         get isMobile() { return windowWidthService.isMobile(); },
         get dashboardList() { return DashboardService.dashboards; },
+        get menuItems() { return mainMenuService.items; },
     };
 
     vm.$onInit = initController;

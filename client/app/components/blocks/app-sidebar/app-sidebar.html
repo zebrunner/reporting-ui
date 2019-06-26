@@ -126,6 +126,12 @@
                     <span>Integrations</span>
                 </a>
             </li>
+            <li ui-sref-active="active" toggle-nav-bottom ng-repeat="menuItem in $ctrl.menuItems track by menuItem.name">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="{{menuItem.state}}">
+                    <i class="material-icons">{{menuItem.icon}}</i>
+                    <span>{{menuItem.name}}</span>
+                </a>
+            </li>
             <li style="flex-grow: 1"></li>
             <li class="profile"  ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-nav-bottom>
                 <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="userProfile">
