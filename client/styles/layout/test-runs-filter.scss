@@ -60,10 +60,13 @@
                 padding: 0;
             }
             &-state {
+                display: flex;
+                align-self: center;
                 padding: 7px 20px;
                 border-right: 1px solid rgba(black, .5);
                 label {
                     padding-right: 8px;
+                    margin: 0;
                 }
                 md-checkbox {
                     margin-bottom: 0;
