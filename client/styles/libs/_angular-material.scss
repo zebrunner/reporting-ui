@@ -678,7 +678,7 @@ md-radio-button {
 }
 
 .md-button.md-icon-button {
-    md-date-range-picker & {
+    md-date-range-picker &:not(._toolbar-btn) {
         padding: 6px;
     }
     &:not(._toolbar-btn) {
