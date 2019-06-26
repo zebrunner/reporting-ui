@@ -391,7 +391,6 @@
 md-chips.filter-chip.custom-filter {
     @media screen and (min-width: $breakpoint-mobile) {
         min-width: auto;
-        padding-top: 2px;
         overflow-x: auto;
         overflow-y: hidden;
         max-width: calc(100vw - 255px);
@@ -420,10 +419,12 @@ md-chips.filter-chip.custom-filter {
             font-size: 14px;
             font-weight: 500;
             border: solid 1px rgba($dark-new, .15);
-            margin-bottom: 2px;
+            margin-bottom: 0;
             margin-left: 0;
             margin-right: 8px;
-            max-height: 32px;
+            max-height: 36px;
+            height: 36px;
+            line-height: 36px;
             position: relative;
 
             ._unactiveChips & {
