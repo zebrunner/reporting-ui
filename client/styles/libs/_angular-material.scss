@@ -714,7 +714,13 @@ md-radio-button {
                 color: rgba($dark-new, 0.9);
             }
         }
+        &._no-hover-bg {
+            &:not([disabled]):hover {
+                background-color: transparent;
+            }
+        }
     }
+    
     .fixed-page-header-container_options & {
         i.material-icons {
             @media(max-width: $screen-phone) { 
