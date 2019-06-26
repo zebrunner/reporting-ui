@@ -355,7 +355,7 @@
                     &__menu {
                         button.md-icon-button.md-button.md-ink-ripple {
                             padding: 0;
-                            margin: 0 -15px 0 0;
+                            margin: 0;
                             height: auto;
                             @media (max-width: $breakpoint-mobile - 1) {
                                 md-icon {

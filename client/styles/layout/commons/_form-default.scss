@@ -269,58 +269,6 @@
     }
 }
 
-.tooltip-btn {
-    border: none;
-    background: transparent;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: 8px;
-    i.material-icons {
-        color: rgba($dark-new, .5);
-        margin: 0;
-        vertical-align: middle;
-    }
-    &[disabled], &[disabled]:hover {
-        background: transparent;
-        i.material-icons {
-            color: rgba($dark-new, .25);
-        }
-    }
-    &:hover {
-        background-color: rgba($dark-new, 0.1);
-        i.material-icons {
-            color: rgba($dark-new, 0.9);
-        }
-    }
-    .fixed-page-header-container_options & {
-        margin-left: 16px;
-        i.material-icons {
-            @media(max-width: $screen-phone) { 
-                color: rgba(#ffffff, .5)
-            }
-            &:not(:last-child) {
-                margin-right: 26px;
-                @media(max-width: $screen-phone) {
-                    margin-right: 5px;
-                }
-            }
-            &:first-child {
-                @media(max-width: $screen-phone) {
-                    margin-left: 0;
-                }
-            }
-
-            &:hover {
-                @media(max-width: $screen-phone) {
-                    color: rgba(#ffffff, 0.8);
-                    opacity: 1;
-                }
-            }
-        }
-    }
-}
-
 .main-modal {
     &__wrapper {
         display: flex;
