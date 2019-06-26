@@ -100,14 +100,12 @@
                                                     <label class="placeholder-label">Value</label>
                                                 </md-input-container>
                                                 <md-input-container class="value-input _gray-bg _without-animation" ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0">
-                                                    <div>
-                                                        <md-input-container class="form-fields__input date-picker-container no-padding pull-left no-margin" flex="auto">
-                                                            <span>{{$ctrl.currentValue.value | date : 'dd MMM'}}</span>
-                                                            <i class="material-icons md-18 date-picker-icon">today</i>
-                                                        </md-input-container>
-                                                        <md-date-range selected-template="TD" ng-model="$ctrl.selectedFilterRange"
-                                                                        one-panel="true" auto-confirm="true" show-template="false" md-on-select="selectedDates = $dates; $ctrl.onSelect($dates)"></md-date-range>
-                                                    </div>
+                                                    <md-input-container class="form-fields__input date-picker-container no-padding pull-left no-margin" flex="auto">
+                                                        <span>{{$ctrl.currentValue.value | date : 'dd MMM'}}</span>
+                                                        <i class="material-icons md-18 date-picker-icon">today</i>
+                                                    </md-input-container>
+                                                    <md-date-range selected-template="TD" ng-model="$ctrl.selectedFilterRange"
+                                                                    one-panel="true" auto-confirm="true" show-template="false" md-on-select="selectedDates = $dates; $ctrl.onSelect($dates)"></md-date-range>
                                                 </md-input-container>
                                             </div>
                                             <md-button ng-disabled="!$ctrl.currentOperator.value || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') === -1) || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') >= 0 && $ctrl.currentOperator.type.indexOf('DATE') >= 0)"
