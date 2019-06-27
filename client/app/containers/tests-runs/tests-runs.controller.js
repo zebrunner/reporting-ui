@@ -310,10 +310,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
             promises = vm.selectedTestRuns.map(testRun => abort(testRun, resultsCounter));
 
-            console.log(promises);
-
             $q.all(promises).finally(() => {
-                console.log(resultsCounter);
                 showBulkOperationMessages({
                     action: 'aborted',
                     succeeded: resultsCounter.success,

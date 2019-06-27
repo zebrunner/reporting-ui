@@ -15,8 +15,8 @@
 
         return service;
 
-        function createPermission(monitor) {
-            return $httpMock.post(API_URL + '/api/permissions', monitor).then(UtilService.handleSuccess, UtilService.handleError('Unable to create permission'));
+        function createPermission(permission) {
+            return $httpMock.post(API_URL + '/api/permissions', permission).then(UtilService.handleSuccess, UtilService.handleError('Unable to create permission'));
         }
 
         function updatePermission(permission) {
