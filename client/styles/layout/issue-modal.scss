@@ -48,19 +48,11 @@
         @media (max-width: 820px) {
             width: 100%;
         }
-        md-input-container {
+        .issue-element-container {
             margin: 17px 0;
-            .md-input.ng-invalid.ng-dirty {
-                border-width: 1px;
-            }
-            &:not(.md-input-invalid.md-input-focused), &:not(.md-input-invalid) {
-                label, label:after {
-                    color: black;
-                }
-            }
             &._with-badge {
+                margin: 0;
                 display: flex;
-                margin-bottom: 0;
                 .jira-status {
                     margin-top: 10px;
                     max-height: 20px;
@@ -73,57 +65,23 @@
                         background-color: #eb4454;
                     }
                 }
-                & .md-errors-spacer {
-                    min-height: 14px;
+                md-input-container {
+                    max-width: 180px;
+                    margin-top: 0;
                 }
             }
-            &.summary-container {
-                margin-bottom: 0;
-            }
-            label {
-                transform: translate3d(0,6px,0) !important;
-                font-size: 12px;
-                line-height: 2;
-                font-weight: 500;
-            }
-            input.jira {
-                padding-left: 8px;
-                padding-right: 8px;
-                min-width: 180px;
-                min-height: 40px;
-                border-width: 1px;
-                border-radius: 4px;
-            }
             textarea.summary {
-                border-width: 1px;
-                border-radius: 4px;
                 min-width: 560px;
                 max-width: 560px;
                 min-height: 80px;
-                padding-left: 8px;
-                padding-right: 8px;
                 @media (max-width: 820px) {
                     min-width: 100%;
                 }
-            }
-            & .md-errors-spacer {
-                min-height: 18px;
             }
         }
         md-dialog-actions {
             min-height: 32px;
             padding: 0;
-            .form-button {
-                box-shadow: none !important;
-                border-radius: 4px;
-                min-width: 80px;
-                font-size: 14px;
-                min-height: 36px;
-                margin: 0 0 0 13px;
-                &._light {
-                    background-color: white;
-                }
-            }
         }
     }
     &__tickets {
@@ -141,6 +99,8 @@
         }
         .ticket-list {
             &-button {
+                max-height: unset;
+                border-radius: 0;
                 padding: 0;
                 text-transform: none;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.15);

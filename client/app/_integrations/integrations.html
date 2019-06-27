@@ -6,7 +6,7 @@
         </zf-sub-header-title>
         <zf-sub-header-button>
             <div has-any-permission="['MODIFY_INTEGRATIONS']">
-                <button class="fixed-page-header__btn zf-header-button"  data-ng-really-message="Do you really want to regenerate encrypt key? All values will be reencrypted!" data-ng-really-click="$ctrl.regenerateKey()">
+                <button class="fixed-page-header__btn zf-primary-button"  data-ng-really-message="Do you really want to regenerate encrypt key? All values will be reencrypted!" data-ng-really-click="$ctrl.regenerateKey()">
                     <md-icon class="material-icons">refresh</md-icon>
                     <span>Re-encrypt secrets</span>
                 </button>
@@ -37,10 +37,10 @@
                     </div>
                     <div ng-class="{'large-card-content': tool.enabled}" class="integration-tool__item-content" data-ng-if="tool.enabled">
                         <div ng-repeat="setting in tool.settings track by setting.id">
-                            <md-input-container class="md-block" style="margin-bottom: 0">
-                                <label name="settingNameLabel">{{ ::setting.name.replace(tool.name + '_', '') }}</label>
+                            <md-input-container>
                                 <input name="settingName" type="text" ng-if="!setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.enabled || setting.notEditable" />
                                 <input name="settingName" type="password" ng-if="setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.enabled || setting.notEditable" autocomplete="new-password" />
+                                <label name="settingNameLabel">{{ ::setting.name.replace(tool.name + '_', '') }}</label>
                             </md-input-container>
                         </div>
                     </div>

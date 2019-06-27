@@ -5,10 +5,13 @@
     &__form-fields {
         padding: 30px 20px;
         border-bottom: 1px solid rgba(#000000, .15);
-        .form-fields__input {
+        md-input-container {
             max-width: 232px;
-            margin-right: 24px;
-        }
+            margin: 0;
+            &:first-child {
+                margin-right: 24px;
+            }
+        }        
         .form-fields__select {
             min-width: 232px;
         }
@@ -67,9 +70,8 @@
         min-height: 56px;
     }
     md-dialog-actions {
-        padding-right: 20px;
-        padding-left: 20px;
-        min-height: 64px;
+        padding: 20px;
+        min-height: 76px;
         .cancel {
             display: none;
         }
@@ -92,7 +94,7 @@
         &__form-fields {
             padding: 24px 16px;
             flex-direction: column;
-            .form-fields__input {
+            md-input-container:first-child {
                 max-width: unset;
                 margin: 0 0 20px 0;
             }
@@ -126,8 +128,7 @@
             }
         }
         md-dialog-actions {
-            padding-right: 16px;
-            padding-left: 16px;
+            padding: 16px;
             min-height: 68px;
             overflow-x: hidden;
             background: white;

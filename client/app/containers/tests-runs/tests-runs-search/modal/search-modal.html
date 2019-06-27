@@ -10,31 +10,30 @@
             <div class="search-modal__content main-modal__content">
                 <div layout="column" class="search-fields">
                     <div layout="row">
-                        <label class="search-modal__input-wrapper">
-                            <input class="form-fields__input _with-icon"
-                                placeholder="Search items"
-                                ng-model-options="{debounce: 700}"
-                                ng-model="$ctrl.searchParams.query"
-                                ng-change="$ctrl.onChangeSearchCriteria()"
-                                aria-label="Search items"
-                                aria-describedby="basic-addon2">
-                            <i class="material-icons form-fields__input-icon">
+                        <md-input-container class="search-modal__input-wrapper _with-icon _without-animation">
+                            <label class="placeholder-label">Search items</label>
+                            <input ng-model-options="{debounce: 700}"
+                                    ng-model="$ctrl.searchParams.query"
+                                    ng-change="$ctrl.onChangeSearchCriteria()"
+                                    aria-label="Search items"
+                                    aria-describedby="basic-addon2">
+                            <i class="material-icons">
                                 search
                             </i>
-                        </label>
+                        </md-input-container>
                     </div>
                     <div layout="row">
                         <button class="quadro-btn reviewed" data-ng-class="{'label-blank': !$ctrl.searchParams.reviewed, 'label-primary': !!$ctrl.searchParams.reviewed}"
                                 ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed; $ctrl.onChangeSearchCriteria()">R
                         </button>
-                        <md-input-container class="no-padding" flex="grow">
+                        <md-input-container class="no-padding without-animation" flex="grow">
                             <md-select id="searchStatus" ng-model="$ctrl.searchParams.status" class="form-fields__select" ng-change="$ctrl.onChangeSearchCriteria()" name="status" placeholder="Status">
                                 <md-option value="">None</md-option>
                                 <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
                             </md-select>
                         </md-input-container>
                     </div>
-                    <md-input-container flex="grow" class="no-padding">
+                    <md-input-container flex="grow" class="no-padding without-animation">
                         <md-select id="searchEnv" ng-model="$ctrl.searchParams.environment" class="form-fields__select"
                                     ng-change="$ctrl.onChangeSearchCriteria()"
                                     name="environment" placeholder="Environment">
@@ -42,7 +41,7 @@
                             <md-option ng-repeat="env in $ctrl.environments" ng-value="env">{{env}}</md-option>
                         </md-select>
                     </md-input-container>
-                    <md-input-container flex="grow" class="no-padding">
+                    <md-input-container flex="grow" class="no-padding without-animation">
                         <md-select id="searchPlatform" ng-model="$ctrl.searchParams.platform" class="form-fields__select" name="platform" placeholder="Platform" ng-change="$ctrl.onChangeSearchCriteria()">
                             <md-option value="">None</md-option>
                             <md-option ng-repeat="platform in $ctrl.platforms" ng-value="platform">{{platform}}</md-option>
@@ -61,8 +60,8 @@
             </div>
         </md-dialog-content>
         <md-dialog-actions>
-            <button class="form-button _reset-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.onModalReset();"><span>RESET</span></button>
-            <button class="form-button _apply-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.onModalApply();"><span>APPLY</span></button>
+            <md-button class="md-raised pull-right" type="button" ng-click="$ctrl.onModalReset();"><span>RESET</span></md-button>
+            <md-button class="md-raised md-primary pull-right" type="button" ng-click="$ctrl.onModalApply();"><span>APPLY</span></md-button>
         </md-dialog-actions>
     </div>  
 </md-dialog>

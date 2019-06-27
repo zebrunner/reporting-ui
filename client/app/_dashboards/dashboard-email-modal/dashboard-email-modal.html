@@ -4,7 +4,7 @@
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle">Email</h2>
                 <span flex></span>
-                <md-button id="close" class="md-icon-button" data-ng-click="cancel()">
+                <md-button id="close" class="md-icon-button _toolbar-btn" data-ng-click="cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
@@ -12,17 +12,19 @@
 
         <md-dialog-content>
             <div class="md-dialog-content">
-                <div layout layout-sm="column" class="dashboard-email-dialog_subject-container">
-                    <input placeholder="Subject" class="form-fields__input form-control" name="subject" type="text" data-ng-model="email.subject" required/>
-                </div>
+                <md-input-container layout layout-sm="column" class="dashboard-email-dialog_subject-container">
+                    <label class="placeholder-label">Name</label>
+                    <input name="subject" type="text" data-ng-model="email.subject" required/>
+                </md-input-container>
                 <div layout layout-sm="column" ng-cloak>
-                    <md-input-container flex>
+                    <md-input-container class="md-input-has-value" flex>
+                        <label class="placeholder-label">Text</label>
                         <div id="editor" ng-init="initEditorInstance()" ui-ace="{{aceOptions}}" ng-model="email.text" required></div>
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column">
-                    <md-input-container flex>
-                        <label name="recipientsLength">Recipients ({{email.recipients.length}})</label>
+                    <md-input-container flex class="chips-input-container">
+                        <label name="recipientsLength">Recepients ({{email.recipients.length}})</label>
                         <md-chips ng-model="users"
                                   class="photo-chip"
                                   filter-selected=true
@@ -60,7 +62,7 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="send" class="md-raised btn-w-md md-primary zf-button-md" data-ng-click="sendEmail()" data-ng-disabled="email_form.$invalid">
+            <md-button id="send" class="md-raised md-primary" data-ng-click="sendEmail()" data-ng-disabled="email_form.$invalid">
                 Send
             </md-button>
         </md-dialog-actions>

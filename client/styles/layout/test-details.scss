@@ -56,13 +56,6 @@
                         @media(max-width: $breakpoint-mobile - 1) {
                             display: none;
                         }
-                        button {
-                            box-shadow: none;
-                            background-color: $dark-coal-light-new-op01;
-                            &.md-primary {
-                                background-color: $medium-teal-light-new;
-                            }
-                        }
                     }
                     &_sorts {
                         @extend %detailsItems;
@@ -153,19 +146,9 @@
                         }
                     }
                     &_other-buttons {
-                        min-width: auto !important;
-                        width: auto !important;
                         margin-left: 40px;
                         @media (max-width: $breakpoint-mid-tablet) {
                             margin-left: 10px;
-                        }
-                        & #resetAllToggle {
-                            background-color: $dark-coal-light-new-op01;
-                            color: $dark-coal-light-new;
-                            &:hover,
-                            &:active {
-                                background-color: $dark-coal-light-new-op02;
-                            }
                         }
                     }
                 }
@@ -372,7 +355,7 @@
                     &__menu {
                         button.md-icon-button.md-button.md-ink-ripple {
                             padding: 0;
-                            margin: 0 -15px 0 0;
+                            margin: 0;
                             height: auto;
                             @media (max-width: $breakpoint-mobile - 1) {
                                 md-icon {

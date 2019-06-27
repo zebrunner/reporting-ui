@@ -4,7 +4,7 @@
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle">Build now</h2>
                 <span flex></span>
-                <md-button id="close" class="md-icon-button" data-ng-click="cancel()">
+                <md-button id="close" class="md-icon-button _toolbar-btn" data-ng-click="cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
@@ -23,11 +23,11 @@
                     <small>Empty</small>
                 </div>
                 <div layout layout-sm="column" data-ng-repeat="jobParameter in jobParameters | orderBy:'-parameterClass'" data-ng-if="jobParameter.parameterClass != 'HIDDEN'">
-                    <md-input-container flex data-ng-if="jobParameter.parameterClass == 'STRING'" class="modal-narrow-row">
+                    <md-input-container flex data-ng-if="jobParameter.parameterClass == 'STRING'">
                         <label>{{jobParameter.name}}<span data-ng-if="'ci_run_id' == jobParameter.name"> (new)</span></label>
                         <input ng-model="jobParameter.value" type="text" />
                     </md-input-container>
-                    <md-input-container flex data-ng-if="jobParameter.parameterClass == 'BOOLEAN'" layout="row" class="modal-narrow-row">
+                    <md-input-container flex data-ng-if="jobParameter.parameterClass == 'BOOLEAN'" layout="row">
                         <div flex style="text-transform: capitalize; max-width:200px;">
                             {{jobParameter.name}}<span data-ng-if="'ci_run_id' == jobParameter.name"> (new)</span>
                         </div>

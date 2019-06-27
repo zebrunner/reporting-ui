@@ -122,6 +122,10 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         return  CARDS_QUEUE.QUEUE[$scope.START_MODE][index];
     };
 
+    $scope.clearSearch = function() {
+        $scope.sc[$scope.card.scValue] = "";
+    }
+
     $scope.next = function() {
         const nextCard = getNextCard();
         initCard(nextCard);

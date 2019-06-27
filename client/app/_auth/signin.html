@@ -13,7 +13,7 @@
                         </div>
 
                         <fieldset>
-                            <md-input-container class="md-block">
+                            <md-input-container>
                                 <label class="placeholder-label">Username or email</label>
                                 <input
                                     type="text"
@@ -27,7 +27,7 @@
                                     </div>
                                 </div>
                             </md-input-container>
-                            <md-input-container class="md-block">
+                            <md-input-container>
                                 <label class="placeholder-label">Password</label>
                                 <input
                                     type="password"
@@ -46,8 +46,8 @@
                             <span class="additional-action">Forgot password? <a class="additional-action__link" ui-sref="forgotPassword">Reset</a></span>
                             <md-button type="submit"
                                        id="signin"
-                                       class="btn-w-sm md-primary signin"
-                                       ng-disabled="signin_form.$invalid">Sign in</md-button>
+                                       class="md-raised"
+                                       ng-disabled="signin_form.$invalid">Login</md-button>
                         </div>
                     </form>
                     <copyright></copyright>

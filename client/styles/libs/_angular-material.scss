@@ -14,40 +14,26 @@ md-backdrop.md-dialog-backdrop{
     }
 }
 
-md-dialog-actions {
-    .md-button {
-        border-radius: 4px;
-        box-shadow: none;
-        margin-right: 0;
-        margin-left: 12px;
-        font-size: 14px;
-        min-width: 80px;
-        &.md-primary {
-            &,
-            &.md-raised {
-                background-color: $medium-teal-light-new;
-                color: white;
-            }
-            &.md-raised {
-                &:not([disabled]) {
-                    box-shadow: none;
-                    &.md-focused,
-                    &:hover {
-                        background-color: $medium-teal-light-new;
-                    }
-                }
-            }
+md-dialog {
+    .md-dialog-content {
+        padding: 20px;
+        @media(max-width: $breakpoint-mobile - 1) {
+            padding: 16px;
         }
-        &.md-raised {
-            background-color: $fog-gray;
-            color: $dark-coal-new;
-            &:not([disabled]) {
-                box-shadow: none;
-                &.md-focused,
-                &:hover {
-                    background-color: rgba($dark-coal-new, .3);
-                }
-            }
+    }
+    form {
+        flex-grow: 1;
+    }
+    md-dialog-content {
+        flex-grow: 1;
+    }
+    md-dialog-actions {
+        min-height: 66px;
+        .md-button {
+            margin: 0;
+        }
+        .md-button:not(:first-child) {
+            margin-left: 12px;
         }
     }
 }
@@ -171,5 +157,788 @@ md-toast {
     }
     &__templates {
         padding-top: 9px;
+    }
+}
+
+//Inputs
+
+md-input-container .md-input-messages-animation {
+    position: absolute;
+    bottom: -18px;
+}
+
+md-input-container  {
+    &:not(.chips-input-container) {
+        width: 100%;
+        padding: 0;
+
+        .md-input {
+            background-color: #fff;
+            height: 36px;
+            border-radius: 4px;
+            letter-spacing: 0.1px;
+            border: 1px solid rgba($dark-new, .15);
+            padding-left: 12px;
+            transition: all .25s ease;
+            font-size: 14px;
+            opacity: 1;
+
+            &:hover {
+                border-color: rgba($dark-new, .25);
+            }
+
+            &.ng-invalid.ng-dirty {
+                border-color: $brand-warning-new;
+                padding-bottom: 1px;
+                border-width: 1px;
+            }
+        }
+
+        &.md-input-invalid {
+            .md-input {
+                border-color: $brand-warning-new;
+            }
+        }
+
+        &.md-input-has-value {
+            .md-input {
+                color:$dark-new;
+            }
+        }
+
+        &.md-input-focused {
+            .md-input {
+                border: 1px solid $brand-light;
+                padding-bottom: 1px;
+            }
+        }
+
+        &.md-default-theme,
+        & {
+            .md-input {
+                &[disabled],
+                [disabled] &, [disabled]:hover & {
+                    background: rgba($dark-new, .07);
+                    border-color: transparent;
+                    color: rgba($dark-new, .35);
+                }
+            }
+        }
+
+        &:not(.md-input-has-value) {
+            &.md-default-theme, &, &:hover {
+                .md-input {
+                    &[disabled],
+                    [disabled] &, [disabled]:hover & {
+                        & ~ label:not(.md-no-float):not(.md-container-ignore) {
+                            color: rgba($dark-new, .35);
+                        }
+                    }
+                    color: rgba($dark-new, .35);
+                }
+            }
+        }
+        
+
+        &:hover {
+            label:not(.md-no-float):not(.md-container-ignore) {
+                color: rgba($dark-new, .8);
+            }
+        }
+
+        .md-errors-spacer {
+            min-height: 0;
+            position: absolute;
+            right: 0;
+            bottom: -19px;
+        }
+
+        label:not(.md-no-float):not(.md-container-ignore) {
+            &:hover {
+                color: rgba($dark-new, .8);
+                &:after {
+                    color: rgba($dark-new, .8);
+                }
+            }
+            color: rgba($dark-new, .6);
+            font-size: 14px;
+            letter-spacing: 0.1px;
+            font-weight: normal;
+            padding-left: 13px;
+            transform: translate3d(0, 28px, 0) scale(1);
+            &:after {
+                color: rgba($dark-new, .6);
+            }
+        }
+
+        &.md-input-focused,
+        &.md-input-has-placeholder,
+        &.md-input-has-value {
+            label:not(.md-no-float) {
+                color: rgba($dark-new, .8);
+                transform: translate3d(-10px, 0, 0) scale(.785);
+            }
+        }
+
+        &._search {
+            padding: 6px 0 4px;
+            label:not(.md-no-float):not(.md-container-ignore) {
+                transform: translate3d(0, 26px, 0) scale(1);
+            }
+            &.md-input-focused, & {
+                label:not(.md-no-float):not(.md-container-ignore) {
+                    transition: opacity .25s ease-in-out, color .25s ease-in-out;
+                    padding-left: 0;
+                    line-height: 1;
+                }
+                .md-input {
+                    background-color: transparent;
+                    border-width: 0 0 1px 0;
+                    border-color: rgba($dark-new, .5);
+                    border-radius: 0;
+                    padding-left: 0;
+                    height: 26px;
+                }
+                md-icon {
+                    font-size: 18px;
+                    color: rgba($dark-new, .5);
+                    height: 18px;
+                    width: 18px;
+                    min-height: 18px;
+                    min-width: 18px;
+                    bottom: 5px;
+                    margin: auto;
+                    right: 2px;
+                    left: auto;
+                    transition: opacity .25s ease-in-out;
+                    &.input-close-icon {
+                        opacity: 0;
+                    }
+                    &.input-search-icon {
+                        opacity: 1;
+                    }
+                }
+            }
+            &.md-input-focused, &.md-input-has-value {
+                label:not(.md-no-float):not(.md-container-ignore) {
+                    opacity: 0;
+                    transform: translate3d(0, 26px, 0) scale(1);
+                }
+            }
+            &.md-input-has-value, &.md-input-focused.md-input-has-value {
+                .input-search-icon {
+                    opacity: 0;
+                }
+                .input-close-icon {
+                    opacity: 1;
+                }
+            }
+        }
+        &._light {
+            &.md-input-focused, & {
+                label:not(.md-no-float):not(.md-container-ignore) {
+                    color: rgba(#ffffff, .5);
+                }
+                .md-input {
+                    color: rgba(#ffffff, .5);
+                    border-color: rgba(#ffffff, .5);
+                    font-weight: normal;
+                }
+                md-icon {
+                    color: rgba(#ffffff, .5);
+                }
+            }
+            
+            .nav-container .nav-search & {
+                md-icon {
+                    right: 2px;
+                    bottom: 15px;
+                }
+                .md-input {
+                    margin-bottom: 12px;
+                }
+            }
+        }
+
+        &._without-animation {
+            label:not(.md-no-float) {
+                transition: opacity .25s ease-in-out;
+            }
+            &.md-input-focused,
+            &.md-input-has-placeholder,
+            &.md-input-has-value {
+                label:not(.md-no-float) {
+                    opacity: 0;
+                    transform: translate3d(0, 28px, 0) scale(1);
+                }
+            }
+        }
+
+        &._with-icon {
+            .material-icons {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #999;
+                pointer-events: none;
+            }
+            .md-input, label:not(.md-no-float):not(.md-container-ignore) {
+                padding-left: 40px;
+            }
+        }
+
+        &._gray-bg {
+            .md-input {
+                border-color: transparent;
+            }
+            .md-input.ng-invalid.ng-dirty, &.md-input-invalid .md-input {
+                border-color: $brand-warning-new;
+            }
+            &.md-input-focused {
+                .md-input {
+                    border: 1px solid $brand-light;
+                }
+            }
+        }
+
+        &._password {
+            i {
+                transform: translateY(75%);
+            }
+        }
+    }
+    &.chips-input-container {
+        &:not(.md-input-invalid).md-input-focused md-icon {
+            color: rgb(97, 97, 97);
+        }
+        input {
+            font-size: 14px;
+        }
+        md-chip {
+            font-size: 14px;
+        }
+        .md-chips .md-chip-input-container {
+            margin: 13px 8px 0 0;
+        }
+        md-chips-wrap {
+            min-height: 56px;
+        }
+        &.md-input-has-placeholder label:not(.md-no-float),
+        &.md-input-has-value label:not(.md-no-float) {
+            transform: translate3d(0, -8px, 0) scale(1);
+            font-weight: normal;
+            color: $dark-new;
+        }
+    }
+}
+
+md-chips {
+    .md-chips {
+        &.md-focused {
+            box-shadow: 0 1px $brand-primary;
+        }
+    }
+}
+
+md-checkbox {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    &:not(.md-checked) {
+        .md-icon {
+            border-color: rgba($dark-new, .5);
+        }
+        &:hover {
+            .md-icon {
+                border-color: rgba($dark-new, .9);
+            }
+        }
+    }
+
+    .md-icon,
+    .md-container {
+        width: 18px;
+        height: 18px;
+    }
+    &.md-checked {
+        .md-ink-ripple {
+            color: rgba($dark-new ,0.9);
+        }
+        .md-icon {
+            background-color: rgba($dark-new, .9);
+            &::after {
+                left: 4px;
+                top: -1px;
+            }
+        }
+        &[disabled], &[disabled]:hover {
+            .md-icon {
+                background-color: rgba($dark-new, .25);
+            }
+        }
+    }
+    &[disabled], &[disabled]:hover {
+        &:not(.md-checked) .md-icon {
+            border-color: rgba($dark-new, .25);
+        }
+    }
+}
+
+md-switch {
+    &.md-checked.md-primary {
+        .md-bar {
+            background-color: $brand-light-blue;
+        }
+        .md-thumb {
+            background-color: $brand-light;
+        }
+        &:hover {
+            .md-bar {
+                background-color: $brand-bright-blue;
+            }
+        }
+    }
+    .md-bar {
+        background-color: #d9dcdf;
+    }
+    &:hover {
+        .md-bar {
+            background-color: #bfc5c9;
+        }
+    }
+    &[disabled] {
+        &.md-checked.md-primary {
+            .md-bar {
+                background-color: #d9dcdf;
+            }
+            .md-thumb {
+                background-color: #b2b9be;
+            }
+            &:hover {
+                .md-bar {
+                    background-color: #d9dcdf;
+                }
+            }
+        }
+        &:hover {
+            .md-bar {
+                background-color: #d9dcdf;
+            }
+        }
+    }
+}
+
+md-select-menu[multiple] md-option.md-checkbox-enabled {
+    .md-icon,
+    .md-container {
+        width: 18px;
+        height: 18px;
+    }
+    .md-container {
+        margin-left: 10px;
+    }
+    .md-icon {
+        border-color: rgba($dark-new, .5);
+    }
+    &:hover {
+        .md-icon {
+            border-color: rgba($dark-new, .9);
+        }
+    }
+    &[selected] {
+        .md-ink-ripple {
+            color: rgba($dark-new ,0.9);
+        }
+        .md-icon {
+            background-color: rgba($dark-new, .9);
+            &::after {
+                left: 4px;
+                top: -1px;
+            }
+        }
+    }
+}
+//SELECTS 
+md-input-container {
+    md-select {
+        margin: 0;
+        &:not([disabled]) .md-select-value,
+        &:not([disabled]) .md-select-value.md-select-placeholder {
+            color: rgba($dark-new, .6);
+        }   
+        &:not([disabled]):focus {
+            .md-select-value, .md-select-value.md-select-placeholder {
+                color: rgba($dark-new, .6);
+            }
+        }
+        &:not([disabled]):focus {
+            &, &:hover {
+                .md-select-value, .md-select-value.md-select-placeholder {
+                    border: solid 1px $brand-primary;
+                    padding-bottom: 2px;
+                }
+            }
+        }
+        md-select-value.md-select-placeholder{
+            padding-left: 12px;
+            color: $dark-new;
+        }
+        &.md-default-theme[disabled],
+        &[disabled] {
+            color: rgba($dark-new, .35);
+            .md-select-value, .md-select-value.md-select-placeholder {
+                border: solid 1px transparent;
+                background-color: rgba($dark-new, .07);
+                background-image: none;
+                margin-bottom: 0;
+            }
+        }
+        .md-select-value , .md-select-value.md-select-placeholder {
+            width: 100%;
+            font-size: 14px;
+            line-height: 1.4;
+            border-radius: 4px;
+            border: solid 1px;
+            padding: 2px 2px 2px 12px;
+            border-color: rgba($dark-new, .15);
+            height: 36px;
+            color: rgba($dark-new, .6);
+            background: #ffffff;
+            box-sizing: border-box;
+            transition: .25s color ease-in-out, .25s border-color ease-in-out;
+            span {
+                &:after {
+                    transition: color .25s ease-in-out;
+                    color: rgba($dark-new, .6);
+                }
+            }
+        }
+        &:hover:not([disabled]) {
+            .md-select-value , .md-select-value.md-select-placeholder {
+                color: rgba($dark-new, .8);
+                border-color: rgba($dark-new, .25);
+                span {
+                    &:after {
+                        color: rgba($dark-new, .8);
+                    }
+                }
+            }
+        }
+    }
+
+    &.md-input-focused, & {
+        md-select, md-select:hover, md-select:not([disabled]):focus, md-select:not([disabled]) {
+            &.ng-invalid.ng-touched .md-select-value {
+                color: rgba($dark-new, .6) !important;
+                border-color: $brand-warning-new;
+                padding-bottom: 2px;
+            }
+        }
+    }
+
+    &.md-input-focused {
+        &.md-input-has-value md-select:not([disabled]){
+            .md-select-value , .md-select-value.md-select-placeholder {
+                color: $dark-new;
+                border-color: $brand-light;
+            }
+        }
+        
+    }
+    &.md-input-has-value md-select:not([disabled]){
+        .md-select-value , .md-select-value.md-select-placeholder {
+            color: $dark-new;
+        }
+    }
+    
+    &._gray-bg:not(.md-input-focused) {
+        &, & md-select:hover:not([disabled]) {
+            .md-select-value, .md-select-value.md-select-placeholder {
+                &, &:hover {
+                    border-color: transparent;
+                }
+            }
+        }
+    }
+    &.without-animation {
+        label {
+            display: none;
+        }
+        md-select {
+            &.md-default-theme[disabled],
+            &[disabled] {
+                .md-select-value span:first-child{
+                    color: transparent;
+                }
+            }
+        }
+        &.md-input-focused:not([md-no-float]) .md-select-placeholder {
+            & span:first-child,  &.md-select-value span:first-child {
+                transform: none;
+                color: rgba($dark-new, .6);
+            }
+        }
+    }
+    
+    &.md-input-focused:not([md-no-float]) .md-select-placeholder,
+    &.md-input-focused:not([md-no-float]) .md-select-value.md-select-placeholder {
+        border-color: $brand-light;
+        span:first-child {
+            color: rgba($dark-new, .8);
+            transform: translate3d(-11px, -29px, 0) scale(0.785);
+        }
+    } 
+}
+
+md-select-menu:not(.md-overflow) {
+    box-shadow: 0 0 5.6px 0.4px rgba(5, 0, 0, 0.25);
+    md-content {
+        padding-top: 0;
+        padding-bottom: 0;
+        md-option {
+            color: $dark-new;
+            &[selected] {
+                background-color: rgba($dark-new, .07);
+                color: $dark-new;
+            }
+            &:hover {
+                background-color: rgba($dark-new, .07);
+            }
+        }
+    }
+}
+
+//BUTTONS
+@mixin default-button($background, $color, $hoverBg) {
+    &:not([disabled]) {
+        background-color: $background;
+        color: $color;
+        box-shadow: none;
+        &:hover {
+            background-color: $hoverBg;
+        }
+    }
+}
+
+.md-button, .md-button.md-focused {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    border-radius: 4px;
+    margin-right: 0;
+    font-size: 14px;
+    max-height: 36px;
+    padding: 11px 12px;
+    line-height: 1;
+    letter-spacing: 0.4px;
+    min-width: 80px;
+    @include default-button(transparent, $dark-new, rgba($dark-new, .07));
+    &[disabled], &[disabled]:hover {
+        background-color: transparent;
+        color: rgba($dark-new, 0.35);
+    }
+    &.md-primary {
+        @include default-button(transparent, $brand-light, rgba($dark-new, .07));
+    }
+    &.md-warn {
+        @include default-button(transparent, $brand-warning-new, rgba($dark-new, .07));
+    }
+    &.md-raised {
+        &, &:active {
+            @include default-button(rgba($dark-new, .07), $dark-new, rgba($dark-new, .12));
+        }
+        &.md-primary {
+            @include default-button($brand-light, $brand-white, $brand-light-hover);
+        }
+        &.md-warn {
+            @include default-button($brand-warning-new, $brand-white, $brand-warning-dark-new);
+        }
+        &[disabled], &[disabled]:hover {
+            background-color: rgba($dark-new, .07);
+            color: rgba($gray-base, 0.35);
+        }
+    }
+}
+
+md-dialog .md-actions, md-dialog md-dialog-actions {
+    padding: 10px 20px 20px 20px;
+    @media (max-width: $breakpoint-mobile - 1) {
+        padding: 8px 16px 16px 16px;
+    }
+}
+
+//FAB BUTTONS
+.md-button.md-fab {
+    &.md-fab-sm {
+        background-color: lightgray;
+        margin-bottom: 8px;
+        max-height: unset;
+    }
+    &.md-primary {
+        &, &.md-focused {
+            font-size: 20px;
+            color: #ffffff;
+            border-radius: 50%;
+            height: 56px;
+            min-height: 56px;
+            width: 56px;
+            min-width: 56px;
+            background-color: #01a99a;
+            &, &:not([disabled]) {
+                &:hover {
+                    background-color: #20887f;
+                }
+            }
+            &[disabled]{
+                background-color: #edeff0;
+                color: rgba(0, 0, 0, 0.4);
+                .search-fab {
+                    filter: invert(0%);
+                    opacity: .4;
+                }
+            }
+            .search-fab {
+                margin: auto;
+                height: 20px;
+                filter: invert(100%);
+                width: 20px;
+                &._list {
+                    background: url('../assets/images/list.svg') center no-repeat;
+                }
+                &._checked-list {
+                    background: url('../assets/images/check_list.svg') center no-repeat;
+                }
+            }
+        }
+    }
+}
+md-radio-button {
+    &.md-checked {
+        .md-off {
+            border-color: rgba($dark-new, .5);
+        }
+    }
+    .md-off {
+        border-color: rgba($dark-new, .5);
+    }
+    .md-on {
+        border-color: rgba($dark-new, .5);
+        background-color: rgba($dark-new, .5);
+    }
+    &:hover {
+        &.md-checked .md-off, .md-off {
+                border-color: rgba($dark-new, .9);
+        }
+        .md-on {
+            border-color: rgba($dark-new, .9);
+            background-color: rgba($dark-new, .9);
+        }
+    }
+
+    &.md-primary {
+        &:not([disabled]).md-checked {
+            .md-off {
+                border-color: #ffffff;
+            }
+        }
+        .md-off {
+            border-color: rgba(#ffffff, .25);
+            &:hover {
+                border-color: #ffffff;
+            }
+        }
+
+        &:not([disabled]) {
+            .md-on {
+                border-color: #ffffff;
+                background-color: #ffffff;
+            }
+        }
+    }
+
+    &[disabled], &[disabled].md-primary,  &[disabled].md-primary.md-checked, &[disabled].md-checked {
+        border-color:rgba($dark-new, .25);
+        .md-off {
+            border-color: rgba($dark-new, .25);
+            &:hover {
+                border-color: rgba($dark-new, .25);
+            }
+        }
+        .md-on {
+            border-color: rgba($dark-new, .25);
+            background-color: rgba($dark-new, .25);
+        }
+    }
+}
+
+.md-button.md-icon-button {
+    md-date-range-picker &:not(._toolbar-btn) {
+        padding: 6px;
+    }
+    &:not(._toolbar-btn) {
+        border: none;
+        background: transparent;
+        width: 32px;
+        height: 32px;
+        min-height: 32px;
+        max-height: 32px;
+        max-width: 32px;
+        min-width: 32px;
+        padding: 0;
+        border-radius: 8px;
+        i.material-icons, md-icon {
+            font-size: 20px;
+            height: 20px;
+            min-height: 20px;
+            width: 20px;
+            min-width: 20px;
+            max-width: 20px;
+            color: rgba($dark-new, .5);
+            vertical-align: middle;
+        }
+        &[disabled], &[disabled]:hover {
+            background: transparent;
+            i.material-icons, md-icon {
+                color: rgba($dark-new, .25);
+            }
+        }
+        &:not([disabled]):hover {
+            background-color: rgba($dark-new, 0.1);
+            i.material-icons, md-icon {
+                color: rgba($dark-new, 0.9);
+            }
+        }
+        &._no-hover-bg {
+            &:not([disabled]):hover {
+                background-color: transparent;
+            }
+        }
+    }
+    
+    .fixed-page-header-container_options & {
+        i.material-icons {
+            @media(max-width: $screen-phone) { 
+                color: rgba(#ffffff, .5)
+            }
+            &:not(:last-child) {
+                @media(max-width: $screen-phone) {
+                    margin-right: 5px;
+                }
+            }
+            &:first-child {
+                @media(max-width: $screen-phone) {
+                    margin-left: 0;
+                }
+            }
+
+            &:hover {
+                @media(max-width: $screen-phone) {
+                    color: rgba(#ffffff, 0.8);
+                    opacity: 1;
+                }
+            }
+        }
     }
 }
