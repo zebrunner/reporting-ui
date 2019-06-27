@@ -527,23 +527,6 @@
                             });
                     }
                 })
-                .state('monitors', {
-                    url: '/monitors',
-                    component: 'monitorsComponent',
-                    data: {
-                        requireLogin: true,
-                        classes: 'p-monitors'
-                    },
-                    lazyLoad: ($transition$) => {
-                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
-
-                        return import(/* webpackChunkName: "monitors" */ '../_monitors/monitors.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.monitorsModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load monitorsModule module, ' + err);
-                            });
-                    }
-                })
                 .state('integrations', {
                     url: '/integrations',
                     component: 'integrationsComponent',

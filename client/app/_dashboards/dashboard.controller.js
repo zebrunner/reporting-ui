@@ -579,7 +579,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             const gridstackEl = angular.element('#widget-' + widget.id)[0];
             $timeout(function () {
                 const height = (Math.ceil(el.offsetHeight / $scope.gridstackOptions.cellHeight / 2)) + 2;
-                console.log(el.offsetHeight);
                 if(Object.size(widget.data.dataset) === 0) {
                     gridstack.resize(gridstackEl, widget.location.width, height);
                 } else {
