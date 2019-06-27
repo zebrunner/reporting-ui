@@ -84,6 +84,7 @@ $red: #d2333b;
 
 
 // Inputs
+//TODO: check uses of this container and remove if possible (looks like redundant after UI KIT implementation)
 .zf-input-container {
     font-size: 0;
     > input, > select, md-select {
