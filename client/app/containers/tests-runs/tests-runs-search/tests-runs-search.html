@@ -8,7 +8,7 @@
     <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
     <div class="tests-runs-search__top-section" flex="auto" layout="row" ng-if="!$ctrl.isMobile()">
         <ng-transclude ng-if="!$ctrl.isMobile()"></ng-transclude>
-        <md-input-container class="tests-runs-search__input-label _with-icon _without-animation ">
+        <md-input-container class="tests-runs-search__input-label _with-icon _without-animation">
             <label class="placeholder-label">Search items</label>
             <input ng-model-options="{debounce: 700}"
                    ng-model="$ctrl.searchParams.query"
