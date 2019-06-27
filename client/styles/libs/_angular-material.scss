@@ -562,6 +562,11 @@ md-input-container {
             color: rgba($dark-new, .6);
         }   
         &:not([disabled]):focus {
+            .md-select-value, .md-select-value.md-select-placeholder {
+                color: rgba($dark-new, .6);
+            }
+        }
+        &:not([disabled]):focus {
             &, &:hover {
                 .md-select-value, .md-select-value.md-select-placeholder {
                     border: solid 1px $brand-primary;
@@ -615,7 +620,6 @@ md-input-container {
                 padding-bottom: 2px;
             }
         }
-        
     }
 
     &.md-input-focused {
@@ -642,7 +646,6 @@ md-input-container {
             }
         }
     }
-        
     &.without-animation {
         label {
             display: none;
