@@ -391,9 +391,9 @@ md-input-container  {
         &._gray-bg {
             .md-input {
                 border-color: transparent;
-                &.ng-invalid.ng-dirty {
-                    border-color: $brand-warning-new;
-                }
+            }
+            .md-input.ng-invalid.ng-dirty, &.md-input-invalid .md-input {
+                border-color: $brand-warning-new;
             }
             &.md-input-focused {
                 .md-input {
