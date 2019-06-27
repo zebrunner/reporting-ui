@@ -5,8 +5,10 @@ import 'brace/mode/json';
 import 'brace/theme/eclipse';
 import 'angular-ui-ace';
 
-const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, windowWidthService, LauncherService, UserService, ScmService, messageService, UtilService, API_URL) {
+const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, windowWidthService, LauncherService, UserService, ScmService, AuthService, messageService, UtilService, API_URL) {
     'ngInject';
+
+    let isMultitenant = false;
 
     $scope.ciOptions = {};
 
@@ -631,6 +633,20 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             });
         });
     };
+
+    function getTenantInfo() {
+        return $q(function (resolve, reject) {
+            AuthService.getTenant().then(function (rs) {
+                if(rs.success) {
+                    resolve(rs.data);
+                } else {
+                    reject();
+                    messageService.error(rs.message);
+                }
+            });
+        });
+    };
+
     $scope.clientId = '';
 
     $scope.connectToGitHub = function() {
@@ -638,7 +654,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if($scope.clientId) {
                 var host = $window.location.host;
                 var tenant = host.split('\.')[0];
-                var redirectURI = $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant;
+                const servletPath = $window.location.pathname.split('/tests/runs')[0];
+                var redirectURI = isMultitenant ?
+                    $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant
+                    : $window.location.protocol + "//" + host + servletPath + "/scm/callback";
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
@@ -829,8 +848,11 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                 resolve();
             });
         });
-        getClientId().then(function (clientId) {
-            $scope.clientId = clientId;
+        getTenantInfo().then(function (tenant) {
+            isMultitenant = tenant.multitenant;
+            getClientId().then(function (clientId) {
+                $scope.clientId = clientId;
+            });
         });
         const scmAccountsPromise = ScmService.getAllScmAccounts().then(function (rs) {
             return $q(function (resolve, reject) {
