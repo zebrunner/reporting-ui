@@ -29,6 +29,7 @@
         &-header {
             md-input-container {
                 margin: 0 0 0 auto;
+                width: auto;
             }
             md-switch {
                 margin: 0;
@@ -96,15 +97,12 @@
         }
         &-wrapper {
             padding: 0 10px 20px;
-
             @media screen and (max-width: $screen-phone) {
-                border-bottom: 2px solid $main_container_bg;
                 &:last-of-type {
                     border-bottom: 0;
                 }
                 .card {
                     margin: 0;
-                    box-shadow: none;
                 }
 
             }
@@ -130,8 +128,12 @@
             padding-left: 16px;
             &-wrapper {
                 padding: 0;
+                border-bottom: 2px solid $main_container_bg;
                 .large-card-content {
                     min-height: 0;
+                }
+                .card {
+                    box-shadow: none;
                 }
             }
         }
