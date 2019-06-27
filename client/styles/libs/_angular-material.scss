@@ -722,6 +722,9 @@ md-select-menu:not(.md-overflow) {
 }
 
 .md-button, .md-button.md-focused {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
     border-radius: 4px;
     margin-right: 0;
     font-size: 14px;
