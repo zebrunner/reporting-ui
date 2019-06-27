@@ -28,8 +28,12 @@ md-dialog {
         flex-grow: 1;
     }
     md-dialog-actions {
+        min-height: 66px;
         .md-button {
-            margin: 0 0 0 12px;
+            margin: 0;
+        }
+        .md-button:not(:first-child) {
+            margin-left: 12px;
         }
     }
 }
@@ -230,6 +234,7 @@ md-input-container  {
                             color: rgba($dark-new, .35);
                         }
                     }
+                    color: rgba($dark-new, .35);
                 }
             }
         }
@@ -243,6 +248,9 @@ md-input-container  {
 
         .md-errors-spacer {
             min-height: 0;
+            position: absolute;
+            right: 0;
+            bottom: -19px;
         }
 
         label:not(.md-no-float):not(.md-container-ignore) {
@@ -340,7 +348,7 @@ md-input-container  {
                     color: rgba(#ffffff, .5);
                 }
             }
-
+            
             .nav-container .nav-search & {
                 md-icon {
                     right: 2px;
@@ -383,9 +391,9 @@ md-input-container  {
         &._gray-bg {
             .md-input {
                 border-color: transparent;
-                &.ng-invalid.ng-dirty {
-                    border-color: $brand-warning-new;
-                }
+            }
+            .md-input.ng-invalid.ng-dirty, &.md-input-invalid .md-input {
+                border-color: $brand-warning-new;
             }
             &.md-input-focused {
                 .md-input {
@@ -552,6 +560,155 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         }
     }
 }
+//SELECTS 
+md-input-container {
+    md-select {
+        margin: 0;
+        &:not([disabled]) .md-select-value,
+        &:not([disabled]) .md-select-value.md-select-placeholder {
+            color: rgba($dark-new, .6);
+        }   
+        &:not([disabled]):focus {
+            .md-select-value, .md-select-value.md-select-placeholder {
+                color: rgba($dark-new, .6);
+            }
+        }
+        &:not([disabled]):focus {
+            &, &:hover {
+                .md-select-value, .md-select-value.md-select-placeholder {
+                    border: solid 1px $brand-primary;
+                    padding-bottom: 2px;
+                }
+            }
+        }
+        md-select-value.md-select-placeholder{
+            padding-left: 12px;
+            color: $dark-new;
+        }
+        &.md-default-theme[disabled],
+        &[disabled] {
+            color: rgba($dark-new, .35);
+            .md-select-value, .md-select-value.md-select-placeholder {
+                border: solid 1px transparent;
+                background-color: rgba($dark-new, .07);
+                background-image: none;
+                margin-bottom: 0;
+            }
+        }
+        .md-select-value , .md-select-value.md-select-placeholder {
+            width: 100%;
+            font-size: 14px;
+            line-height: 1.4;
+            border-radius: 4px;
+            border: solid 1px;
+            padding: 2px 2px 2px 12px;
+            border-color: rgba($dark-new, .15);
+            height: 36px;
+            color: rgba($dark-new, .6);
+            background: #ffffff;
+            box-sizing: border-box;
+            transition: .25s color ease-in-out, .25s border-color ease-in-out;
+            span {
+                &:after {
+                    transition: color .25s ease-in-out;
+                    color: rgba($dark-new, .6);
+                }
+            }
+        }
+        &:hover:not([disabled]) {
+            .md-select-value , .md-select-value.md-select-placeholder {
+                color: rgba($dark-new, .8);
+                border-color: rgba($dark-new, .25);
+                span {
+                    &:after {
+                        color: rgba($dark-new, .8);
+                    }
+                }
+            }
+        }
+    }
+
+    &.md-input-focused, & {
+        md-select, md-select:hover, md-select:not([disabled]):focus, md-select:not([disabled]) {
+            &.ng-invalid.ng-touched .md-select-value {
+                color: rgba($dark-new, .6) !important;
+                border-color: $brand-warning-new;
+                padding-bottom: 2px;
+            }
+        }
+    }
+
+    &.md-input-focused {
+        &.md-input-has-value md-select:not([disabled]){
+            .md-select-value , .md-select-value.md-select-placeholder {
+                color: $dark-new;
+                border-color: $brand-light;
+            }
+        }
+        
+    }
+    &.md-input-has-value md-select:not([disabled]){
+        .md-select-value , .md-select-value.md-select-placeholder {
+            color: $dark-new;
+        }
+    }
+    
+    &._gray-bg:not(.md-input-focused) {
+        &, & md-select:hover:not([disabled]) {
+            .md-select-value, .md-select-value.md-select-placeholder {
+                &, &:hover {
+                    border-color: transparent;
+                }
+            }
+        }
+    }
+    &.without-animation {
+        label {
+            display: none;
+        }
+        md-select {
+            &.md-default-theme[disabled],
+            &[disabled] {
+                .md-select-value span:first-child{
+                    color: transparent;
+                }
+            }
+        }
+        &.md-input-focused:not([md-no-float]) .md-select-placeholder {
+            & span:first-child,  &.md-select-value span:first-child {
+                transform: none;
+                color: rgba($dark-new, .6);
+            }
+        }
+    }
+    
+    &.md-input-focused:not([md-no-float]) .md-select-placeholder,
+    &.md-input-focused:not([md-no-float]) .md-select-value.md-select-placeholder {
+        border-color: $brand-light;
+        span:first-child {
+            color: rgba($dark-new, .8);
+            transform: translate3d(-11px, -29px, 0) scale(0.785);
+        }
+    } 
+}
+
+md-select-menu:not(.md-overflow) {
+    box-shadow: 0 0 5.6px 0.4px rgba(5, 0, 0, 0.25);
+    md-content {
+        padding-top: 0;
+        padding-bottom: 0;
+        md-option {
+            color: $dark-new;
+            &[selected] {
+                background-color: rgba($dark-new, .07);
+                color: $dark-new;
+            }
+            &:hover {
+                background-color: rgba($dark-new, .07);
+            }
+        }
+    }
+}
 
 //BUTTONS
 @mixin default-button($background, $color, $hoverBg) {
@@ -566,6 +723,9 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
 }
 
 .md-button, .md-button.md-focused {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
     border-radius: 4px;
     margin-right: 0;
     font-size: 14px;

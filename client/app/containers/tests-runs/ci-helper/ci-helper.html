@@ -72,26 +72,22 @@
                         Add repository to work with
                     </div>
                     <div class="ci-runner-container_content_scm-connector_items_add">
-                        <zf-input-container>
-                            <md-input-container>
-                                <label>Organization</label>
-                                <md-select ng-model="scmAccount.organization" ng-change="getRepositories();" ng-disabled="! organizations.length">
-                                    <md-option ng-repeat="organization in organizations track by $index" ng-value="organization">
-                                        {{organization.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-                        </zf-input-container>
-                        <zf-input-container>
-                            <md-input-container>
-                                <label>Repository</label>
-                                <md-select ng-model="scmAccount.repository" ng-disabled="! repositories.length">
-                                    <md-option ng-repeat="repository in repositories track by $index" ng-value="repository">
-                                        {{repository.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-                        </zf-input-container>
+                        <md-input-container>
+                            <label>Organization</label>
+                            <md-select ng-model="scmAccount.organization" ng-change="getRepositories();" ng-disabled="! organizations.length">
+                                <md-option ng-repeat="organization in organizations track by $index" ng-value="organization">
+                                    {{organization.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Repository</label>
+                            <md-select ng-model="scmAccount.repository" ng-disabled="! repositories.length">
+                                <md-option ng-repeat="repository in repositories track by $index" ng-value="repository">
+                                    {{repository.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
                         <md-button class="md-raised" md-no-ink ng-click="addScmAccount(scmAccount);" ng-disabled="! scmAccount.organization || !scmAccount.repository">
                             Add
                         </md-button>
@@ -138,9 +134,9 @@
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
-                        <md-input-container class="_gray-bg no-margin">
+                        <md-input-container class="no-margin">
                             <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
-                            <md-input-container class="no-margin">
+                            <md-input-container class="no-margin without-animation">
                                 <label>Platform</label>
                                 <md-select ng-change="mergeTemplate(DEFAULT_TEMPLATES.model.json);" ng-model="DEFAULT_TEMPLATES.model">
                                     <md-option ng-repeat="dt in DEFAULT_TEMPLATES.variants track by $index" ng-value="dt">{{dt.name}}</md-option>
@@ -190,21 +186,17 @@
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">
-                        <zf-input-container>
-                            <md-input-container>
-                                <label>{{key}}</label>
-                                <md-select ng-model="builtLauncher.model[key]">
-                                    <md-option ng-repeat="val in item" ng-value="val">
-                                        {{val}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-                        </zf-input-container>
+                        <md-input-container class="no-margin _gray-bg without-animation">
+                            <label>{{key}}</label>
+                            <md-select ng-model="builtLauncher.model[key]">
+                                <md-option ng-repeat="val in item" ng-value="val">
+                                    {{val}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'boolean'">
-                        <zf-input-container>
-                            <md-checkbox ng-model="builtLauncher.model[key]" aria-label="checkbox"></md-checkbox>
-                        </zf-input-container>
+                        <md-checkbox ng-model="builtLauncher.model[key]" aria-label="checkbox"></md-checkbox>
                     </div>
                 </div>
             </div>

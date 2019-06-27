@@ -8,7 +8,7 @@
     <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
     <div class="tests-runs-search__top-section" flex="auto" layout="row" ng-if="!$ctrl.isMobile()">
         <ng-transclude ng-if="!$ctrl.isMobile()"></ng-transclude>
-        <md-input-container class="tests-runs-search__input-label _with-icon _without-animation ">
+        <md-input-container class="tests-runs-search__input-label _with-icon _without-animation">
             <label class="placeholder-label">Search items</label>
             <input ng-model-options="{debounce: 700}"
                    ng-model="$ctrl.searchParams.query"
@@ -30,13 +30,13 @@
                     ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed; $ctrl.onChangeSearchCriteria()">R
                 <md-tooltip ng-if="!$ctrl.isMobile()" md-direction="bottom">Reviewed</md-tooltip>
             </button>
-            <md-input-container class="select-wrapper no-padding" flex="grow">
+            <md-input-container class="select-wrapper no-padding without-animation" flex="grow">
                 <md-select id="searchStatus" ng-model="$ctrl.searchParams.status" class="form-fields__select" ng-change="$ctrl.onChangeSearchCriteria()" name="status" placeholder="Status">
                     <md-option value="">None</md-option>
                     <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
                 </md-select>
             </md-input-container>
-            <md-input-container class="select-wrapper no-padding no-margin-l" flex="grow">
+            <md-input-container class="select-wrapper no-padding no-margin-l without-animation" flex="grow">
                 <md-select id="searchEnv" ng-model="$ctrl.searchParams.environment" class="form-fields__select"
                            ng-change="$ctrl.onChangeSearchCriteria()"
                            name="environment" placeholder="Environment">
@@ -44,7 +44,7 @@
                     <md-option ng-repeat="env in $ctrl.environments" ng-value="env">{{env}}</md-option>
                 </md-select>
             </md-input-container>
-            <md-input-container class="select-wrapper selectPlatform no-padding" flex="grow">
+            <md-input-container class="select-wrapper selectPlatform no-padding without-animation" flex="grow">
                 <md-select id="searchPlatform" ng-model="$ctrl.searchParams.platform" class="form-fields__select" name="platform" placeholder="Platform" ng-change="$ctrl.onChangeSearchCriteria()">
                     <md-option value="">None</md-option>
                     <md-option ng-repeat="platform in $ctrl.platforms" ng-value="platform">{{platform}}</md-option>

@@ -107,30 +107,26 @@
                                     </md-input-container>
                                 </td>
                                 <td ng-switch-when="array">
-                                    <zf-input-container>
-                                        <md-input-container>
-                                            <label>{{paramName}}</label>
-                                            <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple !== true" ng-required="true">
-                                                <md-option ng-repeat="val in paramValue.values" ng-value="val">
-                                                    {{val}}
-                                                </md-option>
-                                            </md-select>
-                                            <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple === true" ng-required="true" multiple>
-                                                <md-option ng-repeat="val in paramValue.values" ng-value="val">
-                                                    {{val}}
-                                                </md-option>
-                                            </md-select>
-                                        </md-input-container>
-                                    </zf-input-container>
+                                    <md-input-container class="without-animation _gray-bg no-margin">
+                                        <label>{{paramName}}</label>
+                                        <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple !== true" ng-required="true">
+                                            <md-option ng-repeat="val in paramValue.values" ng-value="val">
+                                                {{val}}
+                                            </md-option>
+                                        </md-select>
+                                        <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple === true" ng-required="true" multiple>
+                                            <md-option ng-repeat="val in paramValue.values" ng-value="val">
+                                                {{val}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
                                 </td>
                                 <td ng-switch-when="radio">
-                                    <zf-input-container>
-                                        <md-input-container>
-                                            <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)">
-                                                <md-radio-button ng-value="val" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
-                                            </md-radio-group>
-                                        </md-input-container>
-                                    </zf-input-container>
+                                    <md-input-container>
+                                        <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)">
+                                            <md-radio-button ng-value="val" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
+                                        </md-radio-group>
+                                    </md-input-container>
                                 </td>
                                 <td ng-switch-when="title" colspan="3">
                                     <div class="zf-label">{{paramValue.value}}</div>
@@ -156,30 +152,26 @@
                                     </md-input-container>
                                 </td>
                                 <td ng-switch-when="array">
-                                    <zf-input-container>
-                                        <md-input-container>
-                                            <label>{{paramName}}</label>
-                                            <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple !== true" ng-disabled="! paramValue.input_enabled">
-                                                <md-option ng-repeat="val in paramValue.values" ng-value="val">
-                                                    {{val}}
-                                                </md-option>
-                                            </md-select>
-                                            <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple === true" ng-disabled="! paramValue.input_enabled" multiple>
-                                                <md-option ng-repeat="val in paramValue.values" ng-value="val">
-                                                    {{val}}
-                                                </md-option>
-                                            </md-select>
-                                        </md-input-container>
-                                    </zf-input-container>
+                                    <md-input-container class="without-animation _gray-bg no-margin">
+                                        <label>{{paramName}}</label>
+                                        <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple !== true" ng-disabled="! paramValue.input_enabled">
+                                            <md-option ng-repeat="val in paramValue.values" ng-value="val">
+                                                {{val}}
+                                            </md-option>
+                                        </md-select>
+                                        <md-select ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-if="paramValue.multiple === true" ng-disabled="! paramValue.input_enabled" multiple>
+                                            <md-option ng-repeat="val in paramValue.values" ng-value="val">
+                                                {{val}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
                                 </td>
                                 <td ng-switch-when="radio">
-                                    <zf-input-container>
-                                        <md-input-container>
-                                            <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-disabled="! paramValue.input_enabled">
-                                                <md-radio-button ng-value="val" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
-                                            </md-radio-group>
-                                        </md-input-container>
-                                    </zf-input-container>
+                                    <md-input-container>
+                                        <md-radio-group ng-model="paramValue.value" ng-change="buildConfigs(widget_form.params)" ng-disabled="! paramValue.input_enabled">
+                                            <md-radio-button ng-value="val" ng-repeat="val in paramValue.values">{{val}}</md-radio-button>
+                                        </md-radio-group>
+                                    </md-input-container>
                                 </td>
                                 <td ng-switch-when="title" colspan="3">
                                     <div class="zf-label">{{paramValue.value}}</div>
