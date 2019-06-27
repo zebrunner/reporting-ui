@@ -37,6 +37,10 @@ const monitorsController = function monitorsController($scope, $q, $rootScope, $
         })
     };
 
+    $scope.reset = function() {
+        sc.query = '';
+    }
+
     $scope.search = function (page) {
         if(page) {
             $scope.sc.page = page;

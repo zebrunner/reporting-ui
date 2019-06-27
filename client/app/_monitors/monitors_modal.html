@@ -106,7 +106,7 @@
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column" ng-if="monitor.notificationsEnabled && isToolConnected('EMAIL')">
-                    <md-input-container flex>
+                    <md-input-container flex class="chips-input-container">
                         <label ng-if="monitor.emailList">Recipients ({{monitor.emailList.length}})</label>
                         <md-chips ng-model="monitor.emailList"
                                   filter-selected=true
@@ -148,20 +148,20 @@
             </span>
         </md-dialog-actions>
         <md-dialog-actions layout="row">
-            <md-button id="refresh" ng-if="monitor.id" class="btn" data-ng-click="checkMonitor(false)" data-ng-disabled="monitor_form.$invalid">
+            <md-button id="refresh" ng-if="monitor.id" data-ng-click="checkMonitor(false)" data-ng-disabled="monitor_form.$invalid">
                 Refresh monitor
             </md-button>
-            <md-button id="test" ng-if="!monitor.id || ! monitor_form.$pristine" class="btn" data-ng-click="checkMonitor(true)" data-ng-disabled="monitor_form.$invalid">
+            <md-button id="test" ng-if="!monitor.id || ! monitor_form.$pristine" data-ng-click="checkMonitor(true)" data-ng-disabled="monitor_form.$invalid">
                 Test monitor
             </md-button>
             <span flex></span>
-            <md-button id="create" ng-if="!monitor.id" class="btn btn-primary" data-ng-click="createMonitor()" data-ng-disabled="monitor_form.$invalid">
+            <md-button id="create" ng-if="!monitor.id" class="md-primary md-raised" data-ng-click="createMonitor()" data-ng-disabled="monitor_form.$invalid">
                 Create
             </md-button>
-            <md-button id="save" ng-if="monitor.id" class="md-raised btn-w-md md-primary" data-ng-click="updateMonitor(monitor, false);" data-ng-disabled="monitor_form.$invalid">
+            <md-button id="save" ng-if="monitor.id" class="md-primary md-raised" data-ng-click="updateMonitor(monitor, false);" data-ng-disabled="monitor_form.$invalid">
                 Save
             </md-button>
-            <md-button id="delete" ng-if="monitor.id" class="md-raised btn-w-md md-warn" data-ng-click="deleteMonitor(monitor.id);" data-ng-disabled="monitor_form.$invalid">
+            <md-button id="delete" ng-if="monitor.id" class="md-raised md-warn" data-ng-click="deleteMonitor(monitor.id);" data-ng-disabled="monitor_form.$invalid">
                 Delete
             </md-button>
         </md-dialog-actions>

@@ -28,8 +28,12 @@ md-dialog {
         flex-grow: 1;
     }
     md-dialog-actions {
+        min-height: 66px;
         .md-button {
-            margin: 0 0 0 12px;
+            margin: 0;
+        }
+        .md-button:not(:first-child) {
+            margin-left: 12px;
         }
     }
 }
@@ -244,6 +248,9 @@ md-input-container  {
 
         .md-errors-spacer {
             min-height: 0;
+            position: absolute;
+            right: 0;
+            bottom: -19px;
         }
 
         label:not(.md-no-float):not(.md-container-ignore) {
