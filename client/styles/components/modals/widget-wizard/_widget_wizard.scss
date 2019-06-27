@@ -1,5 +1,5 @@
 $standart-padding:      24px;
-$inner-padding:         16px;
+$inner-padding:         20px;
 $wizard-dark-gray:      #7f7f7f;
 $wizard-white:          #ffffff;
 
@@ -15,7 +15,7 @@ $wizard-white:          #ffffff;
         min-width: 300px !important;
         height: 576px;
         overflow-y: auto !important;
-        padding: 28px 8px 34px 24px !important;
+        padding: 28px 24px 24px 24px !important;
 
         @media(max-width: $screen-phone) {
             height: 100%;
@@ -333,12 +333,7 @@ $wizard-white:          #ffffff;
 
             &_show-more {
                 button {
-                    padding: 0;
-                    text-align: left;
-
-                    &:hover {
-                        background-color: transparent !important;
-                    }
+                    margin-left: -11px;
                 }
             }
 
@@ -482,12 +477,6 @@ $wizard-white:          #ffffff;
             width: 100%;
             padding: 0 $inner-padding $inner-padding $inner-padding;
         }
-    }
-
-    button {
-        min-width: 80px;
-        border-radius: 4px;
-        box-shadow: none !important;
     }
 
     @media(min-width: $screen-desktop) {

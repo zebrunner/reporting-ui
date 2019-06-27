@@ -809,8 +809,9 @@
             }
         }
         &__state {
-            &._badge {
-                margin: 0 0 0 10px;
+            &._badge{
+                height: 20px;
+                width: 20px;
             }
         }
 

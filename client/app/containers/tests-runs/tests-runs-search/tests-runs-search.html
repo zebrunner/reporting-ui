@@ -8,17 +8,17 @@
     <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
     <div class="tests-runs-search__top-section" flex="auto" layout="row" ng-if="!$ctrl.isMobile()">
         <ng-transclude ng-if="!$ctrl.isMobile()"></ng-transclude>
-        <label class="tests-runs-search__input-label">
-            <input class="form-fields__input _with-icon"
-                   placeholder="Search items"
+        <md-input-container class="tests-runs-search__input-label _with-icon _without-animation ">
+            <label class="placeholder-label">Search items</label>
+            <input ng-model-options="{debounce: 700}"
                    ng-model="$ctrl.searchParams.query"
                    ng-change="$ctrl.onChangeSearchCriteria()"
                    aria-label="Search items"
                    aria-describedby="basic-addon2">
-            <i class="material-icons form-fields__input-icon">
+            <i class="material-icons">
                 search
             </i>
-        </label>
+        </md-input-container>
     </div>
 
     <div class="tests-runs-search__bottom-section" ng-if="!$ctrl.isMobile()"
@@ -59,7 +59,7 @@
                 <i class="material-icons">date_range</i>
                 <md-button id="searchCalendar" ng-click="$ctrl.openDatePicker($event, true)"></md-button>
             </md-input-container>
-            <button ng-show="$ctrl.isSearchActive()" class="form-button _reset-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></button>
+            <md-button ng-show="$ctrl.isSearchActive()" class="md-raised pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></md-button>
         </div>
     </div>
     <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile() && !$ctrl.isFilterActive()" md-direction="up" class="md-scale md-fab-bottom-right">

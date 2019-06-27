@@ -12,20 +12,20 @@
             <i class="fa fa-angle-double-up" aria-hidden="true"></i>
         </md-button>
         <md-menu-content class="test-run-group_menu" style="z-index:99;"  width="3">
-            <md-list class="md-dense">
+            <md-list>
                 <md-list-item id="clearProject" class="md-2-line" ng-repeat="chip in chips" md-prevent-menu-close>
-                    <md-checkbox md-prevent-menu-close class="md-primary" ng-model="chip.checked" aria-label="tag"></md-checkbox>
+                    <md-checkbox md-prevent-menu-close ng-model="chip.checked" aria-label="tag"></md-checkbox>
                     <div class="md-list-item-text">
                         {{chip.value}}
                     </div>
                 </md-list-item>
                 <md-list-item>
-                    <button md-prevent-menu-close style="margin-right: 8px" class="md-button md-raised md-dark md-ink-ripple" type="button" ng-click="resetCheckedTags();">
+                    <md-button md-prevent-menu-close style="margin-right: 8px" class="md-raised" type="button" ng-click="resetCheckedTags();">
                         RESET
-                    </button>
-                    <button  class="md-button md-primary md-raised md-ink-ripple" type="button" ng-click="addCheckedTags();">
+                    </md-button>
+                    <md-button class="md-primary md-raised" type="button" ng-click="addCheckedTags();">
                         APPLY
-                    </button>
+                    </md-button>
                 </md-list-item>
             </md-list>
         </md-menu-content>

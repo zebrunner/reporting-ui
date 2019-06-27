@@ -4,7 +4,7 @@
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle">Comparison</h2>
                 <span flex></span>
-                <md-button id="close" class="md-icon-button" data-ng-click="cancel()">
+                <md-button id="close" class="md-icon-button _toolbar-btn" data-ng-click="cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
@@ -18,7 +18,7 @@
                             <i style="color: #009688" class="material-icons">check</i>
                             <span style="position: absolute; top: 20%;">All tests are identical</span>
                         </div>
-                        <md-checkbox ng-show="! allTestsIdentical" class="md-primary" ng-model="hideIdentical" aria-label="Hide identical">
+                        <md-checkbox ng-show="! allTestsIdentical" ng-model="hideIdentical" aria-label="Hide identical">
                             Hide identical
                         </md-checkbox>
                         <md-card class="no-margin-h">

@@ -14,8 +14,8 @@
             <status-buttons on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
         </md-dialog-content>
         <md-dialog-actions>
-            <button class="form-button _reset-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.resetTestsGrouping();"><span>RESET</span></button>
-            <button class="form-button _apply-btn md-button md-ink-ripple pull-right" type="button" ng-click="$ctrl.onApply(true);"><span>APPLY</span></button>
+            <md-button class="md-raised" type="button" ng-click="$ctrl.resetTestsGrouping();"><span>RESET</span></md-button>
+            <md-button class="md-raised md-primary pull-right" type="button" ng-click="$ctrl.onApply(true);"><span>APPLY</span></md-button>
         </md-dialog-actions>
     </div>
 </md-dialog>

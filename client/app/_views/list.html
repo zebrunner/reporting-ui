@@ -2,13 +2,13 @@
     <zf-sub-header>
         <zf-sub-header-title>{{view.name}}</zf-sub-header-title>
         <zf-sub-header-button>
-                <button has-any-role="['ROLE_ADMIN']" class="fixed-page-header__btn zf-header-button" data-ng-click="showJobsViewDialog($event)">
+                <button has-any-role="['ROLE_ADMIN']" class="fixed-page-header__btn zf-primary-button" data-ng-click="showJobsViewDialog($event)">
                     <md-icon class="material-icons">add</md-icon>
                     <span>New view</span>
                 </button>
         </zf-sub-header-button>
         <zf-sub-header-button ng-if="isToolConnected('JENKINS')">
-                <button class="fixed-page-header__btn zf-header-button" ng-click="rebuildJobs()">
+                <button class="fixed-page-header__btn zf-primary-button" ng-click="rebuildJobs()">
                     <md-icon class="material-icons">autorenew</md-icon>
                     <span>Rerun</span>
                     <md-tooltip md-direction="bottom">Rerun</md-tooltip>
@@ -51,7 +51,7 @@
                                                        <small>{{progressBar}}%</small>
                                                    </timer>
                                                </div>
-                                                <md-checkbox class="md-secondary"
+                                                <md-checkbox
                                                     aria-label="Rebuild"
                                                     data-ng-model="jobView.testRun.rebuild"
                                                     data-ng-if="jobView.testRun != null && jobView.testRun.status != 'IN_PROGRESS' && isToolConnected('JENKINS')"

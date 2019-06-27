@@ -5,14 +5,15 @@
             <small id="itemsCount">({{ $ctrl.sr.totalResults }})</small>
         </zf-sub-header-title>
         <zf-sub-header-options>
-            <md-input-container class="no-padding">
-                <label>Search</label>
+            <md-input-container class="_search">
+                <label class="placeholder-label">Search</label>
                 <input ng-model="$ctrl.sc.query" ng-model-options="{debounce: 700}" ng-change="$ctrl.search();" autocomplete="off"/>
-                <md-icon>search</md-icon>
+                <md-icon class="input-search-icon">search</md-icon>
+                <md-icon class="input-close-icon" ng-click="$ctrl.reset()">close</md-icon>
             </md-input-container>
         </zf-sub-header-options>
         <zf-sub-header-button>
-            <button class="fixed-page-header__btn zf-header-button" ng-click="$ctrl.showInviteUsersDialog($event)" has-any-permission="['INVITE_USERS']">
+            <button class="fixed-page-header__btn zf-primary-button" ng-click="$ctrl.showInviteUsersDialog($event)" has-any-permission="['INVITE_USERS']">
                 <md-icon class="material-icons">add</md-icon>
                 <span>Invite user</span>
             </button>

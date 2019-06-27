@@ -25,10 +25,6 @@
         &-content {
             padding: 15px 0 0;
             border-radius: 0;
-
-            md-input-container:not(.md-input-invalid).md-input-has-value label {
-                opacity: .5;
-            }
         }
         &-header {
             md-input-container {
@@ -54,6 +50,9 @@
             path {
                 stroke: currentColor
             }
+        }
+        &-footer {
+            padding-bottom: 10px;
         }
         &-icon {
             display: inline-block;

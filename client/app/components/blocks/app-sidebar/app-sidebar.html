@@ -16,13 +16,14 @@
                         <md-icon toggle-nav-bottom toggle-menu="close">close</md-icon>
                     </li>
                     <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
-                        <a class="nav__button _add" aria-label="menu" href="" data-ng-click="$ctrl.showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
-                    </li>
+                        <a class="nav__button zf-primary-button" aria-label="menu" href="" data-ng-click="$ctrl.showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
+                    </li> 
                     <li class="sub-search nav-search">
-                        <md-input-container class="no-margin no-padding">
-                            <label>Search</label>
-                            <input name="search" ng-model="navSC.title" autocomplete="off"/>
-                            <md-icon>search</md-icon>
+                        <md-input-container class="no-margin _search _light">
+                            <label class="placeholder-label">Search</label>
+                            <input name="search" ng-model="navSC.title" ng-model-options="{debounce: 700}" autocomplete="off"/>
+                            <md-icon class="input-search-icon">search</md-icon>
+                            <md-icon class="input-close-icon" ng-click="navSC.title = ''">close</md-icon>
                         </md-input-container>
                     </li>
                     <li class="sub-search search-menu">
@@ -167,7 +168,7 @@
                     <li class="sub-search search-menu">
                         <ul class="projects__wrapper">
                             <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
-                                <a class="nav__button _add" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
+                                <a class="nav__button zf-primary-button" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
                             </li>
                             <li name="projectName" class="projects__list" md-prevent-menu-close>
                                 <md-radio-group ng-model="$ctrl.selectedProject" ng-change="$ctrl.chooseProject();">

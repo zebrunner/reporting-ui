@@ -4,14 +4,14 @@
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle">Invite users</h2>
                 <span flex></span>
-                <md-button id="close" class="md-icon-button" data-ng-click="cancel()">
+                <md-button id="close" class="md-icon-button _toolbar-btn" data-ng-click="cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-content class="md-padding autocomplete" layout="column" style="background-color: transparent">
+                <md-content class="autocomplete md-padding" layout="column" style="background-color: transparent">
                     <md-select ng-show="isLDAPConnected" id="source" name="source" ng-model="source" placeholder="Choose source...." required>
                         <md-option ng-repeat="s in SOURCES" ng-value="s">
                             {{s}}

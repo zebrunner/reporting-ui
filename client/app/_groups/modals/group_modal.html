@@ -4,7 +4,7 @@
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle"><span ng-if="!group.id">New</span><span ng-if="group.id">Edit</span> group</h2>
                 <span flex></span>
-                <md-button id="close" class="md-icon-button" data-ng-click="cancel()">
+                <md-button id="close" class="md-icon-button _toolbar-btn" data-ng-click="cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
@@ -13,7 +13,10 @@
         <md-dialog-content>
             <div class="groups-modal__content-wrapper">
                 <div layout class="groups-modal__form-fields">
-                    <input id="groupName" placeholder="Group name" class="form-fields__input" type="text" name="name" data-ng-model="group.name" required>
+                    <md-input-container>
+                        <label>Group name</label>
+                        <input id="groupName" type="text" name="name" data-ng-model="group.name" required>
+                    </md-input-container>
                     <md-select id="groupRole" class="form-fields__select" name="role" ng-model="group.role" required placeholder="User role">
                         <md-option ng-repeat="role in roles" value="{{role}}">
                             {{role}}
@@ -31,7 +34,7 @@
                             </div>
                             <div layout="row" class="groups-modal__block__permissions" ng-class="{'hidden-permissions': !blocksChecked[key]}">
                                 <div class="groups-modal__block__permissions__item" ng-repeat="permission in value.permissions">
-                                    <md-checkbox ng-true-value="true" ng-false-value="false" ng-model="permission.value" aria-label="Block" class="md-primary"></md-checkbox>
+                                    <md-checkbox ng-true-value="true" ng-false-value="false" ng-model="permission.value" aria-label="Block"></md-checkbox>
                                     <span name="permissionName" class="text-capitalize">{{ permission.name.split('_').join(' ') }}</span>
                                 </div>
                             </div>
@@ -42,13 +45,13 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="cancel" class="form-button cancel md-raised btn-w-md" ng-click="cancel()">
+            <md-button id="cancel" class="cancel md-raised btn-w-md" ng-click="cancel()">
                 Cancel
             </md-button>
-            <md-button id="create" type="submit" class="form-button md-button md-raised btn-w-md md-primary md-ink-ripple pull-right" ng-disabled="group_form.$invalid" ng-if="! group.id">
+            <md-button id="create" type="submit" class="md-button md-raised btn-w-md md-primary md-ink-ripple pull-right" ng-disabled="group_form.$invalid" ng-if="! group.id">
                 Create
             </md-button>
-            <md-button id="update" class="form-button md-raised btn-w-md md-primary" ng-disabled="group_form.$invalid" ng-click="updateGroup(group)" ng-if="group.id">
+            <md-button id="update" class="md-raised btn-w-md md-primary" ng-disabled="group_form.$invalid" ng-click="updateGroup(group)" ng-if="group.id">
                 Update
             </md-button>
         </md-dialog-actions>

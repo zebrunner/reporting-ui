@@ -4,7 +4,7 @@
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle"><span ng-if="! monitor.id">New</span><span ng-if="monitor.id">Edit/delete</span> monitor</h2>
                 <span flex></span>
-                <md-button id="close" class="md-icon-button" data-ng-click="cancel()">
+                <md-button id="close" class="md-icon-button _toolbar-btn" data-ng-click="cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
@@ -47,9 +47,9 @@
                     </md-input-container>
                 </div>
                 <md-radio-group id="httpMethods" ng-model="monitor.httpMethod" ng-if="isHttpBlockPresent(monitor)">
-                    <md-radio-button id="post" class="checkbox-inline md-primary" value="POST">POST</md-radio-button>
-                    <md-radio-button id="get" class="checkbox-inline md-primary" value="GET">GET</md-radio-button>
-                    <md-radio-button id="put" class="checkbox-inline md-primary" value="PUT">PUT</md-radio-button>
+                    <md-radio-button id="post" class="checkbox-inline" value="POST">POST</md-radio-button>
+                    <md-radio-button id="get" class="checkbox-inline" value="GET">GET</md-radio-button>
+                    <md-radio-button id="put" class="checkbox-inline" value="PUT">PUT</md-radio-button>
                 </md-radio-group>
                 <div layout layout-sm="column" ng-if="isHttpBodyBlockPresent(monitor)">
                     <span>Body</span>
