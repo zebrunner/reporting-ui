@@ -654,9 +654,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             if($scope.clientId) {
                 var host = $window.location.host;
                 var tenant = host.split('\.')[0];
+                const servletPath = $window.location.pathname.split('/tests/runs')[0];
                 var redirectURI = isMultitenant ?
                     $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant
-                    : $window.location.protocol + "//" + host + "/scm/callback";
+                    : $window.location.protocol + "//" + host + servletPath + "/scm/callback";
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
