@@ -296,6 +296,12 @@ $wizard-white:          #ffffff;
                     padding-bottom: $inner-padding;
                     vertical-align: middle;
                 }
+                md-input-container {
+                    md-select-value, input {
+                        min-width: 228px;
+                        max-width: 228px;
+                    }
+                }
                 .zf-label {
                     text-transform: capitalize;
                     line-height: 0;

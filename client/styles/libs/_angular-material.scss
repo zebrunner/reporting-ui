@@ -581,9 +581,6 @@ md-input-container {
                 }
             }
         }
-        .md-select-value span:not(.md-select-icon):after {
-            display: none;
-        }
         md-select-value.md-select-placeholder{
             padding-left: 12px;
             color: $dark-new;
@@ -610,11 +607,22 @@ md-input-container {
             background: #ffffff;
             box-sizing: border-box;
             transition: .25s color ease-in-out, .25s border-color ease-in-out;
+            span {
+                &:after {
+                    transition: color .25s ease-in-out;
+                    color: rgba($dark-new, .6);
+                }
+            }
         }
         &:hover:not([disabled]) {
             .md-select-value , .md-select-value.md-select-placeholder {
                 color: rgba($dark-new, .8);
                 border-color: rgba($dark-new, .25);
+                span {
+                    &:after {
+                        color: rgba($dark-new, .8);
+                    }
+                }
             }
         }
     }

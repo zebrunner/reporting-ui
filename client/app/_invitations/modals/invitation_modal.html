@@ -13,14 +13,16 @@
             <div class="md-dialog-content">
                 <md-content class="autocomplete md-padding" layout="column" style="background-color: transparent">
                     <md-input-container ng-show="isLDAPConnected">
-                        <md-select id="source" name="source" ng-model="source" placeholder="Choose source...." required>
+                        <label>Choose source</label>
+                        <md-select id="source" name="source" ng-model="source" required>
                             <md-option ng-repeat="s in SOURCES" ng-value="s">
                                 {{s}}
                             </md-option>
                         </md-select>
                     </md-input-container>
                     <md-input-container>
-                        <md-select id="userGroup" name="projectId" data-ng-model="userGroup" placeholder="Choose group...." required>
+                        <label>Choose group</label>
+                        <md-select id="userGroup" name="projectId" data-ng-model="userGroup" required>
                             <md-option ng-repeat="group in groups" ng-if="group.invitable" ng-value="group.id">
                                 {{group.name}}
                             </md-option>
