@@ -33,6 +33,20 @@
                         <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch" ng-disabled="!isNew && !dashboard.editable"></md-switch>
                     </div>
                 </ng-form>
+                <div class="dashboard-attributes-items-container">
+                        <md-chips class="dashboard-attributes-items-container_chips" ng-model="dashboard.attributes" md-on-remove="deleteAttribute($chip)" md-removable="true" readonly="true">
+                            <md-chip-template>
+                                <div class="dashboard-attributes-items-container_chips_template" ng-click="">
+                                    <span>{{$chip.key}} = {{$chip.value}}</span>
+                                </div>
+                                <div class="md-chip-remove-container ng-scope" tabindex="-1">
+                                    <button md-chip-remove class="md-primary md-chip-remove filter-slice-chip-button ng-scope" tabindex="-1" aria-hidden="true">
+                                        <md-icon aria-label="Close dialog" class="material-icons" role="img">close</md-icon>
+                                    </button>
+                                </div>
+                            </md-chip-template>
+                        </md-chips>
+                    </div>
             </div>
             <div class="md-dialog-content dashboard-dialog-attributes--container" data-ng-if="!isNew">
                 <ng-form name="attributes">
@@ -53,20 +67,7 @@
                         </div>
                     </div>
                 </ng-form>
-                <div class="dashboard-attributes-items-container">
-                    <md-chips class="dashboard-attributes-items-container_chips" ng-model="dashboard.attributes" md-on-remove="deleteAttribute($chip)" md-removable="true" readonly="true">
-                        <md-chip-template>
-                            <div class="dashboard-attributes-items-container_chips_template" ng-click="">
-                                <span>{{$chip.key}} = {{$chip.value}}</span>
-                            </div>
-                            <div class="md-chip-remove-container ng-scope" tabindex="-1">
-                                <button md-chip-remove class="md-primary md-chip-remove filter-slice-chip-button ng-scope" tabindex="-1" aria-hidden="true">
-                                    <md-icon aria-label="Close dialog" class="material-icons" role="img">close</md-icon>
-                                </button>
-                            </div>
-                        </md-chip-template>
-                    </md-chips>
-                </div>
+                
             </div>
         </md-dialog-content>
 
