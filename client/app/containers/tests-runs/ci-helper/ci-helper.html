@@ -136,7 +136,7 @@
                     <div class="ci-runner-container_content_code" ng-cloak>
                         <md-input-container class="no-margin">
                             <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
-                            <md-input-container class="no-margin without-animation">
+                            <md-input-container class="no-margin">
                                 <label>Platform</label>
                                 <md-select ng-change="mergeTemplate(DEFAULT_TEMPLATES.model.json);" ng-model="DEFAULT_TEMPLATES.model">
                                     <md-option ng-repeat="dt in DEFAULT_TEMPLATES.variants track by $index" ng-value="dt">{{dt.name}}</md-option>
@@ -181,12 +181,13 @@
                     </div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">
                         <md-input-container class="_gray-bg no-margin">
+                            <label>{{key}}</label>
                             <input type="number" ng-if="builtLauncher.type[key] === 'int'" ng-model="builtLauncher.model[key]"/>
                             <input type="text" ng-if="builtLauncher.type[key] !== 'int'" ng-model="builtLauncher.model[key]"/>
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">
-                        <md-input-container class="no-margin _gray-bg without-animation">
+                        <md-input-container class="no-margin _gray-bg">
                             <label>{{key}}</label>
                             <md-select ng-model="builtLauncher.model[key]">
                                 <md-option ng-repeat="val in item" ng-value="val">

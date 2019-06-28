@@ -173,6 +173,8 @@ md-input-container  {
         padding: 0;
 
         .md-input {
+            max-width: 100%;
+            text-overflow: ellipsis;
             background-color: #fff;
             height: 36px;
             border-radius: 4px;

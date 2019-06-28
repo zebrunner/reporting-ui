@@ -3,17 +3,13 @@
 .groups-modal {
     max-width: 871px;
     &__form-fields {
-        padding: 30px 20px;
+        padding: 10px 20px;
         border-bottom: 1px solid rgba(#000000, .15);
         md-input-container {
             max-width: 232px;
-            margin: 0;
             &:first-child {
                 margin-right: 24px;
             }
-        }        
-        .form-fields__select {
-            min-width: 232px;
         }
     }
     &__content-wrapper {
@@ -94,9 +90,11 @@
         &__form-fields {
             padding: 24px 16px;
             flex-direction: column;
-            md-input-container:first-child {
+            md-input-container {
                 max-width: unset;
-                margin: 0 0 20px 0;
+                &:first-child {
+                    margin: 0 0 20px 0;
+                }
             }
         }
         &__block {
@@ -139,15 +137,6 @@
                 display: block;
                 background-color: #e8e9e9;
                 margin-right: 4px;
-            }
-        }
-    }
-    @media screen and (min-width: $breakpoint-mobile-small + 1) and (max-width: 530px) {
-        .form-fields {
-            &__input, &__select {
-                min-width: unset;
-                flex-grow: 1;
-                max-width: calc(50% - 12px);
             }
         }
     }
