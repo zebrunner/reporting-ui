@@ -65,8 +65,6 @@
                                         <td class="result {{getTest(test, testRun).status}}" md-cell data-ng-repeat="(testRunId, testRun) in tr track by testRunId">
                                             <div ng-if="getTest(test, testRun)">
                                                 <span data-ng-if="getTest(test, testRun).finishTime && (getTest(test, testRun).finishTime - getTest(test, testRun).startTime)/1000 > 0" class="light_text"><i class="fa fa-clock-o" aria-hidden="true"></i> <timer name="testFinishTime" autostart="false" countdown="(getTest(test, testRun).finishTime - getTest(test, testRun).startTime)/1000">{{minutes}} minute{{minutesS}} {{seconds}} second{{secondsS}}</timer></span>
-                                                <!--<span name="testOwner" data-ng-if="getTest(test, testRun).owner" class="light_text"></i> <i class="fa fa-user" aria-hidden="true"></i> {{getTest(test, testRun).owner}}</span>
-                                                <span name="secondaryOwner" data-ng-if="getTest(test, testRun).secondaryOwner" class="light_text"></i> <i class="fa fa-user" aria-hidden="true"></i> {{getTest(test, testRun).secondaryOwner}}</span>-->
                                                 <span name="device" data-ng-if="getTest(test, testRun).testConfig.device" class="light_text"></i> <i class="fa fa-mobile" aria-hidden="true"></i> {{getTest(test, testRun).testConfig.device}}</span>
                                             </div>
                                             <div class="result_error {{getTest(test, testRun).status}} {{main.theme}}" data-ng-if="getTest(test, testRun).message && (getTest(test, testRun).status == 'FAILED' || getTest(test, testRun).status == 'SKIPPED')">

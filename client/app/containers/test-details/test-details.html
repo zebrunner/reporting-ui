@@ -85,9 +85,6 @@
                                                 <i class="fa fa-user" aria-hidden="true"></i>
                                                 {{test.owner}}
                                             </span>
-                                            <span name="secondaryOwner" data-ng-if="test.secondaryOwner" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                                                <i class="fa fa-user" aria-hidden="true"></i>
-                                                {{test.secondaryOwner}}</span>
                                             <span name="device" data-ng-if="test.testConfig.device" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
                                                 <i class="fa fa-mobile" aria-hidden="true"></i>
                                                 {{test.testConfig.device}}</span>
@@ -195,4 +192,3 @@
         </div>
     </div>
 </div>
-
