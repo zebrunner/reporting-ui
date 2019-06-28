@@ -877,6 +877,9 @@ md-radio-button {
     md-date-range-picker &:not(._toolbar-btn) {
         padding: 6px;
     }
+    &.md-focused {
+        margin: 0 6px;
+    }
     &:not(._toolbar-btn) {
         border: none;
         background: transparent;

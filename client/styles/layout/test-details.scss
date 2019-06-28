@@ -322,8 +322,8 @@
                     }
                     @media(max-width: $breakpoint-mobile) {
                         flex-grow: 1;
+                        padding: 0 5px 5px 15px;
                     }
-                    @extend %noBorderPadding;
                     &__attachment {
                         display: flex;
                         align-items: flex-end;
