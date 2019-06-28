@@ -3553,8 +3553,8 @@ users-component md-tab-item.md-disabled {
 }
 
 .dashboard-attributes-items-container {
+    margin-bottom: 10px;
     &_chips {
-
         .md-chips {
             box-shadow: none;
             padding-left: 0;
@@ -3562,7 +3562,7 @@ users-component md-tab-item.md-disabled {
             md-chip {
                 border: solid 1px rgba(1, 22, 39, 0.2);
                 background-color: transparent;
-                margin-top: 12px;
+                margin-top: 6px;
 
                 .md-chip-content {
                     padding: 0 !important;
