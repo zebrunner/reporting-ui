@@ -55,7 +55,7 @@
                                     <div layout-sm="column" layout-xs="column">
                                         <div layout="row">
                                             <md-input-container class="filter-input-container select _gray-bg without-animation">
-                                                <md-select id="filterCriteria" ng-change="$ctrl.onFilterSliceUpdate('CRITERIA');" class="form-fields__select"
+                                                <md-select id="filterCriteria" ng-change="$ctrl.onFilterSliceUpdate('CRITERIA');"
                                                            ng-model="$ctrl.currentCriteria.value" name="criteria" placeholder="CRITERIA">
                                                     <md-option ng-value>
                                                         <em>None</em>
@@ -67,7 +67,7 @@
                                                 </md-select>
                                             </md-input-container>
                                             <md-input-container class="filter-input-container select _gray-bg without-animation">
-                                                <md-select id="filterOperator" ng-change="$ctrl.onFilterSliceUpdate('OPERATOR');" class="form-fields__select"
+                                                <md-select id="filterOperator" ng-change="$ctrl.onFilterSliceUpdate('OPERATOR');"
                                                            ng-disabled="!$ctrl.currentCriteria.value" ng-model="$ctrl.currentOperator.value"
                                                            name="operator" placeholder="OPERATOR">
                                                     <md-option ng-value>
@@ -82,7 +82,7 @@
                                         </div>
                                         <div layout="row">
                                             <md-input-container class="filter-input-container select value-input _gray-bg without-animation" ng-if="$ctrl.currentCriteria.type.indexOf('SELECT') >= 0">
-                                                <md-select ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-disabled="!$ctrl.currentOperator.value" class="form-fields__select"
+                                                <md-select ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-disabled="!$ctrl.currentOperator.value"
                                                            ng-model="$ctrl.currentValue.value.value" name="value" placeholder="Value">
                                                     <md-option ng-value>
                                                         <em>None</em>

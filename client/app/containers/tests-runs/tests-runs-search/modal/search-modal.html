@@ -27,14 +27,14 @@
                                 ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed; $ctrl.onChangeSearchCriteria()">R
                         </button>
                         <md-input-container class="no-padding without-animation" flex="grow">
-                            <md-select id="searchStatus" ng-model="$ctrl.searchParams.status" class="form-fields__select" ng-change="$ctrl.onChangeSearchCriteria()" name="status" placeholder="Status">
+                            <md-select id="searchStatus" ng-model="$ctrl.searchParams.status" ng-change="$ctrl.onChangeSearchCriteria()" name="status" placeholder="Status">
                                 <md-option value="">None</md-option>
                                 <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <md-input-container flex="grow" class="no-padding without-animation">
-                        <md-select id="searchEnv" ng-model="$ctrl.searchParams.environment" class="form-fields__select"
+                        <md-select id="searchEnv" ng-model="$ctrl.searchParams.environment"
                                     ng-change="$ctrl.onChangeSearchCriteria()"
                                     name="environment" placeholder="Environment">
                             <md-option value="">None</md-option>
@@ -42,14 +42,14 @@
                         </md-select>
                     </md-input-container>
                     <md-input-container flex="grow" class="no-padding without-animation">
-                        <md-select id="searchPlatform" ng-model="$ctrl.searchParams.platform" class="form-fields__select" name="platform" placeholder="Platform" ng-change="$ctrl.onChangeSearchCriteria()">
+                        <md-select id="searchPlatform" ng-model="$ctrl.searchParams.platform" name="platform" placeholder="Platform" ng-change="$ctrl.onChangeSearchCriteria()">
                             <md-option value="">None</md-option>
                             <md-option ng-repeat="platform in $ctrl.platforms" ng-value="platform">{{platform}}</md-option>
                         </md-select>
                     </md-input-container>
                 </div>
                 <div layout="row" layout-align="none end" layout-align-sm="space-between end" class="search-fields" layout-xs="column">
-                    <md-input-container class="date-picker-container form-fields__input" flex="grow" flex-sm="33" flex-xs="100">
+                    <md-input-container class="date-picker-container" flex="grow" flex-sm="33" flex-xs="100">
                         <span data-ng-if="!$ctrl.selectedRange.dateStart && !$ctrl.selectedRange.dateEnd">Date</span>
                         <span data-ng-if="$ctrl.selectedRange.dateStart && $ctrl.selectedRange.dateEnd && !$ctrl.isEqualDate()">{{$ctrl.selectedRange.dateStart | date : 'dd MMM'}} - </span>
                         <span>{{$ctrl.selectedRange.dateEnd | date : 'dd MMM'}}</span>

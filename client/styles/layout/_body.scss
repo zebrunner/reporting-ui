@@ -2656,10 +2656,6 @@ $light-inprogress: #68c9fd;
         width: 100% !important;
         height: auto;
 
-        md-select, md-input {
-            width: 272px;
-        }
-
         @media(max-width: $screen-phone) {
             width: 100% !important;
             padding: 75px 16px 20px 16px !important;
@@ -2757,6 +2753,17 @@ $light-inprogress: #68c9fd;
                     margin-bottom: 16px;
                     display: flex;
                     width: 100%;
+                    align-items: center;
+                    md-input-container {
+                        max-width: 228px;
+                        margin-right: 12px;
+                    }
+                    @media (max-width: $breakpoint-mobile) {
+                        flex-wrap: wrap;
+                        button {
+                            margin: 18px 0;
+                        }
+                    }
                     > span {
                         font-size: 0;
                         display: flex;
@@ -2850,6 +2857,10 @@ $light-inprogress: #68c9fd;
             bottom: 20px;
 
             @media(max-width: $screen-phone) {
+                right: 0;
+                width: 100%;
+                left: 0;
+                z-index: 1;
                 bottom: 0;
                 box-shadow: 0 -1px 1px 0 rgba(0, 0, 0, 0.2);
                 height: 68px;
@@ -2896,25 +2907,34 @@ $light-inprogress: #68c9fd;
 
                 input, md-input-container, md-select {
                     width: 100% !important;
-                    height: 44px !important;
                 }
             }
             &_container {
                 font-size: 0;
                 position: relative;
                 height: 36px;
-
+                &:not(.builder-boolean) {
+                    
+                    @media (max-width: 768px) {
+                        .zf-label {
+                            opacity: 0;
+                        }
+                        md-input-container {
+                            label {
+                                display: block;
+                            }
+                        }
+                    }
+                }
                 > .zf-label {
                     line-height: 36px !important;
                     min-width: 204px;
-
                     .zf-show-part {
                         .ng-binding {
                             font-weight: normal;
-                            color: black;
+                            color: rgba(1, 22, 39, 0.8);
 
                             @media(max-width: $screen-phone) {
-                                color: rgba(0, 0, 0, 0.6);
                                 letter-spacing: 0.2px;
                                 font-size: 11px;
                                 opacity: 0.6;
@@ -2928,14 +2948,12 @@ $light-inprogress: #68c9fd;
                     }
 
                 }
-
                 @media (max-width: $screen-sm) {
                     display: block !important;
                 }
-
                 @media (max-width: $screen-sm) {
                     &:not(.builder-boolean) {
-                        height: 82px;
+                        height: 72px;
                         padding-bottom: 18px;
                         > div {
                             display: block !important;
@@ -2966,6 +2984,15 @@ $light-inprogress: #68c9fd;
                     display: inline-block;
                     vertical-align: bottom;
                     padding-bottom: 16px;
+                    width: 228px;
+                    md-input-container {
+                        label {
+                            display: none;
+                        }
+                    }
+                    @media(max-width: $screen-phone) {
+                        width: 100%;
+                    }
 
                     &.item-array {
                         width: 100%;
