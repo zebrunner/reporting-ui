@@ -78,6 +78,13 @@
             }
 
             &-chips {
+                md-chip-template {
+                    display: flex;
+                    align-items: center;
+                    span {
+                        margin-right: 5px;
+                    }
+                }
                 md-chips-wrap {
                     display: flex;
                     align-items: center;

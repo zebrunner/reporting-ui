@@ -55,17 +55,17 @@
                                               md-on-add="$ctrl.addUserToGroup($chip, group)"
                                               md-on-remove="$ctrl.deleteUserFromGroup($chip, group)">
                                         <md-chip-template name="chip">
-                                            <profile-photo ng-model="$chip.photoURL" size="40" auto-resize="false"></profile-photo>
+                                            <profile-photo ng-model="$chip.photoURL" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
                                             {{$chip.username}}
                                         </md-chip-template>
                                         <md-autocomplete md-search-text="searchText" md-items="user in $ctrl.querySearch(searchText, group)"
                                                          md-item-text="user.username" md-selected-item="selectedUser" md-autoselect md-no-cache="true"
                                                          placeholder="add user">
                                             <md-item-template style="z-index: 10000;">
-                                                                    <span name="suggestion">
-                                                                        <profile-photo ng-model="user.photoURL" size="40"></profile-photo>
-                                                                        {{user.username}}
-                                                                    </span>
+                                                <span name="suggestion" class="chip-suggestion">
+                                                    <profile-photo ng-model="user.photoURL" size="40" chip="true" squared="20"></profile-photo>
+                                                    {{user.username}}
+                                                </span>
                                             </md-item-template>
                                             <md-not-found id="notRecipients">
                                                 No users matching "{{searchText}}" were found.

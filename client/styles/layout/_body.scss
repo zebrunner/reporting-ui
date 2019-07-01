@@ -981,7 +981,11 @@ ul.profile-image-actions {
 
 .profile-photo {
     position: relative;
-
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    vertical-align: middle;
     &_content {
         position: absolute;
         top: 0;

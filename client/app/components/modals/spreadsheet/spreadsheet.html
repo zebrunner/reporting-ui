@@ -13,7 +13,7 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <div layout layout-sm="column">
-                    <md-input-container flex class="chips-input-container">
+                    <md-input-container flex class="chips-input-container _with-img">
                         <label>Share with: </label>
                         <md-chips ng-model="users"
                                     class="photo-chip"
@@ -23,7 +23,7 @@
                                     md-on-remove="removeRecipient($chip)"
                                     md-separator-keys="keys">
                             <md-chip-template name="chip">
-                                <profile-photo ng-model="$chip.photoURL" size="40" auto-resize="false"></profile-photo>
+                                <profile-photo ng-model="$chip.photoURL" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
                                 {{$chip.email}}
                             </md-chip-template>
                             <md-autocomplete
@@ -35,8 +35,8 @@
                                 md-no-cache="true"
                                 placeholder="add email">
                                 <md-item-template>
-                                <span name="suggestion">
-                                    <profile-photo ng-model="user.photoURL" size="40"></profile-photo>
+                                <span name="suggestion" class="chip-suggestion">
+                                    <profile-photo ng-model="user.photoURL" size="40" squared="20" chip="true"></profile-photo>
                                     {{user.email}}
                                 </span>
                                 </md-item-template>

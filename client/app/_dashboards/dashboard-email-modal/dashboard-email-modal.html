@@ -23,7 +23,7 @@
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column">
-                    <md-input-container flex class="chips-input-container">
+                    <md-input-container flex class="chips-input-container _with-img">
                         <label name="recipientsLength">Recepients ({{email.recipients.length}})</label>
                         <md-chips ng-model="users"
                                   class="photo-chip"
@@ -34,7 +34,7 @@
                                   md-add-on-blur="true"
                                   md-separator-keys="keys">
                             <md-chip-template name="chip">
-                                <profile-photo ng-model="$chip.photoURL" size="40" auto-resize="false"></profile-photo>
+                                <profile-photo ng-model="$chip.photoURL" chip="true" size="40" squared="20" auto-resize="false"></profile-photo>
                                 {{$chip.email}}
                             </md-chip-template>
                             <md-autocomplete
@@ -46,8 +46,8 @@
                                 md-selected-item="currentUser"
                                 placeholder="Add email">
                                 <md-item-template name="suggestion">
-                                    <span>
-                                        <profile-photo ng-model="user.photoURL" size="40"></profile-photo>
+                                    <span class="chip-suggestion">
+                                        <profile-photo ng-model="user.photoURL" chip="true" size="40" squared="20"></profile-photo>
                                         {{user.email}}
                                     </span>
                                 </md-item-template>

@@ -423,6 +423,15 @@ md-input-container  {
         .md-chips .md-chip-input-container {
             margin: 13px 8px 0 0;
         }
+        &._with-img {
+            md-chip-template {
+                display: flex;
+                align-items: center;
+                span {
+                    margin-right: 5px;
+                }
+            }
+        }
         md-chips-wrap {
             min-height: 56px;
         }
