@@ -876,13 +876,16 @@ md-radio-button {
 }
 
 .md-button.md-icon-button {
-    md-date-range-picker &:not(._toolbar-btn) {
+    md-date-range-picker &:not(._unstyled-icon-button) {
         padding: 6px;
     }
     &.md-focused {
         margin: 0 6px;
     }
-    &:not(._toolbar-btn) {
+    &._unstyled-icon-button {
+        max-height: unset;
+    }
+    &:not(._unstyled-icon-button) {
         border: none;
         background: transparent;
         width: 32px;
