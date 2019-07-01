@@ -49,7 +49,7 @@
                                     <tbody md-body name="usersTable">
                                         <tr md-row ng-repeat="user in $ctrl.sr.results">
                                             <td data-title="ID" md-cell>
-                                                <profile-photo name="userPhoto" ng-model="user.photoURL" size="35" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
+                                                <profile-photo name="userPhoto" squared="15" ng-model="user.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
                                                 <span class="mobile-only">{{::user.id}}</span>
                                             </td>
                                             <td data-title="Username" md-cell>

@@ -592,16 +592,18 @@ const ngModule = angular.module('app', [
             rotateHorisontal: '=?',
             src: '@', 
             squared: '=?',
+            chip: '=?',
         },
         compile: function(element, attrs){
             return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
                     if (!attrs.size) { scope.size = 120; }
                     if (!attrs.icon && ! attrs.src) { scope.icon = 'account_circle'; }
-                    if (!attrs.icon && ! attrs.src && attrs.squared) { scope.icon = 'person'; }
+                    if (!attrs.icon && ! attrs.src && attrs.squared && !attrs.chip) { scope.icon = 'person'; }
                     if (!attrs.iconVisible) { scope.iconVisible = true; }
                     if (!attrs.autoResize) { scope.autoResize = true; }
-                    if(!attrs.squared) { scope.squared = false; }
+                    if (!attrs.squared) { scope.squared = false; }
+                    if (!attrs.chip) { scope.chip = false; }
                     if (!attrs.rotateHorisontal) { scope.rotateHorisontal = false; } else { scope.autoResize = scope.autoResize == 'true' }
 
                     scope.imageSize = scope.autoResize ? scope.size - 4 : scope.size;
