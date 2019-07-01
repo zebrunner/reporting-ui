@@ -174,13 +174,13 @@ md-input-container  {
 
         .md-input {
             max-width: 100%;
-            text-overflow: ellipsis;
             background-color: #fff;
             height: 36px;
             border-radius: 4px;
             letter-spacing: 0.1px;
             border: 1px solid rgba($dark-new, .15);
             padding-left: 12px;
+            padding-right: 12px;
             transition: all .25s ease;
             font-size: 14px;
             opacity: 1;
