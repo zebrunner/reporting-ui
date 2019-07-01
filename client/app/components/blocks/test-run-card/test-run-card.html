@@ -194,9 +194,9 @@
                     </div>
                 </span>
             </div>
-            <button class="test-run-card__back-btn" ng-if="$ctrl.singleMode" ng-click="$ctrl.back()">
-                <md-icon>arrow_back</md-icon>
-            </button>
+            <md-button class="md-icon-button test-run-card__back-btn" ng-if="$ctrl.singleMode" ng-click="$ctrl.back()">
+                <md-icon class="material-icons">arrow_back</md-icon>
+            </md-button>
             <div name="testRunInfo" class="test-run-card__cell _info">
                 <div class="test-run-card__title">
                     {{$ctrl.testRun.testSuite.name}}

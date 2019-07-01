@@ -378,23 +378,6 @@
             }
         }
     }
-
-    & &__back-btn {
-        height: 24px;
-        min-width: 24px;
-        line-height: 24px;
-        padding: 0;
-        width: 24px;
-        min-height: 24px;
-        margin: 0;
-        md-icon {
-            color: black;
-            width: 24px;
-            height: 24px;
-            line-height: 24px;
-            font-size: 24px;
-        }
-    }
     @media(min-width: $breakpoint-mobile) and (max-width:  $breakpoint-mid-tablet) {
         &__wrapper {
             &-left {
@@ -769,23 +752,7 @@
         }
 
         &__back-btn {
-            background: none;
-            border: none;
-            margin: -2px 14px 0 0;
-            height: 20px;
-            min-width: 20px;
-            line-height: 20px;
-            padding: 0;
-            width: 20px;
-            min-height: 20px;
-            md-icon {
-                color: black;
-                width: 20px;
-                height: 20px;
-                line-height: 20px;
-                min-height: 20px;
-                font-size: 24px;
-            }
+            margin: -7px 5px 0 0;
             &._close-info {
                 margin: 0 12px 0 0;
             }
