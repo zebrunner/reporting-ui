@@ -46,7 +46,7 @@
                                         </md-menu-content>
                                     </md-menu>
                                 </div>
-                                <div class="users-groups__item-content">
+                                <md-input-container class="users-groups__item-content chips-input-container no-margin _with-img _no-label ">
                                     <md-chips ng-model="group.users"
                                               class="photo-chip users-groups__item-chips"
                                               md-require-match=true
@@ -72,7 +72,7 @@
                                             </md-not-found>
                                         </md-autocomplete>
                                     </md-chips>
-                                </div>
+                                </md-input-container>
                             </div>
                         </div>
                         <div data-ng-if="!$ctrl.count" class="ng-hide users-groups__item _empty">No groups created</div>
