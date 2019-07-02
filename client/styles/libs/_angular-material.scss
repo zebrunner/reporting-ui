@@ -414,16 +414,19 @@ md-input-container  {
         &:not(.md-input-invalid).md-input-focused md-icon {
             color: rgb(97, 97, 97);
         }
-        input {
+        input, md-chip {
             font-size: 14px;
         }
-        md-chip {
-            font-size: 14px;
+        .md-errors-spacer {
+            min-height: 0;
         }
         .md-chips .md-chip-input-container {
-            margin: 13px 8px 0 0;
+            flex-grow: 1;
         }
         &._with-img {
+            .md-chips .md-chip-input-container {
+                margin: 13px 8px 0 0;
+            }
             md-chip-template {
                 display: flex;
                 align-items: center;
@@ -431,9 +434,20 @@ md-input-container  {
                     margin-right: 5px;
                 }
             }
+            md-chips-wrap {
+                min-height: 56px;
+            }
         }
         md-chips-wrap {
-            min-height: 56px;
+            min-height: 48px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        &._no-label {
+            &.md-input-has-placeholder label:not(.md-no-float),
+            &.md-input-has-value label:not(.md-no-float) {
+                display: none;
+            }
         }
         &.md-input-has-placeholder label:not(.md-no-float),
         &.md-input-has-value label:not(.md-no-float) {
