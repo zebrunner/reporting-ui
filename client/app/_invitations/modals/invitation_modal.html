@@ -28,19 +28,21 @@
                             </md-option>
                         </md-select>
                     </md-input-container>
-                    <md-chips ng-model="emails"
-                              name="email"
-                              filter-selected=false
-                              md-autocomplete-snap
-                              md-transform-chip="checkAndTransformRecipient($chip)"
-                              md-on-remove="removeRecipient($chip)"
-                              md-add-on-blur="true"
-                              md-separator-keys="keys"
-                              placeholder="Enter an email..." ng-init="initMdChipsCtrl();">
-                        <md-chip-template>
-                            {{ $chip }}
-                        </md-chip-template>
-                    </md-chips>
+                    <md-input-container flex class="chips-input-container _no-label">
+                        <md-chips ng-model="emails"
+                                    name="email"
+                                    filter-selected=false
+                                    md-autocomplete-snap
+                                    md-transform-chip="checkAndTransformRecipient($chip)"
+                                    md-on-remove="removeRecipient($chip)"
+                                    md-add-on-blur="true"
+                                    md-separator-keys="keys"
+                                    placeholder="Enter an email..." ng-init="initMdChipsCtrl();">
+                            <md-chip-template>
+                                {{ $chip }}
+                            </md-chip-template>
+                        </md-chips>
+                    </md-input-container>
                     <div class="validation_error" ng-messages="invite_form.email.$error">
                         <div ng-message="validationError">
                             {{ invite_form.email.errorMessage }}
