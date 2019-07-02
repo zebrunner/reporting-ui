@@ -417,6 +417,9 @@ md-input-container  {
         input, md-chip {
             font-size: 14px;
         }
+        .md-errors-spacer {
+            min-height: 0;
+        }
         .md-chips .md-chip-input-container {
             flex-grow: 1;
         }
@@ -436,8 +439,9 @@ md-input-container  {
             }
         }
         md-chips-wrap {
-            height: 48px;
+            min-height: 48px;
             display: flex;
+            flex-wrap: wrap;
         }
         &._no-label {
             &.md-input-has-placeholder label:not(.md-no-float),
