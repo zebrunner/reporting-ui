@@ -321,39 +321,6 @@
                             });
                     }
                 })
-                // TODO: link to this state is commented, so we can comment this state to reduce app build size
-                // .state('tests/cases', {
-                //     url: '/tests/cases',
-                //     component: 'testcaseComponent',
-                //     data: {
-                //         requireLogin: true
-                //     },
-                //     lazyLoad: ($transition$) => {
-                //         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
-                //
-                //         return import(/* webpackChunkName: "testcase" */ '../_testcases/testcase.module.js')
-                //             .then(mod => $ocLazyLoad.load(mod.testcaseModule))
-                //             .catch(err => {
-                //                 throw new Error('Can\'t load testcase module, ' + err);
-                //             });
-                //     }
-                // })
-                // .state('tests/cases/metrics', {
-                //     url: '/tests/cases/:id/metrics',
-                //     component: 'testcaseMetricsComponent',
-                //     data: {
-                //         requireLogin: true
-                //     },
-                //     lazyLoad: ($transition$) => {
-                //         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
-                //
-                //         return import(/* webpackChunkName: "testcase" */ '../_testcases/testcase.module.js')
-                //             .then(mod => $ocLazyLoad.load(mod.testcaseModule))
-                //             .catch(err => {
-                //                 throw new Error('Can\'t load testcase module, ' + err);
-                //             });
-                //     }
-                // })
                 .state('tests', {
                     url: '/tests',
                     abstract: true,
@@ -395,15 +362,7 @@
 
                             return testsRunsService.fetchTestRuns().catch(function(err) {
                                 err && err.message && messageService.error(err.message);
-                                //1st approach: if can't load with user/cached searchParams reset them and reload page
-                                // if (!force) {
-                                //     testsRunsService.deleteStoredParams();
-                                // // Timeout to avoid digest issues
-                                // $timeout(function() {
-                                //     $state.go('tests.runs', null, { reload: true });
-                                // });
-                                // }
-                                //2nd approach: if can't load with user/cached searchParams return empty data
+                                //if can't load with user/cached searchParams return empty data
                                 return $q.resolve([]);
                             });
                         },
@@ -560,23 +519,6 @@
                             });
                     }
                 })
-                // TODO: looks like old one, check if we can remove state and related code
-                // .state('certifications', {
-                //     url: '/certification',
-                //     component: 'certificationComponent',
-                //     data: {
-                //         requireLogin: true
-                //     },
-                //     lazyLoad: ($transition$) => {
-                //         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
-                //
-                //         return import(/* webpackChunkName: "certification" */ '../_certifications/certification.module.js')
-                //             .then(mod => $ocLazyLoad.load(mod.certificationModule))
-                //             .catch(err => {
-                //                 throw new Error('Can\'t load certificationModule module, ' + err);
-                //             });
-                //     }
-                // })
                 .state('404', {
                     url: '/404',
                     component: 'notFoundComponent',
