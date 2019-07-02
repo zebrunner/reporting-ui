@@ -76,6 +76,10 @@
                 {
                     name: 'required',
                     message: 'Password required'
+                },
+                {
+                    name: 'identicalTo',
+                    message: 'Password does not match'
                 }
             ],
             name: [
