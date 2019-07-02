@@ -60,7 +60,7 @@
                                         id="password"
                                         required
                                         ng-model="user.password"
-                                        ng-minlength="8" ng-maxlength="50" ng-pattern="/^[A-Za-z0-9_@!#]+$/"/>
+                                        ng-minlength="5" ng-maxlength="50" ng-pattern="/^[A-Za-z0-9_@!#&quot;\$%&'()*+,-.\/:;<>=\?@\[\]\\^_`{}|~]+$/"/>
                                     <div ng-messages="signup_form.password.$error" ng-if="signup_form.password.$dirty">
                                         <div ng-repeat="validation in VALIDATIONS.password" ng-message="{{validation.name}}">
                                             <span ng-if="validation.additional">

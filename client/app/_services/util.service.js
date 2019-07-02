@@ -34,7 +34,7 @@
                 {
                     name: 'pattern',
                     message: 'Username must have only latin letters, numbers and special characters',
-                    additional: '_ -'
+                    additional: '_-'
                 },
                 {
                     name: 'required',
@@ -44,16 +44,16 @@
             password: [
                 {
                     name: 'minlength',
-                    message: 'Password must be between 8 and 50 characters'
+                    message: 'Password must be between 5 and 50 characters'
                 },
                 {
                     name: 'maxlength',
-                    message: 'Password must be between 8 and 50 characters'
+                    message: 'Password must be between 5 and 50 characters'
                 },
                 {
                     name: 'pattern',
                     message: 'Password must have only latin letters, numbers or special symbols',
-                    additional: '@ ! _ #'
+                    additional: '_@!#"$%&\'()*+,-./:;<>=?@[]^_`{}|~'
                 },
                 {
                     name: 'required',
