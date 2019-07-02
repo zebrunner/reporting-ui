@@ -10,7 +10,7 @@
 
                         <form class="form-horizontal" name="signup_form" data-ng-submit="signup(user, signup_form);">
                             <fieldset>
-                                <md-input-container class="md-block">
+                                <md-input-container>
                                     <label class="placeholder-label">Email</label>
                                     <input
                                         type="email"
@@ -26,7 +26,7 @@
                                         <div ng-message="pattern">Invalid format</div>
                                     </div>
                                 </md-input-container>
-                                <md-input-container class="md-block">
+                                <md-input-container>
                                     <span class="input-bar"></span>
                                     <label class="placeholder-label">Username</label>
                                     <input
@@ -50,7 +50,7 @@
                                         <div ng-message="validationError">{{ signup_form.username.errorMessage }}</div>
                                     </div>
                                 </md-input-container>
-                                <md-input-container class="md-block">
+                                <md-input-container>
                                     <span class="input-bar"></span>
                                     <label class="placeholder-label">Password</label>
                                     <input
