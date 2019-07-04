@@ -136,21 +136,6 @@ $red: #d2333b;
         font-size: 12px;
         color: $red;
     }
-    md-checkbox {
-        margin: 0;
-        .md-container {
-            color: $coal;
-            opacity: 0.5;
-        }
-        &.md-checked .md-icon {
-            background-color: black;
-        }
-        .md-label {
-            font-weight: normal;
-            color: black;
-            font-size: 14px;
-        }
-    }
 
     md-chips-wrap {
         box-shadow: none !important;
@@ -189,12 +174,12 @@ $red: #d2333b;
     }
     label {
         display: block;
-        font-size: 12px;
-        font-weight: 500;
+        font-size: 14px;
+        font-weight: normal;
         letter-spacing: normal;
         line-height: 12px;
         margin-bottom: 12px;
-        color: #35393f;
+        color: $dark-new;
     }
 
     [ng-messages] {

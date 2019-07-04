@@ -70,17 +70,6 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     }
 }
 
-.md-open-menu-container {
-    .md-button {
-        &, &.md-focused {
-            max-height: unset;
-            padding: 0 16px;
-            font-size: 14px;
-            border-radius: 0;
-        }
-    }
-}
-
 .zf-primary-button {
     display: flex;
     align-items: center;

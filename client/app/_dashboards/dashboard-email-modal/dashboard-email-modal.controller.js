@@ -42,26 +42,6 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     $scope.users = [];
     $scope.keys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.SPACE];
 
-    $scope.aceOptions = {
-        useWrapMode: false,
-        showGutter: false,
-        theme:'eclipse',
-        mode: 'text',
-        rendererOptions: {
-            fontSize: '14px'
-        }
-    };
-
-    $scope.initEditorInstance = function () {
-        setTimeout(function () {
-            const editor = ace.edit('editor');
-            editor.renderer.setScrollMargin(10, 10);
-            editor.renderer.setPadding(10);
-            editor.setHighlightActiveLine(false);
-            editor.session.setUseSoftTabs(false);
-        }, 0);
-    };
-
     $scope.sendEmail = function () {
         if (! $scope.users.length) {
             if (currentText && currentText.length) {
