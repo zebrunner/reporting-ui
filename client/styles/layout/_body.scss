@@ -2503,7 +2503,7 @@ $light-inprogress: #68c9fd;
                 align-items: center;
             }
             ~ .fixed-page-header-container_button {
-                margin-left: 24px;
+                margin-left: 26px;
             }
             @media(max-width: $screen-phone) {
                 text-align: center;
@@ -3532,6 +3532,12 @@ $light-inprogress: #68c9fd;
         margin-left: 5px;
         button {
             margin-left: 12px;
+        }
+    }
+    .md-icon-button {
+        background-color: rgba($dark-new, .1);
+        i {
+            color: $dark-new;
         }
     }
 }
