@@ -73,7 +73,6 @@ module.exports = (env) => {
             alias: {
                 'jquery-ui': path.resolve(__dirname, '../node_modules/jquery-ui/ui'),
                 'humanizeDuration': 'humanize-duration',
-                appConfig: path.join(__dirname, '../client/config.json')
             }
         },
         module: {
