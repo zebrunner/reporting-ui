@@ -19,7 +19,7 @@
                 <div layout layout-sm="column" ng-cloak>
                     <md-input-container class="md-input-has-value" flex>
                         <label class="placeholder-label">Text</label>
-                        <div id="editor" ng-init="initEditorInstance()" ui-ace="{{aceOptions}}" ng-model="email.text" required></div>
+                        <textarea ng-model="email.text" rows="3" required></textarea>
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column">

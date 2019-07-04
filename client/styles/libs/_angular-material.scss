@@ -184,6 +184,7 @@ md-input-container  {
             transition: all .25s ease;
             font-size: 14px;
             opacity: 1;
+            font-weight: normal;
 
             &:hover {
                 border-color: rgba($dark-new, .25);
@@ -287,6 +288,25 @@ md-input-container  {
             label:not(.md-no-float):not(.md-container-ignore) {
                 transform: translate3d(0, 26px, 0) scale(1);
             }
+            .md-input {
+                border-color: rgba($dark-new, .25);
+            }
+            md-icon {
+                color: rgba($dark-new, .25);
+            }
+            &.md-input-focused {
+                .md-input {
+                    border-color: rgba($dark-new, .5);
+                }
+                md-icon {
+                    color: rgba($dark-new, .5);
+                }
+            }
+            &:hover {
+                label:not(.md-no-float):not(.md-container-ignore) {
+                    color: rgba($dark-new, .6);
+                }
+            }
             &.md-input-focused, & {
                 label:not(.md-no-float):not(.md-container-ignore) {
                     transition: opacity .25s ease-in-out, color .25s ease-in-out;
@@ -296,14 +316,12 @@ md-input-container  {
                 .md-input {
                     background-color: transparent;
                     border-width: 0 0 1px 0;
-                    border-color: rgba($dark-new, .5);
                     border-radius: 0;
                     padding-left: 0;
                     height: 26px;
                 }
                 md-icon {
                     font-size: 18px;
-                    color: rgba($dark-new, .5);
                     height: 18px;
                     width: 18px;
                     min-height: 18px;
@@ -312,7 +330,7 @@ md-input-container  {
                     margin: auto;
                     right: 2px;
                     left: auto;
-                    transition: opacity .25s ease-in-out;
+                    transition: opacity .25s ease-in-out, color .25 ease-in-out;
                     &.input-close-icon {
                         opacity: 0;
                     }
@@ -337,6 +355,11 @@ md-input-container  {
             }
         }
         &._light {
+            &:hover {
+                label:not(.md-no-float):not(.md-container-ignore) {
+                    color: rgba(#ffffff, .5);
+                }
+            }
             &.md-input-focused, & {
                 label:not(.md-no-float):not(.md-container-ignore) {
                     color: rgba(#ffffff, .5);
@@ -634,6 +657,7 @@ md-input-container {
             box-sizing: border-box;
             transition: .25s color ease-in-out, .25s border-color ease-in-out;
             span {
+                font-weight: normal;
                 &:after {
                     transition: color .25s ease-in-out;
                     color: rgba($dark-new, .6);
