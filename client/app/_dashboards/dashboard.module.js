@@ -29,7 +29,6 @@ export const dashboardModule = angular.module('app.dashboard', [
     'n3-pie-chart',
     'n3-line-chart',
     'ngecharts',
-    'ui.ace'
     ])
     .component({ dashboardComponent })
     .component({ emptyPageComponent })

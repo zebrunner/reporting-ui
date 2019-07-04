@@ -1,9 +1,5 @@
 'use strict';
 
-import 'brace';
-import 'brace/mode/text';
-import 'brace/theme/eclipse';
-
 const dashboardEmailModalController = function dashboardEmailModalController($scope, $rootScope, $q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService) {
     'ngInject';
 
