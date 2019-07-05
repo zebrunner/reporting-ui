@@ -25,6 +25,7 @@ const ngModule = angular.module('app', [
     'angular-jwt',
     'oc.lazyLoad',
 ])
+
 .config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider) {
     'ngInject';
 
@@ -1009,7 +1010,108 @@ const ngModule = angular.module('app', [
         }
     })
 
-});
+})
+.config($provide => {
+    'ngInject';
+    // return a decorated delegate of the $mdDialog service
+      $provide.decorator('$mdDialog', ($delegate, $timeout, $rootElement, $document, $window) => {
+        // if a mobile IOS platform
+          if ((/iPhone|iPad|iPod/i).test(navigator.userAgent)) {
+            const delegate = new mdDialogDelegate($delegate, $timeout, $rootElement, $document, $window);
+            // decorate delegate
+              return delegate.decorate();
+          }
+          return $delegate;
+      })
+  });
+  
+class mdDialogDelegate {
+    constructor($delegate, $timeout, $rootElement, $document, $window) {
+        this._$delegate = $delegate;
+        this._$timeout = $timeout;
+        this._$rootElement = $rootElement;
+        this._$document = $document;
+        this._$window = $window;
+    }
+
+    decorate() {
+        // $mdDialog.show is our only point of entry that gets called when either a preset (custom or built-in) or a
+        // custom object is passed as the options into the $mdDialog service.  So this is the function we need to modify.
+        // Keep the original function for now.
+        const cachedShowFunction = this._$delegate.show;
+        // use the $mdDialog delegate to write a new show function to the $mdDialog service
+        this._$delegate.show = opts => {
+            // onShowing is an available callback that gets fired just before the dialog is positioned.  We need to add
+            // our custom positioning logic to it in order to fix the IOS positioning bug.  In case someone else
+            // implements logic in this callback somewhere else, we need to keep it.
+            const cachedOnShowingFunction = opts.onShowing;
+            // Custom positioning logic added to the onShowing callback
+            const onShowing = (scope, element, modifiedOptions) => {
+                // the parent can be passed in as a function, string, elmeent, or jqlite object
+                // it needs to be assigned as a jqlite object
+                let parent = modifiedOptions.parent;
+                if (angular.isFunction(parent)) {
+                    parent(scope, element, modifiedOptions);
+                } else if (angular.isString(parent)) {
+                    parent = angular.element(this._$document[0].querySelector(parent));
+                } else {
+                    parent = angular.element(parent);
+                }
+                
+                // If parent querySelector/getter function fails, or it's just null, find a default.
+                // logic derived from angular js material library
+                if (!(parent || {}).length) {
+                    let defaultParent;
+                    if (this._$rootElement[0] && this._$rootElement[0].querySelector) {
+                    defaultParent = this._$rootElement[0].querySelector(':not(svg) > body');
+                    }
+                    if (!defaultParent) {
+                    defaultParent = this._$rootElement[0];
+                    }
+                    if (defaultParent.nodeName === '#comment') {
+                    defaultParent = this._$document[0].body;
+                    }
+                    parent = angular.element(defaultParent);
+                }
+                // need to capture the parent top, body height, and parent height before the position dialog logic run
+                // in the library
+                const parentTop = angular.copy(Math.abs(parent[0].getBoundingClientRect().top));
+                const bodyHeight = angular.copy(this._$document[0].body.clientHeight);
+                const parentHeight = angular.copy(Math.ceil(Math.abs(parseInt(this._$window.getComputedStyle(parent[0]).height, 10))));
+                // after the position dialog logic runs in the library run our custom position dialog logic
+                this._$timeout(() => {
+                    const parentHeightAfterDelay = angular.copy(Math.ceil(Math.abs(parseInt(this._$window.getComputedStyle(parent[0]).height, 10))));
+                    // see if the body is fixed, should have been set to fixed in the library at this point
+                    const isFixed = this._$window.getComputedStyle(this._$document[0].body).position === 'fixed';
+                    // see if the backdrop has been prepended
+                    const backdropElement = parent.find('md-backdrop');
+                    // if there is a backdrop make the height of the dialog as the lesser of the body height and parent height
+                    const height = backdropElement ? Math.min(bodyHeight, parentHeight, parentHeightAfterDelay) : 0;
+                    // apply the top and height positioning of the dialog
+
+                    element.css({
+                        top: `${(isFixed ? parentTop : 0)}px`,
+                        height: `${height ? `${height}px` : '100%'}`
+                    });
+                });
+                // if there was additional logic added to the onShowing callback, run it
+                if (angular.isFunction(cachedOnShowingFunction)) {
+                    cachedOnShowingFunction(scope, element, modifiedOptions);
+                }
+            };
+            // if a preset was used, assign it to _options, else assign it directly to the options object
+            if (opts.constructor.name === 'Preset') {
+                opts._options.onShowing = onShowing;
+            } else {
+                opts.onShowing = onShowing;
+            }
+            // call the original show function
+            cachedShowFunction(opts);
+        };
+        // return the modified delegated $mdDialog service
+        return this._$delegate;
+    }
+}
 
 angular.injector(['ng']).get('$http').get('./config.json')
     .then(function(response){
