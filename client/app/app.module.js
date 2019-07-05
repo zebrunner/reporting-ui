@@ -1015,6 +1015,7 @@ const ngModule = angular.module('app', [
     'ngInject';
     // return a decorated delegate of the $mdDialog service
       $provide.decorator('$mdDialog', ($delegate, $timeout, $rootElement, $document, $window) => {
+          'ngInject';
         // if a mobile IOS platform
           if ((/iPhone|iPad|iPod/i).test(navigator.userAgent)) {
             const delegate = new mdDialogDelegate($delegate, $timeout, $rootElement, $document, $window);
