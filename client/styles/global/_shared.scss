@@ -4,3 +4,10 @@
     }
 }
 
+input {
+    &[type="password"],
+    &[type="text"],
+    &[type="search"] {
+        appearance: none;
+    }
+}

@@ -13,6 +13,7 @@
                         <md-input-container class="search-modal__input-wrapper _with-icon _without-animation">
                             <label class="placeholder-label">Search items</label>
                             <input ng-model-options="{debounce: 700}"
+                                    type="text"
                                     ng-model="$ctrl.searchParams.query"
                                     ng-change="$ctrl.onChangeSearchCriteria()"
                                     aria-label="Search items"

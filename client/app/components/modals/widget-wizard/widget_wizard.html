@@ -142,9 +142,11 @@
                                 <td ng-show="['title'].indexOf(paramValue.type) === -1" class="zf-label">{{paramName}}</td>
                                 <td ng-switch-default>
                                     <md-input-container class="no-margin _gray-bg">
-                                        <input ng-attr-type="{{paramValue.type === 'int' ? 'number' : 'text'}}" ng-attr-name="{{paramName}}"
+                                        <input ng-attr-type="{{paramValue.type === 'int' ? 'number' : 'text'}}"
+                                               ng-attr-name="{{paramName}}"
                                                ng-model="paramValue.value"
-                                               ng-change="buildConfigs(widget_form.params)" ng-required="true"
+                                               ng-change="buildConfigs(widget_form.params)"
+                                               ng-required="true"
                                                ng-disabled="! paramValue.input_enabled"/>
                                         <div ng-messages="widget_form.params[paramName].$error" ng-if="widget_form.params[paramName].$dirty">
                                             <div ng-message="required">{{paramName}} required</div>
