@@ -103,10 +103,11 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
                 tryToGetLogsHistoryFromElasticsearch(logGetter).then(function (rs) {
                     $timeout(function () {
                         logGetter.pageCount = null;
-                        logGetter.from = $scope.logs.length + logSizeCount + Object.size(unrecognizedImages);
+                        logGetter.from = $scope.logs.length + logSizeCount;
                         function update() {
                             $timeout(function() {
                                 if (Object.size(unrecognizedImages) > 0) {
+                                    logGetter.from = $scope.logs.length + logSizeCount;
                                     tryToGetLogsHistoryFromElasticsearch(logGetter);
                                     update();
                                 }
