@@ -44,6 +44,16 @@ md-dialog {
     z-index: $zindex-navbar-fixed;
 }
 
+md-menu-item .md-button {
+    &, &.md-focused {
+        border-radius: 0;
+        font-size: 15px;
+        padding-left: 16px;
+        padding-right: 16px;
+        max-height: unset;
+    }
+}
+
 // Radio
 md-radio-button {
 
