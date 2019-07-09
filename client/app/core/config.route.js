@@ -7,9 +7,7 @@
 
             $stateProvider
                 .state('home', {
-                  redirectTo: (transisiton) => {
-                    return transisiton.router.stateService.target('dashboard.list', {}, { location: 'replace' });
-                  },
+                    redirectTo: transisiton => transisiton.router.stateService.target('dashboard.list', {}, { location: 'replace', reload: true, inherit: false }),
                 })
                 .state('dashboard', {
                     url: '/dashboards',
@@ -55,14 +53,16 @@
                             }
                         },
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "dashboard" */ '../_dashboards/dashboard.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.dashboardModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load dashboard module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "dashboard" */ '../_dashboards/dashboard.module.js');
+
+                            return $ocLazyLoad.load(mod.dashboardModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load dashboard module, ' + err);
+                        }
                     }
                 })
                 .state('dashboard.list', {
@@ -124,14 +124,16 @@
                             return false;
                         }
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "dashboard" */ '../_dashboards/dashboard.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.dashboardModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load dashboard module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "dashboard" */ '../_dashboards/dashboard.module.js');
+
+                            return $ocLazyLoad.load(mod.dashboardModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load dashboard module, ' + err);
+                        }
                     }
                 })
                 .state('views', {
@@ -152,14 +154,16 @@
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.authModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load auth module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+
+                            return $ocLazyLoad.load(mod.authModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load auth module, ' + err);
+                        }
                     }
                 })
                 .state('signup', {
@@ -169,14 +173,16 @@
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.authModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load auth module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+
+                            return $ocLazyLoad.load(mod.authModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load auth module, ' + err);
+                        }
                     }
                 })
                 .state('logout', {
@@ -201,14 +207,16 @@
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.authModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load auth module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+
+                            return $ocLazyLoad.load(mod.authModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load auth module, ' + err);
+                        }
                     }
                 })
                 .state('resetPassword', {
@@ -218,14 +226,16 @@
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.authModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load auth module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+
+                            return $ocLazyLoad.load(mod.authModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load auth module, ' + err);
+                        }
                     }
                 })
                 .state('users', {
@@ -245,14 +255,16 @@
                         requireLogin: true,
                         classes: 'p-users'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "users" */ '../_users/users.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.usersModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load usersModule module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "users" */ '../_users/users.module.js');
+
+                            return $ocLazyLoad.load(mod.usersModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load usersModule module, ' + err);
+                        }
                     }
                 })
                 .state('users.groups', {
@@ -262,14 +274,16 @@
                         requireLogin: true,
                         classes: 'p-users-groups'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "users" */ '../_groups/groups.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.groupsModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load groupsModule module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "users" */ '../_groups/groups.module.js');
+
+                            return $ocLazyLoad.load(mod.groupsModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load groupsModule module, ' + err);
+                        }
                     }
                 })
                 .state('users.invitations', {
@@ -279,14 +293,17 @@
                         requireLogin: true,
                         classes: 'p-users'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "users" */ '../_invitations/invitations.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.invitationsModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load invitationsModule module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "users" */ '../_invitations/invitations.module.js');
+
+                            return $ocLazyLoad.load(mod.invitationsModule);
+                        }
+                        catch (err) {
+                            throw new Error('Can\'t load invitationsModule module, ' + err);
+                        }
                     }
                 })
                 .state('userProfile', {
@@ -296,14 +313,16 @@
                         requireLogin: true,
                         classes: 'p-user-profile'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "profile" */ '../_user/user.module.js')
-                        .then(mod => $ocLazyLoad.load(mod.userModule))
-                        .catch(err => {
+                        try {
+                            const mod = await import(/* webpackChunkName: "profile" */ '../_user/user.module.js');
+
+                            return $ocLazyLoad.load(mod.userModule);
+                        } catch (err) {
                             throw new Error('Can\'t load userModule module, ' + err);
-                        });
+                        }
                     }
                 })
                 // For github redirection
@@ -311,14 +330,16 @@
                 .state('scm/callback', {
                     url: '/scm/callback?code',
                     component: 'scmComponent',
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "scm" */ '../_scm/scm.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.scmModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load scm module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "scm" */ '../_scm/scm.module.js');
+
+                            return $ocLazyLoad.load(mod.scmModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load scm module, ' + err);
+                        }
                     }
                 })
                 .state('tests', {
@@ -374,14 +395,16 @@
                             return $q.resolve(id);
                         },
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "tests-runs" */ '../containers/tests-runs/tests-runs.module.js')
-                        .then(mod => $ocLazyLoad.load(mod.testsRunsModule))
-                        .catch(err => {
+                        try {
+                            const mod = await import(/* webpackChunkName: "tests-runs" */ '../containers/tests-runs/tests-runs.module.js');
+
+                            return $ocLazyLoad.load(mod.testsRunsModule);
+                        } catch (err) {
                             throw new Error('Can\'t load testsRuns module, ' + err);
-                        });
+                        }
                     }
                 })
                 .state('tests.runDetails', {
@@ -405,20 +428,20 @@
                                 };
 
                                 return TestRunService.searchTestRuns(params)
-                                .then(function(response) {
-                                    if (response.success && response.data.results && response.data.results[0]) {
-                                        return response.data.results[0];
-                                    } else { //TODO: show error message & redirect to testruns
-                                        return $q.reject({message: 'Can\'t get test run with ID=' + $stateParams.testRunId});
-                                    }
-                                })
-                                .catch(function(error) {
-                                    console.log(error); //TODO: show toaster notification
-                                    // Timeout to avoid digest issues
-                                    $timeout(() => {
-                                        $state.go('tests.runs');
-                                    }, 0);
-                                });
+                                    .then(function(response) {
+                                        if (response.success && response.data.results && response.data.results[0]) {
+                                            return response.data.results[0];
+                                        } else { //TODO: show error message & redirect to testruns
+                                            return $q.reject({message: 'Can\'t get test run with ID=' + $stateParams.testRunId});
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        console.log(error); //TODO: show toaster notification
+                                        // Timeout to avoid digest issues
+                                        $timeout(() => {
+                                            $state.go('tests.runs');
+                                        }, 0);
+                                    });
                             } else {
                                 // Timeout to avoid digest issues
                                 $timeout(() => {
@@ -427,14 +450,16 @@
                             }
                         }
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "test-details" */ '../containers/test-details/test-details.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.testDetailsModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load testDetails module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "test-details" */ '../containers/test-details/test-details.module.js');
+
+                            return $ocLazyLoad.load(mod.testDetailsModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load testDetails module, ' + err);
+                        }
                     }
                 })
                 .state('tests.runInfo', {
@@ -454,20 +479,20 @@
                                 };
 
                                 return TestRunService.searchTestRuns(params)
-                                .then(function(response) {
-                                    if (response.success && response.data.results && response.data.results[0]) {
-                                        return response.data.results[0];
-                                    } else {
-                                        return $q.reject({message: 'Can\'t get test run with ID=' + $stateParams.testRunId});
-                                    }
-                                })
-                                .catch(function(error) {
-                                    console.log(error); //TODO: show toaster notification
-                                    // Timeout to avoid digest issues
-                                    $timeout(() => {
-                                        $state.go('tests.runs');
-                                    }, 0);
-                                });
+                                    .then(function(response) {
+                                        if (response.success && response.data.results && response.data.results[0]) {
+                                            return response.data.results[0];
+                                        } else {
+                                            return $q.reject({message: 'Can\'t get test run with ID=' + $stateParams.testRunId});
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        console.log(error); //TODO: show toaster notification
+                                        // Timeout to avoid digest issues
+                                        $timeout(() => {
+                                            $state.go('tests.runs');
+                                        }, 0);
+                                    });
                             } else {
                                 // Timeout to avoid digest issues
                                 $timeout(() => {
@@ -476,14 +501,16 @@
                             }
                         }
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "testRunInfo" */ '../containers/test-run-info/test-run-info.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.testRunInfoModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load testRunInfo module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "testRunInfo" */ '../containers/test-run-info/test-run-info.module.js');
+
+                            return $ocLazyLoad.load(mod.testRunInfoModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load testRunInfo module, ' + err);
+                        }
                     }
                 })
                 .state('integrations', {
@@ -509,14 +536,16 @@
                                 });
                         }
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "integrations" */ '../_integrations/integrations.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.integrationsModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load integrationsModule module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "integrations" */ '../_integrations/integrations.module.js');
+
+                            return $ocLazyLoad.load(mod.integrationsModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load integrationsModule module, ' + err);
+                        }
                     }
                 })
                 .state('404', {
@@ -525,14 +554,16 @@
                     data: {
                         classes: 'body-wide body-err p-not-found'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "not-found" */ '../modules/not-found/not-found.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.notFoundModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load notFoundModule module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "not-found" */ '../modules/not-found/not-found.module.js');
+
+                            return $ocLazyLoad.load(mod.notFoundModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load notFoundModule module, ' + err);
+                        }
                     }
                 })
                 .state('500', {
@@ -541,14 +572,16 @@
                     data: {
                         classes: 'body-wide body-err p-server-error'
                     },
-                    lazyLoad: ($transition$) => {
+                    lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
-                        return import(/* webpackChunkName: "not-found" */ '../modules/server-error/server-error.module.js')
-                            .then(mod => $ocLazyLoad.load(mod.serverErrorModule))
-                            .catch(err => {
-                                throw new Error('Can\'t load serverErrorModule module, ' + err);
-                            });
+                        try {
+                            const mod = await import(/* webpackChunkName: "not-found" */ '../modules/server-error/server-error.module.js');
+
+                            return $ocLazyLoad.load(mod.serverErrorModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load serverErrorModule module, ' + err);
+                        }
                     }
                 });
 
