@@ -932,8 +932,7 @@ const ngModule = angular.module('app', [
 }])
 // __ZAFIRA_UI_VERSION__ variable will be replaced by webpack
 .constant('UI_VERSION', __ZAFIRA_UI_VERSION__)
-.run(function($rootScope, $location, $cookies, $http, $transitions, AuthService, $document,
-              UserService, messageService) {
+.config($uiRouterProvider => {
     'ngInject';
 
     const rejectTypes = { // https://ui-router.github.io/ng1/docs/latest/enums/transition.rejecttype.html
@@ -941,8 +940,23 @@ const ngModule = angular.module('app', [
         ERROR: 6,
         IGNORED: 5,
         INVALID: 4,
-        SUPERSEDE: 2,
+        SUPERSEDED: 2,
     };
+    const _defaultErrorHandler = $uiRouterProvider.stateService._defaultErrorHandler;
+
+    $uiRouterProvider.stateService.defaultErrorHandler((rejection) => {
+        // ignore SUPERSEDED and IGNORED transition rejections
+        switch (rejection.type) {
+            case rejectTypes.SUPERSEDED:
+            case rejectTypes.IGNORED:
+                return;
+        }
+
+        _defaultErrorHandler(rejection);
+    });
+})
+.run(($transitions, AuthService, $document, UserService, messageService) => {
+    'ngInject';
 
     function fetchUserData(trans) {
         return UserService.fetchFullUserData().then((res) => {
@@ -999,17 +1013,6 @@ const ngModule = angular.module('app', [
     $transitions.onSuccess({}, function() {
         $document.scrollTo(0, 0);
     });
-    // ignore SUPERSEDED and IGNORED transition rejections
-    $transitions.onError({}, transition => {
-        const err = transition.error();
-
-        switch (err.type) {
-            case rejectTypes.SUPERSEDED:
-            case rejectTypes.IGNORED:
-                break;
-        }
-    })
-
 })
 .config($provide => {
     'ngInject';
@@ -1124,7 +1127,6 @@ angular.injector(['ng']).get('$http').get('./config.json')
         });
     });
 
-
 //Services
 require('./_services/services.module');
 //Modules
@@ -1134,5 +1136,3 @@ require('./layout/layout.module');
 require('./page/page.module');
 require('./layout/commons/common.module');
 require('./components/components');
-
-
