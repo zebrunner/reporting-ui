@@ -2474,7 +2474,9 @@ $light-inprogress: #68c9fd;
             display: flex;
             width: 32px;
             height: 32px;
-            margin: 0 5px 0 0;
+            &, &.md-focused {
+                margin: 0 5px 0 0;
+            }
             .material-icons {
                 color: black;
             }
