@@ -1030,17 +1030,23 @@ const ngModule = angular.module('app', [
   })
 .config($provide => {
     'ngInject';
+
     $provide.decorator('$mdMenu', ($delegate) => {
         'ngInject';
+
         const delegate = new mdMenuDelegate($delegate);
+
         return delegate.decorate();
     })
 })
 .config($provide => {
     'ngInject';
+
     $provide.decorator('$mdSelect', ($delegate) => {
         'ngInject';
+
         const delegate = new mdSelectDelegate($delegate);
+
         return delegate.decorate();
     })
 });
@@ -1052,23 +1058,16 @@ class mdSelectDelegate {
 
     decorate() {
         const cachedShowFunction = this._$delegate.show;
+        const cachedHideFunction = this._$delegate.hide;
 
         this._$delegate.show = opts => {
+            $('body#app').addClass('md-menu-is-open');
 
-            const onShowing = () => {
-                $('body#app').addClass('md-menu-is-open');
-            }
-            onShowing();
             return cachedShowFunction(opts);
         }
 
-        const cachedHideFunction = this._$delegate.hide;
-
         this._$delegate.hide = opts => {
-            const onHiding = () => {
-                $('body#app').removeClass('md-menu-is-open');
-            }
-            onHiding();
+            $('body#app').removeClass('md-menu-is-open');
             cachedHideFunction(opts);
         }
 
@@ -1082,25 +1081,16 @@ class mdMenuDelegate {
 
     decorate() {
         const cachedShowFunction = this._$delegate.show;
+        const cachedHideFunction = this._$delegate.hide;
 
         this._$delegate.show = opts => {
+            $('body#app').addClass('md-menu-is-open');
 
-            const onShowing = () => {
-                $('body#app').addClass('md-menu-is-open');
-            }
-
-            onShowing();
             return cachedShowFunction(opts);
         }
 
-        const cachedHideFunction = this._$delegate.hide;
-
         this._$delegate.hide = opts => {
-
-            const onHiding = () => {
-                $('body#app').removeClass('md-menu-is-open');
-            }
-            onHiding();
+            $('body#app').removeClass('md-menu-is-open');
             cachedHideFunction(opts);
         }
 
