@@ -1068,7 +1068,8 @@ class mdSelectDelegate {
 
         this._$delegate.hide = opts => {
             $('body#app').removeClass('md-menu-is-open');
-            cachedHideFunction(opts);
+
+            return cachedHideFunction(opts);
         }
 
         return this._$delegate;
@@ -1091,7 +1092,8 @@ class mdMenuDelegate {
 
         this._$delegate.hide = opts => {
             $('body#app').removeClass('md-menu-is-open');
-            cachedHideFunction(opts);
+
+            return cachedHideFunction(opts);
         }
 
         return this._$delegate;
