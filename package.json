@@ -55,7 +55,7 @@
         "angular-aria": "~1.6.0",
         "angular-cookies": "~1.6.0",
         "angular-jwt": "^0.1.10",
-        "angular-material": "1.1.8",
+        "angular-material": "^1.1.8",
         "angular-material-data-table": "^0.10.10",
         "angular-messages": "~1.6.0",
         "angular-moment": "^1.0.1",

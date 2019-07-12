@@ -1027,78 +1027,8 @@ const ngModule = angular.module('app', [
           }
           return $delegate;
       })
-  })
-.config($provide => {
-    'ngInject';
-
-    $provide.decorator('$mdMenu', ($delegate) => {
-        'ngInject';
-
-        const delegate = new mdMenuDelegate($delegate);
-
-        return delegate.decorate();
-    })
-})
-.config($provide => {
-    'ngInject';
-
-    $provide.decorator('$mdSelect', ($delegate) => {
-        'ngInject';
-
-        const delegate = new mdSelectDelegate($delegate);
-
-        return delegate.decorate();
-    })
 });
 
-class mdSelectDelegate {
-    constructor($delegate) {
-        this._$delegate = $delegate;
-    }
-
-    decorate() {
-        const cachedShowFunction = this._$delegate.show;
-        const cachedHideFunction = this._$delegate.hide;
-
-        this._$delegate.show = opts => {
-            $('body#app').addClass('md-menu-is-open');
-
-            return cachedShowFunction(opts);
-        }
-
-        this._$delegate.hide = opts => {
-            $('body#app').removeClass('md-menu-is-open');
-
-            return cachedHideFunction(opts);
-        }
-
-        return this._$delegate;
-    }
-}
-class mdMenuDelegate {
-    constructor($delegate) {
-        this._$delegate = $delegate;
-    }
-
-    decorate() {
-        const cachedShowFunction = this._$delegate.show;
-        const cachedHideFunction = this._$delegate.hide;
-
-        this._$delegate.show = opts => {
-            $('body#app').addClass('md-menu-is-open');
-
-            return cachedShowFunction(opts);
-        }
-
-        this._$delegate.hide = opts => {
-            $('body#app').removeClass('md-menu-is-open');
-
-            return cachedHideFunction(opts);
-        }
-
-        return this._$delegate;
-    }
-}
 class mdDialogDelegate {
     constructor($delegate, $timeout, $rootElement, $document, $window) {
         this._$delegate = $delegate;
