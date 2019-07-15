@@ -16,6 +16,8 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         tags: testDetailsService.getTags() || []
     };
     let jiraSettings = {};
+    let testRailSettings = {};
+    let qTestSettings = {};
     let TENANT;
     const vm = {
         currentMode: 'ONE',
@@ -51,6 +53,8 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
             return !Object.keys(vm.testRun.tests || {}).length ;
         },
         get jira() { return jiraSettings; },
+        get testRail() { return testRailSettings; },
+        get qTest() { return qTestSettings; },
         isToolConnected: toolsService.isToolConnected,
         openImagesViewerModal,
     };
@@ -63,6 +67,8 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         TENANT = $rootScope.globals.auth.tenant;
 
         initJiraSettings();
+        initTestRailSettings();
+        initQTestSettings();
         initTestGroups();
         initWebsocket();
         initTests();
@@ -124,6 +130,28 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
                     jiraSettings = UtilService.settingsAsMap(settings.data);
 
                     jiraSettings['JIRA_URL'] && (jiraSettings['JIRA_URL'] = jiraSettings['JIRA_URL'].replace(/\/$/,''));
+                }
+            });
+    }
+
+    function initTestRailSettings() {
+        toolsService.fetchToolSettings('TESTRAIL')
+            .then(function(settings) {
+                if (settings.success) {
+                    testRailSettings = UtilService.settingsAsMap(settings.data);
+
+                    testRailSettings['TESTRAIL_URL'] && (testRailSettings['TESTRAIL_URL'] = testRailSettings['TESTRAIL_URL'].replace(/\/$/,''));
+                }
+            });
+    }
+
+    function initQTestSettings() {
+        toolsService.fetchToolSettings('QTEST')
+            .then(function(settings) {
+                if (settings.success) {
+                    qTestSettings = UtilService.settingsAsMap(settings.data);
+
+                    qTestSettings['QTEST_URL'] && (qTestSettings['QTEST_URL'] = qTestSettings['QTEST_URL'].replace(/\/$/,''));
                 }
             });
     }

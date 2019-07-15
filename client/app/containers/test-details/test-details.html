@@ -91,8 +91,8 @@
                                         </div>
                                         <div ng-if="test.tags && test.tags.length" class="test-info_tags">
                                             <span class="test-info_tags_tag" ng-repeat="tag in test.tags">
-                                                <span>#</span>
-                                                {{tag.value}}
+                                                <span data-ng-if="!$ctrl.testRail['TESTRAIL_URL'] && !$ctrl.qTest['QTEST_URL']">#{{tag.value}}</span>
+                                                <a name="bugTicket" href="{{$ctrl.testRail['TESTRAIL_URL'] + '/index.php?/cases/view/' + tag.value}}" target="_blank" data-ng-if="$ctrl.testRail['TESTRAIL_URL']" class="test-info_tags_tag">#{{tag.value}}</a>
                                             </span>
                                         </div>
                                         <div class="result_error {{test.status}} {{main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
