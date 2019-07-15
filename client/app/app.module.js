@@ -1110,7 +1110,7 @@ class mdDialogDelegate {
                 opts.onShowing = onShowing;
             }
             // call the original show function
-            cachedShowFunction(opts);
+            return cachedShowFunction(opts);
         };
         // return the modified delegated $mdDialog service
         return this._$delegate;
