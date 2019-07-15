@@ -187,32 +187,14 @@ md-chip:not(:hover) .show-icon-on-hover,
     md-menu.widget-icon {
 
         position: absolute;
-        top: 3px;
-        right: 0;
+        top: 8px;
+        right: 5px;
         border: none;
 
         font-size: 24px;
-        padding: 1px;
-        color: black;
-        opacity: 0.25;
-        //padding-right: 6px;
-
-        &:hover {
-            opacity: 0.5;
-        }
 
         @media (max-width: $screen-tablet-2) {
             display: inline;
-        }
-
-        .md-icon-button {
-            padding: 0;
-            margin: 0;
-
-            md-icon {
-                width: 24px;
-                min-width: 24px;
-            }
         }
     }
 }
@@ -2474,7 +2456,9 @@ $light-inprogress: #68c9fd;
             display: flex;
             width: 32px;
             height: 32px;
-            margin: 0 5px 0 0;
+            &, &.md-focused {
+                margin: 0 5px 0 0;
+            }
             .material-icons {
                 color: black;
             }
