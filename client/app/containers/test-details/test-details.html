@@ -91,8 +91,16 @@
                                         </div>
                                         <div ng-if="test.tags && test.tags.length" class="test-info_tags">
                                             <span class="test-info_tags_tag" ng-repeat="tag in test.tags">
-                                                <span data-ng-if="!$ctrl.testRail['TESTRAIL_URL'] && !$ctrl.qTest['QTEST_URL']">#{{tag.value}}</span>
-                                                <a name="bugTicket" href="{{$ctrl.testRail['TESTRAIL_URL'] + '/index.php?/cases/view/' + tag.value}}" target="_blank" data-ng-if="$ctrl.testRail['TESTRAIL_URL']" class="test-info_tags_tag">#{{tag.value}}</a>
+                                                <span
+                                                    data-ng-if="tag.name === 'TESTRAIL_TESTCASE_UUID' && !$ctrl.testRail['TESTRAIL_URL'] || tag.name === 'QTEST_TESTCASE_UUID' && !$ctrl.qTest['QTEST_URL']">#{{tag.value.split('-').pop()}}</span>
+                                                <a name="testRailLink"
+                                                   href="{{$ctrl.testRail['TESTRAIL_URL'] + '/index.php?/cases/view/' + tag.split('-').pop()}}"
+                                                   target="_blank"
+                                                   data-ng-if="tag.name === 'TESTRAIL_TESTCASE_UUID' && $ctrl.testRail['TESTRAIL_URL']">#{{tag.value.split('-').pop()}}</a>
+                                                <a name="qTestLink"
+                                                   href="{{$ctrl.testRail['QTEST_URL'] + '/p/' + tag.split('-')[0]+ '/portal/project#tab=testdesign&object=1&id=' + tag.split('-').pop()}}"
+                                                   target="_blank"
+                                                   data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.testRail['QTEST_URL']">#{{tag.value.split('-').pop()}}</a>
                                             </span>
                                         </div>
                                         <div class="result_error {{test.status}} {{main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
