@@ -98,7 +98,7 @@
                                                    target="_blank"
                                                    data-ng-if="tag.name === 'TESTRAIL_TESTCASE_UUID' && $ctrl.testRail['TESTRAIL_URL']">#{{tag.value.split('-').pop()}}</a>
                                                 <a name="qTestLink"
-                                                   href="{{$ctrl.qTest['QTEST_URL'] + '/p/' + tag.split('-')[0]+ '/portal/project#tab=testdesign&object=1&id=' + tag.split('-').pop()}}"
+                                                   href="{{$ctrl.qTest['QTEST_URL'] + '/p/' + tag.value.split('-')[0]+ '/portal/project#tab=testdesign&object=1&id=' + tag.value.split('-').pop()}}"
                                                    target="_blank"
                                                    data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{tag.value.split('-').pop()}}</a>
                                             </span>
