@@ -20,7 +20,7 @@ module.exports = (env) => {
     const __PRODUCTION__ = JSON.stringify(isProd);
     const __ZAFIRA_WS_URL__ = process.env.ZAFIRA_WS_URL || 'http://localhost:8080/zafira-ws'; //TODO: move WS_URL fallback value from this file
     const __ZAFIRA_UI_VERSION__ = JSON.stringify(process.env.ZAFIRA_UI_VERSION || 'local');
-    const packageName = JSON.stringify(process.env.npm_package_name) || '';
+    const packageName = JSON.stringify(process.env.npm_package_name) || 'Zafira';
     const base = JSON.stringify(process.env.ZAFIRA_UI_BASE || '/');
     const htmlWebpackConfig = Object.assign(
         {},
@@ -66,14 +66,15 @@ module.exports = (env) => {
         },
         resolve: {
             modules: [
+                'node_modules',
                 path.join(__dirname, '../client/app'),
-                path.join(__dirname, '../client/assets'),
-                path.join(__dirname, '../node_modules')
             ],
             alias: {
                 'jquery-ui': path.resolve(__dirname, '../node_modules/jquery-ui/ui'),
-                'humanizeDuration': 'humanize-duration',
-            }
+                'vendors': path.resolve(__dirname, '../client/vendors'),
+                // 'humanizeDuration': 'humanize-duration',
+            },
+            symlinks: false ,
         },
         module: {
             rules: [
@@ -82,14 +83,16 @@ module.exports = (env) => {
                     // match the requirements. When no loader matches it will fall
                     // back to the "file" loader at the end of the loader list.
                     oneOf: [
+                        // Process application JS with Babel.
                         {
                             test: /\.m?js$/,
-                            exclude: [/node_modules/],
+                            include: path.join(__dirname, '../client/app'),
                             use: [
                                 {
                                     loader: 'babel',
                                     options: {
-                                        compact: isProd && 'auto',
+                                        babelrc: false,
+                                        configFile: false,
                                         presets: ['@babel/preset-env'],
                                         plugins: [
                                             '@babel/plugin-proposal-object-rest-spread',
@@ -97,12 +100,37 @@ module.exports = (env) => {
                                             ['angularjs-annotate', { 'explicitOnly' : true}],
                                             '@babel/plugin-syntax-dynamic-import'
                                         ],
+                                        compact: isProd && 'auto',
                                         cacheDirectory: true,
                                         cacheCompression: isProd,
                                     }
                                 },
                             ]
 
+                        },
+                        // Process any JS outside of the app with Babel.
+                        // Unlike the application JS, we only compile the standard ES features.
+                        {
+                            test: /\.m?js$/,
+                            exclude: [path.join(__dirname, '../client/app'), /\.min\./],
+                            use: [
+                                {
+                                    loader: 'babel',
+                                    options: {
+                                        babelrc: false,
+                                        configFile: false,
+                                        presets: ['@babel/preset-env'],
+                                        compact: false,
+                                        cacheDirectory: true,
+                                        cacheCompression: isProd,
+                                        // If an error happens in a package, it's possible to be
+                                        // because it was compiled. Thus, we don't want the browser
+                                        // debugger to show the original code. Instead, the code
+                                        // being evaluated would be much more helpful.
+                                        sourceMaps: false,
+                                    }
+                                },
+                            ]
                         },
                         {
                             test: /\.(gif|png|jpe?g)$/i,
@@ -189,6 +217,21 @@ module.exports = (env) => {
                 __PRODUCTION__,
                 __ZAFIRA_UI_VERSION__,
             }),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/asyncToGenerator.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/regenerator/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/typeof.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/classCallCheck.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/createClass.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-material/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-material-data-table/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-messages/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-scroll/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-cookies/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-jwt/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-moment/angular-moment.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-sanitize/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'rangy/lib/rangy-core.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular/angular.js'),
             new webpack.ProvidePlugin({
                 $: 'jquery',
                 jQuery: 'jquery',
@@ -293,5 +336,4 @@ module.exports = (env) => {
             colors: true,
         }
     };
-
 };

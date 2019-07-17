@@ -1,7 +1,7 @@
 window.d3 = require('d3');
 import 'gridstack/dist/gridstack.all';
-import '../../vendors/gridstack-angular.min';
-import '../../vendors/pie-chart.min';
+import 'vendors/gridstack-angular.min';
+import 'vendors/pie-chart.min';
 import 'n3-charts/build/LineChart.min';
 window.echarts = require('echarts/lib/echarts');
 require('echarts/lib/chart/bar');
@@ -18,7 +18,7 @@ require('echarts/lib/component/calendar');
 //TODO: can't use npm  package because this file has custom changes;
 //TODO: seems like that changes don't allow to minify this file therefore it's excluded in webpack config
 //TODO: fix DI and use as custom module
-require('../../vendors/ngecharts');
+require('vendors/ngecharts');
 
 import emptyPageComponent from '../shared/empty-page/empty-page.component';
 import ScreenshotService from './screenshot.util';
