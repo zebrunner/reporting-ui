@@ -19,6 +19,7 @@ module.exports = (env) => {
     const __ZAFIRA_UI_VERSION__ = JSON.stringify(process.env.ZAFIRA_UI_VERSION || 'local');
     const packageName = JSON.stringify(process.env.npm_package_name) || 'Zafira';
     const base = JSON.stringify(process.env.ZAFIRA_UI_BASE || '/');
+    const showProgress = isDev || process.env.SHOW_PROGRESS;
     const htmlWebpackConfig = Object.assign(
         {},
         {
@@ -45,7 +46,7 @@ module.exports = (env) => {
             : undefined
     );
 
-    return {
+    const wpConfig =  {
         mode: 'none',
         bail: isProd,
         devtool: 'source-map',
@@ -271,7 +272,6 @@ module.exports = (env) => {
                 }
             }),
             new HtmlWebpackPlugin(htmlWebpackConfig),
-            new webpack.ProgressPlugin(),
             // To strip all locales except “en”
             new MomentLocalesPlugin(),
             new CopyWebpackPlugin(
@@ -315,4 +315,10 @@ module.exports = (env) => {
             colors: true,
         }
     };
+
+    if (showProgress) {
+        wpConfig.plugins.push(new webpack.ProgressPlugin());
+    }
+
+    return wpConfig;
 };
