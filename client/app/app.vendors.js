@@ -9,7 +9,6 @@ require('angular-sanitize');
 require('@uirouter/angularjs');
 require('angular-jwt');
 require('angular-material-data-table');
-require('angular-validation-match');// TODO: Looks like unused
 window.moment = require('moment');
 require('angular-moment');
 require('angular-material');

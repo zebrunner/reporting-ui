@@ -17,7 +17,6 @@ const ngModule = angular.module('app', [
     // 3rd party feature modules
     'ngImgCrop',
     'md.data.table',
-    'validation.match',
     'timer',
     'ngSanitize',
     'textAngular',
