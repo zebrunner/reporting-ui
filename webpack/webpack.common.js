@@ -8,9 +8,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const imageminMozjpeg = require('imagemin-mozjpeg');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -72,7 +69,6 @@ module.exports = (env) => {
             alias: {
                 'jquery-ui': path.resolve(__dirname, '../node_modules/jquery-ui/ui'),
                 'vendors': path.resolve(__dirname, '../client/vendors'),
-                // 'humanizeDuration': 'humanize-duration',
             },
             symlinks: false ,
         },
@@ -278,23 +274,6 @@ module.exports = (env) => {
             new webpack.ProgressPlugin(),
             // To strip all locales except “en”
             new MomentLocalesPlugin(),
-            new ImageminPlugin({
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                disable: isDev,
-                options: {
-                    jpegtran: false,
-                    pngquant: {
-                        quality: '65-90',
-                        speed: 4
-                    },
-                    plugins: [
-                        imageminMozjpeg({
-                            quality: 65,
-                            progressive: true
-                        })
-                    ]
-                },
-            }),
             new CopyWebpackPlugin(
                 [{
                     from: '../config.json',
