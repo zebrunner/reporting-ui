@@ -1,7 +1,6 @@
 'use strict';
 
 //TODO: // Implement run the linter (before Babel processes the JS).
-//TODO: Source maps are resource heavy and can cause out of memory issue for large source files. We need to enable it only on demand (using env variables);
 
 const path = require('path');
 const webpack = require('webpack');

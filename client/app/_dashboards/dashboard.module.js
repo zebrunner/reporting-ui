@@ -1,5 +1,6 @@
 window.d3 = require('d3');
-import 'gridstack/dist/gridstack.all';
+import 'gridstack/dist/gridstack.js';
+import 'gridstack/dist/gridstack.jQueryUI.js';
 import 'vendors/gridstack-angular.min';
 import 'vendors/pie-chart.min';
 import 'n3-charts/build/LineChart.min';
