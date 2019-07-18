@@ -1,6 +1,6 @@
 'use strict';
 
-import RFB from '../../../vendors/novnc.min';
+import RFB from 'vendors/novnc';
 
 const ArtifactService = function ArtifactService($window, $q, $timeout, UtilService, toolsService) {
     'ngInject';

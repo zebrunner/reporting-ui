@@ -9,16 +9,15 @@ require('angular-sanitize');
 require('@uirouter/angularjs');
 require('angular-jwt');
 require('angular-material-data-table');
-require('angular-validation-match');// TODO: Looks like unused
 window.moment = require('moment');
 require('angular-moment');
 require('angular-material');
 require('oclazyload');
 
-require('../vendors/sockjs-1.1.2.min.js');
-require('../vendors/stomp.min.js');
+window.SockJS = require('vendors/sockjs-1.3.0.min');
+require('vendors/stomp.min');
 window.humanizeDuration = require('humanize-duration');
-require('../vendors/angular-timer'); //TODO: This file is changed locally, see generated patch in this angular project root directory
+require('vendors/angular-timer'); //TODO: This file is changed locally, see generated patch in this angular project root directory
 require('textangular/dist/textAngular-sanitize.min');
 require('textangular');
 

@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-    <circle cx="10" cy="10" r="10" fill="#f2f2f2"/>
-    <linearGradient id="a" x1="-1626.195" x2="-1626.195" y1="-1324.802" y2="-1324.793" gradientTransform="matrix(1149.04 0 0 1538.87 1868573.5 2038700.375)" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#58b0e3"/>
-        <stop offset="1" stop-color="#f44e28"/>
-    </linearGradient>
-    <path fill="url(#a)" d="M14.6 3.8H14l-4 5.7-4-5.7h-.6L9.7 10l-4.3 6.1H6l3.9-5.7 4 5.7h.6L10.3 10l4.3-6.2z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#f2f2f2"/><linearGradient id="a" x1="-1626.195" x2="-1626.195" y1="-1324.802" y2="-1324.793" gradientTransform="matrix(1149.04 0 0 1538.87 1868573.5 2038700.375)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#58b0e3"/><stop offset="1" stop-color="#f44e28"/></linearGradient><path fill="url(#a)" d="M14.6 3.8H14l-4 5.7-4-5.7h-.6L9.7 10l-4.3 6.1H6l3.9-5.7 4 5.7h.6L10.3 10l4.3-6.2z"/></svg>

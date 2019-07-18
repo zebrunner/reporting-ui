@@ -1,16 +1,12 @@
 'use strict';
 
 //TODO: // Implement run the linter (before Babel processes the JS).
-//TODO: Source maps are resource heavy and can cause out of memory issue for large source files. We need to enable it only on demand (using env variables);
 
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const imageminMozjpeg = require('imagemin-mozjpeg');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -20,8 +16,9 @@ module.exports = (env) => {
     const __PRODUCTION__ = JSON.stringify(isProd);
     const __ZAFIRA_WS_URL__ = process.env.ZAFIRA_WS_URL || 'http://localhost:8080/zafira-ws'; //TODO: move WS_URL fallback value from this file
     const __ZAFIRA_UI_VERSION__ = JSON.stringify(process.env.ZAFIRA_UI_VERSION || 'local');
-    const packageName = JSON.stringify(process.env.npm_package_name) || '';
+    const packageName = JSON.stringify(process.env.npm_package_name) || 'Zafira';
     const base = JSON.stringify(process.env.ZAFIRA_UI_BASE || '/');
+    const showProgress = isDev || process.env.SHOW_PROGRESS;
     const htmlWebpackConfig = Object.assign(
         {},
         {
@@ -48,7 +45,7 @@ module.exports = (env) => {
             : undefined
     );
 
-    return {
+    const wpConfig =  {
         mode: 'none',
         bail: isProd,
         devtool: 'source-map',
@@ -66,14 +63,14 @@ module.exports = (env) => {
         },
         resolve: {
             modules: [
+                'node_modules',
                 path.join(__dirname, '../client/app'),
-                path.join(__dirname, '../client/assets'),
-                path.join(__dirname, '../node_modules')
             ],
             alias: {
                 'jquery-ui': path.resolve(__dirname, '../node_modules/jquery-ui/ui'),
-                'humanizeDuration': 'humanize-duration',
-            }
+                'vendors': path.resolve(__dirname, '../client/vendors'),
+            },
+            symlinks: false ,
         },
         module: {
             rules: [
@@ -82,14 +79,16 @@ module.exports = (env) => {
                     // match the requirements. When no loader matches it will fall
                     // back to the "file" loader at the end of the loader list.
                     oneOf: [
+                        // Process application JS with Babel.
                         {
                             test: /\.m?js$/,
-                            exclude: [/node_modules/],
+                            include: path.join(__dirname, '../client/app'),
                             use: [
                                 {
                                     loader: 'babel',
                                     options: {
-                                        compact: isProd && 'auto',
+                                        babelrc: false,
+                                        configFile: false,
                                         presets: ['@babel/preset-env'],
                                         plugins: [
                                             '@babel/plugin-proposal-object-rest-spread',
@@ -97,12 +96,37 @@ module.exports = (env) => {
                                             ['angularjs-annotate', { 'explicitOnly' : true}],
                                             '@babel/plugin-syntax-dynamic-import'
                                         ],
+                                        compact: isProd && 'auto',
                                         cacheDirectory: true,
                                         cacheCompression: isProd,
                                     }
                                 },
                             ]
 
+                        },
+                        // Process any JS outside of the app with Babel.
+                        // Unlike the application JS, we only compile the standard ES features.
+                        {
+                            test: /\.m?js$/,
+                            exclude: [path.join(__dirname, '../client/app'), /\.min\./],
+                            use: [
+                                {
+                                    loader: 'babel',
+                                    options: {
+                                        babelrc: false,
+                                        configFile: false,
+                                        presets: ['@babel/preset-env'],
+                                        compact: false,
+                                        cacheDirectory: true,
+                                        cacheCompression: isProd,
+                                        // If an error happens in a package, it's possible to be
+                                        // because it was compiled. Thus, we don't want the browser
+                                        // debugger to show the original code. Instead, the code
+                                        // being evaluated would be much more helpful.
+                                        sourceMaps: false,
+                                    }
+                                },
+                            ]
                         },
                         {
                             test: /\.(gif|png|jpe?g)$/i,
@@ -189,6 +213,21 @@ module.exports = (env) => {
                 __PRODUCTION__,
                 __ZAFIRA_UI_VERSION__,
             }),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/asyncToGenerator.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/regenerator/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/typeof.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/classCallCheck.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/createClass.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-material/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-material-data-table/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-messages/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-scroll/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-cookies/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-jwt/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-moment/angular-moment.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-sanitize/index.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'rangy/lib/rangy-core.js'),
+            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular/angular.js'),
             new webpack.ProvidePlugin({
                 $: 'jquery',
                 jQuery: 'jquery',
@@ -232,26 +271,8 @@ module.exports = (env) => {
                 }
             }),
             new HtmlWebpackPlugin(htmlWebpackConfig),
-            new webpack.ProgressPlugin(),
             // To strip all locales except “en”
             new MomentLocalesPlugin(),
-            new ImageminPlugin({
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                disable: isDev,
-                options: {
-                    jpegtran: false,
-                    pngquant: {
-                        quality: '65-90',
-                        speed: 4
-                    },
-                    plugins: [
-                        imageminMozjpeg({
-                            quality: 65,
-                            progressive: true
-                        })
-                    ]
-                },
-            }),
             new CopyWebpackPlugin(
                 [{
                     from: '../config.json',
@@ -294,4 +315,9 @@ module.exports = (env) => {
         }
     };
 
+    if (showProgress) {
+        wpConfig.plugins.push(new webpack.ProgressPlugin());
+    }
+
+    return wpConfig;
 };
