@@ -1,6 +1,6 @@
 import html2canvas from 'html2canvas';
 
-const ScreenshotService = function ScreenshotService($http, $rootScope, $q, $timeout) {
+const ScreenshotService = function ScreenshotService($q) {
     'ngInject';
 
     var body = angular.element('body');
