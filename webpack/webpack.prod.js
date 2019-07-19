@@ -3,7 +3,6 @@
 const mode = 'production';
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js')(mode);
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -60,10 +59,5 @@ module.exports = merge(common, {
                 },
             }),
         ]
-    },
-    plugins: [
-        new CleanWebpackPlugin(['../dist'], {
-            allowExternal: true
-        }),
-    ]
+    }
 });

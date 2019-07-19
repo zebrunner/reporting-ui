@@ -49,6 +49,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         showFilterDialog: showFilterDialog,
         onBackClick,
         updateTest,
+        getTestURL,
         get empty() {
             return !Object.keys(vm.testRun.tests || {}).length ;
         },
@@ -318,6 +319,11 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
     function addTest(test) {
         test.elapsed = test.finishTime ? (test.finishTime - test.startTime) : Number.MAX_VALUE;
         prepareArtifacts(test);
+        angular.forEach(test.tags, function (tag) {
+            if (tag.name === 'TESTRAIL_TESTCASE_UUID' || tag.name === 'QTEST_TESTCASE_UUID') {
+                tag.normalizedValue = tag.value.split('-').pop();
+            }
+        });
 
         vm.testRun.tests[test.id] = test;
 
@@ -329,6 +335,17 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
 
         onTagSelect(testGroupDataToStore.tags);
         onStatusButtonClick(testGroupDataToStore.statuses);
+    }
+
+    function getTestURL(type, value) {
+        value = value.split('-');
+
+        switch(type) {
+            case 'TESTRAIL_URL':
+                return `${testRailSettings['TESTRAIL_URL']}/index.php?/cases/view/${value.pop()}`;
+            case 'QTEST_URL':
+                return `${qTestSettings['QTEST_URL']}/p/${value[0]}/portal/project#tab=testdesign&object=1&id=${value.pop()}`;
+        }
     }
 
     function prepareArtifacts(test) {
