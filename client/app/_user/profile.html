@@ -32,7 +32,7 @@
         <div layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Access token</div>
             <form class="form-validation profile__form" name="access_token_form" ng-submit="$ctrl.generateAccessToken()">
-                <div class="profile__form-row" layout="row" layout-align="center center">
+                <div class="profile__form-row _access" layout="row" layout-align="center center">
                     <md-input-container class="_gray-bg">
                         <label>Token</label>
                         <input id="userAccessToken" type="text" ng-model="$ctrl.accessToken" name="accessToken"/>
@@ -40,7 +40,7 @@
                     <md-button id="generateToken" ng-if="!$ctrl.accessToken" type="submit" class="md-icon-button _invert pull-right"><md-icon class="material-icons _renew" role="img" aria-label="autorenew">autorenew</md-icon></md-button>
                     <md-button id="copyToken" ng-if="$ctrl.accessToken" ng-click="$ctrl.copyAccessToken()" class="md-icon-button _invert pull-right"><md-icon class="material-icons" role="img" aria-label="autorenew">file_copy</md-icon></md-button>
                 </div>
-                <div class="profile__form-row" layout="row" layout-align="center center">
+                <div class="profile__form-row _access" layout="row" layout-align="center center">
                     <md-input-container class="_gray-bg">
                         <input id="serviceUrl" type="text" ng-model="$ctrl.serviceUrl" name="serviceUrl" disabled/>
                         <label>Service URL</label>
