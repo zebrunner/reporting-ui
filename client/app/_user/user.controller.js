@@ -4,7 +4,7 @@ import uploadImageModalController from '../shared/modals/upload-image-modal/uplo
 import uploadImageModalTemplate from '../shared/modals/upload-image-modal/upload-image-modal.html';
 
 const UserProfileController = function UserProfileController($mdDialog, UserService, DashboardService, UtilService,
-                                                             AuthService, appConfig, $q, $state, messageService) {
+                                                             AuthService, appConfig, $q, $state, messageService, $location) {
     'ngInject';
 
     const vm = {
@@ -16,6 +16,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         get dashboards() {return DashboardService.dashboards;},
         pefrDashboardId: null,
         accessToken: null,
+        serviceUrl: $location.absUrl() || null,
         widgetRefreshIntervals: [0, 30000, 60000, 120000, 300000],
 
         copyAccessToken,
@@ -32,6 +33,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         validations: UtilService.validations,
         untouchForm: UtilService.untouchForm,
         goToState,
+        copyServiceUrl,
 
         get currentUser() { return UserService.currentUser; },
     };
@@ -99,6 +101,26 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         document.body.removeChild(node);
 
         messageService.success('Access token copied to clipboard');
+    }
+
+    function copyServiceUrl() {
+        var node = document.createElement('pre');
+
+        node.textContent = vm.serviceUrl;
+        document.body.appendChild(node);
+
+        var selection = window.getSelection();
+        selection.removeAllRanges();
+
+        var range = document.createRange();
+        range.selectNodeContents(node);
+        selection.addRange(range);
+
+        document.execCommand('copy');
+        selection.removeAllRanges();
+        document.body.removeChild(node);
+
+        messageService.success('Service URL copied to clipboard');
     }
 
     function fetchDashboards() {
