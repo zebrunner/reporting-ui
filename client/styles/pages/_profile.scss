@@ -112,15 +112,17 @@
                 margin-bottom: 12px;
             }
             &-row {
-                margin-bottom: 12px;
-                flex-direction: column;
-                width: 100%;
-                margin-bottom: 12px;
-                md-input-container {
-                    &:nth-child(2) {
-                        margin-left: 0;
-                    }
+                &:not(._access) {
+                    margin-bottom: 12px;
+                    flex-direction: column;
                     width: 100%;
+                    margin-bottom: 12px;
+                    md-input-container {
+                        &:nth-child(2) {
+                            margin-left: 0;
+                        }
+                        width: 100%;
+                    }
                 }
             }
         }
