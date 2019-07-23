@@ -84,42 +84,12 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function copyAccessToken() {
-        var node = document.createElement('pre');
-
-        node.textContent = vm.accessToken;
-        document.body.appendChild(node);
-
-        var selection = window.getSelection();
-        selection.removeAllRanges();
-
-        var range = document.createRange();
-        range.selectNodeContents(node);
-        selection.addRange(range);
-
-        document.execCommand('copy');
-        selection.removeAllRanges();
-        document.body.removeChild(node);
-
+        $('#userAccessToken').val().copyToClipboard();
         messageService.success('Access token copied to clipboard');
     }
 
     function copyServiceUrl() {
-        var node = document.createElement('pre');
-
-        node.textContent = vm.serviceUrl;
-        document.body.appendChild(node);
-
-        var selection = window.getSelection();
-        selection.removeAllRanges();
-
-        var range = document.createRange();
-        range.selectNodeContents(node);
-        selection.addRange(range);
-
-        document.execCommand('copy');
-        selection.removeAllRanges();
-        document.body.removeChild(node);
-
+        $('#serviceUrl').val().copyToClipboard();
         messageService.success('Service URL copied to clipboard');
     }
 
