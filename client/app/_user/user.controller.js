@@ -84,12 +84,12 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function copyAccessToken() {
-        $('#userAccessToken').val().copyToClipboard();
+        vm.accessToken.copyToClipboard();
         messageService.success('Access token copied to clipboard');
     }
 
     function copyServiceUrl() {
-        $('#serviceUrl').val().copyToClipboard();
+        vm.serviceUrl.copyToClipboard();
         messageService.success('Service URL copied to clipboard');
     }
 
