@@ -1822,19 +1822,11 @@ table.table-loupe {
 
 td.settings-cell {
     width: 25px;
-    button {
-        min-height: 20px !important;
-        padding: 0 !important;
-        padding-right: 9px !important;
-        margin: 0 !important;
-        height: 20px !important;
-        width: 100% !important;
-        md-icon {
-            min-height: 20px;
-            height: 20px;
-            margin: 0;
-            float: right;
-        }
+    .md-button.md-icon-button:not(._default-md-style) {
+        min-height: 25px ;
+        height: 25px ;
+        width: 25px ;
+        min-width: 25px ;
     }
 }
 
