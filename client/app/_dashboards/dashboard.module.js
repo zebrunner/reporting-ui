@@ -1,6 +1,7 @@
 window.d3 = require('d3');
-import 'gridstack/dist/gridstack.js';
-import 'gridstack/dist/gridstack.jQueryUI.js';
+//TODO: check if released gridstack version visout lodash dependancy. If so, replace dependency in package.json (last checked version of the library is 0.4.0)
+import 'gridstack/src/gridstack.js';
+import 'gridstack/src/gridstack.jQueryUI.js';
 import 'vendors/gridstack-angular.min';
 import 'vendors/pie-chart.min';
 import 'n3-charts/build/LineChart.min';

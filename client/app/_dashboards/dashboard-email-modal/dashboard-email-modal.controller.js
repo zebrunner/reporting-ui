@@ -1,6 +1,6 @@
 'use strict';
 
-const dashboardEmailModalController = function dashboardEmailModalController($scope, $rootScope, $q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService) {
+const dashboardEmailModalController = function dashboardEmailModalController($scope, $q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService) {
     'ngInject';
 
     var TYPE = widgetId ? 'WIDGET' : 'DASHBOARD';

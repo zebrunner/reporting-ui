@@ -963,6 +963,27 @@ md-radio-button {
             color: rgba($dark-new, .5);
             vertical-align: middle;
         }
+        &._invert {
+            width: 36px;
+            height: 36px;
+            min-height: 36px;
+            max-height: 36px;
+            max-width: 36px;
+            min-width: 36px;
+            background-color: rgba($dark-new, .5);
+            i.material-icons, md-icon {
+                color: #fff;
+                &._renew {
+                    transform: rotate(90deg) scale(1, -1);
+                }
+            }
+            &:not([disabled]):hover {
+                background-color: rgba($dark-new, .6);
+                i.material-icons, md-icon {
+                    color: #fff;
+                }
+            }
+        }
         &[disabled], &[disabled]:hover {
             background: transparent;
             i.material-icons, md-icon {
