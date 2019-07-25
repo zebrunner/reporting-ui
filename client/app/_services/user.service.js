@@ -101,7 +101,7 @@
 
         function initCurrentUser(force) {
             if (service.currentUser && !force) {
-                return $resolve(service.currentUser);
+                return $q.resolve(service.currentUser);
             }
 
             if (_userFullDataFetchPromise && !force) {
