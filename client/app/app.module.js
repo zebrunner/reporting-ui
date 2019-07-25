@@ -954,53 +954,77 @@ const ngModule = angular.module('app', [
         _defaultErrorHandler(rejection);
     });
 })
-.run(($transitions, AuthService, $document, UserService, messageService) => {
+.run(($transitions, AuthService, $document, UserService, messageService, $state, $rootScope, AuthIntercepter) => {
     'ngInject';
 
+    function redirectToSignin(payload) {
+        const params = {};
+
+        payload && payload.location && (params.location = payload.location);
+        AuthService.ClearCredentials();
+        $state.go(
+            'signin',
+            params,
+        );
+    };
+
+    $rootScope.$on('event:auth-loginCancelled', function (e, payload) {
+        redirectToSignin(payload);
+    });
+
+    $rootScope.$on('event:auth-loginRequired', function (e, payload) {
+        if (AuthService.hasValidToken()) {
+            AuthService.RefreshToken($rootScope.globals.auth.refreshToken)
+                .then(function (rs) {
+                    if (rs.success) {
+                        AuthService.SetCredentials(rs.data);
+                        AuthIntercepter.loginConfirmed(payload);
+                    } else if ($state.current.name !== 'signup') {
+                        AuthIntercepter.loginCancelled(payload);
+                    }
+                });
+        } else {
+            AuthIntercepter.loginCancelled(payload);
+        }
+    });
+
     function fetchUserData(trans) {
-        return UserService.fetchFullUserData().then((res) => {
-            if (!res.success) {
-                const fullMessage = `${res.message} Try to login once again.`;
+        return UserService.initCurrentUser()
+            .catch((err) => {
+                const fullMessage = `${err.message} Try to login once again.`;
 
                 messageService.error(fullMessage);
                 //If user isAuthorized but we can't get profile data and therefore cn't redirect to dashboard, lets logout
-                AuthService.ClearCredentials();
+                AuthIntercepter.loginCancelled(payload);
 
-                return trans.router.stateService.target('signin', {}, {reload: true, notify: true, inherit: true});
-            }
-
-            return res;
-        });
+                return err;
+            });
     }
     $transitions.onBefore({}, function(trans) {
         const toState = trans.to();
         const fromState = trans.from();
-        const toStateParams = trans.params();
         const loginRequired = !!(toState.data && toState.data.requireLogin);
         const onlyGuests = !!(toState.data && toState.data.onlyGuests);
-        const isAuthorized = AuthService.isAuthorized();
+        const hasValidToken = AuthService.hasValidToken();
         let currentUser = UserService.currentUser;
 
         if (loginRequired) {
             //Redirect to login page if authorization is required and user is not authorized
-            if (!isAuthorized) {
-                return trans.router.stateService.target('signin', {referrer: toState.name, referrerParams: toStateParams});
+            if (!hasValidToken) {
+                const location = window.location.href;
+
+                redirectToSignin({ location });
             }
 
             //Some controls need user profile on  initialization, so we need to load it if not loaded yet
             return !!currentUser || fetchUserData(trans);
-        } else if (onlyGuests && isAuthorized) {
+        } else if (onlyGuests && hasValidToken) {
+            // TODO: should we redirect to the dashboard enstead of cancelling transition?
             if (!fromState.name) {
                 if (currentUser) {
-                    return trans.router.stateService.target('dashboard.page', {dashboardId: currentUser.defaultDashboardId});
+                    return trans.router.stateService.target('home');
                 } else {
-                    return fetchUserData(trans).then((res) => {
-                        if (res.success) {
-                            currentUser = UserService.currentUser;
-
-                            return trans.router.stateService.target('dashboard.page', {dashboardId: currentUser.defaultDashboardId});
-                        }
-                    });
+                    return fetchUserData(trans).then(() => trans.router.stateService.target('home'));
                 }
             }
 

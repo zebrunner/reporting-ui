@@ -35,55 +35,33 @@
 	        $scope.initSession = toolsService.getTools;
 	        $scope.progressbarService = progressbarService;
 
-	        $rootScope.$on("event:auth-loginSuccess", function(ev, payload){
+	        $rootScope.$on('event:auth-loginSuccess', function(ev, payload){
                 AuthService.SetCredentials(payload.auth);
                 $scope.initSession();
-                UserService.initCurrentUser()
-                    .then(function(user) {
-                        var bufferedRequests = httpBuffer.getBuffer();
-
+                UserService.initCurrentUser(true)
+                    .then((user) => {
                         $scope.main.skin = user.theme;
-                        if (bufferedRequests && bufferedRequests.length) {
-                            $window.location.href = bufferedRequests[0].location;
-                        } else {
-                            if (payload.referrer) {
-                                var params = payload.referrerParams ? payload.referrerParams : {};
 
-                                $timeout(() => {
-                                    $state.go(payload.referrer, params);
-                                });
-                            } else {
-                                $timeout(() => {
-                                    $state.go('dashboard.page', {dashboardId: user.defaultDashboardId});
-                                });
-                            }
+                        if (payload.location) {
+                            $window.location.href = payload.location;
+                        } else if (payload.referrer) {
+                            var params = payload.referrerParams || {};
+
+                            $timeout(() => {
+                                $state.go(payload.referrer, params);
+                            });
+                        } else {
+                            $timeout(() => {
+                                $state.go('home');
+                            });
                         }
                     }, function() {});
 	        });
 
-            $rootScope.$on('event:auth-loginRequired', function() {
-		        	if ($rootScope.globals.auth && $rootScope.globals.auth.refreshToken) {
-	                    AuthService.RefreshToken($rootScope.globals.auth.refreshToken)
-	                        .then(function (rs) {
-	                            if (rs.success) {
-	                                AuthService.SetCredentials(rs.data);
-	                                AuthIntercepter.loginConfirmed();
-	                            } else if ($state.current.name !== 'signup') {
-	                                AuthIntercepter.loginCancelled();
-	                                AuthService.ClearCredentials();
-                                    $state.go("signin", {referrer: $state.current.name, referrerParams: $state.current.params});
-	                            }
-	                        });
-		        	} else if ($state.current.name !== 'signup') {
-	                    $state.go('signin', {referrer: $state.current.name, referrerParams: $state.current.params});
-		        	}
-	        });
-
             function getVersion() {
                 return $q(function (resolve, reject) {
-                    ConfigService.getConfig("version").then(function(rs) {
-                        if(rs.success)
-                        {
+                    ConfigService.getConfig('version').then(function(rs) {
+                        if (rs.success) {
                             $rootScope.version = rs.data;
                             $rootScope.version.ui = UI_VERSION;
 

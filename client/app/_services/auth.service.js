@@ -23,7 +23,7 @@
             isLoggedIn,
             UserHasAnyRole,
             UserHasAnyPermission,
-            isAuthorized,
+            hasValidToken,
             getAuthData,
             getTenant
         };
@@ -66,9 +66,8 @@
         }
 
         function RefreshToken(token) {
-            return $httpMock.post(API_URL + '/api/auth/refresh', {
-                'refreshToken': token
-            }).then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
+            return $httpMock.post(API_URL + '/api/auth/refresh', { 'refreshToken': token }, { skipAuthorization: true })
+                .then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
         }
 
         function GenerateAccessToken(token) {
@@ -79,7 +78,6 @@
             $rootScope.globals = {
                 "auth": auth
             };
-            //$httpMock.defaults.headers.common['Authorization'] = auth.type + " " + auth.accessToken;
             $cookies.putObject('globals', $rootScope.globals);
         }
 
@@ -87,8 +85,6 @@
             UserService.clearCurrentUser();
             $rootScope.globals = {};
             $cookies.remove('globals');
-//            $cookies.remove('Access-Token');
-            //$httpMock.defaults.headers.common.Authorization = null;
         }
 
         function getAuthData() {
@@ -97,15 +93,10 @@
             return globals && globals.auth;
         }
 
-        function isAuthorized() {
-            var isAuthorized = false;
-            var auth = getAuthData();
+        function hasValidToken() {
+            const auth = getAuthData() || {};
 
-            if (auth && auth.refreshToken && !jwtHelper.isTokenExpired(auth.refreshToken)) {
-                isAuthorized = true;
-            }
-
-            return isAuthorized;
+            return auth.refreshToken && !jwtHelper.isTokenExpired(auth.refreshToken);
         }
 
         function isLoggedIn() {
