@@ -14,7 +14,6 @@ const progressbarInterceptor = function progressbarInterceptor($q, $cacheFactory
         },
 
         'response': function(response) {
-            //TODO: check this situation
             if (!response || !response.config) {
                 $log.error('Broken interceptor detected: Config object not supplied in response:\n https://github.com/chieffancypants/angular-loading-bar/pull/50');
                 return response;
