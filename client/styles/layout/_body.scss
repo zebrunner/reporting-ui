@@ -309,16 +309,14 @@ tr.result:hover .expand-button {
 
     // when it's normal nav
     @media (min-width: $screen-sm) {
-        .page-message,
-        .page-err {
+        .page-message {
             margin-right: 220px;
         }
     }
     // when it's collapsed nav
     &.nav-collapsed-min {
         @media (min-width: $screen-sm) {
-            .page-message,
-            .page-err {
+            .page-message {
                 margin-right: 60px;
             }
         }
@@ -326,8 +324,7 @@ tr.result:hover .expand-button {
     // when it's horizontal nav
     .nav-horizontal + .content-container {
         @media (min-width: $screen-sm) {
-            .page-message,
-            .page-err {
+            .page-message {
                 margin-right: 0;
             }
         }
@@ -365,7 +362,13 @@ tr.result:hover .expand-button {
         margin-left: 0;
         margin-right: 0;
     }
-
+    &.body-err {
+        > .main-container {
+            .content-container {
+                padding: 0;
+            }
+        }
+    }
 
 }
 
