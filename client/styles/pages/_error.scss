@@ -157,6 +157,19 @@
                 }
             }
         }
+        @media  (max-width: 570px) {
+            &__wrapper {
+                &._circles {
+                    top: -150px;
+                    .err-entity {
+                        &__inner {
+                            width: 300px;
+                            height: 300px;  
+                        }
+                    }
+                }
+            }
+        }
         @media  (max-width: 638px) and (min-height: 550px){
             justify-content: center;
         }
