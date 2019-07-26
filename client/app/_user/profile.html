@@ -13,7 +13,7 @@
     <div class="page page-profile">
         <div class="profile-header" layout="row">
             <div class="profile-img">
-                <profile-photo ng-model="$ctrl.currentUser.photoURL">
+                <profile-photo ng-model="$ctrl.currentUser.photoURL" size="48">
                     <div class="profile-img-content">
                         <i class="material-icons" ng-click="$ctrl.showUploadImageDialog($event)">add_a_photo</i>
                     </div>
@@ -28,6 +28,26 @@
                 </md-input-container>
             </div>
             
+        </div>
+        <div layout="row" class="profile__form-wrapper">
+            <div class="profile__form-title">Access token</div>
+            <form class="form-validation profile__form" name="access_token_form" ng-submit="$ctrl.generateAccessToken()">
+                <div class="profile__form-row _access" layout="row" layout-align="center center">
+                    <md-input-container class="_gray-bg">
+                        <label>Token</label>
+                        <input id="userAccessToken" type="text" ng-model="$ctrl.accessToken" name="accessToken"/>
+                    </md-input-container>
+                    <md-button id="generateToken" ng-if="!$ctrl.accessToken" type="submit" class="md-icon-button _invert pull-right"><md-icon class="material-icons _renew" role="img" aria-label="autorenew">autorenew</md-icon></md-button>
+                    <md-button id="copyToken" ng-if="$ctrl.accessToken" ng-click="$ctrl.copyAccessToken()" class="md-icon-button _invert pull-right"><md-icon class="material-icons" role="img" aria-label="autorenew">file_copy</md-icon></md-button>
+                </div>
+                <div class="profile__form-row _access" layout="row" layout-align="center center">
+                    <md-input-container class="_gray-bg">
+                        <input id="serviceUrl" type="text" ng-model="$ctrl.serviceUrl" name="serviceUrl" disabled/>
+                        <label>Service URL</label>
+                    </md-input-container>
+                    <md-button data-ng-click="$ctrl.copyServiceUrl()" class="md-icon-button _invert pull-right"><md-icon class="material-icons" role="img" aria-label="autorenew">file_copy</md-icon></md-button>
+                </div>
+            </form>
         </div>
         <div layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Personal data</div>
@@ -159,20 +179,6 @@
                 <md-button id="changePassword" type="submit"
                             class="md-raised btn-w-md md-primary pull-right"
                             ng-disabled="password_form.$invalid">Change</md-button>
-            </form>
-        </div>
-    
-        <div layout="row" class="profile__form-wrapper">
-            <div class="profile__form-title">Access token</div>
-            <form class="form-validation profile__form" name="access_token_form" ng-submit="$ctrl.generateAccessToken()">
-                <div class="profile__form-row">
-                    <md-input-container class="_gray-bg">
-                        <label>Token</label>
-                        <input id="userAccessToken" type="text" ng-model="$ctrl.accessToken" name="accessToken"/>
-                    </md-input-container>
-                </div>
-                <md-button id="generateToken" type="submit" class="md-raised btn-w-md md-primary pull-right">Generate</md-button>
-                <md-button id="copyToken" data-ng-if="$ctrl.accessToken" data-ng-click="$ctrl.copyAccessToken()" class="md-raised btn-w-md md-info pull-right">Copy</md-button>
             </form>
         </div>
     </div>

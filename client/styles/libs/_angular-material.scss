@@ -963,16 +963,39 @@ md-radio-button {
             color: rgba($dark-new, .5);
             vertical-align: middle;
         }
+        &._invert {
+            width: 36px;
+            height: 36px;
+            min-height: 36px;
+            max-height: 36px;
+            max-width: 36px;
+            min-width: 36px;
+            background-color: rgba($dark-new, .5);
+            i.material-icons, md-icon {
+                color: #fff;
+                &._renew {
+                    transform: rotate(90deg) scale(1, -1);
+                }
+            }
+            &:not([disabled]):hover {
+                background-color: rgba($dark-new, .6);
+                i.material-icons, md-icon {
+                    color: #fff;
+                }
+            }
+        }
         &[disabled], &[disabled]:hover {
             background: transparent;
             i.material-icons, md-icon {
                 color: rgba($dark-new, .25);
             }
         }
-        &:not([disabled]):hover {
-            background-color: rgba($dark-new, 0.1);
-            i.material-icons, md-icon {
-                color: rgba($dark-new, 0.9);
+        @media screen and (min-width: $screen-xs + 1) {
+            &:not([disabled]):hover {
+                background-color: rgba($dark-new, 0.1);
+                i.material-icons, md-icon {
+                    color: rgba($dark-new, 0.9);
+                }
             }
         }
         &._no-hover-bg {
