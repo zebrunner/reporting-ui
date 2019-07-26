@@ -45,7 +45,7 @@
                         <input id="serviceUrl" type="text" ng-model="$ctrl.serviceUrl" name="serviceUrl" disabled/>
                         <label>Service URL</label>
                     </md-input-container>
-                    <md-button data-ng-click="$ctrl.copyServiceUrl()" class="md-icon-button _invert pull-right"><md-icon class="material-icons" role="img" aria-label="autorenew">file_copy</md-icon></md-button>
+                    <md-button data-ng-click="$ctrl.copyServiceUrl()" ng-disabled="!$ctrl.serviceUrl" class="md-icon-button _invert pull-right"><md-icon class="material-icons" role="img" aria-label="autorenew">file_copy</md-icon></md-button>
                 </div>
             </form>
         </div>
