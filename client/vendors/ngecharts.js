@@ -4,7 +4,7 @@
  */
 
 (function () {
-    'use strict';
+    //'use strict';
 
     var app = angular.module('ngecharts', [])
     app.directive('echarts', ['$window', '$filter', function ($window, $filter) {
@@ -35,61 +35,30 @@
                 var opts = angular.copy(options);
                 if (!opts) return;
 
-
-                             // If there is height static value in html element
-                var height = ele[0].style.height ? ele[0].style.height :
-                    // else if there is height static value in options.height (options.height.value)
-                    opts.height && opts.height.value && opts.height.value.length ? opts.height.value :
-                    // else if there is each data element height static value in options.height (options.height.dataItemValue)
-                    opts.height && opts.height.dataItemValue && opts.height.dataItemValue > 0 && scope.dataset && ! opts.dataset ? scope.dataset.length * opts.height.dataItemValue + 'px' :
-                    // else use default value
-                    DEFAULT_HEIGHT;
-                ele[0].style.height = height;
+                ele[0].style.height = recognizeHeight();
                 chart = echarts.init(ele[0], 'macarons');
 
+                const isJson = opts.isJson();
+                if (!isJson) {
+
+                    eval(opts);
+                    opts = chart.getOption();
+                }
+
+                if(isJson) {
+                    opts = JSON.parse(opts);
+                }
+
                 if(scope.dataset && ! opts.dataset) {
-
-                    if(! opts.data || opts.data === 'outer') {
-                        opts.dataset = {};
-                        opts.dataset.source = scope.dataset;
-                    } else if(opts.data && opts.data === 'inner' && opts.series && opts.series.length) {
-                        scope.dataset.forEach(function (dataItem, index, array) {
-                            if(opts.series.length > index) {
-                                opts.series[index].data = [dataItem];
-                            }
-                        });
-                    }
-
-                    if(opts.dimensions && opts.dimensions.length) {
-                        opts.dataset.dimensions = opts.dimensions;
-                        delete opts.dimensions;
-                    }
+                    setData(opts);
                 }
 
                 if(! scope.withLegend) {
-                    opts.legend = {
-                        show: false
-                    };
+                    hideLegend(opts);
                 }
 
-                // axisFormatterApply(opts.xAxis);
-                // axisFormatterApply(opts.yAxis);
-                // tooltipFormatterApply(opts.tooltip);
-
-                // hide tooltip and legend for beauty view a miniature
                 if(scope.forceWatch) {
-                    opts.tooltip = opts.tooltip || {};
-                    opts.tooltip.show = false;
-
-                    opts.legend = opts.legend || {};
-                    opts.legend.show = false;
-
-                    opts.grid = opts.grid || {};
-                    opts.grid.top = 0;
-                    opts.grid.bottom = 0;
-                    opts.grid.right = 0;
-                    opts.grid.left = 0;
-
+                    optimizeForMiniature(opts);
                 }
 
                 chart.setOption(opts);
@@ -131,45 +100,57 @@
                 });
             };
 
-            // function axisFormatterApply(axis) {
-            //     if(axis && axis.axisLabel && axis.axisLabel.formatter) {
-            //         axis.axisLabel.formatter = applyFormatter(axis.axisLabel.formatter);
-            //     }
-            // };
-            //
-            // function tooltipFormatterApply(tooltip) {
-            //     if(tooltip && tooltip.formatter && tooltip.formatter.length) {
-            //         tooltip.formatter = applyFormatter(tooltip.formatter);
-            //     }
-            // };
-            //
-            // function applyFormatter(formatter) {
-            //     var asString = JSON.stringify(formatter);
-            //     var placeholders = getPlaceholders(asString);
-            //     var result = formatter;
-            //     if(placeholders && placeholders.length === 1) {
-            //         var placeholder = placeholders[0];
-            //         if(placeholder.indexOf('\"$filter') === 0) {
-            //             var filter = placeholder.split('|')[1].trim();
-            //             var filterSlices = filter.split(':');
-            //             var filterType = filterSlices[0].trim();
-            //             var filterValue = filterSlices[1].trim();
-            //             result = function(value, index) {
-            //                 return $filter(filterType)(value, filterValue);
-            //             }
-            //         } else if(placeholder.indexOf('\"$function') === 0) {
-            //             var funcStr = placeholder.split('$function')[1];
-            //             result = new Function('params', 'ticket', 'callback', funcStr);
-            //         }
-            //     }
-            //     return result;
-            // };
+            function recognizeHeight(opts) {
+                // If there is height static value in html element
+                return ele[0].style.height ? ele[0].style.height :
+                    // else if there is height static value in options.height (options.height.value)
+                    /*opts.height && opts.height.value && opts.height.value.length ? opts.height.value :
+                        // else if there is each data element height static value in options.height (options.height.dataItemValue)
+                        opts.height && opts.height.dataItemValue && opts.height.dataItemValue > 0 && scope.dataset && ! opts.dataset ? scope.dataset.length * opts.height.dataItemValue + 'px' :
+                            // else use default value*/
+                            DEFAULT_HEIGHT;
+            };
 
-            // function getPlaceholders(str) {
-            //     return str.match(/(?:^"\$)(.+?)(?=\$"$)/g);
-            // };
+            function setData(opts) {
+                if(! opts.data || opts.data === 'outer') {
+                    opts.dataset = {};
+                    opts.dataset.source = scope.dataset;
+                } else if(opts.data && opts.data === 'inner' && opts.series && opts.series.length) {
+                    scope.dataset.forEach(function (dataItem, index, array) {
+                        if(opts.series.length > index) {
+                            opts.series[index].data = [dataItem];
+                        }
+                    });
+                }
+
+                if(opts.dimensions && opts.dimensions.length) {
+                    opts.dataset.dimensions = opts.dimensions;
+                    delete opts.dimensions;
+                }
+            };
+
+            function hideLegend(opts) {
+                opts.legend = {
+                    show: false
+                };
+            };
+
+            // hide tooltip and legend for beauty view a miniature
+            function optimizeForMiniature(opts) {
+                opts.tooltip = opts.tooltip || {};
+                opts.tooltip.show = false;
+
+                opts.legend = opts.legend || {};
+                opts.legend.show = false;
+
+                opts.grid = opts.grid || {};
+                opts.grid.top = 0;
+                opts.grid.bottom = 0;
+                opts.grid.right = 0;
+                opts.grid.left = 0;
+            };
+
         };
     };
 
 })(); 
-

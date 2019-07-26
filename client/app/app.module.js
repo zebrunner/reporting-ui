@@ -110,6 +110,15 @@ const ngModule = angular.module('app', [
         }
         return true;
     };
+    String.prototype.isJson = function() {
+        var json = this;
+        try {
+            JSON.parse(json);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    };
     String.prototype.toJson = function() {
         //var jsonText = this.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
         var jsonText = this.replace(/\'/g, "\"");
