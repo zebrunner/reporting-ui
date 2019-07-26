@@ -995,7 +995,7 @@ const ngModule = angular.module('app', [
 
                 messageService.error(fullMessage);
                 //If user isAuthorized but we can't get profile data and therefore cn't redirect to dashboard, lets logout
-                AuthIntercepter.loginCancelled(payload);
+                AuthIntercepter.loginCancelled();
 
                 return err;
             });
@@ -1013,7 +1013,7 @@ const ngModule = angular.module('app', [
             if (!hasValidToken) {
                 const location = window.location.href;
 
-                redirectToSignin({ location });
+                return trans.router.stateService.target('signin', { location });
             }
 
             //Some controls need user profile on  initialization, so we need to load it if not loaded yet
