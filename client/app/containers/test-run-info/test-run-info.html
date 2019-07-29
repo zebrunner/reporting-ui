@@ -89,23 +89,21 @@
                                                 <table data-table-loupe="currentLog.id" data-table-loupe-trigger="videoMode.mode == 'PLAYING'"
                                                     class="table table-striped no-margin testrun-info__tab-table">
                                                     <thead>
-                                                        <tr>
-                                                            <th>
-                                                                Visuals
-                                                                <!-- <md-button id="close" class="md-icon-button table-history_download-zip" ng-click="downloadAll();">
-                                                                <md-icon aria-label="Download zip">archive</md-icon>
-                                                                <md-tooltip md-direction="bottom">Download screenshots as archive</md-tooltip>
-                                                            </md-button> -->
-                                                            </th>
-                                                            <th>Start</th>
-                                                            <th>Action</th>
-                                                            <th></th>
+                                                        <tr class="testrun-info__tab-table-row">
+                                                            <th class="testrun-info__tab-table-col _visuals">Visuals</th>
+                                                            <th class="testrun-info__tab-table-col _start">Start</th>
+                                                            <th class="testrun-info__tab-table-col _status">Status</th>
+                                                            <th class="testrun-info__tab-table-col _action">Action</th>
+                                                            <th  class="testrun-info__tab-table-col _menu"></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="logs">
-                                                        <tr ng-dblclick="getVideoState(log);" ng-attr-id="log-{{ $index }}"
-                                                            ng-if="logs.length" ng-repeat="log in logs">
-                                                            <td class="testrun-info__tab-table-img-wrapper">
+                                                        <tr ng-dblclick="getVideoState(log);"
+                                                            class="testrun-info__tab-table-row"
+                                                            ng-attr-id="log-{{ $index }}"
+                                                            ng-if="logs.length"
+                                                            ng-repeat="log in logs">
+                                                            <td class="testrun-info__tab-table-col _visuals testrun-info__tab-table-img-wrapper">
                                                                 <span ng-show="log.driver" style="border-radius: 8px"
                                                                     class="label label-default">Driver {{
                                                                     log.driver.index + 1 }}</span>
@@ -116,16 +114,19 @@
                                                                     <i ng-show="log.isImageExists === false;" class="material-icons">insert_photo</i>
                                                                 </div>
                                                             </td>
-                                                            <td ng-click="selectLogRow($event, $index);">{{
-                                                                log.timestamp | date: 'HH:mm:ss'}}</td>
-                                                            <td ng-click="selectLogRow($event, $index);">
-                                                                <show-more class="log_message" name="logMessage"
-                                                                    element-id="log.timestamp" text-inline="{{'[' + log.threadName + '] [' + log.level + '] ' + log.message}}"
-                                                                    limit="255"></show-more>
+                                                            <td class="testrun-info__tab-table-col _start" ng-click="selectLogRow($event, $index);">{{log.timestamp | date: 'HH:mm:ss'}}</td>
+                                                            <td class="testrun-info__tab-table-col _status" ng-click="selectLogRow($event, $index);">
+                                                                <span class="testrun-info__status-icon {{log.level ? '_' + (log.level | lowercase) : ''}}">{{log.level}}<md-tooltip md-direction="right">{{log.threadName}}</md-tooltip></span>
                                                             </td>
-                                                            <td ng-click="selectLogRow($event, $index);" class="settings-cell"
-                                                                style="padding: 0 !important;">
-                                                                <md-menu ng-if="selectedLogRow == $index" class="pull-right">
+                                                            <td class="testrun-info__tab-table-col _action" ng-click="selectLogRow($event, $index);" ng-attr-id="log.timestamp">
+                                                                <div ng-if="log.showMore" class="log_message" name="logFullMessage">
+                                                                    <div class="full" ng-bind-html="$ctrl.getFullLogMessage(log)"></div>
+                                                                    <div><a href="#" ng-click="$ctrl.switchMoreLess($event, log)">Show less</a></div>
+                                                                </div>
+                                                                <div class="log_message" name="logMessage" ng-if="!log.showMore">{{log.message | cut:true:255:' ...'}} <a href="#" ng-if="log.message.length > 255" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
+                                                            </td>
+                                                            <td ng-click="selectLogRow($event, $index);" class="testrun-info__tab-table-col _menu settings-cell">
+                                                                <md-menu ng-if="selectedLogRow == $index">
                                                                     <md-button name="logsSetting" aria-label="Logs settings"
                                                                         class="md-icon-button" data-ng-click="$mdMenu.open($event);">
                                                                         <md-icon class="material-icons">more_vert</md-icon>

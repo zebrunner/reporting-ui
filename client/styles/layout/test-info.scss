@@ -105,6 +105,36 @@
         }
     }
 
+    &__status {
+        &-icon {
+            display: inline-block;
+            min-width: 44px;
+            border-radius: 2px;
+            height: 16px;
+            text-align: center;
+            text-transform: uppercase;
+
+            &._debug {
+                background-color: $green-new;
+                color: #fff;
+            }
+
+            &._warn {
+                background-color: $yellow-new;
+                color: #fff;
+            }
+
+            &._error {
+                background-color: $red-new;
+                color: #fff;
+            }
+
+            &._info {
+                background-color: rgba($dark-new, 0.07);
+            }
+        }
+    }
+
     &__tab {
         color: $medium-gray;
         font-size: 14.5px;
@@ -114,48 +144,51 @@
             color: $coal !important;
         }
 
-        &-table-wrapper {
-            margin-bottom: 0;
-            height: 100%;
-            overflow: auto;
-            table {
-                overflow: unset;
-                height: auto;
-                
-                tbody {
-                    display: block;
-                    overflow-y: auto;
+        &-table {
+            overflow: unset;
+            height: auto;
+            width: 100%;
+            table-layout: fixed;
+
+            &-wrapper {
+                margin-bottom: 0;
+                height: 100%;
+                overflow: auto;
+            }
+
+            &-col {
+                font-size: 12px;
+                line-height: 16px;
+                word-wrap: break-word;
+
+                &._start,
+                &._visuals {
+                    width: 80px;
+                    text-align: center;
                 }
+                &._status {
+                    width: 70px;
+                    text-align: center;
+                }
+                &._action {
+                    width: auto;
 
-                tr {
-                    display: table;
-                    width: 100%;
-                    table-layout: fixed;
-                    min-height: 32px;
-
-                    td, th {
-                        vertical-align: middle !important;
-                        font-size: 12px;
-                        word-wrap: break-word;
-
-                        &:nth-child(1),
-                        &:nth-child(2) {
-                            width: 80px;
-                            text-align: center;
-                        }
-
-                        .material-icons {
-                            color: $gray-light;
-                            font-size: 18px !important;
-
-                            &:hover {
-                                cursor: pointer;
-                            }
-                        }
+                    a {
+                        white-space: nowrap;
                     }
                 }
+                &._menu {
+                    width: 40px;
+                    text-align: center;
+                    padding: 6px !important;
+                }
+            }
+
+            .md-button.md-icon-button {
+                margin: auto;
             }
         }
+
         &-additional {
             position: relative;
             bottom: 0;
@@ -262,7 +295,7 @@
                     height: auto;
                     overflow: auto;
                     td, th {
-                        padding: 4px 15px !important;
+                        padding: 10px !important;
                     }
                 }                
             }
@@ -292,6 +325,54 @@
             }
             &-additional {
                 display: none;
+            }
+        }
+    }
+
+    @media screen and (max-width: 599px) {
+        &__tab {
+            &-table {
+                display: block;
+
+                thead,
+                tbody {
+                    display: block;
+                }
+
+                &-row {
+                    display: flex;
+                    flex-wrap: wrap;
+                    width: 100%;
+                }
+    
+                &-col {
+                    display: block;
+    
+                    &._start {
+                        flex: 0 0 80px;
+                    }
+                    &._visuals {
+                        flex: 1 1 80px;
+                        order: 2;
+                    }
+                    &._status {
+                        flex: 0 0 70px;
+                        order: 1;
+                    }
+                    &._action {
+                        flex: 1 1 100%;
+                        order: 4;
+                        max-width: 100%;
+
+                        thead & {
+                            display: none;
+                        }
+                    }
+                    &._menu {
+                        flex: 0 0 40px;
+                        order: 3;
+                    }
+                }
             }
         }
     }
