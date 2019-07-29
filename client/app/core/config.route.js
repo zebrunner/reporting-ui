@@ -147,6 +147,7 @@
                     url: '/signin',
                     component: 'signinComponent',
                     params: {
+                        location: null,
                         referrer: null,
                         referrerParams: null
                     },

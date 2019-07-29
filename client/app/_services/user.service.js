@@ -9,6 +9,7 @@
         'ngInject';
 
         let _currentUser = null;
+        let _userFullDataFetchPromise = null;
         const service = {
             getUserProfile,
             fetchFullUserData,
@@ -98,13 +99,18 @@
             return $httpMock.put(API_URL + '/api/users/preferences/default').then(UtilService.handleSuccess, UtilService.handleError('Unable to reset user preferences to default'));
         }
 
-        function initCurrentUser() {
-            if (service.currentUser) {
+        function initCurrentUser(force) {
+            if (service.currentUser && !force) {
                 return $q.resolve(service.currentUser);
             }
 
-            return fetchFullUserData()
+            if (_userFullDataFetchPromise && !force) {
+                return _userFullDataFetchPromise;
+            }
+
+            _userFullDataFetchPromise = fetchFullUserData()
                 .then(function(rs) {
+                    _userFullDataFetchPromise = null;
                     if (rs.success) {
                         service.currentUser = rs.data['user'];
                         service.currentUser.isAdmin = service.currentUser.roles.indexOf('ROLE_ADMIN') >= 0;
@@ -132,6 +138,8 @@
                         return $q.reject(rs);
                     }
                 });
+
+            return _userFullDataFetchPromise;
         }
 
         function clearCurrentUser() {

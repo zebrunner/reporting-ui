@@ -4,7 +4,7 @@ import uploadImageModalController from '../shared/modals/upload-image-modal/uplo
 import uploadImageModalTemplate from '../shared/modals/upload-image-modal/upload-image-modal.html';
 
 const UserProfileController = function UserProfileController($mdDialog, UserService, DashboardService, UtilService,
-                                                             AuthService, appConfig, $q, $state, messageService, $location) {
+                                                             AuthService, appConfig, $q, $state, messageService, $rootScope) {
     'ngInject';
 
     const vm = {
@@ -16,7 +16,6 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         get dashboards() {return DashboardService.dashboards;},
         pefrDashboardId: null,
         accessToken: null,
-        serviceUrl: $location.absUrl() || null,
         widgetRefreshIntervals: [0, 30000, 60000, 120000, 300000],
 
         copyAccessToken,
@@ -36,6 +35,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         copyServiceUrl,
 
         get currentUser() { return UserService.currentUser; },
+        get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; }
     };
 
     function goToState(state) {

@@ -30,9 +30,10 @@
             if (needStore(toState)) {
                 state = toState.name;
                 storage[state] = {};
-            } else if (needRestore(toState)) {//TODO: what missed here?
-
             }
+            //  else if (needRestore(toState)) {//TODO: what is missed here?
+
+            // }
         });
 
         function needStore(toState) {
@@ -84,5 +85,3 @@
         }
     }
 })();
-
-// return $httpMock.post(API_URL + '/api/projects').then(UtilService.handleSuccess, UtilService.handleError('Unable to get projects list'));

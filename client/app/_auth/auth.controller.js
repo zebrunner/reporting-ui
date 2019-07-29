@@ -102,6 +102,7 @@ const authController = function authController($scope, $rootScope, $location, $s
                         auth: rs.data
                     };
 
+                    $state.params.location && (payload.location = $state.params.location);
                     $state.params.referrer && (payload.referrer = $state.params.referrer);
                     $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
                     $rootScope.$broadcast('event:auth-loginSuccess', payload);

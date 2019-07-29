@@ -983,6 +983,14 @@ md-radio-button {
                     color: #fff;
                 }
             }
+            &[disabled] {
+                &, &:hover {
+                    background-color: rgba($dark-new, 0.07);
+                    i.material-icons, md-icon {
+                        color: rgba($dark-new, 0.35);
+                    }
+                }
+            }
         }
         &[disabled], &[disabled]:hover {
             background: transparent;
@@ -990,10 +998,12 @@ md-radio-button {
                 color: rgba($dark-new, .25);
             }
         }
-        &:not([disabled]):hover {
-            background-color: rgba($dark-new, 0.1);
-            i.material-icons, md-icon {
-                color: rgba($dark-new, 0.9);
+        @media screen and (min-width: $screen-xs + 1) {
+            &:not([disabled]):hover {
+                background-color: rgba($dark-new, 0.1);
+                i.material-icons, md-icon {
+                    color: rgba($dark-new, 0.9);
+                }
             }
         }
         &._no-hover-bg {

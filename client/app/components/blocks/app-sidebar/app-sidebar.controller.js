@@ -11,8 +11,8 @@ import uploadImageModalTemplate
 import 'jquery-ui/widgets/sortable';
 import 'angular-ui-sortable'
 
-const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDialog, $state, ViewService, ConfigService,
-                                       ProjectService, projectsService, UtilService, UserService, DashboardService,
+const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state, ViewService, ConfigService,
+                                       projectsService, UserService, DashboardService, messageService,
                                        AuthService, SettingsService, $timeout, windowWidthService, mainMenuService) {
     'ngInject';
 
@@ -73,7 +73,7 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
         DashboardService.UpdateDashboardOrders(positions).then(function (rs) {
             if(rs.success) {
             } else {
-                alertify.error(rs.message);
+                messageService.error(rs.message);
             }
         });
     };
@@ -194,11 +194,11 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
                         return SettingsService.editSetting($rootScope.companyLogo).then(function (prs) {
                             if (prs.success) {
                                 $rootScope.companyLogo.value += '?' + (new Date()).getTime();
-                                alertify.success('Company logo was successfully changed');
+                                messageService.success('Company logo was successfully changed');
 
                                 return true;
                             } else {
-                                alertify.error(prs.message);
+                                messageService.error(prs.message);
 
                                 return false;
                             }
@@ -248,7 +248,7 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
                     });
                 }
             } else {
-                alertify.error('Unable to load projects');
+                messageService.error('Unable to load projects');
             }
         });
     }
@@ -292,9 +292,9 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             ViewService.createView(view)
                 .then(function(rs) {
                     if (rs.success) {
-                        alertify.success("View created successfully");
+                        messageService.success("View created successfully");
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
 
@@ -305,9 +305,9 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             ViewService.updateView(view)
                 .then(function(rs) {
                     if (rs.success) {
-                        alertify.success("View updated successfully");
+                        messageService.success("View updated successfully");
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             $scope.hide();
@@ -317,9 +317,9 @@ const AppSidebarController = function ($scope, $rootScope, $cookies, $q, $mdDial
             ViewService.deleteView(view.id)
                 .then(function(rs) {
                     if (rs.success) {
-                        alertify.success("View deleted successfully");
+                        messageService.success("View deleted successfully");
                     } else {
-                        alertify.error(rs.message);
+                        messageService.error(rs.message);
                     }
                 });
             $scope.hide();
