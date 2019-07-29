@@ -381,21 +381,21 @@
                 function abort() {
                     if (vm.isToolConnected('JENKINS')) {
                         TestRunService.abortCIJob(vm.testRun.id, vm.testRun.ciRunId).then(function (rs) {
-                            if (rs.success) {
-                                const abortCause = {};
-
-                                abortCause.comment = 'Aborted by ' + local.currentUser.username;
-                                TestRunService.abortTestRun(vm.testRun.id, vm.testRun.ciRunId, abortCause).then(function(rs) {
-                                    if (rs.success){
-                                        vm.testRun.status = 'ABORTED';
-                                        messageService.success('Testrun ' + vm.testRun.testSuite.name + ' is aborted');
-                                    } else {
-                                        messageService.error(rs.message);
-                                    }
-                                });
-                            } else {
+                            if(!rs.success){
                                 messageService.error(rs.message);
                             }
+                            const abortCause = {};
+
+                            abortCause.comment = 'Aborted by ' + local.currentUser.username;
+                            TestRunService.abortTestRun(vm.testRun.id, vm.testRun.ciRunId, abortCause).then(function(rs) {
+                                if (rs.success){
+                                    vm.testRun.status = 'ABORTED';
+                                    messageService.success('Testrun ' + vm.testRun.testSuite.name + ' is aborted');
+                                } else {
+                                    messageService.error(rs.message);
+                                }
+                            });
+
                         });
                     } else {
                         messageService.error('Unable connect to jenkins');
