@@ -15,7 +15,6 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
     const vm = {
         testRun: null,
         wsSubscription: null,
-        getFormattedLogMessage,
         switchMoreLess,
         getFullLogMessage,
     };
