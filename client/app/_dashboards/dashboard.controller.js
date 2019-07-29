@@ -139,7 +139,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             if (rs.success) {
                 var data = rs.data;
                 if(!refresh){
-                    widget.model = widget.widgetTemplate ? jsonSafeParse(widget.widgetTemplate.chartConfig) : jsonSafeParse(widget.model);
+                    widget.model = widget.widgetTemplate ? widget.widgetTemplate.chartConfig : widget.model;
                 }
                 widget.data = {};
                 widget.data.dataset = data;

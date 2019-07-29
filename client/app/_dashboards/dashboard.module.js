@@ -16,6 +16,7 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/grid';
 import 'echarts/lib/component/calendar';
+import 'echarts/lib/component/dataZoom';
 
 window.echarts = echarts;
 
