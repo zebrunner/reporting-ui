@@ -268,6 +268,9 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
     function reloadVideoOnError(videoElement) {
         var sourceElement = videoElement.getElementsByTagName('source')[0];
         var attempt = new Date().getTime() - $scope.test.finishTime > 600000 ? 1 : 5;
+
+        sourceElement.addEventListener('error', function(e) {
+            if (attempt > 0) {
                 loadVideo(videoElement, 5000);
             }
             attempt--;
