@@ -40,35 +40,30 @@
 
                 const isJson = opts.isJson();
                 if (!isJson) {
-
                     eval(opts);
                     opts = chart.getOption();
-                }
-
-                if(isJson) {
+                } else {
                     opts = JSON.parse(opts);
                 }
 
-                if(scope.dataset && ! opts.dataset) {
+                if (scope.dataset && ! opts.dataset) {
                     setData(opts);
                 }
 
-                if(! scope.withLegend) {
+                if (!scope.withLegend) {
                     hideLegend(opts);
                 }
 
-                if(scope.forceWatch) {
+                if (scope.forceWatch) {
                     optimizeForMiniature(opts);
                 }
 
                 chart.setOption(opts);
                 scope.$emit('create', chart);
 
-                angular.element($window).bind('resize', function(){
-                    chart.resize();
-                });
+                angular.element($window).on('resize', onResize);
 
-                if(scope.config) {
+                if (scope.config) {
                     angular.extend(scope.config, {
                         clear: function () {
                             if(chart && chart.clear) {
@@ -78,9 +73,9 @@
                     });
                 }
 
-                if(scope.chartActions) {
+                if (scope.chartActions) {
                     scope.$watchCollection('chartActions', function (actions, oldVal) {
-                        if (! scope.chartActions || ! scope.chartActions.length) return;
+                        if (!scope.chartActions || ! scope.chartActions.length) return;
                         if (chart && chart.dispatchAction) {
                             applyActions(scope.chartActions);
                         }
@@ -112,18 +107,18 @@
             };
 
             function setData(opts) {
-                if(! opts.data || opts.data === 'outer') {
+                if (!opts.data || opts.data === 'outer') {
                     opts.dataset = {};
                     opts.dataset.source = scope.dataset;
-                } else if(opts.data && opts.data === 'inner' && opts.series && opts.series.length) {
+                } else if (opts.data && opts.data === 'inner' && opts.series && opts.series.length) {
                     scope.dataset.forEach(function (dataItem, index, array) {
-                        if(opts.series.length > index) {
+                        if (opts.series.length > index) {
                             opts.series[index].data = [dataItem];
                         }
                     });
                 }
 
-                if(opts.dimensions && opts.dimensions.length) {
+                if (opts.dimensions && opts.dimensions.length) {
                     opts.dataset.dimensions = opts.dimensions;
                     delete opts.dimensions;
                 }
@@ -150,7 +145,15 @@
                 opts.grid.left = 0;
             };
 
+            function onResize() {
+                chart.resize();
+            };
+
+            scope.$on('$destroy', function() {
+                angular.element($window).off('resize', onResize);
+            });
+
         };
     };
 
-})(); 
+})();
