@@ -49,6 +49,18 @@
                     isToolConnected: toolsService.isToolConnected,
 
                     get currentOffset() { return $rootScope.currentOffset; },
+                    get formattedModel() {
+                        let jsonModel = JSON.parse(vm.testRun.model);
+                        let formattedModel = '';
+                        
+                        for (let key in jsonModel) {
+                            if (jsonModel[key]) {
+                                formattedModel += key + ':' + jsonModel[key] + ' / ';
+                            }
+                        }
+
+                        return formattedModel;
+                    }
                 };
 
                 return vm;

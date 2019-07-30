@@ -33,6 +33,7 @@
         }
         &-left {
             width: 40%;
+            flex-grow: 1;
             min-width: 400px;
         }
         &-right {
@@ -425,6 +426,29 @@
         &__title {
             &-wrapper {
                 flex-wrap: wrap;
+            }
+        }
+    }
+
+    /*LAUNCHING TEST*/
+    &._launch & {
+        &__title, &__model {
+            opacity: .5;
+        }
+        &__progressbar {
+            opacity: .5;
+            path {
+                stroke: $dark-new;
+            }
+        }
+        &__wrapper {
+            border-left: none;
+        }
+    }
+    &._launch._mobile & {
+        &__row {
+            &._top {
+                padding-bottom: 0;
             }
         }
     }

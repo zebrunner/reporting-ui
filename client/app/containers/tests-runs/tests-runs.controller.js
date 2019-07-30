@@ -12,6 +12,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     let TENANT;
     const vm = {
         testRuns: [],
+        launchers: [],
         totalResults: 0,
         pageSize: 20,
         currentPage: 1,
@@ -46,17 +47,37 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     return vm;
 
     function init() {
+        vm.launchers = vm.resolvedTestRuns.launchers || [];
         vm.testRuns = vm.resolvedTestRuns.results || [];
         vm.totalResults = vm.resolvedTestRuns.totalResults || 0;
         vm.pageSize = vm.resolvedTestRuns.pageSize;
         vm.currentPage = vm.resolvedTestRuns.page;
 
+        setTimersOnDestroyingLaunchers();
 
         TENANT = $rootScope.globals.auth.tenant;
         readStoredParams();
         initWebsocket();
         bindEvents();
         vm.activeTestRunId && highlightTestRun();
+    }
+
+    function setTimersOnDestroyingLaunchers() {
+        vm.launchers.forEach((launcher) => {
+            setTimerOnDestroingLauncher(launcher);
+        })
+    }
+
+    function setTimerOnDestroingLauncher(launcher) {
+        let dateNow = new Date();
+        let timeDiff = launcher.shouldBeDestroyedAt - dateNow.getTime();
+
+        if (timeDiff > 0) {
+            launcher.timeout = setTimeout(function() {
+                vm.launchers = testsRunsService.deleteLauncherFromStorebyCiId(launcher.ciRunId);
+                $scope.$apply();
+            }, timeDiff)
+        }
     }
 
     function resetFilter() {
@@ -124,7 +145,8 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
                 vm.totalResults = rs.totalResults;
                 vm.pageSize = rs.pageSize;
                 vm.testRuns = testRuns;
-
+                vm.launchers = rs.launchers;
+                
                 return $q.resolve(vm.testRuns);
             })
             .catch(function(err) {
@@ -448,9 +470,28 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         vm.zafiraWebsocket.connect({withCredentials: false}, function () {
             vm.subscriptions.statistics = subscribeStatisticsTopic();
             vm.subscriptions.testRuns = subscribeTestRunsTopic();
+            vm.subscriptions.launchedTestRuns = subscribeLaunchedTestRuns();
             UtilService.websocketConnected(wsName);
         }, function () {
             UtilService.reconnectWebsocket(wsName, initWebsocket);
+        });
+    }
+
+    function subscribeLaunchedTestRuns() {
+        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.launcherRuns', function (data) {
+            const event = getEventFromMessage(data.body);
+            const launcher = event.launcher;
+
+            launcher.status = 'LAUNCHING';
+            launcher.ciRunId = event.ciRunId;
+            launcher.testSuite = { name: launcher.name };
+            const indexOfLauncher = vm.launchers.findIndex((res) => { res.ciRunId === launcher.ciRunId });
+
+            if (indexOfLauncher === -1) {
+                vm.launchers = testsRunsService.addNewLauncher(launcher);
+                setTimerOnDestroingLauncher(launcher);
+                $scope.$apply();
+            }
         });
     }
 
@@ -460,15 +501,24 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             const testRun = angular.copy(event.testRun);
             const index = getTestRunIndexById(+testRun.id);
 
+            if (vm.launchers) {
+                const indexOfLauncher = vm.launchers.findIndex((launcher) => { return launcher.ciRunId === testRun.ciRunId });
+                if (indexOfLauncher !== -1) {
+                    clearTimeout(vm.launchers[indexOfLauncher].timeout);
+                    vm.launchers = testsRunsService.deleteLauncherFromStorebyCiId(testRun.ciRunId);
+                }
+            }
+            
             if (vm.projects && vm.projects.length && vm.projects.indexOfField('id', testRun.project.id) === -1) { return; }
 
             //add new testRun to the top of the list or update fields if it is already in the list
             if (index === -1) {
                 // do no add new Test run if Search is active
                 if (vm.isSearchActive()) { return; }
-
-                vm.testRuns = testsRunsService.addNewTestRun(testRun);
-                vm.totalResults += 1;
+                if (vm.currentPage === 1) {
+                    vm.testRuns = testsRunsService.addNewTestRun(testRun);
+                    vm.totalResults += 1;
+                }
             } else {
                 const data = {
                     status: testRun.status,
@@ -481,6 +531,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
                 vm.testRuns = testsRunsService.updateTestRun(index, data);
             }
+            getTestRuns();
             $scope.$apply();
         });
     }
