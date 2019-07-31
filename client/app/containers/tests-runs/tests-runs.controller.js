@@ -531,7 +531,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
                 vm.testRuns = testsRunsService.updateTestRun(index, data);
             }
-            getTestRuns();
             $scope.$apply();
         });
     }
