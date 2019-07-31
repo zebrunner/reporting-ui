@@ -1,7 +1,8 @@
 <div class="test-run-card" ng-class="{
             '_single': $ctrl.singleMode,
             '_mobile': $ctrl.isMobile(),
-            '_details': $ctrl.singleWholeInfo
+            '_details': $ctrl.singleWholeInfo,
+            '_launch': $ctrl.testRun.status === 'LAUNCHING'
         }">
     <div ng-attr-id="testRun_{{$ctrl.testRun.id}}"
          ng-if="!$ctrl.isMobile()"
@@ -13,11 +14,11 @@
                     <md-checkbox name="testRunCheckbox"
                                  aria-label="Select"
                                  data-ng-model="$ctrl.testRun.selected"
-                                 data-ng-if="$ctrl.testRun.selected || $ctrl.testRun.status !== 'IN_PROGRESS'"
+                                 data-ng-if="$ctrl.testRun.selected || ($ctrl.testRun.status !== 'IN_PROGRESS' && $ctrl.testRun.status !== 'LAUNCHING')"
                                  data-ng-true-value="true"
                                  data-ng-false-value="false">
                     </md-checkbox>
-                    <div class="__test-run_progressbar" ng-if="!$ctrl.testRun.selected && $ctrl.testRun.status === 'IN_PROGRESS'" data-ng-click="$ctrl.testRun.selected = true">
+                    <div class="test-run-card__progressbar" ng-if="!$ctrl.testRun.selected && ($ctrl.testRun.status === 'IN_PROGRESS' || $ctrl.testRun.status === 'LAUNCHING')" data-ng-click="$ctrl.testRun.selected = true">
                         <md-progress-circular md-diameter="20px"></md-progress-circular>
                         <timer countdown="$ctrl.testRun.countdown" eta="$ctrl.testRun.eta" interval="1000" ng-if="$ctrl.testRun.countdown">
                             <small>{{progressBar}}%</small>
@@ -29,7 +30,7 @@
                 <div class="test-run-card__title-wrapper">
                     <div class="test-run-card__title">
                         {{$ctrl.testRun.testSuite.name}}
-                        <md-tooltip md-direction="right">{{$ctrl.testRun.testSuite.fileName}}</md-tooltip>
+                        <md-tooltip ng-if="$ctrl.testRun.status !== 'LAUNCHING'" md-direction="right">{{$ctrl.testRun.testSuite.fileName}}</md-tooltip>
                     </div>
                     <div class="test-run-card__title-additions">
                         <div data-ng-if="$ctrl.testRun.comments" class="test-run-card__state _comments">
@@ -46,9 +47,10 @@
                     </div>
                 </div>
                 <div class="test-run-card__job">
-                    <div class="test-run-card__job-name">
+                    <div class="test-run-card__job-name" ng-if="$ctrl.testRun.status !== 'LAUNCHING'">
                         <a href="{{$ctrl.testRun.jenkinsURL}}" target="_blank">{{$ctrl.testRun.job.name}}</a>
                     </div>
+                    <div class="test-run-card__model" ng-if="$ctrl.testRun.status === 'LAUNCHING'">{{$ctrl.formattedModel}}</div>
                     <div class="test-run-card__job-file">
                         <div class="test-run-card__app-icon">
                             <md-icon class="material-icons testrun-appversion-icon" data-ng-if="!$ctrl.testRun.appVersionValid && $ctrl.testRun.appVersion">insert_drive_file</md-icon>
@@ -63,9 +65,9 @@
                     </div>
                 </div>
             </div>
-            <div class="test-run-card__clickable" ng-class="{ '_highlighting': $ctrl.testRun.highlighting }" ng-click="$ctrl.goToTestRun()"></div>
+            <div class="test-run-card__clickable" ng-class="{ '_highlighting': $ctrl.testRun.highlighting }" ng-if="$ctrl.testRun.status !== 'LAUNCHING'" ng-click="$ctrl.goToTestRun()"></div>
         </div>
-        <div class="test-run-card__wrapper-right">
+        <div class="test-run-card__wrapper-right" ng-if="$ctrl.testRun.status !== 'LAUNCHING'">
             <div name="testRunEnv" class="test-run-card__cell _env">
                 <span class="label label-default" ng-if="$ctrl.testRun.env">{{$ctrl.testRun.env}}</span>
             </div>
@@ -183,10 +185,10 @@
             <div ng-if="!$ctrl.singleMode" name="testRunStatus" class="test-run-card__cell _selection">
                 <span ng-click="$ctrl.addToSelectedtestRuns()">
                     <md-checkbox name="testRunCheckbox" aria-label="Select" data-ng-model="$ctrl.testRun.selected"
-                                 data-ng-if="$ctrl.testRun.selected || $ctrl.testRun.status !== 'IN_PROGRESS'"
+                                 data-ng-if="$ctrl.testRun.selected || ($ctrl.testRun.status !== 'IN_PROGRESS' && $ctrl.testRun.status !== 'LAUNCHING')"
                                  data-ng-true-value="true" data-ng-false-value="false">
                     </md-checkbox>
-                    <div class="__test-run_progressbar" ng-if="!$ctrl.testRun.selected && $ctrl.testRun.status === 'IN_PROGRESS'" data-ng-click="$ctrl.testRun.selected = true">
+                    <div class="test-run-card__progressbar" ng-if="!$ctrl.testRun.selected && ($ctrl.testRun.status === 'IN_PROGRESS' || $ctrl.testRun.status === 'LAUNCHING')" data-ng-click="$ctrl.testRun.selected = true">
                         <md-progress-circular md-diameter="20px"></md-progress-circular>
                         <timer countdown="$ctrl.testRun.countdown" eta="$ctrl.testRun.eta" interval="1000" ng-if="$ctrl.testRun.countdown">
                             <small>{{progressBar}}%</small>
@@ -202,11 +204,12 @@
                     {{$ctrl.testRun.testSuite.name}}
                     <md-tooltip md-direction="right">{{$ctrl.testRun.testSuite.fileName}}</md-tooltip>
                 </div>
+                <div class="test-run-card__model" ng-if="$ctrl.testRun.status === 'LAUNCHING'">{{$ctrl.formattedModel}}</div>
                 <div class="test-run-card__jenkins">
                     <a href="{{$ctrl.testRun.jenkinsURL}}" target="_blank">{{$ctrl.testRun.job.name}}</a>
                 </div>
             </div>
-            <div class="test-run-card__cell _actions">
+            <div class="test-run-card__cell _actions" ng-if="$ctrl.testRun.status !== 'LAUNCHING'">
                 <md-menu md-offset="0 {{$ctrl.currentOffset}}">
                     <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button test-run-card__menu-btn" ng-click="$ctrl.openMenu($event, $mdMenu)">
                         <md-icon class="material-icons">more_vert</md-icon>
@@ -277,10 +280,10 @@
                     </md-menu-content>
                 </md-menu>
             </div>
-            <div class="test-run-card__clickable" ng-class="{ '_highlighting': $ctrl.testRun.highlighting }" ng-click="$ctrl.goToTestRun()"></div>
+            <div class="test-run-card__clickable" ng-class="{ '_highlighting': $ctrl.testRun.highlighting }" ng-if="$ctrl.testRun.status !== 'LAUNCHING'" ng-click="$ctrl.goToTestRun()"></div>
         </div>
 
-        <div class="test-run-card__row _wrapper _middle">
+        <div class="test-run-card__row _wrapper _middle" ng-if="$ctrl.testRun.status !== 'LAUNCHING'">
             <div class="test-run-card__row _app-file" ng-hide="!$ctrl.singleMode && ! $ctrl.testRun.appVersion">
                 <div class="test-run-card__app-icon">
                     <md-icon class="material-icons testrun-appversion-icon" data-ng-if="!$ctrl.testRun.appVersionValid && $ctrl.testRun.appVersion">insert_drive_file</md-icon>

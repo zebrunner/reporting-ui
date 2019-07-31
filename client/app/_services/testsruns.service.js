@@ -11,6 +11,7 @@
         const searchTypes = ['testSuite', 'executionURL', 'appVersion'];
         let _lastResult = null;
         let _lastParams = null;
+        let _launchers = [];
         let _searchParams = angular.copy(DEFAULT_SC);
 
         return  {
@@ -30,6 +31,9 @@
             addNewTestRun: addNewTestRun,
             updateTestRun: updateTestRun,
             isOnlyAdditionalSearchActive: isOnlyAdditionalSearchActive,
+            deleteLauncherFromStorebyCiId: deleteLauncherFromStorebyCiId,
+            addNewLauncher: addNewLauncher,
+            checkForDestroyingLaunchersByTime: checkForDestroyingLaunchersByTime,
         };
 
         function getSearchTypes() {
@@ -40,6 +44,8 @@
             // save search params
             deleteStoredParams();
             storeParams();
+            readStoredlaunchers();
+            checkForDestroyingLaunchersByTime();
             _lastParams = angular.copy(_searchParams);
 
             return TestRunService.searchTestRuns(_searchParams)
@@ -54,7 +60,11 @@
                             testRun.tests = null;
                         });
                         _lastResult = data;
-
+                        
+                        if (_launchers && _launchers.length) {
+                            filterLaunchers();
+                        }
+                        _lastResult.launchers = _launchers;
                         return $q.resolve(_lastResult);
                     } else {
                         console.error(rs.message);
@@ -62,6 +72,22 @@
                     }
                 });
 
+        }
+
+        function filterLaunchers() {
+            _launchers.filter((launcher) => {
+                return _lastResult.results.findIndex((res) => { return res.ciRunId === launcher.ciRunId })=== -1;
+            })
+            storeLaunchers();
+        }
+
+        function checkForDestroyingLaunchersByTime() {
+            let dateNow = new Date();
+
+            _launchers.filter((launcher) => {
+                return launcher.shouldBeDestroyedAt - dateNow.getTime() > 0;
+            })
+            storeLaunchers();
         }
 
         function getLastSearchParams() {
@@ -148,6 +174,26 @@
             params && (_searchParams = angular.fromJson(params)) && (_lastParams = _searchParams);
         }
 
+        function storeLaunchers() {
+            if (_launchers.length) {
+                sessionStorage.setItem('launchers', angular.toJson(_launchers));
+            } else {
+                sessionStorage.removeItem('launchers');
+            }
+        }
+
+        function readStoredlaunchers() {
+            const launchers = sessionStorage.getItem('launchers');
+            launchers && (_launchers = angular.fromJson(launchers));
+        }
+
+        function deleteLauncherFromStorebyCiId(ciRunId) {
+            _launchers = _launchers.filter((res) => { return res.ciRunId !== ciRunId });
+            storeLaunchers();
+
+            return _launchers;
+        }
+
         function addNewTestRun(testRun) {
             addBrowserVersion(testRun);
             addJob(testRun);
@@ -157,8 +203,21 @@
                 _lastResult.results.splice(-1);
             }
             _lastResult.results = [testRun].concat(_lastResult.results);
-
+            
             return _lastResult.results;
+        }
+
+        function addNewLauncher(testRun) {
+            let dateNow = new Date();
+
+            testRun.tests = null;
+            testRun.startedAt = dateNow.getTime();
+            dateNow.setMinutes( dateNow.getMinutes() + 5 );
+            testRun.shouldBeDestroyedAt = dateNow.getTime();
+            _launchers.push(testRun);
+            storeLaunchers();
+            
+            return _launchers;
         }
 
         function updateTestRun(index, data) {
