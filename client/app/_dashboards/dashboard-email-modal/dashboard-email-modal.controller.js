@@ -52,7 +52,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     };
 
     function sendEmail(locator, email) {
-       email =  email.recipients.toString();
+       email.recipients =  email.recipients.toString();
         return $q(function (resolve, reject) {
             $screenshot.take(locator).then(function (multipart) {
                 DashboardService.SendDashboardByEmail(multipart, email).then(function (rs) {
