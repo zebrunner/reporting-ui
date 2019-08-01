@@ -34,7 +34,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     $scope.emptyContent.text = [emptyContentText];
 
     $scope.isPageLoading = true;
-    
+
     $scope.currentUserId = $location.search().userId;
 
     $scope.ECHART_TYPES = ['echart', 'PIE', 'LINE', 'BAR', 'TABLE', 'OTHER'];
@@ -138,8 +138,11 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         func(params, sqlAdapter).then(function (rs) {
             if (rs.success) {
                 var data = rs.data;
-                if(!refresh){
+                if (!refresh){
                     widget.model = widget.widgetTemplate ? widget.widgetTemplate.chartConfig : widget.model;
+                    if (widget.widgetTemplate.type === 'TABLE') {
+                        widget.model = jsonSafeParse(widget.model);
+                    }
                 }
                 widget.data = {};
                 widget.data.dataset = data;

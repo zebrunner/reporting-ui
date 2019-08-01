@@ -340,8 +340,8 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                             }
                         }
                     }
-                } else {
-                    columns = widget.widgetTemplate.chartConfig.columns;
+                } else if(widget.widgetTemplate.type === 'TABLE') {
+                    columns = JSON.parse(widget.widgetTemplate.chartConfig).columns;
                 }
                 widget.widgetTemplate.model = isTable ? {"columns" : columns} : widget.widgetTemplate.chartConfig;
                 widget.data = {
