@@ -46,16 +46,16 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
                 return;
             }
         }
-        $scope.email.recipients = $scope.email.recipients.toString();
-        sendEmail(EMAIL_TYPES[TYPE].locator).then(function () {
+        sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
             $scope.hide();
         });
     };
 
-    function sendEmail(locator) {
+    function sendEmail(locator, email) {
+       email =  email.recipients.toString();
         return $q(function (resolve, reject) {
             $screenshot.take(locator).then(function (multipart) {
-                DashboardService.SendDashboardByEmail(multipart, $scope.email).then(function (rs) {
+                DashboardService.SendDashboardByEmail(multipart, email).then(function (rs) {
                     if (rs.success) {
                         messageService.success('Email was successfully sent!');
                     }
