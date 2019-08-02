@@ -47,12 +47,12 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     return vm;
 
     function init() {
-        vm.launchers = vm.resolvedTestRuns.launchers || [];
         vm.testRuns = vm.resolvedTestRuns.results || [];
         vm.totalResults = vm.resolvedTestRuns.totalResults || 0;
         vm.pageSize = vm.resolvedTestRuns.pageSize;
         vm.currentPage = vm.resolvedTestRuns.page;
 
+        initLaunchers();
         setTimersOnDestroyingLaunchers();
 
         TENANT = $rootScope.globals.auth.tenant;
@@ -60,6 +60,20 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         initWebsocket();
         bindEvents();
         vm.activeTestRunId && highlightTestRun();
+    }
+
+    function initLaunchers() {
+        const launchers = vm.resolvedTestRuns.launchers || [];
+
+        if (launchers && launchers.length) {
+            vm.launchers = launchers.reduce((filteredLaunchers, launcher) => {
+                if (vm.testRuns.find(testRun => testRun.ciRunId === launcher.ciRunId)) {
+                    filteredLaunchers = testsRunsService.deleteLauncherFromStorebyCiId(launcher.ciRunId);
+                }
+
+                return filteredLaunchers;
+            }, launchers);
+        }
     }
 
     function setTimersOnDestroyingLaunchers() {
