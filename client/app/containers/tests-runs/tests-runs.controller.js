@@ -362,37 +362,32 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     function abort(testRun, resultsCounter) {
         return TestRunService.abortCIJob(testRun.id, testRun.ciRunId)
             .then(function (rs) {
-                if (rs.success) {
-                    const abortCause = {};
-                    const currentUser = UserService.currentUser;
-
-                    abortCause.comment = 'Aborted by ' + currentUser.username;
-
-                    return TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause)
-                        .then(function(rs) {
-                            if (rs.success){
-                                testRun.status = 'ABORTED';
-                                testRun.selected = false;
-                                if (resultsCounter) {
-                                    resultsCounter.success += 1;
-                                } else {
-                                    messageService.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
-                                }
-                            } else {
-                                if (resultsCounter) {
-                                    resultsCounter.fail += 1;
-                                } else {
-                                    messageService.error(rs.message);
-                                }
-                            }
-                        });
-                } else {
-                    if (resultsCounter) {
-                        resultsCounter.fail += 1;
-                    } else {
-                        messageService.error(rs.message);
-                    }
+                if(!rs.success){
+                    messageService.error(rs.message);
                 }
+                const abortCause = {};
+                const currentUser = UserService.currentUser;
+
+                abortCause.comment = 'Aborted by ' + currentUser.username;
+
+                return TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause)
+                    .then(function(rs) {
+                        if (rs.success){
+                            testRun.status = 'ABORTED';
+                            testRun.selected = false;
+                            if (resultsCounter) {
+                                resultsCounter.success += 1;
+                            } else {
+                                messageService.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
+                            }
+                        } else {
+                            if (resultsCounter) {
+                                resultsCounter.fail += 1;
+                            } else {
+                                messageService.error(rs.message);
+                            }
+                        }
+                    });
             });
     }
 
