@@ -140,7 +140,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                 var data = rs.data;
                 if (!refresh){
                     widget.model = widget.widgetTemplate ? widget.widgetTemplate.chartConfig : widget.model;
-                    if (widget.widgetTemplate && widget.widgetTemplate.type === 'TABLE') {
+                    if (!widget.widgetTemplate || (widget.widgetTemplate && widget.widgetTemplate.type === 'TABLE')) {
                         widget.model = jsonSafeParse(widget.model);
                     }
                 }
