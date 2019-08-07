@@ -98,7 +98,11 @@ const widgetDialogController = function widgetDialogController($scope, $rootScop
                 }
                 else {
                     widget.executeType = widget.type;
-                    widget.testModel = JSON.parse(widget.model);
+                    if (!widget.widgetTemplate && widget.type !== 'echart') {
+                        widget.testModel = JSON.parse(widget.model);
+                    } else {
+                        widget.testModel = widget.model;
+                    }
                 }
                 widget.data = {};
                 widget.data.dataset = data;

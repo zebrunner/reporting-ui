@@ -38,7 +38,7 @@
                     <div data-ng-if="widget.executeType == 'piechart'" class="pie-chart">
                         <pie-chart data="widget.data.dataset" options="widget.testModel"></pie-chart>
                     </div>
-                    <div data-ng-if="widget.executeType == 'echart' && isJson(widget.testModel)">
+                    <div data-ng-if="widget.executeType == 'echart' && widget.testModel">
                         <div data-echarts dataset="widget.data.dataset" data-options="widget.testModel" with-legend="true" style="height: 350px;"></div>
                     </div>
                     <div data-ng-if="widget.executeType == 'table'" class="table-responsive" style="max-height: 350px; max-width: 1300px">
