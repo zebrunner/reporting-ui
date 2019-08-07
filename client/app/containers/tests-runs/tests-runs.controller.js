@@ -523,7 +523,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             //add new testRun to the top of the list or update fields if it is already in the list
             if (index === -1) {
                 // do no add new Test run if Search is active
-                if (vm.isSearchActive()) { return; }
+                if (vm.isFilterActive() || vm.isSearchActive()) { return; }
                 if (vm.currentPage === 1) {
                     vm.testRuns = testsRunsService.addNewTestRun(testRun);
                     vm.totalResults += 1;
@@ -575,6 +575,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             if(vm.zafiraWebsocket && vm.zafiraWebsocket.connected) {
                 vm.subscriptions.statistics && vm.subscriptions.statistics.unsubscribe();
                 vm.subscriptions.testRuns && vm.subscriptions.testRuns.unsubscribe();
+                vm.subscriptions.launchedTestRuns && vm.subscriptions.launchedTestRuns.unsubscribe();
                 vm.zafiraWebsocket.disconnect();
                 UtilService.websocketConnected('zafira');
             }
