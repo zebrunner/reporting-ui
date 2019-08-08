@@ -65,8 +65,8 @@
                     <md-input-container flex>
                         <label>Email</label>
                         <input id="email" type="email" ng-model="user.email" name="email" required ng-pattern="/^.+@.+\..+$/"/>
-                        <div ng-messages="user_form.email.$error" ng-if="user_form.email.$dirty">
-                            <div ng-message="required">Required</div>
+                        <div ng-messages="user_form.email.$error">
+                            <div ng-message="required">Email required</div>
                             <div ng-message="pattern">Invalid format</div>
                         </div>
                     </md-input-container>
