@@ -59,7 +59,7 @@
                             }
                         }
 
-                        return formattedModel;
+                        return formattedModel.slice(0, -2);
                     }
                 };
 
