@@ -33,6 +33,7 @@
 
             function createChart(options) {
                 var opts = angular.copy(options);
+                var dataset = angular.copy(scope.dataset);
                 if (!opts) return;
 
                 ele[0].style.height = recognizeHeight();
