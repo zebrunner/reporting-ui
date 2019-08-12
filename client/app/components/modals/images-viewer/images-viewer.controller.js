@@ -1,7 +1,7 @@
 'use strict';
 
 const JSZip = require('jszip');
-const ImagesViewerController = function ImagesViewerController($scope, $mdDialog, $q, DownloadService, $timeout,
+const ImagesViewerController = function ImagesViewerController($scope, $mdDialog, $q, ArtifactService, $timeout,
                                     activeArtifactId, TestRunService, test, messageService) {
     'ngInject';
 
@@ -31,7 +31,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         isFullScreenMode: false,
 
         setActiveArtifact,
-        downloadImages,
+        downloadImages: ArtifactService.downloadAll,
         switchFullscreenMode,
         selectNextArtifact,
         selectPrevArtifact,
@@ -71,55 +71,6 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         setActiveArtifact(vm.artifacts[nextIndex].id);
     }
 
-    function downloadImages() {
-        if (vm.mainImagesLoading || !vm.artifacts.length) { return; }
-
-        if (!vm.test.imageArtifacts.length) { return; }
-
-        const promises = vm.test.imageArtifacts.map((artifact) => {
-            return DownloadService.plainDownload(artifact.link)
-                .then(response => {
-                    if (response.success) {
-                        const filename = getUrlFilename(artifact.link);
-                        artifact.extension = getUrlExtension(artifact.link);
-                        return {
-                            fileName: `${artifact.name}_${filename}.${artifact.extension}`,
-                            fileData: response.res.data,
-                        };
-                    }
-
-                    return $q.reject(false);
-                });
-        });
-
-        $q.all(promises)
-            .then(data => {
-                const name = vm.test.id + '. ' + vm.test.name;
-                const formattedData = data.reduce((out, item) => {
-                    out[item.fileName] = item.fileData;
-
-                    return out;
-                }, {});
-
-                downloadZipFile(name, formattedData);
-            })
-            .catch(() => {
-                messageService.error('Unable to download all files, please try again.');
-            });
-    }
-
-    function downloadZipFile(name, data) {
-        const zip = new JSZip();
-        const folder = zip.folder(name);
-
-        angular.forEach(data, function (image, imgName) {
-            folder.file(imgName.getValidFilename(), image, {base64: true});
-        });
-        zip.generateAsync({type:"blob"}).then(function(content) {
-            content.download(name + '.zip');
-        });
-    }
-
     function keyAction(keyCodeNumber) {
         var LEFT = 37,
             UP = 38,
@@ -149,7 +100,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
                 vm.switchFullscreenMode();
                 break;
             case S_KEY:
-                vm.downloadImages();
+                vm.downloadImages(vm.test);
                 break;
             default:
                 break;

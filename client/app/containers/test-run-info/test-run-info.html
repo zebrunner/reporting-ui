@@ -14,7 +14,7 @@
                 </span>
         </zf-sub-header-title>
         <zf-sub-header-button>
-            <button class="fixed-page-header__btn _launcher zf-primary-button" ng-click="downloadAll();" ng-if="test.imageArtifacts && test.imageArtifacts.length">
+            <button class="fixed-page-header__btn _launcher zf-primary-button" ng-click="$ctrl.downloadAll(test);" ng-if="test.imageArtifacts && test.imageArtifacts.length">
                     <md-icon aria-label="Download zip">archive</md-icon>
                 <span>Visuals</span>
             </button>
