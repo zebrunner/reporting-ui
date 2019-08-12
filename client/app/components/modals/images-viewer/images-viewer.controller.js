@@ -74,12 +74,16 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     function downloadImages() {
         if (vm.mainImagesLoading || !vm.artifacts.length) { return; }
 
-        const promises = vm.artifacts.map((artifact) => {
+        if (!vm.test.imageArtifacts.length) { return; }
+
+        const promises = vm.test.imageArtifacts.map((artifact) => {
             return DownloadService.plainDownload(artifact.link)
                 .then(response => {
                     if (response.success) {
+                        const filename = getUrlFilename(artifact.link);
+                        artifact.extension = getUrlExtension(artifact.link);
                         return {
-                            fileName: `${artifact.name}.${artifact.extension}`,
+                            fileName: `${artifact.name}_${filename}.${artifact.extension}`,
                             fileData: response.res.data,
                         };
                     }
