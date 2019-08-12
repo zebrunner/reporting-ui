@@ -2,7 +2,6 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 
-const JSZip = require('jszip');
 const testRunInfoController = function testRunInfoController($scope, $rootScope, $mdDialog, $interval, $log,
     $filter, $anchorScroll, $location, $timeout, $window, $q,
     elasticsearchService, TestRunService, UtilService,
@@ -17,6 +16,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         wsSubscription: null,
         switchMoreLess,
         getFullLogMessage,
+        downloadAll: ArtifactService.downloadAll
     };
 
     vm.$onInit = controllerInit;
@@ -463,62 +463,6 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         if (a.createdAt > b.createdAt)
             return 1;
         return 0;
-    }
-
-    $scope.downloadAll = function() {
-        if (!$scope.test.imageArtifacts.length) { return; }
-
-        const promises = $scope.test.imageArtifacts.map((artifact) => {
-            return DownloadService.plainDownload(artifact.link)
-                .then(response => {
-                    if (response.success) {
-                        const filename = getUrlFilename(artifact.link);
-                        artifact.extension = getUrlExtension(artifact.link);
-                        return {
-                            fileName: `${artifact.name}_${filename}.${artifact.extension}`,
-                            fileData: response.res.data,
-                        };
-                    }
-
-                    return $q.reject(false);
-                });
-        });
-
-        $q.all(promises)
-            .then(data => {
-                const name = $scope.test.id + '. ' + $scope.test.name;
-                const formattedData = data.reduce((out, item) => {
-                    out[item.fileName] = item.fileData;
-
-                    return out;
-                }, {});
-
-                downloadZipFile(name, formattedData);
-            })
-            .catch(() => {
-                messageService.error('Unable to download all files, please try again.');
-            });
-    };
-
-    function getUrlExtension(url) {
-        return url.split(/\#|\?/)[0].split('.').pop().trim();
-    };
-
-    function getUrlFilename(url) {
-        const urlSlices = url.split(/\#|\?/)[0].split('/');
-        return urlSlices[urlSlices.length - 1].split('.')[0].trim();
-    };
-
-    function downloadZipFile(name, data) {
-        const zip = new JSZip();
-        const folder = zip.folder(name);
-
-        angular.forEach(data, function (blob, blobName) {
-            folder.file(blobName.getValidFilename(), blob, { base64: true });
-        });
-        zip.generateAsync({ type: "blob" }).then(function (content) {
-            content.download(name + '.zip');
-        });
     }
 
     function prepareArtifacts(test) {

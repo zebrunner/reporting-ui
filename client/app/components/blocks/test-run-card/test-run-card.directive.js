@@ -52,7 +52,7 @@
                     get formattedModel() {
                         let jsonModel = JSON.parse(vm.testRun.model);
                         let formattedModel = '';
-                        
+
                         for (let key in jsonModel) {
                             if (jsonModel[key]) {
                                 formattedModel += key + ':' + jsonModel[key] + ' / ';
@@ -197,9 +197,12 @@
 
                 function exportTestRun() {
                     TestRunService.exportTestRunResultsHTML(vm.testRun.id).then(function(rs) {
-                        if (rs.success) {
+                        if (rs.success && rs.data) {
                             downloadFromByteArray(vm.testRun.testSuite.name.split(' ').join('_') + '.html', rs, 'html');
                         } else {
+                            if (!rs.data) {
+                                rs.message = "Unable to get test run results HTML";
+                            }
                             messageService.error(rs.message);
                         }
                     });
