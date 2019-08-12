@@ -2,7 +2,6 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 
-const JSZip = require('jszip');
 const testRunInfoController = function testRunInfoController($scope, $rootScope, $mdDialog, $interval, $log,
     $filter, $anchorScroll, $location, $timeout, $window, $q,
     elasticsearchService, TestRunService, UtilService,

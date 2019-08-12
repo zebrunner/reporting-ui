@@ -1,6 +1,5 @@
 'use strict';
 
-const JSZip = require('jszip');
 const ImagesViewerController = function ImagesViewerController($scope, $mdDialog, $q, ArtifactService, $timeout,
                                     activeArtifactId, TestRunService, test, messageService) {
     'ngInject';

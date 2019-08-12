@@ -2,6 +2,7 @@
 
 import RFB from 'vendors/novnc';
 
+const JSZip = require('jszip');
 const ArtifactService = function ArtifactService($window, $q, $timeout, UtilService, toolsService, messageService, DownloadService) {
     'ngInject';
 
