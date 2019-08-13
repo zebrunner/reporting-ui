@@ -25,6 +25,15 @@
         }
     }
 
+    .private-filter {
+        height: 12px;
+        width: 12px;
+        min-height: 12px;
+        min-width: 12px;
+        margin-top: -2px;
+        margin-right: 4px;
+    }
+
     &__editor {
         background-color: rgba($dark-new, .07) !important;
         margin-top: 18px;
