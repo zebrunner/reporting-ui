@@ -24,6 +24,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
         sr: {},
         search: search,
         reset: reset,
+        copyLink: copyLink,
         get groups() {return GroupService.groups;},
     };
 
@@ -53,6 +54,11 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
                 }
             });
     };
+
+    function copyLink(invite) {
+        invite.url.copyToClipboard();
+        messageService.success('Link copied to clipboard');
+    }
 
     function takeOff(invite, index) {
         InvitationService.deleteInvitation(invite.id).then(function (rs) {
