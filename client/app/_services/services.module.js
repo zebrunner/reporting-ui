@@ -26,6 +26,7 @@ require('./dashboard.service');
 require('./download.service');
 require('./filter.service');
 require('./group.service');
+require('./artifact.service');
 require('./invitation.service');
 require('./job.service');
 require('./launcher.service');
