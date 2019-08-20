@@ -6,7 +6,7 @@ import testDetailsFilterController from './test-details-modal/filter-modal.conto
 import testDetailsTemplate from './test-details-modal/filter-modal.html';
 
 const testDetailsController = function testDetailsController($scope, $timeout, $rootScope, $q, TestService, API_URL,
-                                                             modalsService, $state, $transitions,
+                                                             modalsService, $state, $transitions, ArtifactService, 
                                                              UtilService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
     'ngInject';
 
