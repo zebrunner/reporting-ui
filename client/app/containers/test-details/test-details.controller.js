@@ -2,7 +2,7 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 import IssuesModalController from '../../components/modals/issues/issues.controller';
-import testDetailsFilterController from './test-details-modal/filter-modal.contoller';
+import testDetailsFilterController from './test-details-modal/filter-modal.controller';
 import testDetailsTemplate from './test-details-modal/filter-modal.html';
 
 const testDetailsController = function testDetailsController($scope, $timeout, $rootScope, $q, TestService, API_URL,
