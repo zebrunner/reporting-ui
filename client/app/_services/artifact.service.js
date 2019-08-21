@@ -5,9 +5,10 @@
         .module('app.services')
         .factory({ ArtifactService });
 
-    function ArtifactService($window, $q, $timeout, UtilService, toolsService) {
+    function ArtifactService($window, $q, $timeout, UtilService, toolsService, DownloadService, messageService) {
         'ngInject';
 
+        const JSZip = require('jszip');
         var service = {};
 
         var display;
@@ -19,6 +20,7 @@
         service.connectVnc = connectVnc;
         service.resize = resize;
         service.provideLogs = provideLogs;
+        service.downloadAll = downloadAll;
 
         return service;
 
@@ -27,6 +29,7 @@
             containerHeightProperty = heightProperty;
             containerWidthProperty = widthProperty;
             var rfb = new RFB(angular.element('#vnc')[0], wsURL, { shared: true, credentials: { password: 'selenoid' } });
+            
             //rfb._viewOnly = true;
             rfb.addEventListener("connect",  connected);
             rfb.addEventListener("disconnect",  disconnectFunc ? disconnectFunc : disconnected);
@@ -68,6 +71,62 @@
                     });
                 }
             });
+        };
+
+        function downloadAll(test) {
+            if (!test.imageArtifacts.length) { return; }
+    
+            const promises = test.imageArtifacts.map((artifact) => {
+                return DownloadService.plainDownload(artifact.link)
+                    .then(response => {
+                        if (response.success) {
+                            const filename = getUrlFilename(artifact.link);
+                            artifact.extension = getUrlExtension(artifact.link);
+                            return {
+                                fileName: `${artifact.name}_${filename}.${artifact.extension}`,
+                                fileData: response.res.data,
+                            };
+                        }
+    
+                        return $q.reject(false);
+                    });
+            });
+    
+            $q.all(promises)
+                .then(data => {
+                    const name = test.id + '. ' + test.name;
+                    const formattedData = data.reduce((out, item) => {
+                        out[item.fileName] = item.fileData;
+    
+                        return out;
+                    }, {});
+    
+                    downloadZipFile(name, formattedData);
+                })
+                .catch(() => {
+                    messageService.error('Unable to download all files, please try again.');
+                });
+        };
+
+        function downloadZipFile(name, data) {
+            const zip = new JSZip();
+            const folder = zip.folder(name);
+    
+            angular.forEach(data, function (blob, blobName) {
+                folder.file(blobName.getValidFilename(), blob, { base64: true });
+            });
+            zip.generateAsync({ type: "blob" }).then(function (content) {
+                content.download(name + '.zip');
+            });
+        }
+
+        function getUrlExtension(url) {
+            return url.split(/\#|\?/)[0].split('.').pop().trim();
+        };
+    
+        function getUrlFilename(url) {
+            const urlSlices = url.split(/\#|\?/)[0].split('/');
+            return urlSlices[urlSlices.length - 1].split('.')[0].trim();
         };
 
         function scrollLogsOnBottom(logsContainer) {
