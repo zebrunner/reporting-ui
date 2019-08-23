@@ -19,7 +19,6 @@
                                     <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.searchByFilter($chip, $index)">
                                         <md-icon md-svg-src="../../../../assets/images/outline-lock.svg" class="private-filter" ng-if="!$chip.publicAccess"></md-icon>
                                         <span>{{$chip.name}}</span>
-                                        <i class="close-button"></i>
                                     </div>
                                     <div is-owner="{{ $chip.userId }}" user="{{ $ctrl.currentUser }}" style="display: inline-block; vertical-align: sub;">
                                         <i class="material-icons custom-chip-action show-icon-on-hover" ng-click="$ctrl.selectFilterForEdit($chip);">edit</i>
@@ -168,7 +167,6 @@
                                          ng-click="$ctrl.searchByFilter($chip, $index)">
                                          <md-icon md-svg-src="../../../../assets/images/outline-lock.svg" class="private-filter" ng-if="!$chip.publicAccess"></md-icon>
                                         <span>{{$chip.name}}</span>
-                                        <i class="close-button"></i>
                                     </div>
                                 </md-chip-template>
                             </md-chips>
