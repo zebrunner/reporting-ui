@@ -130,7 +130,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
     };
 
     // **************************************************************************
-    function InviteController($scope, $mdDialog, InvitationService, UtilService, groups, isLDAPConnected, messageService) {
+    function InviteController($scope, $mdDialog, InvitationService, UtilService, groups, isLDAPConnected, messageService, $mdConstant) {
         'ngInject';
 
         $scope.isLDAPConnected = isLDAPConnected;
@@ -143,7 +143,7 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
         $scope.userGroup = undefined;
 
         $scope.SOURCES = ['INTERNAL', 'LDAP'];
-
+        $scope.keys = [$mdConstant.KEY_CODE.SPACE];
         var startedEmail;
 
         $scope.initMdChipsCtrl = function () {
