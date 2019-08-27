@@ -14,8 +14,10 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = (env) => {
     const isProd = env === 'production';
     const isDev = env === 'development';
+    const host = process.env.ZAFIRA_API_HOST || 'http://localhost:8080';
+    const context_path = process.env.ZAFIRA_API_CONTEXT_PATH || 'zafira-ws';
     const __PRODUCTION__ = JSON.stringify(isProd);
-    const __ZAFIRA_WS_URL__ = process.env.ZAFIRA_WS_URL || 'http://localhost:8080/zafira-ws'; //TODO: move WS_URL fallback value from this file
+    const __ZAFIRA_WS_URL__ = host + '/' + context_path; //TODO: move WS_URL fallback value from this file
     const __ZAFIRA_UI_VERSION__ = JSON.stringify(process.env.ZAFIRA_UI_VERSION || 'local');
     const packageName = JSON.stringify(process.env.npm_package_name) || 'Zafira';
     const base = JSON.stringify(process.env.ZAFIRA_UI_BASE || '/');
