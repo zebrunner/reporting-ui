@@ -150,11 +150,13 @@
                                             <div class="test-settings__button">
                                                 <md-button class="md-icon-button" ng-click="$ctrl.goToTestDetails(test.id);">
                                                     <md-icon class="material-icons">remove_red_eye</md-icon>
+                                                    <md-tooltip md-direction="bottom">Details</md-tooltip>
                                                 </md-button>
                                             </div>
                                             <md-menu class="pull-right test-settings__menu">
                                                 <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
                                                     <md-icon class="material-icons">more_vert</md-icon>
+                                                    <md-tooltip md-direction="bottom">More options</md-tooltip>
                                                 </md-button>
                                                 <md-menu-content width="2" class="fixed-md-menu-content test-settings__menu-content">
                                                     <md-menu-item ng-click="$ctrl.updateTest(test, true);">
