@@ -476,6 +476,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
         vm.zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
         vm.zafiraWebsocket.debug = null;
+        vm.zafiraWebsocket.ws.close = function() {};
         vm.zafiraWebsocket.connect({withCredentials: false}, function () {
             vm.subscriptions.statistics = subscribeStatisticsTopic();
             vm.subscriptions.testRuns = subscribeTestRunsTopic();
@@ -576,7 +577,9 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
                 vm.subscriptions.statistics && vm.subscriptions.statistics.unsubscribe();
                 vm.subscriptions.testRuns && vm.subscriptions.testRuns.unsubscribe();
                 vm.subscriptions.launchedTestRuns && vm.subscriptions.launchedTestRuns.unsubscribe();
-                vm.zafiraWebsocket.disconnect();
+                $timeout(function () {
+                    vm.zafiraWebsocket.disconnect();
+                }, 0, false);
                 UtilService.websocketConnected('zafira');
             }
         });

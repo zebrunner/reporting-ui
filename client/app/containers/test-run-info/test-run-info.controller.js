@@ -519,6 +519,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
     function initTestsWebSocket(testRun) {
         $scope.testsWebsocket = Stomp.over(new SockJS(API_URL + "/api/websockets"));
         $scope.testsWebsocket.debug = null;
+        $scope.zafiraWebsocket.ws.close = function() {};
         $scope.testsWebsocket.connect({ withCredentials: false }, function () {
             if ($scope.testsWebsocket.connected) {
                 vm.wsSubscription = $scope.testsWebsocket.subscribe("/topic/" + TENANT + ".testRuns." + testRun.id + ".tests", function (data) {
@@ -744,7 +745,9 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         if ($scope.testsWebsocket && $scope.testsWebsocket.connected) {
             $scope.$watch('testsWebsocket.hasClosePermission', function (newVal) {
                 if (newVal) {
-                    $scope.testsWebsocket.disconnect();
+                    $timeout(function () {
+                        $scope.testsWebsocket.disconnect();
+                    });
                     UtilService.websocketConnected(testsWebsocketName);
                 }
             });

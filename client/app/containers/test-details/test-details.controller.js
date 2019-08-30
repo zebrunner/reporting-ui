@@ -6,7 +6,7 @@ import testDetailsFilterController from './test-details-modal/filter-modal.contr
 import testDetailsTemplate from './test-details-modal/filter-modal.html';
 
 const testDetailsController = function testDetailsController($scope, $timeout, $rootScope, $q, TestService, API_URL,
-                                                             modalsService, $state, $transitions, 
+                                                             modalsService, $state, $transitions,
                                                              UtilService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
     'ngInject';
 
@@ -648,6 +648,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
 
         vm.zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
         vm.zafiraWebsocket.debug = null;
+        vm.zafiraWebsocket.ws.close = function() {};
         vm.zafiraWebsocket.connect({withCredentials: false}, function () {
             vm.subscriptions.statistics = subscribeStatisticsTopic();
             vm.subscriptions.testRun = subscribeTestRunsTopic();
@@ -712,7 +713,9 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
                 vm.subscriptions.statistics && vm.subscriptions.statistics.unsubscribe();
                 vm.subscriptions.testRun && vm.subscriptions.testRun.unsubscribe();
                 vm.subscriptions[vm.testRun.id] && vm.subscriptions[vm.testRun.id].unsubscribe();
-                vm.zafiraWebsocket.disconnect();
+                $timeout(function () {
+                    vm.zafiraWebsocket.disconnect();
+                }, 0, false);
                 UtilService.websocketConnected('zafira');
             }
         });

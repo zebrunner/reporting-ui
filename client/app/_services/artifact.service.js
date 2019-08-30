@@ -49,6 +49,7 @@
                     var wsName = 'logs';
                     var testLogsStomp = Stomp.over(new SockJS(rabbitmq.ws));
                     testLogsStomp.debug = null;
+                    testLogsStomp.ws.close = function() {};
                     testLogsStomp.connect(rabbitmq.user, rabbitmq.pass, function () {
 
                         UtilService.websocketConnected(wsName);

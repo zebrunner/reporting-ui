@@ -784,6 +784,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
         zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
         zafiraWebsocket.debug = null;
+        zafiraWebsocket.ws.close = function() {};
         zafiraWebsocket.connect({withCredentials: false}, function () {
             subscriptions.launchers = subscribeLaunchersTopic();
             UtilService.websocketConnected(wsName);
@@ -823,7 +824,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     function disconnectWebsocket() {
         if(zafiraWebsocket && zafiraWebsocket.connected) {
             subscriptions.launchers && subscriptions.launchers.unsubscribe();
-            zafiraWebsocket.disconnect();
+            $timeout(function () {
+                zafiraWebsocket.disconnect();
+            }, 0, false);
             UtilService.websocketConnected('zafira');
         }
     };

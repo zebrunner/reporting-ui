@@ -26,7 +26,8 @@
         $scope.initStatisticWebsocket = function () {
             var sockJS = new SockJS(API_URL + "/websockets");
             $scope.statisticsStomp = Stomp.over(sockJS);
-            //statisticsStomp.debug = null;
+            $scope.statisticsStomp.debug = null;
+            vm.zafiraWebsocket.ws.close = function() {};
             $scope.statisticsStomp.connect({withCredentials: false}, function () {
                 $scope.statisticsStomp.subscribe("/topic/tests", function (data) {
                     $scope.getMessage(data.body);
