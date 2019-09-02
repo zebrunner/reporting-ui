@@ -5,8 +5,10 @@ import progressbarService from './progressbar/progressbar.service';
 import messageService from './messages/message.service';
 import mainMenuService from './main-menu/main-menu.service';
 import testDetailsService from './testdetails.service';
+import ArtifactService from './artifact.service';
 
 angular.module('app.services', [])
+    .service({ ArtifactService})
     .service({ toolsService })
     .service({ messageService })
     .service({ mainMenuService })
@@ -26,7 +28,6 @@ require('./dashboard.service');
 require('./download.service');
 require('./filter.service');
 require('./group.service');
-require('./artifact.service');
 require('./invitation.service');
 require('./job.service');
 require('./launcher.service');
