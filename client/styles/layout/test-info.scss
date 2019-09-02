@@ -182,6 +182,26 @@
                     text-align: center;
                     padding: 6px !important;
                 }
+                &._visuals .image-placeholder {
+                    position: relative;
+                    height: #{$line-height-base}em;
+
+                    .material-icons {
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                }
+            }
+
+            &-img {
+                box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.3);
+                max-width: 66%;
+                max-height: 29px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .md-button.md-icon-button {
