@@ -121,7 +121,7 @@ const authController = function authController($scope, $rootScope, $location, $s
     $scope.signup = function(user, form) {
         AuthService.signup(user, token).then(function(rs) {
                 if (rs.success) {
-                    $state.go('signin', { 'user': user });
+                    $state.go('signin', { user });
                 } else {
                     UtilService.resolveError(rs, form, 'validationError', 'username').then(function (rs) {
                     }, function (rs) {
