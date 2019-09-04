@@ -1,7 +1,7 @@
 'use strict';
 
 const authController = function authController($scope, $rootScope, $location, $state, $cookies, $templateCache, AuthService, UserService,
-                            UtilService, InvitationService, messageService) {
+                            UtilService, InvitationService, messageService, $stateParams) {
     'ngInject';
 
     $scope.UtilService = UtilService;
@@ -91,6 +91,10 @@ const authController = function authController($scope, $rootScope, $location, $s
             default:
                 break;
         }
+        if ($stateParams.user) {
+            $scope.credentials.usernameOrEmail = $stateParams.user.email;
+            $scope.credentials.password = $stateParams.user.password;
+        }
         AuthService.ClearCredentials();
     })();
 
@@ -117,7 +121,7 @@ const authController = function authController($scope, $rootScope, $location, $s
     $scope.signup = function(user, form) {
         AuthService.signup(user, token).then(function(rs) {
                 if (rs.success) {
-                    $state.go('signin');
+                    $state.go('signin', { user });
                 } else {
                     UtilService.resolveError(rs, form, 'validationError', 'username').then(function (rs) {
                     }, function (rs) {

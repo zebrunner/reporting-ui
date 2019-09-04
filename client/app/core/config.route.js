@@ -149,7 +149,8 @@
                     params: {
                         location: null,
                         referrer: null,
-                        referrerParams: null
+                        referrerParams: null,
+                        user: null,
                     },
                     data: {
                         onlyGuests: true,
