@@ -93,20 +93,8 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
 
             if (indexOfLauncher === -1) {
                 testsRunsService.addNewLauncher(launcher);
-                setTimerOnDestroingLauncher(launcher);
             }
         });
-    }
-
-    function setTimerOnDestroingLauncher(launcher) {
-        let dateNow = new Date();
-        let timeDiff = launcher.shouldBeDestroyedAt - dateNow.getTime();
-
-        if (timeDiff > 0) {
-            launcher.timeout = setTimeout(function() {
-                testsRunsService.deleteLauncherFromStorebyCiId(launcher.ciRunId);
-            }, timeDiff)
-        }
     }
 
     function showCiHelperDialog(event) {
