@@ -25,10 +25,9 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     const vm = {
         test: null,
         artifacts: [],
-        mainImagesLoading: true,
+        mainSizesLoading: true,
         activeArtifactId: null,
         isFullScreenMode: false,
-
         setActiveArtifact,
         downloadImages: ArtifactService.downloadAll,
         switchFullscreenMode,
@@ -36,24 +35,20 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         selectPrevArtifact,
         closeModal,
         zoom,
+        newActiveElem: null,
     };
 
-    function setActiveArtifact(id) {
-        if (vm.activeArtifactId === id) { return; }
+    function setActiveArtifact(id, force) {
+        if (vm.activeArtifactId === id && !force) { return; }
 
         const activeElem = document.getElementById(vm.activeArtifactId);
-        const newElem = document.getElementById(id);
-
-        if (!activeElem || !newElem) { return; }
-
+        vm.newActiveElem = document.getElementById(id);
         vm.activeArtifactId = id;
-        activeElem.classList.remove(local.imgCssActiveClass);
-        newElem.classList.add(local.imgCssActiveClass);
+        activeElem && activeElem.classList.remove(local.imgCssActiveClass);
+        vm.newActiveElem && vm.newActiveElem.classList.add(local.imgCssActiveClass);
     }
 
     function selectNextArtifact() {
-        if (vm.mainImagesLoading) { return; }
-
         const currentIndex = vm.artifacts.findIndex(({id}) => id === vm.activeArtifactId);
         const nextIndex = currentIndex !== vm.artifacts.length - 1 ? currentIndex + 1 : 0;
 
@@ -61,8 +56,6 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     }
 
     function selectPrevArtifact() {
-        if (vm.mainImagesLoading) { return; }
-
         const currentIndex = vm.artifacts.findIndex(({id}) => id === vm.activeArtifactId);
         const lastIndex = vm.artifacts.length - 1;
         const nextIndex = currentIndex !== 0 ? currentIndex - 1 : lastIndex;
@@ -124,7 +117,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     }
 
     function switchFullscreenMode(forceQuit) {
-        if (vm.mainImagesLoading) { return; }
+        if (vm.mainSizesLoading) { return; }
 
         if (!document.fullscreenElement &&    // alternative standard method
             !document.mozFullScreenElement && !document.webkitFullscreenElement && !forceQuit) {  // current working methods
@@ -154,35 +147,16 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     }
 
     function initController() {
-        const start = Date.now();
-        let delay = 0;
-
         vm.test = test;
         vm.artifacts = vm.test.imageArtifacts;
         vm.activeArtifactId = activeArtifactId;
 
-        loadImages()
-            .then(images => {
-                if (!local.destroyed) {
-                    images.forEach(img => {
-                        $(`.${local.imgWrapperCssClass}`).append(img);
-                    });
-                    const finish = Date.now();
-
-                    // images are loaded from cache, so we need delay for modal opening animation
-                    if (finish - start < 1000) {
-                        delay = 1000;
-                    }
-                    $timeout(() => {
-                        vm.mainImagesLoading = false;
-                        $timeout(() => {
-                            initGallery();
-                            registerListeners();
-                        }, 0);
-                    }, delay);
-                }
-
-            });
+        loadImages();
+        
+        $timeout(() => {
+            initGallery();
+            registerListeners();
+        }, 0);
     }
 
     function registerListeners() {
@@ -246,7 +220,12 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
                         imageElem.classList.add('_active');
                         vm.activeArtifactId = artifact.id;
                     }
-
+                    initSizes();
+                        $(`.${local.imgWrapperCssClass}`).append(imageElem);
+                    
+                    if (!vm.newActiveElem) {
+                        vm.setActiveArtifact(vm.activeArtifactId, true);
+                    }
                     return imageElem;
                 });
         });
@@ -272,6 +251,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     }
 
     function getImagesDimentions(imgElem) {
+        vm.mainSizesLoading = false;
         const imageWidth = imgElem.width;
         const imageHeight = imgElem.height;
         const imageRatio = precisionRound(imageHeight / imageWidth, 2);
@@ -292,7 +272,6 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     function initGallery() {
         local.container = document.querySelector(`.${local.imgContainerCssClass}`);
         local.imageWrapElem = document.querySelector(`.${local.imgWrapperCssClass}`);
-        initSizes();
     }
 
     function initSizes() {
@@ -320,7 +299,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     }
 
     function zoom(zoomIn) {
-        if (vm.mainImagesLoading) { return; }
+        if (vm.mainSizesLoading) { return; }
 
         const prevZoom = local.zoom.value;
 
