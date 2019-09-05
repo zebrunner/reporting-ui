@@ -4,10 +4,12 @@ import ImagesViewerController from '../../components/modals/images-viewer/images
 import IssuesModalController from '../../components/modals/issues/issues.controller';
 import testDetailsFilterController from './test-details-modal/filter-modal.controller';
 import testDetailsTemplate from './test-details-modal/filter-modal.html';
+import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
+import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
 const testDetailsController = function testDetailsController($scope, $timeout, $rootScope, $q, TestService, API_URL,
                                                              modalsService, $state, $transitions,
-                                                             UtilService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
+                                                             UtilService, testsRunsService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
     'ngInject';
 
     const mobileWidth = 600;
@@ -47,6 +49,8 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         showDetailsDialog: showDetailsDialog,
         goToTestDetails: goToTestDetails,
         showFilterDialog: showFilterDialog,
+        showCiHelperDialog: showCiHelperDialog,
+        subscribeLaunchedTestRuns: subscribeLaunchedTestRuns,
         onBackClick,
         updateTest,
         getTestURL,
@@ -75,6 +79,47 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         initTests();
         fillTestRunMetadata();
         bindEvents();
+    }
+
+    function subscribeLaunchedTestRuns() {
+        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.launcherRuns', function (data) {
+            const event = getEventFromMessage(data.body);
+            const launcher = event.launcher;
+
+            launcher.status = 'LAUNCHING';
+            launcher.ciRunId = event.ciRunId;
+            launcher.testSuite = { name: launcher.name };
+            const indexOfLauncher = testsRunsService.readStoredlaunchers().findIndex((res) => { res.ciRunId === launcher.ciRunId });
+
+            if (indexOfLauncher === -1) {
+                testsRunsService.addNewLauncher(launcher);
+                setTimerOnDestroingLauncher(launcher);
+            }
+        });
+    }
+
+    function setTimerOnDestroingLauncher(launcher) {
+        let dateNow = new Date();
+        let timeDiff = launcher.shouldBeDestroyedAt - dateNow.getTime();
+
+        if (timeDiff > 0) {
+            launcher.timeout = setTimeout(function() {
+                testsRunsService.deleteLauncherFromStorebyCiId(launcher.ciRunId);
+            }, timeDiff)
+        }
+    }
+
+    function showCiHelperDialog(event) {
+        $mdDialog.show({
+            controller: CiHelperController,
+            template: CiHelperTemplate,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose:false,
+            fullscreen: true,
+            autoWrap: false,
+            escapeToClose:false
+        });
     }
 
     function highlightTest() {
@@ -653,6 +698,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
             vm.subscriptions.statistics = subscribeStatisticsTopic();
             vm.subscriptions.testRun = subscribeTestRunsTopic();
             vm.subscriptions[vm.testRun.id] = subscribeTestsTopic(vm.testRun.id);
+            vm.subscriptions.launchedTestRuns = subscribeLaunchedTestRuns();
             UtilService.websocketConnected(wsName);
         }, function () {
             UtilService.reconnectWebsocket(wsName, initWebsocket);
@@ -713,6 +759,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
                 vm.subscriptions.statistics && vm.subscriptions.statistics.unsubscribe();
                 vm.subscriptions.testRun && vm.subscriptions.testRun.unsubscribe();
                 vm.subscriptions[vm.testRun.id] && vm.subscriptions[vm.testRun.id].unsubscribe();
+                vm.subscriptions.launchedTestRuns && vm.subscriptions.launchedTestRuns.unsubscribe();
                 $timeout(function () {
                     vm.zafiraWebsocket.disconnect();
                 }, 0, false);

@@ -30,11 +30,11 @@
                     <li class="folder-container_item">
                         <ul class="folder-container_item_list">
                             <li class="folder-container_item_list_item hide-phone launcher-{{launcher.id}}" ng-click="chooseLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
-                                <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../../assets/images/launcher_manual.svg"></md-icon>
+                                <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 {{launcher.name}}
                             </li>
                             <li class="folder-container_item_list_item show-phone launcher-{{launcher.id}}" ng-click="selectLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
-                                <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../../assets/images/launcher_manual.svg"></md-icon>
+                                <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 {{launcher.name}}
                             </li>
                             <li ng-if="! scmAccount.launchers" class="folder-container_item_list_item-empty">

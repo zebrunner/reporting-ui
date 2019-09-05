@@ -30,6 +30,7 @@
             clearDataCache: clearDataCache,
             addNewTestRun: addNewTestRun,
             updateTestRun: updateTestRun,
+            readStoredlaunchers: readStoredlaunchers,
             isOnlyAdditionalSearchActive: isOnlyAdditionalSearchActive,
             deleteLauncherFromStorebyCiId: deleteLauncherFromStorebyCiId,
             addNewLauncher: addNewLauncher,
@@ -185,6 +186,8 @@
         function readStoredlaunchers() {
             const launchers = sessionStorage.getItem('launchers');
             launchers && (_launchers = angular.fromJson(launchers));
+
+            return _launchers;
         }
 
         function deleteLauncherFromStorebyCiId(ciRunId) {
