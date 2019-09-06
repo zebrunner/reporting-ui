@@ -210,7 +210,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         const promises = vm.artifacts.map((artifact, index) => {
             return loadImage(artifact.link)
                 .then((imageElem) => {
-                    !local.dimensions && getImagesDimentions(imageElem);
+                    getImagesDimentions(imageElem);
                     imageElem.classList.add(local.imgCssClass);
                     imageElem.setAttribute('id', artifact.id);
 
@@ -221,16 +221,43 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
                         vm.activeArtifactId = artifact.id;
                     }
                     initSizes();
-                        $(`.${local.imgWrapperCssClass}`).append(imageElem);
+                    $(`.${local.imgWrapperCssClass}`).append(imageElem);
                     
                     if (!vm.newActiveElem) {
                         vm.setActiveArtifact(vm.activeArtifactId, true);
                     }
                     return imageElem;
-                });
+                })
+                .catch((err) => {
+                    let icon = createBrokenIcon();
+
+                    icon.setAttribute('id', artifact.id);
+                    if (vm.activeArtifactId) {
+                        artifact.id === vm.activeArtifactId && icon.classList.add(local.imgCssActiveClass);
+                    } else if (index === 0) {
+                        icon.classList.add('_active');
+                        vm.activeArtifactId = artifact.id;
+                    }
+                    $(`.${local.imgWrapperCssClass}`).append(icon);
+                    
+                    if (!vm.newActiveElem) {
+                        vm.setActiveArtifact(vm.activeArtifactId, true);
+                    }
+                })
         });
 
         return $q.all(promises);
+    }
+
+    function createBrokenIcon() {
+        let icon = document.createElement('i');
+        let node = document.createTextNode("broken_image");
+
+        icon.appendChild(node);
+        icon.classList.add('material-icons');
+        icon.classList.add(local.imgCssClass);
+
+        return icon;
     }
 
     function loadImage(imageUrl) {
@@ -241,12 +268,11 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
             defer.resolve(image);
         };
         image.onerror = () => {
-            //TODO: handle if can't load image
-            defer.resolve(image);
+            defer.reject(image);
         };
 
         image.src = imageUrl;
-
+        
         return defer.promise;
     }
 
@@ -256,11 +282,13 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         const imageHeight = imgElem.height;
         const imageRatio = precisionRound(imageHeight / imageWidth, 2);
 
-        local.dimensions = {
-            imageWidth,
-            imageHeight,
-            imageRatio,
-        };
+        if (!local.dimensions || imageRatio > local.dimensions.imageRatio) {
+            local.dimensions = {
+                imageWidth,
+                imageHeight,
+                imageRatio,
+            };
+        }
     }
 
     function precisionRound(value, precision) {
