@@ -50,7 +50,6 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         goToTestDetails: goToTestDetails,
         showFilterDialog: showFilterDialog,
         showCiHelperDialog: showCiHelperDialog,
-        subscribeLaunchedTestRuns: subscribeLaunchedTestRuns,
         onBackClick,
         updateTest,
         getTestURL,
@@ -744,10 +743,9 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
     function bindEvents() {
         $scope.$on('$destroy', function () {
             if (vm.zafiraWebsocket && vm.zafiraWebsocket.connected) {
-                vm.subscriptions.statistics && vm.subscriptions.statistics.unsubscribe();
-                vm.subscriptions.testRun && vm.subscriptions.testRun.unsubscribe();
-                vm.subscriptions[vm.testRun.id] && vm.subscriptions[vm.testRun.id].unsubscribe();
-                vm.subscriptions.launchedTestRuns && vm.subscriptions.launchedTestRuns.unsubscribe();
+                for (let key in vm.subscriptions) {
+                    vm.subscriptions[key].unsubscribe();
+                }
                 $timeout(function () {
                     vm.zafiraWebsocket.disconnect();
                 }, 0, false);
