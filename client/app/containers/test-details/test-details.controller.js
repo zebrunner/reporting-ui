@@ -4,10 +4,12 @@ import ImagesViewerController from '../../components/modals/images-viewer/images
 import IssuesModalController from '../../components/modals/issues/issues.controller';
 import testDetailsFilterController from './test-details-modal/filter-modal.controller';
 import testDetailsTemplate from './test-details-modal/filter-modal.html';
+import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
+import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
 const testDetailsController = function testDetailsController($scope, $timeout, $rootScope, $q, TestService, API_URL,
                                                              modalsService, $state, $transitions,
-                                                             UtilService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
+                                                             UtilService, testsRunsService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
     'ngInject';
 
     const mobileWidth = 600;
@@ -47,6 +49,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         showDetailsDialog: showDetailsDialog,
         goToTestDetails: goToTestDetails,
         showFilterDialog: showFilterDialog,
+        showCiHelperDialog: showCiHelperDialog,
         onBackClick,
         updateTest,
         getTestURL,
@@ -75,6 +78,35 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         initTests();
         fillTestRunMetadata();
         bindEvents();
+    }
+
+    function subscribeLaunchedTestRuns() {
+        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.launcherRuns', function (data) {
+            const event = getEventFromMessage(data.body);
+            const launcher = event.launcher;
+
+            launcher.status = 'LAUNCHING';
+            launcher.ciRunId = event.ciRunId;
+            launcher.testSuite = { name: launcher.name };
+            const indexOfLauncher = testsRunsService.readStoredlaunchers().findIndex((res) => { res.ciRunId === launcher.ciRunId });
+
+            if (indexOfLauncher === -1) {
+                testsRunsService.addNewLauncher(launcher);
+            }
+        });
+    }
+
+    function showCiHelperDialog(event) {
+        $mdDialog.show({
+            controller: CiHelperController,
+            template: CiHelperTemplate,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose:false,
+            fullscreen: true,
+            autoWrap: false,
+            escapeToClose:false
+        });
     }
 
     function highlightTest() {
@@ -653,6 +685,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
             vm.subscriptions.statistics = subscribeStatisticsTopic();
             vm.subscriptions.testRun = subscribeTestRunsTopic();
             vm.subscriptions[vm.testRun.id] = subscribeTestsTopic(vm.testRun.id);
+            vm.subscriptions.launchedTestRuns = subscribeLaunchedTestRuns();
             UtilService.websocketConnected(wsName);
         }, function () {
             UtilService.reconnectWebsocket(wsName, initWebsocket);
@@ -710,9 +743,9 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
     function bindEvents() {
         $scope.$on('$destroy', function () {
             if (vm.zafiraWebsocket && vm.zafiraWebsocket.connected) {
-                vm.subscriptions.statistics && vm.subscriptions.statistics.unsubscribe();
-                vm.subscriptions.testRun && vm.subscriptions.testRun.unsubscribe();
-                vm.subscriptions[vm.testRun.id] && vm.subscriptions[vm.testRun.id].unsubscribe();
+                for (let key in vm.subscriptions) {
+                    vm.subscriptions[key].unsubscribe();
+                }
                 $timeout(function () {
                     vm.zafiraWebsocket.disconnect();
                 }, 0, false);

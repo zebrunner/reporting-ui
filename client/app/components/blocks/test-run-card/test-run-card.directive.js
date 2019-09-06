@@ -477,7 +477,7 @@
                 testRun: '=',
                 onSelect: '&',
                 onDelete: '&',
-                back: '&'
+                back: '&',
             },
             controllerAs: '$ctrl',
             restrict: 'E',

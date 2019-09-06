@@ -1,7 +1,7 @@
 'use strict';
 
-import CiHelperController from './ci-helper/ci-helper.controller';
-import CiHelperTemplate from './ci-helper/ci-helper.html';
+import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
+import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
 const testsRunsController = function testsRunsController($cookieStore, $mdDialog, $timeout, $q, TestRunService,
                                                          UtilService, UserService, testsRunsService, $scope, API_URL,
