@@ -251,9 +251,8 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
 
     function createBrokenIcon() {
         let icon = document.createElement('i');
-        let node = document.createTextNode("broken_image");
+        icon.innerText = 'broken_image';
 
-        icon.appendChild(node);
         icon.classList.add('material-icons');
         icon.classList.add(local.imgCssClass);
 
