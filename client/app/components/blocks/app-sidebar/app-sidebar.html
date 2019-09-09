@@ -40,14 +40,12 @@
                         </ul>
                     </li>
                 </ul>
-                <md-tooltip md-direction="right">Boards</md-tooltip>
             </li>
             <li ng-class="{'active':$ctrl.$state.includes('tests')}" toggle-nav-bottom>
                 <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="tests.runs">
                     <i class="material-icons">play_circle_outline</i>
                     <span>Runs</span>
                 </a>
-                <md-tooltip md-direction="right">Runs</md-tooltip>
             </li>
             <li has-any-permission="['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS']" toggle-menu ui-sref-active="active">
                 <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="views" data-ng-click="$ctrl.loadViews();">
@@ -81,7 +79,6 @@
                         </ul>
                     </li>
                 </ul>
-                <md-tooltip md-direction="right">Views</md-tooltip>
             </li>
             <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$ctrl.$state.includes('users')}" toggle-menu>
                 <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="users.list"  has-any-permission="['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS']">
@@ -112,14 +109,12 @@
                         </ul>
                     </li>
                 </ul>
-                <md-tooltip md-direction="right">Users</md-tooltip>
             </li>
             <li ui-sref-active="active" toggle-nav-bottom>
                 <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="integrations" has-any-permission="['VIEW_INTEGRATIONS']">
                     <i class="material-icons">settings_input_component</i>
                     <span>Integrations</span>
                 </a>
-                <md-tooltip md-direction="right">Integrations</md-tooltip>
             </li>
             <li ui-sref-active="active" toggle-nav-bottom ng-repeat="menuItem in $ctrl.menuItems track by menuItem.name">
                 <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="{{menuItem.state}}">
