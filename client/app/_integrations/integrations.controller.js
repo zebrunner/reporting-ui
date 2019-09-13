@@ -272,14 +272,16 @@ const integrationsController = function integrationsController($scope, $rootScop
     }
 
     function selectFieldsForNew(tool) {
+        let fieldsForNewTool = null;
         vm.groups.forEach((group) => {
-            if (!vm.newItem) {
-                vm.newItem = group.types.find((type) => {
+            if (!fieldsForNewTool) {
+                fieldsForNewTool = group.types.find((type) => {
                     return (type.id === tool.id)
                 });
             }
         })
-        vm.newItem = {...vm.newItem, type: vm.newItem.name};
+        vm.newItem =  JSON.parse(JSON.stringify(fieldsForNewTool));
+        vm.newItem.type = fieldsForNewTool.name;
         vm.newItem.name = '';
     }
 
