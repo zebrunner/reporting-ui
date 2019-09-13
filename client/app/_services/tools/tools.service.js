@@ -16,6 +16,9 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         updateSettings,
         fetchToolConnectionStatus,
         uploadSettingFile,
+        fetchIntegrationsTypes,
+        fetchIntegrationOfType,
+        createIntegration,
 
         // fillToolSettings,
         setToolStatus,
@@ -32,14 +35,24 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         return loader$;
     }
 
-    function setToolStatus(toolName, status) {
+    function setToolStatus(toolName, status) { //TODO: wait field 'connected' and check then and fix according to new structure
         if (tools[toolName] === status) { return; }
 
         tools[toolName] = status;
     }
 
-    function isToolConnected(toolName) {
-        return tools[toolName];
+    function isToolConnected(currentTool) {
+        if(!currentTool.name) {
+            return tools[currentTool] && tools[currentTool].find((tool) => {
+                return tool.default && tool.connected;
+            });
+        } else if(tools[currentTool.type.name]) {
+            let tempTool = tools[currentTool.type.name].find((tool) => {
+                return tool.integrationId === currentTool.id;
+            })
+
+            return tempTool.default && tempTool.connected;
+        }
     }
 
     // function fillToolSettings(toolName, settings) {
@@ -65,18 +78,19 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
     //     }
     // }
 
-    function updateSettings(settings) {
-        return $httpMock.put(API_URL + '/api/settings/tools', settings).then(UtilService.handleSuccess, UtilService.handleError('Unable to edit settings'));
+    function updateSettings(id, integrationDTO) {
+        return $httpMock.put(API_URL + '/api/integrations/' + id, integrationDTO).then(UtilService.handleSuccess, UtilService.handleError('Unable to edit settings'));
     }
 
     /* Fetch available tools with their statuses */
     function fetchTools() {
-        return $httpMock.get(API_URL + '/api/settings/tools')
+        return $httpMock.get(API_URL + '/api/integrations-info')
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to fetch tools'))
             .then(response => {
                 if (response.success) {
                     tools = response.data;
-
+                    tools = formatTools();
+                    
                     return tools;
                 }
 
@@ -84,8 +98,29 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
             });
     }
 
+    function formatTools() {
+        let formattedTools = {};
+        for (let key in tools) {
+            formattedTools = {...formattedTools, ...tools[key]};
+        }
+
+        return formattedTools;
+    }
+
     function fetchToolSettings(toolName) {
         return $httpMock.get(API_URL + '/api/settings/tool/' + toolName).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch ${toolName} settings`));
+    }
+
+    function fetchIntegrationsTypes() {
+        return $httpMock.get(API_URL + '/api/integration-groups').then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integration groups`));
+    }
+
+    function createIntegration(integrationTypeId, integrationDTO) {
+        return $httpMock.post(API_URL + '/api/integrations?integrationTypeId=' + integrationTypeId, integrationDTO).then(UtilService.handleSuccess, UtilService.handleError('Unable to create integration'));
+    }
+
+    function fetchIntegrationOfType(type) {
+        return $httpMock.get(API_URL + '/api/integrations?groupId=' + type).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integrations of groups`));
     }
 
     function fetchToolConnectionStatus(name) {

@@ -331,6 +331,7 @@ md-chips.filter-chip.custom-filter {
         display: flex;
         align-items: center;
         height: 100%;
+        overflow-x: auto;
         md-chip {
             background-color: transparent;
             letter-spacing: 0.1px;
@@ -341,7 +342,7 @@ md-chips.filter-chip.custom-filter {
             border: solid 1px rgba($dark-new, .15);
             margin-bottom: 0;
             margin-left: 0;
-            margin-right: 8px;
+            margin-right: 12px;
             max-height: 36px;
             height: 36px;
             line-height: 36px;

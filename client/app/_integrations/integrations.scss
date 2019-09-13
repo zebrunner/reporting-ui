@@ -2,22 +2,29 @@
 @import '../../styles/global/var-pages';
 
 .p-integrations {
-    @media screen and (max-width: 599px) {
-        .page {
-            padding-right: 16px;
-            padding-left: 16px;
-        }
+    md-chips .md-chips {
+        box-shadow: none;
+    }
+    .page {
     }
     @media screen and (max-width: $screen-phone) {
         .page {
-            padding: $header_height 0 0;
+            display: flex;
+            flex-direction: column;
+            padding: $header_height + 10px 0 0;
+        }
+    }
+    md-fab-actions {
+        .integration-tool__item-icon {
+            margin-right: 0;
+            margin-bottom: 3px;
         }
     }
 }
 
 .integration-tool {
     &__list {
-        margin: 0 -10px;
+        margin: 20px 0 0;
     }
     &__item {
         padding: 20px 30px;
@@ -54,6 +61,9 @@
         }
         &-footer {
             padding-bottom: 10px;
+            .md-button {
+                margin-left: 12px;
+            }
         }
         &-icon {
             display: inline-block;
@@ -103,6 +113,25 @@
         }
         &-wrapper {
             padding: 0 10px 20px;
+            &._new-tool {
+                opacity: 1;
+                visibility: visible;
+                &, .integration-tool__item {
+                    height: 100%;
+                    transition: all .25s ease-in-out;
+                }
+                &._hidden {
+                    opacity: 0;
+                    visibility: hidden;
+                    padding: 0;
+                    &:not(._mobile) {
+                        max-width: 0;
+                    }
+                    &._mobile {
+                        max-height: 0;
+                    }
+                }
+            }
             @media screen and (max-width: $screen-phone) {
                 &:last-of-type {
                     border-bottom: 0;

@@ -5,7 +5,7 @@ import fileUploadController from './file-upload-modal/file-upload-modal.controll
 
 const integrationsController = function integrationsController($scope, $rootScope, $state, $mdConstant,
                                                                $stateParams, $mdDialog, UploadService,
-                                                               SettingsService, toolsService, $q, messageService) {
+                                                               SettingsService, toolsService, windowWidthService, $q, messageService, $timeout) {
     'ngInject';
 
     const SORT_POSTFIXES = {
@@ -23,25 +23,37 @@ const integrationsController = function integrationsController($scope, $rootScop
     const vm = {
         isLoading: true,
         tools: null,
+        isMultipleAllowed: false,
         FILE_TYPE_SETTINGS: {
             'GOOGLE': 'GOOGLE_CLIENT_SECRET_ORIGIN',
             'CLOUD_FRONT': 'CLOUD_FRONT_PRIVATE_KEY'
         },
-
+        integrationFormIsShowing: false,
         regenerateKey,
         changeStatus,
         saveTool,
         showUploadFileDialog,
+        showAddIntegrationForm,
+        selectIntegrationType,
+        addNewTool,
+        newTool,
+        cancel,
         isToolConnected: toolsService.isToolConnected,
+        isNewToolAdding: false,
+        isMobile: windowWidthService.isMobile
     };
+
+    function showAddIntegrationForm(isShowing) {
+        vm.integrationFormIsShowing = isShowing;
+    }
 
     function saveTool(tool) {
         tool.connectionChecking = true;
 
-        toolsService.updateSettings(tool.settings)
+        toolsService.updateSettings(tool.id, tool)
             .then(rs => {
                 if (rs.success) {
-                    toolsService.setToolStatus(tool.name, rs.data.connected);
+                    toolsService.setToolStatus(tool.type.name, rs.data.connected);
                     messageService.success('Tool ' + tool.name + ' was changed');
                 } else {
                     messageService.error(rs.message);
@@ -67,10 +79,10 @@ const integrationsController = function integrationsController($scope, $rootScop
 
         statusSetting.value = tool.enabled ? 'true' : 'false';
         tool.enabled && (tool.connectionChecking = true);
-        toolsService.updateSettings([statusSetting])
+        toolsService.updateSettings(tool.id, tool)
             .then(function (rs) {
                 if (rs.success) {
-                    toolsService.setToolStatus(tool.name, rs.data.connected);
+                    toolsService.setToolStatus(tool.type.name, rs.data.connected);
 
                     if (tool.enabled) {
                         messageService.success('Tool ' + tool.name + ' is enabled');
@@ -207,8 +219,73 @@ const integrationsController = function integrationsController($scope, $rootScop
     }
 
     function controllerInit() {
-        vm.tools = Object.keys(toolsService.tools).map(key => ({ name: key }));
-        fillToolsSettings();
+        toolsService.fetchIntegrationsTypes().then((res) => {
+            vm.groups = res.data;
+            vm.isLoading = false;
+
+            if(vm.groups.length) {
+                $timeout(function() {
+                    vm.selectIntegrationType(vm.groups[0], 0);
+                });
+            }
+        })
+    }
+
+    function selectIntegrationType(type, index) {
+        vm.chipsCtrl.selectedChip = index;
+        vm.isNewToolAdding = false;
+        vm.newItem = null;
+        vm.isMultipleAllowed = type.multipleAllowed;
+
+        toolsService.fetchIntegrationOfType(type.id).then((res) => {
+            vm.tools = res.data;
+            vm.toolTypes = vm.groups.find((group) => {
+                return group.id === type.id;
+            }).types;
+        })
+    }
+
+    function addNewTool(tool) {
+        vm.isNewToolAdding = true;
+
+        selectFieldsForNew(tool);
+    }
+
+    function newTool() {
+        let itemForRequest = {};
+        itemForRequest.name = vm.newItem.name;
+        itemForRequest.settings = vm.newItem.params.map((parameter) => {
+            return {
+                value: parameter.value,
+                param: parameter,
+            }
+        })
+        
+        toolsService.createIntegration(vm.newItem.id, itemForRequest)
+            .then((res) => {
+                if (res.success) {
+                    vm.tools.unshift(res.data);
+                } else {
+                    messageService.error(res.message);
+                }
+            })
+    }
+
+    function selectFieldsForNew(tool) {
+        vm.groups.forEach((group) => {
+            if (!vm.newItem) {
+                vm.newItem = group.types.find((type) => {
+                    return (type.id === tool.id)
+                });
+            }
+        })
+        vm.newItem = {...vm.newItem, type: vm.newItem.name};
+        vm.newItem.name = '';
+    }
+
+    function cancel() {
+        vm.isNewToolAdding = false;
+        vm.newItem = null;
     }
 
     vm.$onInit = controllerInit;

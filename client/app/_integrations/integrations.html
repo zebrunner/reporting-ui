@@ -2,7 +2,7 @@
     <zf-sub-header>
         <zf-sub-header-title>
             Integrations
-            <small id="itemsCount" class="fixed-page-header__additional-text">({{::$ctrl.tools.length}})</small>
+            <small id="itemsCount" class="fixed-page-header__additional-text">({{$ctrl.tools.length}})</small>
         </zf-sub-header-title>
         <zf-sub-header-button>
             <div has-any-permission="['MODIFY_INTEGRATIONS']">
@@ -14,34 +14,76 @@
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page page-dashboard">
+        <md-chips class="filter-chip custom-filter" ng-model="$ctrl.groups" md-removable="false" readonly="true">
+            <md-chip-template>
+                <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.selectIntegrationType($chip, $index)">
+                    <span>{{$chip.name}}</span>
+                </div>
+            </md-chip-template>
+        </md-chips>
         <div layout="row" layout-wrap class="integration-tool__list">
+            <div flex="100"
+                flex-gt-xs="50"
+                flex-gt-sm="33" class="integration-tool__item-wrapper _new-tool" ng-class="{'_hidden': !$ctrl.isNewToolAdding, '_mobile': $ctrl.isMobile()}">
+               <div class="card bg-white integration-tool__item" zafira-background-theme ng-if="$ctrl.isNewToolAdding">
+                   <div class="integration-tool__item-header" layout="row" layout-align="start center">
+                       <span class="integration-tool__item-icon {{$ctrl.newItem.type | lowercase}}" flex="none"></span>
+                       <span name="toolName" class="integration-tool__item-title">{{ $ctrl.newItem.type }}</span>
+                   </div>
+                   <div class="large-card-content integration-tool__item-content">
+                        <md-input-container>
+                            <input name="settingName" type="text" ng-model="$ctrl.newItem.name"/>
+                            <label name="settingNameLabel">NAME</label>
+                        </md-input-container>
+                       <div ng-repeat="setting in $ctrl.newItem.params track by setting.id">
+                           <md-input-container>
+                               <input name="settingName" type="text" ng-if="!setting.valueForEncrypting" ng-model="setting.value"/>
+                               <input name="settingName" type="password" ng-if="setting.valueForEncrypting" ng-model="setting.value" autocomplete="new-password" />
+                               <label name="settingNameLabel">{{ ::setting.name.replace(tool.name + '_', '') }}</label>
+                           </md-input-container>
+                       </div>
+                   </div>
+                   <div has-any-permission="['MODIFY_INTEGRATIONS']" ng-if="$ctrl.newItem" class="integration-tool__item-footer integration-actions text-right" style="border-top: none;">
+                        <md-button ng-click="$ctrl.cancel()" class="md-raised btn-w-md">
+                            Cancel
+                        </md-button>
+                        <md-button ng-click="$ctrl.newTool()" class="md-raised btn-w-md md-primary">
+                            Save
+                       </md-button>
+                    </div>
+               </div>
+           </div>
             <!--TODO: make a separate component-->
             <div flex="100"
                  flex-gt-xs="50"
                  flex-gt-sm="33"
-                 data-ng-repeat="tool in $ctrl.tools track by tool.name" class="integration-tool__item-wrapper">
+                 data-ng-repeat="tool in $ctrl.tools" class="integration-tool__item-wrapper">
                 <div class="card bg-white integration-tool__item" zafira-background-theme ng-show="!$ctrl.isLoading">
                     <div class="integration-tool__item-header" layout="row" layout-align="start center">
-                        <span class="integration-tool__item-icon {{::tool.name | lowercase}}" flex="none"></span>
-                        <span name="toolName" class="integration-tool__item-title">{{ ::tool.name }}</span>
-                        <i ng-class="{'highlight_red': !$ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_gray': !tool.enabled}"
+                        <span class="integration-tool__item-icon {{::tool.type.name | lowercase}}" flex="none"></span>
+                        <span name="toolName" class="integration-tool__item-title">{{ tool.name }}</span>
+                        <i ng-class="{'highlight_red': !$ctrl.isToolConnected(tool) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool) && tool.enabled, 'highlight_gray': !tool.enabled}"
                            ng-if="!tool.connectionChecking"
                            class="material-icons material-icon-16px integration-tool__item-status">fiber_manual_record</i>
                         <md-progress-circular md-diameter="16px"
                                               flex="none"
                                               ng-if="tool.connectionChecking"
-                                              ng-class="{'highlight_red': !$ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool.name) && tool.enabled, 'highlight_gray': !tool.enabled}"
+                                              ng-class="{'highlight_red': !$ctrl.isToolConnected(tool) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool) && tool.enabled, 'highlight_gray': !tool.enabled}"
                                               class="integration-tool__item-loader"></md-progress-circular>
                         <md-input-container has-any-permission="['MODIFY_INTEGRATIONS']" flex="none">
                             <md-switch name="toolEnabled" style="margin-top: 0" class="md-primary" ng-model="tool.enabled" ng-change="$ctrl.changeStatus(tool)" aria-label="integr-switch"></md-switch>
                         </md-input-container>
                     </div>
                     <div ng-class="{'large-card-content': tool.enabled}" class="integration-tool__item-content" data-ng-if="tool.enabled">
+                        <md-input-container>
+                            <input name="settingName" type="text" ng-model="tool.name"/>
+                            <label name="settingNameLabel">NAME</label>
+                        </md-input-container>
                         <div ng-repeat="setting in tool.settings track by setting.id">
                             <md-input-container>
-                                <input name="settingName" type="text" ng-if="!setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.enabled || setting.notEditable" />
-                                <input name="settingName" type="password" ng-if="setting.valueForEncrypting" ng-model="setting.value" ng-disabled="!tool.enabled || setting.notEditable" autocomplete="new-password" />
-                                <label name="settingNameLabel">{{ ::setting.name.replace(tool.name + '_', '') }}</label>
+                                <input name="settingName" type="text" ng-if="!setting.param.needEncryption" ng-model="setting.value" ng-disabled="!tool.enabled" />
+                                <input name="settingName" type="password" ng-if="setting.param.needEncryption" ng-model="setting.value" ng-disabled="!tool.enabled" autocomplete="new-password" />
+                                <label name="settingNameLabel">{{ ::setting.param.name.replace(tool.name + '_', '') }}</label>
                             </md-input-container>
                         </div>
                     </div>
@@ -54,5 +96,18 @@
                 </div>
             </div>
         </div>
+        <md-fab-speed-dial id="main-fab" md-direction="up" class="md-scale md-fab-bottom-right" ng-if="$ctrl.isMultipleAllowed">
+            <md-fab-trigger>
+                <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
+                    <span class="fa fa-plus" aria-hidden="true"></span>
+                </md-button>
+            </md-fab-trigger>
+            <md-fab-actions>
+                <md-button aria-label="menu" class="md-fab md-raised md-fab-sm" ng-repeat="tool in $ctrl.toolTypes" ng-click="$ctrl.addNewTool(tool)">
+                    <md-tooltip md-direction="top">{{::tool.name | lowercase}}</md-tooltip>
+                    <span class="integration-tool__item-icon {{::tool.name | lowercase}}" aria-hidden="true"></span>
+                </md-button>
+            </md-fab-actions>
+        </md-fab-speed-dial>
     </div>
 </div>
