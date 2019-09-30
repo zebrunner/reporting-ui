@@ -39,7 +39,7 @@
                            <md-input-container>
                                <input name="settingName" type="text" ng-if="!setting.valueForEncrypting" ng-model="setting.value"/>
                                <input name="settingName" type="password" ng-if="setting.valueForEncrypting" ng-model="setting.value" autocomplete="new-password" />
-                               <label name="settingNameLabel">{{ ::setting.name.replace(tool.name + '_', '') }}</label>
+                               <label name="settingNameLabel">{{ ::setting.name }}</label>
                            </md-input-container>
                        </div>
                    </div>

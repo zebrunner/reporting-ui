@@ -35,10 +35,17 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         return loader$;
     }
 
-    function setToolStatus(toolName, status) { //TODO: wait field 'connected' and check then and fix according to new structure
-        if (tools[toolName] === status) { return; }
+    function setToolStatus(toolName, id, status, newTool) {
+        let currentTool = tools[toolName].find((tool) => {
+            return tool.integrationId === id;
+        })
+        if (!currentTool) {
+            tools[toolName].push(newTool);
+            return;
+        }
+        if (currentTool.connected === status) { return; }
 
-        tools[toolName] = status;
+        currentTool.connected = status;
     }
 
     function isToolConnected(currentTool) {
@@ -51,7 +58,7 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
                 return tool.integrationId === currentTool.id;
             })
 
-            return tempTool.default && tempTool.connected;
+            return tempTool && tempTool.connected;
         }
     }
 
@@ -123,8 +130,8 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         return $httpMock.get(API_URL + '/api/integrations?groupId=' + type).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integrations of groups`));
     }
 
-    function fetchToolConnectionStatus(name) {
-        return $httpMock.get(API_URL + '/api/settings/tools/' + name).then(UtilService.handleSuccess, UtilService.handleError('Unable to get tool connection'));
+    function fetchToolConnectionStatus(groupName, id) {
+        return $httpMock.get(API_URL + '/api/integrations-info/' + id + '?groupName=' + groupName).then(UtilService.handleSuccess, UtilService.handleError('Unable to get tool connection'));
     }
 
     function uploadSettingFile(multipartFile, tool, settingName) {

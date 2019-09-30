@@ -3,9 +3,7 @@
 import fileUploadTemplate from './file-upload-modal/file-upload-modal.html';
 import fileUploadController from './file-upload-modal/file-upload-modal.controller';
 
-const integrationsController = function integrationsController($scope, $rootScope, $state, $mdConstant,
-                                                               $stateParams, $mdDialog, UploadService,
-                                                               SettingsService, toolsService, windowWidthService, $q, messageService, $timeout) {
+const integrationsController = function integrationsController($state, $mdDialog, SettingsService, toolsService, windowWidthService, $q, messageService, $timeout) {
     'ngInject';
 
     const SORT_POSTFIXES = {
@@ -75,16 +73,15 @@ const integrationsController = function integrationsController($scope, $rootScop
     }
 
     function changeStatus(tool) {
-        const statusSetting = {...tool.statusSetting};
-
-        statusSetting.value = tool.enabled ? 'true' : 'false';
         tool.enabled && (tool.connectionChecking = true);
         toolsService.updateSettings(tool.id, tool)
             .then(function (rs) {
                 if (rs.success) {
-                    toolsService.setToolStatus(tool.type.name, rs.data.connected);
-
                     if (tool.enabled) {
+                        toolsService.fetchToolConnectionStatus(vm.currentType.name, rs.data.id)
+                            .then((res) => {
+                                toolsService.setToolStatus(tool.type.name, rs.data.id, res.data.connected);
+                            })
                         messageService.success('Tool ' + tool.name + ' is enabled');
                     } else {
                         messageService.success('Tool ' + tool.name + ' is disabled');
@@ -236,6 +233,7 @@ const integrationsController = function integrationsController($scope, $rootScop
         vm.isNewToolAdding = false;
         vm.newItem = null;
         vm.isMultipleAllowed = type.multipleAllowed;
+        vm.currentType = type;
 
         toolsService.fetchIntegrationOfType(type.id).then((res) => {
             vm.tools = res.data;
@@ -265,10 +263,28 @@ const integrationsController = function integrationsController($scope, $rootScop
             .then((res) => {
                 if (res.success) {
                     vm.tools.unshift(res.data);
+                    toolsService.fetchToolConnectionStatus(vm.currentType.name, res.data.id)
+                        .then((rs) => {
+                            toolsService.setToolStatus(res.data.type.name, res.data.id, rs.data.connected, {
+                                backReferenceId: res.data.backReferenceId,
+                                connected: res.data.connected,
+                                default: false,
+                                enabled: res.data.enabled,
+                                integrationId: res.data.id,
+                            })
+                        })
+                    clearFields();
                 } else {
                     messageService.error(res.message);
                 }
             })
+    }
+
+    function clearFields() {
+        vm.newItem.name = '';
+        vm.newItem.params.forEach((param) => {
+            return param.value = null;
+        })
     }
 
     function selectFieldsForNew(tool) {
@@ -280,7 +296,7 @@ const integrationsController = function integrationsController($scope, $rootScop
                 });
             }
         })
-        vm.newItem =  JSON.parse(JSON.stringify(fieldsForNewTool));
+        vm.newItem =  angular.copy(fieldsForNewTool);
         vm.newItem.type = fieldsForNewTool.name;
         vm.newItem.name = '';
     }
