@@ -35,14 +35,10 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         return loader$;
     }
 
-    function setToolStatus(toolName, id, status, newTool) {
+    function setToolStatus(toolName, id, status) {
         let currentTool = tools[toolName].find((tool) => {
             return tool.integrationId === id;
         })
-        if (!currentTool) {
-            tools[toolName].push(newTool);
-            return;
-        }
         if (currentTool.connected === status) { return; }
 
         currentTool.connected = status;

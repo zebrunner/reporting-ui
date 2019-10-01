@@ -51,12 +51,17 @@ const integrationsController = function integrationsController($state, $mdDialog
         toolsService.updateSettings(tool.id, tool)
             .then(rs => {
                 if (rs.success) {
-                    toolsService.setToolStatus(tool.type.name, rs.data.connected);
-                    messageService.success('Tool ' + tool.name + ' was changed');
+                    toolsService.fetchToolConnectionStatus(vm.currentType.name, rs.data.id)
+                        .then((res) => {
+                            toolsService.setToolStatus(tool.type.name, rs.data.id, res.data.connected);
+                            tool.connectionChecking = false;
+                            messageService.success('Tool ' + tool.name + ' was changed');
+                        })
                 } else {
                     messageService.error(rs.message);
+                    tool.connectionChecking = false;
                 }
-                tool.connectionChecking = false;
+                
         });
     }
 
@@ -263,16 +268,7 @@ const integrationsController = function integrationsController($state, $mdDialog
             .then((res) => {
                 if (res.success) {
                     vm.tools.unshift(res.data);
-                    toolsService.fetchToolConnectionStatus(vm.currentType.name, res.data.id)
-                        .then((rs) => {
-                            toolsService.setToolStatus(res.data.type.name, res.data.id, rs.data.connected, {
-                                backReferenceId: res.data.backReferenceId,
-                                connected: res.data.connected,
-                                default: false,
-                                enabled: res.data.enabled,
-                                integrationId: res.data.id,
-                            })
-                        })
+                    toolsService.getTools(true);
                     clearFields();
                 } else {
                     messageService.error(res.message);
