@@ -3,7 +3,7 @@
 import fileUploadTemplate from './file-upload-modal/file-upload-modal.html';
 import fileUploadController from './file-upload-modal/file-upload-modal.controller';
 
-const integrationsController = function integrationsController($state, $mdDialog, SettingsService, toolsService, windowWidthService, $q, messageService, $timeout) {
+const integrationsController = function integrationsController($state, $mdDialog, SettingsService, toolsService, windowWidthService, $q, messageService, $timeout, integrationsService, $transitions) {
     'ngInject';
 
     const SORT_POSTFIXES = {
@@ -224,21 +224,37 @@ const integrationsController = function integrationsController($state, $mdDialog
         toolsService.fetchIntegrationsTypes().then((res) => {
             vm.groups = res.data;
             vm.isLoading = false;
-
+            integrationsService.readType();
+            
             if(vm.groups.length) {
                 $timeout(function() {
-                    vm.selectIntegrationType(vm.groups[0], 0);
+                    let initialType = integrationsService.getType() || vm.groups[0];
+                    
+                    vm.selectIntegrationType(initialType);
                 });
             }
         })
+        bindEvents();
     }
 
-    function selectIntegrationType(type, index) {
-        vm.chipsCtrl.selectedChip = index;
+    function bindEvents() {
+        const onTransStartSubscription = $transitions.onStart({}, function(trans) {
+            integrationsService.clear();
+            onTransStartSubscription();
+        });
+    }
+
+    function selectIntegrationType(type) {
+        vm.chipsCtrl.selectedChip = vm.groups.findIndex((group) => {
+            return group.id === type.id;
+        });
         vm.isNewToolAdding = false;
         vm.newItem = null;
         vm.isMultipleAllowed = type.multipleAllowed;
         vm.currentType = type;
+
+        integrationsService.setType(type);
+        integrationsService.storeType();
 
         toolsService.fetchIntegrationOfType(type.id).then((res) => {
             vm.tools = res.data;

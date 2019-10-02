@@ -5,6 +5,9 @@
     md-chips .md-chips {
         box-shadow: none;
     }
+    md-chips.filter-chip.custom-filter md-chips-wrap.md-chips {
+        display: block;
+    }
     .page {
     }
     @media screen and (max-width: $screen-phone) {

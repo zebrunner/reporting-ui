@@ -43,6 +43,7 @@ require('./test.service');
 require('./testcase.service');
 require('./testrun.service');
 require('./testsruns.service');
+require('./integrations.service');
 require('./upload.service');
 require('./user.service');
 require('./util.service');
