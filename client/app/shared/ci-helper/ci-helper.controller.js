@@ -5,10 +5,11 @@ import 'brace/mode/json';
 import 'brace/theme/eclipse';
 import 'angular-ui-ace';
 
-const CiHelperController = function CiHelperController($scope, $rootScope, $q, $window, $mdDialog, $timeout, $interval, windowWidthService, LauncherService, UserService, ScmService, AuthService, messageService, UtilService, API_URL) {
+const CiHelperController = function CiHelperController($scope, $rootScope, $q, toolsService, $window, $mdDialog, $timeout, $interval, windowWidthService, LauncherService, UserService, ScmService, AuthService, messageService, UtilService, API_URL) {
     'ngInject';
 
     let isMultitenant = false;
+    const AUTOMATIZATION_SERVER_ID = 2;
 
     $scope.ciOptions = {};
 
@@ -17,6 +18,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     };
 
     $scope.testSuites = [];
+    $scope.currentServer = null;
     $scope.scmAccounts = [];
     $scope.scmAccount = {};
     $scope.launcherScan = {
@@ -53,7 +55,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     $scope.onLoad = function(editor) {
     };
 
-    $scope.onChange = function(editor) {
+    $scope.onChange = function(server) {
+        $scope.currentServer = server;
+        $scope.needServer = false;
     };
 
     let gitHubPopUp;
@@ -110,6 +114,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
         const expandFolderFinishClassName = 'expand-folder_finish';
         const switchFolderElement = element ? element : angular.element(e.target);
         const folderElement = angular.element(switchFolderElement.closest('.folder-container'));
+
+        $scope.needServer = false;
+        $scope.currentServer = null;
         if(folderElement.hasClass(expandFolderClassName) && ! forceExpand) {
             folderElement.addClass(expandFolderFinishClassName);
             folderElement.removeClass(expandFolderClassName);
@@ -222,11 +229,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     $scope.addRepo = function() {
         $scope.repo = {};
-        $scope.connectToGitHub().then(function () {
-            clearPrevLauncherElement();
-            clearPrevFolderElement();
+        // $scope.connectToGitHub().then(function () {
+        //     clearPrevLauncherElement();
+        //     clearPrevFolderElement();
             $scope.cardNumber = 1;
-        });
+            $scope.needServer = false;
+            $scope.currentServer = null;
+        // });
     };
 
     $scope.highlightFolder = function(id) {
@@ -237,6 +246,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     $scope.manageFolder = function (scmAccount) {
         $scope.scmAccount = angular.copy(scmAccount);
+        $scope.needServer = true;
+        $scope.currentServer = null;
         if(scmAccount.id !== $scope.scmAccount.id) {
             getScmAccountDefaultBranchName(scmAccount.id);
         }
@@ -257,7 +268,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     $scope.toEditLauncher = function(launcher) {
         //clearLauncher();
         //$scope.launcher = angular.copy(launcher);
-        $scope.cardNumber = 2;
+            $scope.cardNumber = 2;
     };
 
     function getScmAccountDefaultBranchName(id) {
@@ -314,6 +325,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
     $scope.chooseLauncher = function(launcher, skipBuilderApply) {
         highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
+        $scope.needServer = false;
+        $scope.currentServer = null;
         $scope.DEFAULT_TEMPLATES.model = {};
         if(! skipBuilderApply) {
             switchToLauncherPreview(launcher);
@@ -377,6 +390,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
 
     $scope.createLauncher = function(launcher) {
         return $q(function (resolve, reject) {
+            launcher.automationServerId = $scope.currentServer.id;
             LauncherService.createLauncher(launcher).then(function (rs) {
                 if (rs.success) {
                     $scope.launcher = rs.data;
@@ -487,6 +501,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !! rescan;
+            launcherScan.automationServerId = $scope.currentServer.id;
             LauncherService.scanRepository(launcherScan).then(function (rs) {
                 if (rs.success) {
                     const queueItemUrl = rs.data.queueItemUrl;
@@ -851,6 +866,12 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, $
                 resolve();
             });
         });
+        toolsService.fetchIntegrationOfType(AUTOMATIZATION_SERVER_ID).then((res) => {
+            $scope.servers = res.data;
+            if($scope.servers.length > 1) {
+                $scope.needServer = true;
+            }
+        })
         getTenantInfo().then(function (tenant) {
             isMultitenant = tenant.multitenant;
             getClientId().then(function (clientId) {
