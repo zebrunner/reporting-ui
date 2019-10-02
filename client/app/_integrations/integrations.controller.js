@@ -229,7 +229,7 @@ const integrationsController = function integrationsController($state, $mdDialog
             if(vm.groups.length) {
                 $timeout(function() {
                     let initialType = integrationsService.getType() || vm.groups[0];
-                    
+
                     vm.selectIntegrationType(initialType);
                 });
             }
@@ -285,7 +285,7 @@ const integrationsController = function integrationsController($state, $mdDialog
                 if (res.success) {
                     vm.tools.unshift(res.data);
                     toolsService.getTools(true);
-                    clearFields();
+                    cancel();
                 } else {
                     messageService.error(res.message);
                 }

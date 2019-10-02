@@ -121,7 +121,6 @@
                 visibility: visible;
                 &, .integration-tool__item {
                     height: 100%;
-                    transition: all .25s ease-in-out;
                 }
                 &._hidden {
                     opacity: 0;

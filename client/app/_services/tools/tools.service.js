@@ -46,8 +46,8 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
 
     function isToolConnected(currentTool) {
         if(!currentTool.name) {
-            return tools[currentTool] && tools[currentTool].find((tool) => {
-                return tool.default && tool.connected;
+            return tools[currentTool] && tools[currentTool].some((tool) => {
+                return tool.connected;
             });
         } else if(tools[currentTool.type.name]) {
             let tempTool = tools[currentTool.type.name].find((tool) => {
