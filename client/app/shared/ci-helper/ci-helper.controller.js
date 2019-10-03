@@ -389,8 +389,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.createLauncher = function(launcher) {
         return $q(function (resolve, reject) {
-            launcher.automationServerId = $scope.currentServer.id;
-            LauncherService.createLauncher(launcher).then(function (rs) {
+            LauncherService.createLauncher(launcher, $scope.currentServer.id).then(function (rs) {
                 if (rs.success) {
                     $scope.launcher = rs.data;
                     $scope.launchers.push(rs.data);
@@ -500,8 +499,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !! rescan;
-            launcherScan.automationServerId = $scope.currentServer.id;
-            LauncherService.scanRepository(launcherScan).then(function (rs) {
+            LauncherService.scanRepository(launcherScan, $scope.currentServer.id).then(function (rs) {
                 if (rs.success) {
                     const queueItemUrl = rs.data.queueItemUrl;
                     $scope.launcherLoaderStatus.rescan = launcherScan.rescan;

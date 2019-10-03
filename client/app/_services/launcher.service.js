@@ -21,8 +21,9 @@
 
         return service;
 
-        function createLauncher(launcher) {
-            return $http.post(API_URL + '/api/launchers', launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to create launcher'));
+        function createLauncher(launcher, automationServerId) {
+            const query = $httpParamSerializer({automationServerId: automationServerId});
+            return $http.post(API_URL + '/api/launchers' + '?' + query, launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to create launcher'));
         }
 
         function getLauncherById(id) {
@@ -45,8 +46,9 @@
             return $http.post(API_URL + '/api/launchers/build', launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to build with launcher'));
         }
 
-        function scanRepository(launcherScanner) {
-            return $http.post(API_URL + '/api/launchers/scanner', launcherScanner).then(UtilService.handleSuccess, UtilService.handleError('Unable to scan repository'));
+        function scanRepository(launcherScanner, automationServerId) {
+            const query = $httpParamSerializer({automationServerId: automationServerId});
+            return $http.post(API_URL + '/api/launchers/scanner' + '?' + query, launcherScanner).then(UtilService.handleSuccess, UtilService.handleError('Unable to scan repository'));
         }
 
         function getBuildNumber(queueItemUrl) {
