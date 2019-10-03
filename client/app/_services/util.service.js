@@ -139,8 +139,8 @@
         function settingsAsMap(settings) {
             const map = {};
 
-            settings && settings.forEach(({ name, value }) => {
-                    map[name] = value;
+            settings && settings.forEach(({ param, value }) => {
+                    map[param.name] = value;
                 });
 
             return map;

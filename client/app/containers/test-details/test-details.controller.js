@@ -17,6 +17,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         statuses: testDetailsService.getStatuses() || [],
         tags: testDetailsService.getTags() || []
     };
+    let testCaseManagementTools = [];
     let jiraSettings = {};
     let testRailSettings = {};
     let qTestSettings = {};
@@ -70,9 +71,7 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
     function controlInit() {
         TENANT = $rootScope.globals.auth.tenant;
 
-        initJiraSettings();
-        initTestRailSettings();
-        initQTestSettings();
+        initAllSettings();
         initTestGroups();
         initWebsocket();
         initTests();
@@ -156,37 +155,45 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         );
     }
 
-    function initJiraSettings() {
-        toolsService.fetchToolSettings('JIRA')
-            .then(function(settings) {
-                if (settings.success) {
-                    jiraSettings = UtilService.settingsAsMap(settings.data);
+    function initAllSettings() {
+        toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
+            .then((res) => {
+                testCaseManagementTools = res.data;
+                initJiraSettings();
+                initTestRailSettings();
+                initQTestSettings();
+            })
+    }
 
-                    jiraSettings['JIRA_URL'] && (jiraSettings['JIRA_URL'] = jiraSettings['JIRA_URL'].replace(/\/$/,''));
-                }
-            });
+    function findToolByName(name) {
+        return testCaseManagementTools.find((tool) => tool.name === name);
+    }
+
+    function initJiraSettings() {
+        let jira = findToolByName('JIRA');
+        if (jira && jira.settings) {
+            jiraSettings = UtilService.settingsAsMap(jira.settings);
+
+            jiraSettings['JIRA_URL'] && (jiraSettings['JIRA_URL'] = jiraSettings['JIRA_URL'].replace(/\/$/,''));
+        }
     }
 
     function initTestRailSettings() {
-        toolsService.fetchToolSettings('TESTRAIL')
-            .then(function(settings) {
-                if (settings.success) {
-                    testRailSettings = UtilService.settingsAsMap(settings.data);
+        let testRail = findToolByName('TESTRAIL');
+        if (testRail && testRail.settings) {
+            testRailSettings = UtilService.settingsAsMap(testRail.settings);
 
-                    testRailSettings['TESTRAIL_URL'] && (testRailSettings['TESTRAIL_URL'] = testRailSettings['TESTRAIL_URL'].replace(/\/$/,''));
-                }
-            });
+            testRailSettings['TESTRAIL_URL'] && (testRailSettings['TESTRAIL_URL'] = testRailSettings['TESTRAIL_URL'].replace(/\/$/,''));
+        }
     }
 
     function initQTestSettings() {
-        toolsService.fetchToolSettings('QTEST')
-            .then(function(settings) {
-                if (settings.success) {
-                    qTestSettings = UtilService.settingsAsMap(settings.data);
+        let qtest = findToolByName('QTEST');
+        if (qtest && qtest.settings) {
+            qTestSettings = UtilService.settingsAsMap(qtest.settings);
 
-                    qTestSettings['QTEST_URL'] && (qTestSettings['QTEST_URL'] = qTestSettings['QTEST_URL'].replace(/\/$/,''));
-                }
-            });
+            qTestSettings['QTEST_URL'] && (qTestSettings['QTEST_URL'] = qTestSettings['QTEST_URL'].replace(/\/$/,''));
+        }
     }
 
     function updateTest(test, isPassed) {

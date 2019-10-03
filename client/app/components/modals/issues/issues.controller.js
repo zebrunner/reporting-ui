@@ -306,10 +306,11 @@ const IssuesModalController = function IssuesModalController(
     /* Gets from DB JIRA_CLOSED_STATUS name for the current project*/
 
     function getJiraClosedStatusName() {
-        toolsService.fetchToolSettings('JIRA')
+        toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
             .then(rs => {
                 if (rs.success) {
-                    const setting = rs.data.find(({ name }) => name === 'JIRA_CLOSED_STATUS');
+                    const jira = rs.data.find((data) => data.name === 'JIRA')
+                    const setting = jira.settings.find((setting) => setting.param.name === 'JIRA_CLOSED_STATUS');
 
                     if (setting) {
                         vm.closedStatusName = setting.value.toUpperCase();
