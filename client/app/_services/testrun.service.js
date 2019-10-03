@@ -91,7 +91,7 @@
             return $httpMock.get(API_URL + '/api/tests/runs/' + id + '/debug').then(UtilService.handleSuccess, UtilService.handleError('Unable to start debug'));
         }
 
-        function buildTestRun(id, jobParameters, buildWithParameters) {
+        function buildTestRun(id, jobParameters) {
             return $httpMock.post(API_URL + '/api/tests/runs/' + id + '/build', jobParameters).then(UtilService.handleSuccess, UtilService.handleError('Unable to build test run'));
         }
 
