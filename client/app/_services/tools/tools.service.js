@@ -18,6 +18,7 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         uploadSettingFile,
         fetchIntegrationsTypes,
         fetchIntegrationOfType,
+        fetchIntegrationOfTypeByName,
         createIntegration,
 
         // fillToolSettings,
@@ -124,6 +125,10 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
 
     function fetchIntegrationOfType(type) {
         return $httpMock.get(API_URL + '/api/integrations?groupId=' + type).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integrations of groups`));
+    }
+
+    function fetchIntegrationOfTypeByName(name) {
+        return $httpMock.get(API_URL + '/api/integrations?groupName=' + name).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integrations of groups`));
     }
 
     function fetchToolConnectionStatus(groupName, id) {

@@ -256,7 +256,7 @@ const integrationsController = function integrationsController($state, $mdDialog
         integrationsService.setType(type);
         integrationsService.storeType();
 
-        toolsService.fetchIntegrationOfType(type.id).then((res) => {
+        toolsService.fetchIntegrationOfTypeByName(type.name).then((res) => {
             vm.tools = res.data;
             vm.toolTypes = vm.groups.find((group) => {
                 return group.id === type.id;

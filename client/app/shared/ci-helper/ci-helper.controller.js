@@ -9,7 +9,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     'ngInject';
 
     let isMultitenant = false;
-    const AUTOMATIZATION_SERVER_ID = 2;
 
     $scope.ciOptions = {};
 
@@ -866,7 +865,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 resolve();
             });
         });
-        toolsService.fetchIntegrationOfType(AUTOMATIZATION_SERVER_ID).then((res) => {
+        toolsService.fetchIntegrationOfTypeByName('AUTOMATION_SERVER').then((res) => {
             $scope.servers = res.data;
             if($scope.servers.length > 1) {
                 $scope.needServer = true;
