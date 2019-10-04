@@ -740,6 +740,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                     const newScmAccountElement = angular.element('.folder-container-' + rs.data.id + ' .folder-container_folder_icon');
                     $scope.manageFolder($scope.scmAccount);
                     $scope.switchFolder(null, newScmAccountElement, true);
+                    $scope.needServer = true;
                     $scope.$apply();
                 }, 0, false);
             } else {
