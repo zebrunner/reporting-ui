@@ -17,7 +17,7 @@
         <md-chips class="filter-chip custom-filter" ng-model="$ctrl.groups" md-removable="false" readonly="true">
             <md-chip-template>
                 <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.selectIntegrationType($chip, $index)">
-                    <span>{{$chip.name}}</span>
+                    <span>{{$chip.displayName}}</span>
                 </div>
             </md-chip-template>
         </md-chips>
