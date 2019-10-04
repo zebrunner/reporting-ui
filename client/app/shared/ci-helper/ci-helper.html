@@ -3,7 +3,7 @@
         <zf-modal-helper-container class="ci-runner-container_helper" ng-show="! isMobile || cardNumber === 0">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
-                <button type="button" ng-click="addRepo();" class="zf-primary-button">
+                <button type="button" ng-click="addRepo();" has-any-permission="['MODIFY_LAUNCHERS']" class="zf-primary-button">
                     <i class="material-icons">add</i>
                     <span>ADD REPO</span>
                 </button>

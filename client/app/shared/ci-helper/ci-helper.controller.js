@@ -228,13 +228,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.addRepo = function() {
         $scope.repo = {};
-        // $scope.connectToGitHub().then(function () {
-        //     clearPrevLauncherElement();
-        //     clearPrevFolderElement();
+        $scope.connectToGitHub().then(function () {
+            clearPrevLauncherElement();
+            clearPrevFolderElement();
             $scope.cardNumber = 1;
             $scope.needServer = false;
             $scope.currentServer = null;
-        // });
+        });
     };
 
     $scope.highlightFolder = function(id) {
