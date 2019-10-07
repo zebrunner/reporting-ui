@@ -2643,7 +2643,12 @@ $light-inprogress: #68c9fd;
             width: 100% !important;
             padding: 75px 16px 20px 16px !important;
         }
-
+        
+        .widget-wizard_container_elements_item_container_title {
+            display: flex;
+            align-items: center;
+        }
+        
         &_block {
             &_title {
                 height: 14px;

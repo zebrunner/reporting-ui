@@ -65,13 +65,21 @@
                 </md-button>
             </div>
         </zf-modal-helper-container>
-        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="needServer && cardNumber !== 0">
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="needServer && cardNumber !== 0 && !scmAccount.launchers">
             <ng-form name="info">
                 <div class="ci-runner-container_content_block _server-selection">
                     <zf-radio-button class="widget-wizard_container_elements_item" on-change="onChange(server);" ng-repeat="server in servers track by server.id" ng-model="currentServer" value="server">
                         <zf-radio-button-body>
                             <div class="widget-wizard_container_elements_item_container">
-                                <div class="widget-wizard_container_elements_item_container_title"><show-part text="::server.name" limit="50"></show-part></div>
+                                <div class="widget-wizard_container_elements_item_container_title"><show-part text="::server.name" limit="50"></show-part>
+                                    <i ng-class="{'highlight_red': !server.connected && server.enabled, 'highlight_green': server.connected && server.enabled, 'highlight_gray': !server.enabled}"
+                                        ng-if="!tool.connectionChecking"
+                                        class="material-icons material-icon-16px integration-tool__item-status">fiber_manual_record</i>
+                                    </div>
+                                </div>
+                                <div class="widget-wizard_container_elements_item_icon" ng-switch="::server.type.name">
+                                    <md-icon ng-switch-when="JENKINS" md-svg-src="../../../../assets/images/_icons_tools/jenkins.svg"></md-icon>
+                                    <md-icon ng-switch-default md-svg-src="../../../../assets/images/default_chart.svg"></md-icon>
                                 </div>
                         </zf-radio-button-body>
                     </zf-radio-button>
@@ -108,7 +116,7 @@
                 </div>
             </ng-form>
         </zf-modal-content-container>
-        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-class="{'__info-edit-mode': launcher.id}" ng-if="cardNumber === 2 && !needServer">
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-class="{'__info-edit-mode': launcher.id}" ng-if="cardNumber === 2 && (!needServer || scmAccount.launchers)">
             <ng-form ng-if="! launcher.id" name="scanInfo">
                 <div class="ci-runner-container_content_block">
                     <div ng-if="scmAccount.id" class="ci-runner-container_content_block_title __ci-runner-lg-title __scan-repo">
