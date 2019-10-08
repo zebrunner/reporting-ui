@@ -12,25 +12,25 @@
                 </md-input-container>
             </div>
         </div>
-        <div class="widget-wizard_container_elements" ng-switch="card.index">
+        <div class="selection-blocks_container_elements" ng-switch="card.index">
             <div ng-switch-when="1">
-                <zf-radio-button class="widget-wizard_container_elements_item widget-wizard_container_elements_item_add" ng-click="getCardById('choose-create')">
+                <zf-radio-button class="selection-blocks_container_elements_item selection-blocks_container_elements_item_add" ng-click="getCardById('choose-create')">
                     <zf-radio-button-body>
-                        <div class="widget-wizard_container_elements_item_add_icon">
+                        <div class="selection-blocks_container_elements_item_add_icon">
                             <md-icon md-svg-src="../../../../assets/images/select_widget.svg"></md-icon>
                         </div>
-                        <div class="widget-wizard_container_elements_item_add_title">
+                        <div class="selection-blocks_container_elements_item_add_title">
                             Choose from existing widgets
                         </div>
                     </zf-radio-button-body>
                 </zf-radio-button>
-                <zf-radio-button class="widget-wizard_container_elements_item" ng-repeat="template in templates | filter:sc track by template.id" on-change="onChange();" ng-model="widget.widgetTemplate" value="template">
+                <zf-radio-button class="selection-blocks_container_elements_item" ng-repeat="template in templates | filter:sc track by template.id" on-change="onChange();" ng-model="widget.widgetTemplate" value="template">
                     <zf-radio-button-body>
-                        <div class="widget-wizard_container_elements_item_container">
-                            <div class="widget-wizard_container_elements_item_container_title"><show-part text="::template.name" limit="50"></show-part></div>
-                            <div class="widget-wizard_container_elements_item_container_description"><show-part text="::template.description" limit="150"></show-part></div>
+                        <div class="selection-blocks_container_elements_item_container">
+                            <div class="selection-blocks_container_elements_item_container_title"><show-part text="::template.name" limit="50"></show-part></div>
+                            <div class="selection-blocks_container_elements_item_container_description"><show-part text="::template.description" limit="150"></show-part></div>
                         </div>
-                        <div class="widget-wizard_container_elements_item_icon" ng-switch="::template.type">
+                        <div class="selection-blocks_container_elements_item_icon" ng-switch="::template.type">
                             <md-icon ng-switch-when="PIE" md-svg-src="../../../../assets/images/pie_chart.svg"></md-icon>
                             <md-icon ng-switch-when="BAR" md-svg-src="../../../../assets/images/bar_chart.svg"></md-icon>
                             <md-icon ng-switch-when="TABLE" md-svg-src="../../../../assets/images/table_chart.svg"></md-icon>
@@ -41,36 +41,36 @@
                 </zf-radio-button>
             </div>
             <div ng-switch-when="2">
-                <zf-radio-button class="widget-wizard_container_elements_item widget-wizard_container_elements_item_add" ng-click="getCardById('choose')">
+                <zf-radio-button class="selection-blocks_container_elements_item selection-blocks_container_elements_item_add" ng-click="getCardById('choose')">
                     <zf-radio-button-body>
-                        <div class="widget-wizard_container_elements_item_add_title item-title-back">
-                            <div class="widget-wizard_container_elements_item_add_icon item-icon-back">
+                        <div class="selection-blocks_container_elements_item_add_title item-title-back">
+                            <div class="selection-blocks_container_elements_item_add_icon item-icon-back">
                                 <md-icon md-svg-src="../../../../assets/images/big_back.svg"></md-icon>
                             </div>
                             Back to templates
                         </div>
                     </zf-radio-button-body>
                 </zf-radio-button>
-                <zf-radio-button class="widget-wizard_container_elements_item" ng-repeat="w in widgets | filter:sc track by w.id" on-change="onWidgetChange()" ng-model="tempData.widget" value="w">
+                <zf-radio-button class="selection-blocks_container_elements_item" ng-repeat="w in widgets | filter:sc track by w.id" on-change="onWidgetChange()" ng-model="tempData.widget" value="w">
                     <zf-radio-button-body>
-                        <div class="widget-wizard_container_elements_item_container">
-                            <div class="widget-wizard_container_elements_item_container_title"><show-part text="::w.title" limit="50"></show-part></div>
-                            <div class="widget-wizard_container_elements_item_container_description"><show-part text="::w.description" limit="150"></show-part></div>
+                        <div class="selection-blocks_container_elements_item_container">
+                            <div class="selection-blocks_container_elements_item_container_title"><show-part text="::w.title" limit="50"></show-part></div>
+                            <div class="selection-blocks_container_elements_item_container_description"><show-part text="::w.description" limit="150"></show-part></div>
                         </div>
-                        <div class="widget-wizard_container_elements_item_icon" ng-switch="::w.type">
+                        <div class="selection-blocks_container_elements_item_icon" ng-switch="::w.type">
                             <i ng-switch-when="BAR" class="material-icons">insert_chart</i>
                             <i ng-switch-when="PIE" class="material-icons">pie_chart</i>
                             <i ng-switch-when="TABLE" class="material-icons">table_chart</i>
                             <md-icon ng-switch-when="LINE" md-svg-src="../../../../assets/images/line_chart_filled.svg"></md-icon>
                             <i ng-switch-default class="material-icons">casino</i>
                         </div>
-                        <div ng-if="w.existing" class="widget-wizard_container_elements_item_additional">
+                        <div ng-if="w.existing" class="selection-blocks_container_elements_item_additional">
                             Added
                             <i class="material-icons">check</i>
                         </div>
                     </zf-radio-button-body>
                     <zf-radio-button-controls>
-                        <div class="widget-wizard_container_elements_item_action">
+                        <div class="selection-blocks_container_elements_item_action">
                             <md-menu class="pull-right">
                                 <md-icon data-ng-click="$mdMenu.open($event);" class="material-icons">more_vert</md-icon>
                                 <md-menu-content width="2">
@@ -96,7 +96,7 @@
                 <ng-form class="zf-display-table" name="params">
                     <table>
                         <tbody>
-                            <tr ng-if="paramValue.required && ! paramValue.hidden" class="widget-wizard_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
+                            <tr ng-if="paramValue.required && ! paramValue.hidden" class="selection-blocks_container_elements_input" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
                                 <td ng-show="['title'].indexOf(paramValue.type) === -1" class="zf-label">{{paramName}}</td>
                                 <td ng-switch-default>
                                     <md-input-container class="no-margin _gray-bg">
@@ -185,18 +185,18 @@
                         </tbody>
                     </table>
                 </ng-form>
-                <div ng-show="hasEmptyOptionalParams(false)" class="widget-wizard_container_elements_show-more" md-no-ink>
+                <div ng-show="hasEmptyOptionalParams(false)" class="selection-blocks_container_elements_show-more" md-no-ink>
                     <md-button ng-init="showAdvanced === false" ng-click="showAdvanced = ! showAdvanced" class="md-primary">
                         Show <span ng-if="! showAdvanced">more</span><span ng-if="showAdvanced">less</span>
                     </md-button>
                 </div>
             </div>
             <div ng-switch-when="4">
-                <div class="widget-wizard_container_elements_warning" ng-if="dashboards && dashboards.length">
-                    <div class="widget-wizard_container_elements_warning_body">
+                <div class="selection-blocks_container_elements_warning" ng-if="dashboards && dashboards.length">
+                    <div class="selection-blocks_container_elements_warning_body">
                         Warning! Any changes may cause loss of data. This widget is currently is in use on other dashboard(s).
                     </div>
-                    <div class="widget-wizard_container_elements_warning_list">
+                    <div class="selection-blocks_container_elements_warning_list">
                         <ul>
                             <li ng-repeat="d in ::dashboards | orderBy: 'title' track by d.id">
                                 {{d.title}}
@@ -204,9 +204,9 @@
                         </ul>
                     </div>
                 </div>
-                <div class="widget-wizard_container_elements_personal">
+                <div class="selection-blocks_container_elements_personal">
                     <ng-form class="form-validation" name="info">
-                        <div class="widget-wizard_container_elements_personal_item">
+                        <div class="selection-blocks_container_elements_personal_item">
                             <md-input-container class="_gray-bg">
                                 <label class="placeholder-label">Name</label>
                                 <input type="text" name="title" data-ng-model="widget.title" autofocus required/>
@@ -215,7 +215,7 @@
                                 </div>
                             </md-input-container>
                         </div>
-                        <div class="widget-wizard_container_elements_personal_item __description">
+                        <div class="selection-blocks_container_elements_personal_item __description">
                             <md-input-container class="_gray-bg">
                                 <label class="placeholder-label">Description</label>
                                 <textarea name="description" class="form-control validation summary" rows="3" data-ng-model="widget.description"></textarea>
@@ -223,11 +223,11 @@
                         </div>
                     </ng-form>
                 </div>
-                <div class="widget-wizard_container_elements_additional" ng-if="widgetBuilder.legendConfigObject.legend">
+                <div class="selection-blocks_container_elements_additional" ng-if="widgetBuilder.legendConfigObject.legend">
                     <zf-input-container>
                         <label>Set legend</label>
-                        <div class="widget-wizard_container_elements_additional_legend-container">
-                            <div class="widget-wizard_container_elements_additional_legend-container_item" ng-repeat="legendName in widgetBuilder.legendConfigObject.legend track by $index">
+                        <div class="selection-blocks_container_elements_additional_legend-container">
+                            <div class="selection-blocks_container_elements_additional_legend-container_item" ng-repeat="legendName in widgetBuilder.legendConfigObject.legend track by $index">
                                 <md-checkbox ng-model="widgetBuilder.legendConfigObject.legendItems[legendName]" ng-change="onLegendChange(legendName);" aria-label="checkbox">{{legendName}}</md-checkbox>
                             </div>
                         </div>
