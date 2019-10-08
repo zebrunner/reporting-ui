@@ -241,13 +241,11 @@ const IssuesModalController = function IssuesModalController(
                 }
                 vm.issueJiraIdExists = true;
                 vm.isIssueClosed = vm.closedStatusName.toUpperCase() ===
-                    searchResultIssue.status.name.toUpperCase();
+                    searchResultIssue.status.toUpperCase();
                 vm.newIssue.description = searchResultIssue.summary;
-                vm.newIssue.assignee = searchResultIssue.assignee
-                    ? searchResultIssue.assignee.name
-                    : '';
-                vm.newIssue.reporter = searchResultIssue.reporter.name;
-                vm.newIssue.status = searchResultIssue.status.name.toUpperCase();
+                vm.newIssue.assignee = searchResultIssue.assigneeName || '';
+                vm.newIssue.reporter = searchResultIssue.reporterName || '';
+                vm.newIssue.status = searchResultIssue.status.toUpperCase();
                 if (!vm.ticketStatuses.filter(function(status) {
                     return status === vm.newIssue.status;
                 })[0]) {
