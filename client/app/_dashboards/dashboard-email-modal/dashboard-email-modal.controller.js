@@ -46,10 +46,28 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
                 return;
             }
         }
-        sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
-            $scope.hide();
-        });
+        if (areAllEmailsValid()) {
+            sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
+                $scope.hide();
+            });
+        } else {
+            messageService.error('Invalid email format');
+            return;
+        }
+        
     };
+
+    function areAllEmailsValid() {
+        return !$scope.email.recipients.find((recipient) => {
+            return !isValidRecipient(recipient)
+        })
+    }
+
+    function isValidRecipient(recipient) {
+        let reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+        
+        return (reg.test(recipient));
+    }
 
     function sendEmail(locator, email) {
        email.recipients =  email.recipients.toString();
@@ -87,7 +105,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
                     if (! rs.data.results.length) {
                         stopCriteria = criteria;
                     }
-                    return rs.data.results.filter(searchFilter(user));
+                    return rs.data.results.filter(searchFilter(user)).filter((user) => user.email);
                 }
                 else {
                 }
