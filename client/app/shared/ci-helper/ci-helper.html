@@ -68,7 +68,7 @@
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="needServer && cardNumber !== 0 && !scmAccount.launchers">
             <ng-form name="info">
                 <div class="ci-runner-container_content_block _server-selection">
-                    <zf-radio-button class="selection-blocks_container_elements_item" on-change="onChange(server);" ng-repeat="server in servers track by server.id" ng-model="currentServer" value="server">
+                    <zf-radio-button class="selection-blocks_container_elements_item" on-change="onChange(server);" ng-repeat="server in servers track by server.id" ng-model="currentServerId" value="server">
                         <zf-radio-button-body>
                             <div class="selection-blocks_container_elements_item_container">
                                 <div class="selection-blocks_container_elements_item_container_title"><show-part text="::server.name" limit="50"></show-part>

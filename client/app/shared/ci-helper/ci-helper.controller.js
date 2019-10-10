@@ -17,7 +17,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.testSuites = [];
-    $scope.currentServer = null;
+    $scope.currentServerId = null;
     $scope.scmAccounts = [];
     $scope.scmAccount = {};
     $scope.launcherScan = {
@@ -55,7 +55,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.onChange = function(server) {
-        $scope.currentServer = server;
+        $scope.currentServerId = server.id;
         $scope.needServer = false;
     };
 
@@ -115,7 +115,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         const folderElement = angular.element(switchFolderElement.closest('.folder-container'));
 
         $scope.needServer = false;
-        $scope.currentServer = null;
+        $scope.currentServerId = null;
         if(folderElement.hasClass(expandFolderClassName) && ! forceExpand) {
             folderElement.addClass(expandFolderFinishClassName);
             folderElement.removeClass(expandFolderClassName);
@@ -233,7 +233,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             clearPrevFolderElement();
             $scope.cardNumber = 1;
             $scope.needServer = false;
-            $scope.currentServer = null;
+            $scope.currentServerId = null;
         });
     };
 
@@ -246,7 +246,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     $scope.manageFolder = function (scmAccount) {
         $scope.scmAccount = angular.copy(scmAccount);
         $scope.needServer = true;
-        $scope.currentServer = null;
+        $scope.currentServerId = scmAccount.launchers ? scmAccount.launchers[0].job.automationServerId : null;
         if(scmAccount.id !== $scope.scmAccount.id) {
             getScmAccountDefaultBranchName(scmAccount.id);
         }
@@ -325,7 +325,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
         $scope.needServer = false;
-        $scope.currentServer = null;
+        $scope.currentServerId = null;
         $scope.DEFAULT_TEMPLATES.model = {};
         if(! skipBuilderApply) {
             switchToLauncherPreview(launcher);
@@ -389,7 +389,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.createLauncher = function(launcher) {
         return $q(function (resolve, reject) {
-            LauncherService.createLauncher(launcher, $scope.currentServer.id).then(function (rs) {
+            LauncherService.createLauncher(launcher, $scope.currentServerId).then(function (rs) {
                 if (rs.success) {
                     $scope.launcher = rs.data;
                     $scope.launchers.push(rs.data);
@@ -499,7 +499,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !! rescan;
-            LauncherService.scanRepository(launcherScan, $scope.currentServer.id).then(function (rs) {
+            LauncherService.scanRepository(launcherScan, $scope.currentServerId).then(function (rs) {
                 if (rs.success) {
                     const queueItemUrl = rs.data.queueItemUrl;
                     $scope.launcherLoaderStatus.rescan = launcherScan.rescan;
