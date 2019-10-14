@@ -7,6 +7,7 @@ const testRunInfoComponent = {
     constrollerAs: '$ctrl', 
     bindings: {
         testRun: '<',
+        configSnapshot: '<',
     },
     bindToController: true,
 };

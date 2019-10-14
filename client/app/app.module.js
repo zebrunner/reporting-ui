@@ -1,6 +1,7 @@
 'use strict';
 
 import '../styles/main.scss';
+import 'intersection-observer';
 import progressbarInterceptor from './http-interceptors/progressbar.interceptor';
 
 const ngModule = angular.module('app', [
@@ -198,7 +199,8 @@ const ngModule = angular.module('app', [
 })
 .filter('cut', function () {
     return function (value, wordwise, max, tail) {
-        if (!value) return '';
+        if (typeof value === 'number') { value += ''; }
+        if (typeof value !== 'string' || !value) return '';
 
         max = parseInt(max, 10);
         if (!max) return value;
@@ -910,6 +912,40 @@ const ngModule = angular.module('app', [
             });
         }
     };
+})
+.directive('loadOnScroll', ($timeout) => {
+    'ngInject';
+
+    return {
+        restrict: 'A',
+        scope: {
+            handler: '&loadOnScrollHandler',
+            item: '=loadOnScroll',
+        },
+        bindToController: true,
+        controller: () => {},
+        link: (scope, element, attrs, controller) => {
+            let onDestroyCallback;
+
+            if (typeof controller.handler === 'function') {
+                controller.$postLink = () => {
+                    const $data = {
+                        element: element[0],
+                        test: controller.item,
+                        isLast: scope.$last || scope.$parent.$last,
+                        isFirst: scope.$first || scope.$parent.$first,
+                    }
+                    
+                    onDestroyCallback = controller.handler({ $data });
+                }
+            }
+
+            scope.$on('$destroy', () => {
+                controller.item.isInView = false;
+                onDestroyCallback && typeof onDestroyCallback === 'function' && onDestroyCallback();
+            });
+        }
+    }
 })
 .filter('orderObjectBy', ['$sce', function($sce) {
     var STATUSES_ORDER = {

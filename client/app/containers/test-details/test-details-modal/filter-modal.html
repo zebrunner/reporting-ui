@@ -4,17 +4,13 @@
             <md-icon aria-label="Close dialog">close</md-icon>
         </md-button>
         <md-dialog-content>
-            <div class="main-modal__header no-padding" ng-if="$ctrl.tags.length">
-                <h2 class="main-modal__header-text">Tags</h2>
-            </div>
-            <chips-array class="filter-modal__chips" ng-if="$ctrl.tags.length" chips="$ctrl.tags" options="$ctrl.testsTagsOptions" count-to-show="$ctrl.tags.length" multi="$ctrl.testGroupMode === 'PLAIN'" on-select="$ctrl.onTagSelect($tags);"></chips-array>
             <div class="main-modal__header no-padding">
                 <h2 class="main-modal__header-text">Status</h2>
             </div>
-            <status-buttons on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
+            <status-buttons on-button-click="$ctrl.onStatusChange($statuses);" initial-selections="$ctrl.statusInitValues"></status-buttons>
         </md-dialog-content>
         <md-dialog-actions>
-            <md-button class="md-raised" type="button" ng-click="$ctrl.resetTestsGrouping();"><span>RESET</span></md-button>
+            <md-button class="md-raised" type="button" ng-click="$ctrl.reset();"><span>RESET</span></md-button>
             <md-button class="md-raised md-primary pull-right" type="button" ng-click="$ctrl.onApply(true);"><span>APPLY</span></md-button>
         </md-dialog-actions>
     </div>

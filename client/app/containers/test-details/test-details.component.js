@@ -6,6 +6,7 @@ const testDetailsComponent = {
     controller,
     bindings: {
         testRun: '=',
+        configSnapshot: '<',
     },
     bindToController: true,
 };

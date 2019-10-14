@@ -2138,16 +2138,14 @@ $light-inprogress: #68c9fd;
 
 // TESTS CONTROLS
 .test-run-group-row {
-    height: 64px !important;
+    // height: 64px !important;
     .test-run-group-column {
         border-bottom: 0;
         .test-run-group {
             width: 100%;
             font-size: 0;
-            box-sizing: border-box;
             > * {
                 display: inline-block;
-                box-sizing: border-box;
                 vertical-align: middle;
             }
             &_controls-buttons {
@@ -2285,89 +2283,6 @@ $light-inprogress: #68c9fd;
                         }
                     }
                 }
-            }
-        }
-    }
-}
-
-.page.groups-group-mode {
-    .test-run-group-row.groups {
-        .test-run-group {
-            display: flex;
-            > * {
-                font-size: 0;
-                * {
-                    font-size: 14px;
-                }
-            }
-            &_sorts {
-                width: 14% !important;
-                min-width: 14% !important;
-                @media(max-width: $screen-md) {
-                    width: 14% !important;
-                }
-                > * {
-                    width: 100%;
-                }
-            }
-            &_name {
-                flex-grow: 1;
-            }
-            &_group-items {
-                width: 14% !important;
-                min-width: 120px !important;
-                @media(max-width: $screen-md) {
-                    width: 16% !important;
-                }
-                text-align: right;
-            }
-        }
-        height: 40px !important;
-        > th {
-            font-size: 14px;
-            font-weight: bold;
-            vertical-align: middle;
-            i {
-                font-size: 16px;
-                padding-right: 5px;
-                opacity: 0.5;
-                position: relative;
-                vertical-align: middle;
-                top: -4px;
-
-                &.checked {
-                    transform: rotate(-180deg);
-                }
-                &.unchecked {
-                    transform: rotate(0deg);
-                }
-                &.checked, &.unchecked {
-                    transform-origin: 40% 50%;
-                    transition: all 0.2s linear;
-                }
-            }
-        }
-    }
-
-    .test-run-group-row:not(.groups) {
-        .test-run-group {
-            &_controls-buttons {
-                width: 15.48%;
-                @media(max-width: $screen-lg) {
-                    width: 20%;
-                }
-            }
-            &_tags {
-                width: 44.52%;
-                @media(max-width: $screen-lg) {
-                    width: 45%;
-                }
-            }
-            &_sorts {
-                display: none;
-            }
-            &_group-items {
-                display: none;
             }
         }
     }

@@ -7,12 +7,13 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
     elasticsearchService, TestRunService, UtilService,
     ArtifactService, DownloadService, $stateParams, OFFSET,
     API_URL, $state, TestRunsStorage,
-    TestService, $transitions, messageService) {
+    TestService, $transitions) {
     'ngInject';
 
     const TENANT = $rootScope.globals.auth.tenant;
     const vm = {
         testRun: null,
+        configSnapshot: null,
         wsSubscription: null,
         switchMoreLess,
         getFullLogMessage,
@@ -36,7 +37,8 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
 
     $scope.goToTestRuns = function () {
         $state.go('tests.runDetails', {
-            testRunId: vm.testRun.id
+            testRunId: vm.testRun.id,
+            configSnapshot: vm.configSnapshot,
         });
     };
 

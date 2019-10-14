@@ -43,7 +43,7 @@
         }
 
         function getPreviousUrl() {
-            return local.previousUrl;;
+            return local.previousUrl;
         }
 
         function clearPreviousUrl() {

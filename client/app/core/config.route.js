@@ -414,7 +414,8 @@
                     component: 'testDetailsComponent',
                     store: true,
                     params: {
-                        testRun: null
+                        testRun: null,
+                        configSnapshot: null,
                     },
                     data: {
                         requireLogin: true,
@@ -450,6 +451,11 @@
                                     $state.go('tests.runs');
                                 }, 0);
                             }
+                        },
+                        configSnapshot: ($stateParams, $q) => {
+                            'ngInject';
+                            
+                            return $q.resolve($stateParams.configSnapshot);
                         }
                     },
                     lazyLoad: async ($transition$) => {
@@ -470,6 +476,9 @@
                     data: {
                         requireLogin: true,
                         classes: 'p-tests-run-info'
+                    },
+                    params: {
+                        configSnapshot: null,
                     },
                     resolve: {
                         testRun: ($stateParams, $q, $state, TestRunService, $timeout) => {
@@ -501,6 +510,11 @@
                                     $state.go('tests.runs');
                                 }, 0);
                             }
+                        },
+                        configSnapshot: ($stateParams, $q) => {
+                            'ngInject';
+
+                            return $q.resolve($stateParams.configSnapshot);
                         }
                     },
                     lazyLoad: async ($transition$) => {

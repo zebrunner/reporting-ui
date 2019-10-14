@@ -8,82 +8,92 @@ const statusButtonsDirective = function($timeout) {
     return {
         restrict: 'AE',
         scope: {
-            onButtonClick: '&onButtonClick',
-            multi: '=',
-            options: '='
+            onButtonClick: '&',
+            initialSelections: '<',
         },
         template: template,
         replace: true,
-        link: (scope, iElement, iAttrs, ngModel) => {
-            let previousChecked = {};
+        controllerAs: '$ctrl',
+        bindToController: true,
+        controller: ($scope) => {
+            'ngInject';
 
-            angular.extend(scope.options, {
-                reset: () => {
-                    angular.element('.test-run-group_group-items_item').removeClass('item-checked');
-                    previousChecked = {};
-                    scope.options.initValues = [];
-                    scope.onButtonClick({'$statuses': []});
-                }
-            });
+            let initialSelectionsWatcher;
+            const vm = {
+                buttons: [
+                    {
+                        key: 'FAILED',
+                    },
+                    {
+                        key: 'SKIPPED',
+                    },
+                    {
+                        key: 'PASSED',
+                    },
+                    {
+                        key: 'ABORTED',
+                    },
+                    {
+                        key: 'QUEUED',
+                    },
+                    {
+                        key: 'IN_PROGRESS',
+                    }
+                ],
 
-            scope.changeStatus = (event) => {
-                const elementStatus = angular.element(event.target);
-                const value = elementStatus[0].attributes['name'].value;
-                let removed = null;
-                let values = null;
-
-                if (previousChecked && (!iAttrs.multi || !iAttrs.multi == 'true')) {
-                    angular.forEach(previousChecked, (previousElement) => {
-                        previousElement.removeClass('item-checked');
-                    });
-                    previousChecked = {};
-                }
-                if (previousChecked && iAttrs.multi == 'true' && elementStatus.hasClass('item-checked')) {
-                    elementStatus.removeClass('item-checked');
-                    previousChecked[value] = null;
-                    removed = true;
-                }
-                if (!removed) {
-                    elementStatus.addClass('item-checked');
-                    previousChecked[value] = elementStatus;
-                }
-                values = collectValues(previousChecked);
-                scope.onButtonClick({'$statuses': values});
+                getFormattedName,
+                changeSelection,
             };
 
-            function collectValues(elements, currentValue) {
-                let result = scope.options.initValues.length ? scope.options.initValues : [];
+            function getFormattedName(button) {
+                return button.key.replace('_', ' ').toLowerCase();
+            }
 
-                angular.forEach(elements, (element, key) => {
-                    if (element && result.indexOf(element[0].attributes['name'].value) === -1 ) {
-                        result.push(element[0].attributes['name'].value);
-                    } else if (!element) {
-                        let index = result.indexOf(key);
+            function changeSelection(button) {
+                button.isSelected = !button.isSelected;
 
-                        if (index !== -1) {
-                            result.splice(index, 1);
-                        }
-                    }
+                onSelectionChange();
+            }
+
+            function onSelectionChange() {
+                const newSelections = vm.buttons.filter(button => button.isSelected).map(button => button.key.toLowerCase());
+
+                vm.onButtonClick({'$statuses': newSelections});
+            }
+
+            function initSelections() {
+                if (vm.initialSelections && vm.initialSelections.length) {
+                    updateSelections();
+                }
+            }
+
+            function updateSelections() {
+                vm.buttons.forEach(button => {
+                    button.isSelected = (vm.initialSelections.indexOf(button.key.toLowerCase()) > -1);
                 });
+            }
 
-                return result;
-            };
+            function bindListeners() {
+                initialSelectionsWatcher = $scope.$watch('$ctrl.initialSelections', function(newValue, oldValue) {
+                    updateSelections();
+                }, true); 
+            }
 
-            scope.$watch('options.initValues', (newVal, oldVal) => {
-                if (newVal) {
-                    if (scope.options && scope.options.initValues) {
-                        scope.options.initValues.forEach((value) => {
-                            let chipTemplates = angular.element('*[name = ' + value + ']');
+            function unbindListeners() {
+                initialSelectionsWatcher && initialSelectionsWatcher();
+            }
 
-                            chipTemplates.addClass('item-checked');
-                        });
-                        $timeout(() => {
-                            scope.onButtonClick({'$statuses': scope.options.initValues});
-                        }, 0, false);
-                    }
-                }
-            });
-        }
+            vm.$onInit = () => {
+                initSelections();
+                bindListeners();
+            }
+
+            vm.$onDestroy = () => {
+                unbindListeners();
+            }
+
+            return vm;
+        },
     };
 };
 

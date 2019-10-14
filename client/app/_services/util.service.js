@@ -3,23 +3,26 @@
 
     angular
         .module('app.services')
-        .factory('UtilService', ['$rootScope', '$mdToast', '$timeout', '$q', '$window', '$httpParamSerializer', 'messageService', UtilService])
+        .factory({ UtilService });
 
-    function UtilService($rootScope, $mdToast, $timeout, $q, $window, $httpParamSerializer, messageService) {
-        var service = {};
-
-        service.untouchForm = untouchForm;
-        service.resolveError = resolveError;
-        service.truncate = truncate;
-        service.handleSuccess = handleSuccess;
-        service.handleError = handleError;
-        service.isEmpty = isEmpty;
-        service.settingsAsMap = settingsAsMap;
-        service.reconnectWebsocket = reconnectWebsocket;
-        service.websocketConnected = websocketConnected;
-        service.buildURL = buildURL;
-        service.setOffset = setOffset;
-        service.showDeleteMessage = showDeleteMessage;
+    function UtilService($rootScope, $mdToast, $timeout, $q, $window, $httpParamSerializer, messageService, $sce) {
+        'ngInject';
+        var service = {
+            untouchForm,
+            resolveError,
+            truncate,
+            handleSuccess,
+            handleError,
+            isEmpty,
+            settingsAsMap,
+            reconnectWebsocket,
+            websocketConnected,
+            buildURL,
+            setOffset,
+            showDeleteMessage,
+            isElementInViewport,
+            sortArrayByField,
+        }
 
         service.validations = {
             username: [
@@ -316,6 +319,62 @@
             if(message.errorMessage) {
                 messageService.error(message.errorMessage);
             }
+        }
+
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+    
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        /**
+         * Sort array by field and by immutable way
+         * */
+        function sortArrayByField(data, field, reverse) {
+            if (!field) { return data; }
+
+            const STATUSES_ORDER = {
+                'PASSED': 0,
+                'FAILED': 1,
+                'SKIPPED': 2,
+                'IN_PROGRESS': 3,
+                'ABORTED': 4,
+                'QUEUED': 5
+            };
+
+            const sorted = [...data].sort((a, b) => {
+                var aValue = a;
+                var bValue = b;
+                // cause field has a complex structure (with '.')
+                field.split('.').forEach(function(item) {
+                    aValue = aValue[item];
+                    bValue = bValue[item];
+                });
+                // cause field is html - we should to compare by inner text
+                try {
+                    $sce.parseAsHtml(aValue);
+                    $sce.parseAsHtml(bValue);
+                } catch (e) {
+                    aValue = aValue ? String(aValue).replace(/<[^>]+>/gm, '') : '';
+                    bValue = bValue ? String(bValue).replace(/<[^>]+>/gm, '') : '';
+                }
+
+                if (!aValue || !bValue) {
+                    return !aValue ? -1 : 1;
+                }
+
+                return field == 'status' ? (STATUSES_ORDER[aValue] > STATUSES_ORDER[bValue] ? 1 : -1) :
+                    typeof aValue == 'string' ? (aValue.toLowerCase() > bValue.toLowerCase() ? 1 : -1) : (aValue > bValue ? 1 : -1);
+            });
+
+            if (reverse) { sorted.reverse() };
+
+            return sorted;
         }
     }
 })();
