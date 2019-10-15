@@ -587,7 +587,10 @@ const testDetailsController = function testDetailsController(
             }
             if (test[tagsData.field]) {
                 test[tagsData.field].forEach((tag) => {
-                    tagsData.dataset.add(tag.value);
+                    //skip Testrail and Qtest tags (see ZEB-486 ticket)
+                    if (tag.name !== 'TESTRAIL_TESTCASE_UUID' && tag.name !== 'QTEST_TESTCASE_UUID') {
+                        tagsData.dataset.add(tag.value);
+                    }
                 });
             }
         });

@@ -34,6 +34,7 @@
                                         Plain
                                     </button>
                                     <button id="classToggle"
+                                        ng-if="$ctrl.groupingFilters.class.data.length"
                                         ng-class="{'md-primary': $ctrl.testsViewMode === 'class'}"
                                         class="md-button md-raised md-ink-ripple"
                                         type="button"
@@ -41,6 +42,7 @@
                                         Class
                                     </button>
                                     <button id="packageToggle"
+                                        ng-if="$ctrl.groupingFilters.package.data.length"
                                         ng-class="{'md-primary': $ctrl.testsViewMode === 'package'}"
                                         class="md-button md-raised md-ink-ripple"
                                         type="button"
@@ -48,6 +50,7 @@
                                         Package
                                     </button>
                                     <button id="tagsToggle"
+                                        ng-if="$ctrl.groupingFilters.tags.data.length"
                                         ng-class="{'md-primary': $ctrl.testsViewMode === 'tags'}"
                                         class="md-button md-raised md-ink-ripple"
                                         type="button"
@@ -110,7 +113,7 @@
                                             <md-table-pagination
                                                 id="pagination"
                                                 zafira-background-theme="pagination"
-                                                ng-if="$ctrl.activeTests.length"
+                                                ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
                                                 md-limit="$ctrl.countPerPage"
                                                 md-limit-options=false
                                                 md-page="$ctrl.currentPage"
@@ -261,7 +264,7 @@
                                             <md-table-pagination
                                                 id="pagination"
                                                 zafira-background-theme="pagination"
-                                                ng-if="$ctrl.activeTests.length"
+                                                ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
                                                 md-limit="$ctrl.countPerPage"
                                                 md-limit-options=false
                                                 md-page="$ctrl.currentPage"
