@@ -246,7 +246,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     $scope.manageFolder = function (scmAccount) {
         $scope.scmAccount = angular.copy(scmAccount);
         $scope.needServer = true;
-        $scope.currentServerId = scmAccount.launchers ? scmAccount.launchers[0].job.automationServerId : null;
+        $scope.currentServerId = getCurrentServerId(scmAccount);
         if(scmAccount.id !== $scope.scmAccount.id) {
             getScmAccountDefaultBranchName(scmAccount.id);
         }
@@ -255,6 +255,20 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         $scope.cardNumber = 2;
         $scope.launcher.scmAccountType = angular.copy(scmAccount);
     };
+
+    function getCurrentServerId(scmAccount) {
+        if(scmAccount.launchers) {
+            return scmAccount.launchers[0].job.automationServerId ? scmAccount.launchers[0].job.automationServerId : getDefaultServerId();
+        }
+
+        return;
+    }
+
+    function getDefaultServerId() {
+        return $scope.servers.find((server) => {
+            return server.default;
+        }).id;
+    }
 
     $scope.addLauncher = function(launcher) {
         $scope.createLauncher(launcher).then(function (l) {
