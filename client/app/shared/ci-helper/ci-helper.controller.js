@@ -16,6 +16,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         text: ''
     };
 
+    $scope.isGitHubConnected = false;
     $scope.testSuites = [];
     $scope.currentServerId = null;
     $scope.scmAccounts = [];
@@ -228,13 +229,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.addRepo = function() {
         $scope.repo = {};
-        $scope.connectToGitHub().then(function () {
+        if ($scope.isGitHubConnected) {
             clearPrevLauncherElement();
             clearPrevFolderElement();
             $scope.cardNumber = 1;
             $scope.needServer = false;
             $scope.currentServerId = null;
-        });
+        }
     };
 
     $scope.highlightFolder = function(id) {
@@ -872,6 +873,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     (function initController() {
         clearLauncher();
+        $scope.connectToGitHub().then(function () {
+            $scope.isGitHubConnected = true;
+        });
         const launchersPromise = getAllLaunchers().then(function (launchers) {
             return $q(function (resolve, reject) {
                 $scope.launchers = launchers;
