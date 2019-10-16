@@ -51,12 +51,10 @@ const integrationsController = function integrationsController($state, $mdDialog
         toolsService.updateSettings(tool.id, tool)
             .then(rs => {
                 if (rs.success) {
-                    toolsService.fetchToolConnectionStatus(vm.currentType.name, rs.data.id)
+                    return toolsService.fetchToolConnectionStatus(vm.currentType.name, rs.data.id)
                         .then((res) => {
                             if (res.success) {
                                 toolsService.setToolStatus(tool.type.name, rs.data.id, res.data.connected);
-                            } else {
-                                messageService.error('Tool ' + tool.name + ' status can not be changed');
                             }
                         })
                         .finally(() => {
@@ -89,11 +87,12 @@ const integrationsController = function integrationsController($state, $mdDialog
             .then(function (rs) {
                 if (rs.success) {
                     if (tool.enabled) {
-                        toolsService.fetchToolConnectionStatus(vm.currentType.name, rs.data.id)
+                        messageService.success('Tool ' + tool.name + ' is enabled');
+
+                        return toolsService.fetchToolConnectionStatus(vm.currentType.name, rs.data.id)
                             .then((res) => {
                                 toolsService.setToolStatus(tool.type.name, rs.data.id, res.data.connected);
-                            })
-                        messageService.success('Tool ' + tool.name + ' is enabled');
+                            });
                     } else {
                         messageService.success('Tool ' + tool.name + ' is disabled');
                     }
@@ -101,8 +100,9 @@ const integrationsController = function integrationsController($state, $mdDialog
                     messageService.error('Unable to change ' + tool.name + ' state');
                     tool.enabled = !tool.enabled;
                 }
-
-                tool.enabled && (tool.connectionChecking = false);
+            })
+            .finally(() => {
+                tool.connectionChecking = false;
             });
     }
 
