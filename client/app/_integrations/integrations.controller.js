@@ -53,16 +53,22 @@ const integrationsController = function integrationsController($state, $mdDialog
                 if (rs.success) {
                     toolsService.fetchToolConnectionStatus(vm.currentType.name, rs.data.id)
                         .then((res) => {
-                            toolsService.setToolStatus(tool.type.name, rs.data.id, res.data.connected);
-                            tool.connectionChecking = false;
+                            if (res.success) {
+                                toolsService.setToolStatus(tool.type.name, rs.data.id, res.data.connected);
+                            } else {
+                                messageService.error('Tool ' + tool.name + ' status can not be changed');
+                            }
+                        })
+                        .finally(() => {
                             messageService.success('Tool ' + tool.name + ' was changed');
                         })
                 } else {
                     messageService.error(rs.message);
-                    tool.connectionChecking = false;
                 }
-                
-        });
+            })
+            .finally(() => {
+                tool.connectionChecking = false;
+            })
     }
 
     function regenerateKey() {
@@ -93,6 +99,7 @@ const integrationsController = function integrationsController($state, $mdDialog
                     }
                 } else {
                     messageService.error('Unable to change ' + tool.name + ' state');
+                    tool.enabled = !tool.enabled;
                 }
 
                 tool.enabled && (tool.connectionChecking = false);
@@ -187,39 +194,6 @@ const integrationsController = function integrationsController($state, $mdDialog
             .catch(() => {});
     }
 
-    function fillToolsSettings() {
-        const promises = vm.tools.map(tool => fillToolSettings(tool));
-
-        $q.all(promises)
-            .finally(() => {
-                vm.tools
-                    .sort(compareByName)
-                    .sort(compareByIsEnabled);
-                vm.isLoading = false;
-            });
-    }
-
-    function fillToolSettings(tool) {
-        return toolsService.fetchToolSettings(tool.name)
-            .then(function(settings) {
-                if (settings.success) {
-                    const statusSetting = getStatusSetting(tool.name, settings.data);
-
-                    tool.settings = settings.data
-                        .filter(setting => {
-                            setting.notEditable = NOT_EDITABLE_SETTINGS.indexOf(setting.name) !== -1;
-
-                            return setting !== statusSetting;
-                        })
-                        .sort(compareBySettingSortOrder);
-                    tool.enabled = statusSetting.value === 'true';
-                    tool.statusSetting = statusSetting;
-                } else {
-                    console.error(`Failed to load ${tool.name} settings`);
-                }
-            });
-    }
-
     function controllerInit() {
         toolsService.fetchIntegrationsTypes().then((res) => {
             vm.groups = res.data;
@@ -290,13 +264,6 @@ const integrationsController = function integrationsController($state, $mdDialog
                     messageService.error(res.message);
                 }
             })
-    }
-
-    function clearFields() {
-        vm.newItem.name = '';
-        vm.newItem.params.forEach((param) => {
-            return param.value = null;
-        })
     }
 
     function selectFieldsForNew(tool) {
