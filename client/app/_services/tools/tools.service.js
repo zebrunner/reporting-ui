@@ -92,8 +92,7 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to fetch tools'))
             .then(response => {
                 if (response.success) {
-                    tools = response.data;
-                    tools = formatTools();
+                    tools = formatTools(response.data);
                     
                     return tools;
                 }
@@ -102,10 +101,10 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
             });
     }
 
-    function formatTools() {
+    function formatTools(toolsForFormatting) {
         let formattedTools = {};
-        for (let key in tools) {
-            formattedTools = {...formattedTools, ...tools[key]};
+        for (let key in toolsForFormatting) {
+            formattedTools = {...formattedTools, ...toolsForFormatting[key]};
         }
 
         return formattedTools;
