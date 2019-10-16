@@ -117,20 +117,6 @@ const integrationsController = function integrationsController($state, $mdDialog
         return compareTo(aSortOrder, bSortOrder);
     }
 
-    function compareByName(a, b) {
-        const aSortOrder = a.name;
-        const bSortOrder = b.name;
-
-        return compareTo(aSortOrder, bSortOrder);
-    }
-
-    function compareByIsEnabled(a, b) {
-        const aSortOrder = a.enabled;
-        const bSortOrder = b.enabled;
-
-        return compareTo(aSortOrder, bSortOrder);
-    }
-
     function compareTo(aSortOrder, bSortOrder) {
         if(typeof(aSortOrder) === 'boolean' && typeof(bSortOrder) === 'boolean') {
             if(aSortOrder === true && bSortOrder === false) {
