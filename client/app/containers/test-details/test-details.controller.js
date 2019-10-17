@@ -27,6 +27,7 @@ const testDetailsController = function testDetailsController(
     'ngInject';
 
     const initialCountToDisplay = 50;
+    const defaultLimitOptions = [initialCountToDisplay, initialCountToDisplay * 2];
     let firstIndex;
     let lastIndex;
     const scrollablePerentElement = document.querySelector('.page-wrapper');
@@ -77,20 +78,29 @@ const testDetailsController = function testDetailsController(
                 get data() { return ['All tests'] },
             }
         },
-        toggleGroupingFilter,
-        changeViewMode,
         testRun: null,
         testsLoading: true,
         testsFilteredEmpty: true, //? Does it still work?
         subscriptions: {},
         zafiraWebsocket: null,
         testId: null,
+        configSnapshot: null,
+
         get isMobile() { return windowWidthService.isMobile(); },
         get activeTests() { return _at || []; },
         set activeTests(data) { _at = data; return _at; },
         get testsToDisplay() {
             return this.activeTests.slice(firstIndex, lastIndex);
         },
+        get limitOptions() {  return !windowWidthService.isMobile() ? defaultLimitOptions : false; },
+        get empty() { return !this.testRun.tests || !this.testRun.tests.length; },
+        get jira() { return jiraSettings; },
+        get testRail() { return testRailSettings; },
+        get qTest() { return qTestSettings; },
+        get isFilteringOrSortingActive() { return isFilteringOrSortingActive(); },
+
+        toggleGroupingFilter,
+        changeViewMode,
         orderByElapsed,
         filterByStatus,
         changeTestStatus,
@@ -101,16 +111,10 @@ const testDetailsController = function testDetailsController(
         onBackClick,
         getTestURL,
         highlightTest,
-        get empty() { return !this.testRun.tests || !this.testRun.tests.length; },
-        get jira() { return jiraSettings; },
-        get testRail() { return testRailSettings; },
-        get qTest() { return qTestSettings; },
-        get isFilteringOrSortingActive() { return isFilteringOrSortingActive(); },
         openImagesViewerModal,
         onTrackedTestRender,
         resetStatusFilterAndOrdering,
         onPageChange,
-        configSnapshot: null,
     };
 
     vm.$onInit = controlInit;
@@ -413,6 +417,7 @@ const testDetailsController = function testDetailsController(
 
     function getConfigSnapshot() {
         return {
+            countPerPage: vm.countPerPage,
             currentPage: vm.currentPage,
             testsViewMode: vm.testsViewMode,
             filters: vm.filters,

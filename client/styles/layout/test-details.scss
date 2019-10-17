@@ -422,6 +422,20 @@
     }
     md-table-pagination {
         border: 0;
+        padding: 0 15px;
+        .limit-select {
+            margin-left: 0;
+            margin-right: auto;
+            .label {
+                padding-right: 0;
+            }
+        }
+        .md-table-select {
+            min-width: 45px;
+        }
+        .buttons {
+            margin-right: 0;
+        }
     }
     @media (min-width: $breakpoint-mobile) {
         .ui-section {

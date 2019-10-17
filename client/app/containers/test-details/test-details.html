@@ -115,7 +115,7 @@
                                                 zafira-background-theme="pagination"
                                                 ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
                                                 md-limit="$ctrl.countPerPage"
-                                                md-limit-options=false
+                                                md-limit-options="$ctrl.limitOptions"
                                                 md-page="$ctrl.currentPage"
                                                 md-total="{{$ctrl.activeTests.length}}"
                                                 md-page-select=false
@@ -266,7 +266,6 @@
                                                 zafira-background-theme="pagination"
                                                 ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
                                                 md-limit="$ctrl.countPerPage"
-                                                md-limit-options=false
                                                 md-page="$ctrl.currentPage"
                                                 md-total="{{$ctrl.activeTests.length}}"
                                                 md-page-select=false
