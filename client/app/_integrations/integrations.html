@@ -81,8 +81,8 @@
                         </md-input-container>
                         <div ng-repeat="setting in tool.settings track by setting.id">
                             <md-input-container>
-                                <input name="settingName" type="text" ng-if="!setting.param.needEncryption" ng-model="setting.value" ng-disabled="!tool.enabled" />
-                                <input name="settingName" type="password" ng-if="setting.param.needEncryption" ng-model="setting.value" ng-disabled="!tool.enabled" autocomplete="new-password" />
+                                <input name="settingName" type="text" ng-if="!setting.param.needEncryption" ng-model="setting.value" ng-disabled="!tool.enabled" ng-class="{'ng-invalid': setting.param.required}"/>
+                                <input name="settingName" type="password" ng-if="setting.param.needEncryption" ng-model="setting.value" ng-disabled="!tool.enabled" autocomplete="new-password" ng-class="{'ng-invalid': setting.param.required}"/>
                                 <label name="settingNameLabel">{{ ::setting.param.name.replace(tool.name + '_', '') }}</label>
                             </md-input-container>
                         </div>

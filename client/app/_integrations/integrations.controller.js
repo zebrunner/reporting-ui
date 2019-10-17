@@ -58,10 +58,19 @@ const integrationsController = function integrationsController($state, $mdDialog
                             }
                         })
                         .finally(() => {
+                            tool.settings.map((setting) => {
+                                setting.param.required = false;
+                            })
                             messageService.success('Tool ' + tool.name + ' was changed');
                         })
                 } else {
-                    messageService.error(rs.message);
+                    rs.error.data.validationErrors.forEach((err) => {
+                        tool.settings.map((setting) => {
+                            if (setting.param.name === err.field) {
+                                setting.param.required = true;
+                            }
+                        })
+                    })
                 }
             })
             .finally(() => {
@@ -82,8 +91,10 @@ const integrationsController = function integrationsController($state, $mdDialog
     }
 
     function changeStatus(tool) {
-        tool.enabled && (tool.connectionChecking = true);
-        toolsService.updateSettings(tool.id, tool)
+        if (!isEmptyTool(tool)) { //TODO: change adding tool
+            tool.enabled && (tool.connectionChecking = true);
+
+            toolsService.updateSettings(tool.id, tool)
             .then(function (rs) {
                 if (rs.success) {
                     if (tool.enabled) {
@@ -104,6 +115,13 @@ const integrationsController = function integrationsController($state, $mdDialog
             .finally(() => {
                 tool.connectionChecking = false;
             });
+        }
+    }
+
+    function isEmptyTool(tool) {
+        return !tool.settings.find((setting) => {
+            return setting.value;
+        })
     }
 
     function getStatusSetting(toolName, settings) {

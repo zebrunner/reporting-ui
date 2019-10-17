@@ -68,6 +68,9 @@
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="needServer && cardNumber !== 0 && !scmAccount.launchers">
             <ng-form name="info">
                 <div class="ci-runner-container_content_block _server-selection">
+                    <div class="ci-runner-container_content_block_title">
+                        Choose automation server
+                    </div>
                     <zf-radio-button class="selection-blocks_container_elements_item" on-change="onChange(server);" ng-repeat="server in servers track by server.id" ng-model="currentServerId" value="server">
                         <zf-radio-button-body>
                             <div class="selection-blocks_container_elements_item_container">
@@ -78,6 +81,11 @@
                                 </div>
                         </zf-radio-button-body>
                     </zf-radio-button>
+                    <div class="ci-runner-container_content_actions">
+                        <md-button ng-really-click="deleteRepository(launcher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !launcher.id">
+                            DELETE REPO
+                        </md-button>
+                    </div>
                 </div>
             </ng-form>
         </zf-modal-content-container>
@@ -261,7 +269,7 @@
                     </div>
                 </div>
                 <div class="ci-runner-container_loader_container_action">
-                    <md-button ng-click="cancelScanRepository()" class="md-raised" ng-if="launcherLoaderStatus.started" ng-disabled="! launcherLoaderStatus.buildNumber">
+                    <md-button ng-click="cancelScanRepository()" class="md-raised" ng-if="launcherLoaderStatus.started">
                         CANCEL
                     </md-button>
                     <md-button ng-click="backToLaunchersList();" class="md-raised md-primary" ng-if="launcherLoaderStatus.finished">
