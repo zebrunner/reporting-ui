@@ -21,10 +21,12 @@ RUN apk update \
   && apk add nasm
 
 WORKDIR /app
-COPY ./ /app/
+COPY ./package.json /app/
 
 RUN npm cache clean --force
 RUN npm i
+
+COPY ./ /app/
 RUN npm run build
 
 
