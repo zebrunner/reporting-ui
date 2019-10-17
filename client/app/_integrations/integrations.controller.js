@@ -37,6 +37,7 @@ const integrationsController = function integrationsController($state, $mdDialog
         newTool,
         cancel,
         isToolConnected: toolsService.isToolConnected,
+        isEmptyTool: toolsService.isEmptyTool,
         isNewToolAdding: false,
         isMobile: windowWidthService.isMobile
     };
@@ -91,7 +92,7 @@ const integrationsController = function integrationsController($state, $mdDialog
     }
 
     function changeStatus(tool) {
-        if (!isEmptyTool(tool)) { //TODO: change adding tool
+        if (!vm.isEmptyTool(tool)) { //TODO: change adding tool
             tool.enabled && (tool.connectionChecking = true);
 
             toolsService.updateSettings(tool.id, tool)
@@ -116,12 +117,6 @@ const integrationsController = function integrationsController($state, $mdDialog
                 tool.connectionChecking = false;
             });
         }
-    }
-
-    function isEmptyTool(tool) {
-        return !tool.settings.find((setting) => {
-            return setting.value;
-        })
     }
 
     function getStatusSetting(toolName, settings) {

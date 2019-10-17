@@ -24,6 +24,7 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         // fillToolSettings,
         setToolStatus,
         isToolConnected,
+        isEmptyTool
     };
 
     function getTools(force) {
@@ -57,6 +58,12 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
 
             return tempTool && tempTool.connected;
         }
+    }
+
+    function isEmptyTool(tool) {
+        return !tool.settings.find((setting) => {
+            return setting.value;
+        })
     }
 
     // function fillToolSettings(toolName, settings) {

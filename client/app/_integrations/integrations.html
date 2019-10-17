@@ -62,7 +62,7 @@
                     <div class="integration-tool__item-header" layout="row" layout-align="start center">
                         <span class="integration-tool__item-icon {{::tool.type.name | lowercase}}" flex="none"></span>
                         <span name="toolName" class="integration-tool__item-title">{{ tool.name }}</span>
-                        <i ng-class="{'highlight_red': !$ctrl.isToolConnected(tool) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool) && tool.enabled, 'highlight_gray': !tool.enabled}"
+                        <i ng-class="{'highlight_red': !$ctrl.isToolConnected(tool) && tool.enabled && !$ctrl.isEmptyTool(tool), 'highlight_green': $ctrl.isToolConnected(tool) && tool.enabled && !$ctrl.isEmptyTool(tool), 'highlight_gray': !tool.enabled || $ctrl.isEmptyTool(tool)}"
                            ng-if="!tool.connectionChecking"
                            class="material-icons material-icon-16px integration-tool__item-status">fiber_manual_record</i>
                         <md-progress-circular md-diameter="16px"
