@@ -5,7 +5,7 @@
                 <div class="md-row tests-runs-filter__wrapper-panel-body no-padding-t" ng-class="{'_unactiveChips': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()">
                     <div ng-class="{'disable-layer _transparent': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()"></div>
                     <div layout="row" layout-xs="column" layout-align="space-between" ng-show="$ctrl.filterBlockExpand">
-                        <div layout="row">
+                        <div layout="row" class="tests-runs-filter__wrapper-inner">
                             <div class="manage-chip" ng-click="$ctrl.clearAndOpenFilterBlock(true);">
                                 <md-chips class="filter-chip">
                                     <md-chip>
