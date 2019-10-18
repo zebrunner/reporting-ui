@@ -4,6 +4,7 @@ import '../styles/main.scss';
 import 'intersection-observer';
 import progressbarInterceptor from './http-interceptors/progressbar.interceptor';
 
+const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular.module('app', [
     // Core modules
     'app.core',
@@ -37,9 +38,6 @@ const ngModule = angular.module('app', [
     $anchorScrollProvider.disableAutoScrolling();
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
-    // __PRODUCTION__ variable will be replaced by webpack
-    const isProd = __PRODUCTION__;
 
     // hide "Possibly unhandled rejection" error notification on production
     $qProvider.errorOnUnhandledRejections(!isProd);
@@ -1214,7 +1212,7 @@ angular.injector(['ng']).get('$http').get('./config.json')
 
         //manually bootstrap application after we have gotten our config data
         angular.element(document).ready(function() {
-            angular.bootstrap(document, ['app']);
+            angular.bootstrap(document, ['app'], { strictDi: !isProd });
         });
     });
 

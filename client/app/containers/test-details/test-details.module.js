@@ -13,6 +13,8 @@ export const testDetailsModule = angular.module('app.testDetails', [])
     .directive({ statusButtons })
     .component({ testDetailsComponent })
     .config(function ($mdIconProvider) {
+        'ngInject';
+        
         $mdIconProvider
             .icon('artifacts:image', imageIcon)
             .icon('artifacts:pdf', pdfIcon)
