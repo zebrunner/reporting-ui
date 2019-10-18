@@ -313,10 +313,7 @@ md-chips.filter-chip.custom-filter {
         min-width: auto;
         overflow-x: auto;
         overflow-y: hidden;
-        max-width: calc(100vw - 255px);
-        &._wide {
-            max-width: calc(100vw - 155px);
-        }
+        flex: 1 1 auto;
     }
     @media screen and (max-width: $breakpoint-mobile - 1) {
         overflow-x: scroll;
