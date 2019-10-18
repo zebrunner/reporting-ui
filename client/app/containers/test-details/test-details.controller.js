@@ -22,7 +22,8 @@ const testDetailsController = function testDetailsController(
     $mdDialog,
     toolsService,
     messageService,
-    windowWidthService
+    windowWidthService,
+    ArtifactService
     ) {
     'ngInject';
 
@@ -115,6 +116,7 @@ const testDetailsController = function testDetailsController(
         onTrackedTestRender,
         resetStatusFilterAndOrdering,
         onPageChange,
+        getArtifactIconId,
     };
 
     vm.$onInit = controlInit;
@@ -130,6 +132,17 @@ const testDetailsController = function testDetailsController(
         initTests();
         fillTestRunMetadata();
         bindEvents();
+        vm.testRun.downloadArtifacts = downloadArtifacts;
+    }
+
+    function downloadArtifacts() {
+        const options = {
+            data: Object.values(vm.testRun.tests),
+            field: 'artifactsToShow',
+            name: vm.testRun.testSuite.name,
+        };
+
+        ArtifactService.downloadArtifacts(options);
     }
 
     function initTests() {
@@ -533,6 +546,19 @@ const testDetailsController = function testDetailsController(
         return vm.testRun.tests.find(test => test.id === +id);
     }
 
+    function getArtifactIconId(ext) {
+        let type = 'bin';
+        const predefinedTypes = ['pdf', 'apk', 'exe', 'doc', 'xls', 'txt', 'png'];
+
+        ext = ext.slice(0, 3);
+
+        if (predefinedTypes.find(type => type === ext)) {
+            type = ext;
+        }
+
+        return `artifacts:${type}`;
+    }
+
     /* --------------------- Filtering and ordering helpers --------------------- */
 
     function onStatusFilterChange(newFilter) {
@@ -653,29 +679,36 @@ const testDetailsController = function testDetailsController(
     }
 
     function prepareArtifacts(test) {
-        const formattedArtifacts = test.artifacts.reduce(function (formatted, artifact) {
+        test.artifactsToShow = test.artifacts.reduce(function (formatted, artifact) {
             const name = artifact.name.toLowerCase();
 
             if (!name.includes('live') && !name.includes('video')) {
                 const links = artifact.link.split(' ');
-                const pathname = new URL(links[0]).pathname;
+                const url = new URL(links[0]);
 
-                artifact.extension = pathname.split('/').pop().split('.').pop();
-                if (artifact.extension === 'png') {
-                    if (links[1]) {
-                        artifact.link = links[0];
-                        artifact.thumb = links[1];
-                    }
-                    formatted.imageArtifacts.push(artifact);
+                artifact.extension = url.pathname.split('/').pop().split('.').pop();
+                //if artifact is external link
+                if (window.location.host !== url.host) {
+                    artifact.isExternalLink = true;
+                } else if (!vm.testRun.hasArtifacts) {
+                    vm.testRun.hasArtifacts = true;
                 }
-                formatted.artifactsToShow.push(artifact);
+                /* FOR_DEV_ONLY:START */
+                //previous condition won't work on localhost, so lets check if it is not a production and link's host starts on correct tenant name
+                if (!window.isProd && TENANT !== url.host.split('.')[0]) {
+                    artifact.isExternalLink = true;
+                } else {
+                    artifact.isExternalLink = false;
+                    if (!vm.testRun.hasArtifacts) {
+                        vm.testRun.hasArtifacts = true;
+                    }
+                }
+                /* FOR_DEV_ONLY:END */
+                formatted.push(artifact);
             }
 
             return formatted;
-        }, { imageArtifacts: [], artifactsToShow: [] });
-
-        test.imageArtifacts = formattedArtifacts.imageArtifacts;
-        test.artifactsToShow = formattedArtifacts.artifactsToShow;
+        }, []);
     }
 
     function prepareTestsData() {

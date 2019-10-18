@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const mode = 'production';
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js')(mode);
@@ -10,6 +11,24 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = merge(common, {
     mode,
     devtool: false,
+    module: {
+        rules: [
+            {
+                test: /\.m?js$/,
+                include: path.join(__dirname, '../client/app'),
+                enforce: 'pre',
+                use: [
+                    {
+                        loader: 'webpack-strip-block',
+                        options: {
+                            start: 'FOR_DEV_ONLY:START',
+                            end: 'FOR_DEV_ONLY:END'
+                        }
+                    }
+                ]
+            }
+        ]
+    },
     optimization: {
         minimizer: [
             new TerserPlugin({
