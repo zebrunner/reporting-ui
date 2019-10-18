@@ -155,7 +155,6 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
 
     function initController() {
         vm.test = test;
-        ArtifactService.extractImageArtifacts([vm.test]);
         vm.artifacts = vm.test.imageArtifacts;
         vm.activeArtifactId = activeArtifactId;
 

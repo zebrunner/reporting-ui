@@ -108,7 +108,7 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
         if (data.length === 1 && archiveName === 'artifacts') {
             const test = data[0];
 
-            archiveName = `${test.id}. ${test.name}`;
+            archiveName = normilizeName(`${test.id}. ${test.name}`.replace(/[^a-z0-9]/gi, '_'));
         }
 
         data

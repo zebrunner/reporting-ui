@@ -863,6 +863,8 @@ const testDetailsController = function testDetailsController(
     }
 
     function openImagesViewerModal(event, artifact, test) {
+        ArtifactService.extractImageArtifacts([test]);
+
         $mdDialog.show({
             controller: ImagesViewerController,
             template: require('../../components/modals/images-viewer/images-viewer.html'),
