@@ -3,20 +3,21 @@
 import RFB from 'vendors/novnc';
 
 const JSZip = require('jszip');
-const ArtifactService = function ArtifactService($window, $q, $timeout, UtilService, toolsService, messageService, DownloadService) {
+const ArtifactService = function ArtifactService($window, $q, UtilService, toolsService, messageService, DownloadService) {
     'ngInject';
 
-    var service = {};
-    var display;
-    var ratio;
-    var container;
-    var containerHeightProperty = 'offsetHeight';
-    var containerWidthProperty = 'offsetWidth';
-
-    service.connectVnc = connectVnc;
-    service.resize = resize;
-    service.provideLogs = provideLogs;
-    service.downloadAll = downloadAll;
+    const service = {
+        connectVnc,
+        resize,
+        provideLogs,
+        downloadArtifacts,
+        extractImageArtifacts,
+    };
+    let display;
+    let ratio;
+    let container;
+    let containerHeightProperty = 'offsetHeight';
+    let containerWidthProperty = 'offsetWidth';
 
     return service;
 
@@ -71,56 +72,93 @@ const ArtifactService = function ArtifactService($window, $q, $timeout, UtilServ
         });
     };
 
-    function downloadAll(test) {
-        if (!test.imageArtifacts.length) { return; }
-
-        const promises = test.imageArtifacts.map((artifact) => {
-            return DownloadService.plainDownload(artifact.link)
-                .then(response => {
-                    if (response.success) {
-                        const filename = getUrlFilename(artifact.link);
-                        artifact.extension = getUrlExtension(artifact.link);
-                        return {
-                            fileName: `${artifact.name}_${filename}.${artifact.extension}`,
-                            fileData: response.res.data,
-                        };
+    function extractImageArtifacts(tests) {
+        tests.forEach(test => {
+            const imageArtifacts = test.artifacts.reduce((collected, artifact) => {
+                const name = artifact.name.toLowerCase();
+    
+                if (!name.includes('live') && !name.includes('video')) {
+                    const links = artifact.link.split(' ');
+                    const url = new URL(links[0]);
+    
+                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
+                    if (artifact.extension === 'png') {
+                        if (links[1]) {
+                            artifact.link = links[0];
+                            artifact.thumb = links[1];
+                        }
+                        collected.push(artifact);
                     }
+                }
+    
+                return collected;
+            }, []);
 
-                    return $q.reject(false);
-                });
+            if (imageArtifacts) {
+                test.imageArtifacts = imageArtifacts;
+            }
         });
+    }
 
-        $q.all(promises)
-            .then(data => {
-                const name = test.id + '. ' + test.name;
-                const formattedData = data.reduce((out, item) => {
-                    out[item.fileName] = item.fileData;
-
-                    return out;
-                }, {});
-
-                downloadZipFile(name, formattedData);
-            })
-            .catch(() => {
-                messageService.error('Unable to download all files, please try again.');
-            });
-    };
-
-    function downloadZipFile(name, data) {
+    function downloadArtifacts({ data = [], field = 'artifacts', name: archiveName = 'artifacts' }) {
+        if (!data.length) { return; }
         const zip = new JSZip();
-        const folder = zip.folder(name);
 
-        angular.forEach(data, function (blob, blobName) {
-            folder.file(blobName.getValidFilename(), blob, { base64: true });
-        });
-        zip.generateAsync({ type: "blob" }).then(function (content) {
-            content.download(name + '.zip');
-        });
+        // if there is only one test, name of the archive should be the same as folder name
+        if (data.length === 1 && archiveName === 'artifacts') {
+            const test = data[0];
+
+            archiveName = `${test.id}. ${test.name}`;
+        }
+
+        data
+            .filter(test => (test[field] && test[field].length))
+            .forEach(test => {
+                const name = normilizeName(`${test.id}. ${test.name}`.replace(/[^a-z0-9]/gi, '_'));
+                const folder = zip.folder(name);
+
+                test[field].forEach(artifact => {
+                    const fileName = getUrlFilename(artifact.link);
+                    const formattedFileName = `${artifact.name}_${fileName}.${artifact.extension}`.getValidFilename();
+                    const options = { base64: true };
+                    const contentPromise = DownloadService.plainDownload(artifact.link)
+                        .then(response => {
+                            if (response.success) {
+                                return response.res.data;
+                            }
+        
+                            //broken artifact will be an empty file
+                            return '';
+                        });
+
+                    folder.file(formattedFileName, contentPromise, options);
+                });
+            });
+
+        zip
+            .generateAsync({ type: "blob" })
+            .then(function (content) {
+                content.download(archiveName + '.zip');
+            })
+            .catch(err => {
+                console.log('downloadArtifacts is failed:');
+                console.error(err);
+            });
     }
 
     function getUrlExtension(url) {
         return url.split(/\#|\?/)[0].split('.').pop().trim();
     };
+
+    function normilizeName(str) {
+        const maxLength = 256;
+
+        if (str.length > maxLength) {
+            return str.slice(0, maxLength - 3) + '...';
+        }
+
+        return str;
+    }
 
     function getUrlFilename(url) {
         const urlSlices = url.split(/\#|\?/)[0].split('/');

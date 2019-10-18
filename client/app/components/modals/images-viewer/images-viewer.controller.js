@@ -29,7 +29,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         activeArtifactId: null,
         isFullScreenMode: false,
         setActiveArtifact,
-        downloadImages: ArtifactService.downloadAll,
+        downloadImages,
         switchFullscreenMode,
         selectNextArtifact,
         selectPrevArtifact,
@@ -37,6 +37,13 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         zoom,
         newActiveElem: null,
     };
+
+    function downloadImages() {
+        ArtifactService.downloadArtifacts({
+            data: [vm.test],
+            field: 'imageArtifacts',
+        });
+    }
 
     function setActiveArtifact(id, force) {
         if (vm.activeArtifactId === id && !force) { return; }
@@ -92,7 +99,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
                 vm.switchFullscreenMode();
                 break;
             case S_KEY:
-                vm.downloadImages(vm.test);
+                vm.downloadImages([vm.test], 'imageArtifacts');
                 break;
             default:
                 break;
@@ -148,6 +155,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
 
     function initController() {
         vm.test = test;
+        ArtifactService.extractImageArtifacts([vm.test]);
         vm.artifacts = vm.test.imageArtifacts;
         vm.activeArtifactId = activeArtifactId;
 

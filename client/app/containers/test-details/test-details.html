@@ -172,12 +172,22 @@
                                             </div>
                                             <div class="test-settings__wrapper" ng-if="test.artifactsToShow.length">
                                                 <div ng-repeat="artifact in test.artifactsToShow">
-                                                    <a name="testArtifactsGallery" aria-label="Test artifacts" class="test-settings__attachment" ng-click="$ctrl.openImagesViewerModal($event, artifact, test)" href="" ng-if="::('png' === artifact.extension)">
+                                                    <a name="testArtifactsGallery"
+                                                       aria-label="Test artifacts"
+                                                       class="test-settings__attachment"
+                                                       ng-click="$ctrl.openImagesViewerModal($event, artifact, test)"
+                                                       href=""
+                                                       ng-if="::('png' === artifact.extension)">
                                                         <md-icon md-svg-icon="artifacts:image" class="material-icons"></md-icon>
                                                         <p>{{::artifact.name}}</p>
                                                         <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
                                                     </a>
-                                                    <a name="testArtifacts" href="{{::artifact.link}}" target="{{:: artifact.extension ? '_self' : '_blank' }}" aria-label="Test artifacts" class="test-settings__attachment" ng-if="::('png' !== artifact.extension)">
+                                                    <a name="testArtifacts"
+                                                       href="{{::artifact.link}}"
+                                                       target="{{::(artifact.isExternalLink ? '_blank' : '_self')}}"
+                                                       aria-label="Test artifacts"
+                                                       class="test-settings__attachment"
+                                                       ng-if="::('png' !== artifact.extension)">
                                                         <md-icon md-svg-icon="{{::$ctrl.getArtifactIconId(artifact.extension)}}" ng-if="::artifact.extension" class="material-icons"></md-icon>
                                                         <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="::material-icons">link</md-icon>
                                                         <p>{{::artifact.name}}</p>

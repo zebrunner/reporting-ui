@@ -117,6 +117,11 @@
                                 Copy link
                             </md-button>
                         </md-menu-item>
+                        <md-menu-item ng-if="$ctrl.testRun.hasArtifacts">
+                            <md-button name="copyLink" data-ng-click="$ctrl.testRun.downloadArtifacts()">
+                                Download artifacts
+                            </md-button>
+                        </md-menu-item>
                         <md-menu-item has-any-permission="['MODIFY_TEST_RUNS']">
                             <md-button name="markAsReviewed" data-ng-click="$ctrl.markAsReviewed()">
                                 Mark as reviewed
@@ -223,6 +228,11 @@
                         <md-menu-item>
                             <md-button name="copyLink" data-ng-click="$ctrl.copyLink($ctrl.testRun)">
                                 Copy link
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item ng-if="$ctrl.testRun.hasArtifacts">
+                            <md-button name="copyLink" data-ng-click="$ctrl.testRun.downloadArtifacts()">
+                                Download artifacts
                             </md-button>
                         </md-menu-item>
                         <md-menu-item has-any-permission="['MODIFY_TEST_RUNS']">

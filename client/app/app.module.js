@@ -159,10 +159,10 @@ const ngModule = angular.module('app', [
     };
     Blob.prototype.download = function (filename) {
         var link = angular.element('<a>')
-        .attr('style', 'display: none')
-        .attr('href', window.URL.createObjectURL(this))
-        .attr('download', filename.getValidFilename())
-        .appendTo('body');
+            .attr('style', 'display: none')
+            .attr('href', window.URL.createObjectURL(this))
+            .attr('download', filename.getValidFilename())
+            .appendTo('body');
         link[0].click();
         link.remove();
     };
@@ -279,7 +279,6 @@ const ngModule = angular.module('app', [
     };
 }])
 .directive('showPart', function() {
-    "use strict";
     return {
         restrict: 'E',
         template: '<span class="zf-show-part"><span>{{ text.substring(0, limit + 1) }}<span ng-if="text.length > limit" ng-transclude></span></span><span ng-if="text.length > limit">{{ symbols }}</span></span>',
@@ -320,7 +319,6 @@ const ngModule = angular.module('app', [
     };
 })
 .directive('codeTextarea', ['$timeout', '$interval', '$rootScope', function ($timeout, $interval, $rootScope) {
-    "use strict";
     return {
         restrict: 'E',
         template: '<span>' +
@@ -425,7 +423,6 @@ const ngModule = angular.module('app', [
     };
 }])
 .directive('sortItem', function () {
-    "use strict";
     return {
         restrict: 'A',
         template: '<span ng-transclude></span><md-icon class="md-sort-icon" md-svg-icon="arrow-up.svg"></md-icon>',
@@ -456,7 +453,7 @@ const ngModule = angular.module('app', [
 })
 .directive('formErrorValidation', function($q, $timeout, $compile) {
     'ngInject';
-    "use strict";
+
     return {
         require: 'ngModel',
         transclusion: true,
@@ -490,7 +487,6 @@ const ngModule = angular.module('app', [
     };
 })
 .directive('photoUpload', ['$timeout', '$rootScope', function ($timeout, $rootScope) {
-    "use strict";
     return {
         restrict: 'E',
         template: '<div class="profile-container">\n' +
@@ -591,7 +587,7 @@ const ngModule = angular.module('app', [
 }])
 .directive('fieldError', function($q, $timeout, $compile) {
     'ngInject';
-    "use strict";
+
     return {
         require: 'ngModel',
         transclusion: true,
@@ -624,7 +620,6 @@ const ngModule = angular.module('app', [
     };
 })
 .directive('profilePhoto', ['$rootScope', function ($rootScope) {
-    "use strict";
     return {
         restrict: 'E',
         template: require('./shared/profile-photo.directive.html'),
@@ -664,7 +659,6 @@ const ngModule = angular.module('app', [
     };
 }])
 .directive('autoHeight', ['$window', function ($window) {
-    "use strict";
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -727,7 +721,6 @@ const ngModule = angular.module('app', [
     };
 }])
 .directive('resize', ['$window', function ($window) {
-    "use strict";
     return {
         restrict: 'A',
         scope: {
@@ -815,7 +808,6 @@ const ngModule = angular.module('app', [
     };
 }])
 .directive('tableLoupe', function () {
-    "use strict";
     return {
         restrict: 'A',
         scope: {
@@ -862,7 +854,6 @@ const ngModule = angular.module('app', [
     };
 })
 .directive('passwordEye', function () {
-    "use strict";
     return {
         restrict: 'A',
         replace: false,
@@ -892,7 +883,6 @@ const ngModule = angular.module('app', [
 })
 .directive('windowWidth', function ($window, windowWidthService) {
     'ngInject';
-    "use strict";
 
     return {
         restrict: 'A',
@@ -933,7 +923,7 @@ const ngModule = angular.module('app', [
                         isLast: scope.$last || scope.$parent.$last,
                         isFirst: scope.$first || scope.$parent.$first,
                     }
-                    
+
                     onDestroyCallback = controller.handler({ $data });
                 }
             }
@@ -1023,6 +1013,7 @@ const ngModule = angular.module('app', [
 .run(($transitions, AuthService, $document, UserService, messageService, $state, $rootScope, AuthIntercepter) => {
     'ngInject';
 
+    window.isProd = isProd;
     function redirectToSignin(payload) {
         const params = {};
 

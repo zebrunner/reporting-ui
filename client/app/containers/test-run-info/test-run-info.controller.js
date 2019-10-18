@@ -17,7 +17,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         wsSubscription: null,
         switchMoreLess,
         getFullLogMessage,
-        downloadAll: ArtifactService.downloadAll
+        downloadImageArtifacts,
     };
 
     vm.$onInit = controllerInit;
@@ -86,6 +86,15 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
 
     var LIVE_LOGS_INTERVAL_NAME = 'liveLogsFromElasticsearch';
     var scrollEnable = true;
+
+    function downloadImageArtifacts() {
+        ArtifactService.extractImageArtifacts([$scope.test]);
+
+        ArtifactService.downloadArtifacts({
+            data: [$scope.test],
+            field: 'imageArtifacts',
+        });
+    }
 
     function postModeConstruct(test) {
         var logGetter = MODES[$scope.MODE.name].logGetter;
