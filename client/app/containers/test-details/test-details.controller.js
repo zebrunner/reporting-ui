@@ -7,61 +7,114 @@ import testDetailsTemplate from './test-details-modal/filter-modal.html';
 import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
-const testDetailsController = function testDetailsController($scope, $timeout, $rootScope, $q, TestService, API_URL,
-                                                             modalsService, $state, $transitions,
-                                                             UtilService, testsRunsService, $mdDialog, toolsService, messageService, windowWidthService, testDetailsService)  {
+const testDetailsController = function testDetailsController(
+    $scope,
+    $timeout,
+    $rootScope,
+    $q,
+    TestService,
+    API_URL,
+    modalsService,
+    $state,
+    $transitions,
+    UtilService,
+    testsRunsService,
+    $mdDialog,
+    toolsService,
+    messageService,
+    windowWidthService
+    ) {
     'ngInject';
 
-    const mobileWidth = 600;
-    const testGroupDataToStore = {
-        statuses: testDetailsService.getStatuses() || [],
-        tags: testDetailsService.getTags() || []
-    };
+    const initialCountToDisplay = 50;
+    const defaultLimitOptions = [initialCountToDisplay, initialCountToDisplay * 2];
+    let firstIndex;
+    let lastIndex;
+    const scrollablePerentElement = document.querySelector('.page-wrapper');
     let testCaseManagementTools = [];
     let jiraSettings = {};
     let testRailSettings = {};
     let qTestSettings = {};
     let TENANT;
+    let observer;
+    const defaultSortField = 'startTime';
+    const defaultStatusFilter = {
+        field: 'status',
+        values: [],
+    };
+    let _at = [];
+    let scrollTickingTimeout = null;
+
     const vm = {
-        currentMode: 'ONE',
-        reverse: false,
-        predicate: 'startTime',
-        tags: [],
-        testGroups: null,
-        testGroupMode: 'PLAIN',
+        scrollTicking: false,
+        countPerPage: initialCountToDisplay,
+        currentPage: 1,
+        testsViewMode: 'plain',
+        filters: {
+            status: { ...defaultStatusFilter },
+            grouping: {},
+        },
+        sortConfig: {
+            field: defaultSortField,
+            reverse: false,
+        },
+        groupingFilters: { //TODO: ?use inheritanse
+            'package': {
+                field: 'notNullTestGroup',
+                dataset: new Set(),
+                get data() { return Array.from(this.dataset.values()); },
+            },
+            'class': {
+                field: 'testClass',
+                dataset: new Set(),
+                get data() { return Array.from(this.dataset.values()); },
+            },
+            'tags': {
+                field: 'tags',
+                dataset: new Set(),
+                get data() { return Array.from(this.dataset.values()); },
+            },
+            'plain': {
+                get data() { return ['All tests'] },
+            }
+        },
         testRun: null,
         testsLoading: true,
-        testsFilteredEmpty: true,
-        testsTagsOptions: {initValues: testDetailsService.getTags() || []},
-        testsStatusesOptions: {initValues: testDetailsService.getStatuses() || []},
+        testsFilteredEmpty: true, //? Does it still work?
         subscriptions: {},
         zafiraWebsocket: null,
-        showRealTimeEvents: true,
         testId: null,
-        isMobile: windowWidthService.isMobile,
+        configSnapshot: null,
 
-        isDetailsFilterActive: testDetailsService.isDetailsFilterActive,
-        onStatusButtonClick: onStatusButtonClick,
-        onTagSelect: onTagSelect,
-        resetTestsGrouping: resetTestsGrouping,
-        selectTestGroup: selectTestGroup,
-        switchTestGroupMode: switchTestGroupMode,
-        changeTestStatus: changeTestStatus,
-        showDetailsDialog: showDetailsDialog,
-        goToTestDetails: goToTestDetails,
-        showFilterDialog: showFilterDialog,
-        showCiHelperDialog: showCiHelperDialog,
-        onBackClick,
-        updateTest,
-        getTestURL,
-        get empty() {
-            return !Object.keys(vm.testRun.tests || {}).length ;
+        get isMobile() { return windowWidthService.isMobile(); },
+        get activeTests() { return _at || []; },
+        set activeTests(data) { _at = data; return _at; },
+        get testsToDisplay() {
+            return this.activeTests.slice(firstIndex, lastIndex);
         },
+        get limitOptions() {  return !windowWidthService.isMobile() ? defaultLimitOptions : false; },
+        get empty() { return !this.testRun.tests || !this.testRun.tests.length; },
         get jira() { return jiraSettings; },
         get testRail() { return testRailSettings; },
         get qTest() { return qTestSettings; },
-        isToolConnected: toolsService.isToolConnected,
+        get isFilteringOrSortingActive() { return isFilteringOrSortingActive(); },
+
+        toggleGroupingFilter,
+        changeViewMode,
+        orderByElapsed,
+        filterByStatus,
+        changeTestStatus,
+        showDetailsDialog,
+        goToTestDetails,
+        showFilterDialog,
+        showCiHelperDialog,
+        onBackClick,
+        getTestURL,
+        highlightTest,
         openImagesViewerModal,
+        onTrackedTestRender,
+        resetStatusFilterAndOrdering,
+        onPageChange,
     };
 
     vm.$onInit = controlInit;
@@ -70,253 +123,24 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
 
     function controlInit() {
         TENANT = $rootScope.globals.auth.tenant;
-
         initAllSettings();
-        initTestGroups();
+        initFirstLastIndexes();
+        initIntersectionObserver();
         initWebsocket();
         initTests();
         fillTestRunMetadata();
         bindEvents();
     }
 
-    function subscribeLaunchedTestRuns() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.launcherRuns', function (data) {
-            const event = getEventFromMessage(data.body);
-            const launcher = event.launcher;
-
-            launcher.status = 'LAUNCHING';
-            launcher.ciRunId = event.ciRunId;
-            launcher.testSuite = { name: launcher.name };
-            const indexOfLauncher = testsRunsService.readStoredlaunchers().findIndex((res) => { res.ciRunId === launcher.ciRunId });
-
-            if (indexOfLauncher === -1) {
-                testsRunsService.addNewLauncher(launcher);
-            }
-        });
-    }
-
-    function showCiHelperDialog(event) {
-        $mdDialog.show({
-            controller: CiHelperController,
-            template: CiHelperTemplate,
-            parent: angular.element(document.body),
-            targetEvent: event,
-            clickOutsideToClose:false,
-            fullscreen: true,
-            autoWrap: false,
-            escapeToClose:false
-        });
-    }
-
-    function highlightTest() {
-        const activeTest = getTestById(vm.testId);
-        
-        if (activeTest) {
-            $timeout(function() {
-                const el = document.getElementById('test_' + vm.testId);
-
-                vm.testId = parseInt(vm.testId);
-                if (!isElementInViewport(el)) {
-                    const testRunHeader = document.querySelector('.p-tests-run-details__sticky-header').offsetHeight;
-                    const pageHeader = document.querySelector('.fixed-page-header').offsetHeight;
-                    const headerOffset = testRunHeader + pageHeader;
-                    const elOffsetTop = $(el).offset().top;
-
-                    $('html,body').animate({ scrollTop: elOffsetTop - headerOffset }, 'slow');
-                } 
-                $timeout(function() {
-                    vm.testId = null;
-                }, 4000);
-            }, 500);
-        }
-    }
-
-    function getTestIndexById(id) {
-        return Object.keys(vm.testRun.tests).findIndex((testId) => { return testId === id; });
-    }
-
-    function getTestById(id) {
-        let test;
-        const index = getTestIndexById(id);
-        
-        index !== -1 && (test = vm.testRun.tests[id]);
-
-        return test;
-    }
-
-    function isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-
-    function initAllSettings() {
-        toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
-            .then((res) => {
-                testCaseManagementTools = res.data;
-                initJiraSettings();
-                initTestRailSettings();
-                initQTestSettings();
-            })
-    }
-
-    function findToolByName(name) {
-        return testCaseManagementTools.find((tool) => tool.name === name);
-    }
-
-    function initJiraSettings() {
-        let jira = findToolByName('JIRA');
-        if (jira && jira.settings) {
-            jiraSettings = UtilService.settingsAsMap(jira.settings);
-
-            jiraSettings['JIRA_URL'] && (jiraSettings['JIRA_URL'] = jiraSettings['JIRA_URL'].replace(/\/$/,''));
-        }
-    }
-
-    function initTestRailSettings() {
-        let testRail = findToolByName('TESTRAIL');
-        if (testRail && testRail.settings) {
-            testRailSettings = UtilService.settingsAsMap(testRail.settings);
-
-            testRailSettings['TESTRAIL_URL'] && (testRailSettings['TESTRAIL_URL'] = testRailSettings['TESTRAIL_URL'].replace(/\/$/,''));
-        }
-    }
-
-    function initQTestSettings() {
-        let qtest = findToolByName('QTEST');
-        if (qtest && qtest.settings) {
-            qTestSettings = UtilService.settingsAsMap(qtest.settings);
-
-            qTestSettings['QTEST_URL'] && (qTestSettings['QTEST_URL'] = qTestSettings['QTEST_URL'].replace(/\/$/,''));
-        }
-    }
-
-    function updateTest(test, isPassed) {
-        var newStatus = isPassed ? 'PASSED' : 'FAILED';
-        if (test.status !== newStatus) {
-            test.status = newStatus;
-        }
-        else {
-            return;
-        }
-        var message;
-        TestService.updateTest(test).then(function(rs) {
-            if (rs.success) {
-                message = 'Test was marked as ' + test.status;
-                addTestEvent(message, test);
-                messageService.success(message);
-            }
-            else {
-                console.error(rs.message);
-            }
-        });
-    }
-
-    function  addTestEvent(message, test) {
-        var testEvent = {};
-        testEvent.description = message;
-        testEvent.jiraId = Math.floor(Math.random() * 90000) + 10000;
-        testEvent.testCaseId = test.testCaseId;
-        testEvent.type = 'EVENT';
-        TestService.createTestWorkItem(test.id, testEvent).
-            then(function(rs) {
-                if (rs.success) {
-                } else {
-                    messageService.error('Failed to add event test "' + test.id);
-                }
-            })
-    }
-
-    function fillTestRunMetadata() {
-        addBrowserVersion();
-        initJobMetadata();
-    }
-
-    function addBrowserVersion() {
-        var platform = vm.testRun.platform ? vm.testRun.platform.split(' ') : [];
-        var version = null;
-
-        if (platform.length > 1) {
-            version = 'v.' + platform[1];
-        }
-
-        if(!version && vm.testRun.config && vm.testRun.config.browserVersion !== '*') {
-            version = vm.testRun.config.browserVersion;
-        }
-
-        vm.testRun.browserVersion = version;
-    }
-
-    function onBackClick() {
-        $state.go('tests.runs', {activeTestRunId: vm.testRun.id});
-    }
-
-    /**
-     * Set default value for testGroups
-     */
-    function initTestGroups() {
-        vm.testGroups = {
-            group: {
-                'package': {
-                    data: {},
-                    selectedName: undefined
-                },
-                'class': {
-                    data: {},
-                    selectedName: undefined
-                },
-                common: {
-                    data: {
-                        'all': []
-                    },
-                    selectedName: 'all'
-                }
-            },
-            reverse: false,
-            predicate: 'startTime',
-            mode: 'package',
-            apply: false
-        };
-    }
-
-    function initJobMetadata() {
-        if (vm.testRun.job && vm.testRun.job.jobURL) {
-            !vm.testRun.jenkinsURL && (vm.testRun.jenkinsURL = vm.testRun.job.jobURL + '/' + vm.testRun.buildNumber);
-            !vm.testRun.UID && (vm.testRun.UID = vm.testRun.testSuite.name + ' ' + vm.testRun.jenkinsURL);
-        }
-    }
-
     function initTests() {
-        vm.testGroups.mode = 'common';
-
         loadTests(vm.testRun.id)
-        .then(function () {
-            vm.testId = getSelectedTestId();
-            vm.testId && highlightTest();
-            vm.testGroups.group.common.data.all = vm.testRun.tests;
-            showTestsByTags(vm.testRun.tests, testGroupDataToStore.tags);
-            showTestsByStatuses(vm.testRun.tests, testGroupDataToStore.statuses);
-            vm.testRun.tags = collectTags(vm.testRun.tests);
-        })
-        .finally(() => {
-            vm.testsLoading = false;
-        });
-    }
-
-    function getSelectedTestId() {
-        let successOldUrl = TestService.getPreviousUrl();
-
-        if (successOldUrl) {
-            TestService.clearPreviousUrl();
-            TestService.unsubscribeFromLocationChangeStart();
-        }
-        
-        return successOldUrl && successOldUrl.includes('/info/') ? successOldUrl.split('/').pop() : successOldUrl;
+            .then(function () {
+                vm.testId = getSelectedTestId();
+                onInitTests();
+            })
+            .finally(() => {
+                vm.testsLoading = false;
+            });
     }
 
     function loadTests(testRunId) {
@@ -328,58 +152,200 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         };
 
         TestService.searchTests(params)
-        .then(function (rs) {
-            if (rs.success) {
-                const data = rs.data.results || [];
+            .then((rs) => {
+                if (rs.success) {
+                    const data = rs.data.results || [];
 
-                vm.testRun.tests = {};
-                TestService.setTests = data;
-                TestService.getTests.forEach(function(test) {
-                    addTest(test);
-                });
-
-                defer.resolve(angular.copy(data));
-            } else {
-                console.error(rs.message);
-                defer.reject(rs.message);
-            }
-        });
+                    vm.testRun.tests = data;
+                    prepareTestsData();
+                    defer.resolve(vm.testRun.tests);
+                } else {
+                    console.error(rs.message);
+                    defer.reject(rs.message);
+                }
+            });
 
         return defer.promise;
     }
 
-    function goToTestDetails(testId) {
-        $state.go('tests.runInfo', {
-            testRunId: vm.testRun.id,
-            testId: testId
-        });
-    }
+    /**
+     * Registers event handlers on controller init event
+     * Also registers unsubscribers on controller destroy event
+     */
+    function bindEvents() {
+        $scope.$on('$destroy', function () {
+            if (vm.zafiraWebsocket && vm.zafiraWebsocket.connected) {
+                for (let key in vm.subscriptions) {
+                    vm.subscriptions[key].unsubscribe();
+                }
+                $timeout(function () {
+                    vm.zafiraWebsocket.disconnect();
+                }, 0, false);
+                UtilService.websocketConnected('zafira');
+            }
+            disconnectIntersectionObserver();
 
-    function addTest(test) {
-        test.elapsed = test.finishTime ? (test.finishTime - test.startTime) : Number.MAX_VALUE;
-        prepareArtifacts(test);
-        angular.forEach(test.tags, function (tag) {
-            if (tag.name === 'TESTRAIL_TESTCASE_UUID' || tag.name === 'QTEST_TESTCASE_UUID') {
-                tag.normalizedValue = tag.value.split('-').pop();
+            if (vm.isMobile) {
+                angular.element(scrollablePerentElement).off('scroll.hideFilterButton', onScroll);
             }
         });
 
-        vm.testRun.tests[test.id] = test;
+        const onTransStartSubscription = $transitions.onStart({}, function (trans) {
+            const toState = trans.to();
 
-        if (vm.testGroupMode === 'PLAIN') {
-            vm.testRun.tags = collectTags(vm.testRun.tests);
-        } else {
-            addGroupingItem(test);
+            if (toState.name !== 'tests.runInfo') {
+                TestService.clearDataCache();
+            }
+
+            onTransStartSubscription();
+        });
+
+        if (vm.isMobile) {
+            angular.element(scrollablePerentElement).on('scroll.hideFilterButton', onScroll);
         }
+    }
 
-        onTagSelect(testGroupDataToStore.tags);
-        onStatusButtonClick(testGroupDataToStore.statuses);
+
+
+    /* ------------------------------- UI handlers ------------------------------ */
+    function goToTestDetails(testId) {
+        $state.go('tests.runInfo', {
+            testRunId: vm.testRun.id,
+            testId: testId,
+            configSnapshot: getConfigSnapshot(),
+        });
+    }
+
+    /**
+     * Hadler to order tests by 'elapsed' field
+     * Each next run changes reverses ordering
+     */
+    function orderByElapsed() {
+        vm.sortConfig.reverse = vm.sortConfig.field === 'elapsed' ? !vm.sortConfig.reverse : vm.sortConfig.reverse;
+        vm.sortConfig.field = 'elapsed';
+
+        onOrderByElapsed();
+    }
+
+    function filterByStatus(statuses = []) {
+        onStatusFilterChange({ ...defaultStatusFilter, values: statuses });
+    }
+
+    function resetStatusFilterAndOrdering() {
+        vm.filters.status = { ...defaultStatusFilter };
+        vm.sortConfig.field = defaultSortField;
+        vm.sortConfig.reverse = false;
+        onFilterChange(true);
+
+        return {
+            filters: vm.filters,
+            sortConfig: vm.sortConfig,
+        }
+    }
+
+    function changeViewMode(mode) {
+        if (vm.testsViewMode === mode) { return; }
+
+        // Uncomment code line below if you need to reset previously selected group item on view mode change
+        // if (vm.groupingFilters[vm.testsViewMode].selectedValue) { vm.groupingFilters[vm.testsViewMode].selectedValue = null; }
+        // else save previous active values
+        if (vm.filters.grouping && vm.filters.grouping.values) {
+            vm.groupingFilters[vm.testsViewMode].cachedValues = vm.filters.grouping.values;
+        }
+        vm.testsViewMode = mode;
+        switch (mode) {
+            case 'plain':
+                onPlainViewModeActivate();
+                break;
+            default:
+                onFilteredViewModeActivate();
+        }
+    }
+
+    function toggleGroupingFilter(selectedValue) {
+        const filter = vm.groupingFilters[vm.testsViewMode];
+
+        // switch off selected grouping filter if already selected
+        if (filter.selectedValue === selectedValue) {
+            filter.selectedValue = null;
+            vm.filters.grouping = { ...vm.filters.grouping, values: [''] };
+        } else {
+            filter.selectedValue = selectedValue;
+            vm.filters.grouping = { ...vm.filters.grouping, values: [selectedValue] };
+        }
+        onFilterChange(true);
+    }
+
+    function onPageChange() {
+        updateFirstLastIndexes();
+    }
+
+    function changeTestStatus(test, status) {
+        if (test.status !== status && confirm('Do you really want mark test as ' + status + '?')) {
+            const copy = {...test};
+
+            copy.status = status;
+            TestService.updateTest(copy)
+                .then(rs => {
+                    if (rs.success) {
+                        test.status = status;
+                        message = 'Test was marked as ' + test.status;
+                        messageService.success(message);
+                        addTestEvent(message, test); //? does it actual?
+                    } else {
+                        console.error(rs.message);
+                    }
+                });
+        }
+    }
+
+    function onBackClick() {
+        $state.go('tests.runs', { activeTestRunId: vm.testRun.id });
+    }
+
+    /* ------------------------------ Work with DOM ----------------------------- */
+    function onScroll() {
+        if (!vm.scrollTicking) {
+            vm.scrollTicking = true;
+            $scope.$apply();
+            scrollTickingTimeout = $timeout(() => {
+                vm.scrollTicking = false;
+            }, 300);
+        } else {
+            $timeout.cancel(scrollTickingTimeout);
+            scrollTickingTimeout = $timeout(() => {
+                vm.scrollTicking = false;
+            }, 300);
+        }
+    }
+
+    //! incorrect calculating found, need to be checked on scrolling to the last item of long table
+    function highlightTest() {
+        const activeTest = getTestById(vm.testId);
+
+        if (activeTest) {
+            $timeout(function () {
+                const el = document.getElementById('test_' + vm.testId);
+
+                if (el && !UtilService.isElementInViewport(el)) {
+                    const testRunHeader = document.querySelector('.p-tests-run-details__sticky-header').offsetHeight;
+                    const pageHeader = document.querySelector('.fixed-page-header').offsetHeight;
+                    const headerOffset = testRunHeader + pageHeader;
+                    const elOffsetTop = $(el).offset().top;
+
+                    $(scrollablePerentElement).animate({ scrollTop: elOffsetTop - headerOffset }, 'fast');
+                }
+                $timeout(function () {
+                    vm.testId = null;
+                }, 4000);
+            }, 500);
+        }
     }
 
     function getTestURL(type, value) {
         value = value.split('-');
 
-        switch(type) {
+        switch (type) {
             case 'TESTRAIL_URL':
                 return `${testRailSettings['TESTRAIL_URL']}/index.php?/cases/view/${value.pop()}`;
             case 'QTEST_URL':
@@ -387,8 +353,307 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         }
     }
 
+    /* ------------------------------ Other Helpers ----------------------------- */
+    function initAllSettings() {
+        toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
+            .then((res) => {
+                testCaseManagementTools = res.data;
+                initJiraSettings();
+                initTestRailSettings();
+                initQTestSettings();
+            });
+    }
+
+    function findToolByName(name) {
+        return testCaseManagementTools.find((tool) => tool.name === name);
+    }
+
+    function initJiraSettings() {
+        const jira = findToolByName('JIRA');
+
+        if (jira && jira.settings) {
+            jiraSettings = UtilService.settingsAsMap(jira.settings);
+
+            if (jiraSettings['JIRA_URL']) {
+                jiraSettings['JIRA_URL'] = jiraSettings['JIRA_URL'].replace(/\/$/, '');
+            }
+        }
+    }
+
+    function initTestRailSettings() {
+        const testRail = findToolByName('TESTRAIL');
+
+        if (testRail && testRail.settings) {
+            testRailSettings = UtilService.settingsAsMap(testRail.settings);
+
+            if (testRailSettings['TESTRAIL_URL']) {
+                testRailSettings['TESTRAIL_URL'] = testRailSettings['TESTRAIL_URL'].replace(/\/$/, '');
+            }
+        }
+    }
+
+    function initQTestSettings() {
+        const qtest = findToolByName('QTEST');
+
+        if (qtest && qtest.settings) {
+            qTestSettings = UtilService.settingsAsMap(qtest.settings);
+
+            if (qTestSettings['QTEST_URL']) {
+                qTestSettings['QTEST_URL'] = qTestSettings['QTEST_URL'].replace(/\/$/, '');
+            }
+        }
+    }
+
+     //TODO: add logic to handle case when we return from internal page and don't have configSnapshot: we can calculate page, firstIndex and lastIndex for default videMode
+    function initFirstLastIndexes() {
+        firstIndex = 0;
+        lastIndex = initialCountToDisplay;
+    }
+
+    function resetPagination() {
+        vm.currentPage = 1;
+        initFirstLastIndexes();
+    }
+
+    function getConfigSnapshot() {
+        return {
+            countPerPage: vm.countPerPage,
+            currentPage: vm.currentPage,
+            testsViewMode: vm.testsViewMode,
+            filters: vm.filters,
+            sortConfig: vm.sortConfig,
+            selectedValue: vm.groupingFilters[vm.testsViewMode].selectedValue,
+        };
+    }
+
+    function applyConfigSnapshot() {
+        const selectedValue = vm.configSnapshot.selectedValue;
+
+        delete vm.configSnapshot.selectedValue;
+        Object.assign(vm, vm.configSnapshot);
+        vm.groupingFilters[vm.testsViewMode].selectedValue = selectedValue;
+        vm.configSnapshot = null;
+    }
+
+    function getSelectedTestId() {
+        let successOldUrl = TestService.getPreviousUrl();
+        let selectedId;
+
+        if (successOldUrl) {
+            TestService.clearPreviousUrl();
+            TestService.unsubscribeFromLocationChangeStart();
+        }
+
+        if (successOldUrl && successOldUrl.includes('/info/')) {
+            const parsedId = parseInt(successOldUrl.split('/').pop(), 10);
+
+            if (!isNaN(parsedId)) {
+                selectedId = parsedId;
+            }
+        }
+
+        return selectedId;
+    }
+
+    function updateFirstLastIndexes() {
+        const newFirstIndex = (vm.currentPage - 1) * vm.countPerPage;
+        let newLastIndex = newFirstIndex + vm.countPerPage;
+
+        firstIndex = newFirstIndex;
+        lastIndex = newLastIndex;
+    }
+
+    function addTestEvent(message, test) {
+        var testEvent = {};
+        testEvent.description = message;
+        testEvent.jiraId = Math.floor(Math.random() * 90000) + 10000;
+        testEvent.testCaseId = test.testCaseId;
+        testEvent.type = 'EVENT';
+        TestService.createTestWorkItem(test.id, testEvent)
+            .then(rs => {
+                if (!rs.success) {
+                    messageService.error('Failed to add event test "' + test.id);
+                }
+            });
+    }
+
+    function fillTestRunMetadata() {
+        testsRunsService.addBrowserVersion(vm.testRun);
+        initJobMetadata();
+    }
+
+    function initJobMetadata() {
+        if (vm.testRun.job && vm.testRun.job.jobURL) {
+            !vm.testRun.jenkinsURL && (vm.testRun.jenkinsURL = vm.testRun.job.jobURL + '/' + vm.testRun.buildNumber);
+            !vm.testRun.UID && (vm.testRun.UID = vm.testRun.testSuite.name + ' ' + vm.testRun.jenkinsURL);
+        }
+    }
+
+    function setWorkItemIsNewStatus(workItems) {
+        const isNew = {
+            issue: true,
+            task: true
+        };
+
+        workItems.length && workItems.forEach(function (item) {
+            switch (item.type) {
+                case 'TASK':
+                    isNew.task = false;
+                    break;
+                case 'BUG':
+                    isNew.issue = false;
+                    break;
+            }
+        });
+
+        return isNew;
+    }
+
+    function getEventFromMessage(message) {
+        return JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+    }
+
+    function isCurrentTestRunStatistics(event) {
+        return vm.testRun.id === +event.testRunStatistics.testRunId;
+    }
+
+    function isFilteringOrSortingActive() {
+        const statusFiltering = vm.filters.status && vm.filters.status.values && vm.filters.status.values.length;
+        const orderingByElapsed = vm.sortConfig && vm.sortConfig.field !== defaultSortField;
+
+        return statusFiltering || orderingByElapsed;
+    }
+
+    function getTestsIndexByID(id) {
+        return vm.testRun.tests.findIndex(test => test.id === id);
+    }
+
+    function getTestById(id) {
+        //ID is expected to be a number, so to be sure we added conversion to a number
+        return vm.testRun.tests.find(test => test.id === +id);
+    }
+
+    /* --------------------- Filtering and ordering helpers --------------------- */
+
+    function onStatusFilterChange(newFilter) {
+        vm.filters.status = newFilter;
+        onFilterChange(true);
+    }
+
+    function isFitsByFilter(itemValue, filterValues) {
+        if (!filterValues || !filterValues.length) {
+            return true;
+        } else if (Array.isArray(itemValue)) {
+            return itemValue.some(({ value }) => (filterValues.findIndex(fValue => fValue && value && fValue.toLowerCase() === value.toLowerCase()) > -1));
+        }
+
+        return (filterValues.findIndex(fValue => fValue && itemValue && fValue.toLowerCase() === itemValue.toLowerCase()) > -1);
+    }
+
+    function onPlainViewModeActivate() {
+        vm.filters.grouping = null;
+        onFilterChange(true);
+        // resetStatusFilterAndOrdering(); // Use this if you need to reset status filters and ordering on view mode change
+    }
+
+    function onFilteredViewModeActivate() {
+        const values = vm.groupingFilters[vm.testsViewMode].cachedValues || [''];
+
+        vm.filters.grouping = { field: vm.groupingFilters[vm.testsViewMode].field, values };
+        onFilterChange(true);
+        // resetStatusFilterAndOrdering(); // Use this if you need to reset status filters and ordering on view mode change
+    }
+
+    /* -------------- Work with data (filtering, ordering and etc.) ------------- */
+
+    /**
+     * Init tests for view by filtering and sorting with default values
+     */
+    function onInitTests() {
+        initGroupingData();
+        if (vm.configSnapshot) {
+            applyConfigSnapshot();
+            onPageChange();
+            onFilterChange();
+        } else {
+            onFilterChange(true);
+        }
+    }
+
+    function initGroupingData() {
+        const { class: classData, package: packageData, tags: tagsData } = vm.groupingFilters;
+
+        vm.testRun.tests.forEach((test) => {
+            if (test[classData.field]) {
+                classData.dataset.add(test[classData.field]);
+            }
+            if (test[packageData.field]) {
+                packageData.dataset.add(test[packageData.field]);
+            }
+            if (test[tagsData.field]) {
+                test[tagsData.field].forEach((tag) => {
+                    //skip Testrail and Qtest tags (see ZEB-486 ticket)
+                    if (tag.name !== 'TESTRAIL_TESTCASE_UUID' && tag.name !== 'QTEST_TESTCASE_UUID') {
+                        tagsData.dataset.add(tag.value);
+                    }
+                });
+            }
+        });
+    }
+
+    function updateGroupingData(test) {
+        const { class: classData, package: packageData, tags: tagsData } = vm.groupingFilters;
+
+        if (test[classData.field]) {
+            classData.dataset.add(test[classData.field]);
+        }
+        if (test[packageData.field]) {
+            packageData.dataset.add(test[packageData.field]);
+        }
+        if (test[tagsData.field]) {
+            test[tagsData.field].forEach((tag) => {
+                tagsData.dataset.add(tag.value);
+            });
+        }
+    }
+
+    /**
+     * Sorts array of tests by specified field of items
+     *
+     * @param {[]} [data=vm.activeTests]
+     * @returns {[]} sorted array of tests
+     */
+    function getOrderedTests(data = vm.activeTests) {
+        const { field, reverse } = vm.sortConfig;
+
+        vm.filteredTests = UtilService.sortArrayByField(data, field, reverse);
+        vm.activeTests = vm.filteredTests;
+    }
+
+    /**
+     * Sorts current array of tests by 'elapsed' field on appropriate event
+     */
+    function onOrderByElapsed() {
+        getOrderedTests();
+    }
+
+    function onAddingNewTest(test) {
+        updateGroupingData(test)
+        onFilterChange();
+    }
+
+    function onFilterChange(shouldResetPagination) {
+        const filters = [vm.filters.status, vm.filters.grouping].filter(Boolean);
+        const filteredData = vm.testRun.tests.filter((test) => {
+            return filters.every(filter => isFitsByFilter(test[filter.field], filter.values));
+        });
+
+        shouldResetPagination && resetPagination();
+        getOrderedTests(filteredData);
+    }
+
     function prepareArtifacts(test) {
-        const formattedArtifacts = test.artifacts.reduce(function(formatted, artifact) {
+        const formattedArtifacts = test.artifacts.reduce(function (formatted, artifact) {
             const name = artifact.name.toLowerCase();
 
             if (!name.includes('live') && !name.includes('video')) {
@@ -407,242 +672,145 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
             }
 
             return formatted;
-        }, {imageArtifacts: [], artifactsToShow: []});
+        }, { imageArtifacts: [], artifactsToShow: [] });
 
         test.imageArtifacts = formattedArtifacts.imageArtifacts;
         test.artifactsToShow = formattedArtifacts.artifactsToShow;
     }
 
-    function collectTags(tests) {
-        var result = [];
-
-        angular.forEach(tests, function (test) {
-            test.tags.forEach(function (tag) {
-                if (result.indexOfField('value', tag.value) === -1) {
-                    result.push(tag);
+    function prepareTestsData() {
+        vm.testRun.tests.forEach(test => {
+            test.elapsed = test.finishTime ? (test.finishTime - test.startTime) : Number.MAX_VALUE;
+            prepareArtifacts(test);
+            test.tags.forEach(tag => {
+                if (tag.name === 'TESTRAIL_TESTCASE_UUID' || tag.name === 'QTEST_TESTCASE_UUID') {
+                    tag.normalizedValue = tag.value.split('-').pop();
                 }
             });
         });
-
-        return result;
     }
 
-    function addGroupingItem(test) {
-        if (!vm.testGroups.group.package.data[test.notNullTestGroup] && test.notNullTestGroup) {
-            vm.testGroups.group.package.data[test.notNullTestGroup] = [];
-        }
-
-        if (!vm.testGroups.group.class.data[test.testClass] && test.testClass) {
-            vm.testGroups.group.class.data[test.testClass] = [];
-        }
-
-        var groupPackageIndex = vm.testGroups.group.package.data[test.notNullTestGroup].indexOfField('id', test.id);
-        var classPackageIndex = vm.testGroups.group.class.data[test.testClass].indexOfField('id', test.id);
-
-        if (groupPackageIndex !== -1) {
-            vm.testGroups.group.package.data[test.notNullTestGroup].splice(groupPackageIndex, 1, test);
-        } else {
-            vm.testGroups.group.package.data[test.notNullTestGroup].push(test);
-        }
-
-        if (classPackageIndex !== -1) {
-            vm.testGroups.group.class.data[test.testClass].splice(classPackageIndex, 1, test);
-        } else {
-            vm.testGroups.group.class.data[test.testClass].push(test);
-        }
-    }
-
-    function showTestsByTags(tests, tags) {
-        angular.forEach(tests, function (test) {
-            test.show = false;
-            if (tags && tags.length) {
-                tags.forEach(function (tag) {
-                    if (!test.show) {
-                        test.show = test.tags.map(function (testTag) {
-                            return testTag.value;
-                        }).includes(tag);
-                    }
-                });
-            } else {
-                test.show = true;
+    function addNewTest(test) {
+        test.elapsed = test.finishTime ? (test.finishTime - test.startTime) : Number.MAX_VALUE;
+        prepareArtifacts(test);
+        test.tags.forEach(tag => {
+            if (tag.name === 'TESTRAIL_TESTCASE_UUID' || tag.name === 'QTEST_TESTCASE_UUID') {
+                tag.normalizedValue = tag.value.split('-').pop();
             }
         });
+
+        vm.testRun.tests.push(test);
+        onAddingNewTest(test);
     }
 
-    function showTestsByStatuses(tests, statuses) {
-        vm.testsFilteredEmpty = true;
-        angular.forEach(tests, function (test) {
-            test.showByStatus = false;
-            if (statuses && statuses.length) {
-                test.showByStatus = statuses.includes(test.status.toLowerCase());
-            } else {
-                test.showByStatus = true;
-            }
-            if (test.showByStatus) {
-                vm.testsFilteredEmpty = false;
+    /* -------------------------- Intersection Observer ------------------------- */
+
+    /**
+     * Creates a new IntersectionObserver object which will execute a specified callback function
+     * when it detects that a target element's visibility has crossed one or more thresholds
+     */
+    function initIntersectionObserver() {
+        observer = new IntersectionObserver(intersectionHandler, { threshold: 0.1 });
+    }
+
+    /**
+     * Stops the IntersectionObserver object from observing any target.
+     */
+    function disconnectIntersectionObserver() {
+        observer && observer.disconnect();
+    }
+
+    /**
+     * Callback function for Intersection Observer
+     * Adds flagg 'isInView' when appropriate element becomes visible in viewport
+     * and then ubsubsribes this element from observer
+     *
+     * @param {IntersectionObserverEntry} entries
+     * @param {IntersectionObserver} observer
+     */
+    function intersectionHandler(entries, observer) {
+        entries.filter(entry => entry.isIntersecting).forEach(entry => {
+            const id = entry.target.getAttribute('data-source-id');
+            const test = getTestById(id);
+
+            if (test && !test.isInView) {
+                test.isInView = true;
+                // we use intersection observer only to deley rendering, so after status is changed we can unsubscribe it from observer
+                observer.unobserve(entry.target);
             }
         });
+        $scope.$apply();
     }
 
-    function switchTestGroupMode(mode, force) {
-        if (vm.testGroupMode !== mode || force) {
-            vm.testGroupMode = mode;
+    /**
+     * Targeting an element to be observed
+     *
+     * @param {data} Object
+     * @returns {function(): void} a function to stop observing a particular target element
+     */
+    function onTrackedTestRender(data) {
+        observer.observe(data.element);
 
-            !force && resetTestsGrouping();
-
-            onTestGroupingMode(function () {
-                if (!force) {
-                    vm.testRun.tags = collectTags(vm.testRun.tests);
-                    vm.testsTagsOptions.hashSymbolHide = false;
-                    vm.testGroups.mode = 'common';
-                }
-                angular.element('.page').removeClass('groups-group-mode');
-            }, function () {
-                angular.element('.page').addClass('groups-group-mode');
-                vm.testGroups.mode = 'package';
-                vm.testRun.tags = [
-                    {name: 'package', value: 'Package', default: true},
-                    {name: 'class', value: 'Class'}
-                ];
-                groupTests(force);
-
-                if (!force) {
-                    vm.testsTagsOptions.initValues = ['Package'];
-                    vm.testsTagsOptions.hashSymbolHide = true;
-                }
-            });
-        }
+        return () => {
+            data.test.isInView = false;
+            observer.unobserve(data.element);
+        };
     }
 
-    function resetTestsGrouping() {
-        vm.testsTagsOptions.reset(); //TODO: refactoring: directive shouldn't extend passed object: ("clear functions" approach)
-        vm.testsStatusesOptions.reset();
-        vm.testsFilteredEmpty = false;
-        vm.predicate = 'startTime';
-        vm.reverse = false;
-        vm.testGroups.predicate = 'startTime';
-        vm.testGroups.reverse = false;
-        if (vm.testGroupMode === 'GROUPS') {
-            vm.testGroups.mode = 'package';
-        }
-    }
-
-    function onTestGroupingMode(funcPlain, funcGroups) {
-        switch(vm.testGroupMode) {
-            case 'PLAIN':
-                funcPlain.call();
-                break;
-            case 'GROUPS':
-                funcGroups.call();
-                break;
-            default:
-                break;
-        }
-    }
-
-    function groupTests(force) {
-        if (!force) {
-            initTestGroups();
-        } else {
-            vm.testGroups.group.package.data = {};
-            vm.testGroups.group.class.data = {};
-        }
-
-        angular.forEach(vm.testRun.tests, function (value) {
-            addGroupingItem(value);
+    /* ----------------------------- Dialog openers ----------------------------- */
+    function showCiHelperDialog(event) {
+        $mdDialog.show({
+            controller: CiHelperController,
+            template: CiHelperTemplate,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose: false,
+            fullscreen: true,
+            autoWrap: false,
+            escapeToClose: false
         });
-    }
-
-    function selectTestGroup(group, selectName) {
-        group.selectedName = group.selectedName === selectName ? undefined : selectName;
-    }
-
-    function onTagSelect(chips) {
-        var fnPlain = function() {
-            showTestsByTags(vm.testRun.tests, chips);
-        };
-        var fgGroups = function() {
-            angular.forEach(vm.testRun.tests, function(test) {
-                test.show = true;
-                test.showByStatus = true;
-            });
-            if (chips && chips.length) {
-                vm.testGroups.mode = chips[0].toLowerCase();
-            }
-            vm.testGroups.apply = true;
-        };
-
-        testDetailsService.setTags(chips);
-        vm.testsTagsOptions.initValues = testDetailsService.getTags();
-        onTestGroupingMode(fnPlain, fgGroups);
-        testGroupDataToStore.tags = angular.copy(chips);
-    }
-
-    function onStatusButtonClick(statuses) {
-        var fnPlain = function() {
-            showTestsByStatuses(vm.testRun.tests, statuses);
-        };
-        var fgGroups = function() {
-            showTestsByStatuses(vm.testRun.tests, statuses);
-        };
-        
-        testDetailsService.setStatuses(statuses);
-        vm.testsStatusesOptions.initValues = testDetailsService.getStatuses();
-        onTestGroupingMode(fnPlain, fgGroups);
-        testGroupDataToStore.statuses = angular.copy(statuses);
-    }
-
-    function changeTestStatus(test, status) {
-        if(test.status !== status && confirm('Do you really want mark test as ' + status + '?')) {
-            test.status = status;
-            TestService.updateTest(test)
-            .then(function(rs) {
-                if (rs.success) {
-                    messageService.success('Test was marked as ' + status);
-                } else {
-                    console.error(rs.message);
-                }
-            });
-        }
     }
 
     function showDetailsDialog(test, event) {
         const isNew = setWorkItemIsNewStatus(test.workItems);
 
-        modalsService.openModal({
-            controller: IssuesModalController,
-            template: require('../../components/modals/issues/issues.html'),
-            parent: angular.element(document.body),
-            targetEvent: event,
-            controllerAs: '$ctrl',
-            locals: {
-                test: test,
-                isNewIssue: isNew.issue,
-                isNewTask: isNew.task,
-            }
-        })
-        .catch(function(response) {
-            if (response) {
-                vm.testRun.tests[test.id] = angular.copy(response);
-            }
-        });
+        modalsService
+            .openModal({
+                controller: IssuesModalController,
+                template: require('../../components/modals/issues/issues.html'),
+                parent: angular.element(document.body),
+                targetEvent: event,
+                controllerAs: '$ctrl',
+                locals: {
+                    test: test,
+                    isNewIssue: isNew.issue,
+                    isNewTask: isNew.task,
+                }
+            })
+            .catch(function (response) {
+                if (response) {
+                    const index = getTestsIndexByID(test.id);
+
+                    if (index !== -1) {
+                        vm.testRun.tests[index] = angular.copy(response);
+                    }
+                }
+            });
     }
 
     function showFilterDialog(event) {
-        vm.testsStatusesOptions.initValues = testDetailsService.getStatuses();
-        vm.testsTagsOptions.initValues = testDetailsService.getTags();
         $mdDialog.show({
             controller: testDetailsFilterController,
             template: testDetailsTemplate,
             parent: angular.element(document.body),
             targetEvent: event,
-            clickOutsideToClose:true,
+            clickOutsideToClose: true,
             fullscreen: true,
             bindToController: true,
             controllerAs: '$ctrl',
             onComplete: () => {
                 $(window).on('resize.filterDialog', () => {
-                    if ($(window).width() >= mobileWidth) {
+                    if (!vm.isMobile) {
                         $mdDialog.hide();
                     }
                 })
@@ -651,44 +819,42 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
                 $(window).off('resize.filterDialog');
             },
             locals: {
-                tags: vm.testRun.tags,
-                testsTagsOptions: vm.testsTagsOptions,
-                testGroupMode: vm.testGroupMode,
-                testsStatusesOptions: vm.testsStatusesOptions,
-                sortByStatus: vm.onStatusButtonClick,
-                sortByTags: vm.onTagSelect,
-                resetTestsGroupingParent: vm.resetTestsGrouping,
+                statusInitValues: vm.filters.status.values,
+                defaultValues: {
+                    status: defaultStatusFilter.values,
+                },
+                filterByStatus,
+                reset: resetStatusFilterAndOrdering,
             }
         });
     }
 
-    function setWorkItemIsNewStatus(workItems) {
-        const isNew = {
-            issue: true,
-            task: true
-        };
-
-        workItems.length && workItems.forEach(function(item) {
-            switch (item.type) {
-                case 'TASK':
-                    isNew.task = false;
-                    break;
-                case 'BUG':
-                    isNew.issue = false;
-                    break;
+    function openImagesViewerModal(event, artifact, test) {
+        $mdDialog.show({
+            controller: ImagesViewerController,
+            template: require('../../components/modals/images-viewer/images-viewer.html'),
+            controllerAs: '$ctrl',
+            bindToController: true,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose: true,
+            fullscreen: false,
+            escapeToClose: false,
+            locals: {
+                test,
+                activeArtifactId: artifact.id,
             }
         });
-
-        return isNew;
     }
 
+    /* --------------------------- Work with Websocket -------------------------- */
     function initWebsocket() {
         const wsName = 'zafira';
 
         vm.zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
         vm.zafiraWebsocket.debug = null;
-        vm.zafiraWebsocket.ws.close = function() {};
-        vm.zafiraWebsocket.connect({withCredentials: false}, function () {
+        vm.zafiraWebsocket.ws.close = function () { };
+        vm.zafiraWebsocket.connect({ withCredentials: false }, function () {
             vm.subscriptions.statistics = subscribeStatisticsTopic();
             vm.subscriptions.testRun = subscribeTestRunsTopic();
             vm.subscriptions[vm.testRun.id] = subscribeTestsTopic(vm.testRun.id);
@@ -699,12 +865,25 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
         });
     }
 
-    function getEventFromMessage(message) {
-        return JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
-    }
+    /**
+     * Subscribes to launchers soket to store new ones in session storage
+     *
+     * @returns function to unsubscribe from socket
+     */
+    function subscribeLaunchedTestRuns() {
+        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.launcherRuns', function (data) {
+            const event = getEventFromMessage(data.body);
+            const launcher = event.launcher;
 
-    function isCurrentTestRunStatistics(event) {
-        return vm.testRun.id === +event.testRunStatistics.testRunId;
+            launcher.status = 'LAUNCHING';
+            launcher.ciRunId = event.ciRunId;
+            launcher.testSuite = { name: launcher.name };
+            const indexOfLauncher = testsRunsService.readStoredlaunchers().findIndex((res) => { res.ciRunId === launcher.ciRunId });
+
+            if (indexOfLauncher === -1) {
+                testsRunsService.addNewLauncher(launcher);
+            }
+        });
     }
 
     function subscribeStatisticsTopic() {
@@ -740,54 +919,10 @@ const testDetailsController = function testDetailsController($scope, $timeout, $
 
     function subscribeTestsTopic() {
         return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.testRuns.' + vm.testRun.id + '.tests', function (data) {
-            const event = getEventFromMessage(data.body);
+            const { test } = getEventFromMessage(data.body);
 
-            addTest(event.test);
+            test && addNewTest(test);
             $scope.$apply();
-        });
-    }
-
-    function bindEvents() {
-        $scope.$on('$destroy', function () {
-            if (vm.zafiraWebsocket && vm.zafiraWebsocket.connected) {
-                for (let key in vm.subscriptions) {
-                    vm.subscriptions[key].unsubscribe();
-                }
-                $timeout(function () {
-                    vm.zafiraWebsocket.disconnect();
-                }, 0, false);
-                UtilService.websocketConnected('zafira');
-            }
-        });
-
-        const onTransStartSubscription = $transitions.onStart({}, function(trans) {
-            const toState = trans.to();
-
-            if (toState.name !== 'tests.runInfo') {
-                TestService.clearDataCache();
-                testDetailsService.clearDataCache();
-            }
-
-            onTransStartSubscription();
-        });
-    }
-
-    //TODO: implement lazyLoading after webpack is applied
-    function openImagesViewerModal(event, artifact, test) {
-        $mdDialog.show({
-            controller: ImagesViewerController,
-            template: require('../../components/modals/images-viewer/images-viewer.html'),
-            controllerAs: '$ctrl',
-            bindToController: true,
-            parent: angular.element(document.body),
-            targetEvent: event,
-            clickOutsideToClose:true,
-            fullscreen: false,
-            escapeToClose: false,
-            locals: {
-                test,
-                activeArtifactId: artifact.id,
-            }
         });
     }
 };

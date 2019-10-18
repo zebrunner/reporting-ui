@@ -20,28 +20,56 @@
     <div class="page">
         <div class="p-tests-run-details__sticky-header">
             <test-run-card test-run="$ctrl.testRun" back="$ctrl.onBackClick()" single-mode="true"></test-run-card>
-            <div data-ng-hide="!$ctrl.testRun.tests" ng-if="!$ctrl.isMobile()">
+            <div data-ng-hide="!$ctrl.testRun.tests" ng-if="!$ctrl.isMobile">
                 <div class="test-run-group-row">
                     <div class="sort-new test-run-group-column" colspan="4">
                         <div class="test-run-group">
                             <div class="test-run-group_wrapper _left">
                                 <div class="test-run-group_controls-buttons">
-                                    <button id="plainToggle" ng-class="{'md-primary': $ctrl.testGroupMode === 'PLAIN'}" class="md-button md-raised md-ink-ripple" type="button" ng-click="$ctrl.switchTestGroupMode('PLAIN');">
+                                    <button id="plainToggle"
+                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'plain'}"
+                                        class="md-button md-raised md-ink-ripple"
+                                        type="button"
+                                        ng-click="$ctrl.changeViewMode('plain');">
                                         Plain
                                     </button>
-                                    <button id="groupsToggle" ng-class="{'md-primary': $ctrl.testGroupMode === 'GROUPS'}" class="md-button md-raised md-ink-ripple" type="button" ng-click="$ctrl.switchTestGroupMode('GROUPS');">
-                                        Groups
+                                    <button id="classToggle"
+                                        ng-if="$ctrl.groupingFilters.class.data.length"
+                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'class'}"
+                                        class="md-button md-raised md-ink-ripple"
+                                        type="button"
+                                        ng-click="$ctrl.changeViewMode('class');">
+                                        Class
+                                    </button>
+                                    <button id="packageToggle"
+                                        ng-if="$ctrl.groupingFilters.package.data.length"
+                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'package'}"
+                                        class="md-button md-raised md-ink-ripple"
+                                        type="button"
+                                        ng-click="$ctrl.changeViewMode('package');">
+                                        Package
+                                    </button>
+                                    <button id="tagsToggle"
+                                        ng-if="$ctrl.groupingFilters.tags.data.length"
+                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'tags'}"
+                                        class="md-button md-raised md-ink-ripple"
+                                        type="button"
+                                        ng-click="$ctrl.changeViewMode('tags');">
+                                        Tags
                                     </button>
                                 </div>
-                                <chips-array chips="$ctrl.testRun.tags" options="$ctrl.testsTagsOptions" count-to-show="3" multi="$ctrl.testGroupMode === 'PLAIN'" on-select="$ctrl.onTagSelect($tags);"></chips-array>
                             </div>
                             <div class="test-run-group_wrapper _right">
-                                <status-buttons on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
-                                <div class="test-run-group_sorts">
-                                    <div name="sortElapsed" sort-item="{{$ctrl.testGroups.reverse}}" class="pointer" data-ng-click="$ctrl.testGroups.predicate = 'elapsed'; $ctrl.testGroups.reverse = !$ctrl.testGroups.reverse">Elapsed&nbsp;</div>
+                                <status-buttons on-button-click="$ctrl.filterByStatus($statuses)" initial-selections="$ctrl.filters.status.values"></status-buttons>
+                                <div class="test-run-group_sorts" ng-class="{'active': $ctrl.sortConfig.field === 'elapsed'}">
+                                    <div name="sortElapsed" sort-item="{{$ctrl.sortConfig.reverse}}" class="pointer" data-ng-click="$ctrl.orderByElapsed()">Elapsed&nbsp;</div>
                                 </div>
                                 <div class="test-run-group_other-buttons">
-                                    <md-button id="resetAllToggle" class="md-raised" type="button" ng-click="$ctrl.resetTestsGrouping();">
+                                    <md-button id="resetAllToggle"
+                                        class="md-raised"
+                                        ng-disabled="!$ctrl.isFilteringOrSortingActive"
+                                        type="button"
+                                        ng-click="$ctrl.resetStatusFilterAndOrdering();">
                                         RESET
                                     </md-button>
                                 </div>
@@ -51,10 +79,10 @@
                 </div>
             </div>
         </div>
-        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile()" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
+        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile && !$ctrl.testsLoading && !$ctrl.scrollTicking" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible" ng-click="$ctrl.showFilterDialog($event)">
-                        <div class="search-fab" ng-class="{'_list': !$ctrl.isDetailsFilterActive(), '_checked-list': $ctrl.isDetailsFilterActive()}" aria-hidden="true"></div>
+                        <div class="search-fab" ng-class="{'_list': !$ctrl.isFilteringOrSortingActive, '_checked-list': $ctrl.isFilteringOrSortingActive}" aria-hidden="true"></div>
                 </md-button>
             </md-fab-trigger>
         </md-fab-speed-dial>
@@ -64,148 +92,188 @@
                     <md-card class="no-margin-h" ng-class="{'empty': $ctrl.empty || $ctrl.testsFilteredEmpty}">
                         <md-table-container>
                             <table md-table="md-table" class="table">
-                                <tr ng-show="$ctrl.testGroupMode === 'GROUPS'" ng-repeat-start="(packageName, tests) in $ctrl.testGroups.group[$ctrl.testGroups.mode].data track by $index" class="test-run-group-row groups" md-row="md-row">
-                                    <th class="test-run-group-column md-column" colspan="4">
-                                        <div class="test-run-group">
+                                <tbody>
+                                    <tr ng-if="$ctrl.testsViewMode !== 'plain'"
+                                        ng-repeat-start="groupName in $ctrl.groupingFilters[$ctrl.testsViewMode].data track by groupName"
+                                        class="test-run-group-row groups"
+                                        md-row="md-row">
+                                        <th class="test-run-group-column md-column" colspan="3">
                                             <div class="test-run-group_name">
-                                                <i ng-click="$ctrl.selectTestGroup($ctrl.testGroups.group[$ctrl.testGroups.mode], packageName);" ng-class="$ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName ? 'checked' : 'unchecked'" class="material-icons">
+                                                <i ng-click="$ctrl.toggleGroupingFilter(groupName);"
+                                                    ng-class="$ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue === groupName ? 'checked' : 'unchecked'"
+                                                    class="material-icons">
                                                     keyboard_arrow_down
                                                 </i>
-                                                <span>{{packageName}}</span>
+                                                <span>{{ groupName }}</span>
                                             </div>
-                                            <div ng-if="$ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName" class="test-run-group_sorts">
-                                                <div name="sortElapsed" sort-item="{{$ctrl.testGroups.reverse}}" class="pointer col-sm-2" data-ng-click="$ctrl.testGroups.predicate = 'elapsed'; $ctrl.testGroups.reverse = !$ctrl.testGroups.reverse">Elapsed&nbsp;</div>
+                                        </th>
+                                    </tr>
+                                    <tr ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue" class="table-pagination">
+                                        <td class="no-padding" colspan="3">
+                                            <md-table-pagination
+                                                id="pagination"
+                                                zafira-background-theme="pagination"
+                                                ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
+                                                md-limit="$ctrl.countPerPage"
+                                                md-limit-options="$ctrl.limitOptions"
+                                                md-label="{rowsPerPage: 'Items per page:'}"
+                                                md-page="$ctrl.currentPage"
+                                                md-total="{{$ctrl.activeTests.length}}"
+                                                md-page-select=false
+                                                md-boundary-links=true
+                                                md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
+                                        </td>
+                                    </tr>
+                                    <tr ng-attr-id="test_{{::test.id}}"
+                                        class="test"
+                                        ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue"
+                                        load-on-scroll="test"
+                                        load-on-scroll-handler="$ctrl.onTrackedTestRender($data)"
+                                        ng-repeat="test in $ctrl.testsToDisplay track by test.id"
+                                        ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED', 'active-highlight': test.id === $ctrl.testId}"
+                                        data-source-id="{{test.id}}"
+                                        ng-init="$last && $ctrl.testId && $ctrl.highlightTest()"
+                                        data-ng-hide="$ctrl.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED'">
+                                        <td class="test-info">
+                                            <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{::test.name}}
+                                                <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></p>
+                                            <div class="test-info__wrapper">
+                                                <span data-ng-if="test.finishTime && (test.finishTime - test.startTime)/1000 > 0 && test.status !== 'QUEUED'" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                    <i class="material-icons">schedule</i>
+                                                    <span>{{::(test.finishTime - test.startTime)/1000 | number:0}} seconds</span>
+                                                </span>
+                                                <span name="testOwner" data-ng-if="test.owner" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                                    {{::test.owner}}
+                                                </span>
+                                                <span name="device" data-ng-if="test.testConfig.device" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                    <i class="fa fa-mobile" aria-hidden="true"></i>
+                                                    {{::test.testConfig.device}}</span>
                                             </div>
-                                            <status-buttons ng-if="$ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName && !$ctrl.isMobile" on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
-                                        </div>
-                                    </th>
-                                </tr>
-                                <tr ng-attr-id="test_{{test.id}}" class="test" ng-repeat-end="ng-repeat-end" ng-if="test.show && test.showByStatus && $ctrl.testGroups.group[$ctrl.testGroups.mode].selectedName === packageName" data-ng-repeat="(id, test) in $ctrl.testGroupMode === 'PLAIN' ? $ctrl.testRun.tests : tests | orderObjectBy:$ctrl.testGroups.predicate:$ctrl.testGroups.reverse track by $index" ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED', 'active-highlight': test.id === $ctrl.testId}" data-ng-hide="$ctrl.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED'">
-                                    <td class="test-info">
-                                        <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{test.name}}
-                                            <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></p>
-                                        <div class="test-info__wrapper">
-                                            <span data-ng-if="test.finishTime && (test.finishTime - test.startTime)/1000 > 0 && test.status !== 'QUEUED'" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                                                <i class="material-icons">schedule</i>
-                                                <span>{{(test.finishTime - test.startTime)/1000 | number:0}} seconds</span>
+                                            <div ng-if="test.tags && test.tags.length" class="test-info_tags">
+                                                <span class="test-info_tags_tag" ng-repeat="tag in test.tags">
+                                                    <span ng-if="(tag.name === 'TESTRAIL_TESTCASE_UUID' && !$ctrl.testRail['TESTRAIL_URL']) ||
+                                                    (tag.name === 'QTEST_TESTCASE_UUID' && !$ctrl.qTest['QTEST_URL']) ||
+                                                    (tag.name !== 'TESTRAIL_TESTCASE_UUID' && tag.name !== 'QTEST_TESTCASE_UUID')">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</span>
+                                                    <a name="testRailLink"
+                                                    href="{{::$ctrl.getTestURL('TESTRAIL_URL', tag.value)}}"
+                                                    target="_blank"
+                                                    data-ng-if="tag.name === 'TESTRAIL_TESTCASE_UUID' && $ctrl.testRail['TESTRAIL_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
+                                                    <a name="qTestLink"
+                                                    href="{{::$ctrl.getTestURL('QTEST_URL', tag.value)}}"
+                                                    target="_blank"
+                                                    data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
+                                                </span>
+                                            </div>
+                                            <div class="result_error {{test.status}} {{::main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
+                                                <div>
+                                                    <show-more name="errorMsg" element-id="test.id" class="test-error" text="test.message" limit="100"></show-more>
+                                                </div>
+                                            </div>
+                                            <div class="test-settings__wrapper" ng-if="test.artifactsToShow.length">
+                                                <div ng-repeat="artifact in test.artifactsToShow">
+                                                    <a name="testArtifactsGallery" aria-label="Test artifacts" class="test-settings__attachment" ng-click="$ctrl.openImagesViewerModal($event, artifact, test)" href="" ng-if="::('png' === artifact.extension)">
+                                                        <md-icon md-svg-icon="artifacts:image" class="material-icons"></md-icon>
+                                                        <p>{{::artifact.name}}</p>
+                                                        <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
+                                                    </a>
+                                                    <a name="testArtifacts" href="{{::artifact.link}}" target="{{:: artifact.extension ? '_self' : '_blank' }}" aria-label="Test artifacts" class="test-settings__attachment" ng-if="::('png' !== artifact.extension)">
+                                                        <md-icon md-svg-icon="{{::$ctrl.getArtifactIconId(artifact.extension)}}" ng-if="::artifact.extension" class="material-icons"></md-icon>
+                                                        <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="::material-icons">link</md-icon>
+                                                        <p>{{::artifact.name}}</p>
+                                                        <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- TODO: clarify with designer -->
+                                            <!-- <div class="test__clickable-wrapper"></div> -->
+                                        </td>
+                                        <td class="test-label">
+                                            <span data-ng-repeat="issue in test.workItems" class="work-items">
+                                                <!-- URL pattern for Jira -->
+                                                <a name="taskTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</a>
+                                                <a name="bugTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</a>
+                                                <!-- URL pattern for pseudo GitHub integration -->
+                                                <a name="taskTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && !$ctrl.jira['JIRA_URL'].includes('atlassian') && !$ctrl.jira['JIRA_URL'].includes('jira') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</a>
+                                                <a name="bugTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && !$ctrl.jira['JIRA_URL'].includes('atlassian') && !$ctrl.jira['JIRA_URL'].includes('jira') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</a>
+                                                <span name="taskTicket" ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</span>
+                                                <span name="bugTicket" ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</span>
                                             </span>
-                                            <span name="testOwner" data-ng-if="test.owner" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                                                <i class="fa fa-user" aria-hidden="true"></i>
-                                                {{test.owner}}
+                                        </td>
+                                        <td class="test-settings">
+                                            <div class="align-middle align-right" ng-if="test.status !== 'QUEUED' && test.isInView">
+                                                <div class="test-settings__button" >
+                                                    <md-button class="md-icon-button" ng-click="$ctrl.goToTestDetails(test.id);" aria-label="details">
+                                                        <md-icon class="material-icons">remove_red_eye</md-icon>
+                                                        <md-tooltip md-direction="bottom">Details</md-tooltip>
+                                                    </md-button>
+                                                </div>
+                                                <md-menu class="pull-right test-settings__menu">
+                                                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
+                                                        <md-icon class="material-icons">more_vert</md-icon>
+                                                        <md-tooltip md-direction="bottom">More options</md-tooltip>
+                                                    </md-button>
+                                                    <md-menu-content width="2" class="fixed-md-menu-content test-settings__menu-content">
+                                                        <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'passed');">
+                                                            <md-button>
+                                                                <md-icon class="material-icons point-icon _green">lens</md-icon><span>Mark as passed</span>
+                                                            </md-button>
+                                                        </md-menu-item>
+                                                        <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'failed');">
+                                                            <md-button>
+                                                                <md-icon class="material-icons point-icon _red">lens</md-icon><span>Mark as failed</span>
+                                                            </md-button>
+                                                        </md-menu-item>
+                                                        <md-menu-item ng-click="$ctrl.showDetailsDialog(test, $event);">
+                                                            <md-button name="testDetails" aria-label="Test details">
+                                                                <md-icon class="material-icons assignment">assignment_return</md-icon><span>Assign issue</span>
+                                                            </md-button>
+                                                        </md-menu-item>
+                                                    </md-menu-content>
+                                                </md-menu>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr name="testLoading" md-row="md-row">
+                                        <td md-cell="md-cell" colspan="4" class="test-loading" data-ng-show="$ctrl.testsLoading">
+                                            <span>
+                                            <md-progress-circular md-mode="indeterminate" md-diameter="20px" class="tests-loading-spinner"></md-progress-circular>
+                                            Tests are loading...
                                             </span>
-                                            <span name="device" data-ng-if="test.testConfig.device" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                                                <i class="fa fa-mobile" aria-hidden="true"></i>
-                                                {{test.testConfig.device}}</span>
-                                        </div>
-                                        <div ng-if="test.tags && test.tags.length" class="test-info_tags">
-                                            <span class="test-info_tags_tag" ng-repeat="tag in test.tags">
-                                                <span ng-if="(tag.name === 'TESTRAIL_TESTCASE_UUID' && !$ctrl.testRail['TESTRAIL_URL']) ||
-                                                (tag.name === 'QTEST_TESTCASE_UUID' && !$ctrl.qTest['QTEST_URL']) ||
-                                                (tag.name !== 'TESTRAIL_TESTCASE_UUID' && tag.name !== 'QTEST_TESTCASE_UUID')">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</span>
-                                                <a name="testRailLink"
-                                                   href="{{::$ctrl.getTestURL('TESTRAIL_URL', tag.value)}}"
-                                                   target="_blank"
-                                                   data-ng-if="tag.name === 'TESTRAIL_TESTCASE_UUID' && $ctrl.testRail['TESTRAIL_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
-                                                <a name="qTestLink"
-                                                   href="{{::$ctrl.getTestURL('QTEST_URL', tag.value)}}"
-                                                   target="_blank"
-                                                   data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
-                                            </span>
-                                        </div>
-                                        <div class="result_error {{test.status}} {{main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
-                                            <div>
-                                                <show-more name="errorMsg" element-id="test.id" class="test-error" text="test.message" limit="100"></show-more>
-                                            </div>
-                                        </div>
-                                        <div class="test-settings__wrapper" ng-if="test.artifactsToShow.length">
-                                            <div ng-repeat="artifact in test.artifactsToShow">
-                                                <a name="testArtifactsGallery" aria-label="Test artifacts" class="test-settings__attachment" ng-click="$ctrl.openImagesViewerModal($event, artifact, test)" href="" ng-if="['png'].indexOf(artifact.extension) !== -1">
-                                                    <md-icon md-svg-src="../../../assets/images/_icons_artifacts/image.svg" class="material-icons"></md-icon>
-                                                    <p>{{artifact.name}}</p>
-                                                    <md-tooltip md-direction="bottom">{{artifact.name}}</md-tooltip>
-                                                </a>
-                                                <a name="testArtifacts" href="{{artifact.link}}" target="{{ artifact.extension ? '_self' : '_blank' }}" aria-label="Test artifacts" class="test-settings__attachment" ng-if="['png'].indexOf(artifact.extension) === -1">
-                                                    <md-icon md-svg-src="../../../assets/images/_icons_artifacts/pdf.svg" ng-if="['pdf'].indexOf(artifact.extension) !== -1" class="material-icons"></md-icon>
-                                                    <md-icon md-svg-src="../../../assets/images/_icons_artifacts/apk.svg" ng-if="['apk'].indexOf(artifact.extension) !== -1" class="material-icons"></md-icon>
-                                                    <md-icon md-svg-src="../../../assets/images/_icons_artifacts/exe.svg" ng-if="['exe'].indexOf(artifact.extension) !== -1" class="material-icons"></md-icon>
-                                                    <md-icon md-svg-src="../../../assets/images/_icons_artifacts/doc.svg" ng-if="['doc', 'docx'].indexOf(artifact.extension) !== -1" class="material-icons"></md-icon>
-                                                    <md-icon md-svg-src="../../../assets/images/_icons_artifacts/xls.svg" ng-if="['xls', 'xlsx'].indexOf(artifact.extension) !== -1" class="material-icons"></md-icon>
-                                                    <md-icon md-svg-src="../../../assets/images/_icons_artifacts/txt.svg" ng-if="['txt'].indexOf(artifact.extension) !== -1" class="material-icons"></md-icon>
-                                                    <md-icon md-svg-src="../../../assets/images/_icons_artifacts/bin.svg" ng-if="artifact.extension && ['txt', 'pdf', 'xls', 'xlsx', 'doc', 'docx', 'exe', 'apk', 'png'].indexOf(artifact.extension) === -1" class="material-icons"></md-icon>
-                                                    <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
-                                                    <p>{{artifact.name}}</p>
-                                                    <md-tooltip md-direction="bottom">{{artifact.name}}</md-tooltip>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <!-- TODO: clarify with designer -->
-                                        <!-- <div class="test__clickable-wrapper"></div> -->
-                                    </td>
-                                    <td class="test-label">
-                                        <span data-ng-repeat="issue in test.workItems" class="work-items">
-                                            <!-- URL pattern for Jira -->
-                                            <a name="taskTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</a>
-                                            <a name="bugTicket" href="{{$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</a>
-                                            <!-- URL pattern for pseudo GitHub integration -->
-                                            <a name="taskTicket" href="{{$ctrl.jira['JIRA_URL'] + '/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.jira['JIRA_URL'] && !$ctrl.jira['JIRA_URL'].includes('atlassian') && !$ctrl.jira['JIRA_URL'].includes('jira') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</a>
-                                            <a name="bugTicket" href="{{$ctrl.jira['JIRA_URL'] + '/' + issue.jiraId}}" target="_blank" data-ng-if="$ctrl.jira['JIRA_URL'] && !$ctrl.jira['JIRA_URL'].includes('atlassian') && !$ctrl.jira['JIRA_URL'].includes('jira') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</a>
-                                            <span name="taskTicket" data-ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</span>
-                                            <span name="bugTicket" data-ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</span>
-                                        </span>
-                                    </td>
-                                    <td class="test-settings">
-                                        <div class="align-middle align-right" ng-if="test.status != 'QUEUED'">
-                                            <div class="test-settings__button">
-                                                <md-button class="md-icon-button" ng-click="$ctrl.goToTestDetails(test.id);">
-                                                    <md-icon class="material-icons">remove_red_eye</md-icon>
-                                                    <md-tooltip md-direction="bottom">Details</md-tooltip>
-                                                </md-button>
-                                            </div>
-                                            <md-menu class="pull-right test-settings__menu">
-                                                <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
-                                                    <md-icon class="material-icons">more_vert</md-icon>
-                                                    <md-tooltip md-direction="bottom">More options</md-tooltip>
-                                                </md-button>
-                                                <md-menu-content width="2" class="fixed-md-menu-content test-settings__menu-content">
-                                                    <md-menu-item ng-click="$ctrl.updateTest(test, true);">
-                                                        <md-button>
-                                                            <md-icon class="material-icons point-icon _green">lens</md-icon><span>Mark as passed</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item ng-click="$ctrl.updateTest(test, false);">
-                                                        <md-button>
-                                                            <md-icon class="material-icons point-icon _red">lens</md-icon><span>Mark as failed</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item ng-click="$ctrl.showDetailsDialog(test, $event);">
-                                                        <md-button name="testDetails" aria-label="Test details">
-                                                            <md-icon class="material-icons assignment">assignment_return</md-icon><span>Assign issue</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </md-menu-content>
-                                            </md-menu>
-                                        </div>
-                                    </td>
-
-                                </tr>
-                                <tr name="testLoading" md-row="md-row">
-                                    <td md-cell="md-cell" colspan="4" class="test-loading" data-ng-show="$ctrl.testsLoading">
-                                        <span>
-                                        <md-progress-circular md-mode="indeterminate" md-diameter="20px" class="tests-loading-spinner"></md-progress-circular>
-                                        Tests are loading...
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && ($ctrl.empty || $ctrl.testsFilteredEmpty) && $ctrl.testRun.status !== 'IN_PROGRESS'">
-                                    <td md-cell="md-cell" colspan="4" class="test-empty">
-                                        No tests
-                                    </td>
-                                </tr>
-                                <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && $ctrl.empty && $ctrl.testRun.status === 'IN_PROGRESS'">
-                                    <td md-cell="md-cell" colspan="4" class="test-empty">
-                                        No tests yet
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && $ctrl.empty && $ctrl.testRun.status !== 'IN_PROGRESS'">
+                                        <td md-cell="md-cell" colspan="4" class="test-empty">
+                                            No tests
+                                        </td>
+                                    </tr>
+                                    <tr md-row="md-row"
+                                        data-ng-if="!$ctrl.testsLoading && !$ctrl.empty && !$ctrl.activeTests.length && $ctrl.testRun.status !== 'IN_PROGRESS' && ($ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue)">
+                                        <td md-cell="md-cell" colspan="4" class="test-empty">
+                                            No tests matching selected filters
+                                        </td>
+                                    </tr>
+                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && $ctrl.empty && $ctrl.testRun.status === 'IN_PROGRESS'">
+                                        <td md-cell="md-cell" colspan="4" class="test-empty">
+                                            No tests yet
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat-end
+                                        ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue"
+                                        class="table-pagination">
+                                        <td class="no-padding">
+                                            <md-table-pagination
+                                                id="pagination"
+                                                zafira-background-theme="pagination"
+                                                ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
+                                                md-limit="$ctrl.countPerPage"
+                                                md-page="$ctrl.currentPage"
+                                                md-total="{{$ctrl.activeTests.length}}"
+                                                md-page-select=false
+                                                md-boundary-links=true
+                                                md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </md-table-container>

@@ -4,7 +4,6 @@ import toolsService from './tools/tools.service';
 import progressbarService from './progressbar/progressbar.service';
 import messageService from './messages/message.service';
 import mainMenuService from './main-menu/main-menu.service';
-import testDetailsService from './testdetails.service';
 import ArtifactService from './artifact.service';
 
 angular.module('app.services', [])
@@ -12,8 +11,7 @@ angular.module('app.services', [])
     .service({ toolsService })
     .service({ messageService })
     .service({ mainMenuService })
-    .service({ progressbarService })
-    .service({ testDetailsService });
+    .service({ progressbarService });
 
 require('./auth.intercepter');
 require('./utils/HttpMockResolver');

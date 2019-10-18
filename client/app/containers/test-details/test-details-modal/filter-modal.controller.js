@@ -1,53 +1,42 @@
 'use strict';
 
-const testDetailsFilterController = function testDetailsFilterController(resetTestsGroupingParent, testDetailsService, sortByTags, $mdDialog, tags, testsTagsOptions, testGroupMode, testsStatusesOptions, sortByStatus) {
+const testDetailsFilterController = function testDetailsFilterController(
+    reset,
+    $mdDialog,
+    filterByStatus,
+    statusInitValues,
+    defaultValues,
+) {
     'ngInject';
 
+    let resentlySelectedStatuses = [];
     const vm = {
-        cancel,
-        tags,
-        testsTagsOptions,
-        testGroupMode,
-        testsStatusesOptions,
-        sortByStatus,
-        resetTestsGroupingParent,
-        resetTestsGrouping,
-        sortByTags,
-        onTagSelect,
+        cancel: $mdDialog.cancel,
+        reset: resetFilters,
         onApply,
-        resentlySelectedStatuses: [],
-        recentlySelectedTags: [],
-        onStatusButtonClick,
+        statusInitValues,
+        onStatusChange,
     };
 
     return vm;
 
-    function resetTestsGrouping() {
-        testDetailsService.clearDataCache();
-        vm.resetTestsGroupingParent();
-        vm.onApply(false);
-    }
-
-    function cancel() {
-        $mdDialog.cancel();
-    };
-
     function onApply(needClosing) {
-        vm.sortByTags(vm.recentlySelectedTags);
-        vm.sortByStatus(vm.resentlySelectedStatuses);
+        filterByStatus(resentlySelectedStatuses);
         if (needClosing) {
             vm.cancel();
         }
     }
 
-    function onTagSelect($tags) {
-        vm.recentlySelectedTags = $tags;
+    function resetFilters() {
+        // If you need to use parent's reset
+        // reset();
+        // otherwise just reset current dialog's values
+        vm.statusInitValues = defaultValues.status;
     }
 
-    function onStatusButtonClick($statuses) {
-        vm.resentlySelectedStatuses = $statuses;
+    function onStatusChange($statuses) {
+        resentlySelectedStatuses = $statuses;
     }
-
 };
 
 export default testDetailsFilterController;
