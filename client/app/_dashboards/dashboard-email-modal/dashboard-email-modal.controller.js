@@ -51,6 +51,12 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
         });
     };
 
+    function isValidRecipient(recipient) {
+        let reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+        
+        return (reg.test(recipient));
+    }
+
     function sendEmail(locator, email) {
        email.recipients =  email.recipients.toString();
         return $q(function (resolve, reject) {
@@ -77,48 +83,48 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     $scope.querySearch = querySearch;
     var stopCriteria = '########';
 
-    function querySearch(criteria, user) {
+    function querySearch(criteria, alreadyAddedUsers) {
         $scope.usersSearchCriteria.query = criteria;
         currentText = criteria;
         if (!criteria.includes(stopCriteria)) {
             stopCriteria = '########';
             return UserService.searchUsersWithQuery($scope.usersSearchCriteria, criteria).then(function (rs) {
                 if (rs.success) {
-                    if (! rs.data.results.length) {
+                    if (!rs.data.results.length) {
                         stopCriteria = criteria;
                     }
-                    return rs.data.results.filter(searchFilter(user));
-                }
-                else {
+                    return filterUsersForSend(rs.data.results, alreadyAddedUsers);
                 }
             });
         }
         return "";
     }
 
-    function searchFilter(u) {
-        return function filterFn(user) {
-            var users = u;
-            for(var i = 0; i < users.length; i++) {
-                if(users[i].id == user.id) {
-                    return false;
-                }
-            }
-            return true;
-        };
+    function filterUsersForSend(usersFromDB, alreadyAddedUsers) {
+        return usersFromDB.filter((userFromDB) => {
+            return !alreadyAddedUsers.find((addedUser) => {
+                return addedUser.id === userFromDB.id;
+            }) && userFromDB.email;
+        })
     }
 
     $scope.checkAndTransformRecipient = function (currentUser) {
-        var user = {};
-        if (currentUser.username) {
+        let user = {};
+
+        if (typeof currentUser === 'object' && currentUser.email) {
             user = currentUser;
-            $scope.email.recipients.push(user.email);
-            $scope.users.push(user);
         } else {
+            if (!isValidRecipient(currentUser)) {
+                messageService.error('Invalid email format');
+
+                return null;
+            }
             user.email = currentUser;
-            $scope.email.recipients.push(user.email);
-            $scope.users.push(user);
         }
+
+        $scope.email.recipients.push(user.email);
+        $scope.users.push(user);
+
         return user;
     };
 
