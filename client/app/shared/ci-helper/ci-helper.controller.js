@@ -873,9 +873,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     (function initController() {
         clearLauncher();
-        $scope.connectToGitHub().then(function () {
-            $scope.isGitHubConnected = true;
-        });
         const launchersPromise = getAllLaunchers().then(function (launchers) {
             return $q(function (resolve, reject) {
                 $scope.launchers = launchers;
@@ -892,6 +889,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             isMultitenant = tenant.multitenant;
             getClientId().then(function (clientId) {
                 $scope.clientId = clientId;
+                $scope.connectToGitHub().then(function () {
+                    $scope.isGitHubConnected = true;
+                });
             });
         });
         const scmAccountsPromise = ScmService.getAllScmAccounts().then(function (rs) {
