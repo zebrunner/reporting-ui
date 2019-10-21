@@ -124,6 +124,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
 
         $scope.email.recipients.push(user.email);
         $scope.users.push(user);
+        currentText = '';
 
         return user;
     };
