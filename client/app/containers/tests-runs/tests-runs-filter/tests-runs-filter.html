@@ -13,6 +13,7 @@
                                     </md-chip>
                                 </md-chips>
                             </div>
+                            <div layout="row" layout-align="center center" ng-if="!$ctrl.filters.length">Add stored filter</div>
                             <md-chips class="filter-chip custom-filter" ng-class="{'_wide': !$ctrl.isFilterActive()}" ng-model="$ctrl.filters" md-removable="false"
                                       readonly="true">
                                 <md-chip-template>
