@@ -46,22 +46,10 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
                 return;
             }
         }
-        if (areAllEmailsValid()) {
-            sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
-                $scope.hide();
-            });
-        } else {
-            messageService.error('Invalid email format');
-            return;
-        }
-        
+        sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
+            $scope.hide();
+        });
     };
-
-    function areAllEmailsValid() {
-        return !$scope.email.recipients.find((recipient) => {
-            return !isValidRecipient(recipient)
-        })
-    }
 
     function isValidRecipient(recipient) {
         let reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
@@ -121,16 +109,23 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     }
 
     $scope.checkAndTransformRecipient = function (currentUser) {
-        var user = {};
-        if (currentUser.username) {
-            user = currentUser;
-            $scope.email.recipients.push(user.email);
-            $scope.users.push(user);
-        } else {
+        let user = {};
+
+        if (typeof currentUser === 'string') {
+            if (!isValidRecipient(currentUser)) {
+                messageService.error('Invalid email format');
+
+                return null;
+            }
+            
             user.email = currentUser;
-            $scope.email.recipients.push(user.email);
-            $scope.users.push(user);
+        } else if (currentUser.email) {
+            user = currentUser;
         }
+
+        $scope.email.recipients.push(user.email);
+        $scope.users.push(user);
+
         return user;
     };
 
