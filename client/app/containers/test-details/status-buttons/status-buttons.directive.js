@@ -56,7 +56,7 @@ const statusButtonsDirective = function($timeout) {
             }
 
             function onSelectionChange() {
-                const newSelections = vm.buttons.filter(button => button.isSelected).map(button => button.key.toLowerCase());
+                const newSelections = vm.buttons.filter(button => button.isSelected).map(button => button.key);
 
                 vm.onButtonClick({'$statuses': newSelections});
             }
@@ -69,7 +69,7 @@ const statusButtonsDirective = function($timeout) {
 
             function updateSelections() {
                 vm.buttons.forEach(button => {
-                    button.isSelected = (vm.initialSelections.indexOf(button.key.toLowerCase()) > -1);
+                    button.isSelected = (vm.initialSelections.indexOf(button.key) > -1);
                 });
             }
 

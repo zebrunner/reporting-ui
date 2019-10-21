@@ -50,18 +50,19 @@ const IssuesModalController = function IssuesModalController(
     };
 
     function updateTest(test) {
-        var message;
-        TestService.updateTest(test).then(function(rs) {
-            if (rs.success) {
-                vm.changeStatusIsVisible = false;
-                message = 'Test was marked as ' + test.status;
-                addTestEvent(message);
-                messageService.success(message);
-            }
-            else {
-                console.error(rs.message);
-            }
-        });
+        TestService.updateTest(test)
+            .then(function(rs) {
+                if (rs.success) {
+                    let message;
+
+                    vm.changeStatusIsVisible = false;
+                    message = 'Test was marked as ' + test.status;
+                    addTestEvent(message);
+                    messageService.success(message);
+                } else {
+                    console.error(rs.message);
+                }
+            });
     };
 
     function updateWorkItemList(workItem) {
@@ -106,48 +107,49 @@ const IssuesModalController = function IssuesModalController(
         if (!issue.testCaseId) {
             issue.testCaseId = test.testCaseId;
         }
-        TestService.createTestWorkItem(test.id, issue).then(function(rs) {
-            var workItemType = issue.type;
-            var jiraId = issue.jiraId;
-            var message;
-            if (rs.success) {
-                if (vm.isNewIssue) {
-                    message = generateActionResultMessage(workItemType,
-                        jiraId, "assign" + "e", true);
+        TestService.createTestWorkItem(test.id, issue)
+            .then((rs) => {
+                const workItemType = issue.type;
+                const jiraId = issue.jiraId;
+                let message;
+
+                if (rs.success) {
+                    if (vm.isNewIssue) {
+                        message = generateActionResultMessage(workItemType,
+                            jiraId, "assigned", true);
+                    } else {
+                        message = generateActionResultMessage(workItemType,
+                            jiraId, "updated", true);
+                    }
+                    addTestEvent(message);
+                    vm.newIssue.id = rs.data.id;
+                    updateWorkItemList(rs.data);
+                    initAttachedWorkItems();
+                    vm.isNewIssue = jiraId !== vm.attachedIssue.jiraId;
+                    messageService.success(message);
                 } else {
-                    message = generateActionResultMessage(workItemType,
-                        jiraId, "update", true);
+                    if (vm.isNewIssue) {
+                        message = generateActionResultMessage(workItemType,
+                            jiraId, "assign", false);
+                    } else {
+                        message = generateActionResultMessage(workItemType,
+                            jiraId, "update", false);
+                    }
+                    messageService.error(message);
                 }
-                addTestEvent(message);
-                vm.newIssue.id = rs.data.id;
-                updateWorkItemList(rs.data);
-                initAttachedWorkItems();
-                vm.isNewIssue = !(jiraId ===
-                    vm.attachedIssue.jiraId);
-                messageService.success(message);
-            }
-            else {
-                if (vm.isNewIssue) {
-                    message = generateActionResultMessage(workItemType,
-                        jiraId, "assign", false);
-                } else {
-                    message = generateActionResultMessage(workItemType,
-                        jiraId, "update", false);
-                }
-                messageService.error(message);
-            }
-        });
+            });
     };
 
     /* Unassignes issue from the test */
 
     function unassignIssue(workItem) {
-        TestService.deleteTestWorkItem(test.id, workItem.id).
-            then(function(rs) {
-                var message;
+        TestService.deleteTestWorkItem(test.id, workItem.id)
+            .then(function(rs) {
+                let  message;
+                
                 if (rs.success) {
                     message = generateActionResultMessage(workItem.type,
-                        workItem.jiraId, "unassign" + "e", true);
+                        workItem.jiraId, "unassigned", true);
                     addTestEvent(message);
                     deleteWorkItemFromTestWorkItems(workItem);
                     initAttachedWorkItems();
@@ -371,7 +373,7 @@ const IssuesModalController = function IssuesModalController(
 
     function generateActionResultMessage(item, id, action, success) {
         if (success) {
-            return item + " " + id + " was " + action + "d";
+            return item + " " + id + " was " + action;
         } else {
             return "Failed to " + action + " " + item.toLowerCase();
         }

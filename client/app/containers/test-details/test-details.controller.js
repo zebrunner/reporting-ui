@@ -301,10 +301,12 @@ const testDetailsController = function testDetailsController(
             TestService.updateTest(copy)
                 .then(rs => {
                     if (rs.success) {
+                        let message;
+
                         test.status = status;
                         message = 'Test was marked as ' + test.status;
                         messageService.success(message);
-                        addTestEvent(message, test); //? does it actual?
+                        addTestEvent(message, test);
                     } else {
                         console.error(rs.message);
                     }
@@ -477,7 +479,8 @@ const testDetailsController = function testDetailsController(
     }
 
     function addTestEvent(message, test) {
-        var testEvent = {};
+        const testEvent = {};
+
         testEvent.description = message;
         testEvent.jiraId = Math.floor(Math.random() * 90000) + 10000;
         testEvent.testCaseId = test.testCaseId;
@@ -668,6 +671,13 @@ const testDetailsController = function testDetailsController(
         onFilterChange();
     }
 
+    function onUpdatingTest(test) {
+        //recollect testsToDisplay, if old test was in current displaing scope
+        if (vm.testsToDisplay.find(({ id }) => id === test.id)) {
+            onFilterChange();
+        }
+    }
+
     function onFilterChange(shouldResetPagination) {
         const filters = [vm.filters.status, vm.filters.grouping].filter(Boolean);
         const filteredData = vm.testRun.tests.filter((test) => {
@@ -724,6 +734,18 @@ const testDetailsController = function testDetailsController(
     }
 
     function addNewTest(test) {
+        prepareTestData(test);
+        vm.testRun.tests.push(test);
+        onAddingNewTest(test);
+    }
+
+    function updateTest(test, index) {
+        prepareTestData(test);
+        vm.testRun.tests[index] = {...vm.testRun.tests[index], ...test};
+        onUpdatingTest(vm.testRun.tests[index]);
+    }
+
+    function prepareTestData(test) {
         test.elapsed = test.finishTime ? (test.finishTime - test.startTime) : Number.MAX_VALUE;
         prepareArtifacts(test);
         test.tags.forEach(tag => {
@@ -731,9 +753,6 @@ const testDetailsController = function testDetailsController(
                 tag.normalizedValue = tag.value.split('-').pop();
             }
         });
-
-        vm.testRun.tests.push(test);
-        onAddingNewTest(test);
     }
 
     /* -------------------------- Intersection Observer ------------------------- */
@@ -956,8 +975,17 @@ const testDetailsController = function testDetailsController(
         return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.testRuns.' + vm.testRun.id + '.tests', function (data) {
             const { test } = getEventFromMessage(data.body);
 
-            test && addNewTest(test);
-            $scope.$apply();
+            if (test) {
+                const index = getTestsIndexByID(test.id);
+
+                if (index !== -1) {
+                    updateTest(test, index);
+                } else {
+                    addNewTest(test);
+                }
+
+                $scope.$apply();
+            }
         });
     }
 };
