@@ -111,16 +111,17 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     $scope.checkAndTransformRecipient = function (currentUser) {
         let user = {};
 
-        if (typeof currentUser === 'string') {
+        if (typeof currentUser === 'object' && currentUser.email) {
+            user = currentUser;
+        } else {
             if (!isValidRecipient(currentUser)) {
                 messageService.error('Invalid email format');
 
                 return null;
             }
-            
-            user.email = currentUser;
-        } else if (currentUser.email) {
-            user = currentUser;
+            if (typeof currentUser === 'string') {
+                user.email = currentUser;
+            }
         }
 
         $scope.email.recipients.push(user.email);
