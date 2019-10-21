@@ -16,6 +16,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         text: ''
     };
 
+    $scope.isGitHubConnected = false;
     $scope.testSuites = [];
     $scope.currentServerId = null;
     $scope.scmAccounts = [];
@@ -228,13 +229,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.addRepo = function() {
         $scope.repo = {};
-        $scope.connectToGitHub().then(function () {
+        if ($scope.isGitHubConnected) {
             clearPrevLauncherElement();
             clearPrevFolderElement();
             $scope.cardNumber = 1;
             $scope.needServer = false;
             $scope.currentServerId = null;
-        });
+        }
     };
 
     $scope.highlightFolder = function(id) {
@@ -888,6 +889,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             isMultitenant = tenant.multitenant;
             getClientId().then(function (clientId) {
                 $scope.clientId = clientId;
+                $scope.connectToGitHub().then(function () {
+                    $scope.isGitHubConnected = true;
+                });
             });
         });
         const scmAccountsPromise = ScmService.getAllScmAccounts().then(function (rs) {

@@ -104,6 +104,16 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         text-transform: uppercase;
     }
 
+    &[disabled] {
+        &, &:hover {
+            color: rgba(0, 0, 0, 0.35);
+            border-color: rgba(0, 0, 0, 0.35);
+            .material-icons {
+                color: rgba(0, 0, 0, 0.35);
+            }
+        }
+    }
+
     .nav-container.bg-dark .nav & {
         float: none;
         color: $brand-light;
