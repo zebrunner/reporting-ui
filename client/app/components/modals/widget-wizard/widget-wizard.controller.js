@@ -285,6 +285,9 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             if ($scope.echartConfig.clear && $scope.echartConfig.previousTemplate && $scope.echartConfig.previousTemplate.type !== $scope.echartConfig.currentTemplate.type) {
                 $scope.echartConfig.clear();
             }
+            if ($scope.echartConfig.isDisposed && !$scope.echartConfig.isDisposed()) {
+                $scope.echartConfig.dispose();
+            }
         }
     };
 

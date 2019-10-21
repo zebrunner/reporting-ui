@@ -70,6 +70,16 @@
                             if(chart && chart.clear) {
                                 chart.clear();
                             }
+                        },
+                        isDisposed: function () {
+                            if(chart && chart.isDisposed) {
+                                chart.isDisposed();
+                            }
+                        },
+                        dispose: function () {
+                            if(chart && chart.dispose) {
+                                chart.dispose();
+                            }
                         }
                     });
                 }
@@ -87,6 +97,11 @@
             scope.$watch('options', function (newVal, oldVal) {
                 if (angular.equals(newVal, oldVal) && ! scope.forceWatch) return;
                 createChart(newVal);
+            });
+
+            scope.$watch('dataset', function (newVal, oldVal) {
+                if (angular.equals(newVal, oldVal)) return;
+                createChart(scope.options);
             });
 
             function applyActions(actions) {
