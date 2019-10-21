@@ -119,9 +119,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
 
                 return null;
             }
-            if (typeof currentUser === 'string') {
-                user.email = currentUser;
-            }
+            user.email = currentUser;
         }
 
         $scope.email.recipients.push(user.email);
