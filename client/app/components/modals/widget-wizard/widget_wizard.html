@@ -138,7 +138,7 @@
                 <ng-form name="notRequiredparams">
                     <table>
                         <tbody>
-                            <tr ng-if="! paramValue.required && ! paramValue.hidden  && (showAdvanced || paramValue.input_enabled || paramValue.oldValue)" class="widget-wizard_container_elements_input type-{{paramValue.type}}" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
+                            <tr ng-if="! paramValue.required && ! paramValue.hidden  && (showAdvanced || paramValue.input_enabled || paramValue.oldValue)" class="selection-blocks_container_elements_input type-{{paramValue.type}}" ng-repeat="(paramName, paramValue) in widgetBuilder.paramsConfigObject track by $index" ng-switch="paramValue.type">
                                 <td ng-show="['title'].indexOf(paramValue.type) === -1" class="zf-label">{{paramName}}</td>
                                 <td ng-switch-default>
                                     <md-input-container class="no-margin _gray-bg">
