@@ -224,6 +224,8 @@ tr.result:hover .expand-button {
     .panel-default {
         border: 0;
         > .panel-heading {
+            z-index: 1;
+            position: relative;
             background-color: inherit !important;
             border-bottom-color: white !important;
             font-weight: 500;
