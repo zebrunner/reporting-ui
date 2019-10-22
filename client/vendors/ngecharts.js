@@ -72,9 +72,10 @@
                             }
                         },
                         isDisposed: function () {
-                            if(chart && chart.isDisposed) {
-                                chart.isDisposed();
+                            if (!chart || !chart.isDisposed) {
+                                throw new Error('Chart might be initialized before disposing');
                             }
+                            return chart.isDisposed();
                         },
                         dispose: function () {
                             if(chart && chart.dispose) {
