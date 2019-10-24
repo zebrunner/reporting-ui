@@ -56,6 +56,10 @@
         &.IN_PROGRESS {
             border-left-color: $blue-new;
         }
+
+        &.LAUNCHING {
+            border-left-color: transparent;
+        }
     }
     .expand-button {
         width: 20px !important;
@@ -439,9 +443,6 @@
             path {
                 stroke: $dark-new;
             }
-        }
-        &__wrapper {
-            border-left: none;
         }
     }
     &._launch._mobile & {
