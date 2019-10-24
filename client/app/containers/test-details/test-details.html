@@ -67,7 +67,7 @@
                                 <div class="test-run-group_other-buttons">
                                     <md-button id="resetAllToggle"
                                         class="md-raised"
-                                        ng-disabled="!$ctrl.isFilteringOrSortingActive"
+                                        ng-disabled="!$ctrl.isStausFilteringActive && !$ctrl.isSortingActive"
                                         type="button"
                                         ng-click="$ctrl.resetStatusFilterAndOrdering();">
                                         RESET
@@ -82,7 +82,7 @@
         <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile && !$ctrl.testsLoading && !$ctrl.scrollTicking" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible" ng-click="$ctrl.showFilterDialog($event)">
-                        <div class="search-fab" ng-class="{'_list': !$ctrl.isFilteringOrSortingActive, '_checked-list': $ctrl.isFilteringOrSortingActive}" aria-hidden="true"></div>
+                        <div class="search-fab" ng-class="{'_list': !$ctrl.isStausFilteringActive, '_checked-list': $ctrl.isStausFilteringActive}" aria-hidden="true"></div>
                 </md-button>
             </md-fab-trigger>
         </md-fab-speed-dial>
@@ -132,8 +132,7 @@
                                         ng-repeat="test in $ctrl.testsToDisplay track by test.id"
                                         ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED', 'active-highlight': test.id === $ctrl.testId}"
                                         data-source-id="{{test.id}}"
-                                        ng-init="$last && $ctrl.testId && $ctrl.highlightTest()"
-                                        data-ng-hide="$ctrl.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED'">
+                                        ng-init="$last && $ctrl.testId && $ctrl.highlightTest()">
                                         <td class="test-info">
                                             <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{::test.name}}
                                                 <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></p>
@@ -258,12 +257,12 @@
                                         </td>
                                     </tr>
                                     <tr md-row="md-row"
-                                        data-ng-if="!$ctrl.testsLoading && !$ctrl.empty && !$ctrl.activeTests.length && $ctrl.testRun.status !== 'IN_PROGRESS' && ($ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue)">
+                                        data-ng-if="!$ctrl.testsLoading && !$ctrl.empty && !$ctrl.activeTests.length && $ctrl.isStausFilteringActive && ($ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue)">
                                         <td md-cell="md-cell" colspan="4" class="test-empty">
                                             No tests matching selected filters
                                         </td>
                                     </tr>
-                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && $ctrl.empty && $ctrl.testRun.status === 'IN_PROGRESS'">
+                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && $ctrl.testRun.status === 'IN_PROGRESS' && ($ctrl.empty || (!$ctrl.isStausFilteringActive && !$ctrl.activeTests.length && $ctrl.testRun.queued))">
                                         <td md-cell="md-cell" colspan="4" class="test-empty">
                                             No tests yet
                                         </td>

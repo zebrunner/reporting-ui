@@ -98,7 +98,8 @@ const testDetailsController = function testDetailsController(
         get jira() { return jiraSettings; },
         get testRail() { return testRailSettings; },
         get qTest() { return qTestSettings; },
-        get isFilteringOrSortingActive() { return isFilteringOrSortingActive(); },
+        get isStausFilteringActive() { return isStausFilteringActive(); },
+        get isSortingActive() { return isSortingActive(); },
 
         toggleGroupingFilter,
         changeViewMode,
@@ -533,14 +534,17 @@ const testDetailsController = function testDetailsController(
         return vm.testRun.id === +event.testRunStatistics.testRunId;
     }
 
-    function isFilteringOrSortingActive() {
-        const statusFiltering = vm.filters.status && vm.filters.status.values && vm.filters.status.values.length;
-        const orderingByElapsed = vm.sortConfig && vm.sortConfig.field !== defaultSortField;
+    function isStausFilteringActive() {
+        return vm.filters.status && vm.filters.status.values && vm.filters.status.values.length;
+    }
 
-        return statusFiltering || orderingByElapsed;
+    function isSortingActive() {
+        return vm.sortConfig && vm.sortConfig.field !== defaultSortField;
     }
 
     function getTestsIndexByID(id) {
+        if (!vm.testRun.tests) { return -1; }
+
         return vm.testRun.tests.findIndex(test => test.id === id);
     }
 
@@ -671,9 +675,10 @@ const testDetailsController = function testDetailsController(
         onFilterChange();
     }
 
-    function onUpdatingTest(test) {
+    function onUpdatingTest(test, fromQueuedStatus) {
         //recollect testsToDisplay, if old test was in current displaing scope
-        if (vm.testsToDisplay.find(({ id }) => id === test.id)) {
+        //or test changed status from 'QUEUED' and probably need to be displayed
+        if (fromQueuedStatus || vm.testsToDisplay.find(({ id }) => id === test.id)) {
             onFilterChange();
         }
     }
@@ -681,7 +686,9 @@ const testDetailsController = function testDetailsController(
     function onFilterChange(shouldResetPagination) {
         const filters = [vm.filters.status, vm.filters.grouping].filter(Boolean);
         const filteredData = vm.testRun.tests.filter((test) => {
-            return filters.every(filter => isFitsByFilter(test[filter.field], filter.values));
+            const skipQueued = !(vm.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED');
+
+            return filters.every(filter => isFitsByFilter(test[filter.field], filter.values)) && skipQueued;
         });
 
         shouldResetPagination && resetPagination();
@@ -740,9 +747,12 @@ const testDetailsController = function testDetailsController(
     }
 
     function updateTest(test, index) {
+        const oldTest = vm.testRun.tests[index];
+        const isChangedStatusFromQueued = oldTest.status === 'QUEUED' && test.status !== 'QUEUED';
+
         prepareTestData(test);
         vm.testRun.tests[index] = {...vm.testRun.tests[index], ...test};
-        onUpdatingTest(vm.testRun.tests[index]);
+        onUpdatingTest(vm.testRun.tests[index], isChangedStatusFromQueued);
     }
 
     function prepareTestData(test) {
