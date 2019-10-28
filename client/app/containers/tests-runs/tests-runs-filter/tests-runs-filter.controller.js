@@ -388,9 +388,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     }
 
     function searchByFilter(currentFilter) {
-        let index = vm.filters.findIndex((filter) => {
-            return currentFilter.id === filter.id;
-        })
+        let index = -1;
 
         //return if search tool activated
         if (vm.isSearchActive()) { return; }
@@ -401,6 +399,9 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
             return;
         }
 
+        index = vm.filters.findIndex((filter) => {
+            return currentFilter.id === filter.id;
+        })
         testsRunsService.setSearchParam('filterId', currentFilter.id);
         vm.chipsCtrl.selectedChip = index;
         // fire fetch data event;
