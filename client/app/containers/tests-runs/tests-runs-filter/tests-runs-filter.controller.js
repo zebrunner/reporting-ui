@@ -387,17 +387,21 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         vm.currentValue = angular.copy(CURRENT_VALUE);
     }
 
-    function searchByFilter(filter, index) {
+    function searchByFilter(currentFilter) {
+        let index = vm.filters.findIndex((filter) => {
+            return currentFilter.id === filter.id;
+        })
+
         //return if search tool activated
         if (vm.isSearchActive()) { return; }
         //return if click on already selected filter
-        if (testsRunsService.getSearchParam('filterId') === filter.id) {
+        if (testsRunsService.getSearchParam('filterId') === currentFilter.id) {
             onReset();
 
             return;
         }
 
-        testsRunsService.setSearchParam('filterId', filter.id);
+        testsRunsService.setSearchParam('filterId', currentFilter.id);
         vm.chipsCtrl.selectedChip = index;
         // fire fetch data event;
         vm.onFilterChange();
