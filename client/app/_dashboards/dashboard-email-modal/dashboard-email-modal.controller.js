@@ -53,8 +53,9 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
 
     function isValidRecipient(recipient) {
         let reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+        let isDuplicated = $scope.users.find((user) => user.email === recipient);
 
-        return (reg.test(recipient));
+        return (reg.test(recipient) && !isDuplicated);
     }
 
     function sendEmail(locator, email) {
@@ -116,7 +117,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
             user = currentUser;
         } else {
             if (!isValidRecipient(currentUser)) {
-                messageService.error('Invalid email format');
+                messageService.error('Invalid email');
 
                 return null;
             }
