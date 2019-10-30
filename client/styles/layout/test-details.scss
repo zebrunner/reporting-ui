@@ -73,6 +73,9 @@
                         padding: 3px 15px;
                         min-width: 90px;
                         margin-left: 17px;
+                        &:hover {
+                            background-color: rgba(0, 0, 0, .35);
+                        }
                         & .pointer {
                             display: flex;
                             md-icon.md-sort-icon.md-asc {
@@ -291,15 +294,15 @@
                         }
                         &_tag {
                             @extend %detailsItems;
-                            background-color: #00000026 !important;
                             margin: 2px 4px 2px 0;
                             display: inherit;
+                            &:hover a {
+                                background-color: rgba(0, 0, 0, .35);
+                            }
                             &._inner {
+                                background-color: #00000026;
                                 margin: 0;
                                 padding: 4px 8px;
-                                &, &:hover {
-                                    background-color: transparent !important;
-                                }
                             }
                         }
                     }
@@ -528,20 +531,17 @@
 
 %detailsItems {
     max-height: 28px;
-    border-radius: 14px !important;
+    border-radius: 14px;
     letter-spacing: 0.2px;
     text-align: center;
     font-size: 11px;
     font-weight: 500;
-    color: $dark-coal-light-new !important;
-    &:hover {
-        background-color: rgba(0, 0, 0, .35) !important;
-    }
+    color: $dark-coal-light-new;
 
     &.md-focused,
     &.active {
-        background-color: $dark-coal-light-new !important;
-        color: #ffffff !important;
+        background-color: $dark-coal-light-new;
+        color: #ffffff;
     }
 }
 
