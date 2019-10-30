@@ -280,7 +280,7 @@
                         }
                     }
 
-                    &_tags {
+                    &__tags {
                         position: relative;
                         display: flex;
                         flex-wrap: wrap;
@@ -292,17 +292,18 @@
                             margin-top: 10px;
                             margin-left: 0 !important;
                         }
-                        &_tag {
-                            @extend %detailsItems;
+                        &-tag {
                             margin: 2px 4px 2px 0;
                             display: inherit;
-                            &:hover a {
-                                background-color: rgba(0, 0, 0, .35);
-                            }
-                            &._inner {
+                            &-inner {
+                                @extend %detailsItems;
                                 background-color: #00000026;
-                                margin: 0;
                                 padding: 4px 8px;
+                                &._link {
+                                    &:hover {
+                                        background-color: rgba(0, 0, 0, .35);
+                                    }
+                                }
                             }
                         }
                     }
