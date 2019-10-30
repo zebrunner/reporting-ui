@@ -54,7 +54,6 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
         initLaunchers();
         setTimersOnDestroyingLaunchers();
-
         TENANT = $rootScope.globals.auth.tenant;
         readStoredParams();
         initWebsocket();
@@ -597,13 +596,14 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     function showCiHelperDialog(event) {
         $mdDialog.show({
             controller: CiHelperController,
+            controllerAs: '$ctrl',
             template: CiHelperTemplate,
             parent: angular.element(document.body),
             targetEvent: event,
             clickOutsideToClose:false,
             fullscreen: true,
             autoWrap: false,
-            escapeToClose:false
+            escapeToClose:false,
         });
     }
 

@@ -823,6 +823,7 @@ const testDetailsController = function testDetailsController(
     function showCiHelperDialog(event) {
         $mdDialog.show({
             controller: CiHelperController,
+            controllerAs: '$ctrl',
             template: CiHelperTemplate,
             parent: angular.element(document.body),
             targetEvent: event,
