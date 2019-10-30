@@ -146,7 +146,7 @@
             <div ng-if="! launcher.id" class="divider"></div>
             <ng-form name="manualInfo">
                 <div class="ci-runner-container_content_block __lancher-add">
-                    <div ng-if="! launcher.id" class="ci-runner-container_content_block_title">
+                    <div ng-if="!launcher.id" class="ci-runner-container_content_block_title">
                         <span>Add template manually</span>
                     </div>
                     <div ng-if="launcher.id" class="ci-runner-container_content_block_title __ci-runner-lg-title">
@@ -189,12 +189,53 @@
                 </div>
             </ng-form>
         </zf-modal-content-container>
+        
         <zf-modal-content-container class="ci-runner-container_content" ng-if="cardNumber === 3 || cardNumber === 4" ng-show="launcher">
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
                 <div class="ci-runner-container_content_title_action">
                     <i ng-click="toEditLauncher(launcher);" has-any-permission="['MODIFY_LAUNCHERS']" class="material-icons hide-phone">edit</i>
+                </div>
+            </div>
+            <div class="ci-runner-container__platforms"
+                ng-class="{'_with-controls': $ctrl.platformControls.length && $ctrl.platformControls[0].items.length}"
+                ng-if="$ctrl.platforms.length">
+                <div class="ci-runner-container__platforms-header">
+                        <md-radio-group ng-model="$ctrl.platformModel.platform"
+                            layout="row"
+                            layout-wrap
+                            ng-change="$ctrl.onPlatformSelect()">
+                            <md-radio-button ng-value="null">None</md-radio-button>
+                            <md-radio-button ng-value="platform" ng-repeat="platform in $ctrl.platforms track by platform.id">{{platform.name}}</md-radio-button>
+                        </md-radio-group>
+                </div>
+                <div class="ci-runner-container__platforms-controls zf-display-table"
+                    ng-if="$ctrl.platformControls.length">
+                    <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
+                        ng-if="platformControl.items.length"
+                        ng-repeat="platformControl in $ctrl.platformControls track by $index">
+                        <div class="zf-label">
+                            <show-part text="platformControl.key" limit="30">
+                                <md-tooltip md-direction="top">{{platformControl.key}}</md-tooltip>
+                            </show-part>
+                        </div>
+                        <div class="ci-runner-container_content_builder_container_item">
+                            <md-input-container class="no-margin _gray-bg">
+                                <label>{{platformControl.key}}</label>
+                                <md-select required
+                                    name="{{platformControl.key}}"
+                                    ng-model="$ctrl.platformModel[platformControl.key]"
+                                    ng-model-options="{trackBy: '$value.id'}"
+                                    ng-change="platformControl.onChange(platformControl)">
+                                    <md-option ng-repeat="item in platformControl.items"
+                                        ng-value="item">
+                                        {{item.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="ci-runner-container_content_builder zf-display-table">
@@ -233,7 +274,7 @@
                 <md-button class="md-raised" ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
                     Back
                 </md-button>
-                <md-button class="md-raised md-primary pull-right" ng-click="build(launcher);" ng-disabled="! launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">
+                <md-button class="md-raised md-primary pull-right" ng-click="build(launcher, launcher_form);" ng-disabled="!launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">
                     Launch
                 </md-button>
                 <div ng-if="! launcher.job.jobURL" class="ci-runner-container_content_actions_error">Launcher job is not configured, contact admin.</div>
