@@ -124,6 +124,7 @@
                 <div class="ci-runner-container_content_block">
                     <div ng-if="scmAccount.id" class="ci-runner-container_content_block_title __ci-runner-lg-title __scan-repo">
                         <span>{{scmAccount.repositoryName}}</span>
+                        <a ng-if="scmAccount.repositoryURL" href="{{scmAccount.repositoryURL}}" target="_blank"><md-icon>open_in_new</md-icon></a>
                     </div>
                     <div class="ci-runner-container_content_block_title">
                         Select branch to add templates
