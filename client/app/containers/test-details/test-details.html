@@ -149,16 +149,16 @@
                                                     <i class="fa fa-mobile" aria-hidden="true"></i>
                                                     {{::test.testConfig.device}}</span>
                                             </div>
-                                            <div ng-if="test.tags && test.tags.length" class="test-info_tags">
-                                                <span class="test-info_tags_tag" ng-repeat="tag in test.tags">
-                                                    <span ng-if="(tag.name === 'TESTRAIL_TESTCASE_UUID' && !$ctrl.testRail['TESTRAIL_URL']) ||
+                                            <div ng-if="test.tags && test.tags.length" class="test-info__tags">
+                                                <span class="test-info__tags-tag" ng-repeat="tag in test.tags">
+                                                    <span class="test-info__tags-tag-inner" ng-if="(tag.name === 'TESTRAIL_TESTCASE_UUID' && !$ctrl.testRail['TESTRAIL_URL']) ||
                                                     (tag.name === 'QTEST_TESTCASE_UUID' && !$ctrl.qTest['QTEST_URL']) ||
                                                     (tag.name !== 'TESTRAIL_TESTCASE_UUID' && tag.name !== 'QTEST_TESTCASE_UUID')">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</span>
-                                                    <a name="testRailLink"
+                                                    <a name="testRailLink" class="test-info__tags-tag-inner _link"
                                                     href="{{::$ctrl.getTestURL('TESTRAIL_URL', tag.value)}}"
                                                     target="_blank"
                                                     data-ng-if="tag.name === 'TESTRAIL_TESTCASE_UUID' && $ctrl.testRail['TESTRAIL_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
-                                                    <a name="qTestLink"
+                                                    <a name="qTestLink" class="test-info__tags-tag-inner _link"
                                                     href="{{::$ctrl.getTestURL('QTEST_URL', tag.value)}}"
                                                     target="_blank"
                                                     data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
