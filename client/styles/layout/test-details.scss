@@ -293,8 +293,14 @@
                             @extend %detailsItems;
                             background-color: #00000026 !important;
                             margin: 2px 4px 2px 0;
-                            padding: 4px 8px;
                             display: inherit;
+                            &._inner {
+                                margin: 0;
+                                padding: 4px 8px;
+                                &, &:hover {
+                                    background-color: transparent !important;
+                                }
+                            }
                         }
                     }
                 }
