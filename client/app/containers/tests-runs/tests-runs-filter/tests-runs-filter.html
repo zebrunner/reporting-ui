@@ -17,7 +17,7 @@
                             <md-chips class="filter-chip custom-filter" ng-class="{'_wide': !$ctrl.isFilterActive()}" ng-model="$ctrl.filters" md-removable="false"
                                       readonly="true">
                                 <md-chip-template>
-                                    <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.searchByFilter($chip, $index)">
+                                    <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.searchByFilter($chip)">
                                         <md-icon md-svg-src="../../../../assets/images/outline-lock.svg" class="private-filter" ng-if="!$chip.publicAccess"></md-icon>
                                         <span>{{$chip.name}}</span>
                                     </div>
@@ -165,7 +165,7 @@
                                       readonly="true">
                                 <md-chip-template>
                                     <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl"
-                                         ng-click="$ctrl.searchByFilter($chip, $index)">
+                                         ng-click="$ctrl.searchByFilter($chip)">
                                          <md-icon md-svg-src="../../../../assets/images/outline-lock.svg" class="private-filter" ng-if="!$chip.publicAccess"></md-icon>
                                         <span>{{$chip.name}}</span>
                                     </div>

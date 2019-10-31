@@ -76,7 +76,7 @@
         }
 
         function filterLaunchers() {
-            _launchers.filter((launcher) => {
+            _launchers = _launchers.filter((launcher) => {
                 return _lastResult.results.findIndex((res) => { return res.ciRunId === launcher.ciRunId })=== -1;
             })
             storeLaunchers();
@@ -85,7 +85,7 @@
         function checkForDestroyingLaunchersByTime() {
             let dateNow = new Date();
 
-            _launchers.filter((launcher) => {
+            _launchers = _launchers.filter((launcher) => {
                 return launcher.shouldBeDestroyedAt - dateNow.getTime() > 0;
             })
             storeLaunchers();
@@ -185,6 +185,7 @@
 
         function readStoredlaunchers() {
             const launchers = sessionStorage.getItem('launchers');
+            
             launchers && (_launchers = angular.fromJson(launchers));
 
             return _launchers;

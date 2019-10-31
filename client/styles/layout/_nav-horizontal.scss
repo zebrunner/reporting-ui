@@ -1,5 +1,3 @@
-
-
 // layout for horizontal nav
 @media (min-width: $screen-sm) {
     .app {
@@ -54,7 +52,6 @@
 
 // Horizontal nav is desktop only
 @media (min-width: $screen-sm-min) {
-
     .main-container {
 
         > .nav-container.nav-horizontal {
@@ -99,7 +96,6 @@
                         background-color: $horizontal_link_active_bg;
                         color: $horizontal_link_active_color;
                     }
-                    > .icon-has-ul-h { color: $horizontal_link_active_color; }
                 }
 
                 > a {
@@ -121,19 +117,7 @@
 
                     .badge {
                         top: 15px;
-                    }
-
-                    > .icon-has-ul { // icon for default vertical nav
-                        display: none;
                     }                    
-                }
-
-                > .icon-has-ul-h { // icon for horizontal nav
-                    display: block;
-                    position: absolute;
-                    bottom: 16px;
-                    right: 10px;
-                    font-size: 10px;
                 }
 
                 &:hover {
@@ -141,8 +125,6 @@
                         display: block !important;
                     }
                 }
-
-
                 
                 // sub menu
                 > ul {
@@ -163,11 +145,6 @@
                                 color: $brand-primary;
                             }
                         }
-                        // &.active {
-                        //     > a {
-                        //         background-color: darken($horizontal_sub_nav_bg, 5%);
-                        //     }
-                        // }
 
                         > a {
                             padding: 13px 40px 13px 20px;

@@ -1,200 +1,188 @@
-//@media (min-width: $screen-sm) {
+.app.nav-collapsed-min {
+    // default
+    .slimScrollDiv {
+        overflow: visible !important; // overrides slimScroll plugin
+        height: auto !important;
 
-    .app.nav-collapsed-min {
-
-        // default
-        .slimScrollDiv {
-            overflow: visible !important; // overrides slimScroll plugin
-            height: auto !important;
-
-            .slimScrollBar,
-            .slimScrollRail {
-                display: none !important;
-            }
+        .slimScrollBar,
+        .slimScrollRail {
+            display: none !important;
         }
+    }
 
-        #nav-container {
-            width: $sidebar_width;
-            @media(max-width: $screen-phone) {
-                width: $sidebar_phone_width;
+    #nav-container {
+        width: $sidebar_width;
+        @media(max-width: $screen-phone) {
+            width: $sidebar_phone_width;
+        }
+        @media (max-width: $screen-phone) {
+            &:not(.toggle-bottom) {
+                width: 0;
+                #nav {
+                    > li:not(:first-child) {
+                        display: none !important;
+                    }
+                    >li:first-child {
+                        width: $sidebar_phone_width;
+                    }
+                }
             }
-            @media (max-width: $screen-phone) {
-                &:not(.toggle-bottom) {
-                    width: 0;
-                    #nav {
-                        > li:not(:first-child) {
-                            display: none !important;
-                        }
-                        >li:first-child {
+            &.toggle-bottom {
+                animation: toggleBottom 0.1s linear;
+                z-index: 1031;
+                #nav {
+                    >li:first-child {
+                        transition: none !important;
+                        width: $sidebar_width;
+                        @media(max-width: $screen-phone) {
                             width: $sidebar_phone_width;
                         }
                     }
-                }
-                &.toggle-bottom {
-                    animation: toggleBottom 0.1s linear;
-                    z-index: 1031;
-                    #nav {
-                        >li:first-child {
-                            transition: none !important;
-                            width: $sidebar_width;
-                            @media(max-width: $screen-phone) {
-                                width: $sidebar_phone_width;
-                            }
-                        }
-                        > li:not(:first-child) {
-                            animation: iconsShowing 0.1s linear;
-                        }
+                    > li:not(:first-child) {
+                        animation: iconsShowing 0.1s linear;
                     }
                 }
             }
         }
+    }
 
-        @keyframes toggleBottom {
-            from {
-                width: 0;
-            }
-            to {
-                width: $sidebar_phone_width;
+    @keyframes toggleBottom {
+        from {
+            width: 0;
+        }
+        to {
+            width: $sidebar_phone_width;
+        }
+    }
+
+    @keyframes iconsShowing {
+        from {
+            transform: translateX(-20px);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    #nav-wrapper {
+        overflow: visible !important;
+    }
+    #nav {
+        overflow: visible !important;
+        .sidebar-menu-button {
+            display: none;
+            @media (max-width: $screen-phone) {
+                display: block;
+                height: $header_height;
             }
         }
-
-        @keyframes iconsShowing {
-            from {
-                transform: translateX(-20px);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        #nav-wrapper {
-            overflow: visible !important;
-        }
-        #nav {
-            overflow: visible !important;
-            .sidebar-menu-button {
-                display: none;
-                @media (max-width: $screen-phone) {
-                    display: block;
-                    height: $header_height;
+        > li {
+            &.li-small {
+                > a > i {
+                    font-size: 12px;
                 }
             }
-            > li {
-                &.li-small {
-                    > a > i {
-                        font-size: 12px;
-                    }
-                }
-                > a,
-                > .menu-btn {
-                    text-align: center;
+            > a,
+            > .menu-btn {
+                text-align: center;
 
-                    > i {
-                        margin: 0;
-                        font-size: 22px;
-                    }
-                    > span {
-                        display: none;
-                    }
+                > i {
+                    margin: 0;
+                    font-size: 22px;
                 }
-
-                .nav-menu-icon {
-                    vertical-align: middle;
-                }
-
-                .icon-has-ul {
+                > span {
                     display: none;
                 }
+            }
 
-                > ul {
-                    z-index: 9;
-                    position: absolute;
-                    height: 100%;
-                    left: 100%;
-                    top: 0;
-                    min-width: 280px;
-                    padding-top: 40px;
+            .nav-menu-icon {
+                vertical-align: middle;
+            }
 
-                    @media (max-width: $screen-phone) {
-                        position: fixed;
-                        left: $sidebar_phone_width;
-                        top: $header_height;
-                        width: calc(100% - #{$sidebar_phone_width});
-                        height: calc(100% - #{$sidebar_phone_width});
-                        min-width: auto;
-                        padding-top: 12px;
-                    }
+            > ul {
+                z-index: 9;
+                position: absolute;
+                height: 100%;
+                left: 100%;
+                top: 0;
+                min-width: 280px;
+                padding-top: 40px;
 
-                    @include border-right-radius($border-radius-base);
-                    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
-                    li.search-menu {
-                        > ul:not(.projects__wrapper):not(.dashboards___list_wrapper) {
-                            height: 100%;
-                            overflow: auto;
-                        }
-                        > ul.dashboards___list_wrapper {
-                            // 100% - search height - search margin - add dashboard height
-                            height: calc(100% - 40px - 8px - 32px);
-                            overflow: auto;
+                @media (max-width: $screen-phone) {
+                    position: fixed;
+                    left: $sidebar_phone_width;
+                    top: $header_height;
+                    width: calc(100% - #{$sidebar_phone_width});
+                    height: calc(100% - #{$sidebar_phone_width});
+                    min-width: auto;
+                    padding-top: 12px;
+                }
 
-                            @media(max-width: $screen-phone) {
-                                // 100% - search height - search margins
-                                height: calc(100% - 40px - 8px - 18px);;
-                            }
-                        }
-                        .fa-angle-down {
-                            display: none !important;
-                        }
-                    }
-
-                    > li:not(.nav-search):not(.nav-controls) {
+                @include border-right-radius($border-radius-base);
+                box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+                li.search-menu {
+                    > ul:not(.projects__wrapper):not(.dashboards___list_wrapper) {
                         height: 100%;
+                        overflow: auto;
+                    }
+                    > ul.dashboards___list_wrapper {
+                        // 100% - search height - search margin - add dashboard height
+                        height: calc(100% - 40px - 8px - 32px);
+                        overflow: auto;
+
+                        @media(max-width: $screen-phone) {
+                            // 100% - search height - search margins
+                            height: calc(100% - 40px - 8px - 18px);;
+                        }
+                    }
+                    .fa-angle-down {
+                        display: none !important;
                     }
                 }
 
-                &.open {
-                    > ul, li.search-menu > ul:not(.projects__wrapper) {
-                        display: block !important;
-                    }
+                > li:not(.nav-search):not(.nav-controls) {
+                    height: 100%;
+                }
+            }
+
+            &.open {
+                > ul, li.search-menu > ul:not(.projects__wrapper) {
+                    display: block !important;
                 }
             }
         }
-
-        .nav-title {
-            display: none;
-        }
-
-
-        // Horizontal menu
-        .nav-horizontal {
-            &#nav-container {
-                width: auto;
-            }
-
-            & + .content-container {
-                margin: 0;
-            }
-
-            &.nav-fixed + .content-container {
-                margin: 50px 0 0;
-            }
-
-            #nav {
-                > li {
-                    > .icon-has-ul-h {
-                        display: none;
-                    }
-
-                    > ul {
-                        left: 0;
-                        top: 100%;
-                    }
-                }
-            }
-        }
-
     }
-//}
+
+    .nav-title {
+        display: none;
+    }
+
+
+    // Horizontal menu
+    .nav-horizontal {
+        &#nav-container {
+            width: auto;
+        }
+
+        & + .content-container {
+            margin: 0;
+        }
+
+        &.nav-fixed + .content-container {
+            margin: 50px 0 0;
+        }
+
+        #nav {
+            > li {
+                > ul {
+                    left: 0;
+                    top: 100%;
+                }
+            }
+        }
+    }
+
+}
 
 #app {
     @media (max-width: $screen-phone) {

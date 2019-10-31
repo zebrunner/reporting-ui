@@ -33,9 +33,10 @@ const statusButtonsDirective = function($timeout) {
                     {
                         key: 'ABORTED',
                     },
-                    {
-                        key: 'QUEUED',
-                    },
+                    //at the moment we don't display queued tests, so we don't need in this button
+                    // {
+                    //     key: 'QUEUED',
+                    // },
                     {
                         key: 'IN_PROGRESS',
                     }

@@ -1,4 +1,3 @@
-
 // Sidebar - Color
 .nav-container {
     &:before {
@@ -33,15 +32,11 @@
                     > a {
                         background-color: $light_bg_link_hover_bg;
                         color: $light_bg_link_hover_color;
-                        > .icon-has-ul { color: $light_bg_link_hover_color; }
                     }
-                    > .icon-has-ul-h { color: $light_bg_link_hover_color; }
                 }
                 &.active {
                     > a {
-                        // background-color: $light_bg_link_active_bg;
                         color: $light_bg_link_active_color;
-                        > .icon-has-ul { color: $light_bg_link_active_color; }
                     }                        
                 }
 
@@ -61,12 +56,7 @@
                         > a {
                             color: $brand-primary;
                         }
-                    }
-                    // &.active {
-                    //     > a {
-                    //         background-color: darken($sub_nav_bg, 5%);
-                    //     }
-                    // }           
+                    }           
                 }
             }
         }
@@ -92,7 +82,6 @@
             box-shadow: inset -1px 0 1px rgba(0, 0, 0, 0.3);
         }
         .nav {
-
             a {
                 color: $dark_bg_link_color;
                 &.show-on-hover,
@@ -125,14 +114,11 @@
                             color: $dark_bg_link_color_light_hover;
                         }
                     }
-                    > .icon-has-ul-h { color: $dark_bg_link_hover_color; }
                 }
                 &:hover {
                     > a {
                         background-color: $dark_bg_link_hover_bg;
-                        > .icon-has-ul { color: $dark_bg_link_hover_color; }
-                    }                        
-                    > .icon-has-ul { color: $dark_bg_link_active_color; }
+                    }
                 }
                 // overrides Bootstrap 
                 > a:focus {
@@ -160,14 +146,11 @@
         &.nav-vertical {
             .nav {
                 > li {
-                    // border-bottom: 1px solid rgba(255,255,255, 0.05);
                     &.open {
                         > a {
                             background-color: $dark_light-new;
                             color: $dark_bg_link_open_color;
-                            > .icon-has-ul { color: $dark_bg_link_open_color; }
                         }
-                        > .icon-has-ul-h { color: $dark_bg_link_open_color; }
                     }
                 }
             }
@@ -228,8 +211,4 @@
             }
         }
     }
-}
-// Horizontal nav is desktop only
-@media (min-width: $screen-sm-min) {
-
 }

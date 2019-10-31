@@ -2479,7 +2479,19 @@ $light-inprogress: #68c9fd;
     }
 }
 .ci-runner-container {
-    //height: 576px !important;
+    &__platforms {
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba($dark-new, .15);
+            margin-bottom: 20px;
+        &-header {
+            ._with-controls & {
+                margin-bottom: 15px;
+            }
+        }
+        &._with-controls {
+            padding-bottom: 10px;
+        }
+    }
     * {
         font-weight: 500;
         font-size: 14px;
