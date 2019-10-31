@@ -1,14 +1,12 @@
 'use strict';
 
-const dashboardEmailModalController = function dashboardEmailModalController($scope, $q, $filter, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService) {
+const dashboardEmailModalController = function dashboardEmailModalController($scope, $q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService, UtilService) {
     'ngInject';
 
-    var TYPE = widgetId ? 'WIDGET' : 'DASHBOARD';
-
-    var CURRENT_DASHBOARD_TITLE = angular.element('#dashboard_title')[0].value + ' dashboard';
-    var CURRENT_WIDGET_TITLE = TYPE === 'WIDGET' ? CURRENT_DASHBOARD_TITLE + ' - ' + angular.element('#widget-title-' + widgetId)[0].value + ' widget' : '';
-
-    var EMAIL_TYPES = {
+    let TYPE = widgetId ? 'WIDGET' : 'DASHBOARD';
+    let CURRENT_DASHBOARD_TITLE = angular.element('#dashboard_title')[0].value + ' dashboard';
+    let CURRENT_WIDGET_TITLE = TYPE === 'WIDGET' ? CURRENT_DASHBOARD_TITLE + ' - ' + angular.element('#widget-title-' + widgetId)[0].value + ' widget' : '';
+    let EMAIL_TYPES = {
         'DASHBOARD': {
             title: CURRENT_DASHBOARD_TITLE,
             subject: CURRENT_DASHBOARD_TITLE,
@@ -20,13 +18,11 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
             locator: '#widget-container-' + widgetId
         }
     };
-
     let currentText;
+    let stopCriteria = '########';
 
+    $scope.UtilService = UtilService;
     $scope.title = EMAIL_TYPES[TYPE].title;
-    $scope.subjectRequired = true;
-    $scope.textRequired = true;
-
     $scope.email = {
         subject: EMAIL_TYPES[TYPE].subject,
         text: "This is auto-generated email, please do not reply!",
@@ -36,30 +32,24 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     };
     $scope.users = [];
     $scope.keys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.SPACE];
+    $scope.usersSearchCriteria = {};
 
-    $scope.sendEmail = function () {
-        if (! $scope.users.length) {
-            if (currentText && currentText.length) {
-                $scope.email.recipients.push(currentText);
-            } else {
-                messageService.error('Add a recipient!');
-                return;
-            }
+    $scope.querySearch = querySearch;
+    $scope.submit = submit;
+    $scope.checkAndTransformRecipient = checkAndTransformRecipient;
+
+
+    function submit() {
+        if (UtilService.prepareEmails(currentText, $scope.users, $scope.email.recipients)) {
+            sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
+                $scope.hide();
+            });
         }
-        sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
-            $scope.hide();
-        });
     };
-
-    function isValidRecipient(recipient) {
-        let reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
-        let isDuplicated = $scope.users.find((user) => user.email === recipient);
-
-        return (reg.test(recipient) && !isDuplicated);
-    }
 
     function sendEmail(locator, email) {
        email.recipients =  email.recipients.toString();
+       
         return $q(function (resolve, reject) {
             const imgName = email.subject + ' - ' + $filter('date')(new Date(), 'MM:dd:yyyy');
             $screenshot.take(locator, imgName).then(function (multipart) {
@@ -76,67 +66,31 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
         });
     };
 
-    $scope.users_all = [];
-
-    $scope.usersSearchCriteria = {};
-    $scope.asyncContacts = [];
-    $scope.filterSelected = true;
-
-    $scope.querySearch = querySearch;
-    var stopCriteria = '########';
-
     function querySearch(criteria, alreadyAddedUsers) {
         $scope.usersSearchCriteria.query = criteria;
         currentText = criteria;
         if (!criteria.includes(stopCriteria)) {
             stopCriteria = '########';
+
             return UserService.searchUsersWithQuery($scope.usersSearchCriteria, criteria).then(function (rs) {
                 if (rs.success) {
                     if (!rs.data.results.length) {
                         stopCriteria = criteria;
                     }
-                    return filterUsersForSend(rs.data.results, alreadyAddedUsers);
+
+                    return UtilService.filterUsersForSend(rs.data.results, alreadyAddedUsers);
                 }
             });
         }
+
         return "";
-    }
+    }    
 
-    function filterUsersForSend(usersFromDB, alreadyAddedUsers) {
-        return usersFromDB.filter((userFromDB) => {
-            return !alreadyAddedUsers.find((addedUser) => {
-                return addedUser.id === userFromDB.id;
-            }) && userFromDB.email;
-        })
-    }
-
-    $scope.checkAndTransformRecipient = function (currentUser) {
-        let user = {};
-
-        if (typeof currentUser === 'object' && currentUser.email) {
-            user = currentUser;
-        } else {
-            if (!isValidRecipient(currentUser)) {
-                messageService.error('Invalid email');
-
-                return null;
-            }
-            user.email = currentUser;
-        }
-
-        $scope.email.recipients.push(user.email);
-        $scope.users.push(user);
+    function checkAndTransformRecipient(currentUser) {
         currentText = '';
 
-        return user;
-    };
-
-    $scope.removeRecipient = function (user) {
-        var index = $scope.email.recipients.indexOf(user.email);
-        if (index >= 0) {
-            $scope.email.recipients.splice(index, 1);
-        }
-    };
+        return UtilService.checkAndTransformRecipient(currentUser, $scope.email.recipients, $scope.users);
+    }
 
     $scope.hide = function () {
         $mdDialog.hide();
@@ -144,8 +98,6 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
     $scope.cancel = function () {
         $mdDialog.cancel();
     };
-    (function initController() {
-    })();
 };
 
 export default dashboardEmailModalController;
