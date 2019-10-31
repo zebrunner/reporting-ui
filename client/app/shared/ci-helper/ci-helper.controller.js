@@ -18,7 +18,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         platforms: [],
         platformModel: {},
         providers: [],
-        providersSelectionIsActive: false,
 
         onProviderSelect,
         onPlatformSelect,
@@ -934,9 +933,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 }
             });
         });
-        const browsersConfigPromise = getBrowsersConfig();
         const providersConfigPromise = getProvidersConfig();
-        $q.all([launchersPromise, scmAccountsPromise, browsersConfigPromise, providersConfigPromise]).then(function (data) {
+        $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise]).then(function (data) {
             $scope.scmAccounts.forEach(function (scmAccount) {
                 $scope.launchers.forEach(function (launcher) {
                     if (launcher.scmAccountType.id === scmAccount.id) {
@@ -978,10 +976,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
         vm.platformControls = [...vm.platformControls, childControl];
 
-        if (!skipDefault && data.default) {
-            defaultItem = childControl.items.find(item => item.id === data.default);
-            defaultItem && (vm.platformModel[field] = defaultItem);
-        }
+        defaultItem = data.default ? childControl.items.find(item => item.id === data.default) : childControl.items[0];
+        defaultItem && (vm.platformModel[field] = defaultItem);
 
         if (defaultItem) {
             if (data.versions) {
@@ -1006,10 +1002,16 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
         vm.platformControls = [...vm.platformControls, childControl];
 
-        if (!skipDefault && data['default-versions']) {
-            defaultItem = childControl.items.find(item => item.id === data['default-versions']);
-            defaultItem && (vm.platformModel[field] = defaultItem);
+        if (data['default-versions']) {
+            if (typeof data['default-versions'] === 'string') {
+                defaultItem = childControl.items.find(item => item.id === data['default-versions']);
+            } else {
+                defaultItem = childControl.items.find(item =>  data['default-versions'].includes(item.id));
+            }
         }
+
+        defaultItem = defaultItem ? defaultItem : childControl.items[0];
+        defaultItem && (vm.platformModel[field] = defaultItem);
     }
 
     function onPlatformControlSelect(control) {
@@ -1021,9 +1023,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         filterPlatformModel();
 
         if (versionsData && !control.key.includes('-versions')) {
-            prepareVersionsControl(parentItem, versionsData, true);
+            prepareVersionsControl(parentItem, versionsData);
         } else if (parentItem.child) {
-            prepareChildControl(parentItem, true);
+            prepareChildControl(parentItem);
         }
     }
 
@@ -1039,7 +1041,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     function extractPlatformSelections() {
         Object.keys(vm.platformModel).forEach(key => {
-            $scope.builtLauncher.model[key] = vm.platformModel[key].value;
+            if (vm.platformModel[key]) {
+                $scope.builtLauncher.model[key] = vm.platformModel[key].value;
+            }
         });
     }
 
@@ -1047,40 +1051,57 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         vm.platformControls = [];
     }
 
-    function getBrowsersConfig() {
-        return $http.get(platformsConfigURL)
+    function getBrowsersConfig(url) {
+        vm.gettingBrowsersConfig = true;
+
+        return $http.get(url)
             .then(response => {
                 platformsConfig = response.data;
                 initPlatforms();
             })
             .catch(() => {
                 console.error('Can\'t load platforms config', error);
+            })
+            .finally(() => {
+                vm.gettingBrowsersConfig = false;
             });
     }
 
-    function onProviderSelect(currentProvider) {
-        let index = -1;
-
-        index = vm.providers.findIndex((provider) => {
-            return currentProvider.id === provider.id;
-        })
-       
-        if (vm.chipsCtrl.selectedChip === index && vm.providersSelectionIsActive) {
-            index = -1;
+    function onProviderSelect(selectedProvider) {
+        if (vm.chipsCtrl.selectedChip === -1 || selectedProvider !== vm.chipsCtrl.items[vm.chipsCtrl.selectedChip]) {
+            handleProviderSelection(selectedProvider);
+        } else {
+            handleProviderDeselection();
         }
+    }
+
+    function handleProviderSelection(provider) {
+        const index = vm.chipsCtrl.items.findIndex(({ id }) => {
+            return provider.id === id;
+        })
+
         vm.chipsCtrl.selectedChip = index;
-        vm.providersSelectionIsActive = index >= 0 ? true : false;
+
+        if (!provider.configUrl) { return; }
+
+        getBrowsersConfig(provider.configUrl);
+    }
+
+    function handleProviderDeselection() {
+        platformsConfig = null;
+        clearPlatformControlsData();
+        vm.chipsCtrl.selectedChip = -1;
     }
 
     function getProvidersConfig() {
         vm.providers = providersJson;
 
         return $http.get('providers.json')
-        .then(response => {
-            providersConfig = response.data;
-        })
-        .catch(() => {
-        })
+            .then(response => {
+                providersConfig = response.data;
+            })
+            .catch(() => {
+            });
     }
 
     return vm;
