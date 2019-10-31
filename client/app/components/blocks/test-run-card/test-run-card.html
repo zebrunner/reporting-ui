@@ -48,7 +48,8 @@
                 </div>
                 <div class="test-run-card__job">
                     <div class="test-run-card__job-name" ng-if="$ctrl.testRun.status !== 'LAUNCHING'">
-                        <a href="{{$ctrl.testRun.jenkinsURL}}" target="_blank">{{$ctrl.testRun.job.name}}</a>
+                        <a ng-if="$ctrl.testRun.jenkinsURL && $ctrl.testRun.job.name !== 'unavailable'" href="{{$ctrl.testRun.jenkinsURL}}" target="_blank">{{$ctrl.testRun.job.name}}</a>
+                        <span ng-if="!$ctrl.testRun.jenkinsURL || $ctrl.testRun.job.name === 'unavailable'">{{$ctrl.testRun.job.name}}</span>
                     </div>
                     <div class="test-run-card__model" ng-if="$ctrl.testRun.status === 'LAUNCHING'">{{$ctrl.formattedModel}}</div>
                     <div class="test-run-card__job-file">
