@@ -1,0 +1,20 @@
+[
+    {
+        "name": "zebrunner",
+        "id": "pr-zbr",
+        "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png",
+        "configUrl": "https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/platforms.json"
+    },
+    {
+        "name": "browserstack",
+        "id": "pr-brwsr",
+        "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png",
+        "configUrl": "https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/platforms.json"
+    },
+    {
+        "name": "defwrongault",
+        "id": "pr-gh",
+        "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a//React-icon.svg/640px-React-icon.svg.png",
+        "configUrl": "https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/platforms.json"
+    }
+]

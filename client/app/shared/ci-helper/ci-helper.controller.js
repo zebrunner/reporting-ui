@@ -4,6 +4,7 @@ import 'brace';
 import 'brace/mode/json';
 import 'brace/theme/eclipse';
 import 'angular-ui-ace';
+import providersJson from './providers.json'
 
 const CiHelperController = function CiHelperController($scope, $rootScope, $q, toolsService, $window, $mdDialog,
     $timeout, $interval, windowWidthService, LauncherService, UserService, ScmService, AuthService, messageService,
@@ -16,7 +17,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     const vm = {
         platforms: [],
         platformModel: {},
+        providers: [],
+        providersSelectionIsActive: false,
 
+        onProviderSelect,
         onPlatformSelect,
     };
 
@@ -931,7 +935,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             });
         });
         const browsersConfigPromise = getBrowsersConfig();
-        $q.all([launchersPromise, scmAccountsPromise, browsersConfigPromise]).then(function (data) {
+        const providersConfigPromise = getProvidersConfig();
+        $q.all([launchersPromise, scmAccountsPromise, browsersConfigPromise, providersConfigPromise]).then(function (data) {
             $scope.scmAccounts.forEach(function (scmAccount) {
                 $scope.launchers.forEach(function (launcher) {
                     if (launcher.scmAccountType.id === scmAccount.id) {
@@ -1051,6 +1056,31 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             .catch(() => {
                 console.error('Can\'t load platforms config', error);
             });
+    }
+
+    function onProviderSelect(currentProvider) {
+        let index = -1;
+
+        index = vm.providers.findIndex((provider) => {
+            return currentProvider.id === provider.id;
+        })
+       
+        if (vm.chipsCtrl.selectedChip === index && vm.providersSelectionIsActive) {
+            index = -1;
+        }
+        vm.chipsCtrl.selectedChip = index;
+        vm.providersSelectionIsActive = index >= 0 ? true : false;
+    }
+
+    function getProvidersConfig() {
+        vm.providers = providersJson;
+
+        return $http.get('providers.json')
+        .then(response => {
+            providersConfig = response.data;
+        })
+        .catch(() => {
+        })
     }
 
     return vm;

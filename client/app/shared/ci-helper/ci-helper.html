@@ -198,9 +198,19 @@
                     <i ng-click="toEditLauncher(launcher);" has-any-permission="['MODIFY_LAUNCHERS']" class="material-icons hide-phone">edit</i>
                 </div>
             </div>
+            <div class="ci-runner-container__providers">
+                <md-chips class="filter-chip custom-filter" ng-model="$ctrl.providers" md-removable="false" readonly="true">
+                    <md-chip-template>
+                        <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.onProviderSelect($chip)">
+                            <img class="custom-filter__img" ng-src="{{$chip.icon}}"/>
+                            <span>{{$chip.name}}</span>
+                        </div>
+                    </md-chip-template>
+                </md-chips>
+            </div>
             <div class="ci-runner-container__platforms"
                 ng-class="{'_with-controls': $ctrl.platformControls.length && $ctrl.platformControls[0].items.length}"
-                ng-if="$ctrl.platforms.length">
+                ng-if="$ctrl.platforms.length && $ctrl.providersSelectionIsActive">
                 <div class="ci-runner-container__platforms-header">
                         <md-radio-group ng-model="$ctrl.platformModel.platform"
                             layout="row"
