@@ -409,7 +409,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.chooseLauncherPhone = function (launcher) {
-        console.log(launcher);
         $scope.chooseLauncher(launcher, true);
         $scope.cardNumber = 3;
     };
@@ -1073,6 +1072,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function handleProviderDeselection() {
+        vm.platformModel = {};
+        vm.platforms = [];
         platformsConfig = null;
         clearPlatformControlsData();
         vm.chipsCtrl.selectedChip = -1;
