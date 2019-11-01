@@ -4,7 +4,6 @@ import 'brace';
 import 'brace/mode/json';
 import 'brace/theme/eclipse';
 import 'angular-ui-ace';
-import providersJson from './providers.json'
 
 const CiHelperController = function CiHelperController($scope, $rootScope, $q, toolsService, $window, $mdDialog,
     $timeout, $interval, windowWidthService, LauncherService, UserService, ScmService, AuthService, messageService,
@@ -13,7 +12,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     let isMultitenant = false;
     let platformsConfig = null;
-    const platformsConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/platforms.json';
+    const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
     const vm = {
         platforms: [],
         platformModel: {},
@@ -933,7 +932,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 }
             });
         });
-        const providersConfigPromise = getProvidersConfig();
+        const providersConfigPromise = $q.all(getProvidersConfig());
         $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise]).then(function (data) {
             $scope.scmAccounts.forEach(function (scmAccount) {
                 $scope.launchers.forEach(function (launcher) {
@@ -946,9 +945,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         });
     }
 
-    function initPlatforms() {
-        if (!platformsConfig || !platformsConfig.rootKey) { return; }
+    function initPlatforms(data) {
+        if (!data || !data.rootKey) { return; }
 
+        platformsConfig = data;
         vm.platforms = [...platformsConfig.data[platformsConfig.rootKey]];
     }
 
@@ -1052,19 +1052,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function getBrowsersConfig(url) {
-        vm.gettingBrowsersConfig = true;
-
-        return $http.get(url)
-            .then(response => {
-                platformsConfig = response.data;
-                initPlatforms();
-            })
-            .catch(() => {
-                console.error('Can\'t load platforms config', error);
-            })
-            .finally(() => {
-                vm.gettingBrowsersConfig = false;
-            });
+        return $http.get(url);
     }
 
     function onProviderSelect(selectedProvider) {
@@ -1081,10 +1069,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         })
 
         vm.chipsCtrl.selectedChip = index;
-
-        if (!provider.configUrl) { return; }
-
-        getBrowsersConfig(provider.configUrl);
+        provider.data && initPlatforms(provider.data);
     }
 
     function handleProviderDeselection() {
@@ -1094,13 +1079,31 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function getProvidersConfig() {
-        vm.providers = providersJson;
-
-        return $http.get('providers.json')
+        return $http.get(providersConfigURL)
             .then(response => {
-                providersConfig = response.data;
+                const url = new URL(providersConfigURL);
+                const path = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
+            
+                vm.providers = response.data;
+
+                return vm.providers.map(config => {
+                    if (config.configFile) {
+                        url.pathname = path + config.configFile;
+
+                        return getBrowsersConfig(url.href)
+                            .then(res => {
+                                config.data = res.data;
+                            })
+                            .catch((error) => {
+                                console.error('Unable to load the platforms config');
+                            });
+                    }
+
+                    return $q.resolve();
+                });
             })
-            .catch(() => {
+            .catch((error) => {
+                console.error('Unable to load the providers config');
             });
     }
 

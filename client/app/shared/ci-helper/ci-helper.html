@@ -202,7 +202,7 @@
                 <md-chips class="filter-chip custom-filter" ng-model="$ctrl.providers" md-removable="false" readonly="true">
                     <md-chip-template>
                         <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.onProviderSelect($chip)">
-                            <img class="custom-filter__img" ng-src="{{$chip.icon}}"/>
+                            <img class="custom-filter__img" ng-if="$chip.icon" ng-src="{{$chip.icon}}"/>
                             <span>{{$chip.name}}</span>
                         </div>
                     </md-chip-template>
@@ -284,7 +284,7 @@
                 <md-button class="md-raised" ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
                     Back
                 </md-button>
-                <md-button class="md-raised md-primary pull-right" ng-click="build(launcher, launcher_form);" ng-disabled="!launcher.job.jobURL || $ctrl.gettingBrowsersConfig" ng-if="cardNumber === 2 || cardNumber === 3">
+                <md-button class="md-raised md-primary pull-right" ng-click="build(launcher, launcher_form);" ng-disabled="!launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">
                     Launch
                 </md-button>
                 <div ng-if="! launcher.job.jobURL" class="ci-runner-container_content_actions_error">Launcher job is not configured, contact admin.</div>
