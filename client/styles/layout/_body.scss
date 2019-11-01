@@ -2479,6 +2479,14 @@ $light-inprogress: #68c9fd;
     }
 }
 .ci-runner-container {
+    &__providers {
+        padding-bottom: 17px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(1, 22, 39, 0.15);
+        md-chips.filter-chip.custom-filter md-chips-wrap.md-chips {
+            display: block;
+        }
+    }
     &__platforms {
             padding-bottom: 25px;
             border-bottom: 1px solid rgba($dark-new, .15);
