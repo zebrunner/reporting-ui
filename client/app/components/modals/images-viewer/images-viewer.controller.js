@@ -158,12 +158,11 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         vm.artifacts = vm.test.imageArtifacts;
         vm.activeArtifactId = activeArtifactId;
 
-        loadImages();
-        
         $timeout(() => {
             initGallery();
             registerListeners();
-        }, 0);
+            loadImages();
+        });
     }
 
     function registerListeners() {
@@ -214,46 +213,68 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     }
 
     function loadImages() {
+        const $imgContainer = $(`.${local.imgWrapperCssClass}`);
         const promises = vm.artifacts.map((artifact, index) => {
+            //if image is already loaded
+            if (artifact.imageElem) {
+                handleLoadedImage(artifact, index, $imgContainer);
+
+                return $q.resolve(true);
+            }
+
             return loadImage(artifact.link)
                 .then((imageElem) => {
-                    getImagesDimentions(imageElem);
-                    imageElem.classList.add(local.imgCssClass);
-                    imageElem.setAttribute('id', artifact.id);
+                    // $scope.testsss.imageArtifacts[index].imageElem = imageElem;
+                    artifact.imageElem = imageElem;
+                    handleLoadedImage(artifact, index, $imgContainer);
+                    // return imageElem;
 
-                    if (vm.activeArtifactId) {
-                        artifact.id === vm.activeArtifactId && imageElem.classList.add(local.imgCssActiveClass);
-                    } else if (index === 0) {
-                        imageElem.classList.add('_active');
-                        vm.activeArtifactId = artifact.id;
-                    }
-                    initSizes();
-                    $(`.${local.imgWrapperCssClass}`).append(imageElem);
-                    
-                    if (!vm.newActiveElem) {
-                        vm.setActiveArtifact(vm.activeArtifactId, true);
-                    }
-                    return imageElem;
+                    return true;
                 })
-                .catch((err) => {
+                .catch(() => {
                     let icon = createBrokenIcon();
 
-                    icon.setAttribute('id', artifact.id);
-                    if (vm.activeArtifactId) {
-                        artifact.id === vm.activeArtifactId && icon.classList.add(local.imgCssActiveClass);
-                    } else if (index === 0) {
-                        icon.classList.add('_active');
-                        vm.activeArtifactId = artifact.id;
-                    }
-                    $(`.${local.imgWrapperCssClass}`).append(icon);
-                    
-                    if (!vm.newActiveElem) {
-                        vm.setActiveArtifact(vm.activeArtifactId, true);
-                    }
+                    handleBrokenImage(icon, artifact, index, $imgContainer);
                 })
         });
 
         return $q.all(promises);
+    }
+
+    function handleLoadedImage(artifact, index, $imgContainer) {
+        getImagesDimentions(artifact.imageElem);
+        artifact.imageElem.classList.add(local.imgCssClass);
+        artifact.imageElem.setAttribute('id', artifact.id);
+
+        if (vm.activeArtifactId) {
+            artifact.id === vm.activeArtifactId && artifact.imageElem.classList.add(local.imgCssActiveClass);
+        } else if (index === 0) {
+            artifact.imageElem.classList.add(local.imgCssActiveClass);
+            vm.activeArtifactId = artifact.id;
+        }
+        $timeout(() => {
+            initSizes();
+            $imgContainer.append(artifact.imageElem);
+            
+            if (!vm.newActiveElem) {
+                vm.setActiveArtifact(vm.activeArtifactId, true);
+            }
+        }, 500)
+    }
+
+    function handleBrokenImage(icon, artifact, index, $imgContainer) {
+        icon.setAttribute('id', artifact.id);
+        if (vm.activeArtifactId) {
+            artifact.id === vm.activeArtifactId && icon.classList.add(local.imgCssActiveClass);
+        } else if (index === 0) {
+            icon.classList.add('_active');
+            vm.activeArtifactId = artifact.id;
+        }
+        $imgContainer.append(icon);
+        
+        if (!vm.newActiveElem) {
+            vm.setActiveArtifact(vm.activeArtifactId, true);
+        }
     }
 
     function createBrokenIcon() {
