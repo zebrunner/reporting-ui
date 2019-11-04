@@ -36,7 +36,6 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
 
     $scope.querySearch = querySearch;
     $scope.submit = submit;
-    $scope.checkAndTransformRecipient = checkAndTransformRecipient;
 
 
     function submit() {
@@ -82,12 +81,6 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
         }
 
         return "";
-    }    
-
-    function checkAndTransformRecipient(currentUser) {
-        currentText = '';
-
-        return UtilService.checkAndTransformRecipient(currentUser, $scope.email.recipients, $scope.users);
     }
 
     $scope.hide = function () {

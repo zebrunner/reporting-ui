@@ -16,7 +16,6 @@
 
         $scope.UtilService = UtilService;
         $scope.querySearch = querySearch;
-        $scope.checkAndTransformRecipient = checkAndTransformRecipient;
         $scope.sendEmail = sendEmail;
 
         function sendEmail() {
@@ -54,12 +53,6 @@
             }
 
             return "";
-        }
-    
-        function checkAndTransformRecipient(currentUser) {
-            currentText = '';
-    
-            return UtilService.checkAndTransformRecipient(currentUser, $scope.email.recipients, $scope.users);
         }
 
         $scope.hide = function() {

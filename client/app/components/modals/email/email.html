@@ -29,7 +29,7 @@
                                     class="photo-chip"
                                     filter-selected=true
                                     md-autocomplete-snap
-                                    md-transform-chip="checkAndTransformRecipient($chip)"
+                                    md-transform-chip="UtilService.checkAndTransformRecipient($chip, email.recipients, users)"
                                     md-on-remove="UtilService.removeRecipient($chip, email.recipients)"
                                     md-add-on-blur="true"
                                     md-separator-keys="keys">
