@@ -25,7 +25,6 @@
             removeRecipient,
             checkAndTransformRecipient,
             filterUsersForSend,
-            prepareEmails,
         }
 
         service.validations = {
@@ -388,21 +387,6 @@
                     return addedUser.id === userFromDB.id;
                 }) && userFromDB.email;
             })
-        }
-
-        function prepareEmails(currentText, users, recipients) {
-            if (!users.length) {
-                if (currentText && currentText.length) {
-                    recipients.push(currentText);
-
-                    return recipients;
-                } else {
-                    messageService.error('Add a recipient!');
-                    return;
-                }
-            }
-
-            return users;
         }
 
         /**

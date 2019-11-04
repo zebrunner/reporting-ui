@@ -40,11 +40,9 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
 
 
     function submit() {
-        if (UtilService.prepareEmails(currentText, $scope.users, $scope.email.recipients)) {
-            sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
-                $scope.hide();
-            });
-        }
+        sendEmail(EMAIL_TYPES[TYPE].locator, angular.copy($scope.email)).then(function () {
+            $scope.hide();
+        });
     };
 
     function sendEmail(locator, email) {

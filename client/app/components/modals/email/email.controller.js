@@ -17,15 +17,7 @@
         $scope.UtilService = UtilService;
         $scope.querySearch = querySearch;
         $scope.checkAndTransformRecipient = checkAndTransformRecipient;
-        $scope.submit = submit;
-
-        function submit() {
-            if (UtilService.prepareEmails(currentText, $scope.users, $scope.email.recipients)) {
-                sendEmail();
-            }
-            
-            
-        };
+        $scope.sendEmail = sendEmail;
 
         function sendEmail() {
             $scope.hide();
