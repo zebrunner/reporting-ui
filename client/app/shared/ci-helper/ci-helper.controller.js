@@ -953,9 +953,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     function onPlatformSelect() {
         clearPlatformControlsData();
-        if (!vm.platformModel.platform) {
-            vm.platformModel = { platform: vm.platformModel.platform };
-        } else if (vm.platformModel.platform.child) {
+        resetPlatformModel(vm.platformModel.platform);
+        if (vm.platformModel.platform && vm.platformModel.platform.child) {
             prepareChildControl(vm.platformModel.platform);
         }
     }
@@ -1046,8 +1045,21 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         });
     }
 
+    function clearPlatforms() {
+        resetPlatformModel();
+        vm.platforms = [];
+        platformsConfig = null;
+        clearPlatformControlsData();
+    }
+
     function clearPlatformControlsData() {
         vm.platformControls = [];
+    }
+
+    function resetPlatformModel(platform) {
+        vm.platformModel = {};
+
+        if (platform) { vm.platformModel.platform = platform; }
     }
 
     function getBrowsersConfig(url) {
@@ -1067,15 +1079,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             return provider.id === id;
         })
 
+        clearPlatforms()
         vm.chipsCtrl.selectedChip = index;
         provider.data && initPlatforms(provider.data);
     }
 
     function handleProviderDeselection() {
-        vm.platformModel = {};
-        vm.platforms = [];
-        platformsConfig = null;
-        clearPlatformControlsData();
+        clearPlatforms();
         vm.chipsCtrl.selectedChip = -1;
     }
 
