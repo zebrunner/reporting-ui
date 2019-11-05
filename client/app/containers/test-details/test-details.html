@@ -251,20 +251,9 @@
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && $ctrl.empty && $ctrl.testRun.status !== 'IN_PROGRESS'">
+                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && !$ctrl.testsToDisplay.length && $ctrl.getEptyTestsMessage(groupName)">
                                         <td md-cell="md-cell" colspan="4" class="test-empty">
-                                            No tests
-                                        </td>
-                                    </tr>
-                                    <tr md-row="md-row"
-                                        data-ng-if="!$ctrl.testsLoading && !$ctrl.empty && !$ctrl.activeTests.length && $ctrl.isStausFilteringActive && ($ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue)">
-                                        <td md-cell="md-cell" colspan="4" class="test-empty">
-                                            No tests matching selected filters
-                                        </td>
-                                    </tr>
-                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && $ctrl.testRun.status === 'IN_PROGRESS' && ($ctrl.empty || (!$ctrl.isStausFilteringActive && !$ctrl.activeTests.length && $ctrl.testRun.queued))">
-                                        <td md-cell="md-cell" colspan="4" class="test-empty">
-                                            No tests yet
+                                            {{$ctrl.getEptyTestsMessage(groupName)}}
                                         </td>
                                     </tr>
                                     <tr ng-repeat-end
