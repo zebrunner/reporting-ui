@@ -3,7 +3,7 @@
         <zf-sub-header-title>{{dashboard.title}}</zf-sub-header-title>
         <zf-sub-header-options >
             <div class="hide-phone">
-                <md-button class="md-icon-button" data-ng-if="MODE !== 'WIDGET_PLACEMENT' && $ctrl.isToolConnected('EMAIL') && dashboard.widgets.length" ng-click="showEmailDialog($event);">
+                <md-button class="md-icon-button" data-ng-if="MODE !== 'WIDGET_PLACEMENT' && $ctrl.isToolConnected('EMAIL') && dashboard.widgets.length" ng-click="showEmailDialog($event, dashboard);">
                     <i class="material-icons">
                         send
                     </i>
@@ -59,7 +59,7 @@
                                     </md-button>
                                     <md-menu-content width="2">
                                         <md-menu-item data-ng-if="$ctrl.isToolConnected('EMAIL')">
-                                            <md-button name="sendEmail" data-ng-click="showEmailDialog($event, widget.id)">
+                                            <md-button name="sendEmail" data-ng-click="showEmailDialog($event, widget)">
                                                 <md-icon class="material-icons">send</md-icon>
                                                 Send by email
                                             </md-button>
