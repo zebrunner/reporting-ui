@@ -20,6 +20,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
         onProviderSelect,
         onPlatformSelect,
+        get isMobile() { return windowWidthService.isMobile(); }
     };
 
     vm.$onInit = initController;
@@ -36,7 +37,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     $scope.launcherScan = {
         branch: 'master'
     };
-    $scope.isMobile = windowWidthService.isMobile();
 
     const TENANT = $rootScope.globals.auth.tenant;
 
@@ -352,6 +352,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
 
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
+        if ($scope.launcher && $scope.launcher.id === launcher.id) { return; }
+        handleProviderDeselection();
         highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
         $scope.needServer = false;
@@ -409,7 +411,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.chooseLauncherPhone = function (launcher) {
-        $scope.chooseLauncher(launcher, true);
         $scope.cardNumber = 3;
     };
 
@@ -1086,7 +1087,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     function handleProviderDeselection() {
         clearPlatforms();
-        vm.chipsCtrl.selectedChip = -1;
+        vm.chipsCtrl && (vm.chipsCtrl.selectedChip = -1);
     }
 
     function getProvidersConfig() {

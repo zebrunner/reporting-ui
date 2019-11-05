@@ -363,7 +363,9 @@ $screen-xs:                  480px !default;
 //** Deprecated `$screen-xs-min` as of v3.2.0
 $screen-xs-min:              $screen-xs !default;
 //** Deprecated `$screen-phone` as of v3.0.1
-$screen-phone:               $screen-xs-min !default;
+$screen-phone:               $screen-xs !default;
+$md-screen-xs:               599px !default;
+$md-screen-phone:            $md-screen-xs !default;
 
 // Small screen / tablet
 //** Deprecated `$screen-sm` as of v3.0.1

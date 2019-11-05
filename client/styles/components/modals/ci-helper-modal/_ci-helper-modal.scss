@@ -1,0 +1,36 @@
+@import '../../../global/var';
+
+.zf-md-dialog-container.ci-runner {
+    @media screen and (max-width: $md-screen-phone) {
+        overflow: hidden !important;
+        padding: 0 !important;
+
+        .ci-runner-container {
+            height: 100% !important;
+            &__scrollable {
+                height: 100%;
+                overflow: auto;
+                padding: 20px 16px;
+            }
+            &_content {
+                padding: 48px 0 68px !important;
+
+                &_builder {
+                    padding-bottom: 0;
+                }
+
+                &_title {
+                    margin-bottom: 0;
+                }
+            }
+            &__platforms {
+                &-controls.zf-display-table {
+                    display: block;
+                }
+            }
+        }
+        > form {
+            height: 100%;
+        }
+    }
+}
