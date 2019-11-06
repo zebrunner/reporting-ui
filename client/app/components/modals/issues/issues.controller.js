@@ -174,6 +174,7 @@ const IssuesModalController = function IssuesModalController(
         vm.newIssue.id = issue.id;
         vm.newIssue.jiraId = issue.jiraId;
         vm.newIssue.description = issue.description;
+        vm.newIssue.blocker = issue.blocker;
         vm.selectedIssue = true;
     };
 
