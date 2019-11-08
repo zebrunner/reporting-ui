@@ -1,6 +1,43 @@
 @import '../../../global/var';
 
 .zf-md-dialog-container.ci-runner {
+    .zf-modal-container {
+        &_content,
+        &_helper {
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 0.1px;
+        }
+    }
+    .ci-runner-container {
+        &_content {
+            &_builder {
+                &_container {
+                    margin-bottom: 16px;
+                    min-height: 36px;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    md-checkbox {
+                        margin-bottom: 0;
+                    }
+
+                    .zf-label {
+                        width: 190px;
+                        margin-right: 20px;
+                        padding-right: 0;
+                    }
+                    .zf-show-part {
+                        max-width: 100%;
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+    }
+
     @media screen and (max-width: $md-screen-phone) {
         overflow: hidden !important;
         padding: 0 !important;
@@ -17,6 +54,35 @@
 
                 &_builder {
                     padding-bottom: 0;
+                    &_container {
+                        margin-bottom: 18px;
+                        .zf-label {
+                            width: auto;
+                            margin-right: 0;
+                        }
+
+                        &.builder-boolean {
+                            display: flex;
+                            align-items: center;
+                            .zf-label {
+                                margin-right: 20px;
+                                flex: 1 1 auto;
+                            }
+                            .ci-runner-container_content_builder_container_item {
+                                width: auto;
+                                flex: none;
+                            }
+                        }
+                        md-input-container label {
+                            letter-spacing: 0.2px;
+                            opacity: 0.6;
+                        }
+                        .zf-show-part {
+                            letter-spacing: 0.2px;
+                            font-size: 11px;
+                            opacity: 0.6;
+                        }
+                    }
                 }
 
                 &_title {

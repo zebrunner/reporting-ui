@@ -170,8 +170,7 @@
                 link: function(scope, elem, attrs) {
                     scope.$watch(AuthService.isLoggedIn, function() {
                         if (AuthService.UserHasAnyPermission(eval(attrs.hasAnyPermission))) {
-                            // elem.show();
-                            elem.css('display', '');
+                            elem.show();
                         } else {
                             elem.hide();
                         }

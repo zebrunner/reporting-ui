@@ -159,7 +159,7 @@ md-chip:not(:hover) .show-icon-on-hover,
 }
 
 .hide-phone {
-    @media (max-width: $screen-phone) {
+    @media (max-width: $md-screen-phone) {
         display: none !important;
     }
 }
@@ -171,7 +171,7 @@ md-chip:not(:hover) .show-icon-on-hover,
 }
 
 .show-phone {
-    @media (min-width: $screen-phone + 1px) {
+    @media (min-width: $md-screen-phone + 1px) {
         display: none !important;
     }
 }
@@ -2488,7 +2488,7 @@ $light-inprogress: #68c9fd;
         }
     }
     &__platforms {
-        padding-bottom: 25px;
+        padding-bottom: 20px;
         border-bottom: 1px solid rgba($dark-new, .15);
         margin-bottom: 20px;
         &-header {
@@ -2496,14 +2496,6 @@ $light-inprogress: #68c9fd;
                 margin-bottom: 15px;
             }
         }
-        &._with-controls {
-            padding-bottom: 10px;
-        }
-    }
-    * {
-        font-weight: 500;
-        font-size: 14px;
-        letter-spacing: 0.1px;
     }
 
     .close-button {
@@ -2816,13 +2808,6 @@ $light-inprogress: #68c9fd;
 
         &_builder {
             padding-bottom: 60px;
-            /*display: block !important;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            position: relative;
-            // title top + button heights
-            height: calc(100% - 41px - 36px);
-            margin-left: -20px;*/
 
             @media(max-width: $md-screen-phone) {
                 display: block !important;
@@ -2834,7 +2819,6 @@ $light-inprogress: #68c9fd;
             &_container {
                 font-size: 0;
                 position: relative;
-                height: 36px;
                 &:not(.builder-boolean) {
                     
                     @media (max-width: 768px) {
@@ -2849,18 +2833,11 @@ $light-inprogress: #68c9fd;
                     }
                 }
                 > .zf-label {
-                    line-height: 36px !important;
-                    min-width: 204px;
+                    line-height: 36px;
                     .zf-show-part {
                         .ng-binding {
                             font-weight: normal;
                             color: rgba(1, 22, 39, 0.8);
-
-                            @media(max-width: $md-screen-phone) {
-                                letter-spacing: 0.2px;
-                                font-size: 11px;
-                                opacity: 0.6;
-                            }
 
                             [ng-transclude] {
                                 cursor: text;
@@ -2870,43 +2847,11 @@ $light-inprogress: #68c9fd;
                     }
 
                 }
-                @media (max-width: $screen-sm) {
-                    display: block !important;
-                }
-                @media (max-width: $screen-sm) {
-                    &:not(.builder-boolean) {
-                        height: 72px;
-                        padding-bottom: 18px;
-                        > div {
-                            display: block !important;
-                        }
-                    }
-
-                    &.builder-boolean {
-                        display: block;
-                        padding-top: 12px;
-                        height: 40px;
-                        padding-bottom: 10px;
-                         > div {
-                             height: 36px;
-                             width: 20px;
-                             display: inline-block !important;
-                             &.zf-label {
-                                 width: calc(100% - 21px);
-                             }
-                         }
-                    }
-
-                    > .zf-label {
-                        line-height: 20px !important;
-                    }
-                }
 
                 &_item {
                     display: inline-block;
                     vertical-align: bottom;
-                    padding-bottom: 16px;
-                    width: 228px;
+                    width: 240px;
                     md-input-container {
                         label {
                             display: none;
@@ -3020,18 +2965,6 @@ $light-inprogress: #68c9fd;
                         font-size: 16px;
                     }
                 }
-                // md-icon {
-                //     top: 6px;
-                //     right: -6px !important;
-                //     font-size: 20px;
-                //     color: rgba(127, 127, 127, 0.75);
-
-                //     @media(max-width: $screen-phone) {
-                //         font-size: 24px;
-                //         top: 4px;
-                //         right: -4px !important;
-                //     }
-                // }
                 .md-errors-spacer {
                     display: none;
                 }
@@ -3080,11 +3013,12 @@ $light-inprogress: #68c9fd;
         }
         &_section {
             border-radius: 4px;
-            height: calc(100% - 70px);
+            height: calc(100% - 75px);
             min-width: 200px;
             overflow: scroll;
             flex-grow: 1;
             margin-top: 20px;
+            padding-bottom: 10px;
 
             @media(max-width: $screen-tablet) {
                 height: calc(100% - 94px);
@@ -3179,13 +3113,13 @@ $light-inprogress: #68c9fd;
                         margin: 0 0 0 $item-list-margin;
                         padding: 0;
                         &_item, &_item-empty {
-                            padding-top: 12px;
+                            padding: 6px 0;
                             position: relative;
 
                             @media(max-width: $md-screen-phone) {
                                 font-size: 16px;
+                                line-height: 20px;
                                 padding: 20px 0;
-                                height: 60px;
                             }
 
                             &.chosen-launcher {
@@ -3273,12 +3207,13 @@ $light-inprogress: #68c9fd;
                     }
                 }
 
-                &:hover {
-                    .folder-container_folder_icon_settings {
-                        display: inline-block;
+                @media screen and (min-width: $md-screen-phone + 1px) {
+                    &:hover {
+                        .folder-container_folder_icon_settings {
+                            display: inline-block;
+                        }
                     }
                 }
-
             }
 
             .folder-container-empty {
