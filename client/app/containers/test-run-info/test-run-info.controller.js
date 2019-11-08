@@ -480,19 +480,21 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         const formattedArtifacts = $scope.logs.reduce(function (formatted, artifact) {
             if (artifact.isImageExists && artifact.blobLog.image && artifact.blobLog.image.path) {
                 artifact.blobLog.image.path.forEach(path => {
-                    const url = new URL(path);
-                    let newArtifact = {
-                        id: path,
-                        name: artifact.blobLog.image.threadName,
-                        link: path,
-                        extension: url.pathname.split('/').pop().split('.').pop(),
-                    };
+                    if (path) {
+                        const url = new URL(path);
+                        let newArtifact = {
+                            id: path,
+                            name: artifact.blobLog.image.threadName,
+                            link: path,
+                            extension: url.pathname.split('/').pop().split('.').pop(),
+                        };
 
-                    if (artifact.blobLog.thumb && artifact.blobLog.thumb.path) {
-                        newArtifact.thumb = artifact.blobLog.thumb.path;
+                        if (artifact.blobLog.thumb && artifact.blobLog.thumb.path) {
+                            newArtifact.thumb = artifact.blobLog.thumb.path;
+                        }
+
+                        formatted.imageArtifacts.push(newArtifact);
                     }
-
-                    formatted.imageArtifacts.push(newArtifact);
                 });
             }
 
@@ -519,7 +521,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
                 fullscreen: false,
                 escapeToClose: false,
                 locals: {
-                    test: angular.copy($scope.test),
+                    test: $scope.test,
                     activeArtifactId: activeArtifact.id,
                 }
             });
