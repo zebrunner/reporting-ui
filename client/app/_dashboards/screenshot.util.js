@@ -7,12 +7,13 @@ const ScreenshotService = function ScreenshotService($q) {
     var classesToAdd = {};
 
     return {
-        take: function (locator) {
+        take: function (locator, name) {
             return $q(function (resolve, reject) {
                 crop(locator).then(function (canvasObj) {
                     deleteImage(canvasObj.canvas);
                     var formData = new FormData();
-                    formData.append("file", dataURItoBlob(canvasObj.dataURL), guid() + ".png");
+                    const imgName = name ? name : guid();
+                    formData.append("file", dataURItoBlob(canvasObj.dataURL), imgName + ".png");
                     resolve(formData);
                 })
             });

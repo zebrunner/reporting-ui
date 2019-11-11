@@ -1,6 +1,6 @@
 'use strict';
 
-const dashboardEmailModalController = function dashboardEmailModalController($scope, $q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService) {
+const dashboardEmailModalController = function dashboardEmailModalController($scope, $q, $filter, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, widgetId, messageService) {
     'ngInject';
 
     var TYPE = widgetId ? 'WIDGET' : 'DASHBOARD';
@@ -53,14 +53,15 @@ const dashboardEmailModalController = function dashboardEmailModalController($sc
 
     function isValidRecipient(recipient) {
         let reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
-        
+
         return (reg.test(recipient));
     }
 
     function sendEmail(locator, email) {
        email.recipients =  email.recipients.toString();
         return $q(function (resolve, reject) {
-            $screenshot.take(locator).then(function (multipart) {
+            const imgName = email.subject + ' - ' + $filter('date')(new Date(), 'MM:dd:yyyy');
+            $screenshot.take(locator, imgName).then(function (multipart) {
                 DashboardService.SendDashboardByEmail(multipart, email).then(function (rs) {
                     if (rs.success) {
                         messageService.success('Email was successfully sent!');
