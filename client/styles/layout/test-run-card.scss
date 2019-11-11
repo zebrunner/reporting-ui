@@ -156,8 +156,9 @@
                 border-radius: 10px;
                 line-height: 20px;
             }
+            .label,
             .platform-icon {
-                margin-right: 5px;
+                margin: 0 2px;
             }
         }
         &._date {
@@ -265,17 +266,20 @@
     &__title {
         font-weight: bold;
         font-size: 14px;
-        line-height: normal; 
-        display: flex;
-        align-items: center;
+        line-height: 24px;
         margin-right: 10px;
         z-index: 2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
         @media(max-width: $screen-tablet) {
             z-index: 1;
         }
         &-wrapper {
             display: flex;
             align-items: center;
+            max-width: 100%;
         }
         &-additions {
             margin-left: 5px;
@@ -294,12 +298,25 @@
         flex-wrap: wrap;
         font-weight: 500;
         align-items: flex-end;
+        max-width: 100%;
         &-name {
             font-size: 12px;
+            line-height: 18px;
             margin-right: 5px;
+            max-width: 100%;
+            a {
+                display: inline-block;
+                max-width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+            }
         }
         &-file {
             display: flex;
+            align-items: center;
+            max-width: 100%;
         }
     }
 
@@ -308,22 +325,34 @@
             flex-grow: 0;
             flex-shrink: 0;
             margin-right: 2px;
+            margin: 0;
             &._spinner {
                 width: 10px;
-                margin-right: 0;
                 margin-left: 2px;
-                .tests-loading-spinner {
-                    margin: 0;
+                opacity: 0;
+                visibility: hidden;
+                transition: visibility .25s ease-in-out, opacity .25s ease-in-out;
+                &._show {
+                    opacity: 1;
+                    visibility: visible;
                 }
+            }
+            &._file {
+                height: 12px;
+                width: 12px;
+                min-height: 12px;
+                min-width: 12px;
+                margin-right: 2px;
             }
         }
         &-name {
-            max-width: 390px;
-            word-wrap: break-word;
             font-size: 12px;
+            line-height: 18px;
             font-weight: 500;
             color: rgba(0, 0, 0, .5);
-            padding-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
@@ -364,15 +393,15 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            font-size: 11px;
+            font-size: 12px;
             line-height: 18px;
             font-weight: 700;
             &._blockers {
-                color: $red-for-highlight; // TODO: use correct color after we defined set of defaults with designer
+                color: $red-new;
                 border-color: currentColor;
             }
             &._reviewed {
-                color: #6ac186; // TODO: use correct color after we defined set of defaults with designer
+                color: $green-new;
                 border-color: currentColor;
             }
         }
@@ -416,7 +445,16 @@
         }
         &__title {
             &-wrapper {
-                margin-right: 10px;
+                margin-right: 0;
+                padding-right: 13px;
+            }
+        }
+        &__job {
+            padding-right: 13px;
+        }
+        &__app {
+            &-name {
+                max-width: 100%;
             }
         }
     }
@@ -424,11 +462,6 @@
         &__cell {
             &._info {
                 min-width: 150px;
-            }
-        }
-        &__title {
-            &-wrapper {
-                flex-wrap: wrap;
             }
         }
     }
@@ -627,6 +660,7 @@
             }
             &._info {
                 padding: 0 12px;
+                min-width: 0;
             }
             &._menu {
                 width: 20px;
@@ -648,7 +682,10 @@
                 flex: none;
                 width: auto;
                 .platform-icon {
-                    margin-right: 4px;
+                    margin: 0 4px 0 0;
+                }
+                .label {
+                    margin: 0;
                 }
             }
             &._date {
@@ -665,19 +702,34 @@
         }
 
         &__title {
-            max-height: 36px; //TODO: clarify font-size and line-height
+            line-height: normal;
             margin: 0 5px 0 0;
         }
         &__jenkins {
             font-size: 14px;
             line-height: 1;
             margin-top: 9px;
+            max-width: 100%;
+            a {
+                display: inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+                line-height: 1.2;
+                vertical-align: middle;
+            }
         }
         &__time-text {
             margin-left: 0;
         }
         &__menu-btn {
             margin: -6px 0 0;
+        }
+        &__app {
+            &-name {
+                max-width: 100%;
+            }
         }
     }
 
@@ -722,6 +774,8 @@
                 background: #ffffff;
                 width: 100%;
                 transform: translateZ(0);
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.25);
+                transition: box-shadow .25s ease-in-out;
             }
             &._middle {
                 transition: transform .25s ease-in-out, opacity .25s ease-in-out;
@@ -822,6 +876,9 @@
             }
         }
         &__row {
+            &._top {
+                box-shadow: none;
+            }
             &._middle {
                 transform: translateY(0);
                 opacity: 1;
