@@ -5,16 +5,11 @@ const dashboardEmailModalController = function dashboardEmailModalController($q,
 
     const vm = {
         cancel,
-        hide,
         UtilService,
         users: [],
         querySearch,
         submit,
         keys: [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.SPACE],
-        usersSearchCriteria: {},
-        currentText: '',
-        stopCriteria: '########',
-        title: model.title,
         email: {
             subject: model.title,
             text: "This is auto-generated email, please do not reply!",
@@ -23,10 +18,13 @@ const dashboardEmailModalController = function dashboardEmailModalController($q,
             recipients: []
         }
     }
+    let stopCriteria = '########';
+    let currentText = '';
+    let usersSearchCriteria = {};
 
     function submit() {
         sendEmail(model.locator, angular.copy(vm.email)).then(function () {
-            vm.hide();
+            hide();
         });
     };
 
@@ -46,15 +44,15 @@ const dashboardEmailModalController = function dashboardEmailModalController($q,
     };
 
     function querySearch(criteria, alreadyAddedUsers) {
-        vm.usersSearchCriteria.query = criteria;
-        vm.currentText = criteria;
-        if (!criteria.includes(vm.stopCriteria)) {
-            vm.stopCriteria = '########';
+        usersSearchCriteria.query = criteria;
+        currentText = criteria;
+        if (!criteria.includes(stopCriteria)) {
+            stopCriteria = '########';
 
-            return UserService.searchUsersWithQuery(vm.usersSearchCriteria, criteria).then(function (rs) {
+            return UserService.searchUsersWithQuery(usersSearchCriteria, criteria).then(function (rs) {
                 if (rs.success) {
                     if (!rs.data.results.length) {
-                        vm.stopCriteria = criteria;
+                        stopCriteria = criteria;
                     }
 
                     return UtilService.filterUsersForSend(rs.data.results, alreadyAddedUsers);
