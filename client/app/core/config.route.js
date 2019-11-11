@@ -140,7 +140,8 @@
                     url: '/views/:id',
                     template: require('../_views/list.html'),
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
+                        permissions: ['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS'],
                     }
                 })
                 .state('signin', {
@@ -255,7 +256,8 @@
                     component: 'usersComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-users'
+                        classes: 'p-users',
+                        permissions: ['VIEW_USERS', 'MODIFY_USERS'],
                     },
                     lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
@@ -274,7 +276,8 @@
                     component: 'groupsComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-users-groups'
+                        classes: 'p-users-groups',
+                        permissions: ['MODIFY_USER_GROUPS'],
                     },
                     lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
@@ -293,7 +296,8 @@
                     component: 'invitationsComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-users'
+                        classes: 'p-users',
+                        permissions: ['INVITE_USERS', 'MODIFY_INVITATIONS'],
                     },
                     lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
@@ -534,7 +538,8 @@
                     component: 'integrationsComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-integrations'
+                        classes: 'p-integrations',
+                        permissions: ['VIEW_INTEGRATIONS'],
                     },
                     resolve: {
                         toolsServicePrepare: (toolsService, $timeout, $state, messageService) => {
