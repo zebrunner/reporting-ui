@@ -572,7 +572,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function bindEvents() {
         $scope.$on('$destroy', function () {
-            if(vm.zafiraWebsocket && vm.zafiraWebsocket.connected) {
+            if (vm.zafiraWebsocket && vm.zafiraWebsocket.connected) {
                 vm.subscriptions.statistics && vm.subscriptions.statistics.unsubscribe();
                 vm.subscriptions.testRuns && vm.subscriptions.testRuns.unsubscribe();
                 vm.subscriptions.launchedTestRuns && vm.subscriptions.launchedTestRuns.unsubscribe();
