@@ -531,7 +531,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     $scope.showEmailDialog = function (event, item) {
-        let model = angular.copy(item);;
+        let model = angular.copy(item);
         
         if (item.widgetTemplate) {
             model.title = $scope.dashboard.title + ' dashboard - ' + item.title + ' widget';

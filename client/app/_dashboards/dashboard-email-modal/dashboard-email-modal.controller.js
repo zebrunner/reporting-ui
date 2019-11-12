@@ -1,6 +1,6 @@
 'use strict';
 
-const dashboardEmailModalController = function dashboardEmailModalController($q, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, model, messageService, UtilService) {
+const dashboardEmailModalController = function dashboardEmailModalController($filter, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, model, messageService, UtilService) {
     'ngInject';
 
     const vm = {
@@ -22,11 +22,12 @@ const dashboardEmailModalController = function dashboardEmailModalController($q,
     let usersSearchCriteria = {};
 
     function sendEmail() {
-       let email = angular.copy(vm.email);
+        let email = angular.copy(vm.email);
+        const imgName = email.subject + ' - ' + $filter('date')(new Date(), 'MM:dd:yyyy');
 
-       email.recipients =  email.recipients.toString();
-       
-        return $screenshot.take(model.locator).then(function (multipart) {
+        email.recipients =  email.recipients.toString();
+        
+        return $screenshot.take(model.locator, imgName).then(function (multipart) {
             return DashboardService.SendDashboardByEmail(multipart, email).then(function (rs) {
                 if (rs.success) {
                     messageService.success('Email was successfully sent!');

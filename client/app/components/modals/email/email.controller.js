@@ -47,7 +47,7 @@
                             stopCriteria = criteria;
                         }
 
-                        return UtilService.filterUsersForSend(rs.data.results, alreadyAddedUsers);;
+                        return UtilService.filterUsersForSend(rs.data.results, alreadyAddedUsers);
                     }
                 });
             }
