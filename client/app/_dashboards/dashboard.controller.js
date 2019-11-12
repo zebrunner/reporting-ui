@@ -530,16 +530,27 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         });
     };
 
-    $scope.showEmailDialog = function (event, widgetId) {
+    $scope.showEmailDialog = function (event, item) {
+        let model = angular.copy(item);
+        
+        if (item.widgetTemplate) {
+            model.title = $scope.dashboard.title + ' dashboard - ' + item.title + ' widget';
+            model.locator = '#widget-container-' + model.id;
+        } else {
+            model.title = item.title + ' dashboard';
+            model.locator = '#dashboard_content';
+        }
+        
         $mdDialog.show({
             controller: dashboardEmailModalController,
             template: dashboardEmailModalTemplate,
+            controllerAs: '$ctrl',
             parent: angular.element(document.body),
             targetEvent: event,
             clickOutsideToClose: true,
             fullscreen: true,
             locals: {
-                widgetId: widgetId
+                model,
             }
         })
         .then(function () {}, function () {});

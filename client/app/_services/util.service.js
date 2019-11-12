@@ -22,6 +22,9 @@
             showDeleteMessage,
             isElementInViewport,
             sortArrayByField,
+            removeRecipient,
+            checkAndTransformRecipient,
+            filterUsersForSend,
         }
 
         service.validations = {
@@ -330,6 +333,60 @@
                 rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
                 rect.right <= (window.innerWidth || document.documentElement.clientWidth)
             );
+        }
+
+        /**
+         * Common functions for email modals
+         * */
+
+        function removeRecipient(user, recipients) {
+            var index = recipients.indexOf(user.email);
+            if (index >= 0) {
+                recipients.splice(index, 1);
+            }
+        };
+
+        function checkAndTransformRecipient(currentUser, recipients, users) {
+            let user = {};
+    
+            if (typeof currentUser === 'object' && currentUser.email) {
+                user = currentUser;
+            } else {
+                if (!isValidRecipient(currentUser)) {
+                    messageService.error('Invalid email');
+    
+                    return null;
+                } 
+                if (isDuplicatedRecipient(currentUser, users)) {
+                    messageService.error('Duplicated email');
+    
+                    return null;
+                }
+                user.email = currentUser;
+            }
+    
+            recipients.push(user.email);
+            users.push(user);
+
+            return user;
+        };
+
+        function isValidRecipient(recipient) {
+            let reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+    
+            return (reg.test(recipient));
+        }
+    
+        function isDuplicatedRecipient(recipient, users) {
+            return users.find((user) => user.email === recipient)
+        }
+
+        function filterUsersForSend(usersFromDB, alreadyAddedUsers) {
+            return usersFromDB.filter((userFromDB) => {
+                return !alreadyAddedUsers.find((addedUser) => {
+                    return addedUser.id === userFromDB.id;
+                }) && userFromDB.email;
+            })
         }
 
         /**
