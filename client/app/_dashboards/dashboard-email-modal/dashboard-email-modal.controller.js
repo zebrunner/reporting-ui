@@ -8,7 +8,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($q,
         UtilService,
         users: [],
         querySearch,
-        submit,
+        sendEmail,
         keys: [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.SPACE],
         email: {
             subject: model.title,
@@ -19,22 +19,18 @@ const dashboardEmailModalController = function dashboardEmailModalController($q,
         }
     }
     let stopCriteria = '########';
-    let currentText = '';
     let usersSearchCriteria = {};
 
-    function submit() {
-        sendEmail(model.locator, angular.copy(vm.email)).then(function () {
-            hide();
-        });
-    };
+    function sendEmail() {
+       let email = angular.copy(vm.email);
 
-    function sendEmail(locator, email) {
        email.recipients =  email.recipients.toString();
        
-        return $screenshot.take(locator).then(function (multipart) {
+        return $screenshot.take(model.locator).then(function (multipart) {
             return DashboardService.SendDashboardByEmail(multipart, email).then(function (rs) {
                 if (rs.success) {
                     messageService.success('Email was successfully sent!');
+                    hide();
                 }
                 else {
                     messageService.error(rs.message);
@@ -45,7 +41,6 @@ const dashboardEmailModalController = function dashboardEmailModalController($q,
 
     function querySearch(criteria, alreadyAddedUsers) {
         usersSearchCriteria.query = criteria;
-        currentText = criteria;
         if (!criteria.includes(stopCriteria)) {
             stopCriteria = '########';
 

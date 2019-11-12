@@ -62,7 +62,7 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="send" class="md-raised md-primary" data-ng-click="$ctrl.submit()" data-ng-disabled="email_form.$invalid || !$ctrl.email.recipients.length">
+            <md-button id="send" class="md-raised md-primary" data-ng-click="$ctrl.sendEmail()" data-ng-disabled="email_form.$invalid || !$ctrl.email.recipients.length">
                 Send
             </md-button>
         </md-dialog-actions>
