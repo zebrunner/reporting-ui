@@ -48,7 +48,7 @@
                 </a>
             </li>
             <li has-any-permission="['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS']" toggle-menu ui-sref-active="active">
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="views" data-ng-click="$ctrl.loadViews();">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="views" data-ng-click="$ctrl.loadViews($event);">
                     <i class="material-icons">remove_red_eye</i><span>Views</span>
                 </a>
                 <ul class="width-icon">

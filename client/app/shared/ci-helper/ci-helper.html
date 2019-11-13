@@ -1,6 +1,6 @@
 <form name="launcher_form">
     <zf-modal modal-class="ci-runner" class="ci-runner-container">
-        <zf-modal-helper-container class="ci-runner-container_helper" ng-show="! isMobile || cardNumber === 0">
+        <zf-modal-helper-container class="ci-runner-container_helper" ng-show="!$ctrl.isMobile || cardNumber === 0">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
                 <button type="button" ng-click="addRepo();" ng-disabled="!clientId" has-any-permission="['MODIFY_LAUNCHERS']" class="zf-primary-button">
@@ -60,7 +60,7 @@
             </div>
             <div class="ci-runner-container_content_actions show-phone">
                 <md-button class="md-raised md-primary pull-right" ng-click="chooseLauncherPhone(launcher);"
-                           ng-disabled="! launcher.id">
+                           ng-disabled="!launcher.id">
                     Next
                 </md-button>
             </div>
@@ -198,72 +198,92 @@
                     <i ng-click="toEditLauncher(launcher);" has-any-permission="['MODIFY_LAUNCHERS']" class="material-icons hide-phone">edit</i>
                 </div>
             </div>
-            <div class="ci-runner-container__platforms"
-                ng-class="{'_with-controls': $ctrl.platformControls.length && $ctrl.platformControls[0].items.length}"
-                ng-if="$ctrl.platforms.length">
-                <div class="ci-runner-container__platforms-header">
-                        <md-radio-group ng-model="$ctrl.platformModel.platform"
-                            layout="row"
-                            layout-wrap
-                            ng-change="$ctrl.onPlatformSelect()">
-                            <md-radio-button ng-value="null">None</md-radio-button>
-                            <md-radio-button ng-value="platform" ng-repeat="platform in $ctrl.platforms track by platform.id">{{platform.name}}</md-radio-button>
-                        </md-radio-group>
+            <div class="ci-runner-container__scrollable">
+                <div class="ci-runner-container__providers">
+                    <md-chips class="filter-chip custom-filter" ng-model="$ctrl.providers" md-removable="false" readonly="true">
+                        <md-chip-template>
+                            <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.onProviderSelect($chip)">
+                                <img class="custom-filter__img" ng-if="$chip.icon" ng-src="{{$chip.icon}}"/>
+                                <span>{{$chip.name}}</span>
+                            </div>
+                        </md-chip-template>
+                    </md-chips>
                 </div>
-                <div class="ci-runner-container__platforms-controls zf-display-table"
-                    ng-if="$ctrl.platformControls.length">
+                <div class="ci-runner-container__platforms"
+                    ng-class="{'_with-controls': $ctrl.platformControls.length && $ctrl.platformControls[0].items.length}"
+                    ng-if="$ctrl.platforms.length">
+                    <div class="ci-runner-container__platforms-header">
+                            <md-radio-group ng-model="$ctrl.platformModel.platform"
+                                layout="row"
+                                layout-wrap
+                                ng-change="$ctrl.onPlatformSelect()">
+                                <md-radio-button ng-value="null">None</md-radio-button>
+                                <md-radio-button ng-value="platform" ng-repeat="platform in $ctrl.platforms track by platform.id">{{platform.name}}</md-radio-button>
+                            </md-radio-group>
+                    </div>
+                    <div class="ci-runner-container__platforms-controls"
+                        ng-if="$ctrl.platformControls.length">
+                        <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
+                            layout-gt-xs="row"
+                            layout-align-gt-xs="start center"
+                            ng-if="platformControl.items.length"
+                            ng-repeat="platformControl in $ctrl.platformControls track by $index">
+                            <div class="zf-label" flex="none">
+                                <show-part text="platformControl.key" limit="30">
+                                    <md-tooltip md-direction="top">{{platformControl.key}}</md-tooltip>
+                                </show-part>
+                            </div>
+                            <div class="ci-runner-container_content_builder_container_item">
+                                <md-input-container class="no-margin _gray-bg">
+                                    <label>{{platformControl.key}}</label>
+                                    <md-select required
+                                        name="{{platformControl.key}}"
+                                        ng-model="$ctrl.platformModel[platformControl.key]"
+                                        ng-model-options="{trackBy: '$value.id'}"
+                                        ng-change="platformControl.onChange(platformControl)">
+                                        <md-option ng-repeat="item in platformControl.items"
+                                            ng-value="item">
+                                            {{item.name}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ci-runner-container_content_builder">
                     <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
-                        ng-if="platformControl.items.length"
-                        ng-repeat="platformControl in $ctrl.platformControls track by $index">
-                        <div class="zf-label">
-                            <show-part text="platformControl.key" limit="30">
-                                <md-tooltip md-direction="top">{{platformControl.key}}</md-tooltip>
+                        layout-gt-xs="row"
+                        layout-align-gt-xs="start center"
+                        ng-repeat="(key, item) in jsonModel track by $index">
+                        <div class="zf-label" flex="none">
+                            <show-part text="key" limit="25">
+                                <md-tooltip md-direction="top">{{key}}</md-tooltip>
                             </show-part>
                         </div>
-                        <div class="ci-runner-container_content_builder_container_item">
+                        <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">
+                                <md-input-container class="_gray-bg no-margin" ng-if="builtLauncher.type[key] === 'int'">
+                                    <label>{{key}}</label>
+                                    <input type="number" ng-model="builtLauncher.model[key]"/>
+                                </md-input-container>
+                                <md-input-container class="_gray-bg no-margin" ng-if="builtLauncher.type[key] !== 'int'">
+                                    <label>{{key}}</label>
+                                    <input type="text" ng-model="builtLauncher.model[key]"/>
+                                </md-input-container>
+                        </div>
+                        <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">
                             <md-input-container class="no-margin _gray-bg">
-                                <label>{{platformControl.key}}</label>
-                                <md-select required
-                                    name="{{platformControl.key}}"
-                                    ng-model="$ctrl.platformModel[platformControl.key]"
-                                    ng-model-options="{trackBy: '$value.id'}"
-                                    ng-change="platformControl.onChange(platformControl)">
-                                    <md-option ng-repeat="item in platformControl.items"
-                                        ng-value="item">
-                                        {{item.name}}
+                                <label>{{key}}</label>
+                                <md-select ng-model="builtLauncher.model[key]">
+                                    <md-option ng-repeat="val in item" ng-value="val">
+                                        {{val}}
                                     </md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="ci-runner-container_content_builder zf-display-table">
-                <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}" ng-repeat="(key, item) in jsonModel track by $index">
-                    <div class="zf-label">
-                        <show-part text="key" limit="30">
-                            <md-tooltip md-direction="top">{{key}}</md-tooltip>
-                        </show-part>
-                    </div>
-                    <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">
-                        <md-input-container class="_gray-bg no-margin">
-                            <label>{{key}}</label>
-                            <input type="number" ng-if="builtLauncher.type[key] === 'int'" ng-model="builtLauncher.model[key]"/>
-                            <input type="text" ng-if="builtLauncher.type[key] !== 'int'" ng-model="builtLauncher.model[key]"/>
-                        </md-input-container>
-                    </div>
-                    <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">
-                        <md-input-container class="no-margin _gray-bg">
-                            <label>{{key}}</label>
-                            <md-select ng-model="builtLauncher.model[key]">
-                                <md-option ng-repeat="val in item" ng-value="val">
-                                    {{val}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                    </div>
-                    <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'boolean'">
-                        <md-checkbox ng-model="builtLauncher.model[key]" aria-label="checkbox"></md-checkbox>
+                        <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'boolean'">
+                            <md-checkbox ng-model="builtLauncher.model[key]" aria-label="checkbox"></md-checkbox>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -271,7 +291,7 @@
                 <md-button ng-click="cancelLauncher();" class="md-raised" ng-if="cardNumber === 2">
                     Cancel
                 </md-button>
-                <md-button class="md-raised" ng-click="navigateBack();" ng-if="cardNumber === 3 && isMobile">
+                <md-button class="md-raised" ng-click="navigateBack();" ng-if="cardNumber === 3 && $ctrl.isMobile">
                     Back
                 </md-button>
                 <md-button class="md-raised md-primary pull-right" ng-click="build(launcher, launcher_form);" ng-disabled="!launcher.job.jobURL" ng-if="cardNumber === 2 || cardNumber === 3">

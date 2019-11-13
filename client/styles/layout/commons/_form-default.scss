@@ -333,11 +333,23 @@ md-chips.filter-chip.custom-filter {
             display: none;
         }
     }
+
+    .custom-filter__img {
+        margin-top: -2px;
+        margin-right: 4px;
+        width: 12px;
+        height: 12px;
+        overflow: hidden;
+        object-fit: contain;
+    }
     
     md-chips-wrap.md-chips{
         display: flex;
         align-items: center;
         height: 100%;
+        &, &.md-focused {
+            box-shadow: none;
+        }
         md-chip {
             background-color: transparent;
             letter-spacing: 0.1px;

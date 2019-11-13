@@ -2,13 +2,15 @@
 import SearchModalController from './modal/search-modal.controller';
 import modalTemplate from './modal/search-modal.html';
 
-const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService, $mdDialog) {
+const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $scope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService, $mdDialog) {
     'ngInject';
 
     const mobileWidth = 600;
     const subjectName = 'TEST_RUN';
     const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS'];
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
+    let scrollTickingTimeout = null;
+    const scrollablePerentElement = document.querySelector('.page-wrapper');
 
     const vm = {
         isMobile: windowWidthService.isMobile,
@@ -19,6 +21,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         isOnlyAdditionalSearchActive: testsRunsService.isOnlyAdditionalSearchActive,
         fastSearch: {},
         statuses: STATUSES,
+        scrollTicking: false,
         selectedRange: {
             selectedTemplate: null,
             selectedTemplateName: null,
@@ -48,6 +51,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         vm.fastSearchBlockExpand = true;
         loadFilters();
         readStoredParams();
+        bindEventListeners();
     }
 
     function closeModal() {
@@ -251,6 +255,32 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
     function showSearchFilters() {
         vm.showAdvancedSearchFilters = ! vm.showAdvancedSearchFilters;
     };
+
+    function bindEventListeners() {
+        vm.$onDestroy = () => {
+            if (vm.isMobile) {
+                angular.element(scrollablePerentElement).off('scroll.hideFilterButton', onScroll);
+            }
+        }
+        if (vm.isMobile) {
+            angular.element(scrollablePerentElement).on('scroll.hideFilterButton', onScroll);
+        }
+    }
+
+    function onScroll() {
+        if (!vm.scrollTicking) {
+            vm.scrollTicking = true;
+            $scope.$apply();
+            scrollTickingTimeout = $timeout(() => {
+                vm.scrollTicking = false;
+            }, 300);
+        } else {
+            $timeout.cancel(scrollTickingTimeout);
+            scrollTickingTimeout = $timeout(() => {
+                vm.scrollTicking = false;
+            }, 300);
+        }
+    }
 }
 
 export default TestsRunsSearchController;

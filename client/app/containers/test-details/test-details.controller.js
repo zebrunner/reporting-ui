@@ -101,6 +101,7 @@ const testDetailsController = function testDetailsController(
         get isStausFilteringActive() { return isStausFilteringActive(); },
         get isSortingActive() { return isSortingActive(); },
 
+        getEptyTestsMessage,
         toggleGroupingFilter,
         changeViewMode,
         orderByElapsed,
@@ -564,6 +565,22 @@ const testDetailsController = function testDetailsController(
         }
 
         return `artifacts:${type}`;
+    }
+
+    function getEptyTestsMessage(groupName) {
+        let message = '';
+
+        if (vm.empty && vm.testRun.status !== 'IN_PROGRESS') {
+            message = 'No tests';
+        }
+        if (!vm.empty && !vm.activeTests.length && vm.isStausFilteringActive && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
+            message = 'No tests matching selected filters';
+        }
+        if (vm.testRun.status === 'IN_PROGRESS' && (vm.empty || (!vm.isStausFilteringActive && !vm.activeTests.length && vm.testRun.queued)) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
+            message = 'No tests yet';
+        }
+
+        return message;
     }
 
     /* --------------------- Filtering and ordering helpers --------------------- */

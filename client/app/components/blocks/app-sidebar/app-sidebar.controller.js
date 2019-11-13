@@ -137,12 +137,24 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
             });
     }
 
-    function loadViews() {
-        vm.viewsLoaded = false;
-        getViews()
-            .then(function() {
-                vm.viewsLoaded = true;
-            });
+    function loadViews(e) {
+        if (vm.viewsLoading || vm.viewsLoaded) { return; }
+
+        $timeout(() => {
+            const $el = angular.element(e.target).closest('li');
+
+            //we are closing menu by clicking on link second time
+            if ($el.length && !$el.hasClass('open')) { return; }
+
+            vm.viewsLoading = true;
+            getViews()
+                .then(function() {
+                    vm.viewsLoaded = true;
+                })
+                .finally(() => {
+                    vm.viewsLoading = false;
+                });
+        });
     }
 
     function loadDashboards() {

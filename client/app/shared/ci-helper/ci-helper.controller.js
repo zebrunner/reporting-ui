@@ -12,12 +12,15 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     let isMultitenant = false;
     let platformsConfig = null;
-    const platformsConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/platforms.json';
+    const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
     const vm = {
         platforms: [],
         platformModel: {},
+        providers: [],
 
+        onProviderSelect,
         onPlatformSelect,
+        get isMobile() { return windowWidthService.isMobile(); }
     };
 
     vm.$onInit = initController;
@@ -34,7 +37,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     $scope.launcherScan = {
         branch: 'master'
     };
-    $scope.isMobile = windowWidthService.isMobile();
 
     const TENANT = $rootScope.globals.auth.tenant;
 
@@ -350,6 +352,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
 
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
+        if ($scope.launcher && $scope.launcher.id === launcher.id) { return; }
+        handleProviderDeselection();
         highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
         $scope.needServer = false;
@@ -407,8 +411,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.chooseLauncherPhone = function (launcher) {
-        console.log(launcher);
-        $scope.chooseLauncher(launcher, true);
         $scope.cardNumber = 3;
     };
 
@@ -930,8 +932,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 }
             });
         });
-        const browsersConfigPromise = getBrowsersConfig();
-        $q.all([launchersPromise, scmAccountsPromise, browsersConfigPromise]).then(function (data) {
+        const providersConfigPromise = $q.all(getProvidersConfig());
+        $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise]).then(function (data) {
             $scope.scmAccounts.forEach(function (scmAccount) {
                 $scope.launchers.forEach(function (launcher) {
                     if (launcher.scmAccountType.id === scmAccount.id) {
@@ -943,17 +945,17 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         });
     }
 
-    function initPlatforms() {
-        if (!platformsConfig || !platformsConfig.rootKey) { return; }
+    function initPlatforms(data) {
+        if (!data || !data.rootKey) { return; }
 
+        platformsConfig = data;
         vm.platforms = [...platformsConfig.data[platformsConfig.rootKey]];
     }
 
     function onPlatformSelect() {
         clearPlatformControlsData();
-        if (!vm.platformModel.platform) {
-            vm.platformModel = { platform: vm.platformModel.platform };
-        } else if (vm.platformModel.platform.child) {
+        resetPlatformModel(vm.platformModel.platform);
+        if (vm.platformModel.platform && vm.platformModel.platform.child) {
             prepareChildControl(vm.platformModel.platform);
         }
     }
@@ -973,10 +975,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
         vm.platformControls = [...vm.platformControls, childControl];
 
-        if (!skipDefault && data.default) {
-            defaultItem = childControl.items.find(item => item.id === data.default);
-            defaultItem && (vm.platformModel[field] = defaultItem);
-        }
+        defaultItem = data.default ? childControl.items.find(item => item.id === data.default) : childControl.items[0];
+        defaultItem && (vm.platformModel[field] = defaultItem);
 
         if (defaultItem) {
             if (data.versions) {
@@ -1001,10 +1001,16 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
         vm.platformControls = [...vm.platformControls, childControl];
 
-        if (!skipDefault && data['default-versions']) {
-            defaultItem = childControl.items.find(item => item.id === data['default-versions']);
-            defaultItem && (vm.platformModel[field] = defaultItem);
+        if (data['default-versions']) {
+            if (typeof data['default-versions'] === 'string') {
+                defaultItem = childControl.items.find(item => item.id === data['default-versions']);
+            } else {
+                defaultItem = childControl.items.find(item =>  data['default-versions'].includes(item.id));
+            }
         }
+
+        defaultItem = defaultItem ? defaultItem : childControl.items[0];
+        defaultItem && (vm.platformModel[field] = defaultItem);
     }
 
     function onPlatformControlSelect(control) {
@@ -1016,9 +1022,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         filterPlatformModel();
 
         if (versionsData && !control.key.includes('-versions')) {
-            prepareVersionsControl(parentItem, versionsData, true);
+            prepareVersionsControl(parentItem, versionsData);
         } else if (parentItem.child) {
-            prepareChildControl(parentItem, true);
+            prepareChildControl(parentItem);
         }
     }
 
@@ -1034,22 +1040,82 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     function extractPlatformSelections() {
         Object.keys(vm.platformModel).forEach(key => {
-            $scope.builtLauncher.model[key] = vm.platformModel[key].value;
+            if (vm.platformModel[key]) {
+                $scope.builtLauncher.model[key] = vm.platformModel[key].value;
+            }
         });
+    }
+
+    function clearPlatforms() {
+        resetPlatformModel();
+        vm.platforms = [];
+        platformsConfig = null;
+        clearPlatformControlsData();
     }
 
     function clearPlatformControlsData() {
         vm.platformControls = [];
     }
 
-    function getBrowsersConfig() {
-        return $http.get(platformsConfigURL)
+    function resetPlatformModel(platform) {
+        vm.platformModel = {};
+
+        if (platform) { vm.platformModel.platform = platform; }
+    }
+
+    function getBrowsersConfig(url) {
+        return $http.get(url);
+    }
+
+    function onProviderSelect(selectedProvider) {
+        if (vm.chipsCtrl.selectedChip === -1 || selectedProvider !== vm.chipsCtrl.items[vm.chipsCtrl.selectedChip]) {
+            handleProviderSelection(selectedProvider);
+        } else {
+            handleProviderDeselection();
+        }
+    }
+
+    function handleProviderSelection(provider) {
+        const index = vm.chipsCtrl.items.findIndex(({ id }) => {
+            return provider.id === id;
+        })
+
+        clearPlatforms()
+        vm.chipsCtrl.selectedChip = index;
+        provider.data && initPlatforms(provider.data);
+    }
+
+    function handleProviderDeselection() {
+        clearPlatforms();
+        vm.chipsCtrl && (vm.chipsCtrl.selectedChip = -1);
+    }
+
+    function getProvidersConfig() {
+        return $http.get(providersConfigURL)
             .then(response => {
-                platformsConfig = response.data;
-                initPlatforms();
+                const url = new URL(providersConfigURL);
+                const path = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
+            
+                vm.providers = response.data;
+
+                return vm.providers.map(config => {
+                    if (config.configFile) {
+                        url.pathname = path + config.configFile;
+
+                        return getBrowsersConfig(url.href)
+                            .then(res => {
+                                config.data = res.data;
+                            })
+                            .catch((error) => {
+                                console.error('Unable to load the platforms config');
+                            });
+                    }
+
+                    return $q.resolve();
+                });
             })
-            .catch(() => {
-                console.error('Can\'t load platforms config', error);
+            .catch((error) => {
+                console.error('Unable to load the providers config');
             });
     }
 

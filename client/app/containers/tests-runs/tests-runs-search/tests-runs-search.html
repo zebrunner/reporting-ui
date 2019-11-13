@@ -63,7 +63,7 @@
             <md-button ng-show="$ctrl.isSearchActive()" class="md-raised pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></md-button>
         </div>
     </div>
-    <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile() && !$ctrl.isFilterActive()" md-direction="up" class="md-scale md-fab-bottom-right">
+    <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile() && !$ctrl.isFilterActive() && !$ctrl.scrollTicking" md-direction="up" class="md-scale md-fab-bottom-right">
         <md-fab-trigger>
             <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" ng-click="$ctrl.showSearchDialog($event)" md-visible="tooltipVisible">
                 <div class="search-fab" ng-class="{' _list': !$ctrl.isModalSearchActive(), '_checked-list': $ctrl.isModalSearchActive()}" aria-hidden="true"></div>

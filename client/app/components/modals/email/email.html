@@ -29,8 +29,9 @@
                                     class="photo-chip"
                                     filter-selected=true
                                     md-autocomplete-snap
-                                    md-transform-chip="checkAndTransformRecipient($chip)"
-                                    md-on-remove="removeRecipient($chip)"
+                                    md-transform-chip="UtilService.checkAndTransformRecipient($chip, email.recipients, users)"
+                                    md-on-remove="UtilService.removeRecipient($chip, email.recipients)"
+                                    md-add-on-blur="true"
                                     md-separator-keys="keys">
                             <md-chip-template name="chip">
                                 <profile-photo ng-model="$chip.photoURL" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
@@ -61,7 +62,7 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="send" class="md-raised btn-w-md md-primary" data-ng-click="sendEmail()" data-ng-disabled="email_form.$invalid">
+            <md-button id="send" class="md-raised btn-w-md md-primary" data-ng-click="sendEmail()" data-ng-disabled="email_form.$invalid || !email.recipients.length">
                 Send
             </md-button>
         </md-dialog-actions>

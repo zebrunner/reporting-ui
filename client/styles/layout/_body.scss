@@ -159,7 +159,7 @@ md-chip:not(:hover) .show-icon-on-hover,
 }
 
 .hide-phone {
-    @media (max-width: $screen-phone) {
+    @media (max-width: $md-screen-phone) {
         display: none !important;
     }
 }
@@ -171,7 +171,7 @@ md-chip:not(:hover) .show-icon-on-hover,
 }
 
 .show-phone {
-    @media (min-width: $screen-phone + 1px) {
+    @media (min-width: $md-screen-phone + 1px) {
         display: none !important;
     }
 }
@@ -2469,7 +2469,7 @@ $light-inprogress: #68c9fd;
     padding-bottom: 20px !important;
 }
 .__ci-runner-lg-title {
-    @media(min-width: $screen-phone + 1px) {
+    @media(min-width: $md-screen-phone + 1px) {
         height: 20px !important;
         line-height: 20px !important;
     }
@@ -2479,23 +2479,23 @@ $light-inprogress: #68c9fd;
     }
 }
 .ci-runner-container {
+    &__providers {
+        padding-bottom: 17px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(1, 22, 39, 0.15);
+        md-chips.filter-chip.custom-filter md-chips-wrap.md-chips {
+            display: block;
+        }
+    }
     &__platforms {
-            padding-bottom: 25px;
-            border-bottom: 1px solid rgba($dark-new, .15);
-            margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba($dark-new, .15);
+        margin-bottom: 20px;
         &-header {
             ._with-controls & {
                 margin-bottom: 15px;
             }
         }
-        &._with-controls {
-            padding-bottom: 10px;
-        }
-    }
-    * {
-        font-weight: 500;
-        font-size: 14px;
-        letter-spacing: 0.1px;
     }
 
     .close-button {
@@ -2505,7 +2505,7 @@ $light-inprogress: #68c9fd;
     .md-dialog-content > [ng-transclude] {
         min-height: 718px !important;
 
-        @media(max-width: $screen-phone) {
+        @media(max-width: $md-screen-phone) {
             min-height: auto !important;
         }
     }
@@ -2568,7 +2568,7 @@ $light-inprogress: #68c9fd;
         width: 100% !important;
         height: auto;
 
-        @media(max-width: $screen-phone) {
+        @media(max-width: $md-screen-phone) {
             width: 100% !important;
             padding: 75px 16px 20px 16px !important;
         }
@@ -2600,7 +2600,7 @@ $light-inprogress: #68c9fd;
 
         &_title {
             font-size: 0;
-            @media(max-width: $screen-phone) {
+            @media(max-width: $md-screen-phone) {
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -2618,7 +2618,7 @@ $light-inprogress: #68c9fd;
                 color: black;
                 font-size: 14px;
 
-                @media(max-width: $screen-phone) {
+                @media(max-width: $md-screen-phone) {
                     color: black;
                     letter-spacing: 0.4px;
                     font-size: 18px !important;
@@ -2674,7 +2674,7 @@ $light-inprogress: #68c9fd;
                         max-width: 228px;
                         margin-right: 12px;
                     }
-                    @media (max-width: $breakpoint-mobile) {
+                    @media (max-width: $md-screen-phone) {
                         flex-wrap: wrap;
                         button {
                             margin: 18px 0;
@@ -2772,7 +2772,7 @@ $light-inprogress: #68c9fd;
             left: calc(34% + 20px);
             bottom: 20px;
 
-            @media(max-width: $screen-phone) {
+            @media(max-width: $md-screen-phone) {
                 right: 0;
                 width: 100%;
                 left: 0;
@@ -2799,7 +2799,7 @@ $light-inprogress: #68c9fd;
                 margin-right: 112px;
                 width: calc(66% - 224px);
 
-                @media(max-width: $screen-phone) {
+                @media(max-width: $md-screen-phone) {
                     left: 0;
                     width: calc(100% - 224px);
                 }
@@ -2808,18 +2808,9 @@ $light-inprogress: #68c9fd;
 
         &_builder {
             padding-bottom: 60px;
-            /*display: block !important;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            position: relative;
-            // title top + button heights
-            height: calc(100% - 41px - 36px);
-            margin-left: -20px;*/
 
-            @media(max-width: $screen-phone) {
+            @media(max-width: $md-screen-phone) {
                 display: block !important;
-                height: 100%;
-                overflow: auto;
 
                 input, md-input-container, md-select {
                     width: 100% !important;
@@ -2828,7 +2819,6 @@ $light-inprogress: #68c9fd;
             &_container {
                 font-size: 0;
                 position: relative;
-                height: 36px;
                 &:not(.builder-boolean) {
                     
                     @media (max-width: 768px) {
@@ -2843,18 +2833,11 @@ $light-inprogress: #68c9fd;
                     }
                 }
                 > .zf-label {
-                    line-height: 36px !important;
-                    min-width: 204px;
+                    line-height: 36px;
                     .zf-show-part {
                         .ng-binding {
                             font-weight: normal;
                             color: rgba(1, 22, 39, 0.8);
-
-                            @media(max-width: $screen-phone) {
-                                letter-spacing: 0.2px;
-                                font-size: 11px;
-                                opacity: 0.6;
-                            }
 
                             [ng-transclude] {
                                 cursor: text;
@@ -2864,49 +2847,17 @@ $light-inprogress: #68c9fd;
                     }
 
                 }
-                @media (max-width: $screen-sm) {
-                    display: block !important;
-                }
-                @media (max-width: $screen-sm) {
-                    &:not(.builder-boolean) {
-                        height: 72px;
-                        padding-bottom: 18px;
-                        > div {
-                            display: block !important;
-                        }
-                    }
-
-                    &.builder-boolean {
-                        display: block;
-                        padding-top: 12px;
-                        height: 40px;
-                        padding-bottom: 10px;
-                         > div {
-                             height: 36px;
-                             width: 20px;
-                             display: inline-block !important;
-                             &.zf-label {
-                                 width: calc(100% - 21px);
-                             }
-                         }
-                    }
-
-                    > .zf-label {
-                        line-height: 20px !important;
-                    }
-                }
 
                 &_item {
                     display: inline-block;
                     vertical-align: bottom;
-                    padding-bottom: 16px;
-                    width: 228px;
+                    width: 240px;
                     md-input-container {
                         label {
                             display: none;
                         }
                     }
-                    @media(max-width: $screen-phone) {
+                    @media(max-width: $md-screen-phone) {
                         width: 100%;
                     }
 
@@ -2992,7 +2943,7 @@ $light-inprogress: #68c9fd;
         padding-top: 20px !important;
         padding-left: 20px !important;
 
-        @media(max-width: $screen-phone) {
+        @media(max-width: $md-screen-phone) {
             width: 100% !important;
             padding: 0 !important;
         }
@@ -3000,7 +2951,7 @@ $light-inprogress: #68c9fd;
 
             padding: 20px 20px 0 0;
 
-            @media(max-width: $screen-phone) {
+            @media(max-width: $md-screen-phone) {
                 padding: 30px 24px;
             }
 
@@ -3010,22 +2961,10 @@ $light-inprogress: #68c9fd;
                 input, label {
                     font-weight: normal;
 
-                    @media(max-width: $screen-phone) {
+                    @media(max-width: $md-screen-phone) {
                         font-size: 16px;
                     }
                 }
-                // md-icon {
-                //     top: 6px;
-                //     right: -6px !important;
-                //     font-size: 20px;
-                //     color: rgba(127, 127, 127, 0.75);
-
-                //     @media(max-width: $screen-phone) {
-                //         font-size: 24px;
-                //         top: 4px;
-                //         right: -4px !important;
-                //     }
-                // }
                 .md-errors-spacer {
                     display: none;
                 }
@@ -3045,7 +2984,7 @@ $light-inprogress: #68c9fd;
                 font-weight: normal;
                 flex-grow: 0;
 
-                @media(max-width: $screen-phone) {
+                @media(max-width: $md-screen-phone) {
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -3061,7 +3000,7 @@ $light-inprogress: #68c9fd;
                 height: 56px;
             }
 
-            @media(max-width: $screen-phone) {
+            @media(max-width: $md-screen-phone) {
                 font-size: 18px;
                 letter-spacing: 0.4px;
                 padding-left: 16px;
@@ -3074,22 +3013,23 @@ $light-inprogress: #68c9fd;
         }
         &_section {
             border-radius: 4px;
-            height: calc(100% - 70px);
+            height: calc(100% - 75px);
             min-width: 200px;
             overflow: scroll;
             flex-grow: 1;
             margin-top: 20px;
+            padding-bottom: 10px;
 
             @media(max-width: $screen-tablet) {
                 height: calc(100% - 94px);
             }
 
-            @media(min-width: $screen-phone + 1px) {
+            @media(min-width: $md-screen-phone + 1px) {
                 margin-left: -10px;
                 padding-left: 10px;
             }
 
-            @media(max-width: $screen-phone) {
+            @media(max-width: $md-screen-phone) {
                 min-height: calc(100% - 206px);
                 height: calc(100% - 206px);
                 margin-top: 0;
@@ -3103,7 +3043,7 @@ $light-inprogress: #68c9fd;
                 margin: 0;
                 padding: 0 20px 8px 16px;
 
-                @media(max-width: $screen-phone) {
+                @media(max-width: $md-screen-phone) {
                     padding: 0 24px 8px $folder-container-phone-left-padding;
                 }
 
@@ -3114,7 +3054,7 @@ $light-inprogress: #68c9fd;
                 &_folder {
                     position: relative;
 
-                    @media(max-width: $screen-phone) {
+                    @media(max-width: $md-screen-phone) {
                         padding-bottom: 8px;
                     }
                     &_icon {
@@ -3154,7 +3094,7 @@ $light-inprogress: #68c9fd;
                         line-height: 20px;
                         color: #7f7f7f;
 
-                        @media(max-width: $screen-phone) {
+                        @media(max-width: $md-screen-phone) {
                             font-size: 16px;
                             color: black;
                         }
@@ -3173,19 +3113,19 @@ $light-inprogress: #68c9fd;
                         margin: 0 0 0 $item-list-margin;
                         padding: 0;
                         &_item, &_item-empty {
-                            padding-top: 12px;
+                            padding: 6px 0;
                             position: relative;
 
-                            @media(max-width: $screen-phone) {
+                            @media(max-width: $md-screen-phone) {
                                 font-size: 16px;
+                                line-height: 20px;
                                 padding: 20px 0;
-                                height: 60px;
                             }
 
                             &.chosen-launcher {
                                 color: black;
 
-                                @media(max-width: $screen-phone) {
+                                @media(max-width: $md-screen-phone) {
                                     background-color: rgba($dark-new, 0.05);
                                 }
                             }
@@ -3193,7 +3133,7 @@ $light-inprogress: #68c9fd;
                         &_item {
                             color: #7f7f7f;
 
-                            @media(max-width: $screen-phone) {
+                            @media(max-width: $md-screen-phone) {
                                 width: 100vw;
                                 left: calc(-#{$folder-container-phone-left-padding} - #{$item-list-margin});
                                 padding-left: calc(#{$folder-container-phone-left-padding} + #{$item-list-margin});
@@ -3207,7 +3147,7 @@ $light-inprogress: #68c9fd;
                                 min-height: 20px;
                                 color: $brand-light;
 
-                                @media(max-width: $screen-phone) {
+                                @media(max-width: $md-screen-phone) {
                                     left: $item-list-margin;
                                 }
                             }
@@ -3267,12 +3207,13 @@ $light-inprogress: #68c9fd;
                     }
                 }
 
-                &:hover {
-                    .folder-container_folder_icon_settings {
-                        display: inline-block;
+                @media screen and (min-width: $md-screen-phone + 1px) {
+                    &:hover {
+                        .folder-container_folder_icon_settings {
+                            display: inline-block;
+                        }
                     }
                 }
-
             }
 
             .folder-container-empty {
@@ -3284,7 +3225,7 @@ $light-inprogress: #68c9fd;
                 font-style: italic;
                 font-weight: normal;
 
-                @media(max-width: $screen-phone) {
+                @media(max-width: $md-screen-phone) {
                     font-size: 16px;
                     padding: 20px 0 20px 44px;;
                     height: 60px;
@@ -3300,7 +3241,7 @@ $light-inprogress: #68c9fd;
                 position: relative;
                 padding-right: 10px;
 
-                @media(max-width: $screen-phone) {
+                @media(max-width: $md-screen-phone) {
                     height: 52px;
                     line-height: 52px;
                     * {
@@ -3312,11 +3253,11 @@ $light-inprogress: #68c9fd;
                     position: relative;
                     margin-right: 38px;
 
-                    @media(max-width: $screen-phone) {
+                    @media(max-width: $md-screen-phone) {
                         padding-left: 24px;
                     }
 
-                    @media(min-width: $screen-phone) {
+                    @media(min-width: $md-screen-phone) {
                         &:before {
                             content:'';
                             width:100%;
@@ -3350,7 +3291,7 @@ $light-inprogress: #68c9fd;
                 &:hover, &_selected {
                     cursor: pointer;
 
-                    @media(max-width: $screen-phone) {
+                    @media(max-width: $md-screen-phone) {
                         background-color: #f4f4f4;
                     }
                 }
