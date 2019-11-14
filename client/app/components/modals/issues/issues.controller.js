@@ -198,6 +198,7 @@ const IssuesModalController = function IssuesModalController(
         vm.newIssue.status = null;
         vm.newIssue.assignee = null;
         vm.newIssue.reporter = null;
+        vm.newIssue.blocker = false;
         vm.isIssueClosed = false;
         vm.isIssueFound = false;
         vm.isNewIssue = true;
