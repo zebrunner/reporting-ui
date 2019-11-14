@@ -39,6 +39,7 @@
                             </md-chip-template>
                             <md-autocomplete
                                 md-autoselect
+                                ng-model-options="{ debounce: 700 }"
                                 md-no-cache="true"
                                 md-search-text="searchText"
                                 md-items="user in $ctrl.querySearch(searchText, $ctrl.users)"
