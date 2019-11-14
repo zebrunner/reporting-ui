@@ -3,6 +3,9 @@
 import dashboardSettingsModalController from '../../../shared/modals/dashboard-settings-modal/dashboard-settings-modal.controller';
 import dashboardSettingsModalTemplate from '../../../shared/modals/dashboard-settings-modal/dashboard-settings-modal.html';
 
+import deleteProjectModalController from '../../../shared/modals/delete-project-modal/delete-project-modal.controller';
+import deleteProjectModalTemplate from '../../../shared/modals/delete-project-modal/delete-project-modal.html';
+
 import uploadImageModalController
     from '../../../shared/modals/upload-image-modal/upload-image-modal.controller';
 import uploadImageModalTemplate
@@ -36,6 +39,7 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
         showUploadImageDialog,
         chooseProject,
         showDashboardSettingsModal,
+        showDeleteModal,
         selectedProjectShortName: '',
 
         dashboardSortableOptions: {
@@ -55,6 +59,23 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
     };
 
     vm.$onInit = initController;
+
+    function showDeleteModal(currentProject) {
+        $mdDialog.show({
+            controller: deleteProjectModalController,
+            template: deleteProjectModalTemplate,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            controllerAs: '$ctrl',
+            clickOutsideToClose: true,
+            fullscreen: true,
+            autoWrap: false,
+            locals: {
+                project: currentProject,
+                projects: vm.projects.filter((project) => { return project.id !== currentProject.id && project.name !== 'ALL'; })
+            }
+        })
+    }
 
     function activateDashboardsSorter(activate) {
         vm.dashboardSortableOptions.disabled = ! activate;

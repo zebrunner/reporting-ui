@@ -6,12 +6,13 @@
         .factory('ProjectService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', ProjectService])
 
     function ProjectService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
-        var service = {};
-
-        service.createProject = createProject;
-        service.deleteProject = deleteProject;
-        service.updateProject = updateProject;
-        service.getAllProjects = getAllProjects;
+        const service = {
+            deleteProjectWithReassign,
+            createProject,
+            deleteProject,
+            updateProject,
+            getAllProjects,
+        };
 
         return service;
 
@@ -21,6 +22,10 @@
 
         function deleteProject(id) {
             return $httpMock.delete(API_URL + '/api/projects/' + id).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete project'));
+        }
+
+        function deleteProjectWithReassign(id, reassignTo) {
+            return $httpMock.delete(API_URL + '/api/projects/' + id + '?reassignTo=' + reassignTo).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete project'));
         }
 
         function updateProject(project) {

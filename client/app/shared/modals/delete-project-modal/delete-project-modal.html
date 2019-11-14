@@ -1,0 +1,35 @@
+<md-dialog flex="50" zafira-background-theme="modal">
+    <form class="form-validation" novalidate name="delete_form" ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 id="modalTitle">Delete project</h2>
+                <span flex></span>
+                <md-button id="close" class="md-icon-button _default-md-style" ng-click="$ctrl.closeModal()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="warning-block">
+                    This action <span class="warning-block__text _important">cannot</span> be undone. This will permanently delete the project <span class="warning-block__text _important">{{$ctrl.project.name}}</span>. Select another project to reassign all the existing items.
+                </div>
+                <md-input-container class="select-wrapper no-padding" flex="grow">
+                    <label>Project to reassign</label>
+                    <md-select id="searchStatus" ng-model="$ctrl.projectToReassign" class="form-fields__select" name="projects" required>
+                        <md-option ng-repeat="project in ::$ctrl.projects" ng-value="::project.id">{{ project.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="select-wrapper no-padding" flex="grow">
+                    <label>Project to delete</label>
+                    <input type="text" ng-model="$ctrl.projectToDelete" name="projectToDelete" required ng-pattern="$ctrl.regex"/>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button id="delete" type="button" class="md-warn" ng-disabled="delete_form.$invalid" data-ng-click="$ctrl.deleteProject()">
+                Delete
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

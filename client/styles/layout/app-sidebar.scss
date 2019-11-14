@@ -71,6 +71,9 @@
                 @media (max-width: $screen-phone) {
                     margin-top: 15px;
                 }
+                &-wrapper {
+                    position: relative;
+                }
                 &-item {
                     margin-left: 23px;
                     margin-bottom: 0;
