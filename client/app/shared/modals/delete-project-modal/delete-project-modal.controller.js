@@ -14,15 +14,19 @@ const deleteProjectModalController = function deleteProjectModalController($mdDi
         $mdDialog.cancel();
     }
 
+    function hide(rs) {
+        $mdDialog.hide(rs);
+    };
+
     function initController() {
         vm.regex = `^${project.name}$`;
     }
 
     function deleteProject() {
-        ProjectService.deleteProjectWithReassign(vm.project.id, vm.projectToReassign)
+        ProjectService.deleteProject(vm.project.id, vm.projectToReassign)
             .then((res) => {
                 if(res.success) {
-                    vm.closeModal();
+                    hide(project.id);
                     messageService.success(`Project ${project.name} removed`);
                 } else {
                     messageService.error(res.message);

@@ -75,6 +75,9 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
                 projects: vm.projects.filter((project) => { return project.id !== currentProject.id && project.name !== 'ALL'; })
             }
         })
+        .then((id) => {
+            vm.projects = vm.projects.filter((project) => { return project.id !== id; })
+        })
     }
 
     function activateDashboardsSorter(activate) {

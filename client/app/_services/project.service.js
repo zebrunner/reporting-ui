@@ -7,7 +7,6 @@
 
     function ProjectService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
         const service = {
-            deleteProjectWithReassign,
             createProject,
             deleteProject,
             updateProject,
@@ -20,12 +19,8 @@
             return $httpMock.post(API_URL + '/api/projects', project).then(UtilService.handleSuccess, UtilService.handleError('Unable to create project'));
         }
 
-        function deleteProject(id) {
-            return $httpMock.delete(API_URL + '/api/projects/' + id).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete project'));
-        }
-
-        function deleteProjectWithReassign(id, reassignTo) {
-            return $httpMock.delete(API_URL + '/api/projects/' + id + '?reassignTo=' + reassignTo).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete project'));
+        function deleteProject(id, reassignTo) {
+            return $httpMock.delete(API_URL + '/api/projects/' + id + (reassignTo ? '?reassignTo=' + reassignTo : '')).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete project'));
         }
 
         function updateProject(project) {
