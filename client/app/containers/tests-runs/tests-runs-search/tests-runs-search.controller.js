@@ -92,11 +92,13 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         if (vm.isSearchActive()) {
             let fromDate = testsRunsService.getSearchParam('fromDate');
             let toDate = testsRunsService.getSearchParam('toDate');
-            const date = testsRunsService.getSearchParam('date');
+            const date = testsRunsService.getSearchParam('date'); 
+            const selectedTemplateName = testsRunsService.getSearchParam('selectedTemplateName');
 
             date && (fromDate = toDate = date);
             fromDate && (vm.selectedRange.dateStart = new Date(fromDate));
             toDate && (vm.selectedRange.dateEnd = new Date(toDate));
+            selectedTemplateName && (vm.selectedRange.selectedTemplateName = selectedTemplateName);
 
             testsRunsService.getSearchTypes().forEach(function(type) {
                 const searchValue = testsRunsService.getSearchParam(type);
@@ -234,7 +236,8 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         .then(function(result) {
             if (result) {
                 vm.selectedRange = result;
-                vm.selectedRange.selectedTemplateName = result.selectedTemplateName.slice(0, -4);
+                vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
+                testsRunsService.setSearchParam('selectedTemplateName', vm.selectedRange.selectedTemplateName);
                 if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
                     if (vm.selectedRange.dateStart.getTime() !==
                         vm.selectedRange.dateEnd.getTime()) {
@@ -250,6 +253,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                     testsRunsService.deleteSearchParam('date');
                     testsRunsService.deleteSearchParam('fromDate');
                     testsRunsService.deleteSearchParam('toDate');
+                    testsRunsService.deleteSearchParam('selectedTemplateName');
                 }
 
                 onChangeSearchCriteria();
