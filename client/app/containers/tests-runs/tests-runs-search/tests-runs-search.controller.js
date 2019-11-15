@@ -234,6 +234,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         .then(function(result) {
             if (result) {
                 vm.selectedRange = result;
+                vm.selectedRange.selectedTemplateName = result.selectedTemplateName;
                 if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
                     if (vm.selectedRange.dateStart.getTime() !==
                         vm.selectedRange.dateEnd.getTime()) {
@@ -245,6 +246,10 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                         testsRunsService.deleteSearchParam('toDate');
                         testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
                     }
+                } else {
+                    testsRunsService.deleteSearchParam('date');
+                    testsRunsService.deleteSearchParam('fromDate');
+                    testsRunsService.deleteSearchParam('toDate');
                 }
 
                 onChangeSearchCriteria();
