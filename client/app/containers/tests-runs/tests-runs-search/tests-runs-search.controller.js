@@ -234,7 +234,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         .then(function(result) {
             if (result) {
                 vm.selectedRange = result;
-                vm.selectedRange.selectedTemplateName = result.selectedTemplateName;
+                vm.selectedRange.selectedTemplateName = result.selectedTemplateName.slice(0, -4);
                 if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
                     if (vm.selectedRange.dateStart.getTime() !==
                         vm.selectedRange.dateEnd.getTime()) {
