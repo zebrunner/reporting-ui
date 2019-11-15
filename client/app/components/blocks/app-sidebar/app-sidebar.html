@@ -7,6 +7,50 @@
                     <i class="material-icons nav-close-icon">close</i>
                 </a>
             </li>
+            <li class="projects" toggle-menu>
+                <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="projects.list">
+                    <div class="projects__selected">{{$ctrl.selectedProjectShortName}}</div>
+                    <div style="display: inline-block;">
+                        <profile-photo id="brandPhoto"
+                                        ng-model="$ctrl.companyLogo.value"
+                                        squared="8"
+                                        size="32"
+                                        auto-resize="false"
+                                        icon-visible="false">
+                            <span ng-if="!$ctrl.companyLogo.value" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">flag</i></span>
+                        </profile-photo>
+                    </div>
+                </a>
+                <ul class="width-icon" toggle-nav-bottom>
+                    <li class="nav-controls search_close-button">
+                        <md-icon toggle-menu="close">close</md-icon>
+                    </li>
+                    <li class="sub-search search-menu">
+                        <ul class="projects__wrapper">
+                            <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
+                                <a class="nav__button zf-primary-button" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
+                            </li>
+                            <li name="projectName" class="projects__list" md-prevent-menu-close>
+                                <md-radio-group ng-model="$ctrl.selectedProject" ng-change="$ctrl.chooseProject();">
+                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id" ng-if="project.name === 'ALL'"
+                                                        id="{{::project.id}}"
+                                                        aria-label="project {{ ::project.id }}"
+                                                        class="projects__list-item md-primary"
+                                                        value="{{::project.id}}">{{::project.name}}</md-radio-button>
+                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id" ng-if="project.name !== 'ALL'"
+                                                        id="{{::project.id}}"
+                                                        aria-label="project {{ ::project.id }}"
+                                                        class="projects__list-item md-primary"
+                                                        value="{{::project.id}}">{{::project.name}}</md-radio-button>                 
+                                </md-radio-group>
+                            </li>
+                            <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">
+                                <a ng-click="$ctrl.showUploadImageDialog($event)" href=""><i class="material-icons">add_circle_outline</i><span>Upload new logo</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                </li>
             <li toggle-menu ng-class="{'active':$ctrl.$state.includes('dashboard')}">
                 <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards();">
                     <i class="material-icons">equalizer</i><span>Boards</span>
@@ -123,7 +167,7 @@
                 </a>
             </li>
             <li style="flex-grow: 1"></li>
-            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-nav-bottom>
+            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-menu>
                 <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="userProfile">
                     <div>
                         <profile-photo ng-model="$ctrl.currentUser.photoURL"
@@ -135,51 +179,20 @@
                         </profile-photo>
                     </div>
                 </a>
-            </li>
-            <li class="projects" toggle-menu>
-                <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="projects.list">
-                    <div class="projects__selected">{{$ctrl.selectedProjectShortName}}</div>
-                    <div style="display: inline-block;">
-                        <profile-photo id="brandPhoto"
-                                       ng-model="$ctrl.companyLogo.value"
-                                       squared="8"
-                                       size="32"
-                                       auto-resize="false"
-                                       icon-visible="false">
-                            <span ng-if="!$ctrl.companyLogo.value" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">flag</i></span>
-                        </profile-photo>
-                    </div>
-                </a>
-                <ul class="width-icon" toggle-nav-bottom>
+                <ul class="width-icon">
                     <li class="nav-controls search_close-button">
                         <md-icon toggle-menu="close">close</md-icon>
                     </li>
                     <li class="sub-search search-menu">
-                        <ul class="projects__wrapper">
-                            <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
-                                <a class="nav__button zf-primary-button" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
+                        <ul class="profile__wrapper">
+                            <li toggle-nav-bottom style="position: relative;">
+                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="userProfile" class="show-part">
+                                    <span>User profile</span>
+                                </a>
                             </li>
-                            <li name="projectName" class="projects__list" md-prevent-menu-close>
-                                <md-radio-group ng-model="$ctrl.selectedProject" ng-change="$ctrl.chooseProject();">
-                                    <md-radio-button data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id" ng-if="project.name === 'ALL'"
-                                        id="{{::project.id}}"
-                                        aria-label="project {{ ::project.id }}"
-                                        class="projects__list-item md-primary"
-                                        value="{{::project.id}}">{{::project.name}}</md-radio-button>
-                                    <div data-ng-repeat="project in $ctrl.projects | orderBy:'name' track by project.id" class="projects__list-wrapper show-on-hover">
-                                        <md-radio-button ng-if="project.name !== 'ALL'"
-                                            id="{{::project.id}}"
-                                            aria-label="project {{ ::project.id }}"
-                                            class="projects__list-item md-primary"
-                                            value="{{::project.id}}">{{::project.name}}</md-radio-button>
-                                        <span has-any-permission="['MODIFY_PROJECTS']" ng-if="project.name !== 'ALL' && project.name !== 'UNKNOWN'">
-                                            <i class="material-icons menu-actor _delete show-icon-on-hover hide-tablet" ng-click="$ctrl.showDeleteModal(project)">delete_outline</i>
-                                        </span> 
-                                    </div>                                            
-                                </md-radio-group>
-                            </li>
-                            <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">
-                                <a ng-click="$ctrl.showUploadImageDialog($event)" href=""><i class="material-icons">add_circle_outline</i><span>Upload new logo</span></a>
+                            <li style="flex-grow: 1"></li>
+                            <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _logout">
+                                <a ui-sref="logout"><i class="material-icons">exit_to_app</i><span>Logout</span></a>
                             </li>
                         </ul>
                     </li>
