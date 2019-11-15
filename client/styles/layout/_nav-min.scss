@@ -213,8 +213,7 @@
     }
 }
 
-.drag-actor {
-    cursor: grab;
+.menu-actor {
     font-size: 16px;
     position: absolute;
     top: 0;
@@ -222,10 +221,14 @@
     height: 100%;
     line-height: 40px;
     vertical-align: baseline;
-    z-index: 100000;
-
-    &:active {
-        cursor: grabbing;
+    z-index: 100000; 
+    &._drag {
+        cursor: grab;
+        &:active {
+            cursor: grabbing;
+        }
+    }   
+    &._delete {
+        cursor: pointer;
     }
-
 }

@@ -192,11 +192,11 @@
                 </div>
             </div>
             <div ng-switch-when="4">
-                <div class="selection-blocks_container_elements_warning" ng-if="dashboards && dashboards.length">
-                    <div class="selection-blocks_container_elements_warning_body">
+                <div class="selection-blocks_container_elements warning-block">
+                    <div class="selection-blocks_container_elements warning-block__body">
                         Warning! Any changes may cause loss of data. This widget is currently is in use on other dashboard(s).
                     </div>
-                    <div class="selection-blocks_container_elements_warning_list">
+                    <div class="selection-blocks_container_elements warning-block__list">
                         <ul>
                             <li ng-repeat="d in ::dashboards | orderBy: 'title' track by d.id">
                                 {{d.title}}
