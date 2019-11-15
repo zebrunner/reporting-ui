@@ -41,6 +41,7 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
         showDashboardSettingsModal,
         showDeleteModal,
         selectedProjectShortName: '',
+        goToState,
 
         dashboardSortableOptions: {
             stop: function(e, ui) {
@@ -107,6 +108,10 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
             .then(() => {
                 vm.selectedProjectShortName = cutSelectedProjectName();
             });
+    }
+
+    function goToState(state) {
+        $state.go(state);
     }
 
     function hasHiddenDashboardPermission(){
