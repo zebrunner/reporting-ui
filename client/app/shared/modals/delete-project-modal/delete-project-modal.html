@@ -21,7 +21,7 @@
                     </md-select>
                 </md-input-container>
                 <md-input-container class="select-wrapper no-padding" flex="grow">
-                    <label>Please type '{{$ctrl.project.name}}' to confirm</label>
+                    <label>Please type '{{ ::$ctrl.project.name }}' to confirm</label>
                     <input type="text" ng-model="$ctrl.projectToDelete" name="projectToDelete" required md-no-asterisk="true" ng-pattern="$ctrl.regex"/>
                 </md-input-container>
             </div>
