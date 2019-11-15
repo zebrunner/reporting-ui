@@ -172,7 +172,7 @@
                                             aria-label="project {{ ::project.id }}"
                                             class="projects__list-item md-primary"
                                             value="{{::project.id}}">{{::project.name}}</md-radio-button>
-                                        <span has-any-permission="['MODIFY_DASHBOARDS']" ng-if="project.name !== 'ALL' && project.name !== 'UNKNOWN'">
+                                        <span has-any-permission="['MODIFY_PROJECTS']" ng-if="project.name !== 'ALL' && project.name !== 'UNKNOWN'">
                                             <i class="material-icons menu-actor _delete show-icon-on-hover hide-tablet" ng-click="$ctrl.showDeleteModal(project)">delete_outline</i>
                                         </span> 
                                     </div>                                            
