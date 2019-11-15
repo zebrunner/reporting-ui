@@ -54,9 +54,7 @@
         </div>
         <div layout="row" layout-align="none end" layout-align-sm="space-between end" class="tests-runs-search__helpers search-fields _additional" layout-xs="column">
             <md-input-container class="date-picker-container select-wrapper no-padding form-fields__input" flex="grow" flex-sm="33" flex-xs="100">
-                <span data-ng-if="!$ctrl.selectedRange.dateStart && !$ctrl.selectedRange.dateEnd">Date</span>
-                <span data-ng-if="$ctrl.selectedRange.dateStart && $ctrl.selectedRange.dateEnd && !$ctrl.isEqualDate()">{{$ctrl.selectedRange.dateStart | date : 'dd MMM'}} - </span>
-                <span>{{$ctrl.selectedRange.dateEnd | date : 'dd MMM'}}</span>
+                <span>{{$ctrl.selectedRange.selectedTemplateName || 'Date'}}</span>
                 <i class="material-icons">date_range</i>
                 <md-button id="searchCalendar" ng-click="$ctrl.openDatePicker($event, true)"></md-button>
             </md-input-container>
