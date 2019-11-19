@@ -43,6 +43,61 @@
         }
     }
 
+    @media screen and (min-width: 769px) {
+        .ci-runner-container {
+            &_content {
+                &_builder {
+                    &_container {
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .ci-runner-container {
+            &_content {
+                &_builder {
+                    &_container {
+                        &_item {
+                            width: 100%;
+                        }
+                        &.builder-boolean {
+                            display: flex;
+                            align-items: center;
+                            .zf-label {
+                                margin-right: 20px;
+                                flex: 1 1 auto;
+                            }
+                            .ci-runner-container_content_builder_container_item {
+                                width: auto;
+                                flex: none;
+                            }
+                        }
+                        .zf-label {
+                            width: auto;
+                            margin-right: 0;
+                        }
+                        md-input-container label {
+                            letter-spacing: 0.2px;
+                            opacity: 0.6;
+                        }
+                        .zf-show-part {
+                            letter-spacing: 0.2px;
+                            font-size: 11px;
+                            opacity: 0.6;
+                        }
+                        input, md-input-container, md-select {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @media screen and (max-width: $md-screen-phone) {
         overflow: hidden !important;
         padding: 0 !important;
@@ -61,32 +116,6 @@
                     padding-bottom: 0;
                     &_container {
                         margin-bottom: 18px;
-                        .zf-label {
-                            width: auto;
-                            margin-right: 0;
-                        }
-
-                        &.builder-boolean {
-                            display: flex;
-                            align-items: center;
-                            .zf-label {
-                                margin-right: 20px;
-                                flex: 1 1 auto;
-                            }
-                            .ci-runner-container_content_builder_container_item {
-                                width: auto;
-                                flex: none;
-                            }
-                        }
-                        md-input-container label {
-                            letter-spacing: 0.2px;
-                            opacity: 0.6;
-                        }
-                        .zf-show-part {
-                            letter-spacing: 0.2px;
-                            font-size: 11px;
-                            opacity: 0.6;
-                        }
                     }
                 }
 

@@ -329,6 +329,8 @@ md-chips.filter-chip.custom-filter {
         overflow-x: scroll;
         -ms-overflow-style: none;
         overflow: -moz-scrollbars-none;
+        display: block;
+        max-width: 100%;
         &::-webkit-scrollbar { 
             display: none;
         }

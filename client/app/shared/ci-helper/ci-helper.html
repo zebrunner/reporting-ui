@@ -232,8 +232,6 @@
                     <div class="ci-runner-container__platforms-controls"
                         ng-if="$ctrl.platformControls.length">
                         <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
-                            layout-gt-xs="row"
-                            layout-align-gt-xs="start center"
                             ng-repeat="platformControl in $ctrl.platformControls track by $index">
                             <div class="zf-label" flex="none">
                                 <show-part text="platformControl.label" limit="30">
@@ -270,8 +268,6 @@
                 </div>
                 <div class="ci-runner-container_content_builder">
                     <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
-                        layout-gt-xs="row"
-                        layout-align-gt-xs="start center"
                         ng-repeat="(key, item) in jsonModel track by $index">
                         <div class="zf-label" flex="none">
                             <show-part text="key" limit="25">
@@ -319,11 +315,11 @@
         </zf-modal-content-container>
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.cardNumber === 0">
             <div class="ci-runner-container_content_title no-data">
-                <span ng-if="! scmAccounts.length">
+                <span ng-if="!$ctrl.loadingScm && !scmAccounts.length">
                     <div>There is nothing to launch:(</div>
                     <div>Add repository to start.</div>
                 </span>
-                <span ng-if="scmAccounts.length">
+                <span ng-if="!$ctrl.loadingScm && scmAccounts.length">
                     <div>Choose template to launch.</div>
                 </span>
             </div>

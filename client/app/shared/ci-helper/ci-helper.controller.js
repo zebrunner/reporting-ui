@@ -25,7 +25,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         'SELENIUM': 1,
         'ZEBRUNNER': 2,
         'MCLOUD': 3,
-        'BROWSERSTACK': 4,
+        'AEROKUBE': 4,
+        'BROWSERSTACK': 5,
+        'SAUCELABS': 6,
         'default': 100,
     };
     const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
@@ -35,6 +37,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         providers: [],
         platformsConfig: null,
         providersFail: false,
+        loadingScm: true,
 
         onProviderSelect,
         onPlatformSelect,
@@ -959,6 +962,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                         }
                     });
                 });
+            })
+            .finally(() => {
+                vm.loadingScm = false;
             });
     }
 
@@ -1185,7 +1191,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 return toolsService.fetchIntegrationOfTypeByName('TEST_AUTOMATION_TOOL')
                     .then((res) => {
                         if (res.success) {
-                            const integrations = (res.data || []).map(item => item.name.toLowerCase());
+                            const integrations = (res.data || [])
+                                .filter(integration => integration.enabled)
+                                .map(item => item.name.toLowerCase());
 
                             vm.providers = providers
                                 //filter providers by available integrations
