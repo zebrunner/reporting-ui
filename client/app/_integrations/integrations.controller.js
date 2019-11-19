@@ -195,7 +195,7 @@ const integrationsController = function integrationsController($state, $mdDialog
 
     function controllerInit() {
         toolsService.fetchIntegrationsTypes().then((res) => {
-            vm.groups = res.data;
+            vm.groups = res.data.sort((a, b) => a.displayName.localeCompare(b.displayName))
             vm.isLoading = false;
             integrationsService.readType();
             

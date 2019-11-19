@@ -1,0 +1,26 @@
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+ <style type="text/css">.st0{fill:#21CA88;}</style>
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <ellipse stroke="#000" ry="7.894737" rx="7.894737" id="svg_10" cy="7.995161" cx="7.999999" stroke-opacity="null" stroke-width="0" fill="#f2f2f2"/>
+  <g stroke="null" id="svg_1">
+   <g stroke="null" id="svg_2">
+    <path stroke="null" id="svg_3" d="m6.529751,10.562612l-3.84467,0l0,-1.041265l2.723308,-3.043697l-1.601946,0c-0.800973,0 -1.361654,-0.560681 -1.361654,-1.361654l0,0l5.206324,0l0,0c0,0.640778 -0.240292,1.201459 -0.640778,1.682043l-2.08253,2.322822l2.9636,0l0,0c0,0.800973 -0.560681,1.441751 -1.361654,1.441751z" class="st0"/>
+   </g>
+   <g stroke="null" id="svg_4">
+    <path stroke="null" id="svg_5" d="m10.214226,5.115996l3.444184,0l0,0c0,0.720876 -0.560681,1.281557 -1.281557,1.281557l-3.524281,0l0,0c0,-0.640778 0.640778,-1.281557 1.361654,-1.281557z" class="st0"/>
+   </g>
+   <g stroke="null" id="svg_6">
+    <path stroke="null" id="svg_7" d="m10.214226,9.200958l3.444184,0l0,0c0,0.720876 -0.560681,1.281557 -1.281557,1.281557l-3.524281,0l0,0c0,-0.640778 0.640778,-1.281557 1.361654,-1.281557z" class="st0"/>
+   </g>
+   <g stroke="null" id="svg_8">
+    <path stroke="null" id="svg_9" d="m10.214226,7.198526l3.444184,0l0,0c0,0.720876 -0.560681,1.281557 -1.281557,1.281557l-3.524281,0l0,0c0,-0.720876 0.640778,-1.281557 1.361654,-1.281557z" class="st0"/>
+   </g>
+  </g>
+ </g>
+</svg>
