@@ -36,6 +36,11 @@
                 }
             }
         }
+        &__platforms {
+            .warning-block {
+                margin-bottom: 0;
+            }
+        }
     }
 
     @media screen and (max-width: $md-screen-phone) {
@@ -87,11 +92,6 @@
 
                 &_title {
                     margin-bottom: 0;
-                }
-            }
-            &__platforms {
-                &-controls.zf-display-table {
-                    display: block;
                 }
             }
         }
