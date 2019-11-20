@@ -7,7 +7,7 @@ const ScreenshotService = function ScreenshotService($q, $timeout) {
 
     return {
         take: function (locator, name = guid()) {
-            return $q(function (resolve, reject) {
+            return $q(function (resolve, reject) { //TODO: if error we don't resolve/reject promise at all
                 crop(locator).then(function (canvasObj) {
                     var formData = new FormData();
                     formData.append("file", dataURItoBlob(canvasObj.dataURL), name + ".png");
@@ -28,7 +28,7 @@ const ScreenshotService = function ScreenshotService($q, $timeout) {
             }
             $timeout(function () {
                 const element = angular.element(locator);
-                if (element && element.length) {
+                if (element && element.length) { //TODO: if error we don't resolve/reject promise at all
                     html2canvas(element[0]).then(function (canvas) {
                         body.removeClass('widgets-cropping');
                         angular.forEach(classesToAdd, function (element, key) {
