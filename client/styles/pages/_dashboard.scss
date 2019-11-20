@@ -1,4 +1,8 @@
 .p-dashboard {
+    .fixed-page-header + .page-dashboard {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
     @media screen and (max-width: 599px) {
         .page {
             padding-right: 16px;
@@ -29,7 +33,6 @@
     }
 }
 .page-dashboard {
-
     h3 {
         font-size: 22px;
         font-weight: normal;
@@ -137,9 +140,6 @@
 
 .dashboard {
     &__widgets-wrapper {
-        margin-right: -10px;
-        margin-left: -10px;
-
         &_widget-no-data {
             position: absolute;
             top: 0;
