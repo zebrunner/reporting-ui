@@ -1129,6 +1129,16 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function extractPlatformSelections() {
+        const selectedProvider = getSelectedProvider();
+
+        if (selectedProvider && vm.integrations) {
+            const selectedIntegration = vm.integrations.find(({ name }) => name.toLowerCase() === selectedProvider.name.toLowerCase())
+
+            if (selectedIntegration) {
+                $scope.builtLauncher.model.providerId = selectedIntegration.id;
+            }
+        }
+
         Object.keys(vm.platformModel).forEach(key => {
             if (vm.platformModel[key]) {
                 $scope.builtLauncher.model[key] = vm.platformModel[key].value;
@@ -1181,6 +1191,12 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         vm.chipsCtrl && (vm.chipsCtrl.selectedChip = -1);
     }
 
+    function getSelectedProvider() {
+        if (!vm.chipsCtrl || vm.chipsCtrl.selectedChip === -1) { return; }
+
+        return vm.chipsCtrl.items[vm.chipsCtrl.selectedChip];
+    }
+
     function getProvidersConfig() {
         return $http.get(providersConfigURL)
             .then(response => {
@@ -1191,13 +1207,17 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 return toolsService.fetchIntegrationOfTypeByName('TEST_AUTOMATION_TOOL')
                     .then((res) => {
                         if (res.success) {
-                            const integrations = (res.data || [])
+                            let integrationNames;
+
+                            vm.integrations = (res.data || []);
+
+                            integrationNames = vm.integrations
                                 .filter(integration => integration.enabled)
                                 .map(item => item.name.toLowerCase());
 
                             vm.providers = providers
                                 //filter providers by available integrations
-                                .filter(provider => integrations.includes(provider.name.toLowerCase()))
+                                .filter(provider => integrationNames.includes(provider.name.toLowerCase()))
                                 //sort providers by priority
                                 .sort((a, b) => {
                                     const aPriority = providersPriority[a.name] || providersPriority.default;
