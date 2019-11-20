@@ -26,18 +26,22 @@ const dashboardEmailModalController = function dashboardEmailModalController($fi
         const imgName = email.subject + ' - ' + $filter('date')(new Date(), 'MM:dd:yyyy');
 
         email.recipients =  email.recipients.toString();
+        vm.sendingEmail = true;
         
-        return $screenshot.take(model.locator, imgName).then(function (multipart) {
-            return DashboardService.SendDashboardByEmail(multipart, email).then(function (rs) {
-                if (rs.success) {
-                    messageService.success('Email was successfully sent!');
-                    hide();
-                }
-                else {
-                    messageService.error(rs.message);
-                }
+        return $screenshot.take(model.locator, imgName)
+            .then(function (multipart) {
+                return DashboardService.SendDashboardByEmail(multipart, email)
+                    .then(function (rs) {
+                        vm.sendingEmail = false;
+                        if (rs.success) {
+                            messageService.success('Email was successfully sent!');
+                            hide();
+                        }
+                        else {
+                            messageService.error(rs.message);
+                        }
+                    });
             });
-        });
     };
 
     function querySearch(criteria, alreadyAddedUsers) {

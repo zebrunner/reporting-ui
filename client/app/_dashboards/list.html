@@ -58,7 +58,7 @@
                                         <md-icon class="material-icons">more_vert</md-icon>
                                     </md-button>
                                     <md-menu-content width="2">
-                                        <md-menu-item data-ng-if="$ctrl.isToolConnected('EMAIL')">
+                                        <md-menu-item data-ng-if="$ctrl.isToolConnected('EMAIL') && widget.data.dataset.length">
                                             <md-button name="sendEmail" data-ng-click="showEmailDialog($event, widget)">
                                                 <md-icon class="material-icons">send</md-icon>
                                                 Send by email

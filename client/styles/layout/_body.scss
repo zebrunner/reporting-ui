@@ -190,8 +190,8 @@ md-chip:not(:hover) .show-icon-on-hover,
         top: 8px;
         right: 5px;
         border: none;
-
         font-size: 24px;
+        z-index: 1;
 
         @media (max-width: $screen-tablet-2) {
             display: inline;
@@ -225,7 +225,7 @@ tr.result:hover .expand-button {
         border: 0;
         > .panel-heading {
             z-index: 1;
-            position: relative;
+            //position: relative;
             background-color: inherit !important;
             border-bottom-color: white !important;
             font-weight: 500;
@@ -234,10 +234,10 @@ tr.result:hover .expand-button {
             // default container height - chart height - chart paddings
             max-height: calc(420px - 320px - 15px * 2);
             letter-spacing: 0.1px;
-            padding: 16px 20px 16px 23px;
+            padding: 16px 50px 16px 23px;
 
             @media(max-width: $screen-phone) {
-                padding-right: 5px;
+                padding-right: 20px;
             }
         }
     }
@@ -2457,8 +2457,12 @@ $light-inprogress: #68c9fd;
 }
 
 
-.full-view {
+.widgets-cropping {
     width: 1920px !important;
+    max-width: 1920px !important;
+    .panel {
+        box-shadow: none;
+    }
     .md-dialog-container {
         width: 100vw;
     }
