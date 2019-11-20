@@ -1,9 +1,12 @@
 .p-dashboard {
-    .fixed-page-header + .page-dashboard {
-        padding-left: 10px;
-        padding-right: 10px;
+    @media screen and (min-width: $md-screen-xs + 1) {
+        .fixed-page-header + .page-dashboard {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
     }
-    @media screen and (max-width: 599px) {
+    
+    @media screen and (max-width: $md-screen-xs) {
         .page {
             padding-right: 16px;
             padding-left: 16px;
@@ -140,6 +143,10 @@
 
 .dashboard {
     &__widgets-wrapper {
+        @media screen and (max-width: $md-screen-xs) {
+            margin-right: -10px;
+            margin-left: -10px;    
+        }
         &_widget-no-data {
             position: absolute;
             top: 0;

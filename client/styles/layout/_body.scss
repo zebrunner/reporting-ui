@@ -2436,6 +2436,8 @@ $light-inprogress: #68c9fd;
 
     + div {
         padding-top: calc(#{$header_height} + 20px);
+        position: relative;
+        z-index:  $zindex-fixed - 1;
 
         .p-tests-run-info &,
         .p-tests-run-details &,
