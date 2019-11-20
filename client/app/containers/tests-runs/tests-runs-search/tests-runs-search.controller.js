@@ -237,23 +237,23 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             if (result) {
                 vm.selectedRange = result;
                 vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
-                testsRunsService.setSearchParam('selectedTemplateName', vm.selectedRange.selectedTemplateName);
+                vm.searchParams.selectedTemplateName = vm.selectedRange.selectedTemplateName;
                 if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
                     if (vm.selectedRange.dateStart.getTime() !==
                         vm.selectedRange.dateEnd.getTime()) {
-                        testsRunsService.deleteSearchParam('date');
-                        testsRunsService.setSearchParam('fromDate', vm.selectedRange.dateStart);
-                        testsRunsService.setSearchParam('toDate', vm.selectedRange.dateEnd);
+                        vm.searchParams.date = null;
+                        vm.searchParams.fromDate = vm.selectedRange.dateStart;
+                        vm.searchParams.toDate = vm.selectedRange.dateEnd;
                     } else {
-                        testsRunsService.deleteSearchParam('fromDate');
-                        testsRunsService.deleteSearchParam('toDate');
-                        testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
+                        vm.searchParams.fromDate = null;
+                        vm.searchParams.toDate = null;
+                        vm.searchParams.date = vm.selectedRange.dateStart;
                     }
                 } else {
-                    testsRunsService.deleteSearchParam('date');
-                    testsRunsService.deleteSearchParam('fromDate');
-                    testsRunsService.deleteSearchParam('toDate');
-                    testsRunsService.deleteSearchParam('selectedTemplateName');
+                    vm.searchParams.fromDate = null;
+                    vm.searchParams.toDate = null;
+                    vm.searchParams.date = null;
+                    vm.searchParams.selectedTemplateName = null;
                 }
 
                 onChangeSearchCriteria();
