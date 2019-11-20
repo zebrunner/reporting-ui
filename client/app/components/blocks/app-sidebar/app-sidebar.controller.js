@@ -253,16 +253,16 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
     }
 
     function onProjectSelect() {
-        const cachedSelection = projectsService.getSelectedProjects();
+        //return if trying to select already selected project
+        if (projectsService.selectedProject && projectsService.selectedProject.id === vm.selectedProject) { return; }
+        //return if no selected project and trying to select "all" wich means to reset selected project
+        if (!projectsService.selectedProject && vm.selectedProject === fakeProjectAll.id) { return; }
 
-        if (cachedSelection && cachedSelection[0] && isEqualIDs(cachedSelection[0].id,+vm.selectedProject)) { return; }
-
+        //handle project selection
         if (!isEqualIDs(vm.selectedProject, fakeProjectAll.id)) {
-            const selectedProject = vm.projects.find(({id}) => isEqualIDs(id, vm.selectedProject));
-
-            projectsService.setSelectedProjects([selectedProject]);
-        } else {
-            projectsService.resetSelectedProjects();
+            projectsService.selectedProject = vm.projects.find(({ id }) => isEqualIDs(id, vm.selectedProject));
+        } else { //handle project deselection
+            projectsService.selectedProject = null;
         }
         vm.selectedProjectShortName = cutSelectedProjectName();
         if ($state.current.name === 'tests.runs' || $state.current.name === 'dashboard.page') {
@@ -273,13 +273,11 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
     }
 
     function loadProjects() {
-        const selectedFromCache = projectsService.getSelectedProjects();
-
         return ConfigService.getConfig('projects').then(function(rs) {
             if (rs.success) {
                 vm.projects = [fakeProjectAll, ...rs.data];
 
-                if (selectedFromCache && selectedFromCache[0]) {
+                if (projectsService.selectedProject) {
                     const activeProject = vm.projects.find(({ id }) => isEqualIDs(id, selectedFromCache[0].id));
 
                     if (activeProject) {
@@ -287,6 +285,16 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
                     } else { //Looks like the project doesn't exist anymore, so we need to clear cached selection.
                         projectsService.resetSelectedProjects();
                     }
+
+                    vm.projects.some(({ id }) => {
+                        if (isEqualIDs(id, projectsService.selectedProject.id)) {
+                            vm.selectedProject = id;
+
+                            return true;
+                        }
+
+                        return false;
+                    });
                 }
             } else {
                 messageService.error('Unable to load projects');

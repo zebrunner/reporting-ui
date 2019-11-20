@@ -321,11 +321,10 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     var setQueryParams = function(dashboardName){
-        const selectedProjects = projectsService.getSelectedProjects();
         let params = '';
 
-        if (selectedProjects && selectedProjects.length) {
-            params = `?projects=${selectedProjects.map(project => project.name).join(',')}`;
+        if (projectsService.selectedProject) {
+            params = `?projects=${projectsService.selectedProject.name}`;
         }
 
         if ($scope.dashboard.attributes && $scope.dashboard.attributes.length) {

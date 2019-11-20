@@ -76,9 +76,14 @@
 
         // Get query params merged by hierarchy: cookies.projects -> dashboard.attributes -> dashboardName -> currentUserId -> queryParams
         function getENVParams(dashboard, currentUserId) {
-            var params = projectsService.getProjectsQueryParamObject() || {}; //get project from cookies
+            const params = {};
 
-            if(dashboard) {
+            //get project from cookies
+            if (projectsService.selectedProject) {
+                params.projects = [projectsService.selectedProject.name];
+            }
+
+            if (dashboard) {
                 dashboard.attributes.forEach(function (attr) { // override with dashboard attributes
                     params[attr.key] = attr.value;
                 });
@@ -92,6 +97,7 @@
             angular.forEach($location.search(), function (value, key) {
                 params[key] = value; // override with query params
             });
+            
             return params;
         };
 

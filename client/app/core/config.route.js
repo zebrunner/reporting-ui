@@ -367,7 +367,6 @@
                             'ngInject';
 
                             const prevState = $state.current.name;
-                            const projects = projectsService.getSelectedProjects();
 
                             testsRunsService.resetFilteringState();
                             // read saved search/filtering data only if we returning from internal page
@@ -377,8 +376,8 @@
                                 testsRunsService.deleteStoredParams();
                             }
 
-                            if (projects && projects.length) {
-                                testsRunsService.setSearchParam('projectNames', projects.map(project => project.name));
+                            if (projectsService.selectedProject) {
+                                testsRunsService.setSearchParam('projectNames', [projectsService.selectedProject.name]);
                             } else {
                                 testsRunsService.deleteSearchParam('projectNames');
                             }
