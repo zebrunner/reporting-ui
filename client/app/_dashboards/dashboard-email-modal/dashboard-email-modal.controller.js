@@ -1,6 +1,17 @@
 'use strict';
 
-const dashboardEmailModalController = function dashboardEmailModalController($filter, $screenshot, $mdDialog, $mdConstant, DashboardService, UserService, model, messageService, UtilService) {
+const dashboardEmailModalController = function dashboardEmailModalController(
+    $filter,
+    $screenshot,
+    $mdDialog,
+    $mdConstant,
+    DashboardService,
+    UserService,
+    model,
+    messageService,
+    UtilService,
+    $scope
+    ) {
     'ngInject';
 
     const vm = {
@@ -9,6 +20,7 @@ const dashboardEmailModalController = function dashboardEmailModalController($fi
         users: [],
         querySearch,
         sendEmail,
+        clearInputOnSelect,
         keys: [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.SPACE],
         email: {
             subject: model.title,
@@ -16,18 +28,25 @@ const dashboardEmailModalController = function dashboardEmailModalController($fi
             hostname: document.location.hostname,
             urls: [document.location.href],
             recipients: []
-        }
+        },
+        searchText: '',
+        currentUser: null,
     }
     let stopCriteria = '########';
     let usersSearchCriteria = {};
+
+    function clearInputOnSelect() {
+        vm.searchText = '';
+        vm.currentUser = null;
+    }
 
     function sendEmail() {
         let email = angular.copy(vm.email);
         const imgName = email.subject + ' - ' + $filter('date')(new Date(), 'MM:dd:yyyy');
 
-        email.recipients =  email.recipients.toString();
+        email.recipients = email.recipients.toString();
         vm.sendingEmail = true;
-        
+
         return $screenshot.take(model.locator, imgName)
             .then(function (multipart) {
                 return DashboardService.SendDashboardByEmail(multipart, email)
@@ -44,20 +63,21 @@ const dashboardEmailModalController = function dashboardEmailModalController($fi
             });
     };
 
-    function querySearch(criteria, alreadyAddedUsers) {
-        usersSearchCriteria.query = criteria;
-        if (!criteria.includes(stopCriteria)) {
+    function querySearch() {
+        usersSearchCriteria.query = vm.searchText;
+        if (!vm.searchText.includes(stopCriteria)) {
             stopCriteria = '########';
 
-            return UserService.searchUsersWithQuery(usersSearchCriteria, criteria).then(function (rs) {
-                if (rs.success) {
-                    if (!rs.data.results.length) {
-                        stopCriteria = criteria;
-                    }
+            return UserService.searchUsersWithQuery(usersSearchCriteria, vm.searchText)
+                .then(function (rs) {
+                    if (rs.success) {
+                        if (!rs.data.results.length) {
+                            stopCriteria = vm.searchText;
+                        }
 
-                    return UtilService.filterUsersForSend(rs.data.results, alreadyAddedUsers);
-                }
-            });
+                        return UtilService.filterUsersForSend(rs.data.results, vm.users);
+                    }
+                });
         }
 
         return "";
