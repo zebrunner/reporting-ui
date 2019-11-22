@@ -204,16 +204,7 @@
     }
 }
 
-@keyframes rotateRight {
-    from {
-        transform: rotate(0);
-    }
-    to {
-        transform: rotate(90deg);
-    }
-}
-
-.menu-actor {
+.nav .menu-actor {
     font-size: 16px;
     position: absolute;
     top: 0;
@@ -230,5 +221,14 @@
     }   
     &._delete {
         cursor: pointer;
+    }
+}
+
+@keyframes rotateRight {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(90deg);
     }
 }
