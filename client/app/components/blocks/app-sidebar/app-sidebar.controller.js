@@ -72,12 +72,16 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
             autoWrap: false,
             locals: {
                 project: currentProject,
-                projects: vm.projects.filter((project) => { return project.id !== currentProject.id && project.name !== 'ALL'; })
+                projects: vm.projects.filter(project => !isEqualIDs(project.id, currentProject.id) && project.id !== 'all'),
             }
         })
-        .then((id) => {
-            vm.projects = vm.projects.filter((project) => { return project.id !== id; })
-        })
+        .then(() => {
+            vm.projects = vm.projects.filter(({ id }) => !isEqualIDs(currentProject.id, id));
+            if (isEqualIDs(vm.selectedProject, currentProject.id)) {
+                vm.selectedProject = fakeProjectAll.id;
+                onProjectSelect();
+            }
+        }, () => {})
     }
 
     function activateDashboardsSorter(activate) {
@@ -251,11 +255,10 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
     function onProjectSelect() {
         const cachedSelection = projectsService.getSelectedProjects();
 
-        if (cachedSelection && cachedSelection[0] && cachedSelection[0].id === vm.selectedProject) { return; }
-        if ((!cachedSelection || !cachedSelection[0]) && vm.selectedProject === fakeProjectAll.id) { return; }
+        if (cachedSelection && cachedSelection[0] && isEqualIDs(cachedSelection[0].id,+vm.selectedProject)) { return; }
 
-        if (vm.selectedProject !== fakeProjectAll.id) {
-            const selectedProject = vm.projects.find(({id}) => +id === +vm.selectedProject);
+        if (!isEqualIDs(vm.selectedProject, fakeProjectAll.id)) {
+            const selectedProject = vm.projects.find(({id}) => isEqualIDs(id, vm.selectedProject));
 
             projectsService.setSelectedProjects([selectedProject]);
         } else {
@@ -277,11 +280,13 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
                 vm.projects = [fakeProjectAll, ...rs.data];
 
                 if (selectedFromCache && selectedFromCache[0]) {
-                    vm.projects.forEach(function (project) {
-                        if (+project.id === +selectedFromCache[0].id) {
-                            vm.selectedProject = project.id;
-                        }
-                    });
+                    const activeProject = vm.projects.find(({ id }) => isEqualIDs(id, selectedFromCache[0].id));
+
+                    if (activeProject) {
+                        vm.selectedProject = activeProject.id;
+                    } else { //Looks like the project doesn't exist anymore, so we need to clear cached selection.
+                        projectsService.resetSelectedProjects();
+                    }
                 }
             } else {
                 messageService.error('Unable to load projects');
@@ -291,7 +296,7 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
 
     function cutSelectedProjectName() {
         let name = '';
-        const selectedProject = vm.projects.find(({id}) => +id === +vm.selectedProject);
+        const selectedProject = vm.projects.find(({id}) => isEqualIDs(id, vm.selectedProject) && id !== 'all');
 
         if (selectedProject) {
             name = selectedProject.name.substr(0, 3);
@@ -368,6 +373,15 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
+    }
+
+    //needs this helper because ID can be a string or a number
+    function isEqualIDs(a, b) {
+        if (!isNaN(a) && !isNaN(b)) {
+            return +a === +b;
+        }
+
+        return `${a}` === `${b}`;
     }
 
     return vm;
