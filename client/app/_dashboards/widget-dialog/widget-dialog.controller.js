@@ -8,20 +8,15 @@ const widgetDialogController = function widgetDialogController($scope, $rootScop
     angular.copy(dashboard, $scope.dashboard);
     $scope.showWidget = false;
 
-    $scope.isJson = function(json) {
-        return typeof(json) === 'object';
-    };
-
-    if ($scope.isJson($scope.widget.model)){
+    if (typeof $scope.widget.model === 'object') {
         $scope.widget.model = JSON.stringify($scope.widget.model, null, 4);
     }
 
-    if ($scope.isJson($scope.widget.location)) {
+    if (typeof $scope.widget.location === 'object') {
         $scope.widget.location = JSON.stringify($scope.widget.location, null, 4);
     }
 
-    if($scope.isNew && $scope.widget)
-    {
+    if ($scope.isNew && $scope.widget) {
         $scope.widget.id = null;
     }
 

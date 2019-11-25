@@ -1,10 +1,10 @@
 <md-dialog flex="50" aria-label="User profile" class="email-dialog" zafira-background-theme="modal">
-    <form class="form-validation" name="email_form" ng-submit="sendEmail(); UtilService.untouchForm(email_form)" ng-cloak>
+    <form class="form-validation" name="email_form" ng-submit="$ctrl.sendEmail(); $ctrl.UtilService.untouchForm(email_form)" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle">Email</h2>
                 <span flex></span>
-                <md-button id="close" class="md-icon-button _default-md-style" data-ng-click="cancel()">
+                <md-button id="close" class="md-icon-button _default-md-style" data-ng-click="$ctrl.cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <md-input-container flex>
                             <label>Text</label>
-                            <text-angular id="text" data-ng-model="email.text" options=""></text-angular>
+                            <text-angular id="text" data-ng-model="$ctrl.email.text" options=""></text-angular>
                         </md-input-container>
                     </div>
                 </div>
@@ -24,25 +24,26 @@
             <div class="md-dialog-content">
                 <div layout layout-sm="column">
                     <md-input-container flex class="chips-input-container _with-img">
-                        <label>Recipients ({{email.recipients.length}})</label>
-                        <md-chips ng-model="users"
+                        <label>Recipients ({{$ctrl.email.recipients.length}})</label>
+                        <md-chips ng-model="$ctrl.users"
                                     class="photo-chip"
                                     filter-selected=true
                                     md-autocomplete-snap
-                                    md-transform-chip="UtilService.checkAndTransformRecipient($chip, email.recipients, users)"
-                                    md-on-remove="UtilService.removeRecipient($chip, email.recipients)"
+                                    md-transform-chip="$ctrl.UtilService.checkAndTransformRecipient($chip, $ctrl.email.recipients, $ctrl.users)"
+                                    md-on-remove="$ctrl.UtilService.removeRecipient($chip, $ctrl.email.recipients)"
                                     md-add-on-blur="true"
-                                    md-separator-keys="keys">
+                                    md-separator-keys="$ctrl.keys">
                             <md-chip-template name="chip">
                                 <profile-photo ng-model="$chip.photoURL" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
                                 {{$chip.email}}
                             </md-chip-template>
                             <md-autocomplete
                                 ng-model-options="{ debounce: 700 }"
-                                md-search-text="searchText"
-                                md-items="user in querySearch(searchText, users)"
+                                md-search-text="$ctrl.searchText"
+                                md-items="user in $ctrl.querySearch()"
                                 md-item-text="user.email"
-                                md-selected-item="currentUser"
+                                md-selected-item="$ctrl.currentUser"
+                                md-selected-item-change="$ctrl.clearInputOnSelect()"
                                 md-autoselect
                                 md-no-cache="true"
                                 placeholder="add email">
@@ -53,7 +54,7 @@
                                     </span>
                                 </md-item-template>
                                 <md-not-found id="notRecipients">
-                                    No users matching "{{searchText}}" were found.
+                                    No users matching "{{$ctrl.searchText}}" were found.
                                 </md-not-found>
                             </md-autocomplete>
                         </md-chips>
@@ -63,7 +64,7 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="send" class="md-raised btn-w-md md-primary" data-ng-click="sendEmail()" data-ng-disabled="email_form.$invalid || !email.recipients.length">
+            <md-button id="send" class="md-raised btn-w-md md-primary" data-ng-click="$ctrl.sendEmail()" data-ng-disabled="email_form.$invalid || !$ctrl.email.recipients.length || $ctrl.sendingEmail">
                 Send
             </md-button>
         </md-dialog-actions>

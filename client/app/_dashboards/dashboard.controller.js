@@ -55,10 +55,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         cellHeight: 20
     };
 
-    $scope.isJson = function(json) {
-        return typeof(json) === 'object';
-    };
-
     $scope.isGridStackEvailableToEdit = function() {
         return !angular.element('.grid-stack-one-column-mode').is(':visible');
     };
@@ -289,12 +285,13 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
         }
     };
 
-    var isJSON = function (json) {
+    function isJSON(jsonStr) {
         try {
-            JSON.parse(json);
-            return false;
+            const json = JSON.parse(jsonStr);
+
+            return (typeof json === 'object');
         } catch (e) {
-            return true;
+            return false;
         }
     };
 
@@ -361,16 +358,22 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     function jsonSafeParse (preparedJson) {
-        if(!isJSON(preparedJson)) {
-            return JSON.parse(preparedJson);
+        if (typeof preparedJson === 'string') {
+            preparedJson = preparedJson.replace(/^(")|(")$/g, '').replace(/\\/g,'');
+
+            if (isJSON(preparedJson)) {
+                return JSON.parse(preparedJson);
+            }
         }
+        
         return preparedJson;
     };
 
     function jsonSafeStringify (preparedJson) {
-        if(isJSON(preparedJson)) {
+        if (typeof preparedJson === 'object') {
             return JSON.stringify(preparedJson);
         }
+
         return preparedJson;
     };
 
@@ -484,10 +487,12 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     $scope.addDashboardWidget(rs.widget, true);
                     break;
                 case 'UPDATE':
-                    var index = $scope.dashboard.widgets.indexOfField('id', rs.widget.id);
-                    if(index !== -1) {
-                        $scope.dashboard.widgets.splice(index, 1, rs.widget);
-                        loadWidget(dashboard, $scope.dashboard.widgets[index], dashboard.attributes, false);
+                    const selectedWidget = $scope.dashboard.widgets.find(({ id }) => id === rs.widget.id);
+
+                    if (selectedWidget) {
+                        Object.assign(selectedWidget, rs.widget);
+                        selectedWidget.location = jsonSafeParse(selectedWidget.location);
+                        loadWidget(dashboard, selectedWidget, dashboard.attributes, false);
                     }
                     break;
                 case 'DELETE':
@@ -495,8 +500,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                 default:
                     break;
             }
-        }, function () {
-        });
+        }, function () {});
     };
 
     $scope.showWidgetDialog = function (event, widget, isNew, dashboard) {

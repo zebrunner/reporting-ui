@@ -98,7 +98,7 @@
                                 <pie-chart data="widget.data.dataset" options="widget.model"></pie-chart>
                              </div>
                             <div data-ng-if="ECHART_TYPES.indexOf(widget.type) !== -1 && widget.model" style="overflow: auto;">
-                                <div data-echarts ng-if="widget.type !== 'TABLE' && widget.data.dataset && widget.data.dataset.length" dataset="widget.data.dataset" with-legend="true" chart-actions="widget.chartActions" data-options="widget.model"></div>
+                                <div data-echarts ng-if="widget.type !== 'TABLE' && widget.data && widget.data.dataset && widget.data.dataset.length" dataset="widget.data.dataset" with-legend="true" chart-actions="widget.chartActions" data-options="widget.model"></div>
                                 <table ng-if="widget.type === 'TABLE' && widget.data.dataset != 0" data-ng-attr-id="table-{{ widget.id }}" class="table table-striped table-bordered table-hover" style="width: 100%;">
                                     <thead>
                                         <tr>
