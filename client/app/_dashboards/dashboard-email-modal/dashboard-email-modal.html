@@ -45,7 +45,7 @@
                                 md-items="user in $ctrl.querySearch()"
                                 md-item-text="user.email"
                                 md-selected-item="$ctrl.currentUser"
-                                md-selected-item-change="$ctrl.clearInputOnSelect($event, $ctrl.searchText, $ctrl.currentUser)"
+                                md-selected-item-change="$ctrl.clearInputOnSelect()"
                                 placeholder="Add email">
                                 <md-item-template name="suggestion">
                                     <span class="chip-suggestion">

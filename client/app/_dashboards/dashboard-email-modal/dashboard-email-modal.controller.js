@@ -9,8 +9,7 @@ const dashboardEmailModalController = function dashboardEmailModalController(
     UserService,
     model,
     messageService,
-    UtilService,
-    $scope
+    UtilService
     ) {
     'ngInject';
 
@@ -76,6 +75,8 @@ const dashboardEmailModalController = function dashboardEmailModalController(
                         }
 
                         return UtilService.filterUsersForSend(rs.data.results, vm.users);
+                    } else {
+                        return "";
                     }
                 });
         }

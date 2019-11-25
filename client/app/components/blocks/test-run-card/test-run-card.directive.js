@@ -140,6 +140,7 @@
                         targetEvent: event,
                         clickOutsideToClose:true,
                         fullscreen: true,
+                        controllerAs: '$ctrl',
                         locals: {
                             testRuns: testRuns
                         }
@@ -154,15 +155,16 @@
                         targetEvent: event,
                         clickOutsideToClose:true,
                         fullscreen: true,
+                        controllerAs: '$ctrl',
                         locals: {
                             testRuns: testRuns
                         }
                     })
-                    .then(undefined, function(links) {
+                    .then(function(links) {
                         if (links && links.length) {
                             showToastWithLinks(links);
                         }
-                    });
+                    }, () => {});
                 }
 
                 function showToastWithLinks(links) {

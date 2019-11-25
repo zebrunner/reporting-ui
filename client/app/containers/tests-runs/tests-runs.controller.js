@@ -404,6 +404,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             targetEvent: event,
             clickOutsideToClose:true,
             fullscreen: true,
+            controllerAs: '$ctrl',
             locals: {
                 testRuns: testRuns
             }
