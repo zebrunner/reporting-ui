@@ -329,6 +329,8 @@ md-chips.filter-chip.custom-filter {
         overflow-x: scroll;
         -ms-overflow-style: none;
         overflow: -moz-scrollbars-none;
+        display: block;
+        max-width: 100%;
         &::-webkit-scrollbar { 
             display: none;
         }
@@ -431,6 +433,35 @@ md-chips.filter-chip.custom-filter {
 
             md-chip + md-chip {
                 margin-left: 8px;
+            }
+        }
+    }
+}
+
+.warning-block {
+    padding: 24px 24px 20px 20px;
+    margin-bottom: 30px;
+    background-color: rgba(#eb4454, 0.1);
+    font-weight: normal;
+    letter-spacing: 0.1px;
+    color: #bf3744;
+    &__text {
+        &._important {
+            font-weight: 800;
+        }
+    }
+    &__body {
+        font-size: 14px;
+    }
+    &__list {
+        font-size: 14px;
+        margin-top: 8px;
+        ul {
+            padding-left: 16px;
+            margin: 0;
+
+            li {
+                color: #000000;
             }
         }
     }

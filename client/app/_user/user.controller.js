@@ -31,16 +31,11 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         generateAccessToken,
         validations: UtilService.validations,
         untouchForm: UtilService.untouchForm,
-        goToState,
         copyServiceUrl,
 
         get currentUser() { return UserService.currentUser; },
         get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; }
     };
-
-    function goToState(state) {
-        $state.go(state);
-    }
 
     function isIntervalSelected(interval) {
         return vm.currentUser && vm.currentUser.refreshInterval === interval;

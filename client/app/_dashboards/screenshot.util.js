@@ -1,16 +1,14 @@
 import html2canvas from 'html2canvas';
 
-const ScreenshotService = function ScreenshotService($q) {
+const ScreenshotService = function ScreenshotService($q, $timeout) {
     'ngInject';
 
     var body = angular.element('body');
-    var classesToAdd = {};
 
     return {
         take: function (locator, name = guid()) {
-            return $q(function (resolve, reject) {
+            return $q(function (resolve, reject) { //TODO: if error we don't resolve/reject promise at all
                 crop(locator).then(function (canvasObj) {
-                    deleteImage(canvasObj.canvas);
                     var formData = new FormData();
                     formData.append("file", dataURItoBlob(canvasObj.dataURL), name + ".png");
                     resolve(formData);
@@ -21,31 +19,27 @@ const ScreenshotService = function ScreenshotService($q) {
 
     function crop(locator) {
         return $q(function (resolve, reject) {
-            body.addClass('full-view');
+            body.addClass('widgets-cropping');
             var grid = angular.element('.grid-stack');
+            var classesToAdd = {};
             if(grid.hasClass('grid-stack-one-column-mode')) {
                 classesToAdd['grid-stack-one-column-mode'] = grid;
                 grid.removeClass('grid-stack-one-column-mode');
             }
-            html2canvas(document.querySelector(locator)).then(function (canvas) {
-                body.removeClass('full-view');
-                angular.forEach(classesToAdd, function (element, key) {
-                    element.addClass(key);
-                });
-                classesToAdd = {};
-                canvas.id = 'auto-canvas';
-                canvas.style = "display: none;";
-                canvas.getContext("2d").globalAlpha = 0.5;
-                document.body.appendChild(canvas);
-                resolve({canvas: canvas, dataURL: canvas.toDataURL("image/png")});
-            });
+            $timeout(function () {
+                const element = angular.element(locator);
+                if (element && element.length) { //TODO: if error we don't resolve/reject promise at all
+                    html2canvas(element[0]).then(function (canvas) {
+                        body.removeClass('widgets-cropping');
+                        angular.forEach(classesToAdd, function (element, key) {
+                            element.addClass(key);
+                        });
+                        classesToAdd = {};
+                        resolve({canvas: canvas, dataURL: canvas.toDataURL("image/png")});
+                    });
+                }
+            }, 0, false);
         });
-    };
-
-    function deleteImage(canvas) {
-        if(canvas) {
-            canvas.remove();
-        }
     };
 
     function dataURItoBlob(dataURI) {

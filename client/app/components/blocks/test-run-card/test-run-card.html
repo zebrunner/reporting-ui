@@ -153,12 +153,12 @@
                                 Build now
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.testRun.status === 'IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.testRun.status !== 'IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rerun
                             </md-button>
@@ -266,12 +266,12 @@
                                 Build now
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.testRun.status === 'IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
+                        <md-menu-item ng-if="$ctrl.testRun.status !== 'IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')" has-any-permission="['TEST_RUNS_CI']">
                             <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rerun
                             </md-button>

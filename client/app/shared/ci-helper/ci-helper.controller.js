@@ -10,17 +10,52 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     UtilService, API_URL, $http) {
     'ngInject';
 
+    let cardNumber = 0;
     let isMultitenant = false;
-    let platformsConfig = null;
+    let prevLauncher;
+    let prevFolder;
+    let gitHubPopUp;
+    let onAddNewGithubRepoClose; //TODO: seems like unused
+    let zafiraWebsocket;
+    let subscriptions = {};
+    const TENANT = $rootScope.globals.auth.tenant;
+    const newGithubRepoCloseClass = 'zf-button-close';
+    const newGithubRepoRevertCloseClass = 'zf-button-close-revert';
+    const providersPriority =  {
+        'SELENIUM': 1,
+        'ZEBRUNNER': 2,
+        'MCLOUD': 3,
+        'AEROKUBE': 4,
+        'BROWSERSTACK': 5,
+        'SAUCELABS': 6,
+        'default': 100,
+    };
     const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
     const vm = {
         platforms: [],
         platformModel: {},
         providers: [],
+        platformsConfig: null,
+        providersFail: false,
+        loadingScm: true,
 
         onProviderSelect,
         onPlatformSelect,
-        get isMobile() { return windowWidthService.isMobile(); }
+        get isMobile() { return windowWidthService.isMobile(); },
+        get cardNumber() {
+            return cardNumber;
+        },
+        set cardNumber(num) {
+            cardNumber = num;
+
+            if (cardNumber === 3) {
+                $timeout(() => {
+                    if (vm.providers.length) {
+                        handleProviderSelection(vm.providers[0]);
+                    }
+                })
+            }
+        },
     };
 
     vm.$onInit = initController;
@@ -37,8 +72,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     $scope.launcherScan = {
         branch: 'master'
     };
-
-    const TENANT = $rootScope.globals.auth.tenant;
 
     $scope.launcherLoaderStatus = {
         determinateValue: 20,
@@ -61,9 +94,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         }
     };
 
-    let prevLauncher;
-    let prevFolder;
-
     $scope.onLoad = function (editor) {
     };
 
@@ -71,8 +101,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         $scope.currentServerId = server.id;
         $scope.needServer = false;
     };
-
-    let gitHubPopUp;
 
     $scope.DEFAULT_TEMPLATES = {
         model: {},
@@ -113,13 +141,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         ]
     };
 
-    var newGithubRepoCloseClass = 'zf-button-close';
-    var newGithubRepoRevertCloseClass = 'zf-button-close-revert';
-
     $scope.states = {};
     $scope.states.addGitRepo = false;
-
-    var onAddNewGithubRepoClose;
 
     $scope.switchFolder = function (e, element, forceExpand) {
         const expandFolderClassName = 'expand-folder';
@@ -189,12 +212,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     $scope.mergeTemplate = function (template) {
         if (template) {
             $scope.launcher.model = $scope.launcher.model && $scope.launcher.model.isJsonValid() ? $scope.launcher.model : "{}";
-            var json = $scope.launcher.model.toJson();
             $scope.launcher.model = JSON.stringify(/*angular.merge(json, template)*/template, null, 2);
         }
     };
 
-    $scope.cardNumber = 0;
     $scope.builtLauncher = {
         model: {},
         type: {}
@@ -202,7 +223,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.applyBuilder = function (launcher, isPhone) {
         applyBuilder(launcher);
-        $scope.cardNumber = isPhone ? 3 : 2;
+        vm.cardNumber = isPhone ? 3 : 2;
     };
 
     function applyBuilder(launcher) {
@@ -234,7 +255,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.addTemplate = function () {
-        $scope.cardNumber = 2;
+        vm.cardNumber = 2;
         $scope.launcher = {};
         $scope.DEFAULT_TEMPLATES.model = {};
     };
@@ -246,7 +267,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 .then(() => {
                     clearPrevLauncherElement();
                     clearPrevFolderElement();
-                    $scope.cardNumber = 1;
+                    vm.cardNumber = 1;
                     $scope.needServer = false;
                     $scope.currentServerId = null;
                 });
@@ -268,7 +289,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         }
         clearLauncher();
         $scope.highlightFolder(scmAccount.id);
-        $scope.cardNumber = 2;
+        vm.cardNumber = 2;
         $scope.launcher.scmAccountType = angular.copy(scmAccount);
     };
 
@@ -297,7 +318,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     $scope.toEditLauncher = function (launcher) {
         //clearLauncher();
         //$scope.launcher = angular.copy(launcher);
-            $scope.cardNumber = 2;
+            vm.cardNumber = 2;
     };
 
     function getScmAccountDefaultBranchName(id) {
@@ -346,14 +367,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.editLauncher = function (launcher) {
         $scope.launcher = angular.copy(launcher);
-        $scope.cardNumber = 2;
+        vm.cardNumber = 2;
         closeConnectGithubBlock();
     };
 
 
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
         if ($scope.launcher && $scope.launcher.id === launcher.id) { return; }
-        handleProviderDeselection();
         highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
         $scope.needServer = false;
@@ -366,7 +386,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     function switchToLauncherPreview(launcher) {
         $scope.applyBuilder(launcher);
-        $scope.cardNumber = 3;
+        vm.cardNumber = 3;
     };
 
     $scope.selectLauncher = function (launcher) {
@@ -411,11 +431,11 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.chooseLauncherPhone = function (launcher) {
-        $scope.cardNumber = 3;
+        vm.cardNumber = 3;
     };
 
     $scope.navigateBack = function () {
-        $scope.cardNumber = 0;
+        vm.cardNumber = 0;
     };
 
     $scope.createLauncher = function (launcher) {
@@ -465,7 +485,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 if (rs.success) {
                     $scope.launchers.splice(index, 1);
                     $scope.launcher = {};
-                    $scope.cardNumber = 0;
+                    vm.cardNumber = 0;
 
                     const l = $scope.launchers[index];
                     const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
@@ -487,7 +507,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         ScmService.deleteScmAccount(scmAccountId).then(function (rs) {
             if (rs.success) {
                 const scmAccountIndex = $scope.scmAccounts.indexOfField('id', scmAccountId);
-                $scope.cardNumber = 0;
+                vm.cardNumber = 0;
                 clearPrevLauncherElement();
                 clearPrevFolderElement();
                 clearLauncher();
@@ -627,7 +647,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.cancelLauncher = function () {
-        $scope.cardNumber = 3;
+        vm.cardNumber = 3;
     };
 
     function getAllLaunchers() {
@@ -764,7 +784,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 $scope.launcher.scmAccountType = rs.data;
                 $scope.organizations = [];
                 $scope.repositories = [];
-                $scope.cardNumber = 0;
+                vm.cardNumber = 0;
 
                 // switch folder if new
                 $timeout(function () {
@@ -811,6 +831,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         extractPlatformSelections();
 
         launcher.model = JSON.stringify($scope.builtLauncher.model, null, 2);
+
         LauncherService.buildLauncher(launcher).then(function (rs) {
             if (rs.success) {
                 messageService.success("Job is in progress");
@@ -828,9 +849,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         scmAccount.launchers = scmAccount.launchers || [];
         scmAccount.launchers.push(launcher);
     };
-
-    let zafiraWebsocket;
-    let subscriptions = {};
 
     function initWebsocket() {
         const wsName = 'zafira';
@@ -932,67 +950,100 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 }
             });
         });
-        const providersConfigPromise = $q.all(getProvidersConfig());
-        $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise]).then(function (data) {
-            $scope.scmAccounts.forEach(function (scmAccount) {
-                $scope.launchers.forEach(function (launcher) {
-                    if (launcher.scmAccountType.id === scmAccount.id) {
-                        scmAccount.launchers = scmAccount.launchers || [];
-                        scmAccount.launchers.push(launcher);
-                    }
+        const providersConfigPromise = getProvidersConfig();
+
+        $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise])
+            .then(function (data) {
+                $scope.scmAccounts.forEach(function (scmAccount) {
+                    $scope.launchers.forEach(function (launcher) {
+                        if (launcher.scmAccountType.id === scmAccount.id) {
+                            scmAccount.launchers = scmAccount.launchers || [];
+                            scmAccount.launchers.push(launcher);
+                        }
+                    });
                 });
+            })
+            .finally(() => {
+                vm.loadingScm = false;
             });
-        });
     }
 
     function initPlatforms(data) {
         if (!data || !data.rootKey) { return; }
 
-        platformsConfig = data;
-        vm.platforms = [...platformsConfig.data[platformsConfig.rootKey]];
+        vm.platformsConfig = data;
+        vm.platforms = [...vm.platformsConfig.data[vm.platformsConfig.rootKey]]
+            //any platform can be disabled in the config using 'disabled' field
+            .filter(platform => !platform.disabled);
+
+        //if launcher has defined type, select first platform with the same type in 'job' field of the config
+        if ($scope.launcher.type) {
+            vm.platforms.some(platform => {
+                if (Array.isArray(platform.job) && platform.job.includes($scope.launcher.type)) {
+                    vm.platformModel[vm.platformsConfig.rootKey] = platform;
+                    onPlatformSelect();
+                    
+                    return true;
+                }
+    
+                return false;
+            })
+        }
     }
 
     function onPlatformSelect() {
         clearPlatformControlsData();
-        resetPlatformModel(vm.platformModel.platform);
-        if (vm.platformModel.platform && vm.platformModel.platform.child) {
-            prepareChildControl(vm.platformModel.platform);
+        resetPlatformModel(vm.platformModel[vm.platformsConfig.rootKey]);
+        if (vm.platformModel[vm.platformsConfig.rootKey] && vm.platformModel[vm.platformsConfig.rootKey].child) {
+            prepareChildControl(vm.platformModel[vm.platformsConfig.rootKey]);
         }
     }
 
-    function prepareChildControl(parentItem, skipDefault) {
+    function prepareChildControl(parentItem) {
         const data = parentItem.child;
         let defaultItem;
-        const field = data.field;
-        const items = platformsConfig.data[field] ? platformsConfig.data[field].filter(child => Array.isArray(data.variants) && data.variants.includes(child.id)) : [];
-        const childControl = {
-            key: field,
-            items,
-            onChange: onPlatformControlSelect,
+        const key = data.key;
+        let childControl;
+
+        data.type = data.type ? data.type : 'select';
+        data.label = data.label ? data.label : key;
+        childControl = {
+            type: data.type,
+            key,
+            label: data.label,
             index: vm.platformControls.length,
             data,
-        };
-
+        }
+        
         vm.platformControls = [...vm.platformControls, childControl];
-
-        defaultItem = data.default ? childControl.items.find(item => item.id === data.default) : childControl.items[0];
-        defaultItem && (vm.platformModel[field] = defaultItem);
-
-        if (defaultItem) {
-            if (data.versions) {
-                prepareVersionsControl(defaultItem, data);
-            } else if (defaultItem.child) {
+        if (Array.isArray(vm.platformsConfig.data[key])) {
+            childControl.items = vm.platformsConfig.data[key].filter(child => Array.isArray(data.variants) && data.variants.includes(child.id));
+            defaultItem = getDefaultControl(childControl);
+        }
+        if (data.type === 'select') {
+            childControl.onChange = onPlatformControlSelect;
+            if (defaultItem) {
+                vm.platformModel[key] = defaultItem;
+                if (data.versions) {
+                    prepareVersionsControl(defaultItem, data);
+                } else if (defaultItem.child) {
+                    prepareChildControl(defaultItem);
+                }
+            }
+        } else if (data.type === 'input') {
+            vm.platformModel[key] = defaultItem ? defaultItem : {value: ''};
+            if (defaultItem && defaultItem.child) {
                 prepareChildControl(defaultItem);
             }
         }
     }
 
-    function prepareVersionsControl(parentItem, data, skipDefault) {
+    function prepareVersionsControl(parentItem, data) {
         let defaultItem;
-        const field = `${data.field}-versions`;
-        const items = platformsConfig.data[field].filter(child => data.versions.includes(child.id) && child.id.includes(parentItem.id));
+        const key = `${data.key}-versions`;
+        const items = vm.platformsConfig.data[key].filter(child => data.versions.includes(child.id) && child.id.includes(parentItem.id));
         const childControl = {
-            key: field,
+            key,
             items,
             onChange: onPlatformControlSelect,
             index: vm.platformControls.length,
@@ -1000,17 +1051,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         };
 
         vm.platformControls = [...vm.platformControls, childControl];
-
-        if (data['default-versions']) {
-            if (typeof data['default-versions'] === 'string') {
-                defaultItem = childControl.items.find(item => item.id === data['default-versions']);
-            } else {
-                defaultItem = childControl.items.find(item =>  data['default-versions'].includes(item.id));
-            }
-        }
-
-        defaultItem = defaultItem ? defaultItem : childControl.items[0];
-        defaultItem && (vm.platformModel[field] = defaultItem);
+        defaultItem = getDefaultVersionControl(childControl)
+        defaultItem && (vm.platformModel[key] = defaultItem);
     }
 
     function onPlatformControlSelect(control) {
@@ -1028,17 +1070,75 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         }
     }
 
+    function getDefaultControl(childControl) {
+        let defaultItem;
+
+        //TODO: the highest priority should be by louncher's config if present
+        //firstly sholud be selected by job (launcher type)
+        if ($scope.launcher.type) {
+            defaultItem = childControl.items.find(item => Array.isArray(item.job) && item.job.includes($scope.launcher.type));
+        }
+        //secondly should be selected by config's default value
+        if (!defaultItem && childControl.data.default) {
+            defaultItem = childControl.items.find(item => item.id === childControl.data.default);
+        }
+        //otherwise should be selected first item in array
+        if (!defaultItem) {
+            defaultItem = childControl.items[0]
+        }
+
+        return defaultItem;
+    }
+
+    function getDefaultVersionControl(childControl) {
+        let defaultItem;
+
+        //TODO: the highest priority should be by louncher's config if present
+        //firstly sholud be selected by job (launcher type)
+        if ($scope.launcher.type) {
+            defaultItem = childControl.items.find(item => Array.isArray(item.job) && item.job.includes($scope.launcher.type));
+        }
+        //secondly should be selected by config's default value
+        if (!defaultItem && childControl.data['default-versions']) {
+            if (typeof childControl.data['default-versions'] === 'string') {
+                defaultItem = childControl.items.find(item => item.id === childControl.data['default-versions']);
+            } else {
+                defaultItem = childControl.items.find(item =>  childControl.data['default-versions'].includes(item.id));
+            }
+        }
+        //otherwise should be selected first item in array
+        if (!defaultItem) {
+            defaultItem = childControl.items[0];
+        }
+        
+
+        return defaultItem;
+    }
+
     function filterPlatformModel() {
         const keys = vm.platformControls.map(control => control.key);
+        const newModel = {};
+
+        newModel[vm.platformsConfig.rootKey] = vm.platformModel[vm.platformsConfig.rootKey];
 
         vm.platformModel = keys.reduce((out, key) => {
             out[key] = vm.platformModel[key];
 
             return out;
-        }, { platform: vm.platformModel.platform });
+        }, newModel);
     }
 
     function extractPlatformSelections() {
+        const selectedProvider = getSelectedProvider();
+
+        if (selectedProvider && vm.integrations) {
+            const selectedIntegration = vm.integrations.find(({ name }) => name.toLowerCase() === selectedProvider.name.toLowerCase())
+
+            if (selectedIntegration) {
+                $scope.builtLauncher.model.providerId = selectedIntegration.id;
+            }
+        }
+
         Object.keys(vm.platformModel).forEach(key => {
             if (vm.platformModel[key]) {
                 $scope.builtLauncher.model[key] = vm.platformModel[key].value;
@@ -1049,7 +1149,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     function clearPlatforms() {
         resetPlatformModel();
         vm.platforms = [];
-        platformsConfig = null;
+        vm.platformsConfig = null;
         clearPlatformControlsData();
     }
 
@@ -1060,7 +1160,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     function resetPlatformModel(platform) {
         vm.platformModel = {};
 
-        if (platform) { vm.platformModel.platform = platform; }
+        if (platform) { vm.platformModel[vm.platformsConfig.rootKey] = platform; }
     }
 
     function getBrowsersConfig(url) {
@@ -1080,7 +1180,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             return provider.id === id;
         })
 
-        clearPlatforms()
+        clearPlatforms();
+        vm.failedProvider = provider.failed
         vm.chipsCtrl.selectedChip = index;
         provider.data && initPlatforms(provider.data);
     }
@@ -1090,32 +1191,72 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         vm.chipsCtrl && (vm.chipsCtrl.selectedChip = -1);
     }
 
+    function getSelectedProvider() {
+        if (!vm.chipsCtrl || vm.chipsCtrl.selectedChip === -1) { return; }
+
+        return vm.chipsCtrl.items[vm.chipsCtrl.selectedChip];
+    }
+
     function getProvidersConfig() {
         return $http.get(providersConfigURL)
             .then(response => {
                 const url = new URL(providersConfigURL);
                 const path = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
-            
-                vm.providers = response.data;
+                const providers = response.data || [];
 
-                return vm.providers.map(config => {
-                    if (config.configFile) {
-                        url.pathname = path + config.configFile;
+                return toolsService.fetchIntegrationOfTypeByName('TEST_AUTOMATION_TOOL')
+                    .then((res) => {
+                        if (res.success) {
+                            let integrationNames;
 
-                        return getBrowsersConfig(url.href)
-                            .then(res => {
-                                config.data = res.data;
-                            })
-                            .catch((error) => {
-                                console.error('Unable to load the platforms config');
+                            vm.integrations = (res.data || []);
+
+                            integrationNames = vm.integrations
+                                .filter(integration => integration.enabled)
+                                .map(item => item.name.toLowerCase());
+
+                            vm.providers = providers
+                                //filter providers by available integrations
+                                .filter(provider => integrationNames.includes(provider.name.toLowerCase()))
+                                //sort providers by priority
+                                .sort((a, b) => {
+                                    const aPriority = providersPriority[a.name] || providersPriority.default;
+                                    const bPriority = providersPriority[b.name] || providersPriority.default;
+
+                                    if (aPriority < bPriority) {
+                                        return -1;
+                                    }
+                                    if (aPriority > bPriority) {
+                                        return 1;
+                                    }
+
+                                    return 0;
+                                });
+
+                            return vm.providers.map(config => {
+                                if (config.configFile) {
+                                    url.pathname = path + config.configFile;
+
+                                    return getBrowsersConfig(url.href)
+                                        .then(res => {
+                                            config.data = res.data;
+                                        })
+                                        .catch(() => {
+                                            console.error(`Unable to load ${config.name} provider config`);
+                                            config.failed = true;
+                                        });
+                                }
+
+                                return $q.resolve();
                             });
-                    }
-
-                    return $q.resolve();
-                });
+                        } else {
+                            console.error('Unable to get integrations');
+                        }
+                    })
             })
-            .catch((error) => {
+            .catch(() => {
                 console.error('Unable to load the providers config');
+                vm.providersFail = true;
             });
     }
 

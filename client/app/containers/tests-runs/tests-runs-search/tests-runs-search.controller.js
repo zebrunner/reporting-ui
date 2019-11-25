@@ -92,11 +92,13 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         if (vm.isSearchActive()) {
             let fromDate = testsRunsService.getSearchParam('fromDate');
             let toDate = testsRunsService.getSearchParam('toDate');
-            const date = testsRunsService.getSearchParam('date');
+            const date = testsRunsService.getSearchParam('date'); 
+            const selectedTemplateName = testsRunsService.getSearchParam('selectedTemplateName');
 
             date && (fromDate = toDate = date);
             fromDate && (vm.selectedRange.dateStart = new Date(fromDate));
             toDate && (vm.selectedRange.dateEnd = new Date(toDate));
+            selectedTemplateName && (vm.selectedRange.selectedTemplateName = selectedTemplateName);
 
             testsRunsService.getSearchTypes().forEach(function(type) {
                 const searchValue = testsRunsService.getSearchParam(type);
@@ -234,17 +236,24 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         .then(function(result) {
             if (result) {
                 vm.selectedRange = result;
+                vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
+                vm.searchParams.selectedTemplateName = vm.selectedRange.selectedTemplateName;
                 if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
                     if (vm.selectedRange.dateStart.getTime() !==
                         vm.selectedRange.dateEnd.getTime()) {
-                        testsRunsService.deleteSearchParam('date');
-                        testsRunsService.setSearchParam('fromDate', vm.selectedRange.dateStart);
-                        testsRunsService.setSearchParam('toDate', vm.selectedRange.dateEnd);
+                        vm.searchParams.date = null;
+                        vm.searchParams.fromDate = vm.selectedRange.dateStart;
+                        vm.searchParams.toDate = vm.selectedRange.dateEnd;
                     } else {
-                        testsRunsService.deleteSearchParam('fromDate');
-                        testsRunsService.deleteSearchParam('toDate');
-                        testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
+                        vm.searchParams.fromDate = null;
+                        vm.searchParams.toDate = null;
+                        vm.searchParams.date = vm.selectedRange.dateStart;
                     }
+                } else {
+                    vm.searchParams.fromDate = null;
+                    vm.searchParams.toDate = null;
+                    vm.searchParams.date = null;
+                    vm.searchParams.selectedTemplateName = null;
                 }
 
                 onChangeSearchCriteria();

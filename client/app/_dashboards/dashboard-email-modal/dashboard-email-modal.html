@@ -39,11 +39,13 @@
                             </md-chip-template>
                             <md-autocomplete
                                 md-autoselect
+                                ng-model-options="{ debounce: 700 }"
                                 md-no-cache="true"
-                                md-search-text="searchText"
-                                md-items="user in $ctrl.querySearch(searchText, $ctrl.users)"
+                                md-search-text="$ctrl.searchText"
+                                md-items="user in $ctrl.querySearch()"
                                 md-item-text="user.email"
-                                md-selected-item="currentUser"
+                                md-selected-item="$ctrl.currentUser"
+                                md-selected-item-change="$ctrl.clearInputOnSelect($event, $ctrl.searchText, $ctrl.currentUser)"
                                 placeholder="Add email">
                                 <md-item-template name="suggestion">
                                     <span class="chip-suggestion">
@@ -52,7 +54,7 @@
                                     </span>
                                 </md-item-template>
                                 <md-not-found id="notRecipients">
-                                    No users matching "{{searchText}}" were found.
+                                    No users matching "{{$ctrl.searchText}}" were found.
                                 </md-not-found>
                             </md-autocomplete>
                         </md-chips>
@@ -62,7 +64,7 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="send" class="md-raised md-primary" data-ng-click="$ctrl.sendEmail()" data-ng-disabled="email_form.$invalid || !$ctrl.email.recipients.length">
+            <md-button id="send" class="md-raised md-primary" data-ng-click="$ctrl.sendEmail()" data-ng-disabled="email_form.$invalid || !$ctrl.email.recipients.length || $ctrl.sendingEmail">
                 Send
             </md-button>
         </md-dialog-actions>

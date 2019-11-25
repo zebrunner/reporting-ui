@@ -795,8 +795,10 @@ md-select-menu:not(.md-overflow) {
     min-width: 80px;
     @include default-button(transparent, $dark-new, rgba($dark-new, .07));
     &[disabled], &[disabled]:hover {
-        background-color: transparent;
-        color: rgba($dark-new, 0.35);
+        &.md-warn, &.md-primary {
+            background-color: transparent;
+            color: rgba($dark-new, 0.35);
+        }
     }
     &._chips-like {
         background-color: transparent;

@@ -38,6 +38,7 @@
                                 {{$chip.email}}
                             </md-chip-template>
                             <md-autocomplete
+                                ng-model-options="{ debounce: 700 }"
                                 md-search-text="searchText"
                                 md-items="user in querySearch(searchText, users)"
                                 md-item-text="user.email"

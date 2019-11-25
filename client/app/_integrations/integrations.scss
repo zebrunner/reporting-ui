@@ -73,6 +73,7 @@
             vertical-align: middle;
             width: 32px;
             height: 32px;
+            background-size: 100%;
             background-position: center center;
             background-repeat: no-repeat;
             margin-right: 10px;
@@ -109,6 +110,21 @@
             }
             &.testrail {
                 background-image: url(../../assets/images/_icons_tools/testrail.svg);
+            }
+            &.zebrunner {
+                background-image: url(../../assets/images/_icons_tools/zebrunner.svg);
+            }
+            &.browserstack {
+                background-image: url(../../assets/images/_icons_tools/browserstack.svg);
+            }
+            &.mcloud {
+                background-image: url(../../assets/images/_icons_tools/MCloud.svg);
+            }
+            &.saucelabs {
+                background-image: url(../../assets/images/_icons_tools/saucelabs.svg);
+            }
+            &.aerokube {
+                background-image: url(../../assets/images/_icons_tools/aerokube.svg);
             }
         }
         &-status {

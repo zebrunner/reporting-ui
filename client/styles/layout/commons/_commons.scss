@@ -568,35 +568,6 @@ $standart-padding: 24px;
                 }
             }
 
-            &_warning {
-
-                padding: 24px 24px 20px 20px;
-                margin-bottom: 30px;
-                margin-right: 16px;
-                background-color: rgba(#eb4454, 0.1);
-
-                font-size: 14px;
-                font-weight: 500;
-                letter-spacing: 0.1px;
-                color: #bf3744;
-
-                &_body {
-
-                }
-
-                &_list {
-                    margin-top: 8px;
-                    ul {
-                        padding-left: 16px;
-                        margin: 0;
-
-                        li {
-                            color: #000000;
-                        }
-                    }
-                }
-            }
-
             &_personal {
                 margin-bottom: 40px;
                 &_item {

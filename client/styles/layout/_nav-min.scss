@@ -121,7 +121,7 @@
                 @include border-right-radius($border-radius-base);
                 box-shadow: 1px 1px 3px rgba(0,0,0,.2);
                 li.search-menu {
-                    > ul:not(.projects__wrapper):not(.dashboards___list_wrapper) {
+                    > ul:not(.projects__wrapper):not(.profile__wrapper):not(.dashboards___list_wrapper) {
                         height: 100%;
                         overflow: auto;
                     }
@@ -146,7 +146,7 @@
             }
 
             &.open {
-                > ul, li.search-menu > ul:not(.projects__wrapper) {
+                > ul, li.search-menu > ul:not(.projects__wrapper):not(.profile__wrapper) {
                     display: block !important;
                 }
             }
@@ -204,17 +204,7 @@
     }
 }
 
-@keyframes rotateRight {
-    from {
-        transform: rotate(0);
-    }
-    to {
-        transform: rotate(90deg);
-    }
-}
-
-.drag-actor {
-    cursor: grab;
+.nav .menu-actor {
     font-size: 16px;
     position: absolute;
     top: 0;
@@ -222,10 +212,23 @@
     height: 100%;
     line-height: 40px;
     vertical-align: baseline;
-    z-index: 100000;
-
-    &:active {
-        cursor: grabbing;
+    z-index: 100000; 
+    &._drag {
+        cursor: grab;
+        &:active {
+            cursor: grabbing;
+        }
+    }   
+    &._delete {
+        cursor: pointer;
     }
+}
 
+@keyframes rotateRight {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(90deg);
+    }
 }
