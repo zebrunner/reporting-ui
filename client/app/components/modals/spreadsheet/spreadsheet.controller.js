@@ -3,99 +3,103 @@
 
     angular.module('app').controller('SpreadsheetController', SpreadsheetController);
 
-    function SpreadsheetController($scope, $mdDialog, $mdConstant, UserService, TestRunService, testRuns, messageService) {
+    function SpreadsheetController(
+        $q,
+        $mdDialog,
+        $mdConstant,
+        UserService,
+        TestRunService,
+        testRuns,
+        messageService,
+        UtilService
+        ) {
         'ngInject';
 
-        $scope.recipients = [];
-        $scope.users = [];
-        $scope.keys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SPACE, $mdConstant.KEY_CODE.SEMICOLON];
+        let stopCriteria = '########';
+        let usersSearchCriteria = {};
+        const vm = {
+            UtilService,
+            querySearch,
+            keys: [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SPACE, $mdConstant.KEY_CODE.SEMICOLON],
+            recipients: [],
+            searchText: '',
+            currentUser: null,
+            cancel,
+            users: [],
+            clearInputOnSelect,
+            createSpreadsheet,
+        }
 
-        $scope.createSpreadsheet = function () {
-            $scope.recipients = $scope.recipients.length ? $scope.recipients.toString() : [];
-            $scope.links = [];
+        function clearInputOnSelect() {
+            vm.searchText = '';
+            vm.currentUser = null;
+        }
 
-            testRuns.forEach(function(testRun) {
-                TestRunService.createTestRunResultsSpreadsheet(testRun.id, $scope.recipients).then(function(rs) {
-                    if(rs.success)
-                    {
-                        $scope.links.push(rs.data);
-                        $scope.cancel($scope.links);
-                    }
-                    else
-                    {
-                        messageService.error(rs.message);
-                    }
-                });
-            });
-        };
-        $scope.users_all = [];
-        var currentText;
+        function createSpreadsheet() {
+            const links = [];
+            let errorMessage = '';
+            
+            vm.recipients = vm.recipients.toString();
+            vm.sendingEmail = true;
 
-        $scope.usersSearchCriteria = {};
-        $scope.asyncContacts = [];
-        $scope.filterSelected = true;
-
-        $scope.querySearch = querySearch;
-        var stopCriteria = '########';
-        function querySearch (criteria, user) {
-            $scope.usersSearchCriteria.query = criteria;
-            currentText = criteria;
-            if(!criteria.includes(stopCriteria)) {
-                stopCriteria = '########';
-                return UserService.searchUsersWithQuery($scope.usersSearchCriteria, criteria).then(function(rs) {
-                    if(rs.success)
-                    {
-                        if (! rs.data.results.length) {
-                            stopCriteria = criteria;
+            const promises = testRuns.map(function(testRun) {
+                return TestRunService.createTestRunResultsSpreadsheet(testRun.id, vm.recipients)
+                    .then(function(rs) {
+                        if (rs.success) {
+                            links.push(rs.data);
+                        } else {
+                            !errorMessage && (errorMessage = rs.message);
+    
+                            return $q.reject();
                         }
-                        return rs.data.results.filter(searchFilter(user));
-                    }
-                    else
-                    {
-                        messageService.error(rs.message);
+                    });
+            });
+
+            $q.all(promises)
+                .then(() => {
+                    console.log(1111)
+                    vm.sendingEmail = false;
+                    // messageService.success('Email was successfully sent!');
+                    hide(links);
+                })
+                .catch(() => {
+                    console.log(222)
+                    vm.sendingEmail = false;
+                    if (errorMessage) {
+                        messageService.error(errorMessage);
                     }
                 });
+        };
+
+        function querySearch() {
+            usersSearchCriteria.query = vm.searchText;
+            if (!vm.searchText.includes(stopCriteria)) {
+                stopCriteria = '########';
+    
+                return UserService.searchUsersWithQuery(usersSearchCriteria, vm.searchText)
+                    .then(function (rs) {
+                        if (rs.success) {
+                            if (!rs.data.results.length) {
+                                stopCriteria = vm.searchText;
+                            }
+    
+                            return UtilService.filterUsersForSend(rs.data.results, vm.users);
+                        }
+                    });
             }
+    
             return "";
         }
 
-        function searchFilter(u) {
-            return function filterFn(user) {
-                var users = u;
-                for(var i = 0; i < users.length; i++) {
-                    if(users[i].id == user.id) {
-                        return false;
-                    }
-                }
-                return true;
-            };
-        }
+        function hide(data) {
+            $mdDialog.hide(data);
+        };
 
-        $scope.checkAndTransformRecipient = function (currentUser) {
-            var user = {};
-            if (currentUser.username) {
-                user = currentUser;
-                $scope.recipients.push(currentUser.email);
-                $scope.users.push(user);
-            } else {
-                user.email = currentUser;
-                $scope.recipients.push(user.email);
-                $scope.users.push(user);
-            }
-            return user;
+        function cancel() {
+            $mdDialog.cancel();
         };
-        $scope.removeRecipient = function (user) {
-            var index = $scope.recipients.indexOf(user.email);
-            if (index >= 0) {
-                $scope.recipients.splice(index, 1);
-            }
-        };
-        $scope.hide = function() {
-            $mdDialog.hide();
-        };
-        $scope.cancel = function(links) {
-            $mdDialog.cancel(links);
-        };
+
+        return vm;
     }
 
 })();

@@ -1,10 +1,10 @@
 <md-dialog flex="50" aria-label="User profile" zafira-background-theme="modal">
-    <form class="form-validation" name="spreadsheet_form" ng-submit="createSpreadsheet(); UtilService.untouchForm(spreadsheet_form)" ng-cloak>
+    <form class="form-validation" name="spreadsheet_form" ng-submit="$ctrl.createSpreadsheet(); $ctrl.UtilService.untouchForm(spreadsheet_form)" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 id="modalTitle">Export to Google</h2>
                 <span flex></span>
-                <md-button id="close" class="md-icon-button _default-md-style" data-ng-click="cancel()">
+                <md-button id="close" class="md-icon-button _default-md-style" data-ng-click="$ctrl.cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
@@ -15,25 +15,28 @@
                 <div layout layout-sm="column">
                     <md-input-container flex class="chips-input-container _with-img">
                         <label>Share with: </label>
-                        <md-chips ng-model="users"
+                        <md-chips ng-model="$ctrl.users"
                                     class="photo-chip"
                                     filter-selected=true
                                     md-autocomplete-snap
-                                    md-transform-chip="checkAndTransformRecipient($chip)"
-                                    md-on-remove="removeRecipient($chip)"
-                                    md-separator-keys="keys">
+                                    md-transform-chip="$ctrl.UtilService.checkAndTransformRecipient($chip, $ctrl.recipients, $ctrl.users)"
+                                    md-on-remove="$ctrl.UtilService.removeRecipient($chip, $ctrl.recipients)"
+                                    md-separator-keys="$ctrl.keys"
+                                    md-add-on-blur="true">
                             <md-chip-template name="chip">
                                 <profile-photo ng-model="$chip.photoURL" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
                                 {{$chip.email}}
                             </md-chip-template>
                             <md-autocomplete
-                                md-search-text="searchText"
-                                md-items="user in querySearch(searchText, users)"
+                                md-search-text="$ctrl.searchText"
+                                md-items="user in $ctrl.querySearch()"
                                 md-item-text="user.email"
-                                md-selected-item="currentUser"
+                                md-selected-item="$ctrl.currentUser"
+                                md-selected-item-change="$ctrl.clearInputOnSelect()"
                                 md-autoselect
                                 md-no-cache="true"
-                                placeholder="add email">
+                                placeholder="add email"
+                                ng-model-options="{ debounce: 700 }">
                                 <md-item-template>
                                 <span name="suggestion" class="chip-suggestion">
                                     <profile-photo ng-model="user.photoURL" size="40" squared="20" chip="true"></profile-photo>
@@ -41,7 +44,7 @@
                                 </span>
                                 </md-item-template>
                                 <md-not-found id="notRecipients">
-                                    No users matching "{{searchText}}" were found.
+                                    No users matching "{{$ctrl.searchText}}" were found.
                                 </md-not-found>
                             </md-autocomplete>
                         </md-chips>
@@ -51,7 +54,7 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button id="send" class="md-raised btn-w-md md-primary" data-ng-click="createSpreadsheet()" data-ng-disabled="spreadsheet_form.$invalid">
+            <md-button id="send" class="md-raised btn-w-md md-primary" data-ng-click="$ctrl.createSpreadsheet()" data-ng-disabled="spreadsheet_form.$invalid || !$ctrl.recipients.length || $ctrl.sendingEmail">
                 Export
             </md-button>
         </md-dialog-actions>

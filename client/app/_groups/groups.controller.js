@@ -1,8 +1,13 @@
 'use strict';
 
-const GroupsController = function GroupsController($scope, $rootScope, $location, $state, $mdDialog,
-                                                       UserService, GroupService, InvitationService,
-                                                       AuthService, toolsService, messageService) {
+const GroupsController = function GroupsController(
+    $scope,
+    $mdDialog,
+    UserService,
+    GroupService,
+    UtilService,
+    messageService
+    ) {
     'ngInject';
 
     const vm = {
@@ -87,27 +92,15 @@ const GroupsController = function GroupsController($scope, $rootScope, $location
 
     function querySearch(criteria, group) {
         vm.usersSearchCriteria.query = criteria;
-        return UserService.searchUsersWithQuery(vm.usersSearchCriteria).then(function (rs) {
-            if (rs.success) {
-                return rs.data.results.filter(searchFilter(group));
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        }).finally(function (rs) {
-        });
-    };
 
-    function searchFilter(group) {
-        return function filterFn(user) {
-            var users = group.users;
-            for (var i = 0; i < users.length; i++) {
-                if (users[i].id == user.id) {
-                    return false;
+        return UserService.searchUsersWithQuery(vm.usersSearchCriteria, criteria)
+            .then(function (rs) {
+                if (rs.success) {
+                    return UtilService.filterUsersForSend(rs.data.results, group.users);
+                } else {
+                    messageService.error(rs.message);
                 }
-            }
-            return true;
-        };
+            });
     };
 
     function getAllGroups(isPublic) {
