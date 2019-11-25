@@ -28,7 +28,7 @@
                         <div class="info-row__name">Blocker</div>
                         <div class="info-row__value">
                             <md-checkbox id="blocker" aria-label="Blocker checkbox" ng-model="$ctrl.newIssue.blocker"
-                                class="no-margin no-padding no-border"></md-checkbox>
+                                class="no-margin no-padding no-border" ng-change="$ctrl.unassignAction.status = false;"></md-checkbox>
                         </div>
                     </div>
                 </div>
@@ -46,25 +46,15 @@
                     <md-input-container flex class="issue-element-container summary-container">
                         <label>Summary</label>
                         <textarea id="taskDescription" name="taskDescription" class="form-control validation summary" rows="1"
-                            data-ng-model="$ctrl.newIssue.description"></textarea>
+                            data-ng-model="$ctrl.newIssue.description" ng-change="$ctrl.unassignAction.status = false;"></textarea>
                     </md-input-container>
                     <md-dialog-actions layout="row">
-                        <md-button ng-if="$ctrl.isNewIssue" ng-click="$ctrl.clearIssue()" ng-disabled="known_issue_form.$invalid">
+                        <md-button ng-click="$ctrl.clearIssue()" ng-disabled="known_issue_form.$invalid">
                             Clear
                         </md-button>
-                        <md-button id="unassignIssue" ng-if="!$ctrl.isNewIssue"
-                            ng-really-message="Do you really want to delete known issue from current test?"
-                            ng-really-click="$ctrl.unassignIssue($ctrl.newIssue)" ng-disabled="known_issue_form.$invalid">
-                            Unassign
-                        </md-button>
-                        <md-button id="updateIssue" ng-if="!$ctrl.isNewIssue" class="md-raised md-primary"
-                            ng-click="$ctrl.assignIssue($ctrl.newIssue, $ctrl.isNewIssue)"
-                            ng-disabled="known_issue_form.$invalid">
-                            Update
-                        </md-button>
-                        <md-button id="assignIssue" ng-if="$ctrl.isNewIssue" class="md-raised md-primary"
-                            ng-click="$ctrl.assignIssue($ctrl.newIssue, $ctrl.isNewIssue)" ng-disabled="known_issue_form.$invalid">
-                            Assign
+                        <md-button id="saveIssue" class="md-raised md-primary"
+                                   ng-click="$ctrl.save($ctrl.newIssue)" ng-disabled="known_issue_form.$invalid && !$ctrl.unassignAction.status">
+                            Save
                         </md-button>
                     </md-dialog-actions>
                 </div>
@@ -83,7 +73,7 @@
                                 {{issue.description}}
                             </div>
                             <div class="col-lg-4 clearfix align-middle ticket-list-text ticket-list-row__date">
-                                {{issue.modifiedAt | date : "medium"}}
+                                {{issue.modifiedAt | date : 'MMM dd, yyyy hh:mm'}}
                             </div>
                         </div>
                     </div>

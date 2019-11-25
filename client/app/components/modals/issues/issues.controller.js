@@ -2,7 +2,7 @@
 const IssuesModalController = function IssuesModalController(
         $scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService, messageService) {
     'ngInject';
-        
+
     const vm = {
         isNewIssue: isNewIssue,
         issueJiraIdInputIsChanged: false,
@@ -26,6 +26,7 @@ const IssuesModalController = function IssuesModalController(
         deleteWorkItemFromList: deleteWorkItemFromList,
         deleteWorkItemFromTestWorkItems: deleteWorkItemFromTestWorkItems,
         assignIssue: assignIssue,
+        save: save,
         unassignIssue: unassignIssue,
         searchScopeIssue: searchScopeIssue,
         clearIssue: clearIssue,
@@ -33,6 +34,10 @@ const IssuesModalController = function IssuesModalController(
         hide: hide,
         cancel: cancel,
         bindEvents: bindEvents,
+        unassignAction: {
+            status: false,
+            issue: null
+        },
         isToolConnected: toolsService.isToolConnected,
         get isConnectedToJira() { return toolsService.isToolConnected('JIRA'); },
     };
@@ -140,13 +145,21 @@ const IssuesModalController = function IssuesModalController(
             });
     };
 
+    function save(issue) {
+        if (vm.unassignAction.status && vm.unassignAction.issue) {
+            vm.unassignIssue(vm.unassignAction.issue);
+        } else {
+            vm.assignIssue(issue);
+        }
+    };
+
     /* Unassignes issue from the test */
 
     function unassignIssue(workItem) {
         TestService.deleteTestWorkItem(test.id, workItem.id)
             .then(function(rs) {
                 let  message;
-                
+
                 if (rs.success) {
                     message = generateActionResultMessage(workItem.type,
                         workItem.jiraId, "unassigned", true);
@@ -176,9 +189,14 @@ const IssuesModalController = function IssuesModalController(
         vm.newIssue.description = issue.description;
         vm.newIssue.blocker = issue.blocker;
         vm.selectedIssue = true;
+        vm.unassignAction.status = false;
     };
 
     function clearIssue() {
+        if (vm.attachedIssue.id === vm.newIssue.id) {
+            vm.unassignAction.status = !!vm.newIssue.id;
+            vm.unassignAction.issue = angular.copy(vm.newIssue);
+        }
         initNewIssue();
         getIssues();
         vm.issueJiraIdExists = false;
@@ -202,6 +220,7 @@ const IssuesModalController = function IssuesModalController(
         vm.isIssueClosed = false;
         vm.isIssueFound = false;
         vm.isNewIssue = true;
+        vm.unassignAction.status = false;
         var existingIssue = vm.issues.filter(function(foundIssue) {
             return foundIssue.jiraId === vm.newIssue.jiraId;
         })[0];
