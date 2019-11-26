@@ -25,9 +25,7 @@ const IssuesModalController = function IssuesModalController(
         updateWorkItemList: updateWorkItemList,
         deleteWorkItemFromList: deleteWorkItemFromList,
         deleteWorkItemFromTestWorkItems: deleteWorkItemFromTestWorkItems,
-        assignIssue: assignIssue,
         save: save,
-        unassignIssue: unassignIssue,
         searchScopeIssue: searchScopeIssue,
         clearIssue: clearIssue,
         initIssueSearch: initIssueSearch,
@@ -145,11 +143,11 @@ const IssuesModalController = function IssuesModalController(
             });
     };
 
-    function save(issue) {
+    function save() {
         if (vm.unassignAction.status && vm.unassignAction.issue) {
-            vm.unassignIssue(vm.unassignAction.issue);
+            unassignIssue(vm.unassignAction.issue);
         } else {
-            vm.assignIssue(issue);
+            assignIssue(vm.newIssue);
         }
     };
 
