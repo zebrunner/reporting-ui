@@ -550,17 +550,19 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !!rescan;
-            LauncherService.scanRepository(launcherScan, $scope.currentServerId).then(function (rs) {
-                if (rs.success) {
-                    const queueItemUrl = rs.data.queueItemUrl;
-                    $scope.launcherLoaderStatus.rescan = launcherScan.rescan;
-                    $scope.launcherLoaderStatus.started = true;
-                    getBuildNumber(queueItemUrl);
-                } else {
-                    $scope.launcherLoaderStatus.started = false;
-                    messageService.error(rs.message);
-                }
-            });
+            LauncherService.scanRepository(launcherScan, $scope.currentServerId)
+                .then(function (rs) {
+                    if (rs.success) {
+                        const queueItemUrl = rs.data.queueItemUrl;
+                        
+                        $scope.launcherLoaderStatus.rescan = launcherScan.rescan;
+                        $scope.launcherLoaderStatus.started = true;
+                        getBuildNumber(queueItemUrl);
+                    } else {
+                        $scope.launcherLoaderStatus.started = false;
+                        messageService.error(rs.message);
+                    }
+                });
         }
     };
 
