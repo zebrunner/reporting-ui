@@ -10,11 +10,23 @@ import dashboardSettingsModalController
     from "../shared/modals/dashboard-settings-modal/dashboard-settings-modal.controller";
 import dashboardSettingsModalTemplate from "../shared/modals/dashboard-settings-modal/dashboard-settings-modal.html";
 
-const dashboardController = function dashboardController($scope, $rootScope, $q, $timeout, $interval,
-                                                         $cookies, $location, $state, $http, $mdConstant,
-                                                         $stateParams, $mdDialog, $mdToast, UtilService,
-                                                         DashboardService, projectsService, UserService,
-                                                         $widget, $mapper, toolsService, messageService, AuthService) {
+const dashboardController = function dashboardController(
+    $scope,
+    $q,
+    $timeout,
+    $interval,
+    $location,
+    $stateParams,
+    $mdDialog,
+    DashboardService,
+    projectsService,
+    UserService,
+    $widget,
+    $mapper,
+    toolsService,
+    messageService,
+    AuthService
+    ) {
     'ngInject';
 
     const vm = {

@@ -521,7 +521,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
                 }
             }
             
-            if (projectsService.selectedProject && +projectsService.selectedProject.id !== testRun.project.id) { return; }
+            if (projectsService.selectedProject && +projectsService.selectedProject.id !== +testRun.project.id) { return; }
 
             //add new testRun to the top of the list or update fields if it is already in the list
             if (index === -1) {

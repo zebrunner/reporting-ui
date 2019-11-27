@@ -273,33 +273,24 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
     }
 
     function loadProjects() {
-        return ConfigService.getConfig('projects').then(function(rs) {
-            if (rs.success) {
-                vm.projects = [fakeProjectAll, ...rs.data];
+        return ConfigService.getConfig('projects')
+            .then(function(rs) {
+                if (rs.success) {
+                    vm.projects = [fakeProjectAll, ...rs.data];
 
-                if (projectsService.selectedProject) {
-                    const activeProject = vm.projects.find(({ id }) => isEqualIDs(id, selectedFromCache[0].id));
+                    if (projectsService.selectedProject) {
+                        const activeProject = vm.projects.find(({ id }) => isEqualIDs(id, projectsService.selectedProject.id));
 
-                    if (activeProject) {
-                        vm.selectedProject = activeProject.id;
-                    } else { //Looks like the project doesn't exist anymore, so we need to clear cached selection.
-                        projectsService.resetSelectedProjects();
-                    }
-
-                    vm.projects.some(({ id }) => {
-                        if (isEqualIDs(id, projectsService.selectedProject.id)) {
-                            vm.selectedProject = id;
-
-                            return true;
+                        if (activeProject) {
+                            vm.selectedProject = activeProject.id;
+                        } else { //Looks like the project doesn't exist anymore, so we need to clear cached selection.
+                            projectsService.resetSelectedProjects();
                         }
-
-                        return false;
-                    });
+                    }
+                } else {
+                    messageService.error('Unable to load projects');
                 }
-            } else {
-                messageService.error('Unable to load projects');
-            }
-        });
+            });
     }
 
     function cutSelectedProjectName() {
