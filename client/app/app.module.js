@@ -1010,7 +1010,7 @@ const ngModule = angular.module('app', [
         _defaultErrorHandler(rejection);
     });
 })
-.run(($transitions, AuthService, $document, UserService, messageService, $state, $rootScope, AuthIntercepter) => {
+.run(($transitions, AuthService, $document, UserService, messageService, $state, $rootScope, AuthIntercepter, $q) => {
     'ngInject';
 
     window.isProd = isProd;
@@ -1045,50 +1045,96 @@ const ngModule = angular.module('app', [
         }
     });
 
-    function fetchUserData(trans) {
+    function fetchUserData() {
         return UserService.initCurrentUser()
-            .catch((err) => {
-                const fullMessage = `${err.message} Try to login once again.`;
+            .then(currentUser => {
+                //return rejection if returned user is epmty by some reason
+                if (!currentUser) {
+                    return $.reject();
+                }
 
-                messageService.error(fullMessage);
-                //If user isAuthorized but we can't get profile data and therefore cn't redirect to dashboard, lets logout
+                return currentUser;
+            })
+            .catch(() => {
+                messageService.error(`Couldn't get profile data. Try to login once again.`);
+                //If user isAuthorized but we can't get profile data and therefore can't redirect to dashboard, lets logout
                 AuthIntercepter.loginCancelled();
 
-                return err;
+                return false;
             });
     }
-    $transitions.onBefore({}, function(trans) {
-        const toState = trans.to();
-        const fromState = trans.from();
-        const loginRequired = !!(toState.data && toState.data.requireLogin);
-        const onlyGuests = !!(toState.data && toState.data.onlyGuests);
-        const hasValidToken = AuthService.hasValidToken();
-        let currentUser = UserService.currentUser;
 
-        if (loginRequired) {
-            //Redirect to login page if authorization is required and user is not authorized
-            if (!hasValidToken) {
-                const location = window.location.href;
+    function authGuard(transition) {
+        if (AuthService.hasValidToken()) {
+            //try to fetch user's data, cause it's required by next steps
+            return fetchUserData()
+                .then((currentUser) => {
+                    const toState = transition.to();
+                    const requiresPermissions = toState.data && toState.data.permissions;
 
-                return trans.router.stateService.target('signin', { location });
-            }
+                    //if transition requires any permissions, check it
+                    if (currentUser && requiresPermissions && requiresPermissions.length) {
+                        return permissionsGuard(requiresPermissions, transition);
+                    }
 
-            //Some controls need user profile on  initialization, so we need to load it if not loaded yet
-            return !!currentUser || fetchUserData(trans);
-        } else if (onlyGuests && hasValidToken) {
-            // TODO: should we redirect to the dashboard enstead of cancelling transition?
-            if (!fromState.name) {
-                if (currentUser) {
-                    return trans.router.stateService.target('home');
-                } else {
-                    return fetchUserData(trans).then(() => trans.router.stateService.target('home'));
-                }
-            }
-
-            return false;
+                    //if user data is fetched successfully transition will be continued, otherwise cancelled
+                    return !!currentUser;
+                });
         }
 
-        return true;
+        console.error('You are not authorized to view this page.');
+        //if user is not authorized and current page isn't the signin page, we need to redirect to it
+        if (transition.from().name !== 'signin') {
+            return $q.resolve(transition.router.stateService.target('signin', { location: window.location.href }));
+        }
+
+        //otherwise just cancel transition
+        return $q.resolve(false);
+    }
+
+    function guestGuard(transition) {
+        //transition needs to be cancelled if user is authiruzed
+        if (AuthService.hasValidToken()) {
+            //on page reload we don't have referrer URL, so we need to redirect to default user's page
+            if (!transition.from().name) {
+                return $q.resolve(transition.router.stateService.target('home'));
+            }
+
+            //cancel transition
+            return $q.resolve(false);
+        }
+
+        //continue transition
+        return $q.resolve(true);
+    }
+
+    function permissionsGuard(permissions, transition) {
+        const access = AuthService.UserHasAnyPermission(permissions);
+
+        if (!access) {
+            console.error('You don\'t have permission to view this page');
+            if (!transition.from().name) {
+                return transition.router.stateService.target('404');
+            }
+        }
+
+        return access;
+    }
+
+    $transitions.onBefore({}, function(trans) {
+        const toStateData = trans.to().data;
+        const loginRequired = !!(toStateData && toStateData.requireLogin);
+        const onlyGuests = !!(toStateData && toStateData.onlyGuests);
+        let access = true;
+
+        if (loginRequired) {
+            access = authGuard(trans)
+                
+        } else if (onlyGuests) {
+            access = guestGuard(trans);
+        }
+
+        return access;
     });
     $transitions.onSuccess({}, function() {
         $document.scrollTo(0, 0);

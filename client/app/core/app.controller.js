@@ -3,8 +3,8 @@
 
     angular.module('app')
         .controller('AppCtrl', AppCtrl); // overall control
-	    function AppCtrl($scope, $rootScope, $templateCache, $state, httpBuffer, $window, $cookies, $q, appConfig,
-                         AuthService, UserService, SettingsService, ConfigService, AuthIntercepter, UtilService,
+	    function AppCtrl($scope, $rootScope, $templateCache, $state, $window, $cookies, $q, appConfig,
+                         AuthService, UserService, SettingsService, ConfigService, messageService,
                          SettingProvider, $timeout, toolsService, UI_VERSION, progressbarService) {
             'ngInject';
 
@@ -55,7 +55,12 @@
                                 $state.go('home');
                             });
                         }
-                    }, function() {});
+                    })
+                    .catch(err => {
+                        if (err && err.message) {
+                            messageService.error(err.message);
+                        }
+                    });
 	        });
 
             function getVersion() {
