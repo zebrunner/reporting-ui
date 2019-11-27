@@ -32,14 +32,6 @@
         return service;
 
         function searchTestRuns(params) {
-            //TODO: refactor this and prepare correct projectNames before calling this method
-            if(params.projects && params.projects.length) {
-                params.projectNames = params.projects.map(function (project) {
-                    return project.name;
-                });
-                delete params.projects;
-            }
-
             return $httpMock.get(`${API_URL}/api/tests/runs/search?${$httpParamSerializer(params)}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to search test runs'));
         }
 

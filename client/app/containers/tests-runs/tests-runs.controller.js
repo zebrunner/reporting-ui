@@ -141,9 +141,8 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function getTestRuns(page, pageSize) {
         vm.selectedAll = false;
-        vm.projects = projectsService.getSelectedProjects();
 
-        vm.projects && vm.projects.length && testsRunsService.setSearchParam('projectNames', vm.projects.map(project => project.name));
+        projectsService.selectedProject && testsRunsService.setSearchParam('projectNames', [projectsService.selectedProject.name]);
         if (page) {
             testsRunsService.setSearchParam('page', page);
             page !== vm.currentPage && (vm.currentPage = page);
@@ -513,13 +512,16 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
             if (vm.launchers) {
                 const indexOfLauncher = vm.launchers.findIndex((launcher) => { return launcher.ciRunId === testRun.ciRunId });
+
                 if (indexOfLauncher !== -1) {
                     clearTimeout(vm.launchers[indexOfLauncher].timeout);
-                    vm.launchers = testsRunsService.deleteLauncherFromStorebyCiId(testRun.ciRunId);
+                    $timeout(() => {
+                        vm.launchers = testsRunsService.deleteLauncherFromStorebyCiId(testRun.ciRunId);
+                    });
                 }
             }
             
-            if (vm.projects && vm.projects.length && vm.projects.indexOfField('id', testRun.project.id) === -1) { return; }
+            if (projectsService.selectedProject && +projectsService.selectedProject.id !== +testRun.project.id) { return; }
 
             //add new testRun to the top of the list or update fields if it is already in the list
             if (index === -1) {

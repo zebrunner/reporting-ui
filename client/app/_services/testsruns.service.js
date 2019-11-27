@@ -140,12 +140,11 @@
 
         function isSearchActive() {
             let defaultCriteria = DEFAULT_SC;
-            const projects = projectsService.getSelectedProjects();
 
-            if (projects && projects.length) {
+            if (projectsService.selectedProject) {
                 defaultCriteria = {
                     ...defaultCriteria,
-                    projectNames: projects.map(project => project.name),
+                    projectNames: [projectsService.selectedProject.name],
                 };
             }
             defaultCriteria.page = _searchParams.page;
