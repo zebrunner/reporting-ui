@@ -1114,7 +1114,7 @@ const ngModule = angular.module('app', [
         if (!access) {
             console.error('You don\'t have permission to view this page');
             if (!transition.from().name) {
-                return transition.router.stateService.target('home');
+                return transition.router.stateService.target('404');
             }
         }
 
