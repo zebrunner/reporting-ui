@@ -1,7 +1,7 @@
 <md-dialog flex="50" aria-label="User profile" zafira-background-theme="modal" class="issue-modal modal-min-width">
     <md-toolbar class="issue-modal__header">
         <div class="md-toolbar-tools">
-            <h2 id="modalTitle">Assign Issue</h2>
+            <h2 id="modalTitle">Link issue</h2>
             <span flex></span>
             <md-button id="close" class="md-icon-button _default-md-style" ng-click="$ctrl.cancel()">
                 <md-icon aria-label="Close dialog">close</md-icon>
@@ -36,9 +36,9 @@
                     <div flex class="issue-element-container _with-badge">
                         <md-input-container>
                             <label>Jira ID</label>
-                            <input id="issueJiraId" type="text" ng-disabled="$ctrl.selectedIssue" name="issueJiraId"
+                            <input id="issueJiraId" type="text" ng-disabled="$ctrl.attachedIssue.id && $ctrl.attachedIssue.id === $ctrl.newIssue.id" name="issueJiraId"
                                 ng-pattern="/^([A-z0-9]+-[0-9]+|\d+)$/" class="form-control validation jira" ng-model-options="{debounce: 500}"
-                                data-ng-model="$ctrl.newIssue.jiraId" data-ng-change="$ctrl.initIssueSearch(!known_issue_form.issueJiraId.$valid)" required />
+                                data-ng-model="$ctrl.newIssue.jiraId" required />
                         </md-input-container>
                         <!--<span ng-if="$ctrl.isToolConnected('JIRA') && !$ctrl.issueJiraIdExists && $ctrl.newIssue.jiraId" class="jira-status elment-with-label label label-warn">Not found in JIRA</span>-->
                         <span ng-if="$ctrl.isToolConnected('JIRA') && $ctrl.issueJiraIdExists && known_issue_form.issueJiraId.$valid" class="jira-status elment-with-label label label-info">Connected to JIRA</span>
@@ -49,45 +49,39 @@
                             data-ng-model="$ctrl.newIssue.description"></textarea>
                     </md-input-container>
                     <md-dialog-actions layout="row">
-                        <md-button ng-if="$ctrl.isNewIssue" ng-click="$ctrl.clearIssue()" ng-disabled="known_issue_form.$invalid">
-                            Clear
-                        </md-button>
-                        <md-button id="unassignIssue" ng-if="!$ctrl.isNewIssue"
-                            ng-really-message="Do you really want to delete known issue from current test?"
-                            ng-really-click="$ctrl.unassignIssue($ctrl.newIssue)" ng-disabled="known_issue_form.$invalid">
-                            Unassign
-                        </md-button>
-                        <md-button id="updateIssue" ng-if="!$ctrl.isNewIssue" class="md-raised md-primary"
-                            ng-click="$ctrl.assignIssue($ctrl.newIssue, $ctrl.isNewIssue)"
+                        <md-button id="updateIssue" class="md-raised md-primary"
+                            ng-click="$ctrl.assignIssue($ctrl.newIssue, 'SAVE')"
                             ng-disabled="known_issue_form.$invalid">
-                            Update
-                        </md-button>
-                        <md-button id="assignIssue" ng-if="$ctrl.isNewIssue" class="md-raised md-primary"
-                            ng-click="$ctrl.assignIssue($ctrl.newIssue, $ctrl.isNewIssue)" ng-disabled="known_issue_form.$invalid">
-                            Assign
+                            Save
                         </md-button>
                     </md-dialog-actions>
                 </div>
             </div>
         </form>
         <div class="issue-modal__tickets">
-            <div ng-if="$ctrl.issues.length" ng-repeat="issue in $ctrl.issues track by issue.id">
-                <md-button id="issuesListItem" class="ticket-list-button tickets-font" ng-class="{
-                    '_active' : $ctrl.attachedIssue.id === issue.id}" ng-click="$ctrl.searchScopeIssue(issue)">
+            <div ng-if="$ctrl.issues.length" ng-repeat="issue in $ctrl.issues | orderBy:$ctrl.sortIssuesFilter track by issue.id">
+                <div id="issuesListItem" class="ticket-list-button tickets-font" ng-class="{
+                    '_active' : $ctrl.attachedIssue.id === issue.id}">
                     <div class="col-md-12 ticket-list-row">
                         <div layout layout-sm="row">
                             <div class="col-lg-2 clearfix align-middle ticket-list-text ticket-list-row__jira">
-                                <b class="settings-line">{{issue.jiraId}}</b>
+                                <b class="settings-line">
+                                    {{issue.jiraId}}
+                                </b>
                             </div>
                             <div class="col-lg-6 clearfix align-middle ticket-list-text ticket-list-row__text">
                                 {{issue.description}}
                             </div>
-                            <div class="col-lg-4 clearfix align-middle ticket-list-text ticket-list-row__date">
-                                {{issue.modifiedAt | date : "medium"}}
+                            <div class="col-lg-2 clearfix align-middle ticket-list-text ticket-list-row__date">
+                                {{issue.modifiedAt | date : 'MMM dd, yyyy hh:mm'}}
+                            </div>
+                            <div class="col-lg-2 clearfix align-middle ticket-list-text ticket-list-row__link">
+                                <a href="" class="ticket-list-row_link" ng-click="$ctrl.assignIssue(issue, 'LINK');" ng-if="$ctrl.attachedIssue.id !== issue.id">Link</a>
+                                <a href="" class="ticket-list-row_link _unlink" ng-click="$ctrl.unassignIssue(issue);" ng-if="$ctrl.attachedIssue.id === issue.id">Unlink</a>
                             </div>
                         </div>
                     </div>
-                </md-button>
+                </div>
             </div>
             <p class="no-tickets-lable" ng-if="!$ctrl.issues.length">No tickets added</p>
         </div>
