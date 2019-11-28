@@ -47,7 +47,9 @@
                     opts = JSON.parse(opts);
                 }
 
-                if (scope.dataset && ! opts.dataset) {
+                if (!opts) return;
+
+                if (scope.dataset && !opts.dataset) {
                     setData(opts);
                 }
 
