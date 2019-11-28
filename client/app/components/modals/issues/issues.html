@@ -59,7 +59,7 @@
             </div>
         </form>
         <div class="issue-modal__tickets">
-            <div ng-if="$ctrl.issues.length" ng-repeat="issue in $ctrl.issues track by issue.id">
+            <div ng-if="$ctrl.issues.length" ng-repeat="issue in $ctrl.issues track by $index">
                 <div id="issuesListItem" class="ticket-list-button tickets-font" ng-class="{
                     '_active' : $ctrl.attachedIssue.id === issue.id}">
                     <div class="col-md-12 ticket-list-row">
@@ -76,8 +76,8 @@
                                 {{issue.modifiedAt | date : 'MMM dd, yyyy hh:mm'}}
                             </div>
                             <div class="col-lg-2 clearfix align-middle ticket-list-text ticket-list-row__link">
-                                <a href="" class="ticket-list-row_link" ng-click="$ctrl.assignIssue(issue, 'LINK');" ng-if="$ctrl.attachedIssue.id !== issue.id">Link</a>
-                                <a href="" class="ticket-list-row_link _unlink" ng-click="$ctrl.unassignIssue(issue);" ng-if="$ctrl.attachedIssue.id === issue.id">Unlink</a>
+                                <a href="" ng-click="$ctrl.assignIssue(issue, 'LINK');" ng-if="$ctrl.attachedIssue.id !== issue.id">Link</a>
+                                <a href="" class="_unlink" ng-click="$ctrl.unassignIssue(issue);" ng-if="$ctrl.attachedIssue.id === issue.id">Unlink</a>
                             </div>
                         </div>
                     </div>

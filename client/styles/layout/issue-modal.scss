@@ -126,11 +126,6 @@
                         &__date {
                             color: rgba(0, 0, 0, 1);
                         }
-                        &_link {
-                            &._unlink {
-                                color: #eb4454;
-                            }
-                        }
                     }
                 }
             }
@@ -163,6 +158,14 @@
                 &__link {
                     max-width: 64px;
                     min-width: 64px;
+
+                    a {
+                        margin-left: auto;
+                        margin-right: auto;
+                        &._unlink {
+                            color: #eb4454;
+                        }
+                    }
                 }
                 &__date, &__link {
                     font-family: Roboto;

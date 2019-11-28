@@ -35,39 +35,36 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
 
     function updateWorkItemList(workItem) {
         var issues = vm.issues;
-        for (var i = 0; i < issues.length; i++) {
+        const issueToDelete = issues.find(function (issue) {
+            return issue.jiraId === workItem.jiraId;
+        });
+        if (issueToDelete) {
+            deleteWorkItemFromList(issueToDelete, workItem);
+        } else {
+            vm.issues.push(workItem);
+        }
+        /*for (var i = 0; i < issues.length; i++) {
             if (issues[i].jiraId === workItem.jiraId) {
-                deleteWorkItemFromList(issues[i]);
+                deleteWorkItemFromList(issues[i], workItem);
                 break;
             }
-        }
-        vm.issues.push(workItem);
+        }*/
+        //vm.issues.push(workItem);
         unlinkOldTicket();
         vm.test.workItems.push(workItem);
-
-        sortIssues();
     };
 
     function unlinkOldTicket() {
         vm.test.workItems = vm.test.workItems.filter(({ type }) => type !== 'BUG');
     };
 
-    function sortIssues() {
-        vm.issues.sort(compareIssues);
-    };
-
-    function compareIssues(firstIssue, secondIssue) {
-        const attached = vm.attachedIssue.id === firstIssue.id;
-        return attached ? -1 : 1;
-    };
-
-    function deleteWorkItemFromList(workItem) {
+    function deleteWorkItemFromList(workItem, itemToAdd) {
         var issueToDelete = vm.issues.filter(function(listWorkItem) {
             return listWorkItem.jiraId === workItem.jiraId;
         })[0];
         var issueIndex = vm.issues.indexOf(issueToDelete);
         if (issueIndex !== -1) {
-            vm.issues.splice(issueIndex, 1);
+            vm.issues.splice(issueIndex, 1, itemToAdd);
         }
         deleteWorkItemFromTestWorkItems(workItem);
     };
@@ -167,7 +164,6 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
                     break;
             }
         }
-        sortIssues();
     };
 
     /* Searches issue in Jira by Jira ID */
@@ -232,7 +228,6 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
             then(function(rs) {
                 if (rs.success) {
                     vm.issues = rs.data;
-                    sortIssues();
                     if (test.workItems.length && vm.attachedIssue) {
                         angular.copy(vm.attachedIssue, vm.newIssue);
                     }
