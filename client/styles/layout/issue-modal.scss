@@ -104,6 +104,7 @@
                 padding: 0;
                 text-transform: none;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+                display: inline-block;
                 &._active {
                     .ticket-list-row {
                         &__jira {
@@ -124,6 +125,11 @@
                         }
                         &__date {
                             color: rgba(0, 0, 0, 1);
+                        }
+                        &_link {
+                            &._unlink {
+                                color: #eb4454;
+                            }
                         }
                     }
                 }
@@ -151,11 +157,17 @@
                     font-size: 13px;
                 }
                 &__date {
+                    max-width: 145px;
+                    min-width: 145px;
+                }
+                &__link {
+                    max-width: 64px;
+                    min-width: 64px;
+                }
+                &__date, &__link {
                     font-family: Roboto;
                     font-weight: normal;
                     color: rgba(0, 0, 0, 0.8);
-                    max-width: 145px;
-                    min-width: 145px;
                     padding: 0;
                     font-size: 13px;
                 }
