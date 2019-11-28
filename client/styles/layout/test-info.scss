@@ -2,6 +2,11 @@
 
 .testrun-info {
     background-color: #fff;
+    &.page {
+        &-wrapper {
+            overflow: hidden;
+        }
+    }
     &__title {
         margin: 0;
         font-size: 18px;
@@ -63,7 +68,7 @@
     }
 
     &__container {
-        height: 100vh;
+        height: 100%;
     }
 
     &__section {
@@ -154,6 +159,7 @@
                 margin-bottom: 0;
                 height: 100%;
                 overflow: auto;
+                padding-bottom: 10px !important;
             }
 
             &-col {
@@ -232,7 +238,6 @@
         }
         &-video {
             &-section {
-                height: 560px;
                 position: relative;
                 h4 {
                     margin: 0;
@@ -303,17 +308,15 @@
             &-video-section {
                 border-left: 1px solid $custom-gray;
                 position: absolute;
-                height: inherit;
                 top: 0;
                 right: 0;
                 bottom: 0;
                 height: auto;
                 overflow: auto;
             }
-             &-table-wrapper {
+            &-table-wrapper {
                 table {
                     height: auto;
-                    overflow: auto;
                     td, th {
                         padding: 10px !important;
                     }
@@ -338,13 +341,17 @@
                 }
                 &-wrapper {
                     height: auto !important;
+                    overflow: visible;
                 }
             }
-            &-video-section {
-                border-bottom: 1px solid $custom-gray;
-            }
-            &-additional {
-                display: none;
+            &-video {
+                &-section {
+                    border-bottom: 1px solid $custom-gray;
+                }
+                &-wrapper {
+                    margin-right: 0;
+                    margin-left: 0;
+                }
             }
         }
     }
