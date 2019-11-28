@@ -49,11 +49,7 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
     };
 
     function unlinkOldTicket() {
-        vm.test.workItems.forEach(function (wi, index) {
-            if (wi.type === 'BUG') {
-                vm.test.workItems.splice(index, 1);
-            }
-        });
+        vm.test.workItems = vm.test.workItems.filter(({ type }) => type !== 'BUG');
     };
 
     function sortIssues() {
