@@ -59,7 +59,7 @@
             </div>
         </form>
         <div class="issue-modal__tickets">
-            <div ng-if="$ctrl.issues.length" ng-repeat="issue in $ctrl.issues | orderBy:$ctrl.sortIssuesFilter track by issue.id">
+            <div ng-if="$ctrl.issues.length" ng-repeat="issue in $ctrl.issues track by issue.id">
                 <div id="issuesListItem" class="ticket-list-button tickets-font" ng-class="{
                     '_active' : $ctrl.attachedIssue.id === issue.id}">
                     <div class="col-md-12 ticket-list-row">

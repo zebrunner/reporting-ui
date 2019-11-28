@@ -1,8 +1,7 @@
 'use strict';
-const IssuesModalController = function IssuesModalController(
-        $scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService, messageService) {
+const IssuesModalController = function IssuesModalController($scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService, UtilService, messageService) {
     'ngInject';
-        
+
     const vm = {
         isNewIssue: isNewIssue,
         issueJiraIdInputIsChanged: false,
@@ -12,25 +11,12 @@ const IssuesModalController = function IssuesModalController(
         isIssueFound: true,
         isIssueClosed: false,
         test: angular.copy(test),
-        testCommentText: '',
-        testComments: [],
         issues: [],
-        currentStatus: test.status,
-        testStatuses: ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED'],
         ticketStatuses: ['TO DO', 'OPEN', 'NOT ASSIGNED', 'IN PROGRESS', 'FIXED', 'REOPENED', 'DUPLICATE'],
-        issueStatusIsNotRecognized: false,
-        changeStatusIsVisible: false,
-        issueListIsVisible: false,
-        updateTest: updateTest,
-        updateWorkItemList: updateWorkItemList,
-        deleteWorkItemFromList: deleteWorkItemFromList,
-        deleteWorkItemFromTestWorkItems: deleteWorkItemFromTestWorkItems,
         assignIssue: assignIssue,
         unassignIssue: unassignIssue,
         hide: hide,
         cancel: cancel,
-        bindEvents: bindEvents,
-        sortIssuesFilter: sortIssuesFilter,
         isToolConnected: toolsService.isToolConnected,
         get isConnectedToJira() { return toolsService.isToolConnected('JIRA'); },
     };
@@ -47,22 +33,6 @@ const IssuesModalController = function IssuesModalController(
         bindEvents();
     };
 
-    function updateTest(test) {
-        TestService.updateTest(test)
-            .then(function(rs) {
-                if (rs.success) {
-                    let message;
-
-                    vm.changeStatusIsVisible = false;
-                    message = 'Test was marked as ' + test.status;
-                    addTestEvent(message);
-                    messageService.success(message);
-                } else {
-                    console.error(rs.message);
-                }
-            });
-    };
-
     function updateWorkItemList(workItem) {
         var issues = vm.issues;
         for (var i = 0; i < issues.length; i++) {
@@ -74,6 +44,8 @@ const IssuesModalController = function IssuesModalController(
         vm.issues.push(workItem);
         unlinkOldTicket();
         vm.test.workItems.push(workItem);
+
+        sortIssues();
     };
 
     function unlinkOldTicket() {
@@ -84,8 +56,13 @@ const IssuesModalController = function IssuesModalController(
         });
     };
 
-    function sortIssuesFilter(issue) {
-        return vm.attachedIssue.id !== issue.id;
+    function sortIssues() {
+        vm.issues.sort(compareIssues);
+    };
+
+    function compareIssues(firstIssue, secondIssue) {
+        const attached = vm.attachedIssue.id === firstIssue.id;
+        return attached ? -1 : 1;
     };
 
     function deleteWorkItemFromList(workItem) {
@@ -179,49 +156,10 @@ const IssuesModalController = function IssuesModalController(
             });
     };
 
-    /* Starts set in the scope issue search */
-
-    function searchScopeIssue(issue) {
-        vm.initIssueSearch();
-        initAttachedWorkItems();
-        vm.isNewIssue = !(issue.jiraId === vm.attachedIssue.jiraId);
-        vm.newIssue.id = issue.id;
-        vm.newIssue.jiraId = issue.jiraId;
-        vm.newIssue.description = issue.description;
-        vm.newIssue.blocker = issue.blocker;
-        vm.selectedIssue = true;
-    };
-
-    /* Initializes issue object before search */
-
-    function initIssueSearch(isInvalid) {
-        if (isInvalid) {
-            return;
-        }
-        vm.issueJiraIdExists = false;
-        vm.issueJiraIdInputIsChanged = true;
-        vm.newIssue.description = '';
-        vm.newIssue.id = null;
-        vm.newIssue.status = null;
-        vm.newIssue.assignee = null;
-        vm.newIssue.reporter = null;
-        vm.newIssue.blocker = false;
-        vm.isIssueClosed = false;
-        vm.isIssueFound = false;
-        vm.isNewIssue = true;
-        var existingIssue = vm.issues.filter(function(foundIssue) {
-            return foundIssue.jiraId === vm.newIssue.jiraId;
-        })[0];
-        if (existingIssue) {
-            angular.copy(existingIssue, vm.newIssue);
-        }
-    };
-
     /* Writes all attached to the test workitems into scope variables.
     Used for initialization and reinitialization */
 
     function initAttachedWorkItems() {
-        vm.testComments = [];
         var attachedWorkItem = {};
         attachedWorkItem.jiraId = '';
         vm.attachedIssue = attachedWorkItem;
@@ -233,13 +171,13 @@ const IssuesModalController = function IssuesModalController(
                     break;
             }
         }
+        sortIssues();
     };
 
     /* Searches issue in Jira by Jira ID */
 
     function searchIssue(issue) {
         vm.isIssueFound = false;
-        vm.issueStatusIsNotRecognized = false;
         TestService.getJiraTicket(issue.jiraId).then(function(rs) {
             if (rs.success) {
                 var searchResultIssue = rs.data;
@@ -257,11 +195,6 @@ const IssuesModalController = function IssuesModalController(
                 vm.newIssue.assignee = searchResultIssue.assigneeName || '';
                 vm.newIssue.reporter = searchResultIssue.reporterName || '';
                 vm.newIssue.status = searchResultIssue.status.toUpperCase();
-                if (!vm.ticketStatuses.filter(function(status) {
-                    return status === vm.newIssue.status;
-                })[0]) {
-                    vm.issueStatusIsNotRecognized = true;
-                }
                 vm.isNewIssue = !(vm.newIssue.jiraId ===
                     vm.attachedIssue.jiraId);
                 vm.issueTabDisabled = false;
@@ -303,6 +236,7 @@ const IssuesModalController = function IssuesModalController(
             then(function(rs) {
                 if (rs.success) {
                     vm.issues = rs.data;
+                    sortIssues();
                     if (test.workItems.length && vm.attachedIssue) {
                         angular.copy(vm.attachedIssue, vm.newIssue);
                     }
