@@ -24,6 +24,7 @@ const IssuesModalController = function IssuesModalController(
         ticketStatuses: ['TO DO', 'OPEN', 'NOT ASSIGNED', 'IN PROGRESS', 'FIXED', 'REOPENED', 'DUPLICATE'],
         assignIssue: assignIssue,
         unassignIssue: unassignIssue,
+        initIssueSearch: initIssueSearch,
         hide: hide,
         cancel: cancel,
         isToolConnected: toolsService.isToolConnected,
@@ -143,6 +144,28 @@ const IssuesModalController = function IssuesModalController(
                 vm.issueJiraIdExists = false;
             });
     }
+
+    function initIssueSearch(isInvalid) {
+        if (isInvalid) {
+            return;
+        }
+        vm.issueJiraIdExists = false;
+        vm.issueJiraIdInputIsChanged = true;
+        vm.newIssue.description = '';
+        vm.newIssue.id = null;
+        vm.newIssue.status = null;
+        vm.newIssue.assignee = null;
+        vm.newIssue.reporter = null;
+        vm.isIssueClosed = false;
+        vm.isIssueFound = false;
+        vm.isNewIssue = true;
+        var existingIssue = vm.issues.filter(function(foundIssue) {
+            return foundIssue.jiraId === vm.newIssue.jiraId;
+        })[0];
+        if (existingIssue) {
+            angular.copy(existingIssue, vm.newIssue);
+        }
+    };
 
     /* Writes all attached to the test workitems into scope variables.
     Used for initialization and reinitialization */
