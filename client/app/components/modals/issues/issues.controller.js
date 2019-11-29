@@ -159,11 +159,9 @@ const IssuesModalController = function IssuesModalController(
         vm.isIssueClosed = false;
         vm.isIssueFound = false;
         vm.isNewIssue = true;
-        var existingIssue = vm.issues.filter(function(foundIssue) {
-            return foundIssue.jiraId === vm.newIssue.jiraId;
-        })[0];
+        const existingIssue = vm.issues.find(foundIssue => foundIssue.jiraId === vm.newIssue.jiraId);
         if (existingIssue) {
-            angular.copy(existingIssue, vm.newIssue);
+            vm.newIssue = Object.assign({}, existingIssue);
         }
     };
 
