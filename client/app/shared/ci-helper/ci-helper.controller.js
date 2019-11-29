@@ -281,7 +281,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.manageFolder = function (scmAccount) {
-        $scope.scmAccount = angular.copy(scmAccount);
+        $scope.scmAccount = scmAccount;
         $scope.needServer = true;
         $scope.currentServerId = getCurrentServerId(scmAccount);
         if (scmAccount.id !== $scope.scmAccount.id) {
@@ -290,15 +290,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         clearLauncher();
         $scope.highlightFolder(scmAccount.id);
         vm.cardNumber = 2;
-        $scope.launcher.scmAccountType = angular.copy(scmAccount);
+        $scope.launcher.scmAccountType = scmAccount;
     };
 
     function getCurrentServerId(scmAccount) {
         if (scmAccount.launchers) {
             return scmAccount.launchers[0].job.automationServerId ? scmAccount.launchers[0].job.automationServerId : getDefaultServerId();
         }
-
-        return;
     }
 
     function getDefaultServerId() {
@@ -554,7 +552,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 .then(function (rs) {
                     if (rs.success) {
                         const queueItemUrl = rs.data.queueItemUrl;
-                        
+
                         $scope.launcherLoaderStatus.rescan = launcherScan.rescan;
                         $scope.launcherLoaderStatus.started = true;
                         getBuildNumber(queueItemUrl);
@@ -653,17 +651,16 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     function getAllLaunchers() {
-        return $q(function (resolve, reject) {
-            LauncherService.getAllLaunchers().then(function (rs) {
+        return LauncherService.getAllLaunchers()
+            .then(rs => {
                 if (rs.success) {
-                    resolve(rs.data);
+                    return rs.data;
                 } else {
-                    messageService.error(rs.message);
-                    reject();
+                    rs.message && messageService.error(rs.message);
+                    return [];
                 }
             });
-        });
-    };
+    }
 
     // $scope.updateLauncher = function(launcher, index) {
     //     LauncherService.updateLauncher(launcher).then(function (rs) {
@@ -869,26 +866,32 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     function subscribeLaunchersTopic() {
         return zafiraWebsocket.subscribe('/topic/' + TENANT + '.launchers', function (data) {
             const event = getEventFromMessage(data.body);
-
             const success = event.success;
             const userId = event.userId;
+
             if (UserService.currentUser.id === userId && success) {
-                if ($scope.scmAccount.launchers) {
-                    $scope.scmAccount.launchers.forEach(function (l) {
-                        const index = $scope.launchers.indexOfField('id', l.id);
-                        $scope.launchers.splice(index, 1);
+                //remove all launchers of current scm account, except of defaults ones
+                if (Array.isArray($scope.scmAccount.launchers) && $scope.scmAccount.launchers.length) {
+                    $scope.launchers = $scope.launchers.filter(launcher => {
+                        //skip default Zafira's demo launchers to keep them in data collection
+                        if (launcher.job && launcher.job.name === 'launcher') {
+                            return true;
+                        }
+
+                        return !$scope.scmAccount.launchers.find(l => l.id === launcher.id);
                     });
                 }
-                Array.prototype.push.apply($scope.launchers, event.launchers);
-                const scmIndex = $scope.scmAccounts.indexOfField('id', $scope.scmAccount.id);
-                $scope.scmAccounts[scmIndex].launchers = event.launchers;
+                //add new scanned launchers
+                $scope.launchers = [...$scope.launchers, ...event.launchers];
+                //update current scm account
+                $scope.scmAccount.launchers = $scope.launchers.filter(({ scmAccountType }) => scmAccountType.id === $scope.scmAccount.id);
             } else {
                 messageService.error('Unable to scan repository');
             }
             $scope.onScanRepositoryFinish();
             $scope.$apply();
         });
-    };
+    }
 
     function getEventFromMessage(message) {
         return JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
@@ -918,18 +921,16 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     function initController() {
         clearLauncher();
-        const launchersPromise = getAllLaunchers().then(function (launchers) {
-            return $q(function (resolve, reject) {
-                $scope.launchers = launchers;
-                resolve();
+        const launchersPromise = getAllLaunchers()
+            .then(function (launchers) {
+                return $scope.launchers = launchers;
             });
-        });
         toolsService.fetchIntegrationOfTypeByName('AUTOMATION_SERVER').then((res) => {
             $scope.servers = res.data;
             if($scope.servers.length > 1) {
                 $scope.needServer = true;
             }
-        })
+        });
         getTenantInfo().then(function (tenant) {
             isMultitenant = tenant.multitenant;
             getClientId()
@@ -957,12 +958,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise])
             .then(function (data) {
                 $scope.scmAccounts.forEach(function (scmAccount) {
-                    $scope.launchers.forEach(function (launcher) {
-                        if (launcher.scmAccountType.id === scmAccount.id) {
-                            scmAccount.launchers = scmAccount.launchers || [];
-                            scmAccount.launchers.push(launcher);
-                        }
-                    });
+                    scmAccount.launchers = $scope.launchers.filter(({ scmAccountType }) => scmAccountType.id === scmAccount.id);
                 });
             })
             .finally(() => {
@@ -984,10 +980,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 if (Array.isArray(platform.job) && platform.job.includes($scope.launcher.type)) {
                     vm.platformModel[vm.platformsConfig.rootKey] = platform;
                     onPlatformSelect();
-                    
+
                     return true;
                 }
-    
+
                 return false;
             })
         }
@@ -1016,7 +1012,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             index: vm.platformControls.length,
             data,
         }
-        
+
         vm.platformControls = [...vm.platformControls, childControl];
         if (Array.isArray(vm.platformsConfig.data[key])) {
             childControl.items = vm.platformsConfig.data[key].filter(child => Array.isArray(data.variants) && data.variants.includes(child.id));
@@ -1112,7 +1108,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         if (!defaultItem) {
             defaultItem = childControl.items[0];
         }
-        
+
 
         return defaultItem;
     }
