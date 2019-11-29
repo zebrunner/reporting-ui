@@ -104,7 +104,7 @@
                 padding: 0;
                 text-transform: none;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-                display: inline-block;
+                display: table;
                 &._active {
                     .ticket-list-row {
                         &__jira {
@@ -126,12 +126,10 @@
                         &__date {
                             color: rgba(0, 0, 0, 1);
                         }
-                        &_link {
-                            &._unlink {
-                                color: #eb4454;
-                            }
-                        }
                     }
+                }
+                &:hover {
+                    background-color: #eceff0;
                 }
             }
             &-row {
@@ -163,6 +161,14 @@
                 &__link {
                     max-width: 64px;
                     min-width: 64px;
+
+                    a {
+                        margin-left: auto;
+                        margin-right: auto;
+                        &._unlink {
+                            color: #eb4454;
+                        }
+                    }
                 }
                 &__date, &__link {
                     font-family: Roboto;

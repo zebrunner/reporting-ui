@@ -1,5 +1,14 @@
 'use strict';
-const IssuesModalController = function IssuesModalController($scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService, UtilService, messageService) {
+
+const IssuesModalController = function IssuesModalController(
+    $scope,
+    $mdDialog,
+    $interval,
+    TestService,
+    test,
+    isNewIssue,
+    toolsService,
+    messageService) {
     'ngInject';
 
     const vm = {
@@ -31,57 +40,40 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
         initNewIssue();
         getIssues();
         bindEvents();
-    };
+    }
 
     function updateWorkItemList(workItem) {
-        var issues = vm.issues;
-        for (var i = 0; i < issues.length; i++) {
-            if (issues[i].jiraId === workItem.jiraId) {
-                deleteWorkItemFromList(issues[i]);
-                break;
-            }
+        const issueToDelete = vm.issues.find(({ jiraId }) => jiraId === workItem.jiraId);
+
+        if (issueToDelete) {
+            deleteWorkItemFromList(issueToDelete, workItem);
+        } else {
+            vm.issues.push(workItem);
         }
-        vm.issues.push(workItem);
         unlinkOldTicket();
         vm.test.workItems.push(workItem);
-
-        sortIssues();
-    };
+    }
 
     function unlinkOldTicket() {
         vm.test.workItems = vm.test.workItems.filter(({ type }) => type !== 'BUG');
-    };
+    }
 
-    function sortIssues() {
-        vm.issues.sort(compareIssues);
-    };
+    function deleteWorkItemFromList(workItem, itemToAdd) {
+        const issueIndex = vm.issues.findIndex(({ jiraId }) => jiraId === workItem.jiraId);
 
-    function compareIssues(firstIssue, secondIssue) {
-        const attached = vm.attachedIssue.id === firstIssue.id;
-        return attached ? -1 : 1;
-    };
-
-    function deleteWorkItemFromList(workItem) {
-        var issueToDelete = vm.issues.filter(function(listWorkItem) {
-            return listWorkItem.jiraId === workItem.jiraId;
-        })[0];
-        var issueIndex = vm.issues.indexOf(issueToDelete);
         if (issueIndex !== -1) {
-            vm.issues.splice(issueIndex, 1);
+            vm.issues.splice(issueIndex, 1, itemToAdd);
         }
         deleteWorkItemFromTestWorkItems(workItem);
-    };
+    }
 
     function deleteWorkItemFromTestWorkItems(workItem) {
-        var issueToDelete = vm.test.workItems.filter(
-            function(listWorkItem) {
-                return listWorkItem.jiraId === workItem.jiraId;
-            })[0];
-        var workItemIndex = vm.test.workItems.indexOf(issueToDelete);
+        const workItemIndex = vm.test.workItems.findIndex(({ jiraId }) => jiraId === workItem.jiraId);
+
         if (workItemIndex !== -1) {
             vm.test.workItems.splice(workItemIndex, 1);
         }
-    };
+    }
 
     /** ISSUE functionality */
 
@@ -118,15 +110,15 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
                 } else {
                     if (vm.isNewIssue) {
                         message = generateActionResultMessage(workItemType,
-                            jiraId, "assign", false);
+                            jiraId, 'assign', false);
                     } else {
                         message = generateActionResultMessage(workItemType,
-                            jiraId, "update", false);
+                            jiraId, 'update', false);
                     }
                     messageService.error(message);
                 }
             });
-    };
+    }
 
     /* Unassignes issue from the test */
 
@@ -145,12 +137,12 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
                     messageService.success(message);
                 } else {
                     message = generateActionResultMessage(workItem.type,
-                        workItem.jiraId, "unassign", false);
+                        workItem.jiraId, 'unassign', false);
                     messageService.error(message);
                 }
                 vm.issueJiraIdExists = false;
             });
-    };
+    }
 
     /* Writes all attached to the test workitems into scope variables.
     Used for initialization and reinitialization */
@@ -167,8 +159,7 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
                     break;
             }
         }
-        sortIssues();
-    };
+    }
 
     /* Searches issue in Jira by Jira ID */
 
@@ -196,7 +187,7 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
                 vm.issueTabDisabled = false;
             }
         });
-    };
+    }
 
     /*  Checks whether conditions for issue search in Jira are fulfilled */
 
@@ -210,7 +201,7 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
             vm.isIssueFound = true;
             return false;
         }
-    };
+    }
 
     /* Initializes empty issue */
 
@@ -223,7 +214,7 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
         vm.newIssue = {};
         vm.newIssue.type = "BUG";
         vm.newIssue.testCaseId = test.testCaseId;
-    };
+    }
 
     /* Gets issues attached to the testcase */
 
@@ -232,7 +223,6 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
             then(function(rs) {
                 if (rs.success) {
                     vm.issues = rs.data;
-                    sortIssues();
                     if (test.workItems.length && vm.attachedIssue) {
                         angular.copy(vm.attachedIssue, vm.newIssue);
                     }
@@ -240,7 +230,7 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
                     messageService.error(rs.message);
                 }
             });
-    };
+    }
 
     /* Gets from DB JIRA_CLOSED_STATUS name for the current project*/
 
@@ -248,7 +238,7 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
         toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
             .then(rs => {
                 if (rs.success) {
-                    const jira = rs.data.find((data) => data.name === 'JIRA')
+                    const jira = rs.data.find((data) => data.name === 'JIRA');
                     const setting = jira.settings.find((setting) => setting.param.name === 'JIRA_CLOSED_STATUS');
 
                     if (setting) {
@@ -278,8 +268,7 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
         });
 
         let issueOnModalOpenSearch = $interval(function() {
-            if (angular.element(document.body).
-                hasClass('md-dialog-is-showing')) {
+            if (angular.element(document.body).hasClass('md-dialog-is-showing')) {
                 if (!isIssueSearchAvailable(vm.newIssue.jiraId)) {
                     vm.issueTabDisabled = false;
                 } else {
@@ -299,32 +288,31 @@ const IssuesModalController = function IssuesModalController($scope, $mdDialog, 
         testEvent.jiraId = Math.floor(Math.random() * 90000) + 10000;
         testEvent.testCaseId = test.testCaseId;
         testEvent.type = 'EVENT';
-        TestService.createTestWorkItem(test.id, testEvent).
-            then(function(rs) {
-                if (rs.success) {
-                } else {
-                    messageService.error('Failed to add event test "' + test.id);
+        TestService.createTestWorkItem(test.id, testEvent)
+            .then(function(rs) {
+                if (!rs.success) {
+                    messageService.error('Failed to add event test ' + test.id);
                 }
-            })
-    };
+            });
+    }
 
     /* Generates result message for action comment (needed to be stored into DB and added in UI alert) */
 
     function generateActionResultMessage(item, id, action, success) {
         if (success) {
-            return "Issue " + id + " was " + action;
+            return 'Issue ' + id + ' was ' + action;
         } else {
-            return "Failed to " + action + " " + item.toLowerCase();
+            return 'Failed to ' + action + ' ' + item.toLowerCase();
         }
-    };
+    }
 
     function hide() {
         $mdDialog.hide(test);
-    };
+    }
 
     function cancel() {
         $mdDialog.cancel(vm.test);
-    };
-}
+    }
+};
 
 export default IssuesModalController;
