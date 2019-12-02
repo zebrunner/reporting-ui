@@ -827,11 +827,23 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
             return;
         }
+
+        const selectedProvider = getSelectedProvider();
+        let providerId;
+
         extractPlatformSelections();
+
+        if (selectedProvider && vm.integrations) {
+            const selectedIntegration = vm.integrations.find(({ name }) => name.toLowerCase() === selectedProvider.name.toLowerCase())
+
+            if (selectedIntegration) {
+                providerId = selectedIntegration.id;
+            }
+        }
 
         launcher.model = JSON.stringify($scope.builtLauncher.model, null, 2);
 
-        LauncherService.buildLauncher(launcher).then(function (rs) {
+        LauncherService.buildLauncher(launcher, providerId).then(function (rs) {
             if (rs.success) {
                 messageService.success("Job is in progress");
                 $scope.hide();
@@ -1127,16 +1139,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function extractPlatformSelections() {
-        const selectedProvider = getSelectedProvider();
-
-        if (selectedProvider && vm.integrations) {
-            const selectedIntegration = vm.integrations.find(({ name }) => name.toLowerCase() === selectedProvider.name.toLowerCase())
-
-            if (selectedIntegration) {
-                $scope.builtLauncher.model.providerId = selectedIntegration.id;
-            }
-        }
-
         Object.keys(vm.platformModel).forEach(key => {
             if (vm.platformModel[key]) {
                 $scope.builtLauncher.model[key] = vm.platformModel[key].value;
