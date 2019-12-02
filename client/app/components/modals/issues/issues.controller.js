@@ -8,7 +8,8 @@ const IssuesModalController = function IssuesModalController(
     test,
     isNewIssue,
     toolsService,
-    messageService) {
+    messageService,
+    windowWidthService) {
     'ngInject';
 
     const vm = {
@@ -29,6 +30,7 @@ const IssuesModalController = function IssuesModalController(
         cancel: cancel,
         isToolConnected: toolsService.isToolConnected,
         get isConnectedToJira() { return toolsService.isToolConnected('JIRA'); },
+        get isMobile() { return windowWidthService.isMobile(); },
     };
 
     vm.$onInit = initController;
@@ -104,6 +106,7 @@ const IssuesModalController = function IssuesModalController(
                     message = generateActionResultMessage(workItemType, jiraId, messageWord, true);
                     addTestEvent(message);
                     vm.newIssue = angular.copy(rs.data);
+                    vm.initIssueSearch(false);
                     updateWorkItemList(rs.data);
                     initAttachedWorkItems();
                     vm.isNewIssue = jiraId !== vm.attachedIssue.jiraId;
@@ -146,16 +149,16 @@ const IssuesModalController = function IssuesModalController(
     }
 
     function initIssueSearch(isInvalid) {
+        vm.newIssue.description = '';
+        vm.newIssue.status = null;
+        vm.newIssue.assignee = null;
+        vm.newIssue.reporter = null;
         if (isInvalid) {
             return;
         }
         vm.issueJiraIdExists = false;
         vm.issueJiraIdInputIsChanged = true;
-        vm.newIssue.description = '';
         vm.newIssue.id = null;
-        vm.newIssue.status = null;
-        vm.newIssue.assignee = null;
-        vm.newIssue.reporter = null;
         vm.isIssueClosed = false;
         vm.isIssueFound = false;
         vm.isNewIssue = true;

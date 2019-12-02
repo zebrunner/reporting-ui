@@ -70,9 +70,9 @@
                                 </b>
                             </div>
                             <div class="col-lg-6 clearfix align-middle ticket-list-text ticket-list-row__text">
-                                {{issue.description}}
+                                <show-part text="issue.description" limit="40"></show-part>
                             </div>
-                            <div class="col-lg-2 clearfix align-middle ticket-list-text ticket-list-row__date">
+                            <div ng-if="!$ctrl.isMobile" class="col-lg-2 clearfix align-middle ticket-list-text ticket-list-row__date">
                                 {{issue.modifiedAt | date : 'MMM dd, yyyy hh:mm'}}
                             </div>
                             <div class="col-lg-2 clearfix align-middle ticket-list-text ticket-list-row__link">
