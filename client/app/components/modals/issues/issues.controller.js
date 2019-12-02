@@ -13,7 +13,6 @@ const IssuesModalController = function IssuesModalController(
     'ngInject';
 
     const vm = {
-        isMobile: windowWidthService.isMobile,
         isNewIssue: isNewIssue,
         issueJiraIdInputIsChanged: false,
         selectedIssue: false,
@@ -31,6 +30,7 @@ const IssuesModalController = function IssuesModalController(
         cancel: cancel,
         isToolConnected: toolsService.isToolConnected,
         get isConnectedToJira() { return toolsService.isToolConnected('JIRA'); },
+        get isMobile() { return windowWidthService.isMobile(); },
     };
 
     vm.$onInit = initController;
