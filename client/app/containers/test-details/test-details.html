@@ -233,7 +233,7 @@
                                                                 <md-icon class="material-icons point-icon _red">lens</md-icon><span>Mark as failed</span>
                                                             </md-button>
                                                         </md-menu-item>
-                                                        <md-menu-item ng-click="$ctrl.showDetailsDialog(test, $event);" ng-if="test.status !== 'PASSED'">
+                                                        <md-menu-item ng-click="$ctrl.showDetailsDialog(test, $event);" ng-if="test.status !== 'PASSED' && test.message">
                                                             <md-button name="testDetails" aria-label="Test details">
                                                                 <md-icon class="material-icons assignment">assignment_return</md-icon><span>Link issue</span>
                                                             </md-button>

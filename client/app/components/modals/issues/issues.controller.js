@@ -8,10 +8,12 @@ const IssuesModalController = function IssuesModalController(
     test,
     isNewIssue,
     toolsService,
-    messageService) {
+    messageService,
+    windowWidthService) {
     'ngInject';
 
     const vm = {
+        isMobile: windowWidthService.isMobile,
         isNewIssue: isNewIssue,
         issueJiraIdInputIsChanged: false,
         selectedIssue: false,
@@ -104,6 +106,7 @@ const IssuesModalController = function IssuesModalController(
                     message = generateActionResultMessage(workItemType, jiraId, messageWord, true);
                     addTestEvent(message);
                     vm.newIssue = angular.copy(rs.data);
+                    vm.initIssueSearch(false);
                     updateWorkItemList(rs.data);
                     initAttachedWorkItems();
                     vm.isNewIssue = jiraId !== vm.attachedIssue.jiraId;
@@ -146,16 +149,16 @@ const IssuesModalController = function IssuesModalController(
     }
 
     function initIssueSearch(isInvalid) {
+        vm.newIssue.description = '';
+        vm.newIssue.status = null;
+        vm.newIssue.assignee = null;
+        vm.newIssue.reporter = null;
         if (isInvalid) {
             return;
         }
         vm.issueJiraIdExists = false;
         vm.issueJiraIdInputIsChanged = true;
-        vm.newIssue.description = '';
         vm.newIssue.id = null;
-        vm.newIssue.status = null;
-        vm.newIssue.assignee = null;
-        vm.newIssue.reporter = null;
         vm.isIssueClosed = false;
         vm.isIssueFound = false;
         vm.isNewIssue = true;
