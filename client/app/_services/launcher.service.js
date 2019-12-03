@@ -42,8 +42,8 @@
             return $http.delete(API_URL + '/api/launchers/' + id).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete launcher'));
         }
 
-        function buildLauncher(launcher) {
-            return $http.post(API_URL + '/api/launchers/build', launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to build with launcher'));
+        function buildLauncher(launcher, providerId) {
+            return $http.post(API_URL + '/api/launchers/build' + (providerId ? `?providerId=${providerId}` : ''), launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to build with launcher'));
         }
 
         function scanRepository(launcherScanner, automationServerId) {
