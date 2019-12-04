@@ -126,7 +126,7 @@ const dashboardController = function dashboardController(
             func = DashboardService.ExecuteWidgetSQL;
         } else {
             widget.builder = widget.builder || {};
-            if(! widget.builder.paramsConfigObject) {
+            if (!widget.builder.paramsConfigObject) {
                 widget.builder.paramsConfigObject = $widget.build(widget, dashboard, $scope.currentUserId);
                 widget.builder.legendConfigObject = JSON.parse(widget.legendConfig);
                 applyLegend(widget);
@@ -498,10 +498,13 @@ const dashboardController = function dashboardController(
                     $scope.addDashboardWidget(rs.widget, true);
                     break;
                 case 'UPDATE':
-                    var index = $scope.dashboard.widgets.indexOfField('id', rs.widget.id);
-                    if(index !== -1) {
-                        $scope.dashboard.widgets.splice(index, 1, rs.widget);
-                        loadWidget(dashboard, $scope.dashboard.widgets[index], dashboard.attributes, false);
+                    const selectedWidget = $scope.dashboard.widgets.find(({ id }) => id === rs.widget.id);
+                    
+                    if (selectedWidget) {
+                        Object.assign(selectedWidget, rs.widget);
+                        selectedWidget.location = jsonSafeParse(selectedWidget.location);
+                        selectedWidget.builder = {};
+                        loadWidget(dashboard, selectedWidget, dashboard.attributes, false);
                     }
                     break;
                 case 'DELETE':
