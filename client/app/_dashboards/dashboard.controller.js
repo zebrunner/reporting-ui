@@ -126,7 +126,7 @@ const dashboardController = function dashboardController(
             func = DashboardService.ExecuteWidgetSQL;
         } else {
             widget.builder = widget.builder || {};
-            if(! widget.builder.paramsConfigObject) {
+            if (!widget.builder.paramsConfigObject) {
                 widget.builder.paramsConfigObject = $widget.build(widget, dashboard, $scope.currentUserId);
                 widget.builder.legendConfigObject = JSON.parse(widget.legendConfig);
                 applyLegend(widget);
@@ -376,7 +376,7 @@ const dashboardController = function dashboardController(
                 return JSON.parse(preparedJson);
             }
         }
-        
+
         return preparedJson;
     };
 
@@ -499,10 +499,11 @@ const dashboardController = function dashboardController(
                     break;
                 case 'UPDATE':
                     const selectedWidget = $scope.dashboard.widgets.find(({ id }) => id === rs.widget.id);
-
+                    
                     if (selectedWidget) {
                         Object.assign(selectedWidget, rs.widget);
                         selectedWidget.location = jsonSafeParse(selectedWidget.location);
+                        selectedWidget.builder = {};
                         loadWidget(dashboard, selectedWidget, dashboard.attributes, false);
                     }
                     break;
@@ -547,7 +548,7 @@ const dashboardController = function dashboardController(
 
     $scope.showEmailDialog = function (event, item) {
         let model = angular.copy(item);
-        
+
         if (item.widgetTemplate) {
             model.title = $scope.dashboard.title + ' dashboard - ' + item.title + ' widget';
             model.locator = '#widget-container-' + model.id;
@@ -555,7 +556,7 @@ const dashboardController = function dashboardController(
             model.title = item.title + ' dashboard';
             model.locator = '#dashboard_content';
         }
-        
+
         $mdDialog.show({
             controller: dashboardEmailModalController,
             template: dashboardEmailModalTemplate,
