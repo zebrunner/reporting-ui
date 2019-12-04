@@ -376,7 +376,7 @@ const dashboardController = function dashboardController(
                 return JSON.parse(preparedJson);
             }
         }
-        
+
         return preparedJson;
     };
 
@@ -498,12 +498,10 @@ const dashboardController = function dashboardController(
                     $scope.addDashboardWidget(rs.widget, true);
                     break;
                 case 'UPDATE':
-                    const selectedWidget = $scope.dashboard.widgets.find(({ id }) => id === rs.widget.id);
-
-                    if (selectedWidget) {
-                        Object.assign(selectedWidget, rs.widget);
-                        selectedWidget.location = jsonSafeParse(selectedWidget.location);
-                        loadWidget(dashboard, selectedWidget, dashboard.attributes, false);
+                    var index = $scope.dashboard.widgets.indexOfField('id', rs.widget.id);
+                    if(index !== -1) {
+                        $scope.dashboard.widgets.splice(index, 1, rs.widget);
+                        loadWidget(dashboard, $scope.dashboard.widgets[index], dashboard.attributes, false);
                     }
                     break;
                 case 'DELETE':
@@ -547,7 +545,7 @@ const dashboardController = function dashboardController(
 
     $scope.showEmailDialog = function (event, item) {
         let model = angular.copy(item);
-        
+
         if (item.widgetTemplate) {
             model.title = $scope.dashboard.title + ' dashboard - ' + item.title + ' widget';
             model.locator = '#widget-container-' + model.id;
@@ -555,7 +553,7 @@ const dashboardController = function dashboardController(
             model.title = item.title + ' dashboard';
             model.locator = '#dashboard_content';
         }
-        
+
         $mdDialog.show({
             controller: dashboardEmailModalController,
             template: dashboardEmailModalTemplate,
