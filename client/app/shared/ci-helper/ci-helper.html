@@ -160,7 +160,7 @@
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
                         <md-input-container class="no-margin">
-                            <div id="aceEditor" ng-if="launcher && launcher.model" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
+                            <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
                             <md-input-container class="no-margin">
                                 <label>Platform</label>
                                 <md-select ng-change="mergeTemplate(DEFAULT_TEMPLATES.model.json);" ng-model="DEFAULT_TEMPLATES.model">
