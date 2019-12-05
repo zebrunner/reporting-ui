@@ -27,13 +27,16 @@ const ngModule = angular.module('app', [
     'oc.lazyLoad',
 ])
 
-.config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider) {
+.config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider) {
     'ngInject';
 
     //Enable $location HTML5 mode (hashless)
     $locationProvider.html5Mode({
         enabled: true,
     });
+
+    // Globally disables all ARIA warnings.
+    $mdAriaProvider.disableWarnings();
 
     $anchorScrollProvider.disableAutoScrolling();
     $httpProvider.defaults.useXDomain = true;

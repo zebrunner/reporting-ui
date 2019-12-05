@@ -205,7 +205,7 @@
                     </div>            
                     <md-chips ng-if="$ctrl.providers.length" class="filter-chip custom-filter" ng-model="$ctrl.providers" md-removable="false" readonly="true">
                         <md-chip-template>
-                            <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl;" ng-click="$ctrl.onProviderSelect($chip)">
+                            <div style="display: inline-block;" ng-init="$ctrl.selectProviderOnChipsInit($index, $mdChipsCtrl)" ng-click="$ctrl.onProviderSelect($chip)">
                                 <img class="custom-filter__img" ng-if="$chip.icon" ng-src="{{$chip.icon}}"/>
                                 <span>{{$chip.name}}</span>
                             </div>
