@@ -17,6 +17,8 @@ const integrationsController = function integrationsController($state, $mdDialog
     // const PASSWORD_POSTFIX = '_PASSWORD';
     // const ALTERNATIVE_PASSWORD_POSTFIX = '_API_TOKEN_OR_PASSWORD';
     const NOT_EDITABLE_SETTINGS = ['GOOGLE_CLIENT_SECRET_ORIGIN', 'CLOUD_FRONT_PRIVATE_KEY'];
+    let _chipsCtrl;
+    let chipsCtrlInitialized = false;
 
     const vm = {
         isLoading: true,
@@ -36,10 +38,22 @@ const integrationsController = function integrationsController($state, $mdDialog
         addNewTool,
         newTool,
         cancel,
+        initSelection,
         isToolConnected: toolsService.isToolConnected,
         isEmptyTool: toolsService.isEmptyTool,
         isNewToolAdding: false,
-        isMobile: windowWidthService.isMobile
+        isMobile: windowWidthService.isMobile,
+
+        get chipsCtrl() { return _chipsCtrl; },
+        set chipsCtrl(ctrl) {
+            //let's init controller once
+            if (!_chipsCtrl) {
+                chipsCtrlInitialized = true;
+                _chipsCtrl = ctrl;
+            }
+            
+            return true;
+        },
     };
 
     function showAddIntegrationForm(isShowing) {
@@ -65,18 +79,24 @@ const integrationsController = function integrationsController($state, $mdDialog
                             messageService.success('Tool ' + tool.name + ' was changed');
                         })
                 } else {
-                    rs.error.data.validationErrors.forEach((err) => {
-                        tool.settings.map((setting) => {
-                            if (setting.param.name === err.field) {
-                                setting.param.required = true;
-                            }
-                        })
-                    })
+                    if (rs.error) {
+                        if (rs.error.data && Array.isArray(rs.error.data.validationErrors)) {
+                            rs.error.data.validationErrors.forEach((err) => {
+                                tool.settings.map((setting) => {
+                                    if (setting.param.name === err.field) {
+                                        setting.param.required = true;
+                                    }
+                                })
+                            })
+                        } else if (rs.error.message) {
+                            messageService.error(error.message);
+                        }
+                    }
                 }
             })
             .finally(() => {
                 tool.connectionChecking = false;
-            })
+            });
     }
 
     function regenerateKey() {
@@ -194,19 +214,21 @@ const integrationsController = function integrationsController($state, $mdDialog
     }
 
     function controllerInit() {
-        toolsService.fetchIntegrationsTypes().then((res) => {
-            vm.groups = res.data.sort((a, b) => a.displayName.localeCompare(b.displayName))
-            vm.isLoading = false;
-            integrationsService.readType();
-            
-            if(vm.groups.length) {
-                $timeout(function() {
-                    let initialType = integrationsService.getType() || vm.groups[0];
+        toolsService.fetchIntegrationsTypes()
+            .then(res => {
 
-                    vm.selectIntegrationType(initialType);
-                });
-            }
-        })
+                vm.groups = (res.data || []).sort((a, b) => a.displayName.localeCompare(b.displayName));
+                vm.isLoading = false;
+                integrationsService.readType();
+
+                //we can select chip only if chips constroller initialized and we have referecne to it
+                //otherwise selection will be handled on chips controller initialization
+                if (chipsCtrlInitialized) {
+                    const initialType = integrationsService.getType() || (Array.isArray(vm.groups) && vm.groups[0]);
+
+                    initialType && vm.selectIntegrationType(initialType);
+                }
+            });
         bindEvents();
     }
 
@@ -217,10 +239,17 @@ const integrationsController = function integrationsController($state, $mdDialog
         });
     }
 
+    //init chips selection if chips controller is linked only after integrations controller was initialized
+    function initSelection(i) {
+        if (!vm.isLoading && vm.groups.length === i + 1) {
+            const initialType = integrationsService.getType() || (Array.isArray(vm.groups) && vm.groups[0]);
+
+            initialType && vm.selectIntegrationType(initialType);
+        }
+    }
+
     function selectIntegrationType(type) {
-        vm.chipsCtrl.selectedChip = vm.groups.findIndex((group) => {
-            return group.id === type.id;
-        });
+        vm.chipsCtrl.selectedChip = vm.groups.findIndex(({ id }) => id === type.id);
         vm.isNewToolAdding = false;
         vm.newItem = null;
         vm.isMultipleAllowed = type.multipleAllowed;
@@ -231,9 +260,7 @@ const integrationsController = function integrationsController($state, $mdDialog
 
         toolsService.fetchIntegrationOfTypeByName(type.name).then((res) => {
             vm.tools = res.data;
-            vm.toolTypes = vm.groups.find((group) => {
-                return group.id === type.id;
-            }).types;
+            vm.toolTypes = vm.groups.find(({ id }) => id === type.id).types;
         })
     }
 

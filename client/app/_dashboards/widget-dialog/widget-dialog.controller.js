@@ -111,11 +111,10 @@ const widgetDialogController = function widgetDialogController($scope, $rootScop
     };
 
     var setQueryParams = function(table){
-        const selectedProjects = projectsService.getSelectedProjects();
         let params = '';
 
-        if (selectedProjects && selectedProjects.length) {
-            params = `?projects=${selectedProjects.map(project => project.name).join(',')}`;
+        if (projectsService.selectedProject) {
+            params = `?projects=${projectsService.selectedProject.name}`;
         }
 
         if ($scope.dashboard.attributes && $scope.dashboard.attributes.length) {

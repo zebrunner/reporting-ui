@@ -192,7 +192,7 @@
                 </div>
             </div>
             <div ng-switch-when="4">
-                <div class="selection-blocks_container_elements warning-block">
+                <div class="selection-blocks_container_elements warning-block" ng-if="START_MODE === 'UPDATE' && dashboards.length">
                     <div class="selection-blocks_container_elements warning-block__body">
                         Warning! Any changes may cause loss of data. This widget is currently is in use on other dashboard(s).
                     </div>
@@ -238,8 +238,8 @@
     </zf-modal-content-container>
     <zf-modal-helper-container class="widget-wizard_container-helper">
         <div class="widget-wizard_container-helper_picture">
-            <div class="widget-wizard_container-helper_picture_item item-{{widget.widgetTemplate.type.toLowerCase()}}" ng-if="widget.data.dataset">
-                <div id="chart" data-echarts dataset="widget.data.dataset" ng-if="widget.widgetTemplate.type !== 'TABLE'" force-watch="true" with-legend="false" chart-actions="chartActions" config="echartConfig" data-options="widget.widgetTemplate.model" style="height: 179px; width: 280px;"></div>
+            <div class="widget-wizard_container-helper_picture_item item-{{widget.widgetTemplate.type.toLowerCase()}}" ng-if="widget.data && widget.data.dataset && widget.data.dataset.length">
+                <div id="chart" data-echarts dataset="getWidgetDataset(widget)" ng-if="widget.widgetTemplate.type !== 'TABLE'" force-watch="true" with-legend="false" chart-actions="chartActions" config="echartConfig" data-options="widget.widgetTemplate.model" style="height: 179px; width: 280px;"></div>
                 <table class="table table-striped table-bordered table-hover" ng-if="widget.widgetTemplate.type === 'TABLE'" style="width: 100%;">
                     <thead>
                         <tr>

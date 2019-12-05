@@ -7,39 +7,38 @@
     function projectsService($cookieStore) {
         'ngInject';
 
-        return {
-            initSelectedProjects: function(sc) {
-                const projects = $cookieStore.get('projects');
+        let _selectedProject;
+        const service = {
+            get selectedProject() { return getSelectedProject(); },
+            set selectedProject(project) { return setSelectedProject(project); },
+        }
 
-                if (projects) {
-                    sc.projects = projects;
-                }
+        function getSelectedProject() {
+            if (typeof _selectedProject === 'undefined') {
+                _selectedProject = $cookieStore.get('project');
+            }
 
-                return sc;
-            },
+            return _selectedProject;
+        }
 
-            getProjectsQueryParamObject: function(sc) {
-                const query = {};
-                const projects = $cookieStore.get('projects');
+        function setSelectedProject(project) {
+            if (!project) {
+                return resetSelectedProject();
+            }
 
-                if (projects && projects.length) {
-                    query.projects = projects.map(({ name }) => name);
-                }
+            _selectedProject = project;
+            $cookieStore.put('project', _selectedProject);
 
-                return query;
-            },
+            return true;
+        }
 
-            getSelectedProjects: function() {
-                return $cookieStore.get('projects');
-            },
+        function resetSelectedProject() {
+            _selectedProject = null;
+            $cookieStore.remove('project');
 
-            setSelectedProjects: function(projects) {
-                $cookieStore.put('projects', projects);
-            },
+            return true;
+        }
 
-            resetSelectedProjects: function() {
-                $cookieStore.remove('projects');
-            },
-        };
+        return service;
     }
 })();

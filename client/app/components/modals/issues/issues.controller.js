@@ -1,8 +1,17 @@
 'use strict';
+
 const IssuesModalController = function IssuesModalController(
-        $scope, $mdDialog, $interval, TestService, test, isNewIssue, toolsService, messageService) {
+    $scope,
+    $mdDialog,
+    $interval,
+    TestService,
+    test,
+    isNewIssue,
+    toolsService,
+    messageService,
+    windowWidthService) {
     'ngInject';
-        
+
     const vm = {
         isNewIssue: isNewIssue,
         issueJiraIdInputIsChanged: false,
@@ -12,29 +21,16 @@ const IssuesModalController = function IssuesModalController(
         isIssueFound: true,
         isIssueClosed: false,
         test: angular.copy(test),
-        testCommentText: '',
-        testComments: [],
         issues: [],
-        currentStatus: test.status,
-        testStatuses: ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED'],
         ticketStatuses: ['TO DO', 'OPEN', 'NOT ASSIGNED', 'IN PROGRESS', 'FIXED', 'REOPENED', 'DUPLICATE'],
-        issueStatusIsNotRecognized: false,
-        changeStatusIsVisible: false,
-        issueListIsVisible: false,
-        updateTest: updateTest,
-        updateWorkItemList: updateWorkItemList,
-        deleteWorkItemFromList: deleteWorkItemFromList,
-        deleteWorkItemFromTestWorkItems: deleteWorkItemFromTestWorkItems,
         assignIssue: assignIssue,
         unassignIssue: unassignIssue,
-        searchScopeIssue: searchScopeIssue,
-        clearIssue: clearIssue,
         initIssueSearch: initIssueSearch,
         hide: hide,
         cancel: cancel,
-        bindEvents: bindEvents,
         isToolConnected: toolsService.isToolConnected,
         get isConnectedToJira() { return toolsService.isToolConnected('JIRA'); },
+        get isMobile() { return windowWidthService.isMobile(); },
     };
 
     vm.$onInit = initController;
@@ -47,66 +43,50 @@ const IssuesModalController = function IssuesModalController(
         initNewIssue();
         getIssues();
         bindEvents();
-    };
-
-    function updateTest(test) {
-        TestService.updateTest(test)
-            .then(function(rs) {
-                if (rs.success) {
-                    let message;
-
-                    vm.changeStatusIsVisible = false;
-                    message = 'Test was marked as ' + test.status;
-                    addTestEvent(message);
-                    messageService.success(message);
-                } else {
-                    console.error(rs.message);
-                }
-            });
-    };
+    }
 
     function updateWorkItemList(workItem) {
-        var issues = vm.issues;
-        for (var i = 0; i < issues.length; i++) {
-            if (issues[i].jiraId === workItem.jiraId) {
-                deleteWorkItemFromList(issues[i]);
-                break;
-            }
-        }
-        vm.issues.push(workItem);
-        vm.test.workItems.push(workItem);
-    };
+        const issueToDelete = vm.issues.find(({ jiraId }) => jiraId === workItem.jiraId);
 
-    function deleteWorkItemFromList(workItem) {
-        var issueToDelete = vm.issues.filter(function(listWorkItem) {
-            return listWorkItem.jiraId === workItem.jiraId;
-        })[0];
-        var issueIndex = vm.issues.indexOf(issueToDelete);
+        if (issueToDelete) {
+            deleteWorkItemFromList(issueToDelete, workItem);
+        } else {
+            vm.issues.push(workItem);
+        }
+        unlinkOldTicket();
+        vm.test.workItems.push(workItem);
+    }
+
+    function unlinkOldTicket() {
+        vm.test.workItems = vm.test.workItems.filter(({ type }) => type !== 'BUG');
+    }
+
+    function deleteWorkItemFromList(workItem, itemToAdd) {
+        const issueIndex = vm.issues.findIndex(({ jiraId }) => jiraId === workItem.jiraId);
+
         if (issueIndex !== -1) {
-            vm.issues.splice(issueIndex, 1);
+            vm.issues.splice(issueIndex, 1, itemToAdd);
         }
         deleteWorkItemFromTestWorkItems(workItem);
-    };
+    }
 
     function deleteWorkItemFromTestWorkItems(workItem) {
-        var issueToDelete = vm.test.workItems.filter(
-            function(listWorkItem) {
-                return listWorkItem.jiraId === workItem.jiraId;
-            })[0];
-        var workItemIndex = vm.test.workItems.indexOf(issueToDelete);
+        const workItemIndex = vm.test.workItems.findIndex(({ jiraId }) => jiraId === workItem.jiraId);
+
         if (workItemIndex !== -1) {
             vm.test.workItems.splice(workItemIndex, 1);
         }
-    };
+    }
 
     /** ISSUE functionality */
 
     /* Assigns issue to the test */
 
-    function assignIssue(issue) {
+    function assignIssue(issue, keyWord) {
         if (!issue.testCaseId) {
             issue.testCaseId = test.testCaseId;
         }
+        issue.type = 'BUG';
         TestService.createTestWorkItem(test.id, issue)
             .then((rs) => {
                 const workItemType = issue.type;
@@ -114,15 +94,19 @@ const IssuesModalController = function IssuesModalController(
                 let message;
 
                 if (rs.success) {
-                    if (vm.isNewIssue) {
-                        message = generateActionResultMessage(workItemType,
-                            jiraId, "assigned", true);
-                    } else {
-                        message = generateActionResultMessage(workItemType,
-                            jiraId, "updated", true);
+                    var messageWord;
+                    switch (keyWord) {
+                        case 'SAVE':
+                            messageWord = issue.id ? 'updated' : 'created';
+                            break;
+                        case 'LINK':
+                            messageWord = 'linked';
+                            break;
                     }
+                    message = generateActionResultMessage(workItemType, jiraId, messageWord, true);
                     addTestEvent(message);
-                    vm.newIssue.id = rs.data.id;
+                    vm.newIssue = angular.copy(rs.data);
+                    vm.initIssueSearch(false);
                     updateWorkItemList(rs.data);
                     initAttachedWorkItems();
                     vm.isNewIssue = jiraId !== vm.attachedIssue.jiraId;
@@ -130,15 +114,15 @@ const IssuesModalController = function IssuesModalController(
                 } else {
                     if (vm.isNewIssue) {
                         message = generateActionResultMessage(workItemType,
-                            jiraId, "assign", false);
+                            jiraId, 'assign', false);
                     } else {
                         message = generateActionResultMessage(workItemType,
-                            jiraId, "update", false);
+                            jiraId, 'update', false);
                     }
                     messageService.error(message);
                 }
             });
-    };
+    }
 
     /* Unassignes issue from the test */
 
@@ -146,10 +130,9 @@ const IssuesModalController = function IssuesModalController(
         TestService.deleteTestWorkItem(test.id, workItem.id)
             .then(function(rs) {
                 let  message;
-                
+
                 if (rs.success) {
-                    message = generateActionResultMessage(workItem.type,
-                        workItem.jiraId, "unassigned", true);
+                    message = generateActionResultMessage(workItem.type, workItem.jiraId, "unlinked", true);
                     addTestEvent(message);
                     deleteWorkItemFromTestWorkItems(workItem);
                     initAttachedWorkItems();
@@ -158,55 +141,30 @@ const IssuesModalController = function IssuesModalController(
                     messageService.success(message);
                 } else {
                     message = generateActionResultMessage(workItem.type,
-                        workItem.jiraId, "unassign", false);
+                        workItem.jiraId, 'unassign', false);
                     messageService.error(message);
                 }
                 vm.issueJiraIdExists = false;
             });
-    };
-
-    /* Starts set in the scope issue search */
-
-    function searchScopeIssue(issue) {
-        vm.initIssueSearch();
-        initAttachedWorkItems();
-        vm.isNewIssue = !(issue.jiraId === vm.attachedIssue.jiraId);
-        vm.newIssue.id = issue.id;
-        vm.newIssue.jiraId = issue.jiraId;
-        vm.newIssue.description = issue.description;
-        vm.newIssue.blocker = issue.blocker;
-        vm.selectedIssue = true;
-    };
-
-    function clearIssue() {
-        initNewIssue();
-        getIssues();
-        vm.issueJiraIdExists = false;
-        vm.selectedIssue = false;
-    };
-
-    /* Initializes issue object before search */
+    }
 
     function initIssueSearch(isInvalid) {
+        vm.newIssue.description = '';
+        vm.newIssue.status = null;
+        vm.newIssue.assignee = null;
+        vm.newIssue.reporter = null;
         if (isInvalid) {
             return;
         }
         vm.issueJiraIdExists = false;
         vm.issueJiraIdInputIsChanged = true;
-        vm.newIssue.description = '';
         vm.newIssue.id = null;
-        vm.newIssue.status = null;
-        vm.newIssue.assignee = null;
-        vm.newIssue.reporter = null;
-        vm.newIssue.blocker = false;
         vm.isIssueClosed = false;
         vm.isIssueFound = false;
         vm.isNewIssue = true;
-        var existingIssue = vm.issues.filter(function(foundIssue) {
-            return foundIssue.jiraId === vm.newIssue.jiraId;
-        })[0];
+        const existingIssue = vm.issues.find(foundIssue => foundIssue.jiraId === vm.newIssue.jiraId);
         if (existingIssue) {
-            angular.copy(existingIssue, vm.newIssue);
+            vm.newIssue = Object.assign({}, existingIssue);
         }
     };
 
@@ -214,7 +172,6 @@ const IssuesModalController = function IssuesModalController(
     Used for initialization and reinitialization */
 
     function initAttachedWorkItems() {
-        vm.testComments = [];
         var attachedWorkItem = {};
         attachedWorkItem.jiraId = '';
         vm.attachedIssue = attachedWorkItem;
@@ -226,13 +183,12 @@ const IssuesModalController = function IssuesModalController(
                     break;
             }
         }
-    };
+    }
 
     /* Searches issue in Jira by Jira ID */
 
     function searchIssue(issue) {
         vm.isIssueFound = false;
-        vm.issueStatusIsNotRecognized = false;
         TestService.getJiraTicket(issue.jiraId).then(function(rs) {
             if (rs.success) {
                 var searchResultIssue = rs.data;
@@ -250,17 +206,12 @@ const IssuesModalController = function IssuesModalController(
                 vm.newIssue.assignee = searchResultIssue.assigneeName || '';
                 vm.newIssue.reporter = searchResultIssue.reporterName || '';
                 vm.newIssue.status = searchResultIssue.status.toUpperCase();
-                if (!vm.ticketStatuses.filter(function(status) {
-                    return status === vm.newIssue.status;
-                })[0]) {
-                    vm.issueStatusIsNotRecognized = true;
-                }
                 vm.isNewIssue = !(vm.newIssue.jiraId ===
                     vm.attachedIssue.jiraId);
                 vm.issueTabDisabled = false;
             }
         });
-    };
+    }
 
     /*  Checks whether conditions for issue search in Jira are fulfilled */
 
@@ -274,7 +225,7 @@ const IssuesModalController = function IssuesModalController(
             vm.isIssueFound = true;
             return false;
         }
-    };
+    }
 
     /* Initializes empty issue */
 
@@ -287,7 +238,7 @@ const IssuesModalController = function IssuesModalController(
         vm.newIssue = {};
         vm.newIssue.type = "BUG";
         vm.newIssue.testCaseId = test.testCaseId;
-    };
+    }
 
     /* Gets issues attached to the testcase */
 
@@ -296,14 +247,14 @@ const IssuesModalController = function IssuesModalController(
             then(function(rs) {
                 if (rs.success) {
                     vm.issues = rs.data;
-                    if (test.workItems.length && !vm.isNewIssue) {
+                    if (test.workItems.length && vm.attachedIssue) {
                         angular.copy(vm.attachedIssue, vm.newIssue);
                     }
                 } else {
                     messageService.error(rs.message);
                 }
             });
-    };
+    }
 
     /* Gets from DB JIRA_CLOSED_STATUS name for the current project*/
 
@@ -311,11 +262,11 @@ const IssuesModalController = function IssuesModalController(
         toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
             .then(rs => {
                 if (rs.success) {
-                    const jira = rs.data.find((data) => data.name === 'JIRA')
+                    const jira = rs.data.find((data) => data.name === 'JIRA');
                     const setting = jira.settings.find((setting) => setting.param.name === 'JIRA_CLOSED_STATUS');
 
                     if (setting) {
-                        vm.closedStatusName = setting.value.toUpperCase();
+                        vm.closedStatusName = setting.value ? setting.value.toUpperCase() : null;
                     }
                 } else {
                     messageService.error(rs.message);
@@ -341,8 +292,7 @@ const IssuesModalController = function IssuesModalController(
         });
 
         let issueOnModalOpenSearch = $interval(function() {
-            if (angular.element(document.body).
-                hasClass('md-dialog-is-showing')) {
+            if (angular.element(document.body).hasClass('md-dialog-is-showing')) {
                 if (!isIssueSearchAvailable(vm.newIssue.jiraId)) {
                     vm.issueTabDisabled = false;
                 } else {
@@ -362,32 +312,31 @@ const IssuesModalController = function IssuesModalController(
         testEvent.jiraId = Math.floor(Math.random() * 90000) + 10000;
         testEvent.testCaseId = test.testCaseId;
         testEvent.type = 'EVENT';
-        TestService.createTestWorkItem(test.id, testEvent).
-            then(function(rs) {
-                if (rs.success) {
-                } else {
-                    messageService.error('Failed to add event test "' + test.id);
+        TestService.createTestWorkItem(test.id, testEvent)
+            .then(function(rs) {
+                if (!rs.success) {
+                    messageService.error('Failed to add event test ' + test.id);
                 }
-            })
-    };
+            });
+    }
 
     /* Generates result message for action comment (needed to be stored into DB and added in UI alert) */
 
     function generateActionResultMessage(item, id, action, success) {
         if (success) {
-            return item + " " + id + " was " + action;
+            return 'Issue ' + id + ' was ' + action;
         } else {
-            return "Failed to " + action + " " + item.toLowerCase();
+            return 'Failed to ' + action + ' ' + item.toLowerCase();
         }
-    };
+    }
 
     function hide() {
         $mdDialog.hide(test);
-    };
+    }
 
     function cancel() {
         $mdDialog.cancel(vm.test);
-    };
-}
+    }
+};
 
 export default IssuesModalController;

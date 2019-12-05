@@ -10,11 +10,23 @@ import dashboardSettingsModalController
     from "../shared/modals/dashboard-settings-modal/dashboard-settings-modal.controller";
 import dashboardSettingsModalTemplate from "../shared/modals/dashboard-settings-modal/dashboard-settings-modal.html";
 
-const dashboardController = function dashboardController($scope, $rootScope, $q, $timeout, $interval,
-                                                         $cookies, $location, $state, $http, $mdConstant,
-                                                         $stateParams, $mdDialog, $mdToast, UtilService,
-                                                         DashboardService, projectsService, UserService,
-                                                         $widget, $mapper, toolsService, messageService, AuthService) {
+const dashboardController = function dashboardController(
+    $scope,
+    $q,
+    $timeout,
+    $interval,
+    $location,
+    $stateParams,
+    $mdDialog,
+    DashboardService,
+    projectsService,
+    UserService,
+    $widget,
+    $mapper,
+    toolsService,
+    messageService,
+    AuthService
+    ) {
     'ngInject';
 
     const vm = {
@@ -114,7 +126,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             func = DashboardService.ExecuteWidgetSQL;
         } else {
             widget.builder = widget.builder || {};
-            if(! widget.builder.paramsConfigObject) {
+            if (!widget.builder.paramsConfigObject) {
                 widget.builder.paramsConfigObject = $widget.build(widget, dashboard, $scope.currentUserId);
                 widget.builder.legendConfigObject = JSON.parse(widget.legendConfig);
                 applyLegend(widget);
@@ -321,11 +333,10 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     };
 
     var setQueryParams = function(dashboardName){
-        const selectedProjects = projectsService.getSelectedProjects();
         let params = '';
 
-        if (selectedProjects && selectedProjects.length) {
-            params = `?projects=${selectedProjects.map(project => project.name).join(',')}`;
+        if (projectsService.selectedProject) {
+            params = `?projects=${projectsService.selectedProject.name}`;
         }
 
         if ($scope.dashboard.attributes && $scope.dashboard.attributes.length) {
@@ -365,7 +376,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                 return JSON.parse(preparedJson);
             }
         }
-        
+
         return preparedJson;
     };
 
@@ -488,10 +499,11 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
                     break;
                 case 'UPDATE':
                     const selectedWidget = $scope.dashboard.widgets.find(({ id }) => id === rs.widget.id);
-
+                    
                     if (selectedWidget) {
                         Object.assign(selectedWidget, rs.widget);
                         selectedWidget.location = jsonSafeParse(selectedWidget.location);
+                        selectedWidget.builder = {};
                         loadWidget(dashboard, selectedWidget, dashboard.attributes, false);
                     }
                     break;
@@ -536,7 +548,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
 
     $scope.showEmailDialog = function (event, item) {
         let model = angular.copy(item);
-        
+
         if (item.widgetTemplate) {
             model.title = $scope.dashboard.title + ' dashboard - ' + item.title + ' widget';
             model.locator = '#widget-container-' + model.id;
@@ -544,7 +556,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
             model.title = item.title + ' dashboard';
             model.locator = '#dashboard_content';
         }
-        
+
         $mdDialog.show({
             controller: dashboardEmailModalController,
             template: dashboardEmailModalTemplate,

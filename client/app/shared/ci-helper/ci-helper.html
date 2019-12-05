@@ -37,7 +37,7 @@
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 {{launcher.name}}
                             </li>
-                            <li ng-if="! scmAccount.launchers" class="folder-container_item_list_item-empty">
+                            <li ng-if="!scmAccount.launchers.length" class="folder-container_item_list_item-empty">
                                 No templates added
                             </li>
                         </ul>
@@ -65,7 +65,7 @@
                 </md-button>
             </div>
         </zf-modal-helper-container>
-        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="needServer && $ctrl.cardNumber !== 0 && !scmAccount.launchers">
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="needServer && $ctrl.cardNumber !== 0 && !scmAccount.launchers.length">
             <ng-form name="info">
                 <div class="ci-runner-container_content_block _server-selection">
                     <div class="ci-runner-container_content_block_title">
@@ -119,7 +119,7 @@
                 </div>
             </ng-form>
         </zf-modal-content-container>
-        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-class="{'__info-edit-mode': launcher.id}" ng-if="$ctrl.cardNumber === 2 && (!needServer || scmAccount.launchers)">
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-class="{'__info-edit-mode': launcher.id}" ng-if="$ctrl.cardNumber === 2 && (!needServer || scmAccount.launchers.length)">
             <ng-form ng-if="! launcher.id" name="scanInfo">
                 <div class="ci-runner-container_content_block">
                     <div ng-if="scmAccount.id" class="ci-runner-container_content_block_title __ci-runner-lg-title __scan-repo">
@@ -134,7 +134,7 @@
                             <label class="placeholder-label">Branch</label>
                             <input type="text" ng-model="launcherScan.branch" autofocus ng-required="true" />
                         </md-input-container>
-                        <md-button class="md-raised" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="! hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <md-button class="md-raised" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="!hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             SCAN
                         </md-button>
                         <md-button class="md-raised" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
@@ -189,7 +189,7 @@
                 </div>
             </ng-form>
         </zf-modal-content-container>
-        
+
         <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.cardNumber === 3 || $ctrl.cardNumber === 4" ng-show="launcher">
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
@@ -202,10 +202,10 @@
                 <div class="ci-runner-container__providers">
                     <div class="warning-block" ng-if="$ctrl.providersFail">
                             Unable to load provider configs, contact your administrator!
-                    </div>            
+                    </div>
                     <md-chips ng-if="$ctrl.providers.length" class="filter-chip custom-filter" ng-model="$ctrl.providers" md-removable="false" readonly="true">
                         <md-chip-template>
-                            <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl;" ng-click="$ctrl.onProviderSelect($chip)">
+                            <div style="display: inline-block;" ng-init="$ctrl.selectProviderOnChipsInit($index, $mdChipsCtrl)" ng-click="$ctrl.onProviderSelect($chip)">
                                 <img class="custom-filter__img" ng-if="$chip.icon" ng-src="{{$chip.icon}}"/>
                                 <span>{{$chip.name}}</span>
                             </div>
@@ -239,7 +239,7 @@
                                 </show-part>
                             </div>
                             <div class="ci-runner-container_content_builder_container_item">
-                                <md-input-container class="no-margin _gray-bg" 
+                                <md-input-container class="no-margin _gray-bg"
                                     ng-if="platformControl.type === 'select' && platformControl.items.length">
                                     <label>{{platformControl.label}}</label>
                                     <md-select required
@@ -253,7 +253,7 @@
                                         </md-option>
                                     </md-select>
                                 </md-input-container>
-                                <md-input-container class="no-margin _gray-bg" 
+                                <md-input-container class="no-margin _gray-bg"
                                     ng-if="platformControl.type === 'input'">
                                     <label>{{platformControl.label}}</label>
                                     <input

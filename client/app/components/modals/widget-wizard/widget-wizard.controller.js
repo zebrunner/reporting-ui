@@ -291,6 +291,14 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         }
     };
 
+    $scope.getWidgetDataset = function getWidgetDataset(widget) {
+        if (widget.data && Array.isArray(widget.data.dataset)) {
+            return widget.data.dataset;
+        }
+
+        return [];
+    }
+
     $scope.switchInputEnabled = function(paramValue) {
         if(! widget.id) {
             if (paramValue.input_enabled) {
