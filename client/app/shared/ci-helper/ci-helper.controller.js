@@ -10,7 +10,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     UtilService, API_URL, $http) {
     'ngInject';
 
-    let cardNumber = 0;
     let isMultitenant = false;
     let prevLauncher;
     let prevFolder;
@@ -38,24 +37,12 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         platformsConfig: null,
         providersFail: false,
         loadingScm: true,
+        cardNumber: 0,
 
         onProviderSelect,
         onPlatformSelect,
+        selectProviderOnChipsInit,
         get isMobile() { return windowWidthService.isMobile(); },
-        get cardNumber() {
-            return cardNumber;
-        },
-        set cardNumber(num) {
-            cardNumber = num;
-
-            if (cardNumber === 3) {
-                $timeout(() => {
-                    if (vm.providers.length) {
-                        handleProviderSelection(vm.providers[0]);
-                    }
-                })
-            }
-        },
     };
 
     vm.$onInit = initController;
@@ -294,7 +281,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     function getCurrentServerId(scmAccount) {
-        if (scmAccount.launchers) {
+        if (scmAccount.launchers && scmAccount.launchers.length) {
             return scmAccount.launchers[0].job.automationServerId ? scmAccount.launchers[0].job.automationServerId : getDefaultServerId();
         }
     }
@@ -314,9 +301,11 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.toEditLauncher = function (launcher) {
-        //clearLauncher();
-        //$scope.launcher = angular.copy(launcher);
-            vm.cardNumber = 2;
+        //cache previously selected provider to restore after edition mode
+        if (vm.chipsCtrl) {
+            vm.lastSelectedProvider = vm.chipsCtrl.selectedChip;
+        }
+        vm.cardNumber = 2;
     };
 
     function getScmAccountDefaultBranchName(id) {
@@ -371,7 +360,14 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
 
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
-        if ($scope.launcher && $scope.launcher.id === launcher.id) { return; }
+        if ($scope.launcher) {
+            //do nothing if clicked on active launcher
+            if ($scope.launcher.id === launcher.id) { return; }
+            //reset provider selection on choosing another launcher
+            if (vm.chipsCtrl) {
+                $timeout(() => { handleProviderSelection(vm.providers[0]); });
+            }
+        }
         highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
         $scope.needServer = false;
@@ -385,7 +381,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     function switchToLauncherPreview(launcher) {
         $scope.applyBuilder(launcher);
         vm.cardNumber = 3;
-    };
+    }
 
     $scope.selectLauncher = function (launcher) {
         $scope.chooseLauncher(launcher, true);
@@ -1176,12 +1172,14 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function handleProviderSelection(provider) {
+        if (!vm.chipsCtrl || !provider) { return; }
+
         const index = vm.chipsCtrl.items.findIndex(({ id }) => {
             return provider.id === id;
-        })
+        });
 
         clearPlatforms();
-        vm.failedProvider = provider.failed
+        vm.failedProvider = provider.failed;
         vm.chipsCtrl.selectedChip = index;
         provider.data && initPlatforms(provider.data);
     }
@@ -1195,6 +1193,26 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         if (!vm.chipsCtrl || vm.chipsCtrl.selectedChip === -1) { return; }
 
         return vm.chipsCtrl.items[vm.chipsCtrl.selectedChip];
+    }
+
+    //handle initial provider selection after chips were rendered
+    function selectProviderOnChipsInit(index, ctrl) {
+        //save link to chips controller on first chip initialization
+        if (index === 0) {
+            vm.chipsCtrl = ctrl;
+        }
+        if (vm.providers.length - 1 === index) {
+
+            if (!isNaN(vm.lastSelectedProvider)) {
+                //restore previous selected provider otherwise keep deselected
+                if (vm.lastSelectedProvider !== -1) {
+                    handleProviderSelection(vm.providers[vm.lastSelectedProvider]);
+                }
+                vm.lastSelectedProvider = null;
+            } else { //if we don't have cached selection we should select first provider
+                handleProviderSelection(vm.providers[0]);
+            }
+        }
     }
 
     function getProvidersConfig() {
