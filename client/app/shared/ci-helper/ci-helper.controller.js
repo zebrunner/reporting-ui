@@ -301,6 +301,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     $scope.toEditLauncher = function (launcher) {
+        //cache previously selected provider to restore after edition mode
         if (vm.chipsCtrl) {
             vm.lastSelectedProvider = vm.chipsCtrl.selectedChip;
         }
@@ -360,8 +361,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
         if ($scope.launcher) {
+            //do nothing if clicked on active launcher
             if ($scope.launcher.id === launcher.id) { return; }
-            else if (vm.chipsCtrl) {
+            //reset provider selection on choosing another launcher
+            if (vm.chipsCtrl) {
                 $timeout(() => { handleProviderSelection(vm.providers[0]); });
             }
         }
@@ -1192,18 +1195,21 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         return vm.chipsCtrl.items[vm.chipsCtrl.selectedChip];
     }
 
+    //handle initial provider selection after chips were rendered
     function selectProviderOnChipsInit(index, ctrl) {
+        //save link to chips controller on first chip initialization
         if (index === 0) {
             vm.chipsCtrl = ctrl;
         }
         if (vm.providers.length - 1 === index) {
 
             if (!isNaN(vm.lastSelectedProvider)) {
+                //restore previous selected provider otherwise keep deselected
                 if (vm.lastSelectedProvider !== -1) {
                     handleProviderSelection(vm.providers[vm.lastSelectedProvider]);
                 }
                 vm.lastSelectedProvider = null;
-            } else {
+            } else { //if we don't have cached selection we should select first provider
                 handleProviderSelection(vm.providers[0]);
             }
         }
