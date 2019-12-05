@@ -281,7 +281,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     };
 
     function getCurrentServerId(scmAccount) {
-        if (scmAccount.launchers) {
+        if (scmAccount.launchers && scmAccount.launchers.length) {
             return scmAccount.launchers[0].job.automationServerId ? scmAccount.launchers[0].job.automationServerId : getDefaultServerId();
         }
     }
