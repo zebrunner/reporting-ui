@@ -61,7 +61,7 @@
                             testRun.tests = null;
                         });
                         _lastResult = data;
-                        
+
                         if (_launchers && _launchers.length) {
                             filterLaunchers();
                         }
@@ -96,14 +96,9 @@
         }
 
         function addBrowserVersion(testRun) {
-            const platform = testRun.platform ? testRun.platform.split(' ') : [];
             let version = null;
 
-            if (platform.length > 1) {
-                version = 'v.' + platform[1];
-            }
-
-            if (!version && testRun.config && testRun.config.browserVersion !== '*') {
+            if (testRun.config && testRun.config.browserVersion !== '*') {
                 version = testRun.config.browserVersion;
             }
 
@@ -159,7 +154,7 @@
         function resetFilteringState() {
             resetSearchParams();
         }
-        
+
         function storeParams() {
             sessionStorage.setItem('searchParams', angular.toJson(_searchParams));
         }
@@ -184,7 +179,7 @@
 
         function readStoredlaunchers() {
             const launchers = sessionStorage.getItem('launchers');
-            
+
             launchers && (_launchers = angular.fromJson(launchers));
 
             return _launchers;
@@ -206,7 +201,7 @@
                 _lastResult.results.splice(-1);
             }
             _lastResult.results = [testRun].concat(_lastResult.results);
-            
+
             return _lastResult.results;
         }
 
@@ -219,7 +214,7 @@
             testRun.shouldBeDestroyedAt = dateNow.getTime();
             _launchers.push(testRun);
             storeLaunchers();
-            
+
             return _launchers;
         }
 
