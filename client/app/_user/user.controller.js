@@ -61,7 +61,8 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             .then(function (rs) {
                 if (rs.success) {
                     vm.user = rs.data;
-                    UserService.currentUser = Object.assign({}, vm.currentUser, vm.user);
+                    UserService.currentUser.firstName = vm.user.firstName;
+                    UserService.currentUser.lastName = vm.user.lastName;
                     messageService.success('User profile updated');
                 } else {
                     messageService.error(rs.message);
