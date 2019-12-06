@@ -71,7 +71,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     $scope.jsonModel = {};
 
     $scope.aceOptions = {
-        useWrapMode: true,
+        useWrapMode: false,
         showGutter: false,
         theme: 'eclipse',
         mode: 'json',
