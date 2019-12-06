@@ -460,7 +460,8 @@ button.red {
     &.tizen {
         background-image: url(../assets/images/_icons_platform/tizensss.svg);
     }
-    &.opera {
+    &.opera,
+    &.operablink {
         background-image: url(../assets/images/_icons_platform/opera.svg);
     }
     &.macos {
