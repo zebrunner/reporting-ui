@@ -228,7 +228,7 @@
                                                                 <md-icon class="material-icons point-icon _green">lens</md-icon><span>Mark as passed</span>
                                                             </md-button>
                                                         </md-menu-item>
-                                                        <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'FAILED');" ng-if="test.status === 'PASSED'">
+                                                        <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'FAILED');" ng-if="['PASSED', 'SKIPPED', 'ABORTED'].indexOf(test.status) !== -1">
                                                             <md-button>
                                                                 <md-icon class="material-icons point-icon _red">lens</md-icon><span>Mark as failed</span>
                                                             </md-button>
