@@ -3,6 +3,7 @@
 import '../styles/main.scss';
 import 'intersection-observer';
 import progressbarInterceptor from './http-interceptors/progressbar.interceptor';
+import jenkinsIcon from '../assets/images/_icons_tools/jenkins.svg';
 
 const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular.module('app', [
@@ -27,7 +28,7 @@ const ngModule = angular.module('app', [
     'oc.lazyLoad',
 ])
 
-.config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider) {
+.config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider, $mdIconProvider) {
     'ngInject';
 
     //Enable $location HTML5 mode (hashless)
@@ -45,16 +46,9 @@ const ngModule = angular.module('app', [
     // hide "Possibly unhandled rejection" error notification on production
     $qProvider.errorOnUnhandledRejections(!isProd);
 
-    // var $window = $(window);
-    //
-    // $window.scroll(onScroll);
-    // $window.resize(onResize);
-    //
-    // function onScroll() {
-    // };
-    //
-    // function onResize() {
-    // };
+    //define custom icons
+    $mdIconProvider
+        .icon('tools:jenkins', jenkinsIcon, 64);
 
     Array.prototype.indexOfId = function(id) {
         for (var i = 0; i < this.length; i++)
