@@ -3,9 +3,27 @@
 
     angular.module('app')
         .controller('AppCtrl', AppCtrl); // overall control
-	    function AppCtrl($scope, $rootScope, $templateCache, $state, $window, $cookies, $q, appConfig,
-                         AuthService, UserService, SettingsService, ConfigService, messageService,
-                         SettingProvider, $timeout, toolsService, UI_VERSION, progressbarService) {
+	    function AppCtrl(
+	        $scope,
+            $rootScope,
+            $templateCache,
+            $state,
+            $window,
+            $cookies,
+            $q,
+            appConfig,
+            AuthService,
+            UserService,
+            SettingsService,
+            ConfigService,
+            messageService,
+            SettingProvider,
+            $timeout,
+            toolsService,
+            UI_VERSION,
+            progressbarService,
+            SafariFixesService
+        ) {
             'ngInject';
 
 	        $scope.pageTransitionOpts = appConfig.pageTransitionOpts;
@@ -114,6 +132,10 @@
                     }
 	            }
                  getVersion();
+
+                if (SafariFixesService.isIosSafari) {
+                    SafariFixesService.registerForcedReloading();
+                }
 	        })();
 	    }
 })();
