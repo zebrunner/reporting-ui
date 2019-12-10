@@ -56,6 +56,7 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
         get isMobile() { return windowWidthService.isMobile(); },
         get dashboardList() { return DashboardService.dashboards; },
         get menuItems() { return mainMenuService.items; },
+        getSubitems(name) { return mainMenuService.getSubItemsDefaultMenu(name); },
     };
 
     vm.$onInit = initController;
@@ -387,4 +388,3 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
 };
 
 export default AppSidebarController;
-
