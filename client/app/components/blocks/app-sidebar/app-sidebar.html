@@ -45,8 +45,8 @@
                                             value="{{::project.id}}">{{::project.name}}</md-radio-button>
                                         <span has-any-permission="['MODIFY_DASHBOARDS']" ng-if="project.name !== 'ALL' && project.name !== 'UNKNOWN'">
                                             <i class="material-icons menu-actor _delete show-icon-on-hover hide-tablet" ng-click="$ctrl.showDeleteModal(project)">delete_outline</i>
-                                        </span> 
-                                    </div>                                            
+                                        </span>
+                                    </div>
                                 </md-radio-group>
                             </li>
                             <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">
@@ -66,7 +66,7 @@
                     </li>
                     <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
                         <a class="nav__button zf-primary-button" aria-label="menu" href="" data-ng-click="$ctrl.showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
-                    </li> 
+                    </li>
                     <li class="sub-search nav-search">
                         <md-input-container class="no-margin _search _light">
                             <label class="placeholder-label">Search</label>
@@ -172,7 +172,7 @@
                 </a>
             </li>
             <li style="flex-grow: 1"></li>
-            <li class="profile"  ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-menu>
+            <li class="profile" ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-menu>
                 <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="userProfile">
                     <div>
                         <profile-photo ng-model="$ctrl.currentUser.photoURL"
@@ -193,6 +193,27 @@
                             <li toggle-nav-bottom style="position: relative;">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="userProfile" class="show-part">
                                     <span>User profile</span>
+                                </a>
+                            </li>
+                            <li toggle-nav-bottom style="position: relative;"
+                                ng-repeat="subitem in $ctrl.getSubitems('profile') track by subitem.name"
+                                ng-class="subitem.className">
+                                <a ng-if="subitem.linkType === 'internal'"
+                                   toggle-menu="close"
+                                   md-button
+                                   aria-label="menu"
+                                   ui-sref="{{ subitem.link }}"
+                                   class="show-part">
+                                    <span>{{ subitem.title }}</span>
+                                </a>
+                                <a ng-if="subitem.linkType === 'external'"
+                                   toggle-menu="close"
+                                   md-button
+                                   aria-label="menu"
+                                   ng-href="{{subitem.link}}"
+                                   type="_blank"
+                                   class="show-part">
+                                    <span>{{ subitem.title }}</span>
                                 </a>
                             </li>
                             <li style="flex-grow: 1"></li>
