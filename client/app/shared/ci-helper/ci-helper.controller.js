@@ -1220,7 +1220,17 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             .then(response => {
                 const url = new URL(providersConfigURL);
                 const path = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
-                const providers = response.data || [];
+                const data = response.data || {};
+                let providers = data.default || [];
+
+                //merge default and tenant specific providers
+                if (Array.isArray(data[TENANT])) {
+                    const defaultProviders = providers.reduce((out, provider) => {out[provider.id] = provider; return out;}, {});
+                    const specificProviders = data[TENANT].reduce((out, provider) => {out[provider.id] = provider; return out;}, {});
+                    const mergedProviders = {...defaultProviders, ...specificProviders};
+
+                    providers = Object.values(mergedProviders);
+                }
 
                 return toolsService.fetchIntegrationOfTypeByName('TEST_AUTOMATION_TOOL')
                     .then((res) => {
