@@ -223,7 +223,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             $scope.builtLauncher.model[key] = val;
             $scope.builtLauncher.type[key] = type;
         });
-    };
+    }
 
     $scope.getType = function (value) {
         return angular.isArray(value) ? 'array' : typeof value === "boolean" ? 'boolean' : typeof value === 'string' || value instanceof String ? 'string' : Number.isInteger(value) ? 'int' : 'none';
@@ -998,6 +998,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function onPlatformSelect() {
+        //we need to reset models because $scope.jsonModel can be modified by platform selection
+        applyBuilder($scope.launcher);
         clearPlatformControlsData();
         resetPlatformModel(vm.platformModel[vm.platformsConfig.rootKey]);
         if (vm.platformModel[vm.platformsConfig.rootKey] && vm.platformModel[vm.platformsConfig.rootKey].child) {
@@ -1019,7 +1021,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             label: data.label,
             index: vm.platformControls.length,
             data,
-        }
+        };
 
         vm.platformControls = [...vm.platformControls, childControl];
         if (Array.isArray(vm.platformsConfig.data[key])) {
@@ -1037,8 +1039,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 }
             }
         } else if (data.type === 'input') {
-            vm.platformModel[key] = defaultItem ? defaultItem : {value: ''};
-            if (defaultItem && defaultItem.child) {
+            if (!defaultItem) {
+                defaultItem = {
+                    value: getControlDefaultValue(data.key),
+                }
+            }
+            vm.platformModel[key] = defaultItem;
+            if (defaultItem.child) {
                 prepareChildControl(defaultItem);
             }
         }
@@ -1057,7 +1064,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         };
 
         vm.platformControls = [...vm.platformControls, childControl];
-        defaultItem = getDefaultVersionControl(childControl)
+        defaultItem = getDefaultVersionControl(childControl);
         defaultItem && (vm.platformModel[key] = defaultItem);
     }
 
@@ -1079,16 +1086,34 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     function getDefaultControl(childControl) {
         let defaultItem;
 
-        //TODO: the highest priority should be by louncher's config if present
-        //firstly sholud be selected by job (launcher type)
-        if ($scope.launcher.type) {
+        if (!childControl.items.length) {
+            return  defaultItem;
+        }
+
+        //if we have in the launcher model ($scope.jsonModel) property with the same name as this control's key, try to find appropriate item in childControl
+        //and remove that property from launcher model to prevent duplication
+        if ($scope.jsonModel[childControl.key]) {
+            if (typeof $scope.jsonModel[childControl.key] === 'string') {
+                defaultItem = childControl.items.find((item) => {
+                    return item.value === $scope.jsonModel[childControl.key];
+                });
+            } else if (Array.isArray($scope.jsonModel[childControl.key])) {
+                defaultItem = childControl.items.find((item) => {
+                    return $scope.jsonModel[childControl.key].includes(item.value);
+                });
+            }
+
+            delete $scope.jsonModel[childControl.key];
+        }
+        //select by job (launcher type)
+        if (!defaultItem && $scope.launcher.type) {
             defaultItem = childControl.items.find(item => Array.isArray(item.job) && item.job.includes($scope.launcher.type));
         }
-        //secondly should be selected by config's default value
+        //select by config's default value
         if (!defaultItem && childControl.data.default) {
             defaultItem = childControl.items.find(item => item.id === childControl.data.default);
         }
-        //otherwise should be selected first item in array
+        //select first item in array
         if (!defaultItem) {
             defaultItem = childControl.items[0]
         }
@@ -1096,15 +1121,34 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         return defaultItem;
     }
 
+    //TODO: looks like we can get rid of this 'versions' configs because its functionality can be covered by common approach (variants)
     function getDefaultVersionControl(childControl) {
         let defaultItem;
 
-        //TODO: the highest priority should be by louncher's config if present
-        //firstly sholud be selected by job (launcher type)
-        if ($scope.launcher.type) {
+        if (!childControl.items.length) {
+            return  defaultItem;
+        }
+
+        //if we have in the launcher model ($scope.jsonModel) property with the same name as this control's key, try to find appropriate item in childControl
+        //and remove that property from launcher model to prevent duplication
+        if ($scope.jsonModel[childControl.key]) {
+            if (typeof $scope.jsonModel[childControl.key] === 'string') {
+                defaultItem = childControl.items.find((item) => {
+                    return item.value === $scope.jsonModel[childControl.key];
+                });
+            } else if (Array.isArray($scope.jsonModel[childControl.key])) {
+                defaultItem = childControl.items.find((item) => {
+                    return $scope.jsonModel[childControl.key].includes(item.value);
+                });
+            }
+
+            delete $scope.jsonModel[childControl.key];
+        }
+        //select by job (launcher type)
+        if (!defaultItem && $scope.launcher.type) {
             defaultItem = childControl.items.find(item => Array.isArray(item.job) && item.job.includes($scope.launcher.type));
         }
-        //secondly should be selected by config's default value
+        //select by config's default value
         if (!defaultItem && childControl.data['default-versions']) {
             if (typeof childControl.data['default-versions'] === 'string') {
                 defaultItem = childControl.items.find(item => item.id === childControl.data['default-versions']);
@@ -1112,13 +1156,23 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 defaultItem = childControl.items.find(item =>  childControl.data['default-versions'].includes(item.id));
             }
         }
-        //otherwise should be selected first item in array
+        //select first item in array
         if (!defaultItem) {
             defaultItem = childControl.items[0];
         }
 
-
         return defaultItem;
+    }
+
+    function getControlDefaultValue(key) {
+        let value = '';
+
+        if ($scope.jsonModel[key]) {
+            value = $scope.jsonModel[key];
+            delete $scope.jsonModel[key];
+        }
+
+        return value;
     }
 
     function filterPlatformModel() {
