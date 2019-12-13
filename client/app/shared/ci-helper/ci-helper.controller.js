@@ -1070,6 +1070,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     function onPlatformControlSelect(control) {
         if (!control) { return; }
+        //we need to reset models because $scope.jsonModel can be modified by platform controls selection
+        applyBuilder($scope.launcher);
         const parentItem = vm.platformModel[control.key];
         const versionsData = parentItem.versions ? parentItem : control.data.versions ? control.data : undefined;
 
