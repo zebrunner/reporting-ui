@@ -105,6 +105,9 @@
                 text-transform: none;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.15);
                 display: table;
+                @media screen and (max-width: $md-screen-phone) {
+                    display: block;
+                }
                 &._active {
                     .ticket-list-row {
                         &__jira {
@@ -153,6 +156,10 @@
                     //font-weight: 500;
                     flex-grow: 1;
                     font-size: 13px;
+                    @media screen and (max-width: $md-screen-phone) {
+                        min-width: 0;
+                        word-break: break-word;
+                    }
                 }
                 &__date {
                     max-width: 145px;
@@ -179,5 +186,9 @@
                 }
             }
         }
+    }
+    &.md-content-overflow md-dialog-actions,
+    &.md-content-overflow md-actions {
+        border-top: 0;
     }
 }

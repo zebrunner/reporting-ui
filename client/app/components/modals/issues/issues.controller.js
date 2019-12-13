@@ -106,8 +106,8 @@ const IssuesModalController = function IssuesModalController(
                     message = generateActionResultMessage(workItemType, jiraId, messageWord, true);
                     addTestEvent(message);
                     vm.newIssue = angular.copy(rs.data);
-                    vm.initIssueSearch(false);
                     updateWorkItemList(rs.data);
+                    vm.initIssueSearch(false);
                     initAttachedWorkItems();
                     vm.isNewIssue = jiraId !== vm.attachedIssue.jiraId;
                     messageService.success(message);

@@ -14,6 +14,7 @@ angular.module('app.services', [])
     .service({ progressbarService });
 
 require('./auth.intercepter');
+require('./utils/safari-fixes.util');
 require('./utils/HttpMockResolver');
 require('./utils/TableExpandUtil');
 require('./utils/testrun.storage');

@@ -440,6 +440,7 @@ button.red {
         background-image: url(../assets/images/_icons_platform/android-tv.svg);
     }
     &.iexplorer,
+    &.explorer,
     &.ie {
         background-image: url(../assets/images/_icons_platform/ie.svg);
     }
@@ -459,7 +460,8 @@ button.red {
     &.tizen {
         background-image: url(../assets/images/_icons_platform/tizensss.svg);
     }
-    &.opera {
+    &.opera,
+    &.operablink {
         background-image: url(../assets/images/_icons_platform/opera.svg);
     }
     &.macos {
@@ -1614,7 +1616,7 @@ div[aria-selected='true'] span.ng-binding {
     }
     position: relative;
     width: 152px;
-    
+
     & span {
         line-height: 2.6;
         height: 100%;
@@ -2425,7 +2427,7 @@ $light-inprogress: #68c9fd;
             > div {
                 text-align: end;
                 font-size: 0;
-                
+
                 md-menu {
                     float: right;
                     width: 22px;
@@ -2450,7 +2452,7 @@ $light-inprogress: #68c9fd;
             .p-tests-runs & {
                 padding-top: calc(#{$header-height} + 72px); // 72px - filters;
             }
-            
+
             .p-tests-runs._no-filters & {
                 padding-top: #{$header-height};
             }
@@ -2578,7 +2580,7 @@ $light-inprogress: #68c9fd;
             width: 100% !important;
             padding: 75px 16px 20px 16px !important;
         }
-        
+
         &_block {
             &_title {
                 height: 14px;
@@ -2826,7 +2828,7 @@ $light-inprogress: #68c9fd;
                 font-size: 0;
                 position: relative;
                 &:not(.builder-boolean) {
-                    
+
                     @media (max-width: 768px) {
                         .zf-label {
                             opacity: 0;
@@ -3426,7 +3428,7 @@ users-component md-tab-item.md-disabled {
         }
         label {
             margin: 0;
-        } 
+        }
     }
 
     $button-width: 80px;
@@ -3596,4 +3598,3 @@ users-component md-tab-item.md-disabled {
         }
     }
 }
-
