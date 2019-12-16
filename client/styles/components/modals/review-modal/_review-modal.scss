@@ -1,0 +1,15 @@
+@import '../../../global/var';
+
+.review-modal {
+    @media screen and (max-width: $md-screen-phone) {
+        .md-dialog-content {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

@@ -4,9 +4,9 @@
 @import "global/var-extra";                  // extra global variables
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";        // Bootstrap mixins
 
-@import 
+@import
     "global/shared"
-    
+
 // overrides 3rd party libs' style
 ,   "libs/angular-material"
 ,   "libs/angular-material-data-table"
@@ -41,4 +41,6 @@
 ,   "components/modals/search-modal/search-modal"
 ,   "components/modals/filter-modal/filter-modal"
 ,   "components/modals/ci-helper-modal/ci-helper-modal"
+,   "components/modals/build-now-modal/build-now-modal"
+,   "components/modals/review-modal/review-modal"
 ;

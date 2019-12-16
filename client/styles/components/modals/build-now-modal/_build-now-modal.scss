@@ -1,0 +1,16 @@
+@import '../../../global/var';
+
+.build-now-modal {
+    md-toolbar {
+        box-shadow: 0 4px 5px 0 rgba(4, 0, 0, 0.15);
+
+        md-icon {
+            color: rgb(255,255,255);
+            fill: rgb(255,255,255);
+        }
+    }
+
+    md-dialog-actions {
+        box-shadow: 0px -5px 7px 0 rgba(4, 0, 0, 0.15);
+    }
+}

@@ -26,4 +26,31 @@
             flex-grow: 1;
             flex-shrink: 1;
     }
+
+    .main-modal {
+        &__header {
+            background-color: #009688;
+            height: 56px;
+            max-height: 56px;
+            display: flex;
+            align-items: center;
+
+            &-text {
+                margin: 0;
+                color: rgb(255,255,255);
+                font-size: 20px;
+            }
+        }
+    }
+
+    md-icon {
+        font-size: 24px !important;
+        color: rgb(255,255,255) !important;
+        fill: rgb(255,255,255);
+        height: 24px !important;
+        min-height: 24px !important;
+        width: 24px !important;
+        min-width: 24px !important;
+        max-width: 24px !important;
+    }
 }
