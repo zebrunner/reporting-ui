@@ -279,7 +279,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
     function hasVideo() {
         const currentDriver = $scope.drivers[$scope.selectedDriver];
 
-        return currentDriver && currentDriver.link && currentDriver.link.length;
+        return currentDriver && currentDriver.link;
     };
 
     function reloadVideoOnError(videoElement) {
