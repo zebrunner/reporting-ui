@@ -35,7 +35,6 @@
                     markAsReviewed: markAsReviewed,
                     showCommentsDialog: showCommentsDialog,
                     sendAsEmail: sendAsEmail,
-                    createSpreadsheet: createSpreadsheet,
                     exportTestRun: exportTestRun,
                     notifyInSlack: notifyInSlack,
                     buildNow: buildNow,
@@ -111,10 +110,6 @@
                     showEmailDialog([vm.testRun], event);
                 }
 
-                function createSpreadsheet(event) {
-                    showCreateSpreadsheetDialog([vm.testRun], event);
-                };
-
                 function showCommentsDialog(event) {
                     $mdDialog.show({
                         controller: 'CommentsController',
@@ -145,26 +140,6 @@
                             testRuns: testRuns
                         }
                     });
-                }
-
-                function showCreateSpreadsheetDialog(testRuns, event) {
-                    $mdDialog.show({
-                        controller: 'SpreadsheetController',
-                        template: require('../../modals/spreadsheet/spreadsheet.html'),
-                        parent: angular.element(document.body),
-                        targetEvent: event,
-                        clickOutsideToClose:true,
-                        fullscreen: true,
-                        controllerAs: '$ctrl',
-                        locals: {
-                            testRuns: testRuns
-                        }
-                    })
-                    .then(function(links) {
-                        if (links && links.length) {
-                            showToastWithLinks(links);
-                        }
-                    }, () => {});
                 }
 
                 function showToastWithLinks(links) {

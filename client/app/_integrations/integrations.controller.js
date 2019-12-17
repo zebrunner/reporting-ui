@@ -16,7 +16,6 @@ const integrationsController = function integrationsController($state, $mdDialog
     const ENABLED_POSTFIX = '_ENABLED';
     // const PASSWORD_POSTFIX = '_PASSWORD';
     // const ALTERNATIVE_PASSWORD_POSTFIX = '_API_TOKEN_OR_PASSWORD';
-    const NOT_EDITABLE_SETTINGS = ['GOOGLE_CLIENT_SECRET_ORIGIN', 'CLOUD_FRONT_PRIVATE_KEY'];
     let _chipsCtrl;
     let chipsCtrlInitialized = false;
 
@@ -24,10 +23,6 @@ const integrationsController = function integrationsController($state, $mdDialog
         isLoading: true,
         tools: null,
         isMultipleAllowed: false,
-        FILE_TYPE_SETTINGS: {
-            'GOOGLE': 'GOOGLE_CLIENT_SECRET_ORIGIN',
-            'CLOUD_FRONT': 'CLOUD_FRONT_PRIVATE_KEY'
-        },
         integrationFormIsShowing: false,
         regenerateKey,
         changeStatus,
@@ -51,7 +46,7 @@ const integrationsController = function integrationsController($state, $mdDialog
                 chipsCtrlInitialized = true;
                 _chipsCtrl = ctrl;
             }
-            
+
             return true;
         },
     };
@@ -202,8 +197,6 @@ const integrationsController = function integrationsController($state, $mdDialog
 
                 tool.settings = data.settingList
                     .filter(setting => {
-                        setting.notEditable = NOT_EDITABLE_SETTINGS.indexOf(setting.name) !== -1;
-
                         return setting !== statusSetting;
                     })
                     .sort(compareBySettingSortOrder);
@@ -279,7 +272,7 @@ const integrationsController = function integrationsController($state, $mdDialog
                 param: parameter,
             }
         })
-        
+
         toolsService.createIntegration(vm.newItem.id, itemForRequest)
             .then((res) => {
                 if (res.success) {

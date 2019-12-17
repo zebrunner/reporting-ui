@@ -88,10 +88,7 @@
                         </div>
                     </div>
                     <div has-any-permission="['MODIFY_INTEGRATIONS']" data-ng-if="tool.enabled" class="integration-tool__item-footer integration-actions text-right" style="border-top: none;">
-                        <md-button ng-if="tool.name === 'GOOGLE' || tool.name === 'CLOUD_FRONT'" ng-click="$ctrl.showUploadFileDialog($event, tool, $ctrl.FILE_TYPE_SETTINGS[tool.name]);" class="md-raised btn-w-md md-primary">
-                            Upload {{ ::$ctrl.FILE_TYPE_SETTINGS[tool.name].replace(tool.name + '_', '').split('_').join(' ')}}
-                        </md-button>
-                        <md-button ng-if="tool.name !== 'GOOGLE'" name="save" ng-click="$ctrl.saveTool(tool)" class="md-raised btn-w-md md-primary" ng-disabled="!tool.enabled">Save</md-button>
+                        <md-button name="save" ng-click="$ctrl.saveTool(tool)" class="md-raised btn-w-md md-primary" ng-disabled="!tool.enabled">Save</md-button>
                     </div>
                 </div>
             </div>
