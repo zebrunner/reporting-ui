@@ -275,6 +275,10 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         loadVideo(videoElements[0], 200);
     };
 
+    $scope.hasVideo = function () {
+        return $scope.drivers.length && $scope.drivers[$scope.selectedDriver].link && $scope.drivers[$scope.selectedDriver].link.length;
+    };
+
     function reloadVideoOnError(videoElement) {
         var sourceElement = videoElement.getElementsByTagName('source')[0];
         var attempt = new Date().getTime() - $scope.test.finishTime > 600000 ? 1 : 5;
