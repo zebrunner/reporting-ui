@@ -250,44 +250,6 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     }
 }
 
-.main-modal {
-    &__wrapper {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        justify-content: space-between;
-
-        md-dialog-content {
-            flex-grow: 1;
-        }
-        md-dialog-actions {
-            padding: 16px;
-            .md-button {
-                margin: 0 0 0 12px;
-            }
-        }
-    }
-    &__header {
-        margin-top: 23px;
-        margin-bottom: 14px;
-        max-height: 60px;
-        padding: 0 16px;
-        &-text{
-            font-size: 18px;
-            font-weight: 400;
-        }
-    }
-    &__close-btn {
-        z-index: 1;
-        position: absolute;
-        top: 10px;
-        right: 0;
-    }
-    &__content {
-        padding: 24px 16px 20px;
-    }
-}
-
 .manage-chip {
     position: relative;
     md-chip {

@@ -1,4 +1,4 @@
-<md-dialog class="dashboard-dialog" ng-class="{'__new-dialog': isNew, '__editable-dashboard': dashboard.editable}" flex="50" aria-label="Dashboard settings" zafira-background-theme="modal">
+<md-dialog class="modal-default dashboard-dialog" ng-class="{'__new-dialog': isNew, '__editable-dashboard': dashboard.editable}" flex="50" aria-label="Dashboard settings" zafira-background-theme="modal">
     <form class="form-validation" novalidate name="dashboard_form" ng-submit="UtilService.untouchForm(dashboard_form)" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </ng-form>
-                
+
             </div>
         </md-dialog-content>
 
