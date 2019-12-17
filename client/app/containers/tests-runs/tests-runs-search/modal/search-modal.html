@@ -1,13 +1,17 @@
-<md-dialog flex="50" class="search-modal main-modal modal-min-width" aria-label="Tests runs modal" zafira-background-theme="modal">
-    <div class="main-modal__wrapper">
-        <md-button id="close" class="md-icon-button main-modal__close-btn" ng-click="$ctrl.closeModal()">
-            <md-icon aria-label="Close dialog">close</md-icon>
-        </md-button>
-        <md-dialog-content>
-            <div class="main-modal__header">
-                <h2 class="main-modal__header-text">Parameters</h2>
+<md-dialog flex="50" class="modal-default search-modal modal-min-width" aria-label="Tests runs modal" zafira-background-theme="modal">
+    <div class="modal-default__inner">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 id="modalTitle">Parameters</h2>
+                <span flex></span>
+                <md-button id="close" class="md-icon-button _default-md-style" ng-click="$ctrl.closeModal()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
             </div>
-            <div class="search-modal__content main-modal__content">
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="modal-default__content search-modal__content">
                 <div layout="column" class="search-fields">
                     <div layout="row">
                         <md-input-container class="search-modal__input-wrapper _with-icon _without-animation">
@@ -58,9 +62,10 @@
                 </div>
             </div>
         </md-dialog-content>
+
         <md-dialog-actions>
             <md-button class="md-raised pull-right" type="button" ng-click="$ctrl.onModalReset();"><span>RESET</span></md-button>
             <md-button class="md-raised md-primary pull-right" type="button" ng-click="$ctrl.onModalApply();"><span>APPLY</span></md-button>
         </md-dialog-actions>
-    </div>  
+    </div>
 </md-dialog>

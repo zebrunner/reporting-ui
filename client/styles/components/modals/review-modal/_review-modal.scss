@@ -1,15 +1,27 @@
 @import '../../../global/var';
 
 .review-modal {
-    @media screen and (max-width: $md-screen-phone) {
-        .md-dialog-content {
-            display: flex;
-            flex-grow: 1;
-        }
 
-        form {
+    &__wrapper {
+        padding: 20px;
+
+        @media screen and (max-width: $md-screen-phone) {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
+        }
+    }
+
+    &__content {
+        flex-grow: 1;
+    }
+
+    md-dialog-actions {
+        min-height: 66px;
+        padding: 16px 0;
+
+        @media screen and (max-width: $md-screen-phone) {
+            padding: 20px 0 0 0;
         }
     }
 }

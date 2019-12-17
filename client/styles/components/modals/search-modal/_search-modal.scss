@@ -1,5 +1,7 @@
 .search-modal{
     &__content {
+        padding: 24px 16px 20px;
+
         md-input-container {
             margin-top: 0;
             margin-bottom: 24px;
@@ -19,38 +21,12 @@
             }
         }
     }
+
     &__input-wrapper {
-            position: relative;
-            margin: 0 0 24px 0;
-            font-weight: normal;
-            flex-grow: 1;
-            flex-shrink: 1;
-    }
-
-    .main-modal {
-        &__header {
-            background-color: #009688;
-            height: 56px;
-            max-height: 56px;
-            display: flex;
-            align-items: center;
-
-            &-text {
-                margin: 0;
-                color: rgb(255,255,255);
-                font-size: 20px;
-            }
-        }
-    }
-
-    md-icon {
-        font-size: 24px !important;
-        color: rgb(255,255,255) !important;
-        fill: rgb(255,255,255);
-        height: 24px !important;
-        min-height: 24px !important;
-        width: 24px !important;
-        min-width: 24px !important;
-        max-width: 24px !important;
+        position: relative;
+        margin: 0 0 24px 0;
+        font-weight: normal;
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 }

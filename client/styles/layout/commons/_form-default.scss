@@ -82,7 +82,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
     border: 1px solid $brand-light;
     background-color: white;
     transition: color .25s ease-in-out, background-color .25s ease-in-out;
-    
+
     .page-profile & {
         padding: 6px 13px 6px 10px;
     }
@@ -154,7 +154,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
             border: 1px solid #ffffff;
             background-color: $brand-light;
             md-icon {
-                
+
                 color: #ffffff;
             }
             span {
@@ -256,6 +256,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         flex-direction: column;
         flex-grow: 1;
         justify-content: space-between;
+
         md-dialog-content {
             flex-grow: 1;
         }
@@ -331,7 +332,7 @@ md-chips.filter-chip.custom-filter {
         overflow: -moz-scrollbars-none;
         display: block;
         max-width: 100%;
-        &::-webkit-scrollbar { 
+        &::-webkit-scrollbar {
             display: none;
         }
     }
@@ -344,7 +345,7 @@ md-chips.filter-chip.custom-filter {
         overflow: hidden;
         object-fit: contain;
     }
-    
+
     md-chips-wrap.md-chips{
         display: flex;
         align-items: center;

@@ -695,9 +695,15 @@ $modal-header-border-color:   #e5e5e5 !default;
 //** Modal footer border color
 $modal-footer-border-color:   $modal-header-border-color !default;
 
+//** Modal header shadow
+$modal-header-shadow: 0 4px 5px 0 rgba(4, 0, 0, 0.15);
+//** Modal actions shadow
+$modal-actions-shadow: 0 -5px 7px 0 rgba(4, 0, 0, 0.15);
+
 $modal-lg:                    900px !default;
 $modal-md:                    600px !default;
 $modal-sm:                    300px !default;
+
 
 
 //== Alerts
@@ -959,7 +965,7 @@ $z-index-select: 90 !default;
 $zindex-modal-background: 79;
 $zindex-fixed: 78;
 
-//REFACTORING 
+//REFACTORING
 $brand-light:            #26a69a !default; // Teal 400
 $brand-light-hover:      #20887f;
 $dark-new:               #011627;
