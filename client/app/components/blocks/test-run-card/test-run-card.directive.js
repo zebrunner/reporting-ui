@@ -142,36 +142,6 @@
                     });
                 }
 
-                function showToastWithLinks(links) {
-                    $mdToast.show({
-                        hideDelay: 0,
-                        position: 'bottom right',
-                        locals: {
-                            links: links
-                        },
-                        controller: function ToastWithLinksController($mdToast, links) {
-                            'ngInject';
-
-                            return {
-                                links: links,
-
-                                closeToast: closeToast,
-                            };
-
-                            function closeToast() {
-                                $mdToast.hide();
-                            }
-                        },
-                        controllerAs: '$ctrl',
-                        template: '<md-toast>\n' +
-                            '    <a target="_blank" ng-repeat="link in $ctrl.links" ng-href="{{ link }}" class="md-toast-text" flex>Google spreadsheet</a>\n' +
-                            '    <md-button id="close" ng-click="$ctrl.closeToast();">\n' +
-                            '        Close\n' +
-                            '    </md-button>\n' +
-                            '</md-toast>'
-                    });
-                }
-
                 function exportTestRun() {
                     TestRunService.exportTestRunResultsHTML(vm.testRun.id).then(function(rs) {
                         if (rs.success && rs.data) {
