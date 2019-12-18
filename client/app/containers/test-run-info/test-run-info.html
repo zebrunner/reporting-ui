@@ -34,13 +34,13 @@
                                     <div class="tab-content">
                                         <div class="history-tab">
                                             <div class="testrun-info__tab-video-section col-md-4 col-sm-12 col-md-push-8 no-padding">
-                                                <md-chips>
+                                                <md-chips ng-show="$ctrl.hasVideo">
                                                     <md-chip ng-repeat="driver in drivers" ng-click="switchDriver($index);"
                                                         ng-class="{'active': selectedDriver == $index}">Driver {{
                                                         $index + 1 }}</md-chip>
                                                 </md-chips>
                                                 <div>
-                                                    <div class="testrun-info__tab-video-wrapper">
+                                                    <div ng-show="$ctrl.hasVideo" class="testrun-info__tab-video-wrapper">
                                                         <video preload="auto" ng-init="videoPlayerPained = true;" id="videoRecord"
                                                             ng-if="MODE.name == 'record'" ng-attr-width="{{ videoWidth }}"
                                                             controls>
@@ -52,7 +52,7 @@
                                                             <i ng-click="fullScreen();" class="material-icons video-control">fullscreen</i>
                                                         </div>
                                                     </div>
-                                                    <div class="testrun-info__tab-additional">
+                                                    <div class="testrun-info__tab-additional" ng-class="{'__no-video': !$ctrl.hasVideo}">
                                                         <table>
                                                             <tbody>
                                                             <tr>
