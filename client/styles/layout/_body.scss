@@ -2506,14 +2506,18 @@ $light-inprogress: #68c9fd;
         }
     }
 
-    .close-button {
-        top: 12px !important;
-        color: rgba(1,22,39,.5);
+    .md-dialog-content {
+        .close-button {
+            top: 12px;
 
-        @media screen and (max-width: $md-screen-phone) {
-            top: 17px !important;
-            color: rgb(255,255,255) !important;
-            fill: rgb(255,255,255);
+            @media screen and (max-width: $md-screen-phone) {
+                top: 17px;
+                color: $modal-close-btn-color;
+
+                &:hover {
+                    color: $modal-close-btn-color;
+                }
+            }
         }
     }
 
