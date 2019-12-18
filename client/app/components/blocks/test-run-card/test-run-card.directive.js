@@ -35,7 +35,6 @@
                     markAsReviewed: markAsReviewed,
                     showCommentsDialog: showCommentsDialog,
                     sendAsEmail: sendAsEmail,
-                    createSpreadsheet: createSpreadsheet,
                     exportTestRun: exportTestRun,
                     notifyInSlack: notifyInSlack,
                     buildNow: buildNow,
@@ -111,10 +110,6 @@
                     showEmailDialog([vm.testRun], event);
                 }
 
-                function createSpreadsheet(event) {
-                    showCreateSpreadsheetDialog([vm.testRun], event);
-                };
-
                 function showCommentsDialog(event) {
                     $mdDialog.show({
                         controller: 'CommentsController',
@@ -144,56 +139,6 @@
                         locals: {
                             testRuns: testRuns
                         }
-                    });
-                }
-
-                function showCreateSpreadsheetDialog(testRuns, event) {
-                    $mdDialog.show({
-                        controller: 'SpreadsheetController',
-                        template: require('../../modals/spreadsheet/spreadsheet.html'),
-                        parent: angular.element(document.body),
-                        targetEvent: event,
-                        clickOutsideToClose:true,
-                        fullscreen: true,
-                        controllerAs: '$ctrl',
-                        locals: {
-                            testRuns: testRuns
-                        }
-                    })
-                    .then(function(links) {
-                        if (links && links.length) {
-                            showToastWithLinks(links);
-                        }
-                    }, () => {});
-                }
-
-                function showToastWithLinks(links) {
-                    $mdToast.show({
-                        hideDelay: 0,
-                        position: 'bottom right',
-                        locals: {
-                            links: links
-                        },
-                        controller: function ToastWithLinksController($mdToast, links) {
-                            'ngInject';
-
-                            return {
-                                links: links,
-
-                                closeToast: closeToast,
-                            };
-
-                            function closeToast() {
-                                $mdToast.hide();
-                            }
-                        },
-                        controllerAs: '$ctrl',
-                        template: '<md-toast>\n' +
-                            '    <a target="_blank" ng-repeat="link in $ctrl.links" ng-href="{{ link }}" class="md-toast-text" flex>Google spreadsheet</a>\n' +
-                            '    <md-button id="close" ng-click="$ctrl.closeToast();">\n' +
-                            '        Close\n' +
-                            '    </md-button>\n' +
-                            '</md-toast>'
                     });
                 }
 

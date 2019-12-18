@@ -66,29 +66,6 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         })
     }
 
-    // function fillToolSettings(toolName, settings) {
-    //     switch(toolName) {
-    //         case 'RABBITMQ':
-    //             tools.rabbitmq.enabled = settings['RABBITMQ_ENABLED'];
-    //             tools.rabbitmq.user = settings['RABBITMQ_USER'];
-    //             tools.rabbitmq.pass = settings['RABBITMQ_PASSWORD'];
-    //             break;
-    //         case 'JIRA':
-    //             tools.jira.enabled = settings['JIRA_ENABLED'];
-    //             tools.jira.url = settings['JIRA_URL'];
-    //             break;
-    //         case 'JENKINS':
-    //             tools.jenkins.enabled = settings['JENKINS_ENABLED'];
-    //             tools.jenkins.url = settings['JENKINS_URL'];
-    //             break;
-    //         case 'GOOGLE':
-    //             tools.google.enabled = settings['GOOGLE_ENABLED'];
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // }
-
     function updateSettings(id, integrationDTO) {
         return $httpMock.put(API_URL + '/api/integrations/' + id, integrationDTO).then(UtilService.handleSuccess, UtilService.handleError('Unable to edit settings'));
     }
@@ -100,7 +77,7 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
             .then(response => {
                 if (response.success) {
                     tools = formatTools(response.data);
-                    
+
                     return tools;
                 }
 
