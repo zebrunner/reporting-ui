@@ -2619,18 +2619,28 @@ $light-inprogress: #68c9fd;
 
         &_title {
             font-size: 0;
+
             @media(max-width: $md-screen-phone) {
                 position: absolute;
+                z-index: 1;
                 top: 0;
                 left: 0;
-                height: 48px;
                 line-height: 18px;
-                box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
-                padding: 16px;
                 width: 100%;
-                background-color: #ffffff;
                 opacity: 1;
+                font-size: 18px;
+                letter-spacing: 0.4px;
+                padding-left: 16px;
+                font-weight: normal;
+                justify-content: center;
+                align-items: end;
+                height: 56px;
+                max-height: 56px;
+                box-shadow: $modal-header-shadow;
+                background-color: rgb(0,150,136);
+                color: rgb(255,255,255);
             }
+
             &, > *, .zf-show-part > * {
                 font-weight: normal !important;
                 letter-spacing: 0.1px;
@@ -2638,7 +2648,7 @@ $light-inprogress: #68c9fd;
                 font-size: 14px;
 
                 @media(max-width: $md-screen-phone) {
-                    color: black;
+                    color: #fff;
                     letter-spacing: 0.4px;
                     font-size: 18px !important;
                 }
