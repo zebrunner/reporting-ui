@@ -36,7 +36,7 @@
         min-height: 480px;
         margin: 40px auto;
 
-        @media(min-width: 750px) {
+        @media(min-width: $screen-phone + 1) {
             display: inline-block;
             vertical-align: middle;
             position: relative;
@@ -66,6 +66,8 @@
 
             @media(max-width: 749px) {
                 flex-direction: column;
+            }
+            @media(max-width: $screen-phone) {
                 min-height: 100vh;
             }
         }
@@ -111,14 +113,13 @@
     .card {
         @extend .z-depth-2;
         .card-content {
-            padding: 30px;
+            padding: 17px 30px 30px;
         }
     }
 
     .wrapper {
-        @media(min-width: 750px)
-        {
-            height: 100vh;
+        @media(min-width: $screen-phone + 1) {
+            min-height: 100vh;
             font-size: 0;
             text-align: center;
             &::after{
@@ -126,6 +127,7 @@
                 display: inline-block;
                 width: 0;
                 height: 100%;
+                min-height: 100vh;
                 vertical-align: middle;
             }
         }
@@ -133,9 +135,10 @@
 
     .logo-container{
         margin-bottom: 66px;
+        text-align: left;
         .logo{
             width: 32px;
-            height: 18px;
+            height: 32px;
             color: $brand-light;
         }
     }
@@ -194,9 +197,10 @@
         .version-container{
             max-height: 35px;
             margin-top: -7px;
+            text-align: left;
             .logo{
                 max-height: 35px;
-                border-radius: 50%;                
+                border-radius: 50%;
             }
             @media(max-width: 749px){
                 margin-left: 15px;
@@ -219,9 +223,9 @@
             .text{
                 z-index: 1;
                 @media(max-width: 749px){
-                    margin-bottom: 96px;
+                    margin-bottom: 126px;
                 }
-                p{
+                p {
                     margin-top: 65px;
                     margin-bottom: 0;
                     max-width: 230px;
@@ -265,12 +269,12 @@
             }
             .man {
                 width: 100%;
-                height: 191px;
+                height: 210px;
                 margin-bottom: 43px;
-                background: url('../assets/images/background/desktop-man-bg.svg') right bottom no-repeat;
+                background: url('../assets/images/2020/santa.svg') right bottom no-repeat;
                 background-size: contain;
                 @media(max-width: 749px){
-                    background: url('../assets/images/background/mobile-man-bg.svg') right bottom no-repeat;
+                    background: url('../assets/images/2020/santa-mobile.svg') right bottom no-repeat;
                     margin-bottom: -2px;
                     height: 145px;
                     position: absolute;
@@ -281,6 +285,6 @@
                     right: -10px;
                 }
             }
-        }        
+        }
     }
 }

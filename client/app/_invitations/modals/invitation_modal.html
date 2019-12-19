@@ -1,4 +1,4 @@
-<md-dialog flex="50" aria-label="Invite profile" zafira-background-theme="modal">
+<md-dialog flex="50" aria-label="Invite profile" zafira-background-theme="modal" class="modal-default">
     <form class="form-validation" name="invite_form" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -9,6 +9,7 @@
                 </md-button>
             </div>
         </md-toolbar>
+
         <md-dialog-content>
             <div class="md-dialog-content">
                 <md-content class="autocomplete md-padding" layout="column" style="background-color: transparent">
@@ -51,6 +52,7 @@
                 </md-content>
             </div>
         </md-dialog-content>
+
         <md-dialog-actions layout="row">
             <md-button ng-click="invite(emails, invite_form);" ng-disabled="!chipCtrl || (! chipCtrl.chipBuffer.length && ! chipCtrl.items.length) || ! userGroup || tryInvite" id="change" class="md-raised btn-w-md md-primary">
                 Invite

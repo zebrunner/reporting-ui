@@ -198,7 +198,26 @@
                             <li toggle-nav-bottom style="position: relative;"
                                 ng-repeat="subitem in $ctrl.getSubitems('profile') track by subitem.name"
                                 ng-class="subitem.className">
-                                <a ng-if="subitem.linkType === 'internal'"
+                                <a ng-if="subitem.permissions && subitem.linkType === 'internal'"
+                                   toggle-menu="close"
+                                   has-any-permission="{{ subitem.permissions | json }}"
+                                   md-button
+                                   aria-label="menu"
+                                   ui-sref="{{ subitem.link }}"
+                                   class="show-part">
+                                    <span>{{ subitem.title }}</span>
+                                </a>
+                                <a ng-if="subitem.permissions && subitem.linkType === 'external'"
+                                   toggle-menu="close"
+                                   has-any-permission="{{ subitem.permissions | json }}"
+                                   md-button
+                                   aria-label="menu"
+                                   ng-href="{{subitem.link}}"
+                                   type="_blank"
+                                   class="show-part">
+                                    <span>{{ subitem.title }}</span>
+                                </a>
+                                <a ng-if="!subitem.permissions && subitem.linkType === 'internal'"
                                    toggle-menu="close"
                                    md-button
                                    aria-label="menu"
@@ -206,7 +225,7 @@
                                    class="show-part">
                                     <span>{{ subitem.title }}</span>
                                 </a>
-                                <a ng-if="subitem.linkType === 'external'"
+                                <a ng-if="!subitem.permissions && subitem.linkType === 'external'"
                                    toggle-menu="close"
                                    md-button
                                    aria-label="menu"

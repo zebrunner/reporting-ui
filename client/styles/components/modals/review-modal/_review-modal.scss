@@ -1,0 +1,13 @@
+@import '../../../global/var';
+
+.review-modal {
+    md-dialog-actions {
+        padding-top: 0;
+        padding-bottom: 36px;
+        min-height: 36px;
+
+        @media screen and (max-width: $md-screen-phone) {
+            padding: 16px;
+        }
+    }
+}

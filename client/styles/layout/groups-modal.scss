@@ -2,6 +2,7 @@
 
 .groups-modal {
     max-width: 871px;
+
     &__form-fields {
         padding: 10px 20px;
         border-bottom: 1px solid rgba(#000000, .15);
@@ -29,7 +30,7 @@
             h5 {
                 margin: 0;
             }
-            
+
         }
         md-switch {
             margin: 0;
@@ -62,16 +63,13 @@
             }
         }
     }
-    md-toolbar {
-        min-height: 56px;
-    }
+
     md-dialog-actions {
-        padding: 20px;
-        min-height: 76px;
         .cancel {
             display: none;
         }
     }
+
     @media screen and (max-width: $breakpoint-mobile-small) {
         max-height: 100%;
         form {
@@ -79,14 +77,7 @@
             flex-grow: 1;
             justify-content: space-between;
         }
-        md-toolbar {
-            background-color: #ffffff;
-            color: #000000;
-            box-shadow: 0px 4px 5px 0 rgba(4, 0, 0, 0.15);
-            md-icon {
-                color: rgba(#000000, .5);
-            }
-        }
+
         &__form-fields {
             padding: 24px 16px;
             flex-direction: column;
@@ -132,7 +123,7 @@
             background: white;
             width: 100%;
             z-index: 2;
-            box-shadow: 0px -5px 7px 0 rgba(4, 0, 0, 0.15);
+
             .cancel {
                 display: block;
                 background-color: #e8e9e9;
@@ -140,6 +131,7 @@
             }
         }
     }
+
     @media screen and (min-height: 607px) {
         max-height: 607px;
     }

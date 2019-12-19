@@ -1,5 +1,7 @@
 .search-modal{
     &__content {
+        padding: 24px 16px 20px;
+
         md-input-container {
             margin-top: 0;
             margin-bottom: 24px;
@@ -19,11 +21,12 @@
             }
         }
     }
+
     &__input-wrapper {
-            position: relative;
-            margin: 0 0 24px 0;
-            font-weight: normal;
-            flex-grow: 1;
-            flex-shrink: 1;
+        position: relative;
+        margin: 0 0 24px 0;
+        font-weight: normal;
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 }

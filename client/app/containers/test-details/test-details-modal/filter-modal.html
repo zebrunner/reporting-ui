@@ -1,14 +1,19 @@
-<md-dialog flex="50" aria-label="Test details modal filter" zafira-background-theme="modal" class="filter-modal main-modal modal-min-width">
-    <div class="main-modal__wrapper">
-        <md-button id="close" class="md-icon-button main-modal__close-btn" ng-click="$ctrl.cancel()">
-            <md-icon aria-label="Close dialog">close</md-icon>
-        </md-button>
-        <md-dialog-content>
-            <div class="main-modal__header no-padding">
-                <h2 class="main-modal__header-text">Status</h2>
+<md-dialog flex="50" aria-label="Test details modal filter" zafira-background-theme="modal" class="modal-default filter-modal modal-min-width">
+    <div class="modal-default__inner">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 id="modalTitle">Status</h2>
+                <span flex></span>
+                <md-button id="close" class="md-icon-button _default-md-style" ng-click="$ctrl.cancel()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
             </div>
+        </md-toolbar>
+
+        <md-dialog-content>
             <status-buttons on-button-click="$ctrl.onStatusChange($statuses);" initial-selections="$ctrl.statusInitValues"></status-buttons>
         </md-dialog-content>
+
         <md-dialog-actions>
             <md-button class="md-raised" type="button" ng-click="$ctrl.reset();"><span>RESET</span></md-button>
             <md-button class="md-raised md-primary pull-right" type="button" ng-click="$ctrl.onApply(true);"><span>APPLY</span></md-button>

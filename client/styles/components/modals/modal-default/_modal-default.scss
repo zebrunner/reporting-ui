@@ -1,0 +1,30 @@
+@import '../../../global/var';
+
+.modal-default {
+    &._has-shadows {
+        md-toolbar {
+            box-shadow: $modal-header-shadow;
+
+            md-icon {
+                color: rgb(255,255,255);
+                fill: rgb(255,255,255);
+            }
+        }
+
+        md-dialog-actions {
+            box-shadow: $modal-actions-shadow;
+        }
+    }
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    md-dialog-actions {
+        padding: 16px;
+        min-height: 76px;
+        z-index: 1;
+    }
+}

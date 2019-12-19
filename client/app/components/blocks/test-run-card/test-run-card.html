@@ -132,11 +132,6 @@
                                 Send as email
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('GOOGLE')">
-                            <md-button name="createSpreadsheet" data-ng-click="$ctrl.createSpreadsheet($event)">
-                                Export to Google
-                            </md-button>
-                        </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS'">
                             <md-button name="export" data-ng-click="$ctrl.exportTestRun()">
                                 Export to HTML
@@ -243,11 +238,6 @@
                         <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('EMAIL')">
                             <md-button name="sendAsEmail" data-ng-click="$ctrl.sendAsEmail($event)">
                                 Send as email
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('GOOGLE')">
-                            <md-button name="createSpreadsheet" data-ng-click="$ctrl.createSpreadsheet($event)">
-                                Export to Google
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS'">

@@ -18,6 +18,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
+        get hasVideo() { return hasVideo(); },
     };
 
     vm.$onInit = controllerInit;
@@ -273,6 +274,12 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
             }, false);
         }
         loadVideo(videoElements[0], 200);
+    };
+
+    function hasVideo() {
+        const currentDriver = $scope.drivers[$scope.selectedDriver];
+
+        return currentDriver && currentDriver.link;
     };
 
     function reloadVideoOnError(videoElement) {
