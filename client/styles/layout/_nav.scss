@@ -143,10 +143,14 @@
                     }
 
                     > i {
-                        font-size: 4px;
+                        font-size: 14px;
                         line-height: 16px;
                         margin-right: 10px;
                         vertical-align: middle;
+                        &._right {
+                            margin-left: 10px;
+                            margin-right: 0;
+                        }
                     }
 
                     > .badge {

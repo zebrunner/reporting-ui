@@ -82,8 +82,8 @@
                                     <i class="material-icons show-icon-on-hover menu-actor _drag hide-tablet" ng-mouseup="$ctrl.activateSorter(false)" ng-mousedown="$ctrl.activateSorter(true)">drag_indicator</i>
                                 </span>
                                 <a toggle-menu="close" md-button aria-label="menu" class="show-part" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
-                                    <i data-ng-if="dashboard.hidden == true" style="font-size: 14px;" class="material-icons">visibility_off</i>
                                     <span class="menu-link__text">{{::dashboard.title}}</span>
+                                    <i data-ng-if="dashboard.hidden" class="material-icons _right">visibility_off</i>
                                 </a>
                             </li>
                         </ul>
@@ -142,16 +142,19 @@
                         <ul>
                             <li toggle-nav-bottom style="position: relative;" has-any-permission="['MODIFY_USERS', 'VIEW_USERS']">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.list" class="show-part">
+                                    <i class="material-icons">account_circle</i>
                                     <span>Users</span>
                                 </a>
                             </li>
                             <li toggle-nav-bottom style="position: relative;" has-any-permission="['MODIFY_USER_GROUPS']">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.groups" class="show-part">
+                                    <i class="material-icons">people</i>
                                     <span>Groups</span>
                                 </a>
                             </li>
                             <li toggle-nav-bottom style="position: relative;" has-any-permission="['INVITE_USERS', 'MODIFY_INVITATIONS']">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.invitations" class="show-part">
+                                    <i class="material-icons">person_add</i>
                                     <span>Invitations</span>
                                 </a>
                             </li>
@@ -192,7 +195,8 @@
                         <ul class="profile__wrapper">
                             <li toggle-nav-bottom style="position: relative;">
                                 <a toggle-menu="close" md-button aria-label="menu" ui-sref="userProfile" class="show-part">
-                                    <span>User profile</span>
+                                    <i class="material-icons">person</i>
+                                    <span>Account & profile</span>
                                 </a>
                             </li>
                             <li toggle-nav-bottom style="position: relative;"
@@ -205,6 +209,7 @@
                                    aria-label="menu"
                                    ui-sref="{{ subitem.link }}"
                                    class="show-part">
+                                    <i ng-if="subitem.matIcon" class="material-icons">{{ subitem.matIcon }}</i>
                                     <span>{{ subitem.title }}</span>
                                 </a>
                                 <a ng-if="subitem.permissions && subitem.linkType === 'external'"
@@ -215,6 +220,7 @@
                                    ng-href="{{subitem.link}}"
                                    type="_blank"
                                    class="show-part">
+                                    <i ng-if="subitem.matIcon" class="material-icons">{{ subitem.matIcon }}</i>
                                     <span>{{ subitem.title }}</span>
                                 </a>
                                 <a ng-if="!subitem.permissions && subitem.linkType === 'internal'"
@@ -223,6 +229,7 @@
                                    aria-label="menu"
                                    ui-sref="{{ subitem.link }}"
                                    class="show-part">
+                                    <i ng-if="subitem.matIcon" class="material-icons">{{ subitem.matIcon }}</i>
                                     <span>{{ subitem.title }}</span>
                                 </a>
                                 <a ng-if="!subitem.permissions && subitem.linkType === 'external'"
@@ -232,6 +239,7 @@
                                    ng-href="{{subitem.link}}"
                                    type="_blank"
                                    class="show-part">
+                                    <i ng-if="subitem.matIcon" class="material-icons">{{ subitem.matIcon }}</i>
                                     <span>{{ subitem.title }}</span>
                                 </a>
                             </li>
