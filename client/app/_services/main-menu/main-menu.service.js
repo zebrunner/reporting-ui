@@ -29,6 +29,8 @@ const mainMenuService = function mainMenuService() {
      * @param {string} item.linkType - 'internal' | 'external'. Internal link is a sref, angular link. External link is a link to other page
      * @param {string} item.link - link to the page
      * @param {string} item.className - additional class name for customize a menu
+     * @param {string} item.matIcon - additional class name for customize a menu
+     * @param {string[]} item.permissions - permissions for `has-any-permission` directive
      */
     function addSubItemDefaultMenu(name, item) {
         defaultMenu[name] = defaultMenu[name] || [];
