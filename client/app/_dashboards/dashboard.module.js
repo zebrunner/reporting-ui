@@ -27,10 +27,15 @@ function echartDecorator(echart) {
         let labels = overridedFunction.call(this);
 
         function transform(tick) {
-            if (tick >= 1000000000) return `${tick / 1000000000}B`;
-            else if (tick >= 1000000) return `${tick / 1000000}M`;
-            else if (tick >= 1000) return `${tick / 1000}K`;
-            else return `${tick}`;
+            if (tick >= 1000000000) {
+                return `${tick / 1000000000}B`;
+            } else if (tick >= 1000000) {
+                return `${tick / 1000000}M`;
+            } else if (tick >= 1000) {
+                return `${tick / 1000}K`;
+            } else {
+                return `${tick}`;
+            };
         };
 
         for (let value of labels) {
