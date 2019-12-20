@@ -150,6 +150,10 @@
                     }
                     @media (max-width: $screen-phone) {
                         padding: 17px 0 17px 24px;
+
+                        span {
+                            font-size: 18px;
+                        }
                     }
                 }
             }
