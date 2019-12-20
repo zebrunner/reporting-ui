@@ -36,6 +36,7 @@ function echartDecorator(echart) {
         for (let value of labels) {
             let correctValue = value.formattedLabel.replace(',', '');
             let transformToNumber = parseInt(correctValue);
+            
             if (transformToNumber === value.tickValue) {
                 value.formattedLabel = transform(value.tickValue);
             }
