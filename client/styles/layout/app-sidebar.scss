@@ -1,5 +1,5 @@
 @import
-    "../global/var",   
+    "../global/var",
     "../global/var-extra";
 
 .nav-container {
@@ -100,7 +100,7 @@
                         line-height: 20px;
                         margin-left: 12px;
                         color: rgba(#ffffff, .8);
-                        
+
                     }
                 }
             }
@@ -131,7 +131,8 @@
         &__button {
             margin: 0px 56px 4px 24px;
             max-height: 32px;
-            &._upload, &._logout {
+            &._upload,
+            &._logout {
                 margin: 0;
                 min-height: $sidebar-width;
                 background-color: #132336;
@@ -161,10 +162,10 @@
         width: 6px;
     }
     ::-webkit-scrollbar-track {
-        background: $dark_light-new; 
+        background: $dark_light-new;
     }
     ::-webkit-scrollbar-thumb {
-        background: rgba(#ffffff, .25); 
+        background: rgba(#ffffff, .25);
         border-radius: 6px;
     }
     ::-webkit-scrollbar-thumb:hover {
