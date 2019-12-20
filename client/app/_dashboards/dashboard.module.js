@@ -35,12 +35,10 @@ function echartDecorator(echart) {
 
         for (let value of labels) {
             let correctValue = value.formattedLabel.replace(',', '');
-            if (correctValue == value.tickValue) {
-                let numberValue = parseInt(correctValue);
-                value.formattedLabel = transform(numberValue);
-            } else continue;
+            if (correctValue == value.tickValue) value.formattedLabel = transform(value.tickValue);
+            else continue;
         }
-        return labels
+        return labels;
     }
 }
 
