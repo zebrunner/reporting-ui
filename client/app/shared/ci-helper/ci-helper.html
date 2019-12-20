@@ -68,6 +68,10 @@
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="needServer && $ctrl.cardNumber !== 0 && !scmAccount.launchers.length">
             <ng-form name="info">
                 <div class="ci-runner-container_content_block _server-selection">
+                    <div ng-if="scmAccount.id" class="ci-runner-container_content_block_title __ci-runner-lg-title __scan-repo">
+                        <span>{{scmAccount.repositoryName}}</span>
+                        <a ng-if="scmAccount.repositoryURL" href="{{scmAccount.repositoryURL}}" target="_blank"><md-icon>open_in_new</md-icon></a>
+                    </div>
                     <div class="ci-runner-container_content_block_title">
                         Choose automation server
                     </div>
