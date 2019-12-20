@@ -43,6 +43,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         onProviderSelect,
         onPlatformSelect,
         selectProviderOnChipsInit,
+        cancelFolderManaging,
+
         get isMobile() { return windowWidthService.isMobile(); },
     };
 
@@ -1343,6 +1345,14 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 console.error('Unable to load the providers config');
                 vm.providersFail = true;
             });
+    }
+
+    function cancelFolderManaging() {
+        vm.cardNumber = 0;
+        $scope.scmAccount = {};
+        $scope.needServer = false;
+        $scope.currentServerId = null;
+        clearLauncher();
     }
 
     return vm;

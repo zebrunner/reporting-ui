@@ -85,6 +85,9 @@
                         <md-button ng-really-click="deleteRepository(launcher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !launcher.id">
                             DELETE REPO
                         </md-button>
+                        <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
+                            CANCEL
+                        </md-button>
                     </div>
                 </div>
             </ng-form>
@@ -178,6 +181,9 @@
                         DELETE
                     </md-button>
                     <md-button ng-click="cancelLauncher();" ng-if="launcher.id">
+                        CANCEL
+                    </md-button>
+                    <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
                         CANCEL
                     </md-button>
                     <md-button class="md-raised md-primary pull-right" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
