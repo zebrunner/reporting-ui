@@ -35,9 +35,12 @@ function echartDecorator(echart) {
 
         for (let value of labels) {
             let correctValue = value.formattedLabel.replace(',', '');
-            if (correctValue == value.tickValue) value.formattedLabel = transform(value.tickValue);
-            else continue;
+            let transformToNumber = parseInt(correctValue);
+            if (transformToNumber === value.tickValue) {
+                value.formattedLabel = transform(value.tickValue);
+            }
         }
+
         return labels;
     }
 }
