@@ -11,12 +11,46 @@ import 'echarts/lib/chart/line';
 import 'echarts/lib/chart/pie';
 import 'echarts/lib/chart/radar';
 import 'echarts/lib/chart/gauge';
+import 'echarts/lib/chart/heatmap';
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/grid';
 import 'echarts/lib/component/calendar';
 import 'echarts/lib/component/dataZoom';
+
+
+function echartDecorator(echart) {
+    const overridedFunction = echart.Axis.prototype.getViewLabels;
+
+    echart.Axis.prototype.getViewLabels = function () {
+        let labels = overridedFunction.call(this);
+
+        function transform(tick) {
+            if (tick >= 1000000000) {
+                return `${tick / 1000000000}B`;
+            } else if (tick >= 1000000) {
+                return `${tick / 1000000}M`;
+            } else if (tick >= 1000) {
+                return `${tick / 1000}K`;
+            } else {
+                return `${tick}`;
+            };
+        };
+
+        for (let value of labels) {
+            let correctValue = parseInt(value.formattedLabel.replace(',', ''), 10);
+            
+            if (correctValue === value.tickValue) {
+                value.formattedLabel = transform(value.tickValue);
+            }
+        }
+
+        return labels;
+    }
+}
+
+echartDecorator(echarts);
 
 window.echarts = echarts;
 
@@ -34,7 +68,7 @@ export const dashboardModule = angular.module('app.dashboard', [
     'n3-pie-chart',
     'n3-line-chart',
     'ngecharts',
-    ])
+])
     .component({ dashboardComponent })
     .component({ emptyPageComponent })
     .service('$screenshot', ScreenshotService);
