@@ -27,6 +27,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         'AEROKUBE': 4,
         'BROWSERSTACK': 5,
         'SAUCELABS': 6,
+        'LAMBDATEST': 7,
         'default': 100,
     };
     const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
