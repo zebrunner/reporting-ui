@@ -87,7 +87,7 @@
                 line-height: 1.15;
                 &.show-on-hover,
                 &.show-part {
-                    color: $dark_bg_link_hover_color;
+                    color: rgba(255,255,255, .8);
                     &:hover {
                         color: #fff;
                     }
