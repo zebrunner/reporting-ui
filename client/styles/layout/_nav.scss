@@ -68,7 +68,7 @@
             position: static;
             margin: 0;
             text-align: left;
-            font-weight: bold;
+            //font-weight: bold;
             transition: all $nav-transition_duration ease-in-out;
             &.li-small {
                 font-size: 12px;
@@ -116,7 +116,7 @@
             a {
                 font-size: 14px;
                 @media(max-width: $screen-phone) {
-                    font-size: 18px;
+                    font-size: 16px;
                 }
             }
 
@@ -165,6 +165,7 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     max-width: 100%;
+                    max-height: none;
                 }
             }
             &.auto-width.width-icon {

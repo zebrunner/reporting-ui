@@ -106,19 +106,20 @@
             }
         }
         &-search {
-            margin: 8px 56px 0px 24px;
+            margin: 8px 56px 0 24px;
             max-height: 40px;
             @media(max-width: $screen-phone) {
-                margin: 8px 67px 18px 24px;
+                margin: 4px 67px 18px 24px;
             }
-            md-input-container, md-input-container.md-input-focused  {
+            md-input-container,
+            md-input-container.md-input-focused  {
                 width: 100%;
             }
         }
         .search_close-button {
             position: absolute;
-            right: 12px;
-            top: 12px;
+            right: 13px;
+            top: 20px;
             cursor: pointer;
             z-index: 2;
             md-icon {
@@ -129,7 +130,7 @@
             }
         }
         &__button {
-            margin: 0px 56px 4px 24px;
+            margin: 0 56px 4px 24px;
             max-height: 32px;
             &._upload,
             &._logout {
@@ -152,13 +153,13 @@
                         padding: 17px 0 17px 24px;
 
                         span {
-                            font-size: 18px;
+                            font-size: 16px;
                         }
                     }
                 }
             }
             @media (max-width: $screen-phone) {
-                margin: 8px 56px 17px 24px;
+                margin: 12px 56px 17px 24px;
             }
         }
     }

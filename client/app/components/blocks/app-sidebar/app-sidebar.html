@@ -57,7 +57,7 @@
                 </ul>
                 </li>
             <li toggle-menu ng-class="{'active':$ctrl.$state.includes('dashboard')}">
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards();">
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards($event);">
                     <i class="material-icons">equalizer</i><span>Boards</span>
                 </a>
                 <ul class="width-icon">
@@ -77,13 +77,13 @@
                     </li>
                     <li class="sub-search search-menu">
                         <ul class="dashboards___list_wrapper" ui-sortable="$ctrl.dashboardSortableOptions" ng-model="$ctrl.dashboardList">
-                            <li toggle-nav-bottom data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy: 'position' | filter:navSC" ui-sref-active="active" class="show-on-hover">
+                            <li toggle-nav-bottom data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy: 'position' | filter:navSC track by dashboard.id" ui-sref-active="active" class="show-on-hover">
                                 <span has-any-permission="['MODIFY_DASHBOARDS']" ng-if="$ctrl.dashboardList.length > 1">
                                     <i class="material-icons show-icon-on-hover menu-actor _drag hide-tablet" ng-mouseup="$ctrl.activateSorter(false)" ng-mousedown="$ctrl.activateSorter(true)">drag_indicator</i>
                                 </span>
                                 <a toggle-menu="close" md-button aria-label="menu" class="show-part" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
                                     <span class="menu-link__text">{{::dashboard.title}}</span>
-                                    <i data-ng-if="dashboard.hidden" class="material-icons _right">visibility_off</i>
+                                    <i data-ng-if="dashboard.hidden" class="material-icons _right _dark">visibility_off</i>
                                 </a>
                             </li>
                         </ul>

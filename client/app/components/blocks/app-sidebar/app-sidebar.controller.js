@@ -186,11 +186,21 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
         });
     }
 
-    function loadDashboards() {
-        vm.dashboardsLoaded = false;
-        DashboardService.RetrieveDashboards()
-            .finally(() => vm.dashboardsLoaded = true);
-    };
+    function loadDashboards(e) {
+        if (vm.dashboardsLoading || vm.dashboardsLoaded) { return; }
+
+        vm.dashboardsLoading = true;
+        $timeout(() => {
+            const $el = angular.element(e.target).closest('li');
+
+            //we are closing menu by clicking on link second time
+            if ($el.length && !$el.hasClass('open')) { return; }
+
+            DashboardService.RetrieveDashboards()
+                .then(() => vm.dashboardsLoaded = true)
+                .finally(() => vm.dashboardsLoading = false);
+        });
+    }
 
     function showViewDialog(event, view) {
         $mdDialog.show({

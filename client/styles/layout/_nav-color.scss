@@ -84,6 +84,7 @@
         .nav {
             a {
                 color: $dark_bg_link_color;
+                line-height: 1.15;
                 &.show-on-hover,
                 &.show-part {
                     color: $dark_bg_link_hover_color;
@@ -91,8 +92,12 @@
                         color: #fff;
                     }
                 }
+
                 &._light {
                     color: $dark_bg_link_active_color;
+                }
+                ._dark {
+                    color: $dark_bg_link_color;
                 }
             }
 
