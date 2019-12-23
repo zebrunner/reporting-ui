@@ -39,8 +39,8 @@ function echartDecorator(echart) {
         };
 
         for (let value of labels) {
-            let correctValue = parseInt(value.formattedLabel.replace(',', ''), 10);
-            
+            let correctValue = parseInt(value.rawLabel.replace(',', ''), 10);
+
             if (correctValue === value.tickValue) {
                 value.formattedLabel = transform(value.tickValue);
             }
