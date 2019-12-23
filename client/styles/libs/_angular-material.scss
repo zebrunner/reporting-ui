@@ -297,6 +297,11 @@ md-input-container  {
             padding: 6px 0 4px;
             label:not(.md-no-float):not(.md-container-ignore) {
                 transform: translate3d(0, 26px, 0) scale(1);
+                @media screen and (max-width: $screen-phone) {
+                    .nav-container .nav-search & {
+                        font-size: 16px;
+                    }
+                }
             }
             .md-input {
                 border-color: rgba($dark-new, .25);
@@ -388,9 +393,21 @@ md-input-container  {
                 md-icon {
                     right: 2px;
                     bottom: 15px;
+                    @media screen and (max-width: $screen-phone) {
+                        font-size: 20px;
+                        min-height: 20px;
+                        min-width: 20px;
+                        height: 20px;
+                        width: 20px;
+                        bottom: 20px;
+                    }
                 }
                 .md-input {
                     margin-bottom: 12px;
+                    @media(max-width: $screen-phone) {
+                        font-size: 16px;
+                        padding-right: 20px;
+                    }
                 }
             }
         }
