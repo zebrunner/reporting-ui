@@ -4,13 +4,20 @@
             Integrations
             <small id="itemsCount" class="fixed-page-header__additional-text">({{$ctrl.tools.length}})</small>
         </zf-sub-header-title>
-        <zf-sub-header-button>
-            <div has-any-permission="['MODIFY_INTEGRATIONS']">
-                <button class="fixed-page-header__btn zf-primary-button"  data-ng-really-message="Do you really want to regenerate encrypt key? All values will be reencrypted!" data-ng-really-click="$ctrl.regenerateKey()">
-                    <md-icon class="material-icons">refresh</md-icon>
-                    <span>Re-encrypt secrets</span>
-                </button>
-            </div>
+        <zf-sub-header-options ng-if="$ctrl.addingIntegrationMode && $ctrl.toolTypes.length" class="hide-phone">
+            <md-button class="md-icon-button _no-hover-bg" md-no-ink ng-repeat="tool in $ctrl.toolTypes track by tool.id" ng-click="$ctrl.addNewTool(tool)">
+                <md-tooltip md-direction="bottom">{{::tool.name | lowercase}}</md-tooltip>
+                <span class="integration-tool__item-icon {{::tool.name | lowercase}}" aria-hidden="true"></span>
+            </md-button>
+        </zf-sub-header-options>
+        <zf-sub-header-button ng-if="$ctrl.isMultipleAllowed" class="hide-phone">
+            <button class="fixed-page-header__btn zf-primary-button no-animate" ng-click="$ctrl.switchAddingIntegrationMode()" ng-if="!$ctrl.addingIntegrationMode">
+                <md-icon class="material-icons">add</md-icon>
+                <span>New integration</span>
+            </button>
+            <md-button id="discard" ng-click="$ctrl.switchAddingIntegrationMode()" ng-if="$ctrl.addingIntegrationMode" class="no-animate">
+                Cancel
+            </md-button>
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page page-dashboard">
@@ -93,18 +100,5 @@
                 </div>
             </div>
         </div>
-        <md-fab-speed-dial id="main-fab" md-direction="up" class="md-scale md-fab-bottom-right" ng-if="$ctrl.isMultipleAllowed">
-            <md-fab-trigger>
-                <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
-                    <span class="fa fa-plus" aria-hidden="true"></span>
-                </md-button>
-            </md-fab-trigger>
-            <md-fab-actions>
-                <md-button aria-label="menu" class="md-fab md-raised md-fab-sm" ng-repeat="tool in $ctrl.toolTypes" ng-click="$ctrl.addNewTool(tool)">
-                    <md-tooltip md-direction="top">{{::tool.name | lowercase}}</md-tooltip>
-                    <span class="integration-tool__item-icon {{::tool.name | lowercase}}" aria-hidden="true"></span>
-                </md-button>
-            </md-fab-actions>
-        </md-fab-speed-dial>
     </div>
 </div>
