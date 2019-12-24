@@ -45,7 +45,7 @@
 
 .p-users {
     .fixed-page-header-container_options {
-        @media (max-width: $screen-phone) {
+        @media (max-width: $md-screen-phone) {
             display: none;
         }
     }
@@ -65,7 +65,7 @@
                 text-align: center;
             }
 
-            @media screen and (max-width: 599px) {
+            @media screen and (max-width: $md-screen-phone) {
                 border-bottom: 2px solid $main_container_bg;
 
                 &:last-child {
@@ -82,7 +82,7 @@
                     .md-chip-input-container {
                         min-width: 300px;
 
-                        @media screen and (max-width: 599px) {
+                        @media screen and (max-width: $md-screen-phone) {
                             min-width: 0;
                             width: 100%;
                             margin-top: 30px;
@@ -134,12 +134,12 @@
         }
     }
 
-    @media (max-width: $screen-phone) {
+    @media (max-width: $md-screen-phone) {
         &.page {
             padding: $header_height 0 0;
         }
     }
-    @media (min-width: $screen-phone + 1) {
+    @media (min-width: $md-screen-phone + 1) {
         &__search {
             &-header {
                 display: none;
@@ -338,7 +338,7 @@
         }
     }
 
-    @media screen and (max-width: 599px) { //up to material SM breakpoint
+    @media screen and (max-width: $md-screen-phone) { //up to material SM breakpoint
         table {
             &.md-table {
                 td {
@@ -417,7 +417,7 @@
 }
 
 .page__empty {
-    height: calc(100vh - #{$header_height} - 20px * 2); 
+    height: calc(100vh - #{$header_height} - 20px * 2);
     &-wrapper {
         padding: 20px 0;
         max-width: 368px;
@@ -486,7 +486,7 @@
         }
     }
     @media (max-height: 460px) and (min-width: $screen-phone) {
-        height: calc(100vh + #{$header_height}); 
+        height: calc(100vh + #{$header_height});
     }
 }
 

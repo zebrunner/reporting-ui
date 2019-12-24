@@ -2403,6 +2403,9 @@ $light-inprogress: #68c9fd;
             ~ .fixed-page-header-container_button {
                 margin-left: 26px;
             }
+            ~ .fixed-page-header-container_button + .fixed-page-header-container_button {
+                margin-left: 10px;
+            }
             @media(max-width: $screen-phone) {
                 text-align: center;
                 max-width: calc(100% - 42px); //42px - 32px button wodth + 10px margin
@@ -2424,6 +2427,13 @@ $light-inprogress: #68c9fd;
         }
 
         &_options {
+            md-input-container {
+                margin: 0;
+
+                & + .md-button {
+                    margin-left: 26px;
+                }
+            }
             > div {
                 text-align: end;
                 font-size: 0;

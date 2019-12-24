@@ -1,7 +1,20 @@
 'use strict';
 
-const UsersController = function UserViewController($scope, $rootScope, $location, $state, $mdDialog, $mdDateRangePicker,
-                                                    UserService, messageService) {
+import inviteUserModalTpl from '../shared/modals/invitation-modal/invitation-modal.html';
+import inviteUserModalCtrl from '../shared/modals/invitation-modal/invitation-modal.controller';
+
+const UsersController = function UserViewController(
+    $scope,
+    $rootScope,
+    $location,
+    $state,
+    $mdDialog,
+    $mdDateRangePicker,
+    UserService,
+    messageService,
+    GroupService,
+    toolsService
+) {
     'ngInject';
 
     let DEFAULT_SC = {
@@ -31,6 +44,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
         showEditProfileDialog: showEditProfileDialog,
         showChangePasswordDialog: showChangePasswordDialog,
         showCreateUserDialog: showCreateUserDialog,
+        showInviteUsersDialog,
         usersSearchCriteria: {},
         searchValue: {
             selectedRange: {
@@ -152,13 +166,23 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
             });
     };
 
-    $scope.UtilService = UtilService;
-    $scope.DashboardService = DashboardService;
+    function showInviteUsersDialog(event) {
+        $mdDialog.show({
+            controller: inviteUserModalCtrl,
+            template: inviteUserModalTpl,
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose: false,
+            fullscreen: true,
+            locals: {
+                groups: GroupService.groups,
+                isLDAPConnected: toolsService.isToolConnected('LDAP'),
+            }
+        });
+    }
 
     $scope.users = [];
     $scope.order = 'username';
-
-    var tmpToday = new Date();
 
     $scope.sc = angular.copy(DEFAULT_SC);
 
@@ -170,7 +194,7 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
         if (vm.searchValue.selectedRange.dateStart && vm.searchValue.selectedRange.dateEnd) {
             return vm.searchValue.selectedRange.dateStart.getTime() === vm.searchValue.selectedRange.dateEnd.getTime();
         }
-    };
+    }
 
     $scope.isDateChosen = true;
     $scope.isDateBetween = false;
@@ -310,10 +334,22 @@ const UsersController = function UserViewController($scope, $rootScope, $locatio
                     vm.sr.results[index].status = status;
                 }
             });
-    };
+    }
+
+    function getAllGroups(isPublic) {
+        GroupService.getAllGroups(isPublic)
+            .then((rs) => {
+                if (rs.success) {
+                    GroupService.groups = rs.data || [];
+                }
+            });
+    }
 
     function initController() {
         vm.search(1);
+        if (!GroupService.groups.length) {
+            getAllGroups(true);
+        }
     }
 
 };
