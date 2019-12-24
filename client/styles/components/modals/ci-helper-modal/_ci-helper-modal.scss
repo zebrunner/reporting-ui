@@ -104,6 +104,7 @@
 
         .ci-runner-container {
             height: 100% !important;
+
             &__scrollable {
                 height: 100%;
                 overflow: auto;
@@ -111,6 +112,7 @@
             }
             &_content {
                 padding: 56px 0 68px !important;
+                height: 100%;
 
                 &_builder {
                     padding-bottom: 0;
