@@ -24,6 +24,7 @@ const integrationsController = function integrationsController($state, $mdDialog
         tools: null,
         isMultipleAllowed: false,
         integrationFormIsShowing: false,
+        addingIntegrationMode: false,
         regenerateKey,
         changeStatus,
         saveTool,
@@ -34,6 +35,7 @@ const integrationsController = function integrationsController($state, $mdDialog
         newTool,
         cancel,
         initSelection,
+        switchAddingIntegrationMode,
         isToolConnected: toolsService.isToolConnected,
         isEmptyTool: toolsService.isEmptyTool,
         isNewToolAdding: false,
@@ -209,12 +211,11 @@ const integrationsController = function integrationsController($state, $mdDialog
     function controllerInit() {
         toolsService.fetchIntegrationsTypes()
             .then(res => {
-
                 vm.groups = (res.data || []).sort((a, b) => a.displayName.localeCompare(b.displayName));
                 vm.isLoading = false;
                 integrationsService.readType();
 
-                //we can select chip only if chips constroller initialized and we have referecne to it
+                //we can select chip only if chips controller initialized and we have reference to it
                 //otherwise selection will be handled on chips controller initialization
                 if (chipsCtrlInitialized) {
                     const initialType = integrationsService.getType() || (Array.isArray(vm.groups) && vm.groups[0]);
@@ -253,8 +254,17 @@ const integrationsController = function integrationsController($state, $mdDialog
 
         toolsService.fetchIntegrationOfTypeByName(type.name).then((res) => {
             vm.tools = res.data;
-            vm.toolTypes = vm.groups.find(({ id }) => id === type.id).types;
-        })
+
+            if (vm.isMultipleAllowed) {
+                vm.toolTypes = vm.groups.find(({ id }) => id === type.id).types;
+            } else {
+                vm.toolTypes = [];
+            }
+        });
+    }
+
+    function switchAddingIntegrationMode() {
+        vm.addingIntegrationMode = !vm.addingIntegrationMode;
     }
 
     function addNewTool(tool) {
