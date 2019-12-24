@@ -5,7 +5,7 @@
             <small id="itemsCount" class="fixed-page-header__additional-text">({{$ctrl.tools.length}})</small>
         </zf-sub-header-title>
         <zf-sub-header-options ng-if="$ctrl.addingIntegrationMode && $ctrl.toolTypes.length" class="hide-phone">
-            <md-button class="md-icon-button _no-hover-bg" md-no-ink ng-repeat="tool in $ctrl.toolTypes" ng-click="$ctrl.addNewTool(tool)">
+            <md-button class="md-icon-button _no-hover-bg" md-no-ink ng-repeat="tool in $ctrl.toolTypes track by tool.id" ng-click="$ctrl.addNewTool(tool)">
                 <md-tooltip md-direction="bottom">{{::tool.name | lowercase}}</md-tooltip>
                 <span class="integration-tool__item-icon {{::tool.name | lowercase}}" aria-hidden="true"></span>
             </md-button>
