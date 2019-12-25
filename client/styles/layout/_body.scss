@@ -2618,9 +2618,6 @@ $light-inprogress: #68c9fd;
                 }
             }
 
-            &.__lancher-add {
-                padding: 30px 0 36px 0;
-            }
             &._server-selection {
                 max-height: 660px;
                 overflow: auto;
@@ -2938,12 +2935,6 @@ $light-inprogress: #68c9fd;
             }
         }
 
-        &.__info-edit-mode {
-            .ci-runner-container_content_block {
-                padding-top: 0;
-            }
-        }
-
         &_launcher-add {
             font-size: 0;
             display: flex;
@@ -3117,24 +3108,31 @@ $light-inprogress: #68c9fd;
                         }
 
                         &_settings {
-                            display: none;
-                            position: absolute;
-                            right: 0;
+                            display: inline-block;
                             height: 20px;
+                            width: 20px;
                             line-height: 20px;
-                            font-size: 15px;
+                            font-size: 16px;
                             vertical-align: middle;
+                            text-align: center;
                             opacity: 0.5;
                             color: rgba(0, 0, 0, 0.87);
+                            transition: opacity .25s ease;
+                            &:hover {
+                                opacity: 1;
+                            }
                         }
                     }
                     &_name {
-                        display: inline-block;
                         font-size: 14px;
                         font-weight: 500;
                         height: 20px;
                         line-height: 20px;
                         color: #7f7f7f;
+                        max-width: 100%;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
 
                         @media(max-width: $md-screen-phone) {
                             font-size: 16px;
@@ -3143,6 +3141,19 @@ $light-inprogress: #68c9fd;
 
                         &:hover, &.chosen-launcher {
                             color: black;
+                        }
+                    }
+                    &._with-buttons {
+                        padding-right: 45px;
+                        .folder-container_folder-buttons {
+                            position: absolute;
+                            top: 50%;
+                            right: 0;
+                            transform: translateY(-50%);
+                            font-size: 0;
+                            display: none;
+                            justify-content: center;
+                            align-items: center;
                         }
                     }
                 }
@@ -3251,8 +3262,8 @@ $light-inprogress: #68c9fd;
 
                 @media screen and (min-width: $md-screen-phone + 1px) {
                     &:hover {
-                        .folder-container_folder_icon_settings {
-                            display: inline-block;
+                        .folder-container_folder-buttons {
+                            display: flex;
                         }
                     }
                 }
