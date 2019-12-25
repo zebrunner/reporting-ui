@@ -39,11 +39,14 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         providersFail: false,
         loadingScm: true,
         cardNumber: 0,
+        creatingLauncher: false,
 
         onProviderSelect,
         onPlatformSelect,
         selectProviderOnChipsInit,
         cancelFolderManaging,
+        shouldBeDisplayed,
+        AuthService,
 
         get isMobile() { return windowWidthService.isMobile(); },
     };
@@ -201,7 +204,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
 
     $scope.mergeTemplate = function (template) {
         if (template) {
-            $scope.launcher.model = $scope.launcher.model && $scope.launcher.model.isJsonValid() ? $scope.launcher.model : "{}";
+            $scope.launcher.model = $scope.launcher.model && $scope.launcher.model.isJsonValid() ? $scope.launcher.model : '{}';
             $scope.launcher.model = JSON.stringify(/*angular.merge(json, template)*/template, null, 2);
         }
     };
@@ -270,7 +273,8 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         chooseFolderElement(id);
     };
 
-    $scope.manageFolder = function (scmAccount) {
+    $scope.manageFolder = function (scmAccount, isCreating) {
+        vm.creatingLauncher = !!isCreating;
         $scope.scmAccount = scmAccount;
         $scope.needServer = true;
         $scope.currentServerId = getCurrentServerId(scmAccount);
@@ -296,11 +300,13 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     $scope.addLauncher = function (launcher) {
-        $scope.createLauncher(launcher).then(function (l) {
-            appendLauncher(l);
-            clearLauncher();
-            $scope.chooseLauncher(l);
-        });
+        $scope.createLauncher(launcher)
+            .then(function (l) {
+                appendLauncher(l);
+                clearLauncher();
+                vm.creatingLauncher = false;
+                $scope.chooseLauncher(l);
+            });
     };
 
     $scope.toEditLauncher = function (launcher) {
@@ -353,7 +359,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     function clearLauncher() {
         $scope.launcher = {};
         $scope.launcher.scmAccountType = {};
-    };
+    }
 
     $scope.editLauncher = function (launcher) {
         $scope.launcher = angular.copy(launcher);
@@ -481,8 +487,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
             LauncherService.deleteLauncherById(id).then(function (rs) {
                 if (rs.success) {
                     $scope.launchers.splice(index, 1);
-                    $scope.launcher = {};
-                    vm.cardNumber = 0;
+                    cancelFolderManaging();
 
                     const l = $scope.launchers[index];
                     const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
@@ -504,10 +509,10 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         ScmService.deleteScmAccount(scmAccountId).then(function (rs) {
             if (rs.success) {
                 const scmAccountIndex = $scope.scmAccounts.indexOfField('id', scmAccountId);
-                vm.cardNumber = 0;
+
                 clearPrevLauncherElement();
                 clearPrevFolderElement();
-                clearLauncher();
+                cancelFolderManaging();
                 $scope.scmAccounts.splice(scmAccountIndex, 1);
                 messageService.success('Repository was deleted');
             } else {
@@ -635,7 +640,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         if (messages.length) {
             errorMessage = 'Set ';
             messages.forEach(function (message, index) {
-                errorMessage += message
+                errorMessage += message;
                 errorMessage = index !== messages.length - 1 ? errorMessage + ', ' : errorMessage;
             });
             errorMessage += ' for template to save.';
@@ -1348,11 +1353,38 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function cancelFolderManaging() {
+        vm.creatingLauncher = false;
         vm.cardNumber = 0;
         $scope.scmAccount = {};
         $scope.needServer = false;
         $scope.currentServerId = null;
+        $scope.DEFAULT_TEMPLATES.model = {};
         clearLauncher();
+    }
+
+    function shouldBeDisplayed(section) {
+        switch (section) {
+            case 'helper':
+                return !vm.isMobile || vm.cardNumber === 0;
+            case 'launcher':
+                return vm.cardNumber === 3;
+            case 'welcome':
+                return vm.cardNumber === 0;
+            case 'waiting':
+                return $scope.launcherLoaderStatus && ($scope.launcherLoaderStatus.started || $scope.launcherLoaderStatus.finished);
+            case 'add-repo':
+                return vm.cardNumber === 1 && !$scope.needServer;
+            case 'scan-repo':
+                return vm.cardNumber === 2 && !vm.creatingLauncher && (!$scope.needServer || ($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length)) && !($scope.launcher && $scope.launcher.id);
+            case 'edit-launcher':
+                return vm.cardNumber === 2 && (!$scope.needServer || ($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length)) && $scope.launcher && $scope.launcher.id;
+            case 'create-launcher':
+                return vm.cardNumber === 2 && vm.creatingLauncher && (!$scope.needServer || ($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length)) && !($scope.launcher && $scope.launcher.id);
+            case 'server-select':
+                return $scope.needServer && vm.cardNumber !== 0 && !($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length);
+            default:
+                return false;
+        }
     }
 
     return vm;

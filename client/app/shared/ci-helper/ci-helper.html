@@ -1,6 +1,6 @@
 <form name="launcher_form">
     <zf-modal modal-class="ci-runner" class="ci-runner-container">
-        <zf-modal-helper-container class="ci-runner-container_helper" ng-show="!$ctrl.isMobile || $ctrl.cardNumber === 0">
+        <zf-modal-helper-container class="ci-runner-container_helper" ng-show="$ctrl.shouldBeDisplayed('helper')">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
                 <button type="button" ng-click="addRepo();" ng-disabled="!clientId" has-any-permission="['MODIFY_LAUNCHERS']" class="zf-primary-button">
@@ -19,22 +19,23 @@
             </div>
             <div class="ci-runner-container_helper_section">
                 <ul class="folder-container folder-container-{{scmAccount.id}}" ng-repeat="scmAccount in scmAccounts | orderBy: 'repositoryName' track by scmAccount.id">
-                    <li class="folder-container_folder">
+                    <li class="folder-container_folder" ng-class="{ '_with-buttons': $ctrl.AuthService.UserHasAnyPermission(['MODIFY_LAUNCHERS']) }">
                         <i class="material-icons folder-container_folder_icon hide-phone" ng-click="switchFolder($event)">arrow_drop_down</i>
-                        <span has-any-permission="['MODIFY_LAUNCHERS']">
-                            <i class="material-icons folder-container_folder_icon_settings hide-phone" ng-click="manageFolder(scmAccount)">settings</i>
-                        </span>
                         <div class="folder-container_folder_name hide-phone" ng-click="switchFolder($event)">{{scmAccount.repositoryName}}</div>
                         <div class="folder-container_folder_name show-phone" ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
+                        <div class="folder-container_folder-buttons hide-phone" has-any-permission="['MODIFY_LAUNCHERS']">
+                            <i class="material-icons folder-container_folder_icon_settings" ng-if="scmAccount.launchers.length" ng-click="manageFolder(scmAccount, true)">add_circle_outline</i>
+                            <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount)">settings</i>
+                        </div>
                     </li>
                     <li class="folder-container_item">
                         <ul class="folder-container_item_list">
                             <li class="folder-container_item_list_item hide-phone launcher-{{launcher.id}}" ng-click="chooseLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
-                                <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
+                                <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 {{launcher.name}}
                             </li>
                             <li class="folder-container_item_list_item show-phone launcher-{{launcher.id}}" ng-click="selectLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
-                                <md-icon class="folder-container_item_list_item_icon" ng-if="! launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
+                                <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 {{launcher.name}}
                             </li>
                             <li ng-if="!scmAccount.launchers.length" class="folder-container_item_list_item-empty">
@@ -65,7 +66,7 @@
                 </md-button>
             </div>
         </zf-modal-helper-container>
-        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="needServer && $ctrl.cardNumber !== 0 && !scmAccount.launchers.length">
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('server-select')">
             <ng-form name="info">
                 <div class="ci-runner-container_content_block _server-selection">
                     <div ng-if="scmAccount.id" class="ci-runner-container_content_block_title __ci-runner-lg-title __scan-repo">
@@ -96,7 +97,7 @@
                 </div>
             </ng-form>
         </zf-modal-content-container>
-        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.cardNumber === 1 && !needServer">
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('add-repo')">
             <ng-form name="info">
                 <div class="ci-runner-container_content_block">
                     <div class="ci-runner-container_content_block_title">
@@ -126,8 +127,8 @@
                 </div>
             </ng-form>
         </zf-modal-content-container>
-        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-class="{'__info-edit-mode': launcher.id}" ng-if="$ctrl.cardNumber === 2 && (!needServer || scmAccount.launchers.length)">
-            <ng-form ng-if="! launcher.id" name="scanInfo">
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('scan-repo')">
+            <ng-form name="scanInfo">
                 <div class="ci-runner-container_content_block">
                     <div ng-if="scmAccount.id" class="ci-runner-container_content_block_title __ci-runner-lg-title __scan-repo">
                         <span>{{scmAccount.repositoryName}}</span>
@@ -141,18 +142,31 @@
                             <label class="placeholder-label">Branch</label>
                             <input type="text" ng-model="launcherScan.branch" autofocus ng-required="true" />
                         </md-input-container>
-                        <md-button class="md-raised" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="!hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                    </div>
+                    <div class="ci-runner-container_content_actions">
+                        <md-button ng-really-click="deleteRepository(launcher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !launcher.id">
+                            DELETE REPO
+                        </md-button>
+                        <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
+                            CANCEL
+                        </md-button>
+                        <md-button class="md-raised pull-right" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="!hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             SCAN
                         </md-button>
-                        <md-button class="md-raised" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <md-button class="md-raised pull-right" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             RE-SCAN
                         </md-button>
                     </div>
                 </div>
             </ng-form>
-            <div ng-if="! launcher.id" class="divider"></div>
+        </zf-modal-content-container>
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('create-launcher')">
             <ng-form name="manualInfo">
-                <div class="ci-runner-container_content_block __lancher-add">
+                <div class="ci-runner-container_content_block">
+                    <div ng-if="scmAccount.id" class="ci-runner-container_content_block_title __ci-runner-lg-title __scan-repo">
+                        <span>{{scmAccount.repositoryName}}</span>
+                        <a ng-if="scmAccount.repositoryURL" href="{{scmAccount.repositoryURL}}" target="_blank"><md-icon>open_in_new</md-icon></a>
+                    </div>
                     <div ng-if="!launcher.id" class="ci-runner-container_content_block_title">
                         <span>Add template manually</span>
                     </div>
@@ -178,20 +192,45 @@
                     </div>
                 </div>
                 <div class="ci-runner-container_content_actions">
-                    <md-button ng-really-click="deleteRepository(launcher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && ! launcher.id">
-                        DELETE REPO
-                    </md-button>
-                    <md-button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete template?" class="md-warn" ng-if="launcher.id">
-                        DELETE
-                    </md-button>
-                    <md-button ng-click="cancelLauncher();" ng-if="launcher.id">
-                        CANCEL
-                    </md-button>
                     <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
                         CANCEL
                     </md-button>
                     <md-button class="md-raised md-primary pull-right" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
-                        ADD
+                        CREATE
+                    </md-button>
+                </div>
+            </ng-form>
+        </zf-modal-content-container>
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('edit-launcher')">
+            <ng-form name="manualInfo">
+                <div class="ci-runner-container_content_block __lancher-add">
+                    <div ng-if="launcher.id" class="ci-runner-container_content_block_title __ci-runner-lg-title">
+                        <span ng-if="launcher.id">{{launcher.name}}</span>
+                    </div>
+                    <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
+                        <md-input-container class="_gray-bg">
+                            <label class="placeholder-label">Name</label>
+                            <input type="text" ng-model="launcher.name" />
+                        </md-input-container>
+                    </div>
+                    <div class="ci-runner-container_content_code" ng-cloak>
+                        <md-input-container class="no-margin">
+                            <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
+                            <md-input-container class="no-margin">
+                                <label>Platform</label>
+                                <md-select ng-change="mergeTemplate(DEFAULT_TEMPLATES.model.json);" ng-model="DEFAULT_TEMPLATES.model">
+                                    <md-option ng-repeat="dt in DEFAULT_TEMPLATES.variants track by $index" ng-value="dt">{{dt.name}}</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </md-input-container>
+                    </div>
+                </div>
+                <div class="ci-runner-container_content_actions">
+                    <md-button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete template?" class="md-warn">
+                        DELETE LAUNCHER
+                    </md-button>
+                    <md-button ng-click="cancelLauncher();">
+                        CANCEL
                     </md-button>
                     <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher(launcher);" ng-if="launcher.id" ng-disabled="!launcher.name || !launcher.model">
                         SAVE
@@ -199,8 +238,7 @@
                 </div>
             </ng-form>
         </zf-modal-content-container>
-
-        <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.cardNumber === 3 || $ctrl.cardNumber === 4" ng-show="launcher">
+        <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.shouldBeDisplayed('launcher')" ng-show="launcher">
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
@@ -323,7 +361,7 @@
                 <div ng-if="! launcher.job.jobURL" class="ci-runner-container_content_actions_error">Launcher job is not configured, contact admin.</div>
             </div>
         </zf-modal-content-container>
-        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.cardNumber === 0">
+        <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('welcome')">
             <div class="ci-runner-container_content_title no-data">
                 <span ng-if="!$ctrl.loadingScm && !scmAccounts.length">
                     <div>There is nothing to launch:(</div>
@@ -335,7 +373,7 @@
             </div>
         </zf-modal-content-container>
         <md-icon class="close-button" ng-click="cancel()" aria-label="Close dialog">close</md-icon>
-        <div class="ci-runner-container_loader" ng-if="launcherLoaderStatus.started || launcherLoaderStatus.finished">
+        <div class="ci-runner-container_loader" ng-if="$ctrl.shouldBeDisplayed('waiting')">
             <div class="ci-runner-container_loader_container">
                 <div class="ci-runner-container_loader_container_title">
                     <div ng-if="launcherLoaderStatus.started">Keep calm and have a cup of tea.</div>
