@@ -765,9 +765,9 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         });
     };
 
-    $scope.getRepositories = function () {
+    $scope.getRepositories = function (organization) {
         $scope.repositories = {};
-        var organizationName = $scope.scmAccount.organizationName ? $scope.scmAccount.organizationName : '';
+        const organizationName = organization ? organization : '';
         ScmService.getRepositories($scope.scmAccount.id, organizationName).then(function (rs) {
             if (rs.success) {
                 $scope.repositories = rs.data;
