@@ -40,6 +40,10 @@ $standart-padding: 24px;
             display: flex;
             position: relative;
             min-height: 718px;
+
+            @media(max-width: $md-screen-phone) {
+                flex-direction: column;
+            }
         }
 
         &_helper, &_content {

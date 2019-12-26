@@ -206,7 +206,8 @@
                 </div>
                 <div class="test-run-card__model" ng-if="$ctrl.testRun.status === 'LAUNCHING'">{{$ctrl.formattedModel}}</div>
                 <div class="test-run-card__jenkins">
-                    <a href="{{$ctrl.testRun.jenkinsURL}}" target="_blank">{{$ctrl.testRun.job.name}}</a>
+                    <a ng-if="$ctrl.testRun.jenkinsURL && $ctrl.testRun.job.name !== 'local'" href="{{$ctrl.testRun.jenkinsURL}}" target="_blank">{{$ctrl.testRun.job.name}}</a>
+                    <span ng-if="!$ctrl.testRun.jenkinsURL || $ctrl.testRun.job.name === 'local'">{{$ctrl.testRun.job.name}}</span>
                 </div>
             </div>
             <div class="test-run-card__cell _actions" ng-if="$ctrl.testRun.status !== 'LAUNCHING'">

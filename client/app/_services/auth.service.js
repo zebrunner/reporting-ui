@@ -117,20 +117,15 @@
             return found;
         }
 
+        /**
+         * returns if current user has any of provided permissions
+         * @param {String[]} permissions - array of permission names
+         * @returns {boolean}
+         */
         function UserHasAnyPermission(permissions) {
-            if (!isLoggedIn()) {
-                return false;
-            }
-            var found = false;
-            angular.forEach(permissions, function(permission, index) {
-                angular.forEach(UserService.currentUser.permissions, function(userPermission, index) {
-                    if (userPermission.name === permission) {
-                        found = true;
-                        return;
-                    }
-                });
-            });
-            return found;
+            if (!isLoggedIn()) { return false; }
+
+            return (UserService.currentUser.permissions || []).some(({ name }) => permissions.includes(name));
         }
 
         return service;

@@ -1,8 +1,14 @@
 <div class="page-wrapper">
     <zf-sub-header>
         <zf-sub-header-title>
-            User profile
+            Account & profile
         </zf-sub-header-title>
+        <zf-sub-header-button>
+            <button class="fixed-page-header__btn zf-primary-button" ng-click="$ctrl.goToState('logout')">
+                <md-icon class="material-icons">exit_to_app</md-icon>
+                <span>Logout</span>
+            </button>
+        </zf-sub-header-button>
     </zf-sub-header>
     <div class="page page-profile">
         <div class="profile-header" layout="row">
@@ -21,7 +27,7 @@
                     <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
                 </md-input-container>
             </div>
-            
+
         </div>
         <div layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Access token</div>
@@ -95,7 +101,7 @@
                             ng-disabled="profile_form.$invalid">Save</md-button>
             </form>
         </div>
-    
+
         <!--<div class="row">
             <div class="col-lg-8 clearfix"> <h2 class="section-header">Preferences</h2> </div>
             <div class="col-md-12">
@@ -144,7 +150,7 @@
                 </section>
             </div>
         </div>-->
-    
+
         <div ng-if="$ctrl.user.source === 'INTERNAL'" layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Change password</div>
             <form class="form-validation profile__form" name="password_form" ng-submit="$ctrl.updateUserPassword(); $ctrl.untouchForm(password_form);">

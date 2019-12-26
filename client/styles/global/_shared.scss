@@ -11,3 +11,8 @@ input {
         appearance: none;
     }
 }
+
+.no-animate {
+    -webkit-transition: none !important;
+    transition: none !important;
+}
