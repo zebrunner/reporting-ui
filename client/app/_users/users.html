@@ -1,7 +1,7 @@
 <div class="page-wrapper">
     <zf-sub-header>
         <zf-sub-header-title>
-            Users
+            Users <span ng-if="$ctrl.sr">({{$ctrl.sr.totalResults}})</span>
         </zf-sub-header-title>
         <zf-sub-header-options layout="row" layout-align="start center">
                 <md-input-container class="_search">
