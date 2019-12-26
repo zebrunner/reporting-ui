@@ -253,7 +253,9 @@ const integrationsController = function integrationsController($state, $mdDialog
         integrationsService.storeType();
 
         toolsService.fetchIntegrationOfTypeByName(type.name).then((res) => {
-            vm.tools = res.data;
+            vm.tools = (res.data || []).sort((a, b) => {
+                return (a.enabled === b.enabled) ? 0 : a.enabled ? -1 : 1;
+            });
 
             if (vm.isMultipleAllowed) {
                 vm.toolTypes = vm.groups.find(({ id }) => id === type.id).types;
