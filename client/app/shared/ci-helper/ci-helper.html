@@ -150,10 +150,10 @@
                         <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
                             CANCEL
                         </md-button>
-                        <md-button class="md-raised pull-right" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="!hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <md-button class="md-raised md-primary pull-right" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="!hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             SCAN
                         </md-button>
-                        <md-button class="md-raised pull-right" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <md-button class="md-raised md-primary pull-right" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             RE-SCAN
                         </md-button>
                     </div>
