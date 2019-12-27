@@ -29,6 +29,7 @@ function echartDecorator(echart) {
 
         function transform(tick) {
             let absoluteValue = Math.abs(tick);
+            
             if (absoluteValue >= 1000000000) {
                 return `${tick / 1000000000}B`;
             } else if (absoluteValue >= 1000000) {
@@ -41,10 +42,10 @@ function echartDecorator(echart) {
         };
 
         for (let value of labels) {
-            if (typeof value.formattedLabel === "number") {
+            if (typeof value.formattedLabel === 'number') {
                 value.formattedLabel = transform(value.formattedLabel);
             } else if (reg.test(value.formattedLabel)) {
-                let correctValue = parseFloat(value.formattedLabel.replace(",", ""));
+                let correctValue = parseFloat(value.formattedLabel.replace(',', ''));
                 value.formattedLabel = transform(correctValue);
             }
         }
