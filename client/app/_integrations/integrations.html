@@ -64,7 +64,7 @@
             <div flex="100"
                  flex-gt-xs="50"
                  flex-gt-sm="33"
-                 data-ng-repeat="tool in $ctrl.tools" class="integration-tool__item-wrapper">
+                 data-ng-repeat="tool in $ctrl.tools track by tool.id" class="integration-tool__item-wrapper">
                 <div class="card bg-white integration-tool__item" zafira-background-theme ng-show="!$ctrl.isLoading">
                     <div class="integration-tool__item-header" layout="row" layout-align="start center">
                         <span class="integration-tool__item-icon {{::tool.type.name | lowercase}}" flex="none"></span>
