@@ -22,7 +22,8 @@
             toolsService,
             UI_VERSION,
             progressbarService,
-            SafariFixesService
+            SafariFixesService,
+            UtilService
         ) {
             'ngInject';
 
@@ -41,6 +42,7 @@
             $scope.isAnimated = function() {
                 return UNANIMATED_STATES.indexOf($state.current.name) == -1;
             };
+            $scope.UtilService = UtilService;
 
             $scope.setOffset = function (event) {
 	              $rootScope.currentOffset = 0;

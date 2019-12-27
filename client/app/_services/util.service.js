@@ -25,6 +25,7 @@
             removeRecipient,
             checkAndTransformRecipient,
             filterUsersForSend,
+            isTouchDevice,
         }
 
         service.validations = {
@@ -326,7 +327,7 @@
 
         function isElementInViewport(el) {
             const rect = el.getBoundingClientRect();
-    
+
             return (
                 rect.top >= 0 &&
                 rect.left >= 0 &&
@@ -348,23 +349,23 @@
 
         function checkAndTransformRecipient(currentUser, recipients, users) {
             let user = {};
-    
+
             if (typeof currentUser === 'object' && currentUser.email) {
                 user = currentUser;
             } else {
                 if (!isValidRecipient(currentUser)) {
                     messageService.error('Invalid email');
-    
+
                     return null;
-                } 
+                }
                 if (isDuplicatedRecipient(currentUser, users)) {
                     messageService.error('Duplicated email');
-    
+
                     return null;
                 }
                 user.email = currentUser;
             }
-    
+
             recipients.push(user.email);
             users.push(user);
 
@@ -373,10 +374,10 @@
 
         function isValidRecipient(recipient) {
             let reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
-    
+
             return (reg.test(recipient));
         }
-    
+
         function isDuplicatedRecipient(recipient, users) {
             return users.find((user) => user.email === recipient)
         }
@@ -432,6 +433,23 @@
             if (reverse) { sorted.reverse() };
 
             return sorted;
+        }
+
+        //based on https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
+        function isTouchDevice() {
+            if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+                return true;
+            }
+
+            var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
+            var mq = function(query) {
+                return window.matchMedia(query).matches;
+            };
+            // include the 'heartz' as a way to have a non matching MQ to help terminate the join
+            // https://git.io/vznFH
+            var query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
+
+            return mq(query);
         }
     }
 })();
