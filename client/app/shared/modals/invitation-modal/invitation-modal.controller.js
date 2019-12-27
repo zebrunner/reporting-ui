@@ -22,7 +22,7 @@ const inviteModalController = (
     $scope.userGroup = undefined;
 
     $scope.SOURCES = ['INTERNAL', 'LDAP'];
-    $scope.keys = [$mdConstant.KEY_CODE.SPACE];
+    $scope.keys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.TAB, $mdConstant.KEY_CODE.COMMA, $mdConstant.KEY_CODE.SEMICOLON, $mdConstant.KEY_CODE.SPACE];
     var startedEmail;
 
     $scope.initMdChipsCtrl = function () {
