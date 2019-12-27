@@ -106,7 +106,7 @@
                     <div class="ci-runner-container_content_scm-connector_items_add">
                         <md-input-container>
                             <label>Organization</label>
-                            <md-select ng-model="scmAccount.organization" ng-change="getRepositories(scmAccount.organization);" ng-disabled="! organizations.length">
+                            <md-select ng-model="scmAccount.organization" ng-change="getRepositories(scmAccount.organization.name);" ng-disabled="! organizations.length">
                                 <md-option ng-repeat="organization in organizations track by $index" ng-value="organization">
                                     {{organization.name}}
                                 </md-option>
