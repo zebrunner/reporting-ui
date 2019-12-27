@@ -63,6 +63,8 @@ const integrationsController = function integrationsController($state, $mdDialog
         toolsService.updateSettings(tool.id, tool)
             .then(rs => {
                 if (rs.success) {
+                    sortToolsByStatus();
+
                     return toolsService.fetchToolConnectionStatus(vm.currentType.name, rs.data.id)
                         .then((res) => {
                             if (res.success) {
@@ -74,7 +76,7 @@ const integrationsController = function integrationsController($state, $mdDialog
                                 setting.param.required = false;
                             })
                             messageService.success('Tool ' + tool.name + ' was changed');
-                        })
+                        });
                 } else {
                     if (rs.error) {
                         if (rs.error.data && Array.isArray(rs.error.data.validationErrors)) {
@@ -125,6 +127,7 @@ const integrationsController = function integrationsController($state, $mdDialog
                     } else {
                         messageService.success('Tool ' + tool.name + ' is disabled');
                     }
+                    sortToolsByStatus();
                 } else {
                     messageService.error('Unable to change ' + tool.name + ' state');
                     tool.enabled = !tool.enabled;
@@ -253,9 +256,8 @@ const integrationsController = function integrationsController($state, $mdDialog
         integrationsService.storeType();
 
         toolsService.fetchIntegrationOfTypeByName(type.name).then((res) => {
-            vm.tools = (res.data || []).sort((a, b) => {
-                return (a.enabled === b.enabled) ? 0 : a.enabled ? -1 : 1;
-            });
+            vm.tools = res.data || [];
+            sortToolsByStatus();
 
             if (vm.isMultipleAllowed) {
                 vm.toolTypes = vm.groups.find(({ id }) => id === type.id).types;
@@ -291,6 +293,7 @@ const integrationsController = function integrationsController($state, $mdDialog
                     vm.tools.unshift(res.data);
                     toolsService.getTools(true);
                     cancel();
+                    sortToolsByStatus();
                 } else {
                     messageService.error(res.message);
                 }
@@ -314,6 +317,12 @@ const integrationsController = function integrationsController($state, $mdDialog
     function cancel() {
         vm.isNewToolAdding = false;
         vm.newItem = null;
+    }
+
+    function sortToolsByStatus() {
+        vm.tools.sort((a, b) => {
+            return (a.enabled === b.enabled) ? 0 : a.enabled ? -1 : 1;
+        });
     }
 
     vm.$onInit = controllerInit;
