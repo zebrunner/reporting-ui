@@ -46,6 +46,7 @@ function echartDecorator(echart) {
                 value.formattedLabel = transform(value.formattedLabel);
             } else if (reg.test(value.formattedLabel)) {
                 let correctValue = parseFloat(value.formattedLabel.replace(',', ''));
+                
                 value.formattedLabel = transform(correctValue);
             }
         }
