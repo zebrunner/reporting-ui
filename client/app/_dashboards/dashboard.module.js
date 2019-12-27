@@ -25,13 +25,16 @@ function echartDecorator(echart) {
 
     echart.Axis.prototype.getViewLabels = function () {
         let labels = overridedFunction.call(this);
+        let reg = /^-?[\d.|,\d]*?$/;
 
         function transform(tick) {
-            if (tick >= 1000000000) {
+            let absoluteValue = Math.abs(tick);
+            
+            if (absoluteValue >= 1000000000) {
                 return `${tick / 1000000000}B`;
-            } else if (tick >= 1000000) {
+            } else if (absoluteValue >= 1000000) {
                 return `${tick / 1000000}M`;
-            } else if (tick >= 1000) {
+            } else if (absoluteValue >= 1000) {
                 return `${tick / 1000}K`;
             } else {
                 return `${tick}`;
@@ -39,10 +42,12 @@ function echartDecorator(echart) {
         };
 
         for (let value of labels) {
-            let correctValue = parseInt(value.rawLabel.replace(',', ''), 10);
-
-            if (correctValue === value.tickValue) {
-                value.formattedLabel = transform(value.tickValue);
+            if (typeof value.formattedLabel === 'number') {
+                value.formattedLabel = transform(value.formattedLabel);
+            } else if (reg.test(value.formattedLabel)) {
+                let correctValue = parseFloat(value.formattedLabel.replace(',', ''));
+                
+                value.formattedLabel = transform(correctValue);
             }
         }
 
