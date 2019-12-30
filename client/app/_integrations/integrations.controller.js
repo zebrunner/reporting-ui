@@ -246,11 +246,16 @@ const integrationsController = function integrationsController($state, $mdDialog
     }
 
     function selectIntegrationType(type) {
-        vm.chipsCtrl.selectedChip = vm.groups.findIndex(({ id }) => id === type.id);
+        const selectedIndex = vm.groups.findIndex(({ id }) => id === type.id);
+
+        if (vm.chipsCtrl.selectedChip === selectedIndex) { return; }
+
+        vm.chipsCtrl.selectedChip = selectedIndex;
         vm.isNewToolAdding = false;
         vm.newItem = null;
         vm.isMultipleAllowed = type.multipleAllowed;
         vm.currentType = type;
+        vm.addingIntegrationMode = false;
 
         integrationsService.setType(type);
         integrationsService.storeType();
