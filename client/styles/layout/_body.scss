@@ -2431,7 +2431,10 @@ $light-inprogress: #68c9fd;
                 margin: 0;
 
                 & + .md-button {
-                    margin-left: 26px;
+                    &,
+                    &.md-focused {
+                        margin-left: 26px;
+                    }
                 }
             }
             > div {

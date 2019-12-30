@@ -16,3 +16,7 @@ input {
     -webkit-transition: none !important;
     transition: none !important;
 }
+
+body._touch-device md-tooltip {
+    display: none !important;
+}

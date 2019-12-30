@@ -31,10 +31,11 @@
           class="app nav-collapsed-min"
           window-width
           data-custom-page
-          data-ng-controller="AppCtrl"
-          data-ng-class=" { 'layout-boxed': main.layout === 'boxed',
+          ng-controller="AppCtrl"
+          ng-class=" { 'layout-boxed': main.layout === 'boxed',
                             'dark-container zaf-dark': darkThemes.indexOf(main.skin) !== -1,
-                             'bg-page-grey zaf-light': darkThemes.indexOf(main.skin) === -1
+                             'bg-page-grey zaf-light': darkThemes.indexOf(main.skin) === -1,
+                             '_touch-device': UtilService.isTouchDevice()
           } " md-theme="{{ main.default }}" md-theme-watch>
     <!--[if lt IE 9]>
             <div class="lt-ie9-bg">

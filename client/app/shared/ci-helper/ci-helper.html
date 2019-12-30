@@ -24,7 +24,7 @@
                         <div class="folder-container_folder_name hide-phone" ng-click="switchFolder($event)">{{scmAccount.repositoryName}}</div>
                         <div class="folder-container_folder_name show-phone" ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
                         <div class="folder-container_folder-buttons hide-phone" has-any-permission="['MODIFY_LAUNCHERS']">
-                            <i class="material-icons folder-container_folder_icon_settings" ng-if="scmAccount.launchers.length" ng-click="manageFolder(scmAccount, true)">add_circle_outline</i>
+                            <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount, true)">add_circle_outline</i>
                             <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount)">settings</i>
                         </div>
                     </li>
@@ -106,7 +106,7 @@
                     <div class="ci-runner-container_content_scm-connector_items_add">
                         <md-input-container>
                             <label>Organization</label>
-                            <md-select ng-model="scmAccount.organization" ng-change="getRepositories(scmAccount.organization);" ng-disabled="! organizations.length">
+                            <md-select ng-model="scmAccount.organization" ng-change="getRepositories(scmAccount.organization.name);" ng-disabled="! organizations.length">
                                 <md-option ng-repeat="organization in organizations track by $index" ng-value="organization">
                                     {{organization.name}}
                                 </md-option>
@@ -135,7 +135,7 @@
                         <a ng-if="scmAccount.repositoryURL" href="{{scmAccount.repositoryURL}}" target="_blank"><md-icon>open_in_new</md-icon></a>
                     </div>
                     <div class="ci-runner-container_content_block_title">
-                        Select branch to add templates
+                        Provide the branch for automatic scanner
                     </div>
                     <div class="ci-runner-container_content_launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
@@ -150,10 +150,10 @@
                         <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
                             CANCEL
                         </md-button>
-                        <md-button class="md-raised pull-right" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="!hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <md-button class="md-raised md-primary pull-right" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="!hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             SCAN
                         </md-button>
-                        <md-button class="md-raised pull-right" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
+                        <md-button class="md-raised md-primary pull-right" md-no-ink ng-click="scanRepository(launcherScan, true)" ng-if="hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
                             RE-SCAN
                         </md-button>
                     </div>
@@ -167,11 +167,8 @@
                         <span>{{scmAccount.repositoryName}}</span>
                         <a ng-if="scmAccount.repositoryURL" href="{{scmAccount.repositoryURL}}" target="_blank"><md-icon>open_in_new</md-icon></a>
                     </div>
-                    <div ng-if="!launcher.id" class="ci-runner-container_content_block_title">
-                        <span>Add template manually</span>
-                    </div>
-                    <div ng-if="launcher.id" class="ci-runner-container_content_block_title __ci-runner-lg-title">
-                        <span ng-if="launcher.id">{{launcher.name}}</span>
+                    <div class="ci-runner-container_content_block_title">
+                        <span>Create launcher manually</span>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
@@ -192,10 +189,10 @@
                     </div>
                 </div>
                 <div class="ci-runner-container_content_actions">
-                    <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
+                    <md-button ng-click="$ctrl.cancelFolderManaging();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="addLauncher(launcher);" ng-if="! launcher.id" ng-disabled="!launcher.name || !launcher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="addLauncher(launcher);" ng-disabled="!launcher.name || !launcher.model">
                         CREATE
                     </md-button>
                 </div>
@@ -204,7 +201,7 @@
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('edit-launcher')">
             <ng-form name="manualInfo">
                 <div class="ci-runner-container_content_block __lancher-add">
-                    <div ng-if="launcher.id" class="ci-runner-container_content_block_title __ci-runner-lg-title">
+                    <div class="ci-runner-container_content_block_title __ci-runner-lg-title">
                         <span ng-if="launcher.id">{{launcher.name}}</span>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
@@ -232,7 +229,7 @@
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher(launcher);" ng-if="launcher.id" ng-disabled="!launcher.name || !launcher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher(launcher);" ng-disabled="!launcher.name || !launcher.model">
                         SAVE
                     </md-button>
                 </div>
