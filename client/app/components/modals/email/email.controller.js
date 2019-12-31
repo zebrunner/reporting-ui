@@ -31,15 +31,17 @@
             currentUser: null,
             cancel,
             users: [],
-        }
+        };
 
         function sendEmail() {
-            vm.email.recipients = vm.email.recipients.toString();
-            vm.sendingEmail = true;
+            const email = {...vm.email};
             let errorMessage = '';
+            let promises;
 
-            const promises = testRuns.map(function(testRun) {
-                return TestRunService.sendTestRunResultsEmail(testRun.id, vm.email)
+            email.recipients = email.recipients.toString();
+            vm.sendingEmail = true;
+            promises = testRuns.map(function(testRun) {
+                return TestRunService.sendTestRunResultsEmail(testRun.id, email)
                     .then(function(rs) {
                         if (!rs.success) {
                             !errorMessage && (errorMessage = rs.message);
@@ -69,19 +71,19 @@
             usersSearchCriteria.query = vm.searchText;
             if (!vm.searchText.includes(stopCriteria)) {
                 stopCriteria = '########';
-    
+
                 return UserService.searchUsersWithQuery(usersSearchCriteria, vm.searchText)
                     .then(function (rs) {
                         if (rs.success) {
                             if (!rs.data.results.length) {
                                 stopCriteria = vm.searchText;
                             }
-    
+
                             return UtilService.filterUsersForSend(rs.data.results, vm.users);
                         }
                     });
             }
-    
+
             return "";
         }
 
