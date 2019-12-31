@@ -15,7 +15,7 @@
     </zf-sub-header>
 
     <div class="page">
-        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.selectedTestRuns.length > 0" md-direction="up" class="tests-runs-options md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
+        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.selectedTestRuns.length > 0 && !$ctrl.scrollTicking" md-direction="up" class="tests-runs-options md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
                     <span class="fa fa-bars" aria-hidden="true"></span>
@@ -59,9 +59,9 @@
                 </span>
             </tests-runs-search>
         </div>
-        
+
         <div class="p-tests-runs__content-wrapper">
-            
+
             <div class="p-tests-runs__section _content row ui-section no-margin">
                 <div class="col-md-12 no-padding">
                     <article class="article">

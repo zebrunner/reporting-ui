@@ -10,6 +10,9 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     'ngInject';
 
     let TENANT;
+    let scrollTickingTimeout = null;
+    const scrollablePerentElement = document.querySelector('.page-wrapper');
+
     const vm = {
         testRuns: [],
         launchers: [],
@@ -24,6 +27,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         isSearchActive: testsRunsService.isSearchActive,
         projects: null,
         activeTestRunId: null,
+        scrollTicking: false,
 
         isTestRunsEmpty: isTestRunsEmpty,
         getTestRuns: getTestRuns,
@@ -59,6 +63,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
         initWebsocket();
         bindEvents();
         vm.activeTestRunId && highlightTestRun();
+        bindEventListeners();
     }
 
     function initLaunchers() {
@@ -158,7 +163,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
                 vm.pageSize = rs.pageSize;
                 vm.testRuns = testRuns;
                 vm.launchers = rs.launchers;
-                
+
                 return $q.resolve(vm.testRuns);
             })
             .catch(function(err) {
@@ -520,7 +525,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
                     });
                 }
             }
-            
+
             if (projectsService.selectedProject && +projectsService.selectedProject.id !== +testRun.project.id) { return; }
 
             //add new testRun to the top of the list or update fields if it is already in the list
@@ -672,6 +677,32 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     function showFailBulkOperationMessage({ action, count, total, options = {} }) {
         messageService.error(`${count} out of ${total} test runs have failed to be ${action}. Please, try again.`, options);
+    }
+
+    function bindEventListeners() {
+        vm.$onDestroy = () => {
+            if (vm.isMobile) {
+                angular.element(scrollablePerentElement).off('scroll.hideFilterButton', onScroll);
+            }
+        }
+        if (vm.isMobile) {
+            angular.element(scrollablePerentElement).on('scroll.hideFilterButton', onScroll);
+        }
+    }
+
+    function onScroll() {
+        if (!vm.scrollTicking) {
+            vm.scrollTicking = true;
+            $scope.$apply();
+            scrollTickingTimeout = $timeout(() => {
+                vm.scrollTicking = false;
+            }, 300);
+        } else {
+            $timeout.cancel(scrollTickingTimeout);
+            scrollTickingTimeout = $timeout(() => {
+                vm.scrollTicking = false;
+            }, 300);
+        }
     }
 };
 
