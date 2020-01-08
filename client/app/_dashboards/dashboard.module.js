@@ -18,6 +18,7 @@ import 'echarts/lib/component/title';
 import 'echarts/lib/component/grid';
 import 'echarts/lib/component/calendar';
 import 'echarts/lib/component/dataZoom';
+import 'echarts/lib/component/visualMap';
 
 
 function echartDecorator(echart) {
@@ -29,7 +30,7 @@ function echartDecorator(echart) {
 
         function transform(tick) {
             let absoluteValue = Math.abs(tick);
-            
+
             if (absoluteValue >= 1000000000) {
                 return `${tick / 1000000000}B`;
             } else if (absoluteValue >= 1000000) {
@@ -46,7 +47,7 @@ function echartDecorator(echart) {
                 value.formattedLabel = transform(value.formattedLabel);
             } else if (reg.test(value.formattedLabel)) {
                 let correctValue = parseFloat(value.formattedLabel.replace(',', ''));
-                
+
                 value.formattedLabel = transform(correctValue);
             }
         }
