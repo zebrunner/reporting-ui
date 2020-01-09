@@ -238,19 +238,20 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
                 vm.selectedRange = result;
 
                 if(result.selectedTemplate) {
-                    if (vm.selectedRange.dateStart.getMonth() === vm.selectedRange.dateEnd.getMonth()) {
-                        if(vm.selectedRange.dateStart.getTime() === vm.selectedRange.dateEnd.getTime()) {
-                            vm.selectedRange.selectedTemplateName =  moment(vm.selectedRange.dateStart).format('DD') + ' ' + moment(vm.selectedRange.dateStart).format('MMM');
-                        } else {
-                            vm.selectedRange.selectedTemplateName = moment(vm.selectedRange.dateStart).format('DD') + ' - ' + moment(vm.selectedRange.dateEnd).format('DD') + ' ' + moment(vm.selectedRange.dateStart).format('MMM');
-                        }
-                    } else {
-                        vm.selectedRange.selectedTemplateName = moment(vm.selectedRange.dateStart).format('DD') + ' ' + moment(vm.selectedRange.dateStart).format('MMM') + ' - ' + moment(vm.selectedRange.dateEnd).format('DD') + ' ' + moment(vm.selectedRange.dateEnd).format('MMM');
-                    }
+                    const isSameMonth = vm.selectedRange.dateStart.getMonth() === vm.selectedRange.dateEnd.getMonth();
+                    const isSameDay = vm.selectedRange.dateStart.getTime() === vm.selectedRange.dateEnd.getTime();
+
+                    const rangeDateStart = moment(vm.selectedRange.dateStart).format('DD') + ' ';
+                    const rangeMonthStart = !isSameMonth ? moment(vm.selectedRange.dateStart).format('MMM') : '';
+                    const rangeDateEnd = !isSameDay ? ' - ' + moment(vm.selectedRange.dateEnd).format('DD') : '';
+                    const rangeMonthEnd = !isSameMonth ? ' ' + moment(vm.selectedRange.dateEnd).format('MMM') : ' ' + moment(vm.selectedRange.dateStart).format('MMM');
+
+                    vm.selectedRange.selectedTemplateName = rangeDateStart + rangeMonthStart + rangeDateEnd + rangeMonthEnd;
                 } else {
                     vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
-                    vm.searchParams.selectedTemplateName = vm.selectedRange.selectedTemplateName;
                 }
+
+                vm.searchParams.selectedTemplateName = vm.selectedRange.selectedTemplateName;
 
                 if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
                     if (vm.selectedRange.dateStart.getTime() !== vm.selectedRange.dateEnd.getTime()) {
