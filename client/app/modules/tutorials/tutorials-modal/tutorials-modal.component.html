@@ -1,4 +1,4 @@
-<md-dialog class="modal-default tutorials-modal" flex="50" aria-label="Zafira Help" zafira-background-theme="modal">
+<md-dialog class="modal-default zeb-tutorials-modal" flex="50" aria-label="Zafira Help" zafira-background-theme="modal">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2 id="modalTitle">
@@ -11,24 +11,7 @@
         </div>
     </md-toolbar>
 
-    <md-dialog-content class="tutorials-modal__content">
+    <md-dialog-content class="zeb-tutorials-modal__content">
         <tutorials-slider slides="$ctrl.tutorials" slide-index="$ctrl.currentSlideIndex"></tutorials-slider>
-
-        <h2 class="tutorials-modal__title">{{ $ctrl.activeSlide.title }}</h2>
-        <p class="tutorials-modal__description">{{ $ctrl.activeSlide.description }}</p>
     </md-dialog-content>
-
-    <!-- <md-dialog-actions layout="row">
-        <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew && dashboard.editable" type="button" class="md-warn"
-                    ng-disabled="dashboard_form.info.$invalid" data-ng-click="deleteDashboard(dashboard);">
-            Delete
-        </md-button>
-            <md-button id="create" data-ng-if="isNew" type="submit" class="md-raised md-primary"
-                    ng-disabled="dashboard_form.info.$invalid" data-ng-click="createDashboard(dashboard)">
-            Create
-        </md-button>
-        <md-button id="save" data-ng-if="!isNew" type="submit" class="md-raised md-primary" ng-disabled="dashboard_form.info.$invalid" data-ng-click="updateDashboard(dashboard)">
-            Save
-        </md-button>
-    </md-dialog-actions> -->
 </md-dialog>

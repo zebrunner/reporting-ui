@@ -1,7 +1,7 @@
-import tutorialsSlider from './tutorials-slider.component';
+import tutorialsSliderComponent from './tutorials-slider.component';
 
 export {
-    tutorialsSlider
+    tutorialsSliderComponent
 };
 
 // export const TutorialsSliderModule = angular.module('tutorials.slider', [])
