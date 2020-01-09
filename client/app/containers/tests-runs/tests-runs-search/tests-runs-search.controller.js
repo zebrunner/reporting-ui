@@ -58,7 +58,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         $mdDialog.cancel();
     };
 
-    
+
     function showSearchDialog(event) {
         $mdDialog.show({
             controller: SearchModalController,
@@ -69,7 +69,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             controllerAs: '$ctrl',
             bindToController: true,
             onComplete: () => {
-                $(window).on('resize.searchDialog',() => { 
+                $(window).on('resize.searchDialog',() => {
                     if ($(window).width() >= mobileWidth) {
                         vm.closeModal();
                     }
@@ -92,7 +92,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         if (vm.isSearchActive()) {
             let fromDate = testsRunsService.getSearchParam('fromDate');
             let toDate = testsRunsService.getSearchParam('toDate');
-            const date = testsRunsService.getSearchParam('date'); 
+            const date = testsRunsService.getSearchParam('date');
             const selectedTemplateName = testsRunsService.getSearchParam('selectedTemplateName');
 
             date && (fromDate = toDate = date);
@@ -236,11 +236,24 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         .then(function(result) {
             if (result) {
                 vm.selectedRange = result;
-                vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
+
+                if (result.selectedTemplate) {
+                    const isSameMonth = vm.selectedRange.dateStart.getMonth() === vm.selectedRange.dateEnd.getMonth();
+                    const isSameDay = vm.selectedRange.dateStart.getTime() === vm.selectedRange.dateEnd.getTime();
+                    const rangeDateStart = moment(vm.selectedRange.dateStart).format('DD');
+                    const rangeMonthStart = !isSameMonth ? ' ' + moment(vm.selectedRange.dateStart).format('MMM') : '';
+                    const rangeDateEnd = !isSameDay ? ' - ' + moment(vm.selectedRange.dateEnd).format('DD') : '';
+                    const rangeMonthEnd = ' ' + moment(vm.selectedRange.dateEnd).format('MMM');
+
+                    vm.selectedRange.selectedTemplateName = rangeDateStart + rangeMonthStart + rangeDateEnd + rangeMonthEnd;
+                } else {
+                    vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
+                }
+
                 vm.searchParams.selectedTemplateName = vm.selectedRange.selectedTemplateName;
+
                 if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
-                    if (vm.selectedRange.dateStart.getTime() !==
-                        vm.selectedRange.dateEnd.getTime()) {
+                    if (vm.selectedRange.dateStart.getTime() !== vm.selectedRange.dateEnd.getTime()) {
                         vm.searchParams.date = null;
                         vm.searchParams.fromDate = vm.selectedRange.dateStart;
                         vm.searchParams.toDate = vm.selectedRange.dateEnd;
