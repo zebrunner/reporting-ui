@@ -237,14 +237,13 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             if (result) {
                 vm.selectedRange = result;
 
-                if(result.selectedTemplate) {
+                if (result.selectedTemplate) {
                     const isSameMonth = vm.selectedRange.dateStart.getMonth() === vm.selectedRange.dateEnd.getMonth();
                     const isSameDay = vm.selectedRange.dateStart.getTime() === vm.selectedRange.dateEnd.getTime();
-
-                    const rangeDateStart = moment(vm.selectedRange.dateStart).format('DD') + ' ';
-                    const rangeMonthStart = !isSameMonth ? moment(vm.selectedRange.dateStart).format('MMM') : '';
+                    const rangeDateStart = moment(vm.selectedRange.dateStart).format('DD');
+                    const rangeMonthStart = !isSameMonth ? ' ' + moment(vm.selectedRange.dateStart).format('MMM') : '';
                     const rangeDateEnd = !isSameDay ? ' - ' + moment(vm.selectedRange.dateEnd).format('DD') : '';
-                    const rangeMonthEnd = !isSameMonth ? ' ' + moment(vm.selectedRange.dateEnd).format('MMM') : ' ' + moment(vm.selectedRange.dateStart).format('MMM');
+                    const rangeMonthEnd = ' ' + moment(vm.selectedRange.dateEnd).format('MMM');
 
                     vm.selectedRange.selectedTemplateName = rangeDateStart + rangeMonthStart + rangeDateEnd + rangeMonthEnd;
                 } else {
