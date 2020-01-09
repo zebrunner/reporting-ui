@@ -4,6 +4,7 @@ import '../styles/main.scss';
 import 'intersection-observer';
 import progressbarInterceptor from './http-interceptors/progressbar.interceptor';
 import jenkinsIcon from '../assets/images/_icons_tools/jenkins.svg';
+import { TutorialsModule } from './modules/tutorials';
 
 const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular.module('app', [
@@ -26,7 +27,14 @@ const ngModule = angular.module('app', [
     'ngMaterialDateRangePicker',
     'angular-jwt',
     'oc.lazyLoad',
+    TutorialsModule,
 ])
+
+.config((TutorialsProvider) => {
+    'ngInject';
+
+    TutorialsProvider.setUrl('testUrl');
+})
 
 .config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider, $mdIconProvider) {
     'ngInject';
@@ -631,7 +639,7 @@ const ngModule = angular.module('app', [
             iconVisible: '=?',
             label: '@',
             rotateHorisontal: '=?',
-            src: '@', 
+            src: '@',
             squared: '=?',
             chip: '=?',
         },
@@ -1126,7 +1134,7 @@ const ngModule = angular.module('app', [
 
         if (loginRequired) {
             access = authGuard(trans)
-                
+
         } else if (onlyGuests) {
             access = guestGuard(trans);
         }
@@ -1184,7 +1192,7 @@ class mdDialogDelegate {
                 } else {
                     parent = angular.element(parent);
                 }
-                
+
                 // If parent querySelector/getter function fails, or it's just null, find a default.
                 // logic derived from angular js material library
                 if (!(parent || {}).length) {

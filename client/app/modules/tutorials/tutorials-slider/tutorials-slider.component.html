@@ -1,0 +1,26 @@
+<div class="tutorials-slider">
+    <div class="tutorials-slider__slides">
+        <div class="tutorials-slider__item-wrapper" ng-style="{transform: $ctrl.transform}">
+            <youtube ng-repeat="slide in $ctrl.slides track by $index"
+                     class="tutorials-slider__item"
+                     video-id="slide.id"
+                     width="100%"
+                     height="auto"></youtube>
+        </div>
+
+        <button class="tutorials-slider__arrow _left" ng-click="$ctrl.prev()">
+            <md-icon class="material-icons">arrow_back</md-icon>
+        </button>
+        <button class="tutorials-slider__arrow _right" ng-click="$ctrl.next()">
+            <md-icon class="material-icons">arrow_forward</md-icon>
+        </button>
+    </div>
+
+    <div class="tutorials-slider__dots">
+        <div class="tutorials-slider__dots-item"
+             ng-repeat="slide in $ctrl.slides track by $index"
+             ng-class="{_active: $index === $ctrl.slideIndex}"
+             ng-click="$ctrl.changeSlide($index)">
+        </div>
+    </div>
+</div>
