@@ -326,7 +326,6 @@
         &-icon {
             flex-grow: 0;
             flex-shrink: 0;
-            margin-right: 2px;
             margin: 0;
             &._spinner {
                 width: 10px;
@@ -345,6 +344,7 @@
                 min-height: 12px;
                 min-width: 12px;
                 margin-right: 2px;
+                font-size:12px;
             }
         }
         &-name {
