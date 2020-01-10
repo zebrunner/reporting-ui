@@ -137,17 +137,26 @@
                                             <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{::test.name}}
                                                 <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></p>
                                             <div class="test-info__wrapper">
-                                                <span data-ng-if="test.finishTime && (test.finishTime - test.startTime)/1000 > 0 && test.status !== 'QUEUED'" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                <span ng-if="test.finishTime && (test.finishTime - test.startTime)/1000 > 0 && test.status !== 'QUEUED'"
+                                                      ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'"
+                                                      class="test-info__item">
                                                     <i class="material-icons">schedule</i>
                                                     <span>{{::(test.finishTime - test.startTime)/1000 | number:0}} seconds</span>
                                                 </span>
-                                                <span name="testOwner" data-ng-if="test.owner" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                <span name="testOwner"
+                                                      ng-if="test.owner"
+                                                      class="test-info__item"
+                                                      ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
                                                     <i class="fa fa-user" aria-hidden="true"></i>
-                                                    {{::test.owner}}
+                                                    <span>{{::test.owner}}</span>
                                                 </span>
-                                                <span name="device" data-ng-if="test.testConfig.device" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                <span name="device"
+                                                      ng-if="test.testConfig.device"
+                                                      class="test-info__item"
+                                                      ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
                                                     <i class="fa fa-mobile" aria-hidden="true"></i>
-                                                    {{::test.testConfig.device}}</span>
+                                                    <span>{{::test.testConfig.device}}</span>
+                                                </span>
                                             </div>
                                             <div ng-if="test.tags && test.tags.length" class="test-info__tags">
                                                 <span class="test-info__tags-tag" ng-repeat="tag in test.tags">
@@ -178,7 +187,7 @@
                                                        href=""
                                                        ng-if="::('png' === artifact.extension)">
                                                         <md-icon md-svg-icon="artifacts:image" class="material-icons"></md-icon>
-                                                        <p>{{::artifact.name}}</p>
+                                                        <span>{{::artifact.name}}</span>
                                                         <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
                                                     </a>
                                                     <a name="testArtifacts"
@@ -188,8 +197,8 @@
                                                        class="test-settings__attachment"
                                                        ng-if="::('png' !== artifact.extension && !artifact.hasBrokenLink)">
                                                         <md-icon md-svg-icon="{{::$ctrl.getArtifactIconId(artifact.extension)}}" ng-if="::artifact.extension" class="material-icons"></md-icon>
-                                                        <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="::material-icons">link</md-icon>
-                                                        <p>{{::artifact.name}}</p>
+                                                        <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
+                                                        <span>{{::artifact.name}}</span>
                                                         <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
                                                     </a>
                                                     <span name="testArtifactsBroken"
