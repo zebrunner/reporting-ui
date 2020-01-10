@@ -1529,6 +1529,18 @@ md-chip md-chip-template.bg-primary {
         }
     }
 
+    .value-input-wrapper {
+        width: 144px;
+        position: relative;
+        margin: 0 12px 12px 0;
+        float: none;
+
+        .value-input {
+            width: 100%;
+            margin: 0;
+        }
+    }
+
 
     & md-chip{
       min-width: 148px;
@@ -1623,6 +1635,11 @@ div[aria-selected='true'] span.ng-binding {
         padding-left: 12px;
         color: rgba($dark-new, .6);
         transition: color .25s ease-in-out;
+        overflow: hidden;
+        max-width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: inline-block;
     }
     & button {
         position: absolute;

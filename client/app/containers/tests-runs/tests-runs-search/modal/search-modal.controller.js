@@ -1,6 +1,6 @@
 'use strict';
 
-const SearchModalController = function SearchModalController(onApply, environments, allProjects, platforms, onReset, testsRunsService, windowWidthService, DEFAULT_SC, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, $mdDialog) {
+const SearchModalController = function SearchModalController(onApply, environments, allProjects, platforms, onReset, testsRunsService, windowWidthService, DEFAULT_SC, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, $mdDialog, UtilService) {
     'ngInject';
 
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
@@ -87,28 +87,15 @@ const SearchModalController = function SearchModalController(onApply, environmen
         })
         .then(function(result) {
             if (result) {
-                vm.selectedRange = result;
-                vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
-                vm.searchParams.selectedTemplateName = vm.selectedRange.selectedTemplateName;
-                if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
-                    if (vm.selectedRange.dateStart.getTime() !==
-                        vm.selectedRange.dateEnd.getTime()) {
-                        vm.searchParams.date = null;
-                        vm.searchParams.fromDate = vm.selectedRange.dateStart;
-                        vm.searchParams.toDate = vm.selectedRange.dateEnd;
-                    } else {
-                        vm.searchParams.fromDate = null;
-                        vm.searchParams.toDate = null;
-                        vm.searchParams.date = vm.selectedRange.dateStart;
-                    }
-                } else {
-                    vm.searchParams.fromDate = null;
-                    vm.searchParams.toDate = null;
-                    vm.searchParams.date = null;
-                    vm.searchParams.selectedTemplateName = null;
-                }
+                const res = UtilService.handleDateFilter(result);
+                const newSearchParams = {...vm.searchParams, ...res.searchParams};
 
-                vm.onChangeSearchCriteria();
+                vm.selectedRange = res.selectedRange;
+
+                if ((!res.searchParams.selectedTemplateName && vm.searchParams.selectedTemplateName) || (res.searchParams.selectedTemplateName && !angular.equals(vm.searchParams, newSearchParams))) {
+                    vm.searchParams = newSearchParams;
+                    onChangeSearchCriteria();
+                }
             }
         })
     }
