@@ -571,7 +571,9 @@ const ngModule = angular.module('app', [
 
             $scope.onChange = function (event) {
                 if(canRecognize) {
-                    ngModel.$setViewValue(blobToFormData());
+                    $timeout(function () {
+                        ngModel.$setViewValue(blobToFormData());
+                    }, 0);
                 }
             };
 
@@ -631,7 +633,7 @@ const ngModule = angular.module('app', [
             iconVisible: '=?',
             label: '@',
             rotateHorisontal: '=?',
-            src: '@', 
+            src: '@',
             squared: '=?',
             chip: '=?',
         },
@@ -1126,7 +1128,7 @@ const ngModule = angular.module('app', [
 
         if (loginRequired) {
             access = authGuard(trans)
-                
+
         } else if (onlyGuests) {
             access = guestGuard(trans);
         }
@@ -1184,7 +1186,7 @@ class mdDialogDelegate {
                 } else {
                     parent = angular.element(parent);
                 }
-                
+
                 // If parent querySelector/getter function fails, or it's just null, find a default.
                 // logic derived from angular js material library
                 if (!(parent || {}).length) {
