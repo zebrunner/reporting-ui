@@ -33,7 +33,8 @@ const ngModule = angular.module('app', [
 .config((TutorialsProvider) => {
     'ngInject';
 
-    TutorialsProvider.setUrl('https://api.myjson.com/bins/msaze');
+    // Set a link to the json with data
+    TutorialsProvider.setUrl('https://api.myjson.com/bins/f06vm');
 })
 
 .config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider, $mdIconProvider) {

@@ -4,7 +4,7 @@
             <div ng-repeat="slide in $ctrl.slides track by $index" class="zeb-tutorials-slider__item">
                 <youtube ng-if="slide.type === 'video'"
                     class="zeb-tutorials-slider__item-content _video"
-                    video-id="slide.id"></youtube>
+                    video-id="slide.youtubeId"></youtube>
                 <div ng-if="slide.type === 'image'"
                     class="zeb-tutorials-slider__item-content _image"
                     ng-style="{backgroundImage: 'url(' + slide.url + ')'}"></div>
