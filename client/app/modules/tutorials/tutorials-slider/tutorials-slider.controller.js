@@ -51,6 +51,7 @@ export default function TutorialsSliderController($scope, $window) {
     function changeSlide(index) {
         this.slideIndex = index;
         this.change({index: this.slideIndex});
+        // emit slide-changed event to children (we need it e.g. for stopping the video in a youtube frame)
         $scope.$broadcast('slide-changed', index);
     }
 }

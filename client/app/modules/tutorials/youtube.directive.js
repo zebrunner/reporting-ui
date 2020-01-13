@@ -1,6 +1,6 @@
 import YTPlayer from 'yt-player';
 
-export function YoutubeDirective() {
+export function youtubeDirective() {
     'ngInject';
     return {
         restrict: 'E',

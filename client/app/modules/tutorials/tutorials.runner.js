@@ -111,7 +111,7 @@ export function TutorialsRunner($q, $transitions, $state, Tutorials, $http) {
     }
 
     function fetchData() {
-        return $http.get('https://api.myjson.com/bins/msaze')
+        return $http.get(Tutorials.url)
             .then(response => response.data);
     }
 }

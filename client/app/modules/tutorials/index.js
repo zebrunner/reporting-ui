@@ -1,5 +1,5 @@
 import { tutorialsSliderComponent } from './tutorials-slider';
-import { YoutubeDirective } from './youtube.directive';
+import { youtubeDirective } from './youtube.directive';
 import { TutorialsProvider } from './tutorials.provider';
 import { TutorialsRunner } from './tutorials.runner';
 
@@ -14,6 +14,6 @@ export const TutorialsModule = angular.module('tutorials', [
     .run(TutorialsRunner)
     .provider('Tutorials', TutorialsProvider)
     .component('tutorialsSlider', tutorialsSliderComponent)
-    .directive('youtube', YoutubeDirective)
+    .directive('youtube', youtubeDirective)
 
     .name;
