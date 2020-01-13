@@ -8,10 +8,10 @@ export function TutorialsModalController($mdDialog, tutorials) {
             return tutorials[this.currentSlideIndex];
         },
 
-        close,
+        cancel,
     };
 
-    function close() {
-        $mdDialog.hide();
+    function cancel() {
+        $mdDialog.cancel();
     }
 }

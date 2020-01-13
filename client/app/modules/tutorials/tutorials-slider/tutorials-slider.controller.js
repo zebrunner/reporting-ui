@@ -1,4 +1,4 @@
-export default function TutorialsSliderController() {
+export default function TutorialsSliderController($scope, $window) {
     'ngInject';
 
     return {
@@ -16,7 +16,28 @@ export default function TutorialsSliderController() {
         changeSlide,
         prev,
         next,
+
+        $onInit() {
+            $window.addEventListener('keyup', arrowsHandler.bind(this));
+        },
+
+        $onDestroy() {
+            $window.removeEventListener('keyup', arrowsHandler);
+        },
     };
+
+    function arrowsHandler(event) {
+        // 37 - leftArrow
+        // 39 - rightArrow
+        const keyCode = event.which || event.keyCode;
+
+        $scope.$apply(() => {
+            switch (keyCode) {
+                case 37: return this.prev();
+                case 39: return this.next();
+            }
+        });
+    }
 
     function prev() {
         const newIndex = this.slideIndex - 1;
@@ -30,5 +51,6 @@ export default function TutorialsSliderController() {
     function changeSlide(index) {
         this.slideIndex = index;
         this.change({index: this.slideIndex});
+        $scope.$broadcast('slide-changed', index);
     }
 }

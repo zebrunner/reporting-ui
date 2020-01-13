@@ -1,11 +1,14 @@
 <div class="zeb-tutorials-slider">
     <div class="zeb-tutorials-slider__slides">
         <div class="zeb-tutorials-slider__item-wrapper" ng-style="{transform: $ctrl.transform}">
-            <youtube ng-repeat="slide in $ctrl.slides track by $index"
-                     class="zeb-tutorials-slider__item"
-                     video-id="slide.id"
-                     width="100%"
-                     height="auto"></youtube>
+            <div ng-repeat="slide in $ctrl.slides track by $index" class="zeb-tutorials-slider__item">
+                <youtube ng-if="slide.type === 'video'"
+                    class="zeb-tutorials-slider__item-content _video"
+                    video-id="slide.id"></youtube>
+                <div ng-if="slide.type === 'image'"
+                    class="zeb-tutorials-slider__item-content _image"
+                    ng-style="{backgroundImage: 'url(' + slide.url + ')'}"></div>
+            </div>
         </div>
 
         <button class="zeb-tutorials-slider__arrow _left" ng-click="$ctrl.prev()">
@@ -18,9 +21,9 @@
 
     <div class="zeb-tutorials-slider__dots">
         <div class="zeb-tutorials-slider__dots-item"
-             ng-repeat="slide in $ctrl.slides track by $index"
-             ng-class="{_active: $index === $ctrl.slideIndex}"
-             ng-click="$ctrl.changeSlide($index)">
+            ng-repeat="slide in $ctrl.slides track by $index"
+            ng-class="{_active: $index === $ctrl.slideIndex}"
+            ng-click="$ctrl.changeSlide($index)">
         </div>
     </div>
 

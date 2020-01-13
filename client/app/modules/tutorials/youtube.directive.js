@@ -1,26 +1,25 @@
+import YTPlayer from 'yt-player';
+
 export function YoutubeDirective() {
     'ngInject';
     return {
         restrict: 'E',
         scope: {
-            height: '@',
-            width: '@',
             videoId: '<',
-            autoplay: '<',
-            mute: '<',
-            showinfo: '@',
         },
-        template: '<iframe frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+        template: '<div></div>',
         link: ($scope, element) => {
+            let player;
             const deRegistrationCallback = $scope.$watch('videoId', () => {
                 if (!$scope.videoId) {
                     return;
                 }
-                const $element = angular.element(element).find('iframe');
-                const url = 'https://www.youtube.com/embed/' + $scope.videoId + `?rel=0&autoplay=${$scope.autoplay || 0}&mute=${$scope.mute || 0}&showinfo=${$scope.showinfo || 0}`;
-                $element.attr('src', url);
-                $element.attr('width', $scope.width);
-                $element.attr('height', $scope.height);
+                player = new YTPlayer(element.get(0));
+                player.load($scope.videoId, false);
+            });
+
+            $scope.$on('slide-changed', () => {
+                player && player.getState() !== 'paused' && player.pause();
             });
 
             $scope.$on('$destroy', function() {

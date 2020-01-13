@@ -1,3 +1,5 @@
+@import '../../../styles/global/var';
+
 .zeb-tutorials-container {
     position: fixed;
     bottom: -8px;
@@ -24,11 +26,11 @@
         margin-left: 12px;
         margin-right: -8px;
     }
-    &.entered {
+    &._entered {
         transform: translateY(0);
     }
     .zeb-tutorials-container._opened &,
-    .zeb-tutorials-container._hide:not(:hover) &{
+    .zeb-tutorials-container._visited:not(:hover) & {
         transform: translateY(60%);
     }
 }
@@ -36,5 +38,12 @@
 .zeb-tutorials-modal {
     &__content {
         padding: 24px 24px 16px;
+    }
+}
+
+// Hide on mobile
+@media (max-width: $screen-xs-max) {
+    .zeb-tutorials-container {
+        display: none;
     }
 }
