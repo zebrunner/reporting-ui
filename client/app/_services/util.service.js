@@ -26,7 +26,8 @@
             checkAndTransformRecipient,
             filterUsersForSend,
             isTouchDevice,
-        }
+            handleDateFilter,
+        };
 
         service.validations = {
             username: [
@@ -450,6 +451,50 @@
             var query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
 
             return mq(query);
+        }
+
+        function handleDateFilter(selectedRange) {
+            const searchParams = {};
+            let isEmptySelection = false;
+
+            if (selectedRange.dateStart && selectedRange.dateEnd) {
+                //TODO: probably should use UTC version of date methods (for example 'getUTCFullYear()')
+                const isSameYear = selectedRange.dateStart.getFullYear() === selectedRange.dateEnd.getFullYear();
+                const isSameMonth = selectedRange.dateStart.getMonth() === selectedRange.dateEnd.getMonth();
+                const isSameDay = selectedRange.dateStart.getTime() === selectedRange.dateEnd.getTime();
+                const isCurrentYear = selectedRange.dateEnd.getFullYear() === new Date().getFullYear();
+                const rangeDateStart = moment(selectedRange.dateStart).format('DD');
+                const rangeMonthStart = !isSameMonth ? ' ' + moment(selectedRange.dateStart).format('MMM') : '';
+                const rangeDateEnd = !isSameDay ? ' - ' + moment(selectedRange.dateEnd).format('DD') : '';
+                const rangeMonthEnd = ' ' + moment(selectedRange.dateEnd).format('MMM');
+                const rangeYearStart = !isSameYear ? ' ' + moment(selectedRange.dateStart).format('YYYY') : '';
+                const rangeYearEnd = !isSameYear || !isCurrentYear ? ' ' + moment(selectedRange.dateEnd).format('YYYY') : '';
+
+                selectedRange.selectedTemplateName = rangeDateStart + rangeMonthStart + rangeYearStart + rangeDateEnd + rangeMonthEnd + rangeYearEnd;
+                searchParams.selectedTemplateName = selectedRange.selectedTemplateName;
+
+                if (!isSameDay) {
+                    searchParams.date = null;
+                    searchParams.fromDate = selectedRange.dateStart;
+                    searchParams.toDate = selectedRange.dateEnd;
+                } else {
+                    searchParams.fromDate = null;
+                    searchParams.toDate = null;
+                    searchParams.date = selectedRange.dateStart;
+                }
+            } else {
+                searchParams.fromDate = null;
+                searchParams.toDate = null;
+                searchParams.date = null;
+                searchParams.selectedTemplateName = null;
+                isEmptySelection = true;
+            }
+
+            return {
+                searchParams,
+                selectedRange,
+                isEmptySelection,
+            }
         }
     }
 })();

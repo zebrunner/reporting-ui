@@ -153,6 +153,7 @@ const IssuesModalController = function IssuesModalController(
         vm.newIssue.status = null;
         vm.newIssue.assignee = null;
         vm.newIssue.reporter = null;
+        vm.newIssue.blocker = null;
         if (isInvalid) {
             return;
         }
@@ -206,8 +207,7 @@ const IssuesModalController = function IssuesModalController(
                 vm.newIssue.assignee = searchResultIssue.assigneeName || '';
                 vm.newIssue.reporter = searchResultIssue.reporterName || '';
                 vm.newIssue.status = searchResultIssue.status.toUpperCase();
-                vm.isNewIssue = !(vm.newIssue.jiraId ===
-                    vm.attachedIssue.jiraId);
+                vm.isNewIssue = vm.newIssue.jiraId !== vm.attachedIssue.jiraId;
                 vm.issueTabDisabled = false;
             }
         });

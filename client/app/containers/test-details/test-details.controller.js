@@ -716,28 +716,37 @@ const testDetailsController = function testDetailsController(
         test.artifactsToShow = test.artifacts.reduce(function (formatted, artifact) {
             const name = artifact.name.toLowerCase();
 
-            if (!name.includes('live') && !name.includes('video')) {
+            if (!name.includes('live') && !name.includes('video') && artifact.link) {
                 const links = artifact.link.split(' ');
-                const url = new URL(links[0]);
+                let url = null;
 
-                artifact.extension = url.pathname.split('/').pop().split('.').pop();
-                //if artifact is external link
-                if (window.location.host !== url.host) {
-                    artifact.isExternalLink = true;
-                } else if (!vm.testRun.hasArtifacts) {
-                    vm.testRun.hasArtifacts = true;
+                try {
+                    url = new URL(links[0]);
+                } catch (error) {
+                    artifact.hasBrokenLink = true;
+                    console.warn(`Artifact "${name}" has invalid link.`);
                 }
-                /* FOR_DEV_ONLY:START */
-                //previous condition won't work on localhost, so lets check if it is not a production and link's host starts on correct tenant name
-                if (!window.isProd && TENANT !== url.host.split('.')[0]) {
-                    artifact.isExternalLink = true;
-                } else {
-                    artifact.isExternalLink = false;
-                    if (!vm.testRun.hasArtifacts) {
+
+                if (url instanceof URL) {
+                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
+                    //if artifact is external link
+                    if (window.location.host !== url.host) {
+                        artifact.isExternalLink = true;
+                    } else if (!vm.testRun.hasArtifacts) {
                         vm.testRun.hasArtifacts = true;
                     }
+                    /* FOR_DEV_ONLY:START */
+                    //previous condition won't work on localhost, so lets check if it is not a production and link's host starts on correct tenant name
+                    if (!window.isProd && TENANT !== url.host.split('.')[0]) {
+                        artifact.isExternalLink = true;
+                    } else {
+                        artifact.isExternalLink = false;
+                        if (!vm.testRun.hasArtifacts) {
+                            vm.testRun.hasArtifacts = true;
+                        }
+                    }
+                    /* FOR_DEV_ONLY:END */
                 }
-                /* FOR_DEV_ONLY:END */
                 formatted.push(artifact);
             }
 

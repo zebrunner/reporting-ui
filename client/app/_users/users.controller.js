@@ -9,7 +9,6 @@ const UsersController = function UserViewController(
     $location,
     $state,
     $mdDialog,
-    $mdDateRangePicker,
     UserService,
     messageService,
     GroupService,
@@ -51,7 +50,6 @@ const UsersController = function UserViewController(
                 showTemplate: null
             }
         },
-        pick: pick,
         get currentUser() { return UserService.currentUser; },
     };
 
@@ -216,20 +214,6 @@ const UsersController = function UserViewController(
                 $scope.isDateBetween = false;
                 break;
         }
-    };
-
-    function pick($event, showTemplate) {
-        vm.searchValue.selectedRange.showTemplate = showTemplate;
-        $mdDateRangePicker.show({
-            targetEvent: $event,
-            model: vm.searchValue.selectedRange
-        }).then(function (result) {
-            if (result) {
-                $scope.searchAct = true;
-                vm.searchValue.selectedRange = result;
-            }
-
-        })
     };
 
     function showChangePasswordDialog($event, user) {

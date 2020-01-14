@@ -2,7 +2,7 @@
 import SearchModalController from './modal/search-modal.controller';
 import modalTemplate from './modal/search-modal.html';
 
-const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $scope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService, $mdDialog) {
+const TestsRunsSearchController = function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $scope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, messageService, $mdDialog, UtilService) {
     'ngInject';
 
     const mobileWidth = 600;
@@ -58,7 +58,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         $mdDialog.cancel();
     };
 
-    
+
     function showSearchDialog(event) {
         $mdDialog.show({
             controller: SearchModalController,
@@ -69,7 +69,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
             controllerAs: '$ctrl',
             bindToController: true,
             onComplete: () => {
-                $(window).on('resize.searchDialog',() => { 
+                $(window).on('resize.searchDialog',() => {
                     if ($(window).width() >= mobileWidth) {
                         vm.closeModal();
                     }
@@ -92,7 +92,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         if (vm.isSearchActive()) {
             let fromDate = testsRunsService.getSearchParam('fromDate');
             let toDate = testsRunsService.getSearchParam('toDate');
-            const date = testsRunsService.getSearchParam('date'); 
+            const date = testsRunsService.getSearchParam('date');
             const selectedTemplateName = testsRunsService.getSearchParam('selectedTemplateName');
 
             date && (fromDate = toDate = date);
@@ -235,28 +235,15 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
         })
         .then(function(result) {
             if (result) {
-                vm.selectedRange = result;
-                vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
-                vm.searchParams.selectedTemplateName = vm.selectedRange.selectedTemplateName;
-                if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
-                    if (vm.selectedRange.dateStart.getTime() !==
-                        vm.selectedRange.dateEnd.getTime()) {
-                        vm.searchParams.date = null;
-                        vm.searchParams.fromDate = vm.selectedRange.dateStart;
-                        vm.searchParams.toDate = vm.selectedRange.dateEnd;
-                    } else {
-                        vm.searchParams.fromDate = null;
-                        vm.searchParams.toDate = null;
-                        vm.searchParams.date = vm.selectedRange.dateStart;
-                    }
-                } else {
-                    vm.searchParams.fromDate = null;
-                    vm.searchParams.toDate = null;
-                    vm.searchParams.date = null;
-                    vm.searchParams.selectedTemplateName = null;
-                }
+                const res = UtilService.handleDateFilter(result);
+                const newSearchParams = {...vm.searchParams, ...res.searchParams};
 
-                onChangeSearchCriteria();
+                vm.selectedRange = res.selectedRange;
+
+                if ((!res.searchParams.selectedTemplateName && vm.searchParams.selectedTemplateName) || (res.searchParams.selectedTemplateName && !angular.equals(vm.searchParams, newSearchParams))) {
+                    vm.searchParams = newSearchParams;
+                    onChangeSearchCriteria();
+                }
             }
         })
     }

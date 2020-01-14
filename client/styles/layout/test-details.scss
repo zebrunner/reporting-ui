@@ -6,7 +6,7 @@
         top: $header_height;
         z-index: 4;
         box-shadow: 0 4px 8px 0 rgba(4, 0, 0, 0.2);
-        @media (max-width: $breakpoint-mobile - 1) { 
+        @media (max-width: $breakpoint-mobile - 1) {
             box-shadow: none;
             margin-bottom: 2px;
         }
@@ -112,7 +112,7 @@
                             &.SKIPPED {
                                 background-color: $yellow-light-new;
                                 border: 2px solid $yellow-light-new;
-                            } 
+                            }
                             &.PASSED {
                                 background-color: rgba($green-light-new, .5);
                                 border: 2px solid rgba($green-light-new, .1);
@@ -250,21 +250,29 @@
                         display: flex;
                         flex-wrap: wrap;
                         font-size: 12px;
+
                         @media(max-width: $breakpoint-mobile) {
                             margin-top: 5px;
                         }
-                        .material-icons {
-                            font-size: 12px;
-                            margin-right: 3px;
-                        }
+                        .material-icons,
                         .fa {
                             margin-right: 3px;
+                            font-size: 12px;
+                            display: inline-block;
+                            width: 12px;
+                            min-width: 12px;
+                            height: 12px;
+                            min-height: 12px;
+                            text-align: center;
                         }
                         .light_text {
                             display: flex;
                             align-items: center;
-                            margin-right: 4px;
                         }
+                    }
+                    &__item {
+                        margin-right: 10px;
+                        line-height: 16px;
                     }
                     & .result_error {
                         word-wrap: break-word;
@@ -350,10 +358,13 @@
                         md-icon {
                             min-height: 12px;
                             height: 12px;
-                        }
-                        p {
                             font-size: 12px;
-                            margin: 0 15px 0 5px;
+                            min-width: 12px;
+                            width: 12px;
+                        }
+                        span {
+                            font-size: 12px;
+                            margin: 0 15px 0 3px;
                             max-width: 100px;
                             overflow: hidden;
                             text-overflow: ellipsis;
@@ -405,7 +416,7 @@
             th {
                 font-size: 14px;
                 font-weight: 700;
-                vertical-align: middle; 
+                vertical-align: middle;
             }
             i {
                 font-size: 14px;
@@ -428,7 +439,7 @@
                 }
             }
         }
-        
+
     }
     md-table-pagination {
         border: 0;
@@ -518,7 +529,7 @@
                 font-weight: normal;
                 text-transform: none;
             }
-        }   
+        }
     }
     @media (max-width: $breakpoint-mobile - 1) {
         .page {

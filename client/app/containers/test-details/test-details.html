@@ -10,8 +10,8 @@
         </zf-sub-header-title>
         <zf-sub-header-button>
             <button has-any-permission="['MODIFY_LAUNCHERS', 'VIEW_LAUNCHERS']"
-                    class="fixed-page-header__btn _launcher zf-primary-button"
-                    ng-click="$ctrl.showCiHelperDialog($event);">
+                class="fixed-page-header__btn _launcher zf-primary-button"
+                ng-click="$ctrl.showCiHelperDialog($event);">
                 <md-icon class="material-icons">play_arrow</md-icon>
                 <span>Test launcher</span>
             </button>
@@ -82,7 +82,7 @@
         <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile && !$ctrl.testsLoading && !$ctrl.scrollTicking" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible" ng-click="$ctrl.showFilterDialog($event)">
-                        <div class="search-fab" ng-class="{'_list': !$ctrl.isStausFilteringActive, '_checked-list': $ctrl.isStausFilteringActive}" aria-hidden="true"></div>
+                    <div class="search-fab" ng-class="{'_list': !$ctrl.isStausFilteringActive, '_checked-list': $ctrl.isStausFilteringActive}" aria-hidden="true"></div>
                 </md-button>
             </md-fab-trigger>
         </md-fab-speed-dial>
@@ -137,17 +137,26 @@
                                             <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{::test.name}}
                                                 <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></p>
                                             <div class="test-info__wrapper">
-                                                <span data-ng-if="test.finishTime && (test.finishTime - test.startTime)/1000 > 0 && test.status !== 'QUEUED'" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                <span ng-if="test.finishTime && (test.finishTime - test.startTime) / 1000 > 0 && test.status !== 'QUEUED'"
+                                                    ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'"
+                                                    class="test-info__item">
                                                     <i class="material-icons">schedule</i>
                                                     <span>{{::(test.finishTime - test.startTime)/1000 | number:0}} seconds</span>
                                                 </span>
-                                                <span name="testOwner" data-ng-if="test.owner" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                <span name="testOwner"
+                                                    ng-if="test.owner"
+                                                    class="test-info__item"
+                                                    ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
                                                     <i class="fa fa-user" aria-hidden="true"></i>
-                                                    {{::test.owner}}
+                                                    <span>{{::test.owner}}</span>
                                                 </span>
-                                                <span name="device" data-ng-if="test.testConfig.device" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                <span name="device"
+                                                    ng-if="test.testConfig.device"
+                                                    class="test-info__item"
+                                                    ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
                                                     <i class="fa fa-mobile" aria-hidden="true"></i>
-                                                    {{::test.testConfig.device}}</span>
+                                                    <span>{{::test.testConfig.device}}</span>
+                                                </span>
                                             </div>
                                             <div ng-if="test.tags && test.tags.length" class="test-info__tags">
                                                 <span class="test-info__tags-tag" ng-repeat="tag in test.tags">
@@ -155,13 +164,13 @@
                                                     (tag.name === 'QTEST_TESTCASE_UUID' && !$ctrl.qTest['QTEST_URL']) ||
                                                     (tag.name !== 'TESTRAIL_TESTCASE_UUID' && tag.name !== 'QTEST_TESTCASE_UUID')">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</span>
                                                     <a name="testRailLink" class="test-info__tags-tag-inner _link"
-                                                    href="{{::$ctrl.getTestURL('TESTRAIL_URL', tag.value)}}"
-                                                    target="_blank"
-                                                    data-ng-if="tag.name === 'TESTRAIL_TESTCASE_UUID' && $ctrl.testRail['TESTRAIL_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
+                                                        href="{{::$ctrl.getTestURL('TESTRAIL_URL', tag.value)}}"
+                                                        target="_blank"
+                                                        data-ng-if="tag.name === 'TESTRAIL_TESTCASE_UUID' && $ctrl.testRail['TESTRAIL_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
                                                     <a name="qTestLink" class="test-info__tags-tag-inner _link"
-                                                    href="{{::$ctrl.getTestURL('QTEST_URL', tag.value)}}"
-                                                    target="_blank"
-                                                    data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
+                                                        href="{{::$ctrl.getTestURL('QTEST_URL', tag.value)}}"
+                                                        target="_blank"
+                                                        data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
                                                 </span>
                                             </div>
                                             <div class="result_error {{test.status}} {{::main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
@@ -172,26 +181,34 @@
                                             <div class="test-settings__wrapper" ng-if="test.artifactsToShow.length">
                                                 <div ng-repeat="artifact in test.artifactsToShow">
                                                     <a name="testArtifactsGallery"
-                                                       aria-label="Test artifacts"
-                                                       class="test-settings__attachment"
-                                                       ng-click="$ctrl.openImagesViewerModal($event, artifact, test)"
-                                                       href=""
-                                                       ng-if="::('png' === artifact.extension)">
+                                                        aria-label="Test artifacts"
+                                                        class="test-settings__attachment"
+                                                        ng-click="$ctrl.openImagesViewerModal($event, artifact, test)"
+                                                        href=""
+                                                        ng-if="::('png' === artifact.extension)">
                                                         <md-icon md-svg-icon="artifacts:image" class="material-icons"></md-icon>
-                                                        <p>{{::artifact.name}}</p>
+                                                        <span>{{::artifact.name}}</span>
                                                         <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
                                                     </a>
                                                     <a name="testArtifacts"
-                                                       href="{{::artifact.link}}"
-                                                       target="{{::(artifact.isExternalLink ? '_blank' : '_self')}}"
-                                                       aria-label="Test artifacts"
-                                                       class="test-settings__attachment"
-                                                       ng-if="::('png' !== artifact.extension)">
+                                                        href="{{::artifact.link}}"
+                                                        target="{{::(artifact.isExternalLink ? '_blank' : '_self')}}"
+                                                        aria-label="Test artifacts"
+                                                        class="test-settings__attachment"
+                                                        ng-if="::('png' !== artifact.extension && !artifact.hasBrokenLink)">
                                                         <md-icon md-svg-icon="{{::$ctrl.getArtifactIconId(artifact.extension)}}" ng-if="::artifact.extension" class="material-icons"></md-icon>
-                                                        <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="::material-icons">link</md-icon>
-                                                        <p>{{::artifact.name}}</p>
+                                                        <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
+                                                        <span>{{::artifact.name}}</span>
                                                         <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
                                                     </a>
+                                                    <span name="testArtifactsBroken"
+                                                        aria-label="Test artifacts"
+                                                        class="test-settings__attachment _broken"
+                                                        ng-if="::artifact.hasBrokenLink">
+                                                        <md-icon md-font-library="material-icons" class="material-icons">broken_image</md-icon>
+                                                        <span>{{::artifact.name}}</span>
+                                                        <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
+                                                    </span>
                                                 </div>
                                             </div>
                                             <!-- TODO: clarify with designer -->
@@ -246,8 +263,8 @@
                                     <tr name="testLoading" md-row="md-row">
                                         <td md-cell="md-cell" colspan="4" class="test-loading" data-ng-show="$ctrl.testsLoading">
                                             <span>
-                                            <md-progress-circular md-mode="indeterminate" md-diameter="20px" class="tests-loading-spinner"></md-progress-circular>
-                                            Tests are loading...
+                                                <md-progress-circular md-mode="indeterminate" md-diameter="20px" class="tests-loading-spinner"></md-progress-circular>
+                                                Tests are loading...
                                             </span>
                                         </td>
                                     </tr>

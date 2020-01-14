@@ -143,8 +143,6 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         const switchFolderElement = element ? element : angular.element(e.target);
         const folderElement = angular.element(switchFolderElement.closest('.folder-container'));
 
-        $scope.needServer = false;
-        $scope.currentServerId = null;
         if (folderElement.hasClass(expandFolderClassName) && ! forceExpand) {
             folderElement.addClass(expandFolderFinishClassName);
             folderElement.removeClass(expandFolderClassName);
