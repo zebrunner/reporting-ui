@@ -63,6 +63,7 @@ export function TutorialsProvider() {
                     },
                     controllerAs: '$ctrl',
                 };
+
                 return $mdCompiler.compile(options).then(compiledData => {
                     $element = compiledData.link(options.scope);
                     $container.append($element);
@@ -89,6 +90,7 @@ export function TutorialsProvider() {
 
                 function emit(name, data) {
                     const currentEventCallbacks = callbacks[name] || [];
+
                     currentEventCallbacks.forEach(cb => typeof cb === 'function' && cb(data));
                 }
 

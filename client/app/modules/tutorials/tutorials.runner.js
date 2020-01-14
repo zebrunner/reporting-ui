@@ -90,17 +90,20 @@ export function TutorialsRunner($q, $transitions, $state, Tutorials, $http) {
     function getFullStorageState() {
         const key = Tutorials.getStorageKey();
         const stateString = localStorage.getItem(key) || '{}';
+
         return JSON.parse(stateString);
     }
 
     function getStorageState(routerState) {
         const state = getFullStorageState();
+
         return state && state[routerState] || {};
     }
 
     function patchStorageState(routerState, newStorageState) {
         const key = Tutorials.getStorageKey();
         const state = getFullStorageState();
+
         localStorage.setItem(key, JSON.stringify({
             ...state,
             [routerState]: {
