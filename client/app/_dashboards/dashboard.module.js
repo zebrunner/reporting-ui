@@ -53,6 +53,7 @@ function echartDecorator(echart) {
                 }
             }
         }
+        
         return labels;
     }
 }
