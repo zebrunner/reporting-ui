@@ -33,11 +33,11 @@ function echartDecorator(echart) {
                 let absoluteValue = Math.abs(tick);
 
                 if (absoluteValue >= 1000000000) {
-                    return `${tick / 1000000000}B`;
+                    return `${(tick / 1000000000).toFixed(2)}B`;
                 } else if (absoluteValue >= 1000000) {
-                    return `${tick / 1000000}M`;
+                    return `${(tick / 1000000).toFixed(2)}M`;
                 } else if (absoluteValue >= 1000) {
-                    return `${tick / 1000}K`;
+                    return `${(tick / 1000).toFixed(2)}K`;
                 } else {
                     return `${tick}`;
                 };
@@ -53,7 +53,7 @@ function echartDecorator(echart) {
                 }
             }
         }
-        
+
         return labels;
     }
 }
