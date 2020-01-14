@@ -28,27 +28,29 @@ function echartDecorator(echart) {
         let labels = overridedFunction.call(this);
         let reg = /^-?[\d.|,\d]*?$/;
 
-        function transform(tick) {
-            let absoluteValue = Math.abs(tick);
+        if (this.type === 'value') {
+            function transform(tick) {
+                let absoluteValue = Math.abs(tick);
 
-            if (absoluteValue >= 1000000000) {
-                return `${tick / 1000000000}B`;
-            } else if (absoluteValue >= 1000000) {
-                return `${tick / 1000000}M`;
-            } else if (absoluteValue >= 1000) {
-                return `${tick / 1000}K`;
-            } else {
-                return `${tick}`;
+                if (absoluteValue >= 1000000000) {
+                    return `${(tick / 1000000000).toFixed(2)}B`;
+                } else if (absoluteValue >= 1000000) {
+                    return `${(tick / 1000000).toFixed(2)}M`;
+                } else if (absoluteValue >= 1000) {
+                    return `${(tick / 1000).toFixed(2)}K`;
+                } else {
+                    return `${tick}`;
+                };
             };
-        };
 
-        for (let value of labels) {
-            if (typeof value.formattedLabel === 'number') {
-                value.formattedLabel = transform(value.formattedLabel);
-            } else if (reg.test(value.formattedLabel)) {
-                let correctValue = parseFloat(value.formattedLabel.replace(',', ''));
+            for (let value of labels) {
+                if (typeof value.formattedLabel === 'number') {
+                    value.formattedLabel = transform(value.formattedLabel);
+                } else if (reg.test(value.formattedLabel)) {
+                    let correctValue = parseFloat(value.formattedLabel.replace(',', ''));
 
-                value.formattedLabel = transform(correctValue);
+                    value.formattedLabel = transform(correctValue);
+                }
             }
         }
 
