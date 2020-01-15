@@ -132,7 +132,7 @@ export function TutorialsProvider() {
                 }
 
                 function setVisited(event) {
-                    event.stopPropagation();
+                    event && event.stopPropagation();
                     $container.addClass(classes.visited);
                     emit('visit');
                 }

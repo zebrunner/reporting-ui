@@ -36,8 +36,7 @@ export function TutorialsRunner($q, $transitions, $state, Tutorials, $http) {
                     if (!storageState.visited) {
                         containerRef.on('visit', () =>
                             patchStorageState(newRouteTutorials.route, { visited: true }));
-                        containerRef.on('open', () =>
-                            patchStorageState(newRouteTutorials.route, { visited: true }));
+                        containerRef.on('open', () => containerRef.setVisited());
                     }
                     return containerRef;
                 });
