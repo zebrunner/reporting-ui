@@ -86,7 +86,8 @@
         "n3-charts": "^2.0.28",
         "ng-img-crop": "^0.2.0",
         "oclazyload": "^1.1.0",
-        "textangular": "^1.5.16"
+        "textangular": "^1.5.16",
+        "yt-player": "^3.4.3"
     },
     "resolutions": {
         "svgo": "1.3.0"

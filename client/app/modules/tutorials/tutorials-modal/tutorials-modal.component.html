@@ -1,0 +1,17 @@
+<md-dialog class="modal-default zeb-tutorials-modal" flex="50" aria-label="Tutorials" zafira-background-theme="modal">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 id="modalTitle">
+                Tutorials
+            </h2>
+            <span flex></span>
+            <md-button id="close" class="md-icon-button _default-md-style" data-ng-click="$ctrl.cancel()">
+                <md-icon aria-label="Close dialog">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="zeb-tutorials-modal__content">
+        <tutorials-slider slides="$ctrl.tutorials" slide-index="$ctrl.currentSlideIndex"></tutorials-slider>
+    </md-dialog-content>
+</md-dialog>
