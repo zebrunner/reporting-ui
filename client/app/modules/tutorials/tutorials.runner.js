@@ -48,7 +48,7 @@ export function TutorialsRunner($q, $transitions, $state, Tutorials, $http) {
 
     function removeTutorialContainer(containerRef) {
         if (containerRef) {
-            containerRef.then(({ remove }) => remove());
+            return containerRef.then(({ remove }) => remove());
         }
         return $q.resolve(null);
     }
