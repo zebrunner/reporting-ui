@@ -39,11 +39,11 @@ function echartDecorator(echart) {
                 let absoluteValue = Math.abs(tick);
 
                 if (absoluteValue >= 1000000000) {
-                    return precisionRound(tick / 1000000000, "B");
+                    return precisionRound(tick / 1000000000, 'B');
                 } else if (absoluteValue >= 1000000) {
-                    return precisionRound(tick / 1000000, "M");
+                    return precisionRound(tick / 1000000, 'M');
                 } else if (absoluteValue >= 1000) {
-                    return precisionRound(tick / 1000, "K");
+                    return precisionRound(tick / 1000, 'K');
                 } else {
                     return `${tick}`;
                 };
