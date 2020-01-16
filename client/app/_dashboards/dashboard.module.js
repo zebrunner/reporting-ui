@@ -29,15 +29,21 @@ function echartDecorator(echart) {
         let reg = /^-?[\d.|,\d]*?$/;
 
         if (this.type === 'value') {
+            function precisionRound(value, suffix) {
+                const factor = Math.pow(10, 2);
+                const number = Math.round(value * factor) / factor;
+                return `${number}${suffix}`;
+            }
+
             function transform(tick) {
                 let absoluteValue = Math.abs(tick);
 
                 if (absoluteValue >= 1000000000) {
-                    return `${+(tick / 1000000000).toFixed(2)} B`;
+                    return precisionRound(tick / 1000000000, "B");
                 } else if (absoluteValue >= 1000000) {
-                    return `${+(tick / 1000000).toFixed(2)} M`;
+                    return precisionRound(tick / 1000000, "M");
                 } else if (absoluteValue >= 1000) {
-                    return `${+(tick / 1000).toFixed(2)} K`;
+                    return precisionRound(tick / 1000, "K");
                 } else {
                     return `${tick}`;
                 };
@@ -48,7 +54,6 @@ function echartDecorator(echart) {
                     value.formattedLabel = transform(value.formattedLabel);
                 } else if (reg.test(value.formattedLabel)) {
                     let correctValue = parseFloat(value.formattedLabel.replace(/,/g, ''));
-
                     value.formattedLabel = transform(correctValue);
                 }
             }
