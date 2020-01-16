@@ -49,13 +49,6 @@
                 background-position: center;
             }
         }
-        iframe {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
         &-wrapper {
             width: 100%;
             display: flex;
@@ -113,6 +106,6 @@
         font-size: 14px;
         line-height: 24px;
         color: #011627;
-        margin: 0;
+        margin: 0 0 12px;
     }
 }

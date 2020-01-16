@@ -1,4 +1,4 @@
-import YTPlayer from 'yt-player';
+import YouTubePlayer from 'youtube-player';
 
 export function youtubeDirective() {
     'ngInject';
@@ -14,12 +14,13 @@ export function youtubeDirective() {
                 if (!$scope.videoId) {
                     return;
                 }
-                player = new YTPlayer(element.get(0));
-                player.load($scope.videoId, false);
+                player = new YouTubePlayer(element.get(0), {
+                    videoId: $scope.videoId
+                });
             });
 
             $scope.$on('slide-changed', () => {
-                player && player.getState() !== 'paused' && player.pause();
+                player && player.pauseVideo();
             });
 
             $scope.$on('$destroy', function() {
