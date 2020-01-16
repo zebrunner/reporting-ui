@@ -7,6 +7,7 @@ const classes = {
 
     visited: '_visited',
     entered: '_entered',
+    hidden: '_hidden',
 };
 
 const storageKey = 'tutorials';
@@ -50,14 +51,14 @@ export function TutorialsProvider() {
                         <div class="${classes.item}">
                             <div class="${classes.content}" ng-click="$ctrl.open()">
                                 <span>Tutorials</span>
-                                <md-icon ng-click="$ctrl.setVisited($event)" ng-bind="'close'"></md-icon>
+                                <md-icon ng-click="$ctrl.close($event)" ng-bind="'close'"></md-icon>
                             </div>
                         </div>
                     `,
                     controller() {
                         'ngInject';
                         return {
-                            setVisited,
+                            close,
                             open,
                         };
                     },
@@ -131,10 +132,21 @@ export function TutorialsProvider() {
                         .then(() => $container.remove());
                 }
 
-                function setVisited(event) {
-                    event && event.stopPropagation();
+                function setVisited() {
                     $container.addClass(classes.visited);
                     emit('visit');
+                }
+
+
+                function close(event) {
+                    event.stopPropagation();
+                    $container.addClass(classes.hidden);
+                    setVisited();
+
+                    $container.on('mouseleave.tutorials-closed', () => {
+                        $container.removeClass(classes.hidden);
+                        $container.off('mouseleave.tutorials-closed');
+                    });
                 }
             }
         },

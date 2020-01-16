@@ -17,7 +17,7 @@
     padding: 8px 12px 16px;
     border-radius: 8px;
     color: #fff;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     transform: translateY(100%);
     md-icon {
@@ -30,6 +30,7 @@
         transform: translateY(0);
     }
     .zeb-tutorials-container._opened &,
+    .zeb-tutorials-container._hidden &,
     .zeb-tutorials-container._visited:not(:hover) & {
         transform: translateY(60%);
     }
