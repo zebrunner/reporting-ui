@@ -1218,7 +1218,14 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     function resetPlatformModel(platform) {
         vm.platformModel = {};
 
-        if (platform) { vm.platformModel[vm.platformsConfig.rootKey] = platform; }
+        if (platform) {
+            vm.platformModel[vm.platformsConfig.rootKey] = platform;
+
+            // if launcher has appropriate param we need to use this value
+            if ($scope.jsonModel && $scope.jsonModel[vm.platformsConfig.rootKey]) {
+                vm.platformModel[vm.platformsConfig.rootKey].value = getControlDefaultValue(vm.platformsConfig.rootKey);
+            }
+        }
     }
 
     function getBrowsersConfig(url) {
