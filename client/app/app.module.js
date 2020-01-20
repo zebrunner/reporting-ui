@@ -34,7 +34,7 @@ const ngModule = angular.module('app', [
     'ngInject';
 
     // Set a link to the json with data
-    TutorialsProvider.setUrl(`https://zebrunner.s3-us-west-1.amazonaws.com/common/tutorials/contents.json?version=${Date.now()}`);
+    TutorialsProvider.setUrl(`https://zebrunner.s3-us-west-1.amazonaws.com/common/tutorials/contents.json?timestamp=${Date.now()}`);
 })
 
 .config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider, $mdIconProvider) {
