@@ -1229,7 +1229,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function getBrowsersConfig(url) {
-        return $http.get(url);
+        return $http.get(`${url}?timestamp=${Date.now()}`);
     }
 
     function onProviderSelect(selectedProvider) {
@@ -1285,7 +1285,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function getProvidersConfig() {
-        return $http.get(providersConfigURL)
+        return $http.get(`${providersConfigURL}?timestamp=${Date.now()}`)
             .then(response => {
                 const url = new URL(providersConfigURL);
                 const path = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
