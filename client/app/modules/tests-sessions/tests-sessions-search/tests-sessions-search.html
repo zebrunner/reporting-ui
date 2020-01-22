@@ -1,0 +1,56 @@
+<div id="sessions-search"
+    class="md-row tests-sessions-search"
+    layout-gt-sm="row"
+    layout="column"
+    ng-class="{ '_mobile': $ctrl.isMobile }">
+    <div class="tests-sessions-search__top-section" flex="auto" layout="row" ng-if="!$ctrl.isMobile">
+        <ng-transclude ng-if="!$ctrl.isMobile"></ng-transclude>
+        <md-input-container class="tests-sessions-search__input-label _with-icon _without-animation">
+            <label class="placeholder-label">Search items</label>
+            <input ng-model-options="{debounce: 700}"
+                type="text"
+                ng-model="$ctrl.searchParams.query"
+                ng-change="$ctrl.onChangeSearchCriteria()"
+                aria-label="Search items"
+                aria-describedby="basic-addon2">
+            <i class="material-icons">
+                search
+            </i>
+        </md-input-container>
+    </div>
+
+    <div class="tests-sessions-search__bottom-section" ng-if="!$ctrl.isMobile"
+        layout="row"
+        layout-xs="column">
+        <div layout="row"
+            layout-wrap
+            flex="grow"
+            class="tests-sessions-search__helpers search-fields _main">
+            <md-input-container class="select-wrapper no-padding without-animation" flex="grow" ng-if="$ctrl.statuses.length">
+                <md-select id="searchStatus" ng-model="$ctrl.searchParams.status" class="form-fields__select" ng-change="$ctrl.onChangeSearchCriteria()" name="status" placeholder="Status">
+                    <md-option value="">None</md-option>
+                    <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="select-wrapper selectPlatform no-padding without-animation" flex="grow" ng-if="$ctrl.platforms.length">
+                <md-select id="searchPlatform" ng-model="$ctrl.searchParams.platform" class="form-fields__select" name="platform" placeholder="Platform" ng-change="$ctrl.onChangeSearchCriteria()">
+                    <md-option value="">None</md-option>
+                    <md-option ng-repeat="platform in $ctrl.platforms" ng-value="platform">{{platform}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="date-picker-container select-wrapper no-padding form-fields__input" flex="grow" flex-xs="100">
+                <span>{{$ctrl.selectedRange.selectedTemplateName || 'Date'}}</span>
+                <i class="material-icons">date_range</i>
+                <md-button id="searchCalendar" ng-click="$ctrl.openDatePicker($event, true)"></md-button>
+            </md-input-container>
+            <md-button ng-if="$ctrl.isSearchActive()" class="tests-sessions-search__btn md-raised pull-right" type="button" ng-click="$ctrl.onReset();"><span>RESET</span></md-button>
+        </div>
+    </div>
+    <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile && !$ctrl.scrollTicking" md-direction="up" class="md-scale md-fab-bottom-right">
+        <md-fab-trigger>
+            <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" ng-click="$ctrl.showSearchDialog($event)" md-visible="tooltipVisible">
+                <div class="search-fab" ng-class="{' _list': !$ctrl.isSearchActive(), '_checked-list': $ctrl.isSearchActive()}" aria-hidden="true"></div>
+            </md-button>
+        </md-fab-trigger>
+    </md-fab-speed-dial>
+</div>

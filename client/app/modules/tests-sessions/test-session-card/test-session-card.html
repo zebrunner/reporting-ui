@@ -1,0 +1,51 @@
+<div class="test-session-card">
+    <div ng-attr-id="testSession_{{$ctrl.testSession.id}}"
+        ng-class="{'background-gray': $ctrl.testSession.selected}"
+        class="test-session-card__wrapper {{$ctrl.testSession.status}}">
+        <div class="test-session-card__wrapper-left">
+            <div class="test-session-card__cell _info">
+                <div class="test-session-card__title-wrapper">
+                    <div class="test-session-card__title">{{$ctrl.testSession.testName}}</div>
+                </div>
+                <div class="test-session-card__job">
+                    <div class="test-session-card__job-name">
+                        <a ng-if="$ctrl.testSession.jenkinsURL && $ctrl.testSession.buildNumber !== 'local'" href="{{$ctrl.testSession.jenkinsURL}}" target="_blank">{{$ctrl.testSession.buildNumber}}</a>
+                        <span ng-if="!$ctrl.testSession.jenkinsURL || $ctrl.testSession.buildNumber === 'local'">{{$ctrl.testSession.buildNumber}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="test-session-card__clickable" ng-class="{ '_highlighting': $ctrl.testSession.highlighting }" ng-if="$ctrl.testSession.status !== 'LAUNCHING'" ng-click="$ctrl.goToTestSesstion()"></div>
+        </div>
+        <div class="test-session-card__wrapper-right">
+            <div name="testRunEnv" class="test-session-card__cell _env" ng-hide="$ctrl.isMobile && !$ctrl.testSession.env">
+                <span class="label label-default" ng-if="$ctrl.testSession.env">{{$ctrl.testSession.env}}</span>
+            </div>
+            <div name="testRunPlatform" class="test-session-card__cell _platform">
+                <span data-ng-if="$ctrl.testSession.browserName !== ''" class="platform-icon {{$ctrl.testSession.browserName | lowercase}}"></span>
+                <span data-ng-if="$ctrl.testSession.browserName === ''" class="platform-icon unknown"></span>
+                <span data-ng-if="$ctrl.testSession.version" class="label label-default">{{$ctrl.testSession.version}}</span>
+            </div>
+            <div name="testRunStarted" class="test-session-card__cell _date">
+                <div class="test-session-card__time _time">
+                    <span class="test-session-card__time-text" ng-if="!$ctrl.isMobile">{{ $ctrl.testSession.status === 'QUEUED' ? 'Queued' : $ctrl.testSession.status === 'ABORTED' ? 'Aborted' : 'Started' }}</span>
+                    <i ng-if="$ctrl.isMobile"
+                        class="test-run-card__time-icon fa"
+                        ng-class="{
+                            'fa-play-circle': $ctrl.testRun.status !== 'ABORTED' && $ctrl.testRun.status !== 'QUEUED',
+                            'fa-pause-circle': $ctrl.testRun.status === 'QUEUED',
+                            'fa-ban': $ctrl.testRun.status === 'ABORTED',
+                        }"
+                        aria-hidden="true"></i>
+                    <time class="test-session-card__time-text" am-time-ago="$ctrl.testSession.startedAt" title="{{ main.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
+                </div>
+                <div data-ng-if="$ctrl.testSession.duration" class="test-session-card__time _duration">
+                    <i class="test-run-card__time-icon fa fa-clock-o" aria-hidden="true"></i>
+                    <timer class="test-session-card__time-text" max-time-unit="'minute'" autostart="false" countdown="$ctrl.testSession.duration">
+                        <span ng-show="minutes">{{minutes}} minute{{minutesS}}</span>
+                        <span ng-show="!minutes">{{seconds}} second{{secondsS}}</span>
+                    </timer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

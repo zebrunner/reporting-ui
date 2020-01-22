@@ -28,7 +28,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
-    
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -39,7 +39,7 @@
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     100% {
         opacity: 0;
         transform: translateY(-20px);
@@ -134,13 +134,13 @@
     animation: 0.35s slideOutUp ease-in-out;
 }
 
-// 
+//
 @keyframes slideInRight {
     0% {
         opacity: 0;
         transform: translateX(25px);
     }
-    
+
     100% {
         opacity: 1;
         transform: translateX(0);
@@ -151,7 +151,7 @@
 }
 
 
-// 
+//
 .animated {
     animation-duration: .35s;
     animation-fill-mode: both;
@@ -266,3 +266,8 @@
     transform: scale(1);
 }
 
+@keyframes change-color {
+    0% { background-color: inherit; }
+    25% { background-color: rgba(0,0,0,.05); }
+    100% { background-color: inherit; }
+}

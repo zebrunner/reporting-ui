@@ -1,5 +1,5 @@
 @import "../global/var";
-
+@import "../ui/components/animation";
 
 .test-run-card {
     .p-test-details & {
@@ -902,10 +902,4 @@
     .comments-area {
         overflow: hidden;
     }
-}
-
-@keyframes change-color {
-    0% { background-color: inherit; }
-    25% { background-color: rgba(0,0,0,.05); }
-    100% { background-color: inherit; }
 }

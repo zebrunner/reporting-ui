@@ -1,0 +1,34 @@
+<div class="page-wrapper">
+    <zf-sub-header>
+        <zf-sub-header-title>
+            Test sessions
+            <small id="itemsCount" class="fixed-page-header__additional-text">({{$ctrl.totalResults}})</small>
+        </zf-sub-header-title>
+        <zf-sub-header-button ng-if="!$ctrl.isMobile">
+            <button class="fixed-page-header__btn zf-primary-button"
+                ng-click="$ctrl.openAccessKeyModal($event);">
+                <md-icon class="material-icons">fingerprint</md-icon>
+                <span>ACCESS KEY</span>
+            </button>
+        </zf-sub-header-button>
+    </zf-sub-header>
+
+    <div class="page">
+        <div class="p-tests-sessions__content-header">
+            <tests-sessions-search on-search="$ctrl.onSearch($params)"></tests-sessions-search>
+        </div>
+        <div class="p-tests-sessions__content-wrapper">
+            <div class="p-tests-sessions__section _content">
+                <article class="article">
+                    <md-card class="no-margin-h">
+                        <test-session-card test-session="testSession" ng-repeat="testSession in $ctrl.testSessions | orderObjectBy:'startedAt':true track by testSession.id" on-select="$ctrl.selectTestSession(testSession)"></test-session-card>
+                        <div ng-if="$ctrl.isEmpty">
+                            <div id="noData" class="text-center p-tests-sessions__no-content">No test sessions</div>
+                        </div>
+                        <md-table-pagination id="pagination" zafira-background-theme="pagination" ng-if="!$ctrl.isEmpty" md-limit="$ctrl.pageSize" md-limit-options=false md-page="$ctrl.currentPage" md-total="{{$ctrl.totalResults}}" md-page-select=false md-boundary-links=true md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
+                    </md-card>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
