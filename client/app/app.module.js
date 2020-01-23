@@ -35,6 +35,7 @@ const ngModule = angular.module('app', [
 
     // Set a link to the json with data
     TutorialsProvider.setUrl(`https://zebrunner.s3-us-west-1.amazonaws.com/common/tutorials/contents.json?timestamp=${Date.now()}`);
+    TutorialsProvider.setMinWidth(768);
 })
 
 .config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider, $mdIconProvider) {
