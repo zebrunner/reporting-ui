@@ -1,0 +1,32 @@
+<div class="zeb-tutorials-slider">
+    <div class="zeb-tutorials-slider__slides">
+        <div class="zeb-tutorials-slider__item-wrapper" ng-style="{transform: $ctrl.transform}">
+            <div ng-repeat="slide in $ctrl.slides track by $index" class="zeb-tutorials-slider__item">
+                <youtube ng-if="slide.type === 'video'"
+                    class="zeb-tutorials-slider__item-content _video"
+                    video-id="slide.youtubeId"></youtube>
+                <div ng-if="slide.type === 'image'"
+                    class="zeb-tutorials-slider__item-content _image"
+                    ng-style="{backgroundImage: 'url(' + slide.url + ')'}"></div>
+            </div>
+        </div>
+
+        <button class="zeb-tutorials-slider__arrow _left" ng-click="$ctrl.prev()">
+            <md-icon class="material-icons">arrow_back</md-icon>
+        </button>
+        <button class="zeb-tutorials-slider__arrow _right" ng-click="$ctrl.next()">
+            <md-icon class="material-icons">arrow_forward</md-icon>
+        </button>
+    </div>
+
+    <div class="zeb-tutorials-slider__dots">
+        <div class="zeb-tutorials-slider__dots-item"
+            ng-repeat="slide in $ctrl.slides track by $index"
+            ng-class="{_active: $index === $ctrl.slideIndex}"
+            ng-click="$ctrl.changeSlide($index)">
+        </div>
+    </div>
+
+    <h2 class="zeb-tutorials-slider__title" ng-if="$ctrl.activeSlide.title">{{ $ctrl.activeSlide.title }}</h2>
+    <p class="zeb-tutorials-slider__description" ng-if="$ctrl.activeSlide.description">{{ $ctrl.activeSlide.description }}</p>
+</div>

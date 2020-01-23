@@ -4,6 +4,7 @@ import '../styles/main.scss';
 import 'intersection-observer';
 import progressbarInterceptor from './http-interceptors/progressbar.interceptor';
 import jenkinsIcon from '../assets/images/_icons_tools/jenkins.svg';
+import { TutorialsModule } from './modules/tutorials';
 
 const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular.module('app', [
@@ -26,7 +27,16 @@ const ngModule = angular.module('app', [
     'ngMaterialDateRangePicker',
     'angular-jwt',
     'oc.lazyLoad',
+    TutorialsModule,
 ])
+
+.config((TutorialsProvider) => {
+    'ngInject';
+
+    // Set a link to the json with data
+    TutorialsProvider.setUrl(`https://zebrunner.s3-us-west-1.amazonaws.com/common/tutorials/contents.json?timestamp=${Date.now()}`);
+    TutorialsProvider.setMinWidth(768);
+})
 
 .config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider, $mdIconProvider) {
     'ngInject';

@@ -1218,11 +1218,18 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     function resetPlatformModel(platform) {
         vm.platformModel = {};
 
-        if (platform) { vm.platformModel[vm.platformsConfig.rootKey] = platform; }
+        if (platform) {
+            vm.platformModel[vm.platformsConfig.rootKey] = platform;
+
+            // if launcher has appropriate param we need to use this value
+            if ($scope.jsonModel && $scope.jsonModel[vm.platformsConfig.rootKey]) {
+                vm.platformModel[vm.platformsConfig.rootKey].value = getControlDefaultValue(vm.platformsConfig.rootKey);
+            }
+        }
     }
 
     function getBrowsersConfig(url) {
-        return $http.get(url);
+        return $http.get(`${url}?timestamp=${Date.now()}`);
     }
 
     function onProviderSelect(selectedProvider) {
@@ -1278,7 +1285,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
     }
 
     function getProvidersConfig() {
-        return $http.get(providersConfigURL)
+        return $http.get(`${providersConfigURL}?timestamp=${Date.now()}`)
             .then(response => {
                 const url = new URL(providersConfigURL);
                 const path = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);

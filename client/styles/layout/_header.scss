@@ -75,8 +75,9 @@
             display: inline-block;
             width: 220px;
             border-right: 1px solid $header-border;
+
             @media (max-width: $screen-phone) {
-                left: 60px;
+                left: 62px;
             }
 
             > a {
@@ -84,12 +85,9 @@
                 white-space: nowrap;
             }
             img {
-
                 height: 28px;
-                width: 28px;
-                //vertical-align: sub;
-                margin-top: -14px;
-
+                width: 33px;
+                vertical-align: sub;
             }
         }
 
