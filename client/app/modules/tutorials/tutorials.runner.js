@@ -1,5 +1,10 @@
 export function TutorialsRunner($q, $transitions, $state, Tutorials, $http) {
     'ngInject';
+
+    if (Tutorials.minWidth >= window.innerWidth) {
+        return;
+    }
+
     let allTutorials = null;
     let currentRouteTutorials = null;
     let tutorialComponentRef = null;

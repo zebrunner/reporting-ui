@@ -15,11 +15,13 @@ const storageKey = 'tutorials';
 export function TutorialsProvider() {
     'ngInject'
     let url;
+    let minWidth = 0;
     let prefix = 'zeb-';
 
     return {
         // Set a link to a json that will be loaded when the project is opened
         setUrl: newUrl => url = newUrl,
+        setMinWidth: width => minWidth = width,
         setStoragePrefix: (newPrefix = 'zeb-') => prefix = newPrefix,
         $get($document, $mdCompiler, $rootScope, $animate, $mdDialog) {
             'ngInject';
@@ -28,6 +30,7 @@ export function TutorialsProvider() {
 
             return {
                 get url() { return url; },
+                get minWidth() { return minWidth; },
                 render,
                 getStorageKey: () => `${prefix}${storageKey}`,
             };

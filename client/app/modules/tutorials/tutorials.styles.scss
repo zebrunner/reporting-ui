@@ -41,10 +41,3 @@
         padding: 24px 24px 16px;
     }
 }
-
-// Hide on mobile
-@media (max-width: $screen-xs-max) {
-    .zeb-tutorials-container {
-        display: none;
-    }
-}
