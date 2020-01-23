@@ -4,9 +4,7 @@ const testsSessionsService = function testsSessionsService(
     $httpMock,
     API_URL,
     $httpParamSerializer,
-    UtilService,
-
-    $q
+    UtilService
 ) {
     'ngInject';
 
@@ -19,13 +17,13 @@ const testsSessionsService = function testsSessionsService(
         DEFAULT_SC,
         searchSessions,
         resetCachedParams,
+        fetchAdditionalSearchParams,
 
         get activeParams() { return lastParams; },
         set activeParams(newSC) { lastParams = newSC; return true; },
     };
 
     function searchSessions(params = lastParams) {
-        clearParams(params);
         service.activeParams = params;
 
         return $httpMock.get(`${API_URL}/api/tests/sessions/search?${$httpParamSerializer(service.activeParams)}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to search test sessions'));
@@ -35,13 +33,8 @@ const testsSessionsService = function testsSessionsService(
         lastParams = {...DEFAULT_SC};
     }
 
-    // remove empty properties from params object
-    function clearParams(params) {
-        Object.keys(params).forEach(property => {
-            if (params[property] === '' || params[property] === undefined || params[property] === null) {
-                Reflect.deleteProperty(params, property);
-            }
-        });
+    function fetchAdditionalSearchParams() {
+        return $httpMock.get(`${API_URL}/api/tests/sessions/search/parameters`).then(UtilService.handleSuccess, UtilService.handleError('Unable to fetch additional sessions search params'));
     }
 
     return service;

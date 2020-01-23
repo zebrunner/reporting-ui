@@ -4,7 +4,6 @@ import accessKeyModalController from './access-key-modal/access-key-modal.contro
 import accessKeyModalTemplate from './access-key-modal/access-key-modal.html';
 
 // TODO: reset service cache on routing except internal (logs) page
-// TODO: Specify source of statuses, env, platform data
 // TODO: Add menus with "open" and "copy Url" links (see test runs)
 const testsSessionsController = function testsSessionsController(
     $q,
@@ -72,7 +71,6 @@ const testsSessionsController = function testsSessionsController(
                 }
             })
             .catch(function(err) {
-                console.error(err.message);
                 messageService.error(err.message);
 
                 return $q.resolve([]);

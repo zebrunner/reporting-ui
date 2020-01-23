@@ -18,13 +18,13 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
 ) {
     'ngInject';
 
-    const STATUSES = ['RUNNING', 'COMPLETED', 'FAILED', 'TIMEOUT'];
     let scrollTickingTimeout = null;
     const scrollableParentElement = document.querySelector('.page-wrapper');
 
     const vm = {
         isSearchActive,
-        statuses: STATUSES,
+        platforms: [],
+        statuses: [],
         scrollTicking: false,
         selectedRange: {
             selectedTemplate: null,
@@ -49,7 +49,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
 
     function init() {
         readDatePickerValues();
-        loadPlatforms();
+        loadAdditionalSearchParams();
         bindEventListeners();
     }
 
@@ -112,20 +112,17 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         }, 0);
     }
 
-    function loadPlatforms() {
-        return TestRunService.getPlatforms().then(function (rs) {
-            if (rs.success) {
-                vm.platforms = rs.data.filter(function (platform) {
-                    return platform && platform.length;
-                });
-
-                return vm.platforms;
-            } else {
-                messageService.error(rs.message);
-
-                return $q.reject(rs.message);
-            }
-        });
+    function loadAdditionalSearchParams() {
+        return testsSessionsService.fetchAdditionalSearchParams()
+            .then(function (rs) {
+                if (rs.success) {
+                    console.log(rs);
+                    vm.platforms = rs.data.platforms || [];
+                    vm.statuses = rs.data.statuses || [];
+                } else {
+                    messageService.error(rs.message);
+                }
+            });
     }
 
     function readDatePickerValues() {
@@ -142,6 +139,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
     }
 
     function onChangeSearchCriteria() {
+        clearParams();
         onApply();
     }
 
@@ -176,6 +174,14 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         if (vm.isMobile) {
             angular.element(scrollableParentElement).on('scroll.hideFilterButton', onScroll);
         }
+    }
+
+    function clearParams() {
+        Object.keys(vm.searchParams).forEach(property => {
+            if (vm.searchParams[property] === '' || vm.searchParams[property] === undefined || vm.searchParams[property] === null) {
+                Reflect.deleteProperty(vm.searchParams, property);
+            }
+        });
     }
 
     function onScroll() {

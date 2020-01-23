@@ -44,12 +44,12 @@
             border-left-color: $red-new;
         }
 
-        &.RUNNING {
+        &.IN_PROGRESS {
             border-left-color: $blue-new;
         }
 
         &.TIMEOUT {
-            border-left-color: $dark-coal-new; /*TODO: define right color*/
+            border-left-color: rgba($gray-light-new, .5);
         }
     }
     &__cell {
