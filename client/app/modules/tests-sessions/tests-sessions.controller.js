@@ -3,7 +3,6 @@
 import accessKeyModalController from './access-key-modal/access-key-modal.controller';
 import accessKeyModalTemplate from './access-key-modal/access-key-modal.html';
 
-// TODO: reset service cache on routing except internal (logs) page
 // TODO: Add menus with "open" and "copy Url" links (see test runs)
 const testsSessionsController = function testsSessionsController(
     $q,
@@ -11,7 +10,7 @@ const testsSessionsController = function testsSessionsController(
     testsSessionsService,
     messageService,
     $transitions,
-    $mdDialog
+    $mdDialog,
 ) {
     'ngInject';
 
@@ -24,12 +23,11 @@ const testsSessionsController = function testsSessionsController(
         onPageChange,
         onSearch,
         openAccessKeyModal,
+        $onInit: init,
 
         get isEmpty() { return this.testSessions && !this.testSessions.length; },
         get isMobile() { return windowWidthService.isMobile(); },
     };
-
-    vm.$onInit = init;
 
     return vm;
 
@@ -43,29 +41,29 @@ const testsSessionsController = function testsSessionsController(
 
     // page value comes from pagination where counting starts from 1, so we need to subtract 1
     function onPageChange(page) {
-        const activeParams = {...testsSessionsService.activeParams};
+        const activeParams = { ...testsSessionsService.activeParams };
 
         activeParams.page = page - 1;
 
         return getTestSessions(activeParams);
     }
 
-    function onSearch(params = {...testsSessionsService.DEFAULT_SC}) {
+    function onSearch(params = { ...testsSessionsService.DEFAULT_SC }) {
         vm.currentPage = params.page + 1;
 
         return getTestSessions(params);
     }
 
-    function getTestSessions(params = {...testsSessionsService.activeParams}) {
+    function getTestSessions(params = { ...testsSessionsService.activeParams }) {
         return testsSessionsService.searchSessions(params)
-            .then((rs) => {
+            .then(rs => {
                 if (rs.success) {
                     const data = rs.data || {};
 
                     vm.testSessions = data.results || [];
                     vm.totalResults = data.totalResults || 0;
 
-                    return $q.resolve(vm.testSessions);
+                    return vm.testSessions;
                 } else {
                     return $q.reject(rs);
                 }
@@ -77,8 +75,9 @@ const testsSessionsController = function testsSessionsController(
             });
     }
 
+    // TODO: reset service cache on routing except internal (logs) page
     function bindEvents() {
-        const onTransStartSubscription = $transitions.onStart({}, function(trans) {
+        const onTransStartSubscription = $transitions.onStart({}, trans => {
             // const toState = trans.to();
             //
             // if (toState.name !== 'tests.runDetails'){

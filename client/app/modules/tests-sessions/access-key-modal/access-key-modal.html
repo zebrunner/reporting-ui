@@ -23,17 +23,19 @@
                                         type="text"
                                         readonly
                                         name="access-url"
-                                        ng-model="$ctrl.accessUrl"
-                                        ng-model-options="{debounce: 700}"/>
+                                        ng-model="$ctrl.accessUrl" />
                                 </md-input-container>
                             </div>
                         </div>
+<!--                        TODO: will be enabled in future -->
 <!--                        <md-button ng-click="$ctrl.refreshAccessUrl()"-->
+<!--                            type="button"-->
 <!--                            ng-disabled="!$ctrl.accessUrl || $ctrl.accessUrlLoading"-->
 <!--                            class="md-icon-button _invert pull-right">-->
 <!--                            <md-icon class="material-icons" role="img" aria-label="autorenew">autorenew</md-icon>-->
 <!--                        </md-button>-->
                         <md-button ng-click="$ctrl.copyAccessUrl()"
+                            type="button"
                             ng-disabled="!$ctrl.accessUrl || $ctrl.accessUrlLoading"
                             class="md-icon-button _invert pull-right">
                             <md-icon class="material-icons" role="img" aria-label="copy url">file_copy</md-icon>
@@ -44,7 +46,11 @@
                     <div class="warning-block" ng-if="$ctrl.languagesFail">
                         Unable to load languages configs, contact your administrator!
                     </div>
-                    <md-chips ng-if="!$ctrl.languagesFail && $ctrl.languages.length" class="filter-chip custom-filter" ng-model="$ctrl.languages" md-removable="false" readonly="true">
+                    <md-chips ng-if="!$ctrl.languagesFail && $ctrl.languages.length"
+                        class="filter-chip custom-filter"
+                        ng-model="$ctrl.languages"
+                        md-removable="false"
+                        readonly="true">
                         <md-chip-template>
                             <div ng-init="$ctrl.selectLanguageOnChipsInit($index, $mdChipsCtrl)" ng-click="$ctrl.onLanguageSelect($chip)">
                                 <img class="custom-filter__img" ng-if="$chip.icon" ng-src="{{$chip.icon}}"/>
@@ -70,7 +76,6 @@
                             layout="row"
                             layout-wrap
                             ng-change="$ctrl.onPlatformSelect()">
-<!--                            <md-radio-button ng-value="null">None</md-radio-button>-->
                             <md-radio-button ng-value="platform"
                                 ng-repeat="platform in $ctrl.platforms track by platform.id">{{platform.name}}</md-radio-button>
                         </md-radio-group>
@@ -106,8 +111,7 @@
                                         type="text"
                                         readonly
                                         name="{{platformControl.key}}"
-                                        ng-model="$ctrl.platformModel[platformControl.key].value"
-                                        ng-model-options="{debounce: 700}"/>
+                                        ng-model="$ctrl.platformModel[platformControl.key].value" />
                                 </md-input-container>
                             </div>
                         </div>
@@ -126,7 +130,10 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button ng-click="$ctrl.onCodeCopy();" ng-disabled="$ctrl.isLoading || !$ctrl.lastUpdatedAceModel" class="md-raised btn-w-md md-primary">
+            <md-button ng-click="$ctrl.onCodeCopy();"
+                type="button"
+                ng-disabled="$ctrl.isLoading || !$ctrl.lastUpdatedAceModel"
+                class="md-raised btn-w-md md-primary">
                 Copy
             </md-button>
         </md-dialog-actions>

@@ -36,19 +36,19 @@
             width: 60%;
             position: relative;
         }
-        &.COMPLETED {
+        &.completed {
             border-left-color: $green-new;
         }
 
-        &.FAILED {
+        &.failed {
             border-left-color: $red-new;
         }
 
-        &.IN_PROGRESS {
+        &.in_progress {
             border-left-color: $blue-new;
         }
 
-        &.TIMEOUT {
+        &.timeout {
             border-left-color: rgba($gray-light-new, .5);
         }
     }
@@ -70,13 +70,13 @@
             min-width: 200px;
             padding-left: 11px;
         }
-        &._env {
+        &._status {
             justify-content: center;
             flex-grow: 1;
             width: 11%;
             min-width: 100px;
             & .label {
-                font-weight: bold !important;
+                font-weight: 700;
             }
         }
         &._platform {
@@ -85,6 +85,9 @@
             min-width: 100px;
             flex-wrap: wrap;
             justify-content: center;
+            & .label {
+                font-weight: 500;
+            }
             @media(min-width: $breakpoint-mid-tablet + 1) and (max-width: 1120px){
                 flex-grow: 0;
             }
@@ -92,7 +95,7 @@
                 flex-grow: 1;
             }
         }
-        &._env,
+        &._status,
         &._platform {
             .label {
                 color: $dark-coal-new;
@@ -100,7 +103,6 @@
                 display: inline-block;
                 vertical-align: middle;
                 font-size: 10px;
-                font-weight: 500;
                 text-transform: uppercase;
                 padding: 0 8px;
                 height: 20px;
@@ -125,7 +127,7 @@
     }
 
     &__title {
-        font-weight: bold;
+        font-weight: 700;
         font-size: 14px;
         line-height: 24px;
         margin-right: 10px;
@@ -188,7 +190,7 @@
         }
     }
 
-    @media screen and (max-width:  $breakpoint-mid-tablet) {
+    @media screen and (max-width: $breakpoint-mid-tablet) {
         &__wrapper {
             flex-direction: column;
 
@@ -203,12 +205,12 @@
         }
 
         &__cell {
-            &._env,
+            &._status,
             &._platform,
             &._date {
                 border-top: none;
             }
-            &._env {
+            &._status {
                 margin: 0 0 0 10px;
                 justify-content: flex-start;
             }
@@ -232,7 +234,7 @@
         }
     }
 
-    @media screen and (max-width:  $md-screen-phone) {
+    @media screen and (max-width: $md-screen-phone) {
         &__clickable {
             position: absolute;
             top: -15px;
@@ -262,14 +264,14 @@
             padding: 12px 0 0;
             &._info,
             &._date,
-            &._env,
+            &._status,
             &._platform {
                 min-width: 0;
             }
             &._info {
                 padding: 0 0 10px;
             }
-            &._env {
+            &._status {
                 flex-grow: 0;
                 flex-shrink: 1;
                 width: auto;

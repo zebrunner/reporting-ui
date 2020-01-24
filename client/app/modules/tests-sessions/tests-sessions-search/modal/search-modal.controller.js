@@ -7,7 +7,8 @@ const SearchModalController = function SearchModalController(
     $mdDateRangePicker,
     $mdDialog,
     selectedRange,
-    searchParams
+    searchParams,
+    UtilService,
 ) {
     'ngInject';
 
@@ -22,13 +23,7 @@ const SearchModalController = function SearchModalController(
         platforms,
     };
 
-    vm.$onInit = init;
-
     return vm;
-
-    function init() {
-
-    }
 
     function closeModal() {
         $mdDialog.cancel();
@@ -58,7 +53,6 @@ const SearchModalController = function SearchModalController(
     }
 
     function openDatePicker($event, showTemplate) {
-
         vm.selectedRange.showTemplate = showTemplate;
 
         $mdDateRangePicker.show({
@@ -66,33 +60,21 @@ const SearchModalController = function SearchModalController(
             model: vm.selectedRange,
             multiple: true,
         })
-        .then(function(result) {
-            if (result) {
-                vm.selectedRange = result;
-                vm.selectedRange.selectedTemplateName = result.selectedTemplateName.split(' ').slice(0,-1).join(' ');
-                vm.searchParams.selectedTemplateName = vm.selectedRange.selectedTemplateName;
-                if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
-                    if (vm.selectedRange.dateStart.getTime() !==
-                        vm.selectedRange.dateEnd.getTime()) {
-                        vm.searchParams.date = null;
-                        vm.searchParams.fromDate = vm.selectedRange.dateStart;
-                        vm.searchParams.toDate = vm.selectedRange.dateEnd;
-                    } else {
-                        vm.searchParams.fromDate = null;
-                        vm.searchParams.toDate = null;
-                        vm.searchParams.date = vm.selectedRange.dateStart;
-                    }
-                } else {
-                    vm.searchParams.fromDate = null;
-                    vm.searchParams.toDate = null;
-                    vm.searchParams.date = null;
-                    vm.searchParams.selectedTemplateName = null;
-                }
+            .then(result => {
+                if (result) {
+                    const res = UtilService.handleDateFilter(result);
+                    const newSearchParams = { ...vm.searchParams, ...res.searchParams };
 
-                vm.onChangeSearchCriteria();
-            }
-        })
+                    vm.selectedRange = res.selectedRange;
+
+                    if ((!res.searchParams.selectedTemplateName && vm.searchParams.selectedTemplateName) ||
+                        (res.searchParams.selectedTemplateName && !angular.equals(vm.searchParams, newSearchParams))) {
+                        vm.searchParams = newSearchParams;
+                        vm.onChangeSearchCriteria();
+                    }
+                }
+            });
     }
-}
+};
 
 export default SearchModalController;

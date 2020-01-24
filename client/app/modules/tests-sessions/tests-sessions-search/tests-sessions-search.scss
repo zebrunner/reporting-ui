@@ -55,7 +55,7 @@
                 color: #fff;
             }
 
-            @media screen and (min-width: 600px) {
+            @media screen and (min-width: $md-screen-phone + 1) {
                 &:hover {
                     background-color: rgba($dark-new, .5);
                     color: #fff;
@@ -79,7 +79,6 @@
 
     @media (min-width: $md-screen-phone + 1 ) and (max-width: 959px) {
         &__top-section {
-
             margin-right: 0;
         }
         &__input {
@@ -94,7 +93,7 @@
         }
     }
 
-    @media (min-width: 481px) and (max-width: $md-screen-phone) {
+    @media (min-width: $screen-xs + 1) and (max-width: $md-screen-phone) {
         &__input {
             &-label {
                 margin-right: 0;
@@ -118,7 +117,7 @@
             display: block;
             position: absolute;
             top: calc(100% + 2px);
-            height: calc(100vh - #{$header-height} - 72px);
+            height: calc(100vh - #{$header-height} - 72px);  // TODO: what is 72px?
             width: 100%;
             left: 0;
             background-color: rgba($dark-new, .25);
@@ -159,7 +158,7 @@
         }
     }
 
-    @media (min-width: 481px) and (max-width: $md-screen-phone) {
+    @media (min-width: $screen-xs + 1) and (max-width: $md-screen-phone) {
         left: $sidebar_width;
         margin: 0 20px;
     }

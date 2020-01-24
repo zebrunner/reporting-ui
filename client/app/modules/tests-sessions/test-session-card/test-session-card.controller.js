@@ -3,7 +3,7 @@
 const testsSessionCardController = function testsSessionCardController(
     windowWidthService,
     $rootScope,
-    $state
+    $state,
 ) {
     'ngInject';
 
@@ -19,7 +19,7 @@ const testsSessionCardController = function testsSessionCardController(
     return vm;
 
     function goToTestSession() {
-        // TODO:
+        // TODO: will be finished with test logs page
         // $state.go('tests.sessionLogs', {testSessionId: vm.testSession.id});
     }
 

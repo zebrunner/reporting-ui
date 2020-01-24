@@ -5,8 +5,7 @@ import languagesConfig from './languages-config.json';
 const jsonConfigsService = function jsonConfigsService(
     $httpMock,
     UtilService,
-
-    $q
+    $q,
 ) {
     'ngInject';
 

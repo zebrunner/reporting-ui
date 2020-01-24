@@ -1,3 +1,5 @@
+'use strict';
+
 import template from './tests-sessions.html';
 import controller from './tests-sessions.controller';
 

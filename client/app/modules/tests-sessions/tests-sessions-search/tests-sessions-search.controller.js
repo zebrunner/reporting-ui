@@ -14,7 +14,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
     $mdDateRangePicker,
     $timeout,
     messageService,
-    $mdDialog
+    $mdDialog,
 ) {
     'ngInject';
 
@@ -32,18 +32,17 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             dateStart: null,
             dateEnd: null,
             showTemplate: false,
-            fullscreen: false
+            fullscreen: false,
         },
         searchParams: {},
         onChangeSearchCriteria,
         openDatePicker,
         onReset,
         showSearchDialog,
+        $onInit: init,
 
         get isMobile() { return windowWidthService.isMobile(); },
     };
-
-    vm.$onInit = init;
 
     return vm;
 
@@ -57,7 +56,6 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         $mdDialog.cancel();
     }
 
-
     function showSearchDialog(event) {
         $mdDialog.show({
             controller: SearchModalController,
@@ -67,7 +65,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             fullscreen: true,
             controllerAs: '$ctrl',
             onComplete: () => {
-                angular.element(window).on('resize.searchDialog',() => {
+                angular.element(window).on('resize.searchDialog', () => {
                     if (!vm.isMobile) {
                         closeModal();
                     }
@@ -79,8 +77,8 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             locals: {
                 platforms: vm.platforms,
                 statuses: vm.statuses,
-                selectedRange: {...vm.selectedRange},
-                searchParams: {...vm.searchParams},
+                selectedRange: { ...vm.selectedRange },
+                searchParams: { ...vm.searchParams },
             }
         })
             .then(handleSearchDialogResponse)
@@ -106,7 +104,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
 
     function onApply() {
         $timeout(function() {
-            const params = {...testsSessionsService.DEFAULT_SC, ...vm.searchParams};
+            const params = { ...testsSessionsService.DEFAULT_SC, ...vm.searchParams };
 
             vm.onSearch({$params: params});
         }, 0);
@@ -116,7 +114,6 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         return testsSessionsService.fetchAdditionalSearchParams()
             .then(function (rs) {
                 if (rs.success) {
-                    console.log(rs);
                     vm.platforms = rs.data.platforms || [];
                     vm.statuses = rs.data.statuses || [];
                 } else {
@@ -150,19 +147,20 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             targetEvent: $event,
             model: vm.selectedRange
         })
-        .then(function(result) {
-            if (result) {
-                const res = UtilService.handleDateFilter(result);
-                const newSearchParams = {...vm.searchParams, ...res.searchParams};
+            .then(result => {
+                if (result) {
+                    const res = UtilService.handleDateFilter(result);
+                    const newSearchParams = { ...vm.searchParams, ...res.searchParams };
 
-                vm.selectedRange = res.selectedRange;
+                    vm.selectedRange = res.selectedRange;
 
-                if ((!res.searchParams.selectedTemplateName && vm.searchParams.selectedTemplateName) || (res.searchParams.selectedTemplateName && !angular.equals(vm.searchParams, newSearchParams))) {
-                    vm.searchParams = newSearchParams;
-                    onChangeSearchCriteria();
+                    if ((!res.searchParams.selectedTemplateName && vm.searchParams.selectedTemplateName) ||
+                        (res.searchParams.selectedTemplateName && !angular.equals(vm.searchParams, newSearchParams))) {
+                        vm.searchParams = newSearchParams;
+                        onChangeSearchCriteria();
+                    }
                 }
-            }
-        });
+            });
     }
 
     function bindEventListeners() {
@@ -190,12 +188,12 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             $scope.$apply();
             scrollTickingTimeout = $timeout(() => {
                 vm.scrollTicking = false;
-            }, 300);
+            }, 0);
         } else {
             $timeout.cancel(scrollTickingTimeout);
             scrollTickingTimeout = $timeout(() => {
                 vm.scrollTicking = false;
-            }, 300);
+            }, 0);
         }
     }
 };

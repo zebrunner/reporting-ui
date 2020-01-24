@@ -20,7 +20,7 @@ const AccessKeyModalController = function AccessKeyModalController(
     toolsService,
     messageService,
     $timeout,
-    $q
+    $q,
 ) {
     'ngInject';
 
@@ -34,7 +34,7 @@ const AccessKeyModalController = function AccessKeyModalController(
             mode: 'java',
             firstLineNumber: 5,
             rendererOptions: {
-                fontSize: '14px'
+                fontSize: '14px',
             },
             onLoad: setEditorInstance,
         },
@@ -54,11 +54,8 @@ const AccessKeyModalController = function AccessKeyModalController(
         // refreshAccessUrl,
         copyAccessUrl,
         onCodeCopy,
-
-        get aceModelHasChanges() { return this.lastUpdatedAceModel && this.aceModel !== this.lastUpdatedAceModel; },
+        $onInit: init,
     };
-
-    vm.$onInit = init;
 
     return vm;
 
@@ -96,7 +93,9 @@ const AccessKeyModalController = function AccessKeyModalController(
             })
             .catch(err => {
                 vm.languagesFail = true;
-                err && err.message && messageService.error(err.message);
+                if (err && err.message) {
+                    messageService.error(err.message);
+                }
             });
     }
 
@@ -147,7 +146,7 @@ const AccessKeyModalController = function AccessKeyModalController(
     }
 
     // function refreshAccessUrl() {
-    //     // TODO:
+    //     // TODO: will be implemented later
     // }
 
     function initAccessUrl() {
@@ -156,8 +155,12 @@ const AccessKeyModalController = function AccessKeyModalController(
             try {
                 const url = new URL(vm.accessSettings.ZEBRUNNER_URL);
 
-                if (vm.accessSettings.ZEBRUNNER_USER) { url.username = vm.accessSettings.ZEBRUNNER_USER; }
-                if (vm.accessSettings.ZEBRUNNER_PASSWORD) {url.password = vm.accessSettings.ZEBRUNNER_PASSWORD; }
+                if (vm.accessSettings.ZEBRUNNER_USER) {
+                    url.username = vm.accessSettings.ZEBRUNNER_USER;
+                }
+                if (vm.accessSettings.ZEBRUNNER_PASSWORD) {
+                    url.password = vm.accessSettings.ZEBRUNNER_PASSWORD;
+                }
 
                 vm.accessUrl = url.href;
             } catch (error) {
@@ -208,7 +211,9 @@ const AccessKeyModalController = function AccessKeyModalController(
 
     function handleLanguageDeselection() {
         vm.aceModel = '';
-        vm.chipsCtrl && (vm.chipsCtrl.selectedChip = -1);
+        if (vm.chipsCtrl) {
+            vm.chipsCtrl.selectedChip = -1;
+        }
     }
 
     function getSelectedLanguage() {
@@ -321,7 +326,9 @@ const AccessKeyModalController = function AccessKeyModalController(
 
         vm.platformControls = [...vm.platformControls, childControl];
         defaultItem = getDefaultVersionControl(childControl);
-        defaultItem && (vm.platformModel[key] = defaultItem);
+        if (defaultItem) {
+            vm.platformModel[key] = defaultItem;
+        }
     }
 
     function onPlatformControlSelect(control) {
@@ -407,8 +414,12 @@ const AccessKeyModalController = function AccessKeyModalController(
                     return acc;
                 }, {});
 
-                if (vm.accessSettings.ZEBRUNNER_USER) { data.username = vm.accessSettings.ZEBRUNNER_USER; }
-                if (vm.accessSettings.ZEBRUNNER_PASSWORD) { data.password = vm.accessSettings.ZEBRUNNER_PASSWORD; }
+                if (vm.accessSettings.ZEBRUNNER_USER) {
+                    data.username = vm.accessSettings.ZEBRUNNER_USER;
+                }
+                if (vm.accessSettings.ZEBRUNNER_PASSWORD) {
+                    data.password = vm.accessSettings.ZEBRUNNER_PASSWORD;
+                }
 
                 vm.aceModel = replacePlaceholders(selectedLanguage.snippet, data);
                 vm.lastUpdatedAceModel = vm.aceModel;
@@ -436,7 +447,7 @@ const AccessKeyModalController = function AccessKeyModalController(
             vm.aceModel.copyToClipboard();
             messageService.success('Code copied to clipboard');
             $mdDialog.hide();
-        }, 0);
+        }, 0, false);
     }
 
     function closeModal() {

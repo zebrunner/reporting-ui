@@ -2468,16 +2468,17 @@ $light-inprogress: #68c9fd;
 
         .p-tests-run-info &,
         .p-tests-run-details &,
+        .p-tests-sessions,
         .p-tests-runs & {
             padding-top: $header_height;
         }
 
         @media (max-width: $breakpoint-mobile - 1) {
-
             .p-tests-runs & {
                 padding-top: calc(#{$header-height} + 72px); // 72px - filters;
             }
 
+            .p-tests-sessions &,
             .p-tests-runs._no-filters & {
                 padding-top: #{$header-height};
             }

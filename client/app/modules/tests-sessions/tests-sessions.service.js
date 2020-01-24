@@ -4,7 +4,7 @@ const testsSessionsService = function testsSessionsService(
     $httpMock,
     API_URL,
     $httpParamSerializer,
-    UtilService
+    UtilService,
 ) {
     'ngInject';
 
@@ -12,7 +12,7 @@ const testsSessionsService = function testsSessionsService(
         page: 0,
         pageSize: 20,
     };
-    let lastParams = {...DEFAULT_SC};
+    let lastParams = { ...DEFAULT_SC };
     const service = {
         DEFAULT_SC,
         searchSessions,
@@ -30,7 +30,7 @@ const testsSessionsService = function testsSessionsService(
     }
 
     function resetCachedParams() {
-        lastParams = {...DEFAULT_SC};
+        lastParams = { ...DEFAULT_SC };
     }
 
     function fetchAdditionalSearchParams() {
