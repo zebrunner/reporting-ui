@@ -106,7 +106,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         $timeout(function() {
             const params = { ...testsSessionsService.DEFAULT_SC, ...vm.searchParams };
 
-            vm.onSearch({$params: params});
+            vm.onSearch({ $params: params });
         }, 0);
     }
 
