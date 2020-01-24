@@ -1,0 +1,47 @@
+<div class="test-session-card">
+    <div ng-attr-id="testSession_{{$ctrl.testSession.id}}"
+        ng-class="{'background-gray': $ctrl.testSession.selected}"
+        class="test-session-card__wrapper {{$ctrl.testSession.status | lowercase}}">
+        <div class="test-session-card__wrapper-left">
+            <div class="test-session-card__cell _info">
+                <div class="test-session-card__title-wrapper">
+                    <div class="test-session-card__title">{{$ctrl.testSession.testName}}</div>
+                </div>
+                <div class="test-session-card__job">
+                    <div class="test-session-card__job-name">
+                        <span>{{$ctrl.testSession.buildNumber}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="test-session-card__clickable"
+                ng-class="{ '_highlighting': $ctrl.testSession.highlighting }"
+                ng-click="$ctrl.goToTestSession()"></div>
+        </div>
+        <div class="test-session-card__wrapper-right">
+            <div name="testSessionStatus" class="test-session-card__cell _status">
+                <span class="label label-default" ng-if="$ctrl.testSession.status">{{$ctrl.testSession.status}}</span>
+            </div>
+            <div name="testSessionPlatform" class="test-session-card__cell _platform">
+                <span data-ng-if="$ctrl.testSession.browserName !== ''" class="platform-icon {{$ctrl.testSession.browserName | lowercase}}"></span>
+                <span data-ng-if="$ctrl.testSession.browserName === ''" class="platform-icon unknown"></span>
+                <span data-ng-if="$ctrl.testSession.version" class="label label-default">{{$ctrl.testSession.version}}</span>
+            </div>
+            <div name="testSessionStarted" class="test-session-card__cell _date">
+                <div class="test-session-card__time _time">
+                    <span class="test-session-card__time-text" ng-if="!$ctrl.isMobile">Started</span>
+                    <i ng-if="$ctrl.isMobile"
+                        class="test-run-card__time-icon fa fa-play-circle"
+                        aria-hidden="true"></i>
+                    <time class="test-session-card__time-text" am-time-ago="$ctrl.testSession.startedAt" title="{{ main.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
+                </div>
+                <div data-ng-if="$ctrl.testSession.duration" class="test-session-card__time _duration">
+                    <i class="test-run-card__time-icon fa fa-clock-o" aria-hidden="true"></i>
+                    <timer class="test-session-card__time-text" max-time-unit="'minute'" autostart="false" countdown="$ctrl.testSession.duration">
+                        <span ng-if="minutes">{{minutes}} minute{{minutesS}}</span>
+                        <span ng-if="!minutes">{{seconds}} second{{secondsS}}</span>
+                    </timer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

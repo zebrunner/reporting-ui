@@ -5,13 +5,15 @@ import progressbarService from './progressbar/progressbar.service';
 import messageService from './messages/message.service';
 import mainMenuService from './main-menu/main-menu.service';
 import ArtifactService from './artifact.service';
+import jsonConfigsService from './json-configs/json-configs.service';
 
 angular.module('app.services', [])
     .service({ ArtifactService})
     .service({ toolsService })
     .service({ messageService })
     .service({ mainMenuService })
-    .service({ progressbarService });
+    .service({ progressbarService })
+    .service({ jsonConfigsService });
 
 require('./auth.intercepter');
 require('./utils/safari-fixes.util');

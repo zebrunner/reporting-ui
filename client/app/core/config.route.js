@@ -412,6 +412,45 @@
                         }
                     }
                 })
+
+                .state('tests.sessions', {
+                    url: '/sessions',
+                    component: 'testsSessionsComponent',
+                    data: {
+                        requireLogin: true,
+                        classes: 'p-tests-sessions'
+                    },
+                    resolve: {
+                        resolvedTestSessions: function($state, testsSessionsService, $q, projectsService, messageService) {
+                            'ngInject';
+
+                            return testsSessionsService.searchSessions()
+                                .then(res => {
+                                    if (res.success) {
+                                        return res.data;
+                                    }
+
+                                    return $q.reject(res);
+                                })
+                                .catch(function(err) {
+                                    err && err.message && messageService.error(err.message);
+                                    //if can't load with user/cached searchParams return empty data
+                                    return $q.resolve([]);
+                                });
+                        },
+                    },
+                    lazyLoad: async ($transition$) => {
+                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                        try {
+                            const mod = await import(/* webpackChunkName: "tests-sessions" */ '../modules/tests-sessions/tests-sessions.module.js');
+
+                            return $ocLazyLoad.load(mod.testsSessionsModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load testsSessions module, ' + err);
+                        }
+                    }
+                })
                 .state('tests.runDetails', {
                     url: '/runs/:testRunId',
                     component: 'testDetailsComponent',
@@ -457,7 +496,7 @@
                         },
                         configSnapshot: ($stateParams, $q) => {
                             'ngInject';
-                            
+
                             return $q.resolve($stateParams.configSnapshot);
                         }
                     },

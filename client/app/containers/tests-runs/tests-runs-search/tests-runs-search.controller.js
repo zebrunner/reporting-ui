@@ -10,7 +10,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
     const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS'];
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
     let scrollTickingTimeout = null;
-    const scrollablePerentElement = document.querySelector('.page-wrapper');
+    const scrollableParentElement = document.querySelector('.page-wrapper');
 
     const vm = {
         isMobile: windowWidthService.isMobile,
@@ -255,11 +255,11 @@ const TestsRunsSearchController = function TestsRunsSearchController(windowWidth
     function bindEventListeners() {
         vm.$onDestroy = () => {
             if (vm.isMobile) {
-                angular.element(scrollablePerentElement).off('scroll.hideFilterButton', onScroll);
+                angular.element(scrollableParentElement).off('scroll.hideFilterButton', onScroll);
             }
         }
         if (vm.isMobile) {
-            angular.element(scrollablePerentElement).on('scroll.hideFilterButton', onScroll);
+            angular.element(scrollableParentElement).on('scroll.hideFilterButton', onScroll);
         }
     }
 

@@ -1,6 +1,7 @@
-@import "../global/var";
+@import "../../../../styles/global/var";
+@import "../../../../styles/global/var-pages";
 
-.tests-runs-search {
+.tests-sessions-search {
     background-color: white;
     padding: 18px 20px 18px 15px;
     position: relative;
@@ -9,26 +10,25 @@
     &__top-section {
         align-items: center;
         max-width: 550px;
+        margin-right: 12px;
+    }
+
+    &__btn {
+        margin-left: auto;
+        margin-right: 0;
     }
 
     md-input-container.select-wrapper {
-        margin-top: 0;
-        margin-left: 12px;
+        margin: 0 12px 0 0;
         padding-top: 0;
-        margin-bottom: 0;
         width: 144px;
-    }
-
-    &__helpers {
-        .md-button {
-            margin-left: 12px;
-        }
+        max-width: 144px;
     }
 
     &__input {
         &-label {
             position: relative;
-            margin: 0 12px 0 0;
+            margin: 0;
             font-weight: normal;
             flex-grow: 1;
             flex-shrink: 1;
@@ -55,25 +55,12 @@
                 color: #fff;
             }
 
-            @media screen and (min-width: 600px) {
+            @media screen and (min-width: $md-screen-phone + 1) {
                 &:hover {
                     background-color: rgba($dark-new, .5);
                     color: #fff;
                 }
             }
-        }
-    }
-
-    md-checkbox {
-        width: 36px;
-        height: 36px;
-        margin: 0 12px 0 0;
-        .md-container {
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        @media (max-width: $screen-phone) {
-            margin: 0 8px 0 4px;
         }
     }
 
@@ -84,16 +71,29 @@
         }
     }
 
-    @media (max-width: 1279px) {
+    @media (max-width: 959px) {
         &__top-section {
             max-width: 100%;
         }
     }
 
-    @media (min-width: $breakpoint-mobile ) and (max-width: 1279px) {
+    @media (min-width: $md-screen-phone + 1 ) and (max-width: 959px) {
         &__top-section {
-            margin-bottom: 8px;
+            margin-right: 0;
         }
+        &__input {
+            &-label {
+                margin-right: 0;
+            }
+        }
+
+        md-input-container.select-wrapper,
+        &__btn {
+            margin-top: 8px;
+        }
+    }
+
+    @media (min-width: $screen-xs + 1) and (max-width: $md-screen-phone) {
         &__input {
             &-label {
                 margin-right: 0;
@@ -101,15 +101,7 @@
         }
     }
 
-    @media (min-width: 481px) and (max-width: $breakpoint-mobile - 1) {
-        &__input {
-            &-label {
-                margin-right: 0;
-            }
-        }
-    }
-
-    @media (max-width: $breakpoint-mobile - 1) {
+    @media (max-width: $md-screen-phone) {
         box-shadow: none;
         position: fixed;
         left: 0;
@@ -125,7 +117,7 @@
             display: block;
             position: absolute;
             top: calc(100% + 2px);
-            height: calc(100vh - #{$header-height} - 72px);
+            height: calc(100vh - #{$header-height} - 72px);  // TODO: what is 72px?
             width: 100%;
             left: 0;
             background-color: rgba($dark-new, .25);
@@ -166,7 +158,7 @@
         }
     }
 
-    @media (min-width: 481px) and (max-width: $breakpoint-mobile - 1) {
+    @media (min-width: $screen-xs + 1) and (max-width: $md-screen-phone) {
         left: $sidebar_width;
         margin: 0 20px;
     }

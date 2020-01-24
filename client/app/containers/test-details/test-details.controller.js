@@ -31,7 +31,7 @@ const testDetailsController = function testDetailsController(
     const defaultLimitOptions = [initialCountToDisplay, initialCountToDisplay * 2];
     let firstIndex;
     let lastIndex;
-    const scrollablePerentElement = document.querySelector('.page-wrapper');
+    const scrollableParentElement = document.querySelector('.page-wrapper');
     let testCaseManagementTools = [];
     let jiraSettings = {};
     let testRailSettings = {};
@@ -201,7 +201,7 @@ const testDetailsController = function testDetailsController(
             disconnectIntersectionObserver();
 
             if (vm.isMobile) {
-                angular.element(scrollablePerentElement).off('scroll.hideFilterButton', onScroll);
+                angular.element(scrollableParentElement).off('scroll.hideFilterButton', onScroll);
             }
         });
 
@@ -216,7 +216,7 @@ const testDetailsController = function testDetailsController(
         });
 
         if (vm.isMobile) {
-            angular.element(scrollablePerentElement).on('scroll.hideFilterButton', onScroll);
+            angular.element(scrollableParentElement).on('scroll.hideFilterButton', onScroll);
         }
     }
 
@@ -350,7 +350,7 @@ const testDetailsController = function testDetailsController(
                     const headerOffset = testRunHeader + pageHeader;
                     const elOffsetTop = $(el).offset().top;
 
-                    $(scrollablePerentElement).animate({ scrollTop: elOffsetTop - headerOffset }, 'fast');
+                    $(scrollableParentElement).animate({ scrollTop: elOffsetTop - headerOffset }, 'fast');
                 }
                 $timeout(function () {
                     vm.testId = null;
