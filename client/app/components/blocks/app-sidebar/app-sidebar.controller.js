@@ -295,7 +295,7 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
                         if (activeProject) {
                             vm.selectedProject = activeProject.id;
                         } else { //Looks like the project doesn't exist anymore, so we need to clear cached selection.
-                            projectsService.resetSelectedProjects();
+                            projectsService.resetSelectedProject();
                         }
                     }
                 } else {

@@ -3,7 +3,7 @@
 import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
-const testsRunsController = function testsRunsController($cookieStore, $mdDialog, $timeout, $q, TestRunService,
+const testsRunsController = function testsRunsController($mdDialog, $timeout, $q, TestRunService,
                                                          UtilService, UserService, testsRunsService, $scope, API_URL,
                                                          $rootScope, $transitions, windowWidthService, TestService,
                                                          toolsService, projectsService, messageService) {
