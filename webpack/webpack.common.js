@@ -9,7 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = (env) => {
     const isProd = env === 'production';
@@ -212,9 +212,7 @@ module.exports = (env) => {
             moduleExtensions: ['-loader']
         },
         plugins: [
-            new CleanWebpackPlugin(['../dist'], {
-                allowExternal: true
-            }),
+            new CleanWebpackPlugin(),
             new webpack.DefinePlugin({
                 __PRODUCTION__,
                 __ZAFIRA_UI_VERSION__,
