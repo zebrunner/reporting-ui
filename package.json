@@ -72,7 +72,7 @@
         "echarts": "^4.6.0",
         "elasticsearch-browser": "^15.5.0",
         "font-awesome": "^4.7.0",
-        "gridstack": "git://github.com/danymill/gridstack.js.git#develop",
+        "gridstack": "^0.6.0",
         "highlight.js": "^9.18.0",
         "html2canvas": "^1.0.0-rc.5",
         "humanize-duration": "^3.21.0",
