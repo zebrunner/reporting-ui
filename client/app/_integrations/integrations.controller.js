@@ -266,7 +266,7 @@ const integrationsController = function integrationsController($state, $mdDialog
                     sortToolsByStatus();
 
                     if (type.multipleAllowed) {
-                        vm.toolTypes = vm.groups.find(({ id }) => id === type.id).types;
+                        vm.toolTypes = vm.groups.find(({ id }) => id === type.id)?.types ?? [];
                     } else {
                         vm.toolTypes = [];
                     }
