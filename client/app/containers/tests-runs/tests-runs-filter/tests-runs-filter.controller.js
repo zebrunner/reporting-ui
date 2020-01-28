@@ -1,7 +1,7 @@
 'use strict';
 
 const TestsRunsFilterController = function TestsRunsFilterController($scope, FilterService, DEFAULT_SC, TestRunService, $q, ProjectService,
-                                       testsRunsService, $cookieStore, UserService, $timeout, $mdDateRangePicker,
+                                       testsRunsService, UserService, $timeout, $mdDateRangePicker,
                                        windowWidthService, messageService) {
     'ngInject';
 
@@ -416,7 +416,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         });
         clearFilterSlice();
     }
-    
+
     function handleBodyClass() {
         if (vm.filters && vm.filters.length) {
             document.body.classList.remove('_no-filters');
