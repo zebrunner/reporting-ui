@@ -1,3 +1,5 @@
+@import '../../../../styles/global/var';
+
 .zeb-tutorials-slider {
     &__dots {
         display: flex;
@@ -25,14 +27,14 @@
             &:before {
                 width: 8px;
                 height: 8px;
-                background: #011627;
+                background: $dark-new;
             }
             &._active {
                 cursor: default;
                 &:after {
                     width: 14px;
                     height: 14px;
-                    border: 1px solid #011627;
+                    border: 1px solid $dark-new;
                 }
             }
         }
@@ -98,7 +100,7 @@
             right: 8px
         }
         .material-icons {
-            color: #011627;
+            color: $dark-new;
         }
     }
     &__slides:hover &__arrow {
@@ -109,14 +111,14 @@
         font-weight: 700;
         font-size: 24px;
         line-height: 28px;
-        color: #011627;
+        color: $dark-new;
         margin-bottom: 8px;
         margin-top: 12px;
     }
     &__description {
         font-size: 14px;
         line-height: 24px;
-        color: #011627;
+        color: $dark-new;
         margin: 0 0 12px;
     }
 }
