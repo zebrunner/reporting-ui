@@ -1,6 +1,6 @@
 'use strict';
 
-const authController = function authController($scope, $rootScope, $location, $state, $cookies, $templateCache, AuthService, UserService,
+const authController = function authController($scope, $window, $rootScope, $location, $interval, $state, $cookies, $templateCache, AuthService, UserService,
                             UtilService, InvitationService, messageService, $stateParams) {
     'ngInject';
 
@@ -73,6 +73,41 @@ const authController = function authController($scope, $rootScope, $location, $s
         $state.go(state);
     };
 
+    let gitHubPopUp;
+    $scope.connectToGitHub = function () {
+        var url = 'http://localhost:8082/zafira-ws/oauth2/authorization/github';
+        var height = 650;
+        var width = 450;
+        var location = getCenterWindowLocation(height, width);
+        var gitHubPopUpProperties = 'toolbar=0,scrollbars=1,status=1,resizable=1,location=1,menuBar=0,width=' + width + ', height=' + height + ', top=' + location.top + ', left=' + location.left;
+        gitHubPopUp = $window.open(url, 'GithubAuth', gitHubPopUpProperties);
+
+        var localStorageWatcher = $interval(function () {
+            var token = localStorage.getItem('authToken');
+            if (token) {
+                const authToken = JSON.parse(token);
+                gitHubPopUp.close();
+                onLoginSuccess(authToken);
+                localStorage.removeItem('authToken');
+                $interval.cancel(localStorageWatcher);
+            }
+        }, 200);
+
+        if (window.focus) {
+            gitHubPopUp.focus();
+        }
+    };
+
+    function getCenterWindowLocation(height, width) {
+        var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+        var dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+        var w = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        var h = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+        var left = ((w / 2) - (width / 2)) + dualScreenLeft;
+        var top = ((h / 2) - (height / 2)) + dualScreenTop;
+        return { 'top': top, 'left': left };
+    }
+
     (function initController() {
         switch($state.current.name) {
             case 'signup':
@@ -102,20 +137,24 @@ const authController = function authController($scope, $rootScope, $location, $s
         AuthService.Login(credentials.usernameOrEmail, credentials.password)
             .then(function(rs) {
                 if (rs.success) {
-                    var payload = {
-                        auth: rs.data
-                    };
-
-                    $state.params.location && (payload.location = $state.params.location);
-                    $state.params.referrer && (payload.referrer = $state.params.referrer);
-                    $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
-                    $rootScope.$broadcast('event:auth-loginSuccess', payload);
+                    onLoginSuccess(rs.data);
                 } else {
                     $scope.credentials = {
                         valid: false
                     };
                 }
             });
+    };
+
+    function onLoginSuccess(authToken) {
+        var payload = {
+            auth: authToken
+        };
+
+        $state.params.location && (payload.location = $state.params.location);
+        $state.params.referrer && (payload.referrer = $state.params.referrer);
+        $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
+        $rootScope.$broadcast('event:auth-loginSuccess', payload);
     };
 
     $scope.signup = function(user, form) {

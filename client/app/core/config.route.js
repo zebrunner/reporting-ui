@@ -9,6 +9,21 @@
                 .state('home', {
                     redirectTo: transisiton => transisiton.router.stateService.target('dashboard.list', {}, { location: 'replace', reload: true, inherit: false }),
                 })
+                .state('loginSuccess', {
+                    url: '/login/success?authToken',
+                    component: 'loginSuccessComponent',
+                    lazyLoad: async ($transition$) => {
+                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                        try {
+                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+
+                            return $ocLazyLoad.load(mod.authModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load auth module, ' + err);
+                        }
+                    },
+                })
                 .state('dashboard', {
                     url: '/dashboards',
                     abstract: true,
@@ -457,7 +472,7 @@
                         },
                         configSnapshot: ($stateParams, $q) => {
                             'ngInject';
-                            
+
                             return $q.resolve($stateParams.configSnapshot);
                         }
                     },
