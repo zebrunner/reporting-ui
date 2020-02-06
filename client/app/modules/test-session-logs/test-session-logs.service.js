@@ -8,7 +8,7 @@ const testSessionLogsService = function testSessionLogsService(
 ) {
     'ngInject';
 
-    const sessionStorageURL = 'http://api.zebrunner.com/moon';
+    const sessionStorageURL = 'https://api.zebrunner.com/moon';
     const service = {
         getSessionLog,
         getSessionVideoURL,
