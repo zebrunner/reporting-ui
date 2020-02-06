@@ -412,45 +412,6 @@
                         }
                     }
                 })
-
-                .state('tests.sessions', {
-                    url: '/sessions',
-                    component: 'testsSessionsComponent',
-                    data: {
-                        requireLogin: true,
-                        classes: 'p-tests-sessions'
-                    },
-                    resolve: {
-                        resolvedTestSessions: function($state, testsSessionsService, $q, projectsService, messageService) {
-                            'ngInject';
-
-                            return testsSessionsService.searchSessions()
-                                .then(res => {
-                                    if (res.success) {
-                                        return res.data;
-                                    }
-
-                                    return $q.reject(res);
-                                })
-                                .catch(function(err) {
-                                    err && err.message && messageService.error(err.message);
-                                    //if can't load with user/cached searchParams return empty data
-                                    return $q.resolve([]);
-                                });
-                        },
-                    },
-                    lazyLoad: async ($transition$) => {
-                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
-
-                        try {
-                            const mod = await import(/* webpackChunkName: "tests-sessions" */ '../modules/tests-sessions/tests-sessions.module.js');
-
-                            return $ocLazyLoad.load(mod.testsSessionsModule);
-                        } catch (err) {
-                            throw new Error('Can\'t load testsSessions module, ' + err);
-                        }
-                    }
-                })
                 .state('tests.runDetails', {
                     url: '/runs/:testRunId',
                     component: 'testDetailsComponent',
@@ -568,6 +529,95 @@
                             return $ocLazyLoad.load(mod.testRunInfoModule);
                         } catch (err) {
                             throw new Error('Can\'t load testRunInfo module, ' + err);
+                        }
+                    }
+                })
+                .state('tests.sessions', {
+                    url: '/sessions',
+                    component: 'testsSessionsComponent',
+                    data: {
+                        requireLogin: true,
+                        classes: 'p-tests-sessions'
+                    },
+                    params: {
+                        sessionId: null
+                    },
+                    resolve: {
+                        resolvedTestSessions: function($state, testsSessionsService, $q, projectsService, messageService) {
+                            'ngInject';
+
+                            return testsSessionsService.searchSessions()
+                                .then(res => {
+                                    if (res.success) {
+                                        return res.data;
+                                    }
+
+                                    return $q.reject(res);
+                                })
+                                .catch(function(err) {
+                                    err && err.message && messageService.error(err.message);
+                                    //if can't load with user/cached searchParams return empty data
+                                    return $q.resolve([]);
+                                });
+                        },
+                    },
+                    lazyLoad: async ($transition$) => {
+                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                        try {
+                            const mod = await import(/* webpackChunkName: "tests-sessions" */ '../modules/tests-sessions/tests-sessions.module.js');
+
+                            return $ocLazyLoad.load(mod.testsSessionsModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load testsSessions module, ' + err);
+                        }
+                    }
+                })
+                .state('tests.sessionLogs', {
+                    url: '/sessions/:testSessionId',
+                    component: 'testSessionLogsComponent',
+                    data: {
+                        requireLogin: true,
+                        classes: 'p-test-session-logs'
+                    },
+                    resolve: {
+                        testSession: function($stateParams, $q, $state, testsSessionsService, $timeout, messageService) {
+                            'ngInject';
+
+                            if ($stateParams.testSessionId) {
+                                return testsSessionsService.getSessionById($stateParams.testSessionId)
+                                    .then(res => {
+                                        if (res.success && res.data) {
+                                            return res.data;
+                                        }
+
+                                        const message = `Can't get test session with ID='${$stateParams.testSessionId}'`;
+                                        // Timeout to avoid digest issues
+                                        $timeout(() => {
+                                            $state.go('tests.sessions');
+                                        }, 0);
+                                        messageService.error(message);
+
+                                        return $q.reject({ message });
+                                    });
+                            } else {
+                                // Timeout to avoid digest issues
+                                $timeout(() => {
+                                    $state.go('tests.sessions');
+                                }, 0);
+                                return $q.reject(false);
+                            }
+                        },
+                    },
+                    lazyLoad: async ($transition$) => {
+                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                        try {
+                            const mod = await import(/* webpackChunkName: "test-session-logs" */ '../modules/test-session-logs/test-session-logs.module');
+
+                            return $ocLazyLoad.load(mod.testSessionLogsModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load testSessionLogs module, ' + err);
                         }
                     }
                 })

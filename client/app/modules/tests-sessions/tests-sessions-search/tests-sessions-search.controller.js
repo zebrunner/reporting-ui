@@ -47,6 +47,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
     return vm;
 
     function init() {
+        readCachedSearchParams();
         readDatePickerValues();
         loadAdditionalSearchParams();
         bindEventListeners();
@@ -129,6 +130,17 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         vm.selectedRange.selectedTemplateName = params.selectedTemplateName || null;
         vm.selectedRange.dateStart = params.fromDate || params.date || null;
         vm.selectedRange.dateEnd = params.toDate || params.date || null;
+    }
+
+    function readCachedSearchParams() {
+        const fieldsForSync = ['query', 'platform', 'status'];
+        const params = testsSessionsService.activeParams;
+
+        fieldsForSync.forEach(field => {
+            if (params[field]) {
+                vm.searchParams[field] = params[field];
+            }
+        });
     }
 
     function isSearchActive() {

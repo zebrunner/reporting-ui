@@ -6,6 +6,7 @@ import messageService from './messages/message.service';
 import mainMenuService from './main-menu/main-menu.service';
 import ArtifactService from './artifact.service';
 import jsonConfigsService from './json-configs/json-configs.service';
+import testsSessionsService from './tests-sessions/tests-sessions.service';
 
 angular.module('app.services', [])
     .service({ ArtifactService})
@@ -13,7 +14,8 @@ angular.module('app.services', [])
     .service({ messageService })
     .service({ mainMenuService })
     .service({ progressbarService })
-    .service({ jsonConfigsService });
+    .service({ jsonConfigsService })
+    .service({ testsSessionsService });
 
 require('./auth.intercepter');
 require('./utils/safari-fixes.util');

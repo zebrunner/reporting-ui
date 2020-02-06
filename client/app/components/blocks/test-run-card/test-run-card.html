@@ -93,7 +93,7 @@
                     <span data-ng-hide="$ctrl.testRun.status === 'QUEUED' || $ctrl.testRun.status == 'ABORTED'">Started</span>
                     <span data-ng-if="$ctrl.testRun.status === 'QUEUED'">Queued</span>
                     <span data-ng-if="$ctrl.testRun.status === 'ABORTED'">Aborted</span>
-                    <time am-time-ago="$ctrl.testRun.startedAt" title="{{ main.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
+                    <time am-time-ago="$ctrl.testRun.startedAt" title="{{ $ctrl.testRun.startedAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
                 </div>
                 <div data-ng-if="$ctrl.testRun.elapsed && $ctrl.testRun.elapsed > 0" class="light_text">
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
@@ -328,7 +328,7 @@
                         <i data-ng-if="$ctrl.testRun.status === 'ABORTED'" class="test-run-card__time-icon fa fa-ban" aria-hidden="true"></i>
                         <time class="test-run-card__time-text"
                               am-time-ago="$ctrl.testRun.startedAt"
-                              title="{{ main.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
+                              title="{{ $ctrl.testRun.startedAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
                     </div>
                     <div data-ng-if="$ctrl.testRun.elapsed && $ctrl.testRun.elapsed > 0" class="test-run-card__time _light">
                         <i class="test-run-card__time-icon fa fa-clock-o" aria-hidden="true"></i>

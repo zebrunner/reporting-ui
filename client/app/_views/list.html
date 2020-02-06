@@ -69,7 +69,7 @@
                                                <span title="In Progress" class="label arrowed arrowed-in-right label-info-border" data-ng-class="{'label-info-empty': jobView.testRun.inProgress == 0, 'label-info': jobView.testRun.inProgress > 0}">{{jobView.testRun.inProgress}}</span>
                                            </td>
                                            <td md-cell>
-                                                <time data-ng-if="jobView.testRun.startedAt" am-time-ago="jobView.testRun.startedAt" title="{{ main.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
+                                                <time data-ng-if="jobView.testRun.startedAt" am-time-ago="jobView.testRun.startedAt" title="{{ jobView.testRun.startedAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
                                                 <span data-ng-if="!jobView.testRun.startedAt">Long ago</span>
                                            </td>
                                            <td md-cell class="no-padding">

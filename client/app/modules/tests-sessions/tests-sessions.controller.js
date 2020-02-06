@@ -3,7 +3,6 @@
 import accessKeyModalController from './access-key-modal/access-key-modal.controller';
 import accessKeyModalTemplate from './access-key-modal/access-key-modal.html';
 
-// TODO: Add menus with "open" and "copy Url" links (see test runs)
 const testsSessionsController = function testsSessionsController(
     $q,
     windowWidthService,
@@ -75,15 +74,13 @@ const testsSessionsController = function testsSessionsController(
             });
     }
 
-    // TODO: reset service cache on routing except internal (logs) page
     function bindEvents() {
         const onTransStartSubscription = $transitions.onStart({}, trans => {
-            // const toState = trans.to();
-            //
-            // if (toState.name !== 'tests.runDetails'){
-            //     TestService.clearDataCache();
-            // }
-            testsSessionsService.resetCachedParams();
+            const toState = trans.to();
+
+            if (toState.name !== 'tests.sessionLogs'){
+                testsSessionsService.resetCachedParams();
+            }
             onTransStartSubscription();
         });
     }

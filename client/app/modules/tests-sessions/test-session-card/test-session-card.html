@@ -1,17 +1,36 @@
 <div class="test-session-card">
-    <div ng-attr-id="testSession_{{$ctrl.testSession.id}}"
+    <div ng-attr-id="testSession_{{$ctrl.testSession.sessionId}}"
         ng-class="{'background-gray': $ctrl.testSession.selected}"
         class="test-session-card__wrapper {{$ctrl.testSession.status | lowercase}}">
         <div class="test-session-card__wrapper-left">
             <div class="test-session-card__cell _info">
                 <div class="test-session-card__title-wrapper">
-                    <div class="test-session-card__title">{{$ctrl.testSession.testName}}</div>
+                    <div class="test-session-card__title">{{$ctrl.testSession.testName || 'Untitled'}}</div>
                 </div>
                 <div class="test-session-card__job">
                     <div class="test-session-card__job-name">
-                        <span>{{$ctrl.testSession.buildNumber}}</span>
+                        <span>{{$ctrl.testSession.buildNumber || 'Unknown build'}}</span>
                     </div>
                 </div>
+            </div>
+            <div class="test-session-card__cell _actions" ng-if="$ctrl.isMobile">
+                <md-menu class="pull-right" md-offset="0 {{$ctrl.currentOffset}}">
+                    <md-button name="testSessionSetting" aria-label="User settings" class="md-icon-button" ng-click="$ctrl.openMenu($event, $mdMenu)">
+                        <md-icon class="material-icons">more_vert</md-icon>
+                    </md-button>
+                    <md-menu-content width="2" class="fixed-md-menu-content">
+                        <md-menu-item>
+                            <md-button name="open" ng-click="$ctrl.openLogs()">
+                                Open
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button name="copyLink" data-ng-click="$ctrl.copyLink()">
+                                Copy link
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
             </div>
             <div class="test-session-card__clickable"
                 ng-class="{ '_highlighting': $ctrl.testSession.highlighting }"
@@ -32,7 +51,7 @@
                     <i ng-if="$ctrl.isMobile"
                         class="test-run-card__time-icon fa fa-play-circle"
                         aria-hidden="true"></i>
-                    <time class="test-session-card__time-text" am-time-ago="$ctrl.testSession.startedAt" title="{{ main.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
+                    <time class="test-session-card__time-text" am-time-ago="$ctrl.testSession.startedAt" title="{{ $ctrl.testSession.startedAt | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a' }}"></time>
                 </div>
                 <div data-ng-if="$ctrl.testSession.duration" class="test-session-card__time _duration">
                     <i class="test-run-card__time-icon fa fa-clock-o" aria-hidden="true"></i>
@@ -41,6 +60,25 @@
                         <span ng-if="!minutes">{{seconds}} second{{secondsS}}</span>
                     </timer>
                 </div>
+            </div>
+            <div class="test-session-card__cell _menu" ng-if="!$ctrl.isMobile">
+                <md-menu class="pull-right" md-offset="0 {{$ctrl.currentOffset}}">
+                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" ng-click="$ctrl.openMenu($event, $mdMenu)">
+                        <md-icon class="material-icons">more_vert</md-icon>
+                    </md-button>
+                    <md-menu-content width="2" class="fixed-md-menu-content">
+                        <md-menu-item>
+                            <md-button name="open" ng-click="$ctrl.openLogs()">
+                                Open
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button name="copyLink" data-ng-click="$ctrl.copyLink()">
+                                Copy link
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
             </div>
         </div>
     </div>
