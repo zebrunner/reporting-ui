@@ -1,3 +1,5 @@
+'use strict';
+
 import '../styles/vendors.scss';
 
 require('angular');
@@ -18,6 +20,9 @@ window.SockJS = require('vendors/sockjs-1.3.0.min');
 require('vendors/stomp.min');
 window.humanizeDuration = require('humanize-duration');
 require('vendors/angular-timer'); //TODO: This file is changed locally, see generated patch in this angular project root directory
+if (!angular.lowercase) { //https://github.com/textAngular/textAngular/issues/1608
+    angular.lowercase = str => angular.isString(str) ? str.toLowerCase() : str;
+}
 require('textangular/dist/textAngular-sanitize.min');
 require('textangular');
 

@@ -1,0 +1,202 @@
+@import '../../../styles/global/var';
+
+.test-session-logs {
+    &__content {
+        height: 100%;
+    }
+
+    &__section {
+        height: inherit;
+
+        & > .row,
+        & .test-session-logs__tabs,
+        & .panel,
+        & .panel-body {
+            height: inherit;
+        }
+
+        md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) md-tab-content {
+            height: inherit;
+            overflow: hidden !important;
+        }
+
+        .history-tab {
+            height: 100%;
+        }
+
+        .panel {
+            border: none;
+            box-shadow: none;
+        }
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+
+        &-name {
+            padding: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            &._mobile {
+                display: none;
+            }
+            @media screen and (max-width: $screen-phone) {
+                display: none;
+                &._mobile {
+                    display: inline-block;
+                }
+            }
+        }
+
+        .back_button {
+            min-width: auto;
+            min-height: auto;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            .material-icons {
+                color: black;
+            }
+            &:hover {
+                background-color: none;
+            }
+
+            @media screen and (max-width: $screen-phone) {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: $screen-phone) {
+            font-size: 20px;
+            display: flex;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            &-name {
+                display: none;
+                &._mobile {
+                    display: inline-block;
+                }
+            }
+        }
+
+        &-link {
+            .material-icons {
+                font-size: .85em;
+                height: .85em;
+                width: .85em;
+                min-height: .85em;
+                min-width: .85em;
+            }
+        }
+    }
+
+    &__tab-video {
+        &-wrapper {
+            margin: 16px;
+            background: #000;
+            min-height: 465px;
+            position: relative;
+            top: 0;
+            left: 0;
+            display: flex;
+            height: 50vh;
+            video {
+                height: 50vh;
+                width: 100%;
+                min-height: 100%;
+                padding: 10px 8px;
+                position: absolute;
+            }
+        }
+    }
+    &__tab-table {
+        &-wrapper {
+            margin-bottom: 0;
+            height: 100%;
+            overflow: auto;
+
+            table {
+                table-layout: fixed;
+                margin-bottom: 10px;
+                // TODO: check if we need this
+                //height: auto;
+                //td, th {
+                //    padding: 10px !important;
+                //}
+            }
+        }
+        &-col {
+            font-size: 12px;
+            line-height: 16px;
+            word-wrap: break-word;
+        }
+    }
+    &__tab-additional {
+        table {
+            margin: 16px;
+            padding-left: 33px;
+            -webkit-padding-start: 33px;
+            list-style: none;
+            td {
+                padding: 8px 8px 8px 0;
+                color: $dark-coal-new;
+                font-size: 14.5px;
+                span {
+                    font-weight: 500;
+                }
+            }
+
+        }
+        &._no-video table {
+            margin-top: 5px;
+        }
+    }
+    &__plain-log {
+        padding: 15px;
+    }
+
+    @media (min-width: 992px) {
+        &__tab {
+            &-video-section {
+                border-left: 1px solid $custom-gray;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                height: auto;
+                overflow: auto;
+            }
+        }
+    }
+
+    @media (max-width: 991px) {
+        &__section {
+            .history-tab {
+                overflow: auto;
+            }
+        }
+        &__tab {
+            &-table {
+                &-wrapper {
+                    height: auto !important;
+                    overflow: visible;
+                }
+            }
+            &-video {
+                &-section {
+                    border-bottom: 1px solid $custom-gray;
+                }
+                &-wrapper {
+                    margin-right: 0;
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+}

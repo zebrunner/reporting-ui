@@ -253,23 +253,27 @@ const integrationsController = function integrationsController($state, $mdDialog
         vm.chipsCtrl.selectedChip = selectedIndex;
         vm.isNewToolAdding = false;
         vm.newItem = null;
-        vm.isMultipleAllowed = type.multipleAllowed;
         vm.currentType = type;
         vm.addingIntegrationMode = false;
 
         integrationsService.setType(type);
         integrationsService.storeType();
 
-        toolsService.fetchIntegrationOfTypeByName(type.name).then((res) => {
-            vm.tools = res.data || [];
-            sortToolsByStatus();
+        toolsService.fetchIntegrationOfTypeByName(type.name)
+            .then(res => {
+                if (res.success) {
+                    vm.tools = res.data || [];
+                    sortToolsByStatus();
 
-            if (vm.isMultipleAllowed) {
-                vm.toolTypes = vm.groups.find(({ id }) => id === type.id).types;
-            } else {
-                vm.toolTypes = [];
-            }
-        });
+                    if (type.multipleAllowed) {
+                        vm.toolTypes = vm.groups.find(({ id }) => id === type.id)?.types ?? [];
+                    } else {
+                        vm.toolTypes = [];
+                    }
+                }
+
+                vm.isMultipleAllowed = type.multipleAllowed;
+            });
     }
 
     function switchAddingIntegrationMode() {

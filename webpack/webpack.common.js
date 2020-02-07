@@ -9,7 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = (env) => {
     const isProd = env === 'production';
@@ -52,7 +52,7 @@ module.exports = (env) => {
         mode: 'none',
         bail: isProd,
         devtool: 'source-map',
-        context: path.join(__dirname, '../client/app'),
+        context: path.join(process.cwd(), './client/app'),
         entry: {
             vendors: './app.vendors.js',
             app: './app.module.js',
@@ -60,18 +60,18 @@ module.exports = (env) => {
         output: {
             filename: isProd ? '[name].build.[hash:8].min.js' : '[name].build.js',
             chunkFilename: isProd ? '[name].chunk.[hash:8].min.js' : '[name].chunk.js',
-            path: path.join(__dirname, '../dist'),
+            path: path.join(process.cwd(), './dist'),
             pathinfo: isDev,
             publicPath: isDev ? '/': undefined,
         },
         resolve: {
             modules: [
                 'node_modules',
-                path.join(__dirname, '../client/app'),
+                path.join(process.cwd(), './client/app'),
             ],
             alias: {
-                'jquery-ui': path.resolve(__dirname, '../node_modules/jquery-ui/ui'),
-                'vendors': path.resolve(__dirname, '../client/vendors'),
+                'jquery-ui': path.resolve(process.cwd(), './node_modules/jquery-ui/ui'),
+                'vendors': path.resolve(process.cwd(), './client/vendors'),
             },
             symlinks: false ,
         },
@@ -85,7 +85,7 @@ module.exports = (env) => {
                         // Process application JS with Babel.
                         {
                             test: /\.m?js$/,
-                            include: path.join(__dirname, '../client/app'),
+                            include: path.join(process.cwd(), './client/app'),
                             use: [
                                 {
                                     loader: 'babel',
@@ -111,7 +111,7 @@ module.exports = (env) => {
                         // Unlike the application JS, we only compile the standard ES features.
                         {
                             test: /\.m?js$/,
-                            exclude: [path.join(__dirname, '../client/app'), /\.min\./],
+                            exclude: [path.join(process.cwd(), './client/app'), /\.min\./],
                             use: [
                                 {
                                     loader: 'babel',
@@ -135,7 +135,7 @@ module.exports = (env) => {
                             test: /\.(gif|png|jpe?g)$/i,
                             loader: 'url',
                             exclude: [
-                                path.resolve(__dirname, '../node_modules/font-awesome/fonts')
+                                path.resolve(process.cwd(), './node_modules/font-awesome/fonts')
                             ],
                             options: {
                                 limit: 8192,
@@ -145,7 +145,7 @@ module.exports = (env) => {
                         {
                             test: /\.(otf|ttf|eot|woff2?|svg)$/i,
                             include: [
-                                path.resolve(__dirname, '../node_modules/font-awesome/fonts')
+                                path.resolve(process.cwd(), './node_modules/font-awesome/fonts')
                             ],
                             loader: 'file',
                             options: {
@@ -154,7 +154,7 @@ module.exports = (env) => {
                         },
                         {
                             test: /\.html$/,
-                            exclude: [path.resolve(__dirname, '../client/index.html')],
+                            exclude: [path.resolve(process.cwd(), './client/index.html')],
                             loader: 'html',
                             options: {
                                 attrs: [':md-svg-src', ':data-src', ':src']
@@ -212,28 +212,26 @@ module.exports = (env) => {
             moduleExtensions: ['-loader']
         },
         plugins: [
-            new CleanWebpackPlugin(['../dist'], {
-                allowExternal: true
-            }),
+            new CleanWebpackPlugin(),
             new webpack.DefinePlugin({
                 __PRODUCTION__,
                 __ZAFIRA_UI_VERSION__,
             }),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/asyncToGenerator.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/regenerator/index.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/typeof.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/classCallCheck.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), '@babel/runtime/helpers/createClass.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-material/index.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-material-data-table/index.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-messages/index.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-scroll/index.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-cookies/index.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-jwt/index.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-moment/angular-moment.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular-sanitize/index.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'rangy/lib/rangy-core.js'),
-            new webpack.PrefetchPlugin(path.join(__dirname, '../node_modules'), 'angular/angular.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), '@babel/runtime/helpers/asyncToGenerator.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), '@babel/runtime/regenerator/index.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), '@babel/runtime/helpers/typeof.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), '@babel/runtime/helpers/classCallCheck.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), '@babel/runtime/helpers/createClass.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-material/index.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-material-data-table/index.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-messages/index.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-scroll/index.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-cookies/index.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-jwt/index.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-moment/angular-moment.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-sanitize/index.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'rangy/lib/rangy-core.js'),
+            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular/angular.js'),
             new webpack.ProvidePlugin({
                 $: 'jquery',
                 jQuery: 'jquery',

@@ -1,0 +1,165 @@
+@import "../../../../styles/global/var";
+@import "../../../../styles/global/var-pages";
+
+.tests-sessions-search {
+    background-color: white;
+    padding: 18px 20px 18px 15px;
+    position: relative;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12), 0 4px 4px 0 rgba(0, 0, 0, 0.12);
+
+    &__top-section {
+        align-items: center;
+        max-width: 550px;
+        margin-right: 12px;
+    }
+
+    &__btn {
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    md-input-container.select-wrapper {
+        margin: 0 12px 0 0;
+        padding-top: 0;
+        width: 144px;
+        max-width: 144px;
+    }
+
+    &__input {
+        &-label {
+            position: relative;
+            margin: 0;
+            font-weight: normal;
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+
+        &-btn {
+            font-size: 0;
+            line-height: 1;
+            transition: all .25s;
+            color: $dark-new;
+            border: 1px solid rgba($dark-new, 0.2);
+            background-color: transparent;
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+
+            .material-icons {
+                color: currentColor;
+            }
+
+            &._active {
+                background-color: rgba($dark-new, .5);
+                color: #fff;
+            }
+
+            @media screen and (min-width: $md-screen-phone + 1) {
+                &:hover {
+                    background-color: rgba($dark-new, .5);
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    .date-picker-container {
+        i.material-icons {
+            color: currentColor;
+            display: none;
+        }
+    }
+
+    @media (max-width: 959px) {
+        &__top-section {
+            max-width: 100%;
+        }
+    }
+
+    @media (min-width: $md-screen-phone + 1 ) and (max-width: 959px) {
+        &__top-section {
+            margin-right: 0;
+        }
+        &__input {
+            &-label {
+                margin-right: 0;
+            }
+        }
+
+        md-input-container.select-wrapper,
+        &__btn {
+            margin-top: 8px;
+        }
+    }
+
+    @media (min-width: $screen-xs + 1) and (max-width: $md-screen-phone) {
+        &__input {
+            &-label {
+                margin-right: 0;
+            }
+        }
+    }
+
+    @media (max-width: $md-screen-phone) {
+        box-shadow: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        z-index: 3;
+        padding: 0;
+        ._no-filters & {
+            top: $header-height;
+        }
+
+        &:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: calc(100% + 2px);
+            height: calc(100vh - #{$header-height} - 72px);  // TODO: what is 72px?
+            width: 100%;
+            left: 0;
+            background-color: rgba($dark-new, .25);
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease-in-out, visibility .25s ease-in-out;
+        }
+
+        &__input {
+            &-label {
+                margin-right: 0;
+            }
+        }
+
+        &__helpers {
+            &:first-of-type {
+                flex-wrap: wrap;
+
+                button + md-input-container {
+                    max-width: calc(100% - 44px); //44px - button width + margin
+                }
+            }
+            &:last-of-type {
+                .date-picker-container {
+                    width: 100%;
+
+                    i.material-icons {
+                        display: inline-block;
+                        position: absolute;
+                        right: 8px;
+                        top: 9px;
+                        font-size: 20px;
+                    }
+
+                }
+            }
+        }
+    }
+
+    @media (min-width: $screen-xs + 1) and (max-width: $md-screen-phone) {
+        left: $sidebar_width;
+        margin: 0 20px;
+    }
+}

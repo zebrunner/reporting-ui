@@ -1,0 +1,141 @@
+<md-dialog flex="100" flex-gt-xs="75" flex-gt-md="50" aria-label="Access key" class="modal-default access-key-modal">
+    <form class="form-validation" name="access_key_form" ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 id="modalTitle">Access key</h2>
+                <span flex></span>
+                <md-button id="close" class="md-icon-button _default-md-style" ng-click="$ctrl.closeModal()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="access-key-modal__section _access-url">
+                    <div class="access-key-modal__control-list" layout="row" layout-align-xs="start end">
+                        <div class="access-key-modal__control-item" flex-xs="grow">
+                            <div class="zf-label" flex="none">Access URL</div>
+                            <div class="access-key-modal__control-input">
+                                <md-input-container class="no-margin _gray-bg">
+                                    <label>Access URL</label>
+                                    <input
+                                        type="text"
+                                        readonly
+                                        name="access-url"
+                                        ng-model="$ctrl.accessUrl" />
+                                </md-input-container>
+                            </div>
+                        </div>
+<!--                        TODO: will be enabled in future -->
+<!--                        <md-button ng-click="$ctrl.refreshAccessUrl()"-->
+<!--                            type="button"-->
+<!--                            ng-disabled="!$ctrl.accessUrl || $ctrl.accessUrlLoading"-->
+<!--                            class="md-icon-button _invert pull-right">-->
+<!--                            <md-icon class="material-icons" role="img" aria-label="autorenew">autorenew</md-icon>-->
+<!--                        </md-button>-->
+                        <md-button ng-click="$ctrl.copyAccessUrl()"
+                            type="button"
+                            ng-disabled="!$ctrl.accessUrl || $ctrl.accessUrlLoading"
+                            class="md-icon-button _invert pull-right">
+                            <md-icon class="material-icons" role="img" aria-label="copy url">file_copy</md-icon>
+                        </md-button>
+                    </div>
+                </div>
+                <div class="access-key-modal__section _languages">
+                    <div class="warning-block" ng-if="$ctrl.languagesFail">
+                        Unable to load languages configs, contact your administrator!
+                    </div>
+                    <md-chips ng-if="!$ctrl.languagesFail && $ctrl.languages.length"
+                        class="filter-chip custom-filter"
+                        ng-model="$ctrl.languages"
+                        md-removable="false"
+                        readonly="true">
+                        <md-chip-template>
+                            <div ng-init="$ctrl.selectLanguageOnChipsInit($index, $mdChipsCtrl)" ng-click="$ctrl.onLanguageSelect($chip)">
+                                <img class="custom-filter__img" ng-if="$chip.icon" ng-src="{{$chip.icon}}"/>
+                                <span>{{$chip.name}}</span>
+                            </div>
+                        </md-chip-template>
+                    </md-chips>
+                </div>
+                <div class="access-key-modal__section _loading" ng-if="$ctrl.isLoading">
+                    Loading configs...
+                </div>
+
+                <div class="access-key-modal__section _platforms" ng-if="!$ctrl.isLoading && $ctrl.failedProvider">
+                    <div class="warning-block">
+                        Unable to load provider's config, contact your administrator!
+                    </div>
+                </div>
+                <div class="access-key-modal__section _platforms"
+                    ng-class="{'_with-controls': $ctrl.platformControls.length}"
+                    ng-if="!$ctrl.isLoading && $ctrl.platforms.length">
+                    <div class="access-key-modal__platforms-header">
+                        <md-radio-group ng-model="$ctrl.platformModel[$ctrl.platformsConfig.rootKey]"
+                            layout="row"
+                            layout-wrap
+                            ng-change="$ctrl.onPlatformSelect()">
+                            <md-radio-button ng-value="platform"
+                                ng-repeat="platform in $ctrl.platforms track by platform.id">{{platform.name}}</md-radio-button>
+                        </md-radio-group>
+                    </div>
+                    <div class="access-key-modal__control-list"
+                        ng-if="$ctrl.platformControls.length">
+                        <div class="access-key-modal__control-item"
+                            ng-repeat="platformControl in $ctrl.platformControls track by $index">
+                            <div class="zf-label" flex="none">
+                                <show-part text="platformControl.label" limit="30">
+                                    <md-tooltip md-direction="top">{{platformControl.label}}</md-tooltip>
+                                </show-part>
+                            </div>
+                            <div class="access-key-modal__control-input">
+                                <md-input-container class="no-margin _gray-bg"
+                                    ng-if="platformControl.type === 'select' && platformControl.items.length">
+                                    <label>{{platformControl.label}}</label>
+                                    <md-select required
+                                        name="{{platformControl.key}}"
+                                        ng-model="$ctrl.platformModel[platformControl.key]"
+                                        ng-model-options="{trackBy: '$value.id'}"
+                                        ng-change="platformControl.onChange(platformControl)">
+                                        <md-option ng-repeat="item in platformControl.items"
+                                            ng-value="item">
+                                            {{item.name}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-input-container class="no-margin _gray-bg"
+                                    ng-if="platformControl.type === 'input'">
+                                    <label>{{platformControl.label}}</label>
+                                    <input
+                                        type="text"
+                                        readonly
+                                        name="{{platformControl.key}}"
+                                        ng-model="$ctrl.platformModel[platformControl.key].value" />
+                                </md-input-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="access-key-modal__section _code-editor" ng-cloak ng-if="!$ctrl.isLoading && !$ctrl.failedProvider">
+                    <div id="aceEditor"
+                        required
+                        class="access-key-modal__editor"
+                        readonly
+                        ui-ace="$ctrl.aceOptions"
+                        ng-model="$ctrl.aceModel"></div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button ng-click="$ctrl.onCodeCopy();"
+                type="button"
+                ng-disabled="$ctrl.isLoading || !$ctrl.lastUpdatedAceModel"
+                class="md-raised btn-w-md md-primary">
+                Copy
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -6,24 +6,16 @@
         .provider('SettingProvider', SettingProvider);
 
     function SettingProvider() {
-        this.$get = function($cookieStore) {
+        this.$get = function($cookies) {
             'ngInject';
             return {
                 getCompanyLogoURl: function() {
-                    return $cookieStore.get("companyLogoURL");
+                    return $cookies.get('companyLogoURL');
                 },
                 setCompanyLogoURL: function(logoURL) {
-                    $cookieStore.put("companyLogoURL", logoURL);
+                    $cookies.put('companyLogoURL', logoURL);
                 },
-                getAmazonCookies: function () {
-                    return $cookieStore.get("s3Policy");
-                },
-                setAmazonCookies: function(s3Policy) {
-                    for (var name in s3Policy) {
-                        $cookieStore.put(name, s3Policy[name], {domain: ".storage.qaprosoft.cloud"});
-                    }
-                }
-            }
+            };
         };
     }
 })();

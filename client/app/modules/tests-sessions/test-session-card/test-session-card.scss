@@ -1,0 +1,347 @@
+@import "../../../../styles/global/var";
+@import "../../../../styles/ui/components/animation";
+
+.test-session-card {
+    &__clickable {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        z-index: 1;
+        &:hover {
+            background-color: rgba(0,0,0,.05);
+        }
+        &._highlighting {
+            animation: change-color 3s ease-in-out 1;
+        }
+    }
+    &__wrapper {
+        position: relative;
+        background-color: #fff;
+        border-left: 4px solid #777;
+        min-height: 55px;
+        display: flex;
+
+        &-left,
+        &-right {
+            display: flex;
+        }
+        &-left {
+            width: 40%;
+            flex-grow: 1;
+            min-width: 400px;
+        }
+        &-right {
+            width: 60%;
+            position: relative;
+        }
+        &.completed {
+            border-left-color: $green-new;
+        }
+
+        &.failed {
+            border-left-color: $red-new;
+        }
+
+        &.in_progress {
+            border-left-color: $blue-new;
+        }
+
+        &.timeout {
+            border-left-color: rgba($gray-light-new, .5);
+        }
+    }
+    &__cell {
+        display: flex;
+        align-items: center;
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 13px;
+        border-top: 1px rgba(0, 0, 0, 0.12) solid;
+        flex-shrink: 0;
+        padding: 5px;
+
+        &._info {
+            flex-grow: 1;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            flex-shrink: 1;
+            min-width: 200px;
+            padding-left: 11px;
+        }
+        &._status {
+            justify-content: center;
+            flex-grow: 1;
+            width: 11%;
+            min-width: 100px;
+            & .label {
+                font-weight: 700;
+            }
+        }
+        &._platform {
+            flex-grow: 2;
+            width: 11%;
+            min-width: 100px;
+            flex-wrap: wrap;
+            justify-content: center;
+            & .label {
+                font-weight: 500;
+            }
+            @media(min-width: $breakpoint-mid-tablet + 1) and (max-width: 1120px){
+                flex-grow: 0;
+            }
+            @media(min-width: $breakpoint-mobile) and (max-width: 630px){
+                flex-grow: 1;
+            }
+        }
+        &._status,
+        &._platform {
+            .label {
+                color: $dark-coal-new;
+                background-color: rgba(31, 36, 42, .1);
+                display: inline-block;
+                vertical-align: middle;
+                font-size: 10px;
+                text-transform: uppercase;
+                padding: 0 8px;
+                height: 20px;
+                border-radius: 10px;
+                line-height: 20px;
+            }
+            .label,
+            .platform-icon {
+                margin: 0 2px;
+            }
+        }
+        &._date {
+            flex-grow: 2;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            width: 11%;
+            min-width: 100px;
+            font-weight: 500;
+            font-size: 12px;
+        }
+        &._menu {
+            .md-menu {
+                position: relative;
+                z-index: 2;
+            }
+        }
+        &._actions {
+            z-index: 2;
+            width: 20px;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            .expand-button {
+                margin: 0 auto;
+                left: 0;
+                top: 0;
+            }
+        }
+    }
+
+    &__title {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 24px;
+        margin-right: 10px;
+        z-index: 2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        @media(max-width: $screen-tablet) {
+            z-index: 1;
+        }
+        &-wrapper {
+            display: flex;
+            align-items: center;
+            max-width: 100%;
+        }
+    }
+
+    &__job {
+        z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        font-weight: 500;
+        align-items: flex-end;
+        max-width: 100%;
+        &-name {
+            font-size: 12px;
+            line-height: 18px;
+            margin-right: 5px;
+            max-width: 100%;
+            a {
+                display: inline-block;
+                max-width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+            }
+        }
+        &-file {
+            display: flex;
+            align-items: center;
+            max-width: 100%;
+        }
+    }
+
+    &__time {
+        display: flex;
+        align-items: center;
+        &._duration {
+            color: #aaa;
+        }
+        &-icon {
+            color: rgba(0,0,0,.5);
+            margin-right: 4px;
+        }
+        &-text {
+            line-height: 14px;
+            margin-left: 2px;
+        }
+    }
+
+    @media screen and (max-width: $breakpoint-mid-tablet) {
+        &__wrapper {
+            flex-direction: column;
+
+            &-left {
+                position: relative;
+                width: 100%;
+                border-bottom: 1px rgba(0, 0, 0, 0.04) solid;
+            }
+            &-right {
+                width: 100%;
+            }
+        }
+
+        &__cell {
+            &._status,
+            &._platform,
+            &._menu,
+            &._date {
+                border-top: none;
+            }
+            &._status {
+                margin: 0 0 0 10px;
+                justify-content: flex-start;
+            }
+            &._date {
+                flex-grow: 2;
+            }
+        }
+        &__title {
+            &-wrapper {
+                margin-right: 0;
+                padding-right: 13px;
+            }
+        }
+        &__job {
+            padding-right: 13px;
+        }
+        &__app {
+            &-name {
+                max-width: 100%;
+            }
+        }
+    }
+
+    @media screen and (max-width: $md-screen-phone) {
+        &__clickable {
+            position: absolute;
+            top: -15px;
+            bottom: -1px;
+            right: -12px;
+            left: -12px;
+            z-index: 1;
+            &:hover {
+                background-color: transparent;
+            }
+        }
+        &__wrapper {
+            padding: 15px 12px;
+            margin-bottom: 4px;
+            display: block;
+            position: relative;
+            &-left {
+                border-bottom-color: rgba(0, 0, 0, 0.12);
+                min-width: 0;
+            }
+            &-right {
+                flex-wrap: wrap;
+            }
+        }
+        &__cell {
+            border-top: 0;
+            padding: 12px 0 0;
+            &._actions {
+                min-width: auto;
+                padding: 0;
+            }
+            &._info,
+            &._date,
+            &._status,
+            &._platform {
+                min-width: 0;
+            }
+            &._info {
+                padding: 0 0 10px;
+            }
+            &._status {
+                flex-grow: 0;
+                flex-shrink: 1;
+                width: auto;
+                margin-left: 0;
+                margin-right: 12px;
+                justify-content: flex-start;
+                .label {
+                    max-width: 100%;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+            }
+            &._platform {
+                margin-right: 0;
+                flex: none;
+                width: auto;
+                flex-grow: 1;
+                justify-content: flex-start;
+                .platform-icon {
+                    margin: 0 4px 0 0;
+                }
+                .label {
+                    margin: 0;
+                }
+            }
+            &._date {
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+        }
+        &__time {
+            & + & {
+                margin-left: 10px;
+            }
+            &-text {
+                margin-left: 0;
+                color: rgba($coal, .25);
+            }
+        }
+
+        &__title {
+            line-height: normal;
+            margin: 0 5px 0 0;
+        }
+    }
+}

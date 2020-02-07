@@ -5,9 +5,25 @@ import 'brace/mode/json';
 import 'brace/theme/eclipse';
 import 'angular-ui-ace';
 
-const CiHelperController = function CiHelperController($scope, $rootScope, $q, toolsService, $window, $mdDialog,
-    $timeout, $interval, windowWidthService, LauncherService, UserService, ScmService, AuthService, messageService,
-    UtilService, API_URL, $http) {
+const CiHelperController = function CiHelperController(
+    $scope,
+    $rootScope,
+    $q,
+    toolsService,
+    $window,
+    $mdDialog,
+    $timeout,
+    $interval,
+    windowWidthService,
+    LauncherService,
+    UserService,
+    ScmService,
+    AuthService,
+    messageService,
+    UtilService,
+    API_URL,
+    $http
+) {
     'ngInject';
 
     let isMultitenant = false;
@@ -30,6 +46,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         'LAMBDATEST': 7,
         'default': 100,
     };
+    // TODO: use json-configs service
     const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
     const vm = {
         platforms: [],
@@ -999,7 +1016,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
                 }
 
                 return false;
-            })
+            });
         }
     }
 
@@ -1123,7 +1140,7 @@ const CiHelperController = function CiHelperController($scope, $rootScope, $q, t
         }
         //select first item in array
         if (!defaultItem) {
-            defaultItem = childControl.items[0]
+            defaultItem = childControl.items[0];
         }
 
         return defaultItem;

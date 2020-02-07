@@ -3,7 +3,7 @@
 import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
-const testsRunsController = function testsRunsController($cookieStore, $mdDialog, $timeout, $q, TestRunService,
+const testsRunsController = function testsRunsController($mdDialog, $timeout, $q, TestRunService,
                                                          UtilService, UserService, testsRunsService, $scope, API_URL,
                                                          $rootScope, $transitions, windowWidthService, TestService,
                                                          toolsService, projectsService, messageService) {
@@ -11,7 +11,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
 
     let TENANT;
     let scrollTickingTimeout = null;
-    const scrollablePerentElement = document.querySelector('.page-wrapper');
+    const scrollableParentElement = document.querySelector('.page-wrapper');
 
     const vm = {
         testRuns: [],
@@ -682,11 +682,11 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
     function bindEventListeners() {
         vm.$onDestroy = () => {
             if (vm.isMobile) {
-                angular.element(scrollablePerentElement).off('scroll.hideFilterButton', onScroll);
+                angular.element(scrollableParentElement).off('scroll.hideFilterButton', onScroll);
             }
         }
         if (vm.isMobile) {
-            angular.element(scrollablePerentElement).on('scroll.hideFilterButton', onScroll);
+            angular.element(scrollableParentElement).on('scroll.hideFilterButton', onScroll);
         }
     }
 
