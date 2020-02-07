@@ -216,7 +216,7 @@
                         <md-icon class="material-icons">more_vert</md-icon>
                     </md-button>
                     <md-menu-content width="2" class="fixed-md-menu-content">
-                        <md-menu-item>
+                        <md-menu-item ng-if="!$ctrl.singleMode">
                             <md-button name="open" data-ng-click="$ctrl.openTestRun()">
                                 Open
                             </md-button>
