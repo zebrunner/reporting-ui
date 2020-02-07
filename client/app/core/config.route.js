@@ -560,6 +560,14 @@
                                     return $q.resolve([]);
                                 });
                         },
+                        additionalSearchParams: function(testsSessionsService) {
+                            'ngInject';
+
+                            return testsSessionsService.fetchAdditionalSearchParams()
+                                .then(function (rs) {
+                                    return rs.data ?? {};
+                                });
+                        },
                     },
                     lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
@@ -607,7 +615,7 @@
                                 }, 0);
                                 return $q.reject(false);
                             }
-                        },
+                        }
                     },
                     lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');

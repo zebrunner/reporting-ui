@@ -34,6 +34,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             showTemplate: false,
             fullscreen: false,
         },
+        additionalSearchParams: {},
         searchParams: {},
         onChangeSearchCriteria,
         openDatePicker,
@@ -49,7 +50,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
     function init() {
         readCachedSearchParams();
         readDatePickerValues();
-        loadAdditionalSearchParams();
+        initAdditionalSearchParams();
         bindEventListeners();
     }
 
@@ -111,16 +112,9 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         }, 0);
     }
 
-    function loadAdditionalSearchParams() {
-        return testsSessionsService.fetchAdditionalSearchParams()
-            .then(function (rs) {
-                if (rs.success) {
-                    vm.platforms = rs.data.platforms || [];
-                    vm.statuses = rs.data.statuses || [];
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
+    function initAdditionalSearchParams() {
+        vm.platforms = vm.additionalSearchParams?.platforms ?? [];
+        vm.statuses = vm.additionalSearchParams?.statuses ?? [];
     }
 
     function readDatePickerValues() {

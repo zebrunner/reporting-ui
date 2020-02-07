@@ -11,6 +11,7 @@ const testsSessionsSearchDirective = function testsSessionsSearchDirective() {
         controller,
         scope: {
             onSearch: '&',
+            additionalSearchParams: '<',
         },
         controllerAs: '$ctrl',
         restrict: 'E',

@@ -8,6 +8,7 @@ const testsSessionsComponent = {
     controller,
     bindings: {
         resolvedTestSessions: '<',
+        additionalSearchParams: '<',
     },
     bindToController: true,
 };
