@@ -4,6 +4,7 @@
 
 const testLogTableController = function testLogTableController(
     messageService,
+    $timeout,
 ) {
     'ngInject';
 
@@ -22,22 +23,23 @@ const testLogTableController = function testLogTableController(
     }
 
     function switchMoreLess(e, log) {
+        log.showMore = !log.showMore;
+
         if (e) {
             e.stopPropagation();
             e.preventDefault();
-        }
-        // TODO: fix scroll
-        // const rowElem = e.target.closest('.testrun-info__tab-table-col._action');
-        // const scrollableElem = rowElem.closest('.testrun-info__tab-table-wrapper');
 
-        log.showMore = !log.showMore;
-        // if (!log.showMore) {
-        //     $timeout(function () {
-        //         if (scrollableElem.scrollTop > rowElem.offsetTop) {
-        //             scrollableElem.scrollTop = rowElem.offsetTop;
-        //         }
-        //     }, 0);
-        // }
+            const rowElem = e.target.closest('.test-log-table__col._action');
+            const scrollableElem = rowElem.closest(vm.isMobile ? '.history-tab' : '.test-session-logs__tab-table-wrapper');
+
+            if (!log.showMore) {
+                $timeout(function () {
+                    if (scrollableElem.scrollTop > rowElem.offsetTop) {
+                        scrollableElem.scrollTop = rowElem.offsetTop;
+                    }
+                }, 0);
+            }
+        }
     }
 
     function copyLogLine(log) {
