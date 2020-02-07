@@ -3,12 +3,11 @@
 const testSessionLogsService = function testSessionLogsService(
     $httpMock,
     API_URL,
-    $httpParamSerializer,
     UtilService,
 ) {
     'ngInject';
 
-    const sessionStorageURL = 'https://api.zebrunner.com/moon';
+    const sessionStorageURL = `${API_URL}/moon`;
     const service = {
         getSessionLog,
         getSessionVideoURL,
