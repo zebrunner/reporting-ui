@@ -200,12 +200,12 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             $scope.$apply();
             scrollTickingTimeout = $timeout(() => {
                 vm.scrollTicking = false;
-            }, 0);
+            }, 300);
         } else {
             $timeout.cancel(scrollTickingTimeout);
             scrollTickingTimeout = $timeout(() => {
                 vm.scrollTicking = false;
-            }, 0);
+            }, 300);
         }
     }
 };
