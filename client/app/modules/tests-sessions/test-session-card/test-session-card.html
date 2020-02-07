@@ -56,8 +56,8 @@
                 <div data-ng-if="$ctrl.testSession.duration" class="test-session-card__time _duration">
                     <i class="test-run-card__time-icon fa fa-clock-o" aria-hidden="true"></i>
                     <timer class="test-session-card__time-text" max-time-unit="'minute'" autostart="false" countdown="$ctrl.testSession.duration">
-                        <span ng-if="minutes">{{minutes}} minute{{minutesS}}</span>
-                        <span ng-if="!minutes">{{seconds}} second{{secondsS}}</span>
+                        <span ng-show="minutes">{{minutes}} minute{{minutesS}}</span>
+                        <span ng-show="!minutes">{{seconds}} second{{secondsS}}</span>
                     </timer>
                 </div>
             </div>
