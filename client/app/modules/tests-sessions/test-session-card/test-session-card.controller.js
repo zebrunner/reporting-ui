@@ -82,7 +82,7 @@ const testsSessionCardController = function testsSessionCardController(
         UtilService.setOffset($event);
         $timeout(function() {
             $msMenuCtrl.open($event);
-        });
+        }, 0, false);
     }
 };
 

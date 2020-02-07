@@ -47,7 +47,7 @@
                                 // Timeout to avoid digest issues
                                 $timeout(function () {
                                     $state.go('home');
-                                });
+                                }, 0, false);
 
                                 return false;
                             }
@@ -93,7 +93,7 @@
                                             // Timeout to avoid digest issues
                                             $timeout(function() {
                                                 $state.go('dashboard.page', {dashboardId: defaultDashboardId}, {location: 'replace'});
-                                            });
+                                            }, 0, false);
 
                                             return false;
                                         } else {
@@ -119,7 +119,7 @@
                             // Timeout to avoid digest issues
                             $timeout(function() {
                                 $state.go('dashboard.page', {dashboardId: defaultDashboardId}, {location: 'replace'});
-                            });
+                            }, 0, false);
 
                             return false;
                         }
@@ -197,7 +197,7 @@
                         // Timeout to avoid digest issues
                         $timeout(function() {
                             $state.go('signin');
-                        });
+                        }, 0, false);
                     },
                     data: {
                         requireLogin: true
@@ -446,13 +446,13 @@
                                         // Timeout to avoid digest issues
                                         $timeout(() => {
                                             $state.go('tests.runs');
-                                        }, 0);
+                                        }, 0, false);
                                     });
                             } else {
                                 // Timeout to avoid digest issues
                                 $timeout(() => {
                                     $state.go('tests.runs');
-                                }, 0);
+                                }, 0, false);
                             }
                         },
                         configSnapshot: ($stateParams, $q) => {
@@ -505,13 +505,13 @@
                                         // Timeout to avoid digest issues
                                         $timeout(() => {
                                             $state.go('tests.runs');
-                                        }, 0);
+                                        }, 0, false);
                                     });
                             } else {
                                 // Timeout to avoid digest issues
                                 $timeout(() => {
                                     $state.go('tests.runs');
-                                }, 0);
+                                }, 0, false);
                             }
                         },
                         configSnapshot: ($stateParams, $q) => {
@@ -603,7 +603,7 @@
                                         // Timeout to avoid digest issues
                                         $timeout(() => {
                                             $state.go('tests.sessions');
-                                        }, 0);
+                                        }, 0, false);
                                         messageService.error(message);
 
                                         return $q.reject({ message });
@@ -612,7 +612,7 @@
                                 // Timeout to avoid digest issues
                                 $timeout(() => {
                                     $state.go('tests.sessions');
-                                }, 0);
+                                }, 0, false);
                                 return $q.reject(false);
                             }
                         }
@@ -647,7 +647,7 @@
                                     // Timeout to avoid digest issues
                                     $timeout(() => {
                                         $state.go('home');
-                                    }, 0);
+                                    }, 0, false);
 
                                     return false;
                                 });
