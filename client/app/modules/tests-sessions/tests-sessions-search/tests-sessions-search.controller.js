@@ -34,6 +34,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             showTemplate: false,
             fullscreen: false,
         },
+        additionalSearchParams: {},
         searchParams: {},
         onChangeSearchCriteria,
         openDatePicker,
@@ -47,8 +48,9 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
     return vm;
 
     function init() {
+        readCachedSearchParams();
         readDatePickerValues();
-        loadAdditionalSearchParams();
+        initAdditionalSearchParams();
         bindEventListeners();
     }
 
@@ -110,16 +112,9 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         }, 0);
     }
 
-    function loadAdditionalSearchParams() {
-        return testsSessionsService.fetchAdditionalSearchParams()
-            .then(function (rs) {
-                if (rs.success) {
-                    vm.platforms = rs.data.platforms || [];
-                    vm.statuses = rs.data.statuses || [];
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
+    function initAdditionalSearchParams() {
+        vm.platforms = vm.additionalSearchParams?.platforms ?? [];
+        vm.statuses = vm.additionalSearchParams?.statuses ?? [];
     }
 
     function readDatePickerValues() {
@@ -129,6 +124,17 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         vm.selectedRange.selectedTemplateName = params.selectedTemplateName || null;
         vm.selectedRange.dateStart = params.fromDate || params.date || null;
         vm.selectedRange.dateEnd = params.toDate || params.date || null;
+    }
+
+    function readCachedSearchParams() {
+        const fieldsForSync = ['query', 'platform', 'status'];
+        const params = testsSessionsService.activeParams;
+
+        fieldsForSync.forEach(field => {
+            if (params[field]) {
+                vm.searchParams[field] = params[field];
+            }
+        });
     }
 
     function isSearchActive() {
@@ -188,12 +194,12 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
             $scope.$apply();
             scrollTickingTimeout = $timeout(() => {
                 vm.scrollTicking = false;
-            }, 0);
+            }, 300);
         } else {
             $timeout.cancel(scrollTickingTimeout);
             scrollTickingTimeout = $timeout(() => {
                 vm.scrollTicking = false;
-            }, 0);
+            }, 300);
         }
     }
 };

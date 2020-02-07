@@ -10,7 +10,6 @@ const testSessionCardComponent = {
     controller,
     bindings: {
         testSession: '=',
-        onSelect: '&',
     },
     bindToController: true,
 };

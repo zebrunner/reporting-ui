@@ -5,12 +5,15 @@ const testsSessionsService = function testsSessionsService(
     API_URL,
     $httpParamSerializer,
     UtilService,
+    moment,
 ) {
     'ngInject';
 
     const DEFAULT_SC = {
         page: 0,
         pageSize: 20,
+        orderBy: 'startedAt',
+        sortOrder: 'DESC',
     };
     let lastParams = { ...DEFAULT_SC };
     const service = {
@@ -18,6 +21,7 @@ const testsSessionsService = function testsSessionsService(
         searchSessions,
         resetCachedParams,
         fetchAdditionalSearchParams,
+        getSessionById,
 
         get activeParams() { return lastParams; },
         set activeParams(newSC) { lastParams = newSC; return true; },
@@ -30,11 +34,15 @@ const testsSessionsService = function testsSessionsService(
     }
 
     function resetCachedParams() {
-        lastParams = { ...DEFAULT_SC };
+        service.activeParams = { ...DEFAULT_SC };
     }
 
     function fetchAdditionalSearchParams() {
         return $httpMock.get(`${API_URL}/api/tests/sessions/search/parameters`).then(UtilService.handleSuccess, UtilService.handleError('Unable to fetch additional sessions search params'));
+    }
+
+    function getSessionById(sessionId) {
+        return $httpMock.get(`${API_URL}/api/tests/sessions/${sessionId}`).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch test session with ID: ${sessionId}`));
     }
 
     return service;

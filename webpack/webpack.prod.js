@@ -15,7 +15,7 @@ module.exports = merge(common, {
         rules: [
             {
                 test: /\.m?js$/,
-                include: path.join(__dirname, '../client/app'),
+                include: path.join(process.cwd(), './client/app'),
                 enforce: 'pre',
                 use: [
                     {
@@ -51,14 +51,14 @@ module.exports = merge(common, {
                         switches: false,
                         toplevel: false,
                         typeofs: false,
-                  
+
                         // a few flags with noticable gains/speed ratio
                         // numbers based on out of the box vendor bundle
                         booleans: true, // 0.7kb
                         if_return: true, // 0.4kb
                         sequences: true, // 0.7kb
                         unused: true, // 2.3kb
-                  
+
                         // required features to drop conditional branches
                         conditionals: true,
                         dead_code: true,

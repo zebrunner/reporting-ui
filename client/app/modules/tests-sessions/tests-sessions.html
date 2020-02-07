@@ -15,15 +15,14 @@
 
     <div class="page">
         <div class="p-tests-sessions__content-header">
-            <tests-sessions-search on-search="$ctrl.onSearch($params)"></tests-sessions-search>
+            <tests-sessions-search on-search="$ctrl.onSearch($params)" additional-search-params="$ctrl.additionalSearchParams"></tests-sessions-search>
         </div>
         <div class="p-tests-sessions__content-wrapper">
             <div class="p-tests-sessions__section _content">
                 <article class="article">
                     <md-card class="no-margin-h">
                         <test-session-card test-session="testSession"
-                            ng-repeat="testSession in $ctrl.testSessions | orderObjectBy:'startedAt':true track by testSession.id"
-                            on-select="$ctrl.selectTestSession(testSession)"></test-session-card>
+                            ng-repeat="testSession in $ctrl.testSessions track by testSession.id"></test-session-card>
                         <div ng-if="$ctrl.isEmpty">
                             <div id="noData" class="text-center p-tests-sessions__no-content">No test sessions</div>
                         </div>

@@ -1,0 +1,90 @@
+<div class="page-wrapper page no-padding no-margin">
+    <zf-sub-header>
+        <zf-sub-header-button>
+            <md-button name="testInfoBackBtn"
+                aria-label="Go back"
+                type="button"
+                ng-click="$ctrl.goToTestsSessions();"
+                class="md-icon-button back_button zf-icon-button">
+                <md-icon class="material-icons">keyboard_backspace</md-icon>
+            </md-button>
+        </zf-sub-header-button>
+        <zf-sub-header-title class="_flex">
+            <span class="test-session-logs__title-name">{{ ::$ctrl.testSession.testName || 'Untitled' }}</span>
+            <span class="test-session-logs__title-name _mobile">Session logs</span>
+            <small class="test-session-logs__title-link" ng-if="$ctrl.logURL">
+                &nbsp;(<a target="_blank" href="{{::$ctrl.logURL}}">raw logs <md-icon>open_in_new</md-icon></a>)
+            </small>
+        </zf-sub-header-title>
+    </zf-sub-header>
+    <div class="row no-margin test-session-logs__content">
+        <div class="test-session-logs__section col-md-12 no-padding">
+            <div class="row no-margin" ng-cloak>
+                <section class="panel panel-default no-margin">
+                    <div class="panel-body no-padding">
+                        <md-tabs ng-init="selectedTab = 0;" class="test-session-logs__tabs" md-selected="selectedTab" md-no-select-click="true"
+                            md-border-bottom md-autoselect>
+                            <md-tab class="test-session-logs__tab" ng-disabled="false" label="Overview" ng-click="selectedTab = 0;">
+                                <div class="history-tab">
+                                    <div class="test-session-logs__tab-video-section col-md-4 col-sm-12 col-md-push-8 no-padding">
+                                        <div>
+                                            <div ng-if="$ctrl.videoURL" class="test-session-logs__tab-video-wrapper">
+                                                <video preload="auto"
+                                                    id="videoLog"
+                                                    controls>
+                                                    <source ng-src="{{$ctrl.videoURL}}" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            </div>
+                                            <div class="test-session-logs__tab-additional" ng-class="{'_no-video': !$ctrl.videoURL}">
+                                                <table>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Status</td>
+                                                        <td>
+                                                            <span style="text-transform: capitalize;">{{ $ctrl.testSession.status.split('_').join(' ').toLowerCase() }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Started</td>
+                                                        <td>
+                                                            <span>{{ $ctrl.testSession.startedAt | date: 'HH:mm dd MMM yyyy'}}</span>
+                                                            <span>(<time am-time-ago="$ctrl.testSession.startedAt" title="{{ $ctrl.testSession.startedAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>)</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-if="$ctrl.testSession.duration">
+                                                        <td>Duration</td>
+                                                        <td>
+                                                            <span>
+                                                                {{$ctrl.testSession.duration}} seconds
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Platform</td>
+                                                        <td>
+                                                            <span ng-if="$ctrl.testSession.browserName !== ''" class="platform-icon {{$ctrl.testSession.browserName | lowercase}}"></span>
+                                                            <span ng-if="$ctrl.testSession.browserName === ''" class="platform-icon unknown"></span>
+                                                            <span ng-if="$ctrl.testSession.version">{{ $ctrl.testSession.version }}</span>
+                                                            <span ng-if="$ctrl.testSession.osName"> ({{ $ctrl.testSession.osName }})</span>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="test-session-logs__tab-table-wrapper col-md-8 col-sm-12 no-padding">
+                                        <test-log-table ng-if="!$ctrl.parserNotFound && $ctrl.logs.length" logs="$ctrl.logs"></test-log-table>
+                                        <div class="test-session-logs__plain-log" ng-if="$ctrl.parserNotFound" ng-bind-html="$ctrl.getFormattedPlainLog()"></div>
+                                    </div>
+                                </div>
+                            </md-tab>
+                            <md-tab class="test-session-logs__tab" ng-disabled="false" label="Raw logs" ng-click="$ctrl.openRawLogs(); selectedTab = 0;"></md-tab>
+                        </md-tabs>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
