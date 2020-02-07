@@ -281,9 +281,7 @@ module.exports = (env) => {
                 [{
                     from: '../config.json',
                     transform(data) {
-                        const str = data.toString('utf8')
-                            .replace('__ZAFIRA_API_URL__', __ZAFIRA_API_URL__)
-                            .replace('__ZAFIRA_API_HOST__', host);
+                        const str = data.toString('utf8').replace('__ZAFIRA_API_URL__', __ZAFIRA_API_URL__);
 
                         return Buffer.from(str);
                     }

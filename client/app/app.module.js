@@ -29,7 +29,6 @@ const ngModule = angular.module('app', [
     'oc.lazyLoad',
     TutorialsModule,
 ])
-
 .config((TutorialsProvider) => {
     'ngInject';
 
@@ -1254,9 +1253,23 @@ class mdDialogDelegate {
 
 angular.injector(['ng']).get('$http').get('./config.json')
     .then(function(response){
+        const apiURL = response.data['API_URL'] || '';
+        let apiHost = '';
+
+        if (apiURL) {
+            try {
+                const url = new URL(apiURL);
+
+                apiHost = url.origin;
+            } catch(e) {
+
+            }
+        }
+
+        // TODO: add error handler if incorrect data provided or missed
         ngModule
-            .constant('API_URL', response.data['API_URL'] || '')
-            .constant('API_HOST', response.data['API_HOST'] || '');
+            .constant('API_URL', apiURL)
+            .constant('API_HOST', apiHost);
 
         //manually bootstrap application after we have gotten our config data
         angular.element(document).ready(function() {

@@ -1,4 +1,3 @@
 {
-    "API_URL": "__ZAFIRA_API_URL__",
-    "API_HOST": "__ZAFIRA_API_HOST__"
+    "API_URL": "__ZAFIRA_API_URL__"
 }
