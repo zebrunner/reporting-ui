@@ -1254,7 +1254,9 @@ class mdDialogDelegate {
 
 angular.injector(['ng']).get('$http').get('./config.json')
     .then(function(response){
-        ngModule.constant('API_URL', response.data['API_URL']);
+        ngModule
+            .constant('API_URL', response.data['API_URL'] || '')
+            .constant('API_HOST', response.data['API_HOST'] || '');
 
         //manually bootstrap application after we have gotten our config data
         angular.element(document).ready(function() {

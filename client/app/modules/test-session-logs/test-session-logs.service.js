@@ -2,12 +2,12 @@
 
 const testSessionLogsService = function testSessionLogsService(
     $httpMock,
-    API_URL,
+    API_HOST,
     UtilService,
 ) {
     'ngInject';
 
-    const sessionStorageURL = `${API_URL}/moon`;
+    const sessionStorageURL = `${API_HOST}/moon`;
     const service = {
         getSessionLog,
         getSessionVideoURL,
