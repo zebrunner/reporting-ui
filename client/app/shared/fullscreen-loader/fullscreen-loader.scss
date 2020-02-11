@@ -1,0 +1,44 @@
+@import '../../../styles/global/var';
+
+.fullscreen-loader {
+    background: $gray-bg-light-new;
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 99999;
+
+    &.company-init:not(.company-logo) {
+        background: $gray-bg-light-new url('../../../assets/images/audio.svg') no-repeat center center fixed;
+    }
+    &.company-logo &__image {
+        &,
+        &-wrapper {
+            display: block !important;
+        }
+    }
+    &:not(.company-logo) &__image {
+        display: none !important;
+    }
+
+    &__image {
+        height: 50px;
+        width: 50px;
+
+        &-wrapper {
+            position: absolute !important;
+            overflow: hidden;
+            height: 50px;
+            width: 50px;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100000;
+            margin: auto;
+            top: 0;
+            border-radius: 50%;
+        }
+    }
+}

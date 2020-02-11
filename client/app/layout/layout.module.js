@@ -16,5 +16,3 @@ ngModule
     .directive({ toggleNavBottom })
     .directive({ toggleNavCollapsedMin })
     .directive({ uiPreloader });
-
-require('./loader');

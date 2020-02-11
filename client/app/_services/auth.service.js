@@ -100,7 +100,7 @@
         }
 
         function isLoggedIn() {
-            return !!(UserService.currentUser && $rootScope.globals.auth);
+            return !!(UserService.currentUser && $rootScope.globals?.auth);
         }
 
         function UserHasAnyRole(roles) {

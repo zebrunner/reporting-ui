@@ -3,6 +3,9 @@
     "../global/var-extra";
 
 .nav-container {
+    &:not(._initialized) {
+        display: none !important;
+    }
     .nav {
         height: 100%;
         display: flex;

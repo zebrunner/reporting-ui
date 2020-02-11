@@ -31,32 +31,41 @@
           class="app nav-collapsed-min"
           window-width
           data-custom-page
-          ng-controller="AppCtrl"
+          ng-controller="appCtrl as $ctrl"
           ng-class=" { 'layout-boxed': main.layout === 'boxed',
                             'dark-container zaf-dark': darkThemes.indexOf(main.skin) !== -1,
                              'bg-page-grey zaf-light': darkThemes.indexOf(main.skin) === -1,
                              '_touch-device': UtilService.isTouchDevice()
           } " md-theme="{{ main.default }}" md-theme-watch>
-    <!--[if lt IE 9]>
+        <!--[if lt IE 9]>
             <div class="lt-ie9-bg">
                 <p class="browsehappy">You are using an <strong>outdated</strong> browser.</p>
                 <p>Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
             </div>
         <![endif]-->
 
-    <div id="loader-container" ng-class="{'company-logo': companyLogo.value, 'company-init': companyLogo}">
-        <div ng-if="companyLogo.value" id="loader-container-image">
-            <img class="img-circle imageRotateHorizontal" ng-src="{{ companyLogo.value }}">
-        </div>
-    </div>
+    <fullscreen-loader></fullscreen-loader>
 
-    <app-header main-data="main" ng-class="{ 'header-fixed': main.fixedHeader, 'bg-white': ['11','12','13','14','15','16','21'].indexOf(main.skin) >= 0 }"></app-header>
+    <app-header main-data="main"
+        ng-class="{
+            'header-fixed': main.fixedHeader,
+            'bg-white': ['11','12','13','14','15','16','21'].indexOf(main.skin) >= 0,
+             '_initialized': !$strl.isLoading
+        }"></app-header>
 
     <div class="main-container" data-ng-class="{ 'app-nav-horizontal': main.menu === 'horizontal' }">
-        <app-sidebar ng-class="{ 'nav-fixed': main.fixedSidebar, 'nav-vertical': main.menu === 'vertical' }"></app-sidebar>
+        <app-sidebar
+            ng-class="{
+                'nav-fixed': main.fixedSidebar,
+                'nav-vertical': main.menu === 'vertical',
+                '_initialized': !$strl.isLoading
+            }"></app-sidebar>
         <div id="content" class="content-container">
-            <section data-ui-view class="view-container" ng-class="{ '{{main.pageTransition.class}}': isAnimated(), 'dark-container zaf-dark': darkThemes.indexOf(main.skin) >= 0,
-                             'bg-page-grey zaf-light': darkThemes.indexOf(main.skin) === -1}"></section>
+            <section ui-view
+                class="view-container"
+                ng-class="{ '{{main.pageTransition.class}}': isAnimated(), 'dark-container zaf-dark': darkThemes.indexOf(main.skin) >= 0,
+                             'bg-page-grey zaf-light': darkThemes.indexOf(main.skin) === -1}">
+            </section>
         </div>
     </div>
 

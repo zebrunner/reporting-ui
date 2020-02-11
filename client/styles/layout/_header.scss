@@ -347,6 +347,9 @@
             height: $header_height;
         }
     }
+    &:not(._initialized) {
+        display: none !important;
+    }
 }
 .langs {
     .md-button {
