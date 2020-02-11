@@ -198,8 +198,6 @@ export const toggleNavCollapsedMin = ($rootScope) => {
             const hasClass = $app.hasClass('nav-collapsed-min');
             const currentWidth = $window.width();
 
-            console.log(attrs.back);
-
             if (hasClass && attrs.back == undefined) {
                 $app.removeClass('nav-collapsed-min');
             } else if(!hasClass && currentWidth > minWidth) {

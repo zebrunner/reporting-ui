@@ -1060,7 +1060,6 @@ const ngModule = angular
         function fetchUserData() {
             return UserService.initCurrentUser()
                 .then(currentUser => {
-                    console.log(currentUser.permissions);
                     //return rejection if returned user is empty by some reason
                     if (!currentUser) {
                         return $.reject();
@@ -1078,7 +1077,6 @@ const ngModule = angular
         }
 
         function authGuard(transition) {
-            console.log('authGuard');
             if (AuthService.hasValidToken()) {
                 //try to fetch user's data, cause it's required by next steps
                 return fetchUserData()
@@ -1088,7 +1086,6 @@ const ngModule = angular
 
                         //if transition requires any permissions, check it
                         if (currentUser && requiresPermissions && requiresPermissions.length) {
-                            console.log(123);
                             return permissionsGuard(requiresPermissions, transition);
                         }
 
