@@ -264,6 +264,7 @@
             return url;
         };
 
+        // TODO: the same function is in the app controller, check and remove if possible
         function setOffset(event) {
             const bottomHeight = $window.innerHeight - event.target.clientHeight - event.clientY;
 

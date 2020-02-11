@@ -10,7 +10,7 @@
         const data = {};
 
         return {
-            getConfig: getConfig,
+            getConfig,
         };
 
         function getConfig(name, force) {

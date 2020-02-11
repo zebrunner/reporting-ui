@@ -14,7 +14,7 @@ export function CoreModuleRunner(
     ConfigService,
     UserService,
     toolsService,
-    ) {
+) {
     'ngInject';
 
     // try to load stored data

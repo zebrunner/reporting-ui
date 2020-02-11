@@ -37,7 +37,7 @@ const appCtrl = function appCtrl(
     $rootScope.currentOffset = 0;
     $rootScope.companyLogo = {
         name: 'COMPANY_LOGO_URL',
-        value: SettingProvider.getCompanyLogoURl() || ''
+        value: SettingProvider.getCompanyLogoURl() ?? '',
     };
 
     const UNANIMATED_STATES = ['signin', 'signup', 'forgotPassword', 'resetPassword'];
@@ -50,7 +50,8 @@ const appCtrl = function appCtrl(
     $scope.setOffset = function (event) {
         $rootScope.currentOffset = 0;
         var bottomHeight = $window.innerHeight - event.target.clientHeight - event.clientY;
-        if(bottomHeight < 400) {
+
+        if (bottomHeight < 400) {
             $rootScope.currentOffset = -250 + bottomHeight;
         }
     };
