@@ -21,13 +21,10 @@ const serverErrorController = function serverErrorController(
                 // TODO: redirect to the referrer page if available
                 $state.go('home');
             })
-            .catch(err => {
-                // API is unavailable, we need to redirect
+            .catch(() => {
+                vm.isChecking = false;
                 appHealthService.changeHealthyStatus(false);
                 messageService.error('Server is unavailable, please try later');
-            })
-            .finally(() => {
-                vm.isChecking = false;
             });
     }
 
