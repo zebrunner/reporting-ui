@@ -8,20 +8,26 @@ const serverErrorController = function serverErrorController(
     'ngInject';
 
     const vm = {
+        isChecking: false,
+
         backToSystem,
     };
 
     function backToSystem() {
+        vm.isChecking = true;
         appHealthService.checkServerStatus()
             .then(() => {
-                appHealthService.isHealthy = true;
+                appHealthService.changeHealthyStatus(true);
                 // TODO: redirect to the referrer page if available
                 $state.go('home');
             })
             .catch(err => {
                 // API is unavailable, we need to redirect
-                appHealthService.isHealthy = false;
+                appHealthService.changeHealthyStatus(false);
                 messageService.error('Server is unavailable, please try later');
+            })
+            .finally(() => {
+                vm.isChecking = false;
             });
     }
 

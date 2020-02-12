@@ -12,11 +12,15 @@ const appHealthService = function appHealthService(
         return $http.get(`${API_URL}/api/status`, { transformResponse: [data => data] });
     }
 
+    function changeHealthyStatus(newStatus) {
+        return status = newStatus;
+    }
+
     return {
         checkServerStatus,
+        changeHealthyStatus,
 
         get isHealthy() { return status; },
-        set isHealthy(newStatus) { return status = newStatus; },
     };
 };
 

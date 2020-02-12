@@ -27,7 +27,7 @@ export function CoreModuleRunner(
      */
     appHealthService.checkServerStatus()
         .then(() => {
-            appHealthService.isHealthy = true;
+            appHealthService.changeHealthyStatus(true);
 
             getVersion();
             updateCompanyLogo();
@@ -38,7 +38,7 @@ export function CoreModuleRunner(
         })
         .catch(err => {
             // API is unavailable, we need to redirect
-            appHealthService.isHealthy = false;
+            appHealthService.changeHealthyStatus(false);
 
             $timeout(function() {
                 const params = $state.current?.name ? { referrer: $state.current.name } : {};
