@@ -427,18 +427,32 @@ const AccessKeyModalController = function AccessKeyModalController(
         }, 0);
     }
 
+    /**
+     * Formats snippet's code by replacing placeholders with values from provided data, if available
+     * @param text {string} - code snippet
+     * @param data {Object} - config data
+     * @returns {string} - formatted code
+     */
     function replacePlaceholders(text, data) {
-        return text.replace(/\${([^{}]*)}/g, function (a, b) {
-            let replacer = data[`capabilities.${b}`] || data[b];
+        return text.replace(/\${([^{}]*)}/g, function (selection, group) {
+            let replacer;
 
-            if (b === 'platformName') {
-                if (replacer === '*') {
-                    replacer = 'any';
+            // keys in the group can contain several items separated by "|"
+            group.split('|').some(key => {
+                replacer = data[`capabilities.${key}`] || data[key];
+
+                // special handling for platformName
+                if (replacer && key === 'platformName') {
+                    if (replacer === '*') {
+                        replacer = 'any';
+                    }
+                    replacer = replacer.toUpperCase();
                 }
-                replacer = replacer.toUpperCase();
-            }
 
-            return replacer && (typeof replacer === 'string' || typeof replacer === 'number') ? replacer : a;
+                return !!replacer;
+            });
+
+            return replacer && (typeof replacer === 'string' || typeof replacer === 'number') ? replacer : selection;
         });
     }
 
