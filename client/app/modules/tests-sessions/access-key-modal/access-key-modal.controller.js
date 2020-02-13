@@ -66,8 +66,10 @@ const AccessKeyModalController = function AccessKeyModalController(
         $q.all([initLangsPromise, initAccessUrlPromise])
             .finally(() => {
                 vm.isLoading = false;
-                if (vm.languages.length && vm.languages[0].snippet) {
-                    $timeout(() => { handleLanguageSelection(vm.languages[0]); }, 0);
+                if (vm.languages.length && vm.languages[0].snippets) {
+                    $timeout(() => {
+                        handleLanguageSelection(vm.languages[0]);
+                    }, 0);
                 }
             });
     }
@@ -75,27 +77,31 @@ const AccessKeyModalController = function AccessKeyModalController(
     function initLanguages() {
         return jsonConfigsService.getLanguagesConfig()
             .then(res => {
-                const languages = res.languages || [];
-                const providerConfigUrl = res.providerConfigUrl || '';
+                if (res.success) {
+                    const data = res.data ?? {};
+                    const languages = data.languages || [];
+                    const providerConfigUrl = data.providerConfigUrl || '';
 
-                languages.sort((a, b) => a.order - b.order);
-                vm.languages = languages;
+                    languages.sort((a, b) => a.order - b.order);
+                    vm.languages = languages;
 
-                const languagesPromises = vm.languages.length ? loadLanguagesSnippets() : [];
+                    const languagesPromises = vm.languages.length ? loadAllSnippets(): [];
 
-                if (providerConfigUrl) {
-                    languagesPromises.push(getProvidersConfig(providerConfigUrl));
-                } else {
-                    vm.failedProvider = true;
+                    if (providerConfigUrl) {
+                        languagesPromises.push(getProvidersConfig(providerConfigUrl));
+                    } else {
+                        vm.failedProvider = true;
+                    }
+
+                    return $q.all(languagesPromises);
                 }
 
-                return $q.all(languagesPromises);
-            })
-            .catch(err => {
                 vm.languagesFail = true;
-                if (err && err.message) {
-                    messageService.error(err.message);
+                if (res.message) {
+                    messageService.error(res.message);
                 }
+
+                return $q.reject(res);
             });
     }
 
@@ -110,20 +116,33 @@ const AccessKeyModalController = function AccessKeyModalController(
             });
     }
 
-    function loadLanguagesSnippets() {
-        return vm.languages.map(langConfig => {
-            return jsonConfigsService.fetchFile(langConfig.snippetURL)
-                .then(res => {
-                    langConfig.snippet = res.data || '';
+    function loadAllSnippets() {
+        const langConfigMapper = async langConfig => {
+            if (!langConfig.snippetURLs) {
+                return langConfig;
+            }
 
-                    return langConfig;
-                })
-                .catch(() => {
-                    langConfig.snippet = 'Unable to load snippet for this language.';
+            const snippetLoaders = Object.keys(langConfig.snippetURLs)
+                .map(async key => {
+                    const snippetUrl = langConfig.snippetURLs[key];
+                    const snippet = await loadLanguageSnippet(snippetUrl);
 
-                    return langConfig;
+                    return ({ [key]: snippet });
                 });
-        });
+            const snippets = await $q.all(snippetLoaders);
+
+            langConfig.snippets = snippets.reduce((accum, item) => ({...accum, ...item}), {});
+
+            return langConfig;
+        };
+
+        return vm.languages.map(langConfigMapper);
+    }
+
+    function loadLanguageSnippet(snippetUrl) {
+        return jsonConfigsService.fetchFile(snippetUrl)
+            .then(res => (res.data ?? ''))
+            .catch(() => 'Unable to load snippet for this language.');
     }
 
     function getAccessUrl() {
@@ -180,8 +199,10 @@ const AccessKeyModalController = function AccessKeyModalController(
         if (index === 0) {
             vm.chipsCtrl = ctrl;
         }
-        if (vm.languages.length && vm.languages.length - 1 === index && vm.languages[0].snippet) {
-            $timeout(() => { handleLanguageSelection(vm.languages[0]); }, 0);
+        if (vm.languages.length && vm.languages.length - 1 === index && vm.languages[0].snippets) {
+            $timeout(() => {
+                handleLanguageSelection(vm.languages[0]);
+            }, 0);
         }
     }
 
@@ -194,14 +215,19 @@ const AccessKeyModalController = function AccessKeyModalController(
     }
 
     function handleLanguageSelection(language) {
-        if (!vm.chipsCtrl || !language) { return; }
+        if (!vm.chipsCtrl || !language || vm.failedProvider) { return; }
 
         const index = vm.chipsCtrl.items.findIndex(({ name }) => {
             return language.name === name;
         });
+
+        // if by some reason trying to select already selected language
+        if (index === vm.chipsCtrl.selectedChip) {
+            return;
+        }
+
         const mode = language.editorMode || 'ace/mode/plain_text';
 
-        // vm.failedProvider = provider.failed;
         vm.chipsCtrl.selectedChip = index;
         if (vm.aceEditor) {
             vm.aceEditor.getSession().setMode(mode);
@@ -407,7 +433,10 @@ const AccessKeyModalController = function AccessKeyModalController(
         $timeout(() => {
             const selectedLanguage = getSelectedLanguage();
 
-            if (selectedLanguage && selectedLanguage.snippet) {
+            if (selectedLanguage && selectedLanguage.snippets) {
+                const selectedPlatform = vm.platformModel[vm.platformsConfig.rootKey].value.toLowerCase();
+                // get code snippet specific for platform, otherwise default one
+                const codeSnippet = selectedLanguage.snippets[selectedPlatform] ?? selectedLanguage.snippets.default ?? '';
                 const data = Object.keys(vm.platformModel).reduce((acc, key) => {
                     acc[key] = vm.platformModel[key].value;
 
@@ -421,7 +450,7 @@ const AccessKeyModalController = function AccessKeyModalController(
                     data.password = vm.accessSettings.ZEBRUNNER_PASSWORD;
                 }
 
-                vm.aceModel = replacePlaceholders(selectedLanguage.snippet, data);
+                vm.aceModel = replacePlaceholders(codeSnippet, data);
                 vm.lastUpdatedAceModel = vm.aceModel;
             }
         }, 0);
