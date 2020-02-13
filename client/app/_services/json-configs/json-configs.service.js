@@ -1,13 +1,12 @@
 'use strict';
 
-import languagesConfig from './languages-config.json';
-
 const jsonConfigsService = function jsonConfigsService(
     $httpMock,
     UtilService,
-    $q,
 ) {
     'ngInject';
+
+    const languagesConfigUrl = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/snippets.json';
 
     function fetchFile(url) {
         return $httpMock.get(`${url}?timestamp=${Date.now()}`);
@@ -18,7 +17,7 @@ const jsonConfigsService = function jsonConfigsService(
     }
 
     function getLanguagesConfig() {
-        return $q.resolve(languagesConfig);
+        return fetchFile(languagesConfigUrl).then(UtilService.handleSuccess, UtilService.handleError('Unable to fetch languages config'));
     }
 
     return {
