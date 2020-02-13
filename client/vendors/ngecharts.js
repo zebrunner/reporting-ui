@@ -17,7 +17,8 @@
                 withLegend: '=withLegend',
                 forceWatch: '=forceWatch',
                 chartActions: '=chartActions',
-                config: '=config'
+                config: '=config',
+                configCallback: '&configCallback'
             },
             link: buildLinkFunc($window, $filter)
         };
@@ -45,6 +46,10 @@
                     opts = chart.getOption();
                 } else {
                     opts = JSON.parse(opts);
+                }
+
+                if (scope.configCallback) {
+                    scope.configCallback({arg1: opts});
                 }
 
                 if (!opts) return;

@@ -259,7 +259,7 @@ const dashboardController = function dashboardController(
     };
 
     $scope.addDashboardWidget = function (widget, hideSuccessAlert) {
-        widget.location = getNextEmptyGridAreaV2(defaultWidgetLocation);
+        widget.location = resolveWidgetLocation(widget);
         var data = {"id": widget.id, "location": widget.location};
         return $q(function (resolve, reject) {
             DashboardService.AddDashboardWidget($stateParams.dashboardId, data).then(function (rs) {
@@ -276,6 +276,18 @@ const dashboardController = function dashboardController(
                 resolve(rs);
             });
         });
+    };
+
+    function resolveWidgetLocation(widget) {
+        let widgetLocationStr = angular.copy(defaultWidgetLocation);
+        if (widget.defaultSize) {
+            let widgetLocation = jsonSafeParse(widgetLocationStr);
+            widgetLocation.height = widget.defaultSize.height;
+            widgetLocation.width = widget.defaultSize.width;
+
+            widgetLocationStr = jsonSafeStringify(widgetLocation);
+        }
+        return  getNextEmptyGridAreaV2(widgetLocationStr);
     };
 
     $scope.deleteDashboardWidget = function (widget) {
@@ -499,7 +511,7 @@ const dashboardController = function dashboardController(
                     break;
                 case 'UPDATE':
                     const selectedWidget = $scope.dashboard.widgets.find(({ id }) => id === rs.widget.id);
-                    
+
                     if (selectedWidget) {
                         Object.assign(selectedWidget, rs.widget);
                         selectedWidget.location = jsonSafeParse(selectedWidget.location);

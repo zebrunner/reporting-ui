@@ -275,6 +275,12 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
         });
     };
 
+    $scope.onOptionsLoaded = function(opts) {
+        if (opts && opts.defaultSize) {
+            $scope.widget.defaultSize = opts.defaultSize;
+        }
+    };
+
     $scope.buildConfigs = function(form) {
         if(! form || form.$valid) {
             $scope.widget.widgetTemplate.chartConfig = replaceFontSize($scope.widget.widgetTemplate.chartConfig);
@@ -343,6 +349,7 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
             if (rs.success) {
                 var data = rs.data;
                 var columns = {};
+                var defaultSize = {};
                 if(! widget.widgetTemplate.chartConfig) {
                     for (var j = 0; j < data.length; j++) {
                         if (data[j] !== null) {
@@ -353,8 +360,9 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                     }
                 } else if(widget.widgetTemplate.type === 'TABLE') {
                     columns = JSON.parse(widget.widgetTemplate.chartConfig).columns;
+                    defaultSize = JSON.parse(widget.widgetTemplate.chartConfig).defaultSize;
                 }
-                widget.widgetTemplate.model = isTable ? {"columns" : columns} : widget.widgetTemplate.chartConfig;
+                widget.widgetTemplate.model = isTable ? {"columns" : columns, "defaultSize": defaultSize} : widget.widgetTemplate.chartConfig;
                 widget.data = {
                     dataset: data
                 };
