@@ -100,8 +100,6 @@ const dashboardController = function dashboardController(
         });
     };
 
-    var defaultWidgetLocation = '{ "x":0, "y":0, "width":4, "height":11 }';
-
     function loadDashboardData (dashboard, refresh) {
         for (var i = 0; i < dashboard.widgets.length; i++) {
             var currentWidget = dashboard.widgets[i];
@@ -259,7 +257,7 @@ const dashboardController = function dashboardController(
     };
 
     $scope.addDashboardWidget = function (widget, hideSuccessAlert) {
-        widget.location = getNextEmptyGridAreaV2(defaultWidgetLocation);
+        widget.location = resolveWidgetLocation(widget);
         var data = {"id": widget.id, "location": widget.location};
         return $q(function (resolve, reject) {
             DashboardService.AddDashboardWidget($stateParams.dashboardId, data).then(function (rs) {
@@ -277,6 +275,22 @@ const dashboardController = function dashboardController(
             });
         });
     };
+
+    const defaultWidgetLocation = {
+        x: 0,
+        y: 0,
+        width: 4,
+        height: 11,
+    };
+
+    function resolveWidgetLocation(widget) {
+        const { width, height } = defaultWidgetLocation;
+        const widgetLocation = {
+            width: widget.defaultSize && widget.defaultSize.width || width,
+            height: widget.defaultSize && widget.defaultSize.height || height,
+        };
+        return getNextEmptyGridAreaV2(jsonSafeStringify(widgetLocation));
+    }
 
     $scope.deleteDashboardWidget = function (widget) {
         var confirmedDelete = confirm('Would you like to delete widget "' + widget.title + '" from dashboard?');
@@ -499,7 +513,7 @@ const dashboardController = function dashboardController(
                     break;
                 case 'UPDATE':
                     const selectedWidget = $scope.dashboard.widgets.find(({ id }) => id === rs.widget.id);
-                    
+
                     if (selectedWidget) {
                         Object.assign(selectedWidget, rs.widget);
                         selectedWidget.location = jsonSafeParse(selectedWidget.location);
