@@ -85,7 +85,7 @@ const AccessKeyModalController = function AccessKeyModalController(
                     languages.sort((a, b) => a.order - b.order);
                     vm.languages = languages;
 
-                    const languagesPromises = vm.languages.length ? loadAllSnippets(): [];
+                    const languagesPromises = vm.languages.length ? loadAllSnippets()  : [];
 
                     if (providerConfigUrl) {
                         languagesPromises.push(getProvidersConfig(providerConfigUrl));
@@ -131,7 +131,7 @@ const AccessKeyModalController = function AccessKeyModalController(
                 });
             const snippets = await $q.all(snippetLoaders);
 
-            langConfig.snippets = snippets.reduce((accum, item) => ({...accum, ...item}), {});
+            langConfig.snippets = snippets.reduce((accum, item) => ({ ...accum, ...item }), {});
 
             return langConfig;
         };
