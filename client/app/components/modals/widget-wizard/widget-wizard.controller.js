@@ -359,8 +359,9 @@ const widgetWizardController = function WidgetWizardController($scope, $mdDialog
                         }
                     }
                 } else if(widget.widgetTemplate.type === 'TABLE') {
-                    columns = JSON.parse(widget.widgetTemplate.chartConfig).columns;
-                    defaultSize = JSON.parse(widget.widgetTemplate.chartConfig).defaultSize;
+                    const chartConfig = JSON.parse(widget.widgetTemplate.chartConfig);
+                    columns = chartConfig.columns;
+                    defaultSize = chartConfig.defaultSize;
                 }
                 widget.widgetTemplate.model = isTable ? {"columns" : columns, "defaultSize": defaultSize} : widget.widgetTemplate.chartConfig;
                 widget.data = {

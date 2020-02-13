@@ -100,8 +100,6 @@ const dashboardController = function dashboardController(
         });
     };
 
-    var defaultWidgetLocation = '{ "x":0, "y":0, "width":4, "height":11 }';
-
     function loadDashboardData (dashboard, refresh) {
         for (var i = 0; i < dashboard.widgets.length; i++) {
             var currentWidget = dashboard.widgets[i];
@@ -278,17 +276,21 @@ const dashboardController = function dashboardController(
         });
     };
 
-    function resolveWidgetLocation(widget) {
-        let widgetLocationStr = angular.copy(defaultWidgetLocation);
-        if (widget.defaultSize) {
-            let widgetLocation = jsonSafeParse(widgetLocationStr);
-            widgetLocation.height = widget.defaultSize.height;
-            widgetLocation.width = widget.defaultSize.width;
-
-            widgetLocationStr = jsonSafeStringify(widgetLocation);
-        }
-        return  getNextEmptyGridAreaV2(widgetLocationStr);
+    const defaultWidgetLocation = {
+        x: 0,
+        y: 0,
+        width: 4,
+        height: 11,
     };
+
+    function resolveWidgetLocation(widget) {
+        const { width, height } = defaultWidgetLocation;
+        const widgetLocation = {
+            width: widget.defaultSize && widget.defaultSize.width || width,
+            height: widget.defaultSize && widget.defaultSize.height || height,
+        };
+        return getNextEmptyGridAreaV2(jsonSafeStringify(widgetLocation));
+    }
 
     $scope.deleteDashboardWidget = function (widget) {
         var confirmedDelete = confirm('Would you like to delete widget "' + widget.title + '" from dashboard?');

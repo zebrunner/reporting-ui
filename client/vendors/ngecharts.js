@@ -18,7 +18,7 @@
                 forceWatch: '=forceWatch',
                 chartActions: '=chartActions',
                 config: '=config',
-                configCallback: '&configCallback'
+                configCallback: '&configCallback',
             },
             link: buildLinkFunc($window, $filter)
         };
@@ -49,7 +49,7 @@
                 }
 
                 if (scope.configCallback) {
-                    scope.configCallback({arg1: opts});
+                    scope.configCallback({ arg1: opts });
                 }
 
                 if (!opts) return;
