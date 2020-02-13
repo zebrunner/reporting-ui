@@ -243,7 +243,7 @@
                 <table class="table table-striped table-bordered table-hover" ng-if="widget.widgetTemplate.type === 'TABLE'" ng-init="onOptionsLoaded(widget.widgetTemplate.model);" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th class="pointer" ng-show="!widgetBuilder.legendConfigObject.legendItems || widgetBuilder.legendConfigObject.legendItems[column] === undefined || widgetBuilder.legendConfigObject.legendItems[column]" ng-init="onOptionsLoaded();" data-ng-repeat="column in widget.widgetTemplate.model.columns">
+                            <th class="pointer" ng-show="!widgetBuilder.legendConfigObject.legendItems || widgetBuilder.legendConfigObject.legendItems[column] === undefined || widgetBuilder.legendConfigObject.legendItems[column]" data-ng-repeat="column in widget.widgetTemplate.model.columns">
                                 {{column}}&nbsp;<i class="fa fa-sort"></i>
                             </th>
                         </tr>

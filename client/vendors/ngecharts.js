@@ -12,13 +12,13 @@
             restrict: 'EA',
             template: '<div></div>',
             scope: {
-                options: '=options',
-                dataset: '=dataset',
-                withLegend: '=withLegend',
-                forceWatch: '=forceWatch',
-                chartActions: '=chartActions',
-                config: '=config',
-                configCallback: '&configCallback',
+                options: '=',
+                dataset: '=',
+                withLegend: '=',
+                forceWatch: '=',
+                chartActions: '=',
+                config: '=',
+                configCallback: '&',
             },
             link: buildLinkFunc($window, $filter)
         };
