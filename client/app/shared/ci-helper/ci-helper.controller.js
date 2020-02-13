@@ -1007,8 +1007,11 @@ const CiHelperController = function CiHelperController(
 
         //if launcher has defined type, select first platform with the same type in 'job' field of the config
         if ($scope.launcher.type) {
+            // if type has '-web' postfix it should be used as 'web'
+            const type = (/-web$/i).test($scope.launcher.type) ? 'web' : $scope.launcher.type;
+
             vm.platforms.some(platform => {
-                if (Array.isArray(platform.job) && platform.job.includes($scope.launcher.type)) {
+                if (Array.isArray(platform.job) && platform.job.includes(type)) {
                     vm.platformModel[vm.platformsConfig.rootKey] = platform;
                     onPlatformSelect();
 
