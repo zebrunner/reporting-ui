@@ -3,7 +3,7 @@
 import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
-const testsRunsController = function testsRunsController($mdDialog, $timeout, $q, TestRunService,
+const testsRunsController = function testsRunsController($mdDialog, $timeout, $q, $state, TestRunService,
                                                          UtilService, UserService, testsRunsService, $scope, API_URL,
                                                          $rootScope, $transitions, windowWidthService, TestService,
                                                          toolsService, projectsService, messageService) {
@@ -28,6 +28,8 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
         projects: null,
         activeTestRunId: null,
         scrollTicking: false,
+        switcherState: 'runs',
+        isUserParamSaving: false,
 
         isTestRunsEmpty: isTestRunsEmpty,
         getTestRuns: getTestRuns,
@@ -44,6 +46,7 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
         selectAllTestRuns: selectAllTestRuns,
         selectTestRun: selectTestRun,
         isToolConnected: toolsService.isToolConnected,
+        onViewChange,
     };
 
     vm.$onInit = init;
@@ -78,6 +81,23 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
                 return filteredLaunchers;
             }, launchers);
         }
+    }
+
+    function onViewChange(state) {
+        const param = {name: 'DEFAULT_TEST_VIEW', value: state};
+
+        vm.isUserParamSaving = true;
+
+        return UserService.updateUserPreference(UserService.currentUser.id, param).then(rs => {
+            if (rs.success) {
+                UserService.currentUser.testsView = state;
+                $state.go(`tests.${state}`);
+            } else {
+                vm.isUserParamSaving = false;
+                vm.switcherState = 'runs';
+                messageService.error(rs.message);
+            }
+        });
     }
 
     function setTimersOnDestroyingLaunchers() {

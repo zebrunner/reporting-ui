@@ -629,6 +629,16 @@
                         }
                     }
                 })
+                .state('tests.default', {
+                    url: '',
+                    controller: ($state, UserService) => {
+                        'ngInject';
+
+                        $state.go(`tests.${UserService.currentUser.testsView}`, {}, {
+                            location: 'replace',
+                        });
+                    },
+                })
                 .state('integrations', {
                     url: '/integrations',
                     component: 'integrationsComponent',
