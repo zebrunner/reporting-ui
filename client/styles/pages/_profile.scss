@@ -23,6 +23,16 @@
         }
     }
 
+    .profile-versions-info {
+        margin-top: 15px;
+    
+        ._right-breadscrumb::after {
+            padding: 8px;
+            color: rgba(0, 0, 0, 1);
+            content: "\007c";
+        }
+    }
+
     .profile-social {
         display: inline-block;
         > a {

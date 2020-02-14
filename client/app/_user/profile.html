@@ -11,7 +11,8 @@
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page page-profile">
-        <div class="profile-header" layout="row">
+        <div class="profile-header" layout="row" layout-xs="column">
+            <div layout="row">
             <div class="profile-img">
                 <profile-photo ng-model="$ctrl.currentUser.photoURL" size="48">
                     <div class="profile-img-content">
@@ -27,7 +28,11 @@
                     <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
                 </md-input-container>
             </div>
-
+        </div>
+            <div class="profile-versions-info" layout="row" layout-align="end end" flex="auto" layout-align-xs="end center">
+                <span class="md-caption no-margin _right-breadscrumb">server: {{$ctrl.appVersions.server}}</span>
+                <span class="md-caption no-margin">ui: {{$ctrl.appVersions.client}}</span>
+            </div>
         </div>
         <div layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Access token</div>
