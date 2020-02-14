@@ -28,7 +28,7 @@
                             <div ng-message="duplicateKey">Duplicate title forbidden</div>
                         </div>
                     </md-input-container>
-                    <div class="dashboard-dialog-container_hidden">
+                    <div class="dashboard-dialog-container_hidden" has-any-permission="['VIEW_HIDDEN_DASHBOARDS']">
                         <div class="dashboard-dialog-container_hidden_label">Hidden</div>
                         <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch" ng-disabled="!isNew && !dashboard.editable"></md-switch>
                     </div>
