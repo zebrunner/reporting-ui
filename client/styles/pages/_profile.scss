@@ -24,6 +24,7 @@
     }
 
     .profile-versions-info {
+        margin-left: auto;
         margin-top: 15px;
     
         ._right-breadscrumb::after {
@@ -110,6 +111,12 @@
         padding: 60px 0 20px 0;
         .profile-header {
             padding: 24px 16px;
+        }
+        .profile-versions-info {
+            margin: 5px 0 0;
+            ._right-breadscrumb::after {
+                display: none;
+            }
         }
         .profile__form {
             &-wrapper {
