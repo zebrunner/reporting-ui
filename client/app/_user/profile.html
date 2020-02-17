@@ -20,7 +20,7 @@
                         </div>
                     </profile-photo>
                 </div>
-                <div layout="row" layout-xs="column" flex="100">
+                <div class="profile-wrapper" flex="100">
                     <div>
                         <div class="profile-personal-info" ng-if="$ctrl.currentUser.firstName || $ctrl.currentUser.lastName">
                             {{$ctrl.currentUser.firstName}} {{$ctrl.currentUser.lastName}}
@@ -29,7 +29,7 @@
                             <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
                         </md-input-container>
                     </div>
-                    <div class="profile-versions-info" layout="row" layout-xs="column" layout-align="center start">
+                    <div class="profile-versions-info" layout="row" layout-align="center start">
                         <span class="md-caption no-margin _right-breadscrumb">server: {{$ctrl.appVersions.server}}</span>
                         <span class="md-caption no-margin">ui: {{$ctrl.appVersions.client}}</span>
                     </div>

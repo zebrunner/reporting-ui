@@ -9,6 +9,11 @@
 
     .profile-header {
         padding: 40px 0;
+
+        .profile-wrapper {
+            display: flex;
+            flex-direction: row;
+        }
     }
 
     .profile-img {
@@ -109,15 +114,24 @@
 
     @media(max-width: $breakpoint-mobile) {
         padding: 60px 0 20px 0;
+        
         .profile-header {
             padding: 24px 16px;
+
+            .profile-wrapper {
+                flex-direction: column;
+            }
         }
+
         .profile-versions-info {
             margin: 5px 0 0;
+            flex-direction: column;
+
             ._right-breadscrumb::after {
                 display: none;
             }
         }
+
         .profile__form {
             &-wrapper {
                 flex-direction: column;
