@@ -27,7 +27,7 @@
                     <md-card class="no-margin-h">
                         <test-session-card test-session="testSession"
                             ng-repeat="testSession in $ctrl.testSessions track by testSession.id"></test-session-card>
-                        <div ng-if="true || $ctrl.isEmpty" class="p-tests-sessions__no-content-wrapper">
+                        <div ng-if="$ctrl.isEmpty" class="p-tests-sessions__no-content-wrapper">
                             <div id="noData" class="text-center p-tests-sessions__no-content">No test sessions</div>
                         </div>
                         <md-table-pagination id="pagination"
