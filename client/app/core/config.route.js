@@ -38,14 +38,17 @@
                                     } else {
                                         //TODO: dashboards is a home page. If we redirect to dashboards we can get infinity loop. We need to add simple error page;
                                         const message = rs && rs.message || `Can\'t fetch dashboard with id: ${dashboardId}`;
+                                        const is404 = rs && rs.error && rs.error.status === 404;
 
+                                        if (!is404) {
+                                            messageService.error(message);
+                                        }
                                         // Timeout to avoid digest issues
                                         $timeout(() => {
-                                            const state = rs && rs.error && rs.error.status === 404 ? '404' : 'home';
+                                            const state = is404 ? '404' : 'home';
 
                                             $state.go(state);
                                         }, 0, false);
-                                        messageService.error(message);
 
                                         return $q.reject({ message });
                                     }
