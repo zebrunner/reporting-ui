@@ -1,9 +1,20 @@
 @media (max-width: 599px) {
-    #search-container, .filter-input-container, .filter-name, .filter-select-container, .filter-text input, #search .searchable.select {
+    #search-container,
+    .filter-input-container,
+    .filter-name,
+    .filter-select-container,
+    .filter-text input,
+    #search .searchable.select {
         width: 100% !important;
     }
 
-    #search-container, .filter-text div, .filter-name, .filter-input-container, .filter-select-container, #search .searchable.select, .date-picker-container {
+    #search-container,
+    .filter-text div,
+    .filter-name,
+    .filter-input-container,
+    .filter-select-container,
+    #search .searchable.select,
+    .date-picker-container {
         margin: 0 0 8px 0 !important;
     }
 
@@ -16,7 +27,8 @@
         padding-right: 12px;
     }
 
-    .value-input, .filter-date {
+    .value-input,
+    .filter-date {
         width: 100%;
         margin-right: 8px !important;
     }
@@ -69,16 +81,6 @@
 @media (min-width: 768px) and (max-width: 959px) {
     .btn-check {
       right: 4px;
-    }
-}
-
-@media (min-width: 600px) and (max-width: 959px) {
-    // .value-input, button#add-button {
-    //   margin-top: 16px !important;
-    // }
-    #search md-input-container.date-picker-container{
-      margin-top: 8px !important;
-      margin-left: 0 !important;
     }
 }
 

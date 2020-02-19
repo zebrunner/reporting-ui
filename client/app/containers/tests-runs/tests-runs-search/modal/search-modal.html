@@ -17,43 +17,67 @@
                         <md-input-container class="search-modal__input-wrapper _with-icon _without-animation">
                             <label class="placeholder-label">Search items</label>
                             <input ng-model-options="{debounce: 700}"
-                                    type="text"
-                                    ng-model="$ctrl.searchParams.query"
-                                    ng-change="$ctrl.onChangeSearchCriteria()"
-                                    aria-label="Search items"
-                                    aria-describedby="basic-addon2">
+                                type="text"
+                                ng-model="$ctrl.searchParams.query"
+                                ng-change="$ctrl.onChangeSearchCriteria()"
+                                aria-label="Search items"
+                                aria-describedby="basic-addon2">
                             <i class="material-icons">
                                 search
                             </i>
                         </md-input-container>
                     </div>
                     <div layout="row">
-                        <button class="quadro-btn reviewed" data-ng-class="{'label-blank': !$ctrl.searchParams.reviewed, 'label-primary': !!$ctrl.searchParams.reviewed}"
-                                ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed; $ctrl.onChangeSearchCriteria()">R
-                        </button>
+                        <button class="quadro-btn reviewed"
+                            data-ng-class="{'label-blank': !$ctrl.searchParams.reviewed, 'label-primary': !!$ctrl.searchParams.reviewed}"
+                            ng-click="$ctrl.searchParams.reviewed = !$ctrl.searchParams.reviewed; $ctrl.onChangeSearchCriteria()">R</button>
                         <md-input-container class="no-padding without-animation" flex="grow">
-                            <md-select id="searchStatus" ng-model="$ctrl.searchParams.status" ng-change="$ctrl.onChangeSearchCriteria()" name="status" placeholder="Status">
+                            <md-select id="searchStatus"
+                                ng-model="$ctrl.searchParams.status"
+                                ng-change="$ctrl.onChangeSearchCriteria()"
+                                name="status"
+                                placeholder="Status">
                                 <md-option value="">None</md-option>
                                 <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
                             </md-select>
                         </md-input-container>
                     </div>
-                    <md-input-container flex="grow" class="no-padding without-animation">
-                        <md-select id="searchEnv" ng-model="$ctrl.searchParams.environment"
-                                    ng-change="$ctrl.onChangeSearchCriteria()"
-                                    name="environment" placeholder="Environment">
+                    <md-input-container ng-if="$ctrl.environments.length" flex="grow" class="no-padding without-animation">
+                        <md-select id="searchEnv"
+                            ng-model="$ctrl.searchParams.environment"
+                            ng-change="$ctrl.onChangeSearchCriteria()"
+                            name="environment"
+                            placeholder="Environment">
                             <md-option value="">None</md-option>
                             <md-option ng-repeat="env in $ctrl.environments" ng-value="env">{{env}}</md-option>
                         </md-select>
                     </md-input-container>
-                    <md-input-container flex="grow" class="no-padding without-animation">
-                        <md-select id="searchPlatform" ng-model="$ctrl.searchParams.platform" name="platform" placeholder="Platform" ng-change="$ctrl.onChangeSearchCriteria()">
+                    <md-input-container ng-if="$ctrl.platforms.length" flex="grow" class="no-padding without-animation">
+                        <md-select id="searchPlatform"
+                            ng-model="$ctrl.searchParams.platform"
+                            name="platform"
+                            placeholder="Platform"
+                            ng-change="$ctrl.onChangeSearchCriteria()">
                             <md-option value="">None</md-option>
                             <md-option ng-repeat="platform in $ctrl.platforms" ng-value="platform">{{platform}}</md-option>
                         </md-select>
                     </md-input-container>
+                    <md-input-container ng-if="$ctrl.browsers.length" flex="grow" class="no-padding without-animation">
+                        <md-select id="searchBrowser"
+                            ng-model="$ctrl.searchParams.browser"
+                            name="browser"
+                            placeholder="Browser"
+                            ng-change="$ctrl.onChangeSearchCriteria()">
+                            <md-option value="">None</md-option>
+                            <md-option ng-repeat="browser in $ctrl.browsers" ng-value="browser">{{browser}}</md-option>
+                        </md-select>
+                    </md-input-container>
                 </div>
-                <div layout="row" layout-align="none end" layout-align-sm="space-between end" class="search-fields" layout-xs="column">
+                <div layout="row"
+                    layout-align="none end"
+                    layout-align-sm="space-between end"
+                    class="search-fields"
+                    layout-xs="column">
                     <md-input-container class="date-picker-container" flex="grow" flex-sm="33" flex-xs="100">
                         <span>{{$ctrl.selectedRange.selectedTemplateName || 'Date'}}</span>
                         <i class="material-icons">date_range</i>

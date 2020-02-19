@@ -1,6 +1,19 @@
 'use strict';
 
-const SearchModalController = function SearchModalController(onApply, environments, allProjects, platforms, onReset, testsRunsService, windowWidthService, DEFAULT_SC, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker, $timeout, $mdDialog, UtilService) {
+const SearchModalController = function SearchModalController(
+    $mdDateRangePicker,
+    $mdDialog,
+    onApply,
+    environments,
+    allProjects,
+    platforms,
+    browsers,
+    onReset,
+    testsRunsService,
+    windowWidthService,
+    DEFAULT_SC,
+    UtilService,
+    ) {
     'ngInject';
 
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
@@ -23,9 +36,10 @@ const SearchModalController = function SearchModalController(onApply, environmen
         onReset: onReset,
         onApply: onApply,
         onModalApply,
-        environments: environments,
-        platforms: platforms,
-        allProjects: allProjects,
+        environments,
+        platforms,
+        browsers,
+        allProjects,
     };
 
     vm.$onInit = init;
@@ -53,7 +67,7 @@ const SearchModalController = function SearchModalController(onApply, environmen
     }
 
     function onModalApply() {
-        vm.onApply()
+        vm.onApply();
         vm.closeModal();
     }
 
@@ -77,28 +91,28 @@ const SearchModalController = function SearchModalController(onApply, environmen
     }
 
     function openDatePicker($event, showTemplate) {
-
         vm.selectedRange.showTemplate = showTemplate;
 
-        $mdDateRangePicker.show({
-            targetEvent: $event,
-            model: vm.selectedRange,
-            multiple: true,
-        })
-        .then(function(result) {
-            if (result) {
-                const res = UtilService.handleDateFilter(result);
-                const newSearchParams = {...vm.searchParams, ...res.searchParams};
+        $mdDateRangePicker
+            .show({
+                targetEvent: $event,
+                model: vm.selectedRange,
+                multiple: true,
+            })
+            .then(result => {
+                if (result) {
+                    const res = UtilService.handleDateFilter(result);
+                    const newSearchParams = {...vm.searchParams, ...res.searchParams};
 
-                vm.selectedRange = res.selectedRange;
+                    vm.selectedRange = res.selectedRange;
 
-                if ((!res.searchParams.selectedTemplateName && vm.searchParams.selectedTemplateName) || (res.searchParams.selectedTemplateName && !angular.equals(vm.searchParams, newSearchParams))) {
-                    vm.searchParams = newSearchParams;
-                    onChangeSearchCriteria();
+                    if ((!res.searchParams.selectedTemplateName && vm.searchParams.selectedTemplateName) || (res.searchParams.selectedTemplateName && !angular.equals(vm.searchParams, newSearchParams))) {
+                        vm.searchParams = newSearchParams;
+                        onChangeSearchCriteria();
+                    }
                 }
-            }
-        })
+            });
     }
-}
+};
 
 export default SearchModalController;
