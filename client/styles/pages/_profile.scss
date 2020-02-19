@@ -100,7 +100,7 @@
         border-radius: $border-radius-base;
     }
 
-    @media(max-width: $md-screen-phone - 1) {
+    @media(max-width: $md-screen-phone) {
         padding: 60px 0 20px 0;
         
         .profile-header {
