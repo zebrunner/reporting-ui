@@ -11,23 +11,31 @@
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page page-profile">
-        <div class="profile-header" layout="row">
-            <div class="profile-img">
-                <profile-photo ng-model="$ctrl.currentUser.photoURL" size="48">
-                    <div class="profile-img-content">
-                        <i class="material-icons" ng-click="$ctrl.showUploadImageDialog($event)">add_a_photo</i>
-                    </div>
-                </profile-photo>
-            </div>
-            <div layout="column">
-                <div class="profile-personal-info" ng-if="$ctrl.currentUser.firstName || $ctrl.currentUser.lastName">
-                    {{$ctrl.currentUser.firstName}} {{$ctrl.currentUser.lastName}}
+        <div class="profile-header" layout="row" layout-xs="column">
+            <div layout="row" flex="auto">
+                <div class="profile-img">
+                    <profile-photo ng-model="$ctrl.currentUser.photoURL" size="48">
+                        <div class="profile-img-content">
+                            <i class="material-icons" ng-click="$ctrl.showUploadImageDialog($event)">add_a_photo</i>
+                        </div>
+                    </profile-photo>
                 </div>
-                <md-input-container flex class="no-margin">
-                    <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
-                </md-input-container>
+                <div class="profile-wrapper" layout="row" layout-xs="column" flex="100" layout-align="end start">
+                    <div class="profile-personal-content">
+                        <div class="profile-personal-info" ng-if="$ctrl.currentUser.firstName || $ctrl.currentUser.lastName">
+                            {{$ctrl.currentUser.firstName}} {{$ctrl.currentUser.lastName}}
+                        </div>
+                        <md-input-container flex class="no-margin">
+                            <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
+                        </md-input-container>
+                    </div>
+                    <div class="profile-versions-info" layout="column" layout-align="start end" layout-align-xs="start start" ng-if="$ctrl.appVersions.service || $ctrl.appVersions.service || $ctrl.appVersions.client ">
+                        <span class="md-caption no-margin" ng-if="$ctrl.appVersions.client">ui: {{$ctrl.appVersions.client}}</span>
+                        <span class="md-caption no-margin" ng-if="$ctrl.appVersions.service">server: {{$ctrl.appVersions.service}}</span>
+                        <span class="md-caption no-margin" ng-if="$ctrl.appVersions.client">client: {{$ctrl.appVersions.client}}</span>
+                    </div>
+                </div>
             </div>
-
         </div>
         <div layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Access token</div>

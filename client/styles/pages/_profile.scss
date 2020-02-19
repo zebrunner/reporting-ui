@@ -23,6 +23,10 @@
         }
     }
 
+    .profile-versions-info {
+        margin-left: auto;
+    }
+
     .profile-social {
         display: inline-block;
         > a {
@@ -96,11 +100,17 @@
         border-radius: $border-radius-base;
     }
 
-    @media(max-width: $breakpoint-mobile) {
+    @media(max-width: $md-screen-phone) {
         padding: 60px 0 20px 0;
+        
         .profile-header {
             padding: 24px 16px;
         }
+
+        .profile-versions-info {
+            margin: 5px 0 0;
+        }
+
         .profile__form {
             &-wrapper {
                 flex-direction: column;
