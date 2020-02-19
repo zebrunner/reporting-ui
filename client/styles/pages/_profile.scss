@@ -9,11 +9,6 @@
 
     .profile-header {
         padding: 40px 0;
-
-        .profile-wrapper {
-            display: flex;
-            flex-direction: row;
-        }
     }
 
     .profile-img {
@@ -30,13 +25,6 @@
 
     .profile-versions-info {
         margin-left: auto;
-        margin-top: 15px;
-    
-        ._right-breadscrumb::after {
-            padding: 8px;
-            color: rgba(0, 0, 0, 1);
-            content: "\007c";
-        }
     }
 
     .profile-social {
@@ -112,24 +100,15 @@
         border-radius: $border-radius-base;
     }
 
-    @media(max-width: $breakpoint-mobile) {
+    @media(max-width: $md-screen-phone - 1) {
         padding: 60px 0 20px 0;
         
         .profile-header {
             padding: 24px 16px;
-
-            .profile-wrapper {
-                flex-direction: column;
-            }
         }
 
         .profile-versions-info {
             margin: 5px 0 0;
-            flex-direction: column;
-
-            ._right-breadscrumb::after {
-                display: none;
-            }
         }
 
         .profile__form {
