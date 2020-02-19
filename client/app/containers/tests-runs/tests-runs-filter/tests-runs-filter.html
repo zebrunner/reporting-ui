@@ -4,10 +4,10 @@
             <div id="filter" class="md-row tests-runs-filter__wrapper">
                 <div class="md-row tests-runs-filter__wrapper-panel-body no-padding-t"
                     ng-class="{'_unactiveChips': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()">
-                    <div ng-class="{'disable-layer _transparent': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()">
-                    </div>
                     <div layout="row" layout-xs="column" layout-align="space-between" ng-show="$ctrl.filterBlockExpand">
                         <div layout="row" class="tests-runs-filter__wrapper-inner">
+                            <div ng-class="{'disable-layer _transparent': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()">
+                            </div>
                             <div class="manage-chip" ng-click="$ctrl.clearAndOpenFilterBlock(true);">
                                 <md-chips class="filter-chip">
                                     <md-chip>
@@ -33,10 +33,10 @@
                                     </div>
                                 </md-chip-template>
                             </md-chips>
-                            <sessions-switcher switcher-state="$ctrl.switcherState"
-                                on-change="$ctrl.onSwitcherChange({$value})" is-disabled="$ctrl.isSwitcherDisabled">
-                            </sessions-switcher>
                         </div>
+                        <sessions-switcher switcher-state="$ctrl.switcherState"
+                            on-change="$ctrl.onSwitcherChange({$value})" is-disabled="$ctrl.isSwitcherDisabled">
+                        </sessions-switcher>
                     </div>
                     <div id="filter-editor" class="tests-runs-filter__editor" ng-if=" !$ctrl.isMobile()"
                         ng-show="$ctrl.collapseFilter && $ctrl.filterBlockExpand">
