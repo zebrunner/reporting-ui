@@ -38,7 +38,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
 
         get currentUser() { return UserService.currentUser; },
         get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; },
-        get appVersions() { return {server: $rootScope.version.service, client: $rootScope.version.client} || {}}
+        get appVersions() { return $rootScope.version; }
     };
 
     function goToState(state) {
