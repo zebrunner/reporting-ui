@@ -63,7 +63,7 @@ md-radio-button {
 }
 
 
-// 
+//
 md-toast {
     &.md-toast-primary {
         > .md-toast-content {
@@ -251,7 +251,7 @@ md-input-container  {
                 }
             }
         }
-        
+
 
         &:hover {
             label:not(.md-no-float):not(.md-container-ignore) {
@@ -388,7 +388,7 @@ md-input-container  {
                     color: rgba(#ffffff, .5);
                 }
             }
-            
+
             .nav-container .nav-search & {
                 md-icon {
                     right: 2px;
@@ -635,14 +635,14 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
         }
     }
 }
-//SELECTS 
+//SELECTS
 md-input-container {
     md-select {
         margin: 0;
         &:not([disabled]) .md-select-value,
         &:not([disabled]) .md-select-value.md-select-placeholder {
             color: rgba($dark-new, .6);
-        }   
+        }
         &:not([disabled]):focus {
             .md-select-value, .md-select-value.md-select-placeholder {
                 color: rgba($dark-new, .6);
@@ -721,14 +721,14 @@ md-input-container {
                 border-color: $brand-light;
             }
         }
-        
+
     }
     &.md-input-has-value md-select:not([disabled]){
         .md-select-value , .md-select-value.md-select-placeholder {
             color: $dark-new;
         }
     }
-    
+
     &._gray-bg:not(.md-input-focused) {
         &, & md-select:hover:not([disabled]) {
             .md-select-value, .md-select-value.md-select-placeholder {
@@ -757,7 +757,7 @@ md-input-container {
             }
         }
     }
-    
+
     &.md-input-focused:not([md-no-float]) .md-select-placeholder,
     &.md-input-focused:not([md-no-float]) .md-select-value.md-select-placeholder {
         border-color: $brand-light;
@@ -765,7 +765,7 @@ md-input-container {
             color: rgba($dark-new, .8);
             transform: translate3d(-11px, -29px, 0) scale(0.785);
         }
-    } 
+    }
 }
 
 md-select-menu:not(.md-overflow) {
@@ -798,7 +798,8 @@ md-select-menu:not(.md-overflow) {
     }
 }
 
-.md-button, .md-button.md-focused {
+.md-button,
+.md-button.md-focused:not(.md-icon-button) {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
@@ -981,9 +982,6 @@ md-radio-button {
     md-date-range-picker &:not(._default-md-style) {
         padding: 6px;
     }
-    &.md-focused {
-        margin: 0 6px;
-    }
     &._default-md-style {
         max-height: unset;
     }
@@ -1057,10 +1055,10 @@ md-radio-button {
             }
         }
     }
-    
+
     .fixed-page-header-container_options & {
         i.material-icons {
-            @media(max-width: $screen-phone) { 
+            @media(max-width: $screen-phone) {
                 color: rgba(#ffffff, .5)
             }
             &:not(:last-child) {

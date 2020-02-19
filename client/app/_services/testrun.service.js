@@ -7,25 +7,26 @@
 
     function TestRunService($httpMock, UtilService, API_URL, $httpParamSerializer) {
         var service = {
-            searchTestRuns: searchTestRuns,
-            abortTestRun: abortTestRun,
-            abortCIJob: abortCIJob,
-            abortDebug: abortDebug,
-            getTestRun: getTestRun,
-            getTestRunByCiRunId: getTestRunByCiRunId,
-            getTestRunResults: getTestRunResults,
-            createCompareMatrix: createCompareMatrix,
-            deleteTestRun: deleteTestRun,
-            sendTestRunResultsEmail: sendTestRunResultsEmail,
-            exportTestRunResultsHTML: exportTestRunResultsHTML,
-            markTestRunAsReviewed: markTestRunAsReviewed,
-            rerunTestRun: rerunTestRun,
-            debugTestRun: debugTestRun,
-            buildTestRun: buildTestRun,
-            getJobParameters: getJobParameters,
-            getEnvironments: getEnvironments,
-            getPlatforms: getPlatforms,
-            getConsoleOutput: getConsoleOutput,
+            searchTestRuns,
+            abortTestRun,
+            abortCIJob,
+            abortDebug,
+            getTestRun,
+            getTestRunByCiRunId,
+            getTestRunResults,
+            createCompareMatrix,
+            deleteTestRun,
+            sendTestRunResultsEmail,
+            exportTestRunResultsHTML,
+            markTestRunAsReviewed,
+            rerunTestRun,
+            debugTestRun,
+            buildTestRun,
+            getJobParameters,
+            getEnvironments,
+            getPlatforms,
+            getBrowsers,
+            getConsoleOutput,
         };
 
         return service;
@@ -99,7 +100,11 @@
         }
 
         function getPlatforms() {
-            return $httpMock.get(API_URL + '/api/tests/runs/platforms').then(UtilService.handleSuccess, UtilService.handleError('Unable to get platforms'));
+            return $httpMock.get(API_URL + '/api/tests/runs/platforms').then(UtilService.handleSuccess, UtilService.handleError('Unable to get platforms list'));
+        }
+
+        function getBrowsers() {
+            return $httpMock.get(API_URL + '/api/tests/runs/browsers').then(UtilService.handleSuccess, UtilService.handleError('Unable to get browsers list'));
         }
 
         function getConsoleOutput(id, ciRunId, count, fullCount) {

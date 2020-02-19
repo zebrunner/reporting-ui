@@ -10,12 +10,19 @@
         max-width: 550px;
     }
 
+    &__bottom-section {
+        margin: 0 -6px;
+        > md-input-container,
+        > button {
+            margin: 0 6px;
+        }
+    }
+
     md-input-container.select-wrapper {
-        margin-top: 0;
-        margin-left: 12px;
         padding-top: 0;
-        margin-bottom: 0;
         width: 144px;
+        max-width: 144px;
+        min-width: 144px;
     }
 
     &__helpers {
@@ -89,9 +96,38 @@
         }
     }
 
+    @media (min-width: 960px ) and (max-width: 1279px) {
+        md-input-container.select-wrapper {
+            max-width: calc((100% - 48px - (5 * 12px)) / 5); //"48px" - button with margins; "5 * 12px" - margins of elements
+        }
+    }
+
+    @media (min-width: 768px ) and (max-width: 959px) {
+        md-input-container.select-wrapper {
+            max-width: calc((100% - 48px - (4 * 12px)) / 4); //"48px" - button with margins; "4 * 12px" - margins of elements
+        }
+    }
+
+    @media (min-width: $breakpoint-mobile ) and (max-width: 767px) {
+        md-input-container.select-wrapper {
+            max-width: calc((100% - 48px - (3 * 12px)) / 3); //"48px" - button with margins; "3 * 12px" - margins of elements
+        }
+    }
+
     @media (min-width: $breakpoint-mobile ) and (max-width: 1279px) {
-        &__top-section {
-            margin-bottom: 8px;
+        md-input-container.select-wrapper {
+            min-width: 130px;
+        }
+        &__bottom-section {
+            flex-wrap: wrap;
+
+            > md-input-container,
+            > button {
+                margin-top: 8px;
+            }
+            > button:last-of-type {
+                margin-left: auto;
+            }
         }
         &__input {
             &-label {
@@ -145,7 +181,7 @@
                 flex-wrap: wrap;
 
                 button + md-input-container {
-                    max-width: calc(100% - 44px); //44px - button width + margin
+                    max-width: calc(100% - 48px); //48px - button width + margins
                 }
             }
             &:last-of-type {
