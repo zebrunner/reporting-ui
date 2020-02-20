@@ -217,6 +217,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(
             });
     }
 
+    // TODO: looks like it is used on filters and redundant here
     function loadSubjectBuilder() {
         FilterService.getSubjectBuilder(subjectName).then(function (rs) {
             if(rs.success) {
