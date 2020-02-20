@@ -29,8 +29,13 @@
                             <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
                         </md-input-container>
                     </div>
-                    <div class="profile-versions-info" layout="column" layout-align="start end" layout-align-xs="start start" ng-if="$ctrl.appVersions.service || $ctrl.appVersions.service || $ctrl.appVersions.client ">
-                        <span class="md-caption no-margin" ng-if="$ctrl.appVersions.client">ui: {{$ctrl.appVersions.client}}</span>
+                    <div class="profile-versions-info" 
+                        flex="none" 
+                        layout="column" 
+                        layout-align="start end" 
+                        layout-align-xs="start start" 
+                        ng-if="$ctrl.appVersions.ui || $ctrl.appVersions.service || $ctrl.appVersions.client">
+                        <span class="md-caption no-margin" ng-if="$ctrl.appVersions.ui">ui: {{$ctrl.appVersions.ui}}</span>
                         <span class="md-caption no-margin" ng-if="$ctrl.appVersions.service">server: {{$ctrl.appVersions.service}}</span>
                         <span class="md-caption no-margin" ng-if="$ctrl.appVersions.client">client: {{$ctrl.appVersions.client}}</span>
                     </div>
