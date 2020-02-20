@@ -45,7 +45,8 @@ md-dialog {
 }
 
 md-menu-item .md-button {
-    &, &.md-focused {
+    &,
+    &.md-focused:not(.md-icon-button) {
         border-radius: 0;
         font-size: 15px;
         padding-left: 16px;
