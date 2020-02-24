@@ -74,7 +74,7 @@
                 if (scope.config) {
                     angular.extend(scope.config, {
                         clear: function () {
-                            if(chart && chart.clear) {
+                            if (chart && chart.clear) {
                                 chart.clear();
                             }
                         },
@@ -82,7 +82,7 @@
                             return chart && chart.isDisposed && chart.isDisposed();
                         },
                         dispose: function () {
-                            if(chart && chart.dispose) {
+                            if (chart && chart.dispose) {
                                 chart.dispose();
                             }
                         }
@@ -91,7 +91,7 @@
 
                 if (scope.chartActions) {
                     scope.$watchCollection('chartActions', function (actions, oldVal) {
-                        if (!scope.chartActions || ! scope.chartActions.length) return;
+                        if (!scope.chartActions || !scope.chartActions.length) return;
                         if (chart && chart.dispatchAction) {
                             applyActions(scope.chartActions);
                         }
@@ -100,14 +100,14 @@
             };
 
             scope.$watch('options', function (newVal, oldVal) {
-                if (angular.equals(newVal, oldVal) && ! scope.forceWatch) return;
+                if (angular.equals(newVal, oldVal) && !scope.forceWatch) return;
                 createChart(newVal);
             });
 
-            scope.$watch('dataset', function (newVal, oldVal) {
-                if (angular.equals(newVal, oldVal)) return;
-                createChart(scope.options);
-            });
+            // scope.$watch('dataset', function (newVal, oldVal) {
+            //     if (angular.equals(newVal, oldVal)) return;
+            //     createChart(scope.options);
+            // });
 
             function applyActions(actions) {
                 actions.forEach(function (action, index) {
@@ -124,7 +124,7 @@
                         // else if there is each data element height static value in options.height (options.height.dataItemValue)
                         opts.height && opts.height.dataItemValue && opts.height.dataItemValue > 0 && scope.dataset && ! opts.dataset ? scope.dataset.length * opts.height.dataItemValue + 'px' :
                             // else use default value*/
-                            DEFAULT_HEIGHT;
+                    DEFAULT_HEIGHT;
             };
 
             function setData(opts) {
@@ -170,7 +170,7 @@
                 chart.resize();
             };
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', function () {
                 angular.element($window).off('resize', onResize);
             });
 
