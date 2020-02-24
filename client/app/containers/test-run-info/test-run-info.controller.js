@@ -7,7 +7,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
     elasticsearchService, TestRunService, UtilService,
     ArtifactService, DownloadService, $stateParams, OFFSET,
     API_URL, $state, TestRunsStorage,
-    TestService, $transitions) {
+    TestService, $transitions, pageTitleService) {
     'ngInject';
 
     const TENANT = $rootScope.globals.auth.tenant;
@@ -822,6 +822,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
                     vm.testRun.tests = {};
                     TestService.setTests = data;
                     setTestParams();
+                    window.innerWidth <= 480 ? pageTitleService.setTitle('Test details') : pageTitleService.setTitle($scope.test.name);
                 } else {
                     console.error(rs.message);
                 }

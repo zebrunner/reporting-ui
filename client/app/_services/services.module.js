@@ -7,6 +7,7 @@ import mainMenuService from './main-menu/main-menu.service';
 import ArtifactService from './artifact.service';
 import jsonConfigsService from './json-configs/json-configs.service';
 import testsSessionsService from './tests-sessions/tests-sessions.service';
+import pageTitleService from './page-title/page-title.service';
 
 angular.module('app.services', [])
     .service({ ArtifactService})
@@ -15,6 +16,7 @@ angular.module('app.services', [])
     .service({ mainMenuService })
     .service({ progressbarService })
     .service({ jsonConfigsService })
+    .service({ pageTitleService })
     .service({ testsSessionsService });
 
 require('./auth.intercepter');

@@ -164,6 +164,7 @@
                         user: null,
                     },
                     data: {
+                        title: 'Signin',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -183,6 +184,7 @@
                     url: '/signup?token',
                     component: 'signupComponent',
                     data: {
+                        title: 'Signup',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -217,6 +219,7 @@
                     url: '/password/forgot',
                     component: 'forgotPasswordComponent',
                     data: {
+                        title: 'Password',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -236,6 +239,7 @@
                     url: '/password/reset?token',
                     component: 'resetPasswordComponent',
                     data: {
+                        title: 'Reset password',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -265,6 +269,7 @@
                     url: '/list',
                     component: 'usersComponent',
                     data: {
+                        title: 'Users',
                         requireLogin: true,
                         classes: 'p-users',
                         permissions: ['VIEW_USERS', 'MODIFY_USERS'],
@@ -285,6 +290,7 @@
                     url: '/groups',
                     component: 'groupsComponent',
                     data: {
+                        title: 'Groups',
                         requireLogin: true,
                         classes: 'p-users-groups',
                         permissions: ['MODIFY_USER_GROUPS'],
@@ -305,6 +311,7 @@
                     url: '/invitations',
                     component: 'invitationsComponent',
                     data: {
+                        title: 'Invitations',
                         requireLogin: true,
                         classes: 'p-users',
                         permissions: ['INVITE_USERS', 'MODIFY_INVITATIONS'],
@@ -326,6 +333,7 @@
                     url: '/profile',
                     component: 'userComponent',
                     data: {
+                        title: 'User profile',
                         requireLogin: true,
                         classes: 'p-user-profile'
                     },
@@ -373,6 +381,7 @@
                         activeTestRunId: null
                     },
                     data: {
+                        title: 'Test runs',
                         requireLogin: true,
                         classes: 'p-tests-runs'
                     },
@@ -431,6 +440,7 @@
                         configSnapshot: null,
                     },
                     data: {
+                        title: 'Test results',
                         requireLogin: true,
                         classes: 'p-tests-run-details'
                     },
@@ -546,6 +556,7 @@
                     url: '/sessions',
                     component: 'testsSessionsComponent',
                     data: {
+                        title: 'Test sessions',
                         requireLogin: true,
                         classes: 'p-tests-sessions'
                     },
@@ -653,6 +664,7 @@
                     url: '/integrations',
                     component: 'integrationsComponent',
                     data: {
+                        title: 'Integrations',
                         requireLogin: true,
                         classes: 'p-integrations',
                         permissions: ['VIEW_INTEGRATIONS'],
@@ -689,6 +701,7 @@
                     url: '/404',
                     component: 'notFoundComponent',
                     data: {
+                        title: 'Not found',
                         classes: 'body-wide body-err p-not-found'
                     },
                     lazyLoad: async ($transition$) => {
@@ -707,6 +720,7 @@
                     url: '/500',
                     component: 'serverErrorComponent',
                     data: {
+                        title: 'Server error',
                         classes: 'body-wide body-err p-server-error'
                     },
                     lazyLoad: async ($transition$) => {

@@ -9,6 +9,7 @@ const testSessionLogsController = function testsSessionsController(
     $transitions,
     $state,
     moment,
+    pageTitleService,
 ) {
     'ngInject';
 
@@ -44,6 +45,7 @@ const testSessionLogsController = function testsSessionsController(
                     vm.rawLog = _rawLog;
                     parseLog(vm.rawLog);
                 }
+                vm.testSession.testName ? pageTitleService.setTitle(vm.testSession.testName) : pageTitleService.setTitle('Untitled');
             });
         bindEvents();
     }
