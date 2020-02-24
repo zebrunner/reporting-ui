@@ -5,14 +5,14 @@ import inviteUserModalCtrl from '../shared/modals/invitation-modal/invitation-mo
 
 const UsersController = function UserViewController(
     $scope,
-    $rootScope,
     $location,
     $state,
     $mdDialog,
     UserService,
     messageService,
     GroupService,
-    toolsService
+    toolsService,
+    pageTitleService,
 ) {
     'ngInject';
 
@@ -50,6 +50,7 @@ const UsersController = function UserViewController(
                 showTemplate: null
             }
         },
+        get currentTitle() { return pageTitleService.slicedTitle; },
         get currentUser() { return UserService.currentUser; },
     };
 

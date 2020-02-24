@@ -1,7 +1,8 @@
 <div class="page-wrapper">
     <zf-sub-header>
         <zf-sub-header-title>
-            Users <small class="fixed-page-header__additional-text" ng-if="$ctrl.sr">({{$ctrl.sr.totalResults}})</small>
+            {{ $ctrl.currentTitle }} 
+            <small class="fixed-page-header__additional-text" ng-if="$ctrl.sr">({{$ctrl.sr.totalResults}})</small>
         </zf-sub-header-title>
         <zf-sub-header-options layout="row" layout-align="start center">
                 <md-input-container class="_search">

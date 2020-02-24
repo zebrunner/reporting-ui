@@ -23,7 +23,8 @@ const testDetailsController = function testDetailsController(
     toolsService,
     messageService,
     windowWidthService,
-    ArtifactService
+    ArtifactService,
+    pageTitleService,
     ) {
     'ngInject';
 
@@ -100,6 +101,7 @@ const testDetailsController = function testDetailsController(
         get qTest() { return qTestSettings; },
         get isStausFilteringActive() { return isStausFilteringActive(); },
         get isSortingActive() { return isSortingActive(); },
+        get currentTitle() { return pageTitleService.slicedTitle; },
 
         getEptyTestsMessage,
         toggleGroupingFilter,

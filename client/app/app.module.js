@@ -1133,9 +1133,6 @@ const ngModule = angular.module('app', [
     }
 
     $transitions.onBefore({}, function(trans) {
-        if (!$rootScope.title) {
-            $rootScope.title = 'Zebrunner';
-        }
         const toStateData = trans.to().data;
         const loginRequired = !!(toStateData && toStateData.requireLogin);
         const onlyGuests = !!(toStateData && toStateData.onlyGuests);

@@ -8,7 +8,7 @@
         </zf-sub-header-button>
         <zf-sub-header-title class="_flex">
             <span class="testrun-info__title-name">{{ test.name }}</span>
-            <span class="testrun-info__title-name _mobile">Test details</span>
+            <span class="testrun-info__title-name _mobile">{{ $ctrl.currentTitle }}</span>
             <span class="recording-icon" ng-if="MODE.name == 'live'">
                     <div class="red-point" ng-class="{'flash-point': true}"></div>
                 </span>

@@ -2,15 +2,16 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 
-const testRunInfoController = function testRunInfoController($scope, $rootScope, $mdDialog, $interval, $log,
-    $filter, $anchorScroll, $location, $timeout, $window, $q,
+const testRunInfoController = function testRunInfoController($scope, $rootScope, $mdDialog, $interval,
+    $filter, $anchorScroll, $location, $timeout, $q,
     elasticsearchService, TestRunService, UtilService,
-    ArtifactService, DownloadService, $stateParams, OFFSET,
+    ArtifactService, $stateParams, OFFSET,
     API_URL, $state, TestRunsStorage,
     TestService, $transitions, pageTitleService) {
     'ngInject';
 
     const TENANT = $rootScope.globals.auth.tenant;
+    const mobileWidth = 480;
     const vm = {
         testRun: null,
         configSnapshot: null,
@@ -19,6 +20,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         getFullLogMessage,
         downloadImageArtifacts,
         get hasVideo() { return hasVideo(); },
+        get currentTitle() { return pageTitleService.slicedTitle; },
     };
 
     vm.$onInit = controllerInit;
@@ -822,7 +824,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
                     vm.testRun.tests = {};
                     TestService.setTests = data;
                     setTestParams();
-                    window.innerWidth <= 480 ? pageTitleService.setTitle('Test details') : pageTitleService.setTitle($scope.test.name);
+                    pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : $scope.test.name);
                 } else {
                     console.error(rs.message);
                 }

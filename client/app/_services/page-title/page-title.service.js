@@ -9,6 +9,7 @@ const pageTitleService = function pageTitleService() {
 
     return {
         get title() { return title; },
+        get slicedTitle() { return title.slice(0, -12); },
         setTitle,
     };
 };

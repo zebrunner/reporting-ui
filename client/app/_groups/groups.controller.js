@@ -6,7 +6,8 @@ const GroupsController = function GroupsController(
     UserService,
     GroupService,
     UtilService,
-    messageService
+    messageService,
+    pageTitleService,
     ) {
     'ngInject';
 
@@ -18,7 +19,8 @@ const GroupsController = function GroupsController(
         deleteUserFromGroup: deleteUserFromGroup,
         usersSearchCriteria: {},
         count: 0,
-        get groups() { return GroupService.groups; }
+        get groups() { return GroupService.groups; },
+        get currentTitle() { return pageTitleService.slicedTitle; },
     };
 
     vm.$onInit = initController;

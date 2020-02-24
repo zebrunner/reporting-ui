@@ -16,6 +16,8 @@ const testSessionLogsController = function testsSessionsController(
     let _rawLog = '';
     const splitPattern = '/* ZEBRUNNER_PARSING_SPLITTER */';
     const logLevels = ['info', 'error', 'warn', 'debug', 'trace', 'warning'];
+    const mobileWidth = 480;
+    
     const vm = {
         testSession: null,
         rawLog: '',
@@ -39,13 +41,15 @@ const testSessionLogsController = function testsSessionsController(
         vm.videoURL = testSessionLogsService.getSessionVideoURL(vm.testSession.sessionId);
         vm.logURL = testSessionLogsService.getSessionLogURL(vm.testSession.sessionId);
         testSessionLogsService.getSessionLog(vm.testSession.sessionId)
-            .then(res => {
-                if (res.success) {
-                    _rawLog = res.data || '';
-                    vm.rawLog = _rawLog;
-                    parseLog(vm.rawLog);
-                }
-                vm.testSession.testName ? pageTitleService.setTitle(vm.testSession.testName) : pageTitleService.setTitle('Untitled');
+        .then(res => {
+            const testName = vm.testSession.testName ? vm.testSession.testName : 'Untitled';
+            pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Session logs' : testName);
+            
+            if (res.success) {
+                _rawLog = res.data || '';
+                vm.rawLog = _rawLog;
+                parseLog(vm.rawLog);
+            }
             });
         bindEvents();
     }

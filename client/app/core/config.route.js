@@ -219,7 +219,7 @@
                     url: '/password/forgot',
                     component: 'forgotPasswordComponent',
                     data: {
-                        title: 'Password',
+                        title: 'Forgot password',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -333,7 +333,7 @@
                     url: '/profile',
                     component: 'userComponent',
                     data: {
-                        title: 'User profile',
+                        title: 'Account & profile',
                         requireLogin: true,
                         classes: 'p-user-profile'
                     },
