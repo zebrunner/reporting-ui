@@ -247,7 +247,7 @@ const CiHelperController = function CiHelperController(
     }
 
     $scope.getType = function (value) {
-        return angular.isArray(value) ? 'array' : typeof value === "boolean" ? 'boolean' : Number.isInteger(+value) ? 'int' : typeof value === 'string' || value instanceof String ? 'string' : 'none';
+        return angular.isArray(value) ? 'array' : typeof value === "boolean" ? 'boolean' : !isNaN(+value) ? 'int' : typeof value === 'string' || value instanceof String ? 'string' : 'none';
     };
 
     $scope.getElement = function (item) {

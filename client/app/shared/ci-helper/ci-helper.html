@@ -322,7 +322,7 @@
                         <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">
                                 <md-input-container class="_gray-bg no-margin" ng-if="builtLauncher.type[key] === 'int'">
                                     <label>{{key}}</label>
-                                    <input type="number" min="1" ng-step="1" pattern="^[0-9]+$" ng-model="builtLauncher.model[key]"/>
+                                    <input type="number" min="1" step="1" pattern="^[0-9]+$" ng-model="builtLauncher.model[key]"/>
                                 </md-input-container>
                                 <md-input-container class="_gray-bg no-margin" ng-if="builtLauncher.type[key] !== 'int'">
                                     <label>{{key}}</label>
