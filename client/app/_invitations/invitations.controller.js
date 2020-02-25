@@ -26,7 +26,7 @@ const InvitationsController = function InvitationsController($location, $mdDialo
         search: search,
         reset: reset,
         copyLink: copyLink,
-        get currentTitle() { return pageTitleService.slicedTitle; },
+        get currentTitle() { return pageTitleService.pageTitle; },
         get groups() {return GroupService.groups;},
     };
 

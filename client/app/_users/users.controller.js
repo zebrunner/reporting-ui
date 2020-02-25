@@ -50,7 +50,7 @@ const UsersController = function UserViewController(
                 showTemplate: null
             }
         },
-        get currentTitle() { return pageTitleService.slicedTitle; },
+        get currentTitle() { return pageTitleService.pageTitle; },
         get currentUser() { return UserService.currentUser; },
     };
 

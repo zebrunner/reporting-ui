@@ -20,7 +20,7 @@ const GroupsController = function GroupsController(
         usersSearchCriteria: {},
         count: 0,
         get groups() { return GroupService.groups; },
-        get currentTitle() { return pageTitleService.slicedTitle; },
+        get currentTitle() { return pageTitleService.pageTitle; },
     };
 
     vm.$onInit = initController;

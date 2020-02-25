@@ -20,7 +20,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         getFullLogMessage,
         downloadImageArtifacts,
         get hasVideo() { return hasVideo(); },
-        get currentTitle() { return pageTitleService.slicedTitle; },
+        get currentTitle() { return pageTitleService.pageTitle; },
     };
 
     vm.$onInit = controllerInit;

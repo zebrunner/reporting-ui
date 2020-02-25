@@ -101,7 +101,7 @@ const testDetailsController = function testDetailsController(
         get qTest() { return qTestSettings; },
         get isStausFilteringActive() { return isStausFilteringActive(); },
         get isSortingActive() { return isSortingActive(); },
-        get currentTitle() { return pageTitleService.slicedTitle; },
+        get currentTitle() { return pageTitleService.pageTitle; },
 
         getEptyTestsMessage,
         toggleGroupingFilter,

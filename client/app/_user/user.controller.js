@@ -36,7 +36,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         copyServiceUrl,
         goToState,
 
-        get currentTitle() { return pageTitleService.slicedTitle },
+        get currentTitle() { return pageTitleService.pageTitle },
         get currentUser() { return UserService.currentUser; },
         get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; },
         get appVersions() { return $rootScope.version; }

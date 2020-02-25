@@ -48,7 +48,7 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
         isToolConnected: toolsService.isToolConnected,
         onViewChange,
 
-        get currentTitle() { return pageTitleService.slicedTitle; },
+        get currentTitle() { return pageTitleService.pageTitle; },
     };
 
     vm.$onInit = init;

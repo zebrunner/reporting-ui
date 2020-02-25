@@ -31,7 +31,7 @@ const testsSessionsController = function testsSessionsController(
         $onInit: init,
 
         get isEmpty() { return this.testSessions && !this.testSessions.length; },
-        get currentTitle() { return pageTitleService.slicedTitle; },
+        get currentTitle() { return pageTitleService.pageTitle; },
         get isMobile() { return windowWidthService.isMobile(); },
     };
 

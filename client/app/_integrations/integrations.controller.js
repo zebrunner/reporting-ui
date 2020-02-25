@@ -42,7 +42,7 @@ const integrationsController = function integrationsController($state, $mdDialog
         isMobile: windowWidthService.isMobile,
 
         get chipsCtrl() { return _chipsCtrl; },
-        get currentTitle() { return pageTitleService.slicedTitle; },
+        get currentTitle() { return pageTitleService.pageTitle; },
         set chipsCtrl(ctrl) {
             //let's init controller once
             if (!_chipsCtrl) {
