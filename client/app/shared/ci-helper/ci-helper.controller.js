@@ -240,14 +240,14 @@ const CiHelperController = function CiHelperController(
         $scope.jsonModel = launcher.model.toJson();
         angular.forEach($scope.jsonModel, function (value, key) {
             var type = $scope.getType(value);
-            var val = type === 'array' && value.length ? value[0] : value;
+            var val = type === 'array' && value.length ? value[0] : type === 'int' ? +value : value;
             $scope.builtLauncher.model[key] = val;
             $scope.builtLauncher.type[key] = type;
         });
     }
 
     $scope.getType = function (value) {
-        return angular.isArray(value) ? 'array' : typeof value === "boolean" ? 'boolean' : typeof value === 'string' || value instanceof String ? 'string' : Number.isInteger(value) ? 'int' : 'none';
+        return angular.isArray(value) ? 'array' : typeof value === "boolean" ? 'boolean' : !isNaN(+value) ? 'int' : typeof value === 'string' || value instanceof String ? 'string' : 'none';
     };
 
     $scope.getElement = function (item) {
@@ -840,6 +840,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.build = function (launcher, launcher_form) {
         if (launcher_form.$invalid) {
+            // TODO: display error message;
             Object.keys(launcher_form.$error).forEach(key => {
                 launcher_form.$error[key].forEach(errEl => errEl.$touched = true)
             });
