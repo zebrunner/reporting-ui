@@ -72,9 +72,8 @@
                 <span class="label label-default" ng-if="$ctrl.testRun.env">{{$ctrl.testRun.env}}</span>
             </div>
             <div name="testRunPlatform" class="test-run-card__cell _platform">
-                <span data-ng-if="$ctrl.testRun.platform !== ''" class="platform-icon {{$ctrl.testRun.platform | lowercase}}"></span>
-                <span data-ng-if="$ctrl.testRun.platform === ''" class="platform-icon unknown"></span>
-                <span data-ng-if="$ctrl.testRun.browserVersion" class="label label-default">{{$ctrl.testRun.browserVersion}}</span>
+                <span ng-if="$ctrl.testRun.platformIcon" class="platform-icon {{::$ctrl.testRun.platformIcon}}"></span>
+                <span ng-if="$ctrl.testRun.platformVersion" class="label label-default">{{::$ctrl.testRun.platformVersion}}</span>
             </div>
             <div name="testRunStatistics" class="test-run-card__cell _statistics fixed-testcount-column"><span title="Passed"
                     class="label arrowed arrowed-in-right label-success-border" data-ng-class="$ctrl.testRun.passed ? 'label-success' : 'label-success-empty'">{{$ctrl.testRun.passed}}</span>
@@ -301,10 +300,9 @@
                     <span class="label label-default">{{$ctrl.testRun.env}}</span>
                 </div>
                 <div name="testRunPlatform" class="test-run-card__cell _platform no-padding browser-version_column"
-                     ng-if="$ctrl.testRun.platform || $ctrl.testRun.browserVersion">
-                    <span data-ng-if="$ctrl.testRun.platform !== ''" class="platform-icon {{$ctrl.testRun.platform | lowercase}}" />
-                    <span data-ng-if="$ctrl.testRun.platform === ''" class="platform-icon unknown"></span>
-                    <span data-ng-if="$ctrl.testRun.browserVersion" class="label label-default">{{$ctrl.testRun.browserVersion}}</span>
+                     ng-if="$ctrl.testRun.platformIcon || $ctrl.testRun.platformVersion">
+                    <span ng-if="$ctrl.testRun.platformIcon" class="platform-icon {{$ctrl.testRun.platformIcon}}"></span>
+                    <span ng-if="$ctrl.testRun.platformVersion" class="label label-default">{{$ctrl.testRun.platformVersion}}</span>
                 </div>
             </div>
             <div class="test-run-card__row _data">

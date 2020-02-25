@@ -5,7 +5,7 @@
         .module('app.services')
         .service('UserService', UserService);
 
-    function UserService($httpMock, $cookies, UtilService, API_URL, $q, messageService) {
+    function UserService($httpMock, UtilService, API_URL, $q, messageService) {
         'ngInject';
 
         let _currentUser = null;
@@ -29,6 +29,7 @@
             initCurrentUser,
             clearCurrentUser,
             setDefaultPreferences,
+            updateUserPreference,
 
             get currentUser() {
                 return _currentUser;
@@ -88,6 +89,10 @@
             return $httpMock.get(API_URL + '/api/users/preferences').then(UtilService.handleSuccess, UtilService.handleError('Unable to get default preferences'));
         }
 
+        function updateUserPreference(userId, params) {
+        	return $httpMock.put(`${API_URL}/api/users/${userId}/preference`, null, { params }).then(UtilService.handleSuccess, UtilService.handleError('Unable to update user preference'));
+        }
+
         function updateUserPreferences(userId, preferences) {
             return $httpMock.put(API_URL + '/api/users/' + userId + '/preferences', preferences).then(UtilService.handleSuccess, UtilService.handleError('Unable to update user preferences'));
         }
@@ -114,6 +119,8 @@
                     if (rs.success) {
                         service.currentUser = rs.data['user'];
                         service.currentUser.isAdmin = service.currentUser.roles.indexOf('ROLE_ADMIN') >= 0;
+                        // Set fallback value if 'DEFAULT_TEST_VIEW' is apsent
+                        service.currentUser.testsView = 'runs';
                         setDefaultPreferences(service.currentUser.preferences);
 
                         service.currentUser.pefrDashboardId = rs.data['performanceDashboardId'];
@@ -159,6 +166,9 @@
                         break;
                     case 'THEME':
                         service.currentUser.theme = userPreference.value;
+                        break;
+                    case 'DEFAULT_TEST_VIEW':
+                        service.currentUser.testsView = userPreference.value;
                         break;
                     default:
                         break;

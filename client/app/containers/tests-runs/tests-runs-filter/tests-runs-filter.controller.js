@@ -27,7 +27,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         name: 'VALUE',
         value: null
     };
-    const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS'];
+    const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS', 'BROWSER'];
     const DATE_CRITERIAS = ['DATE'];
     const DATE_CRITERIAS_PICKER_OPERATORS = ['EQUALS', 'NOT_EQUALS', 'BEFORE', 'AFTER'];
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
@@ -148,6 +148,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
 
         loadFilterDataPromises.push(loadEnvironments());
         loadFilterDataPromises.push(loadPlatforms());
+        loadFilterDataPromises.push(loadBrowsers());
         loadFilterDataPromises.push(loadProjects());
 
         return $q.all(loadFilterDataPromises).then(function() {
@@ -165,48 +166,60 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
     }
 
     function loadEnvironments() {
-        return TestRunService.getEnvironments().then(function(rs) {
-            if (rs.success) {
-                vm.environments = rs.data.filter(function (env) {
-                    return !!env;
-                });
+        return TestRunService.getEnvironments()
+            .then(rs => {
+                if (rs.success) {
+                    // TODO: remove when BE get rid of nullish values from DB
+                    vm.environments = rs.data.filter(Boolean);
+                } else {
+                    messageService.error(rs.message);
+                }
 
                 return vm.environments;
-            } else {
-                messageService.error(rs.message);
-                $q.reject(rs.message);
-            }
-        });
+            });
     }
 
     function loadPlatforms() {
-        return TestRunService.getPlatforms().then(function (rs) {
-            if (rs.success) {
-                vm.platforms = rs.data.filter(function (platform) {
-                    return platform && platform.length;
-                });
+        return TestRunService.getPlatforms()
+            .then(rs => {
+                if (rs.success) {
+                    // TODO: remove when BE get rid of nullish values from DB
+                    vm.platforms = rs.data.filter(Boolean);
+                } else {
+                    messageService.error(rs.message);
+                }
 
                 return vm.platforms;
-            } else {
-                messageService.error(rs.message);
+            });
+    }
 
-                return $q.reject(rs.message);
-            }
-        });
+    function loadBrowsers() {
+        return TestRunService.getBrowsers()
+            .then(rs => {
+                if (rs.success) {
+                    // TODO: remove when BE get rid of nullish values from DB
+                    vm.browsers = rs.data.filter(Boolean);
+                } else {
+                    messageService.error(rs.message);
+                }
+
+                return vm.browsers;
+            });
     }
 
     function loadProjects() {
-        return ProjectService.getAllProjects().then(function (rs) {
-            if (rs.success) {
-                vm.allProjects = rs.data.map(function(proj) {
-                    return proj.name;
-                });
+        return ProjectService.getAllProjects()
+            .then(rs => {
+                if (rs.success) {
+                    vm.allProjects = rs.data.map(function(proj) {
+                        return proj.name;
+                    });
+                } else {
+                    messageService.error(rs.message);
+                }
 
-                return rs.data;
-            } else {
-                $q.reject(rs.message);
-            }
-        });
+                return vm.allProjects;
+            });
     }
 
     function loadSubjectBuilder() {
@@ -221,6 +234,9 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
                                 break;
                             case 'PLATFORM':
                                 criteria.values = vm.platforms;
+                                break;
+                            case 'BROWSER':
+                                criteria.values = vm.browsers;
                                 break;
                             case 'PROJECT':
                                 criteria.values = vm.allProjects;

@@ -5,11 +5,13 @@ import accessKeyModalTemplate from './access-key-modal/access-key-modal.html';
 
 const testsSessionsController = function testsSessionsController(
     $q,
+    $state,
     windowWidthService,
     testsSessionsService,
     messageService,
     $transitions,
     $mdDialog,
+    UserService,
 ) {
     'ngInject';
 
@@ -18,10 +20,13 @@ const testsSessionsController = function testsSessionsController(
         totalResults: 0,
         pageSize: 20,
         currentPage: 1,
+        switcherState: 'sessions',
+        isUserParamSaving: false,
 
         onPageChange,
         onSearch,
         openAccessKeyModal,
+        onViewChange,
         $onInit: init,
 
         get isEmpty() { return this.testSessions && !this.testSessions.length; },
@@ -36,6 +41,23 @@ const testsSessionsController = function testsSessionsController(
         vm.pageSize = testsSessionsService.activeParams.pageSize;
         vm.currentPage = testsSessionsService.activeParams.page + 1;
         bindEvents();
+    }
+
+    function onViewChange(state) {
+        const param = {name: 'DEFAULT_TEST_VIEW', value: state};
+
+        vm.isUserParamSaving = true;
+
+        return UserService.updateUserPreference(UserService.currentUser.id, param).then(rs => {
+            if (rs.success) {
+                UserService.currentUser.testsView = state;
+                $state.go(`tests.${state}`);
+            } else {
+                vm.isUserParamSaving = false;
+                vm.switcherState = 'sessions';
+                messageService.error(rs.message);
+            }
+        });
     }
 
     // page value comes from pagination where counting starts from 1, so we need to subtract 1

@@ -90,16 +90,10 @@
                     </li>
                 </ul>
             </li>
-            <li ng-class="{'active':$ctrl.$state.includes('tests.runs')}" toggle-nav-bottom>
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="tests.runs">
+            <li ng-class="{'active':$ctrl.$state.includes('tests.sessions') || $ctrl.$state.includes('tests.runs')}" toggle-nav-bottom>
+                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="tests.default">
                     <i class="material-icons">play_circle_outline</i>
-                    <span>Runs</span>
-                </a>
-            </li>
-            <li ng-class="{'active':$ctrl.$state.includes('tests.sessions')}" toggle-nav-bottom>
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="tests.sessions">
-                    <i class="material-icons">fingerprint</i>
-                    <span>Sessions</span>
+                    <span>{{$ctrl.currentUser.testsView}}</span>
                 </a>
             </li>
             <li has-any-permission="['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS']" toggle-menu ui-sref-active="active">

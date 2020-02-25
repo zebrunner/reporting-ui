@@ -5,6 +5,7 @@ import 'intersection-observer';
 import progressbarInterceptor from './http-interceptors/progressbar.interceptor';
 import jenkinsIcon from '../assets/images/_icons_tools/jenkins.svg';
 import { TutorialsModule } from './modules/tutorials';
+import sessionSwitcherComponent from './shared/sessions-switcher/sessions-switcher.component';
 
 const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular.module('app', [
@@ -29,6 +30,7 @@ const ngModule = angular.module('app', [
     'oc.lazyLoad',
     TutorialsModule,
 ])
+.component('sessionsSwitcher', sessionSwitcherComponent)
 .config((TutorialsProvider) => {
     'ngInject';
 

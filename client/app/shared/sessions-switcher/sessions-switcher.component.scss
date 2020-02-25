@@ -1,0 +1,45 @@
+@import "../../../styles/global/var";
+
+.p-tests-sessions__toggle-container {
+    margin-top: 4px;
+    height: 54px;
+    display: flex;
+    justify-content: flex-end;
+
+    @media screen and (max-width: $md-screen-phone) {
+        display: none;
+    }
+}
+
+.filter__selector {
+    display: flex;
+    justify-content: space-around;
+    flex-shrink: 0;
+    margin: 0 0 0 8px;
+    height: 36px;
+    width: 195px;
+    border: solid 1px rgba($dark-new, .15);
+    border-radius: 10px;
+    transition: opacity 0.25s ease;
+
+    &-variant {
+        margin: 0;
+        line-height: 34px;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba($dark-new, .5);
+    }
+
+    &-variant._selected {
+        color: $medium-teal-new;
+        transition: color .25s ease-in-out;
+    }
+
+    &-switch {
+        margin: 2px 0 0;
+    }
+
+    &[disabled] {
+        opacity: 0.75;
+    }
+}

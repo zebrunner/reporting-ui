@@ -1,0 +1,12 @@
+<div class="filter__selector" ng-disabled="$ctrl.isDisabled">
+    <div ng-class="{'filter__selector-variant': true, '_selected': $ctrl.switcherState === 'runs' && !$ctrl.isDisabled}">Tests</div>
+    <md-switch class="filter__selector-switch md-primary"
+        aria-label="Switch"
+        ng-model="$ctrl.switcherState"
+        ng-true-value="'sessions'"
+        ng-false-value="'runs'"
+        ng-change="$ctrl.toggleTestsView()"
+        ng-disabled="$ctrl.isDisabled"
+    ></md-switch>
+    <div ng-class="{'filter__selector-variant': true, '_selected': $ctrl.switcherState === 'sessions' && !$ctrl.isDisabled}">Sessions</div>
+</div>

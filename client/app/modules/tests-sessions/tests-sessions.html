@@ -14,16 +14,20 @@
     </zf-sub-header>
 
     <div class="page">
-        <div class="p-tests-sessions__content-header">
-            <tests-sessions-search on-search="$ctrl.onSearch($params)" additional-search-params="$ctrl.additionalSearchParams"></tests-sessions-search>
+        <div class="p-tests-sessions__toggle-container">
+            <sessions-switcher switcher-state="$ctrl.switcherState"
+            on-change="$ctrl.onViewChange($value)" is-disabled="$ctrl.isUserParamSaving"></sessions-switcher>
         </div>
         <div class="p-tests-sessions__content-wrapper">
+            <div class="p-tests-sessions__section _header">
+                <tests-sessions-search on-search="$ctrl.onSearch($params)" additional-search-params="$ctrl.additionalSearchParams"></tests-sessions-search>
+            </div>
             <div class="p-tests-sessions__section _content">
                 <article class="article">
                     <md-card class="no-margin-h">
                         <test-session-card test-session="testSession"
                             ng-repeat="testSession in $ctrl.testSessions track by testSession.id"></test-session-card>
-                        <div ng-if="$ctrl.isEmpty">
+                        <div ng-if="$ctrl.isEmpty" class="p-tests-sessions__no-content-wrapper">
                             <div id="noData" class="text-center p-tests-sessions__no-content">No test sessions</div>
                         </div>
                         <md-table-pagination id="pagination"

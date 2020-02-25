@@ -17,6 +17,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         pefrDashboardId: null,
         accessToken: null,
         widgetRefreshIntervals: [0, 30000, 60000, 120000, 300000],
+        testsVariants: ['runs', 'sessions'],
 
         copyAccessToken,
         deleteUserProfilePhoto,
@@ -24,8 +25,9 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         isDashboardSelected,
         showUploadImageDialog,
         updateUserProfile,
-        updateUserPreferences,
-        resetPreferences,
+        updateUserPreference,
+        // updateUserPreferences,
+        // resetPreferences,
         convertMillis,
         updateUserPassword,
         generateAccessToken,
@@ -35,7 +37,8 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         goToState,
 
         get currentUser() { return UserService.currentUser; },
-        get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; }
+        get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; },
+        get appVersions() { return $rootScope.version; }
     };
 
     function goToState(state) {
@@ -53,6 +56,20 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
                 messageService.success('Photo was deleted');
             }
             else {
+                messageService.error(rs.message);
+            }
+        });
+    }
+
+    function updateUserPreference(preferenceForm) {
+        const { defaultTests } = preferenceForm;
+        const params = {name: 'DEFAULT_TEST_VIEW', value: defaultTests};
+
+        UserService.updateUserPreference(UserService.currentUser.id, params).then((rs) => {
+            if (rs.success) {
+                UserService.currentUser.testsView = defaultTests;
+                messageService.success('User preferences updated');
+            } else {
                 messageService.error(rs.message);
             }
         });
@@ -140,48 +157,58 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             });
     }
 
-    function updateUserPreferences(preferenceForm) {
-        const preferences = angular.copy(vm.preferences);
+    // TODO: enable and refactor when more preferences will be added
+    // function updateUserPreferences(preferenceForm) {
+    //     const preferences = angular.copy(vm.preferences);
 
-        for (var i = 0; i < preferences.length; i++) {
-            preferences[i].userId = vm.user.id;
-            if (preferences[i].name === 'DEFAULT_DASHBOARD') {
-                preferences[i].value = preferenceForm.defaultDashboard;
-            } else if (preferences[i].name === 'REFRESH_INTERVAL') {
-                preferences[i].value = parseInt(preferenceForm.refreshInterval, 10);
-            } else if (preferences[i].name === 'THEME') {
-                preferences[i].value = vm.main.skin;
-            }
-        }
-        UserService.updateUserPreferences(vm.user.id, preferences).then(function (rs) {
-            if (rs.success) {
-                vm.preferences = rs.data;
-                if (rs.data && rs.data.length) {
-                    UserService.setDefaultPreferences(rs.data);
-                }
-                messageService.success('User preferences are successfully updated');
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        });
-    }
+    //     preferences.forEach((item) => {
+    //         item.userId = vm.user.id;
+    //         switch (item.name) {
+    //             case 'DEFAULT_DASHBOARD':
+    //                 item.value = preferenceForm.defaultDashboard;
+    //                 break;
+    //             case 'REFRESH_INTERVAL':
+    //                 item.value = parseInt(preferenceForm.refreshInterval, 10);
+    //                 break;
+    //             case 'DEFAULT_TESTS':
+    //                 item.value = preferenceForm.defaultTests;
+    //                 break;
+    //             case 'THEME':
+    //                 item.value = vm.main.skin;
+    //             default:
+    //                 break;
+    //         }
+    //     });
 
-    function resetPreferences(preferenceForm) {
-        UserService.resetUserPreferencesToDefault().then(function (rs) {
-            if (rs.success) {
-                vm.preferences = rs.data;
-                UserService.setDefaultPreferences(vm.preferences);
-                preferenceForm.refreshInterval = vm.currentUser.refreshInterval;
-                preferenceForm.defaultDashboard = vm.currentUser.defaultDashboard;
-                vm.main.skin = vm.currentUser.theme;
-                messageService.success('Preferences are set to default');
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        });
-    }
+    //     UserService.updateUserPreferences(vm.user.id, preferences).then(function (rs) {
+    //         if (rs.success) {
+    //             vm.preferences = rs.data;
+    //             if (rs.data && rs.data.length) {
+    //                 UserService.setDefaultPreferences(rs.data);
+    //             }
+    //             messageService.success('User preferences are successfully updated');
+    //         }
+    //         else {
+    //             messageService.error(rs.message);
+    //         }
+    //     });
+    // }
+
+    // function resetPreferences(preferenceForm) {
+    //     UserService.resetUserPreferencesToDefault().then(function (rs) {
+    //         if (rs.success) {
+    //             vm.preferences = rs.data;
+    //             UserService.setDefaultPreferences(vm.preferences);
+    //             preferenceForm.refreshInterval = vm.currentUser.refreshInterval;
+    //             preferenceForm.defaultDashboard = vm.currentUser.defaultDashboard;
+    //             vm.main.skin = vm.currentUser.theme;
+    //             messageService.success('Preferences are set to default');
+    //         }
+    //         else {
+    //             messageService.error(rs.message);
+    //         }
+    //     });
+    // }
 
     function isDashboardSelected(dashboard) {
         return vm.currentUser && vm.currentUser.defaultDashboard === dashboard.title;

@@ -1,3 +1,4 @@
+// TODO: refactor redirections: create global "$rootScope.$on('$stateChangeError'..." handler inside a run() function
 (function () {
     'use strict';
 
@@ -37,10 +38,19 @@
                                     } else {
                                         //TODO: dashboards is a home page. If we redirect to dashboards we can get infinity loop. We need to add simple error page;
                                         const message = rs && rs.message || `Can\'t fetch dashboard with id: ${dashboardId}`;
+                                        const is404 = rs && rs.error && rs.error.status === 404;
 
-                                        messageService.error(message);
+                                        if (!is404) {
+                                            messageService.error(message);
+                                        }
+                                        // Timeout to avoid digest issues
+                                        $timeout(() => {
+                                            const state = is404 ? '404' : 'home';
 
-                                        return $q.reject(message);
+                                            $state.go(state);
+                                        }, 0, false);
+
+                                        return $q.reject({ message });
                                     }
                                 });
                             } else {
@@ -628,6 +638,16 @@
                             throw new Error('Can\'t load testSessionLogs module, ' + err);
                         }
                     }
+                })
+                .state('tests.default', {
+                    url: '',
+                    controller: ($state, UserService) => {
+                        'ngInject';
+
+                        $state.go(`tests.${UserService.currentUser.testsView}`, {}, {
+                            location: 'replace',
+                        });
+                    },
                 })
                 .state('integrations', {
                     url: '/integrations',

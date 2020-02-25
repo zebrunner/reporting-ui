@@ -407,24 +407,30 @@ button.red {
     &.safari {
         background-image: url(../assets/images/_icons_platform/safari.svg);
     }
+    &.safari-mobile {
+        background-image: url(../assets/images/_icons_platform/safari_mobile.svg);
+    }
     &.chrome {
         background-image: url(../assets/images/_icons_platform/chrome.svg);
+    }
+
+    &.chrome-mobile {
+        background-image: url(../assets/images/_icons_platform/chrome_mobile.svg);
     }
     &.firefox {
         background-image: url(../assets/images/_icons_platform/firefox.svg);
     }
-    &.MicrosoftEdge,
+    &.firefox-mobile {
+        background-image: url(../assets/images/_icons_platform/firefox_mobile.svg);
+    }
     &.microsoftedge,
     &.edge {
         background-image: url(../assets/images/_icons_platform/edge.svg);
     }
-    &.xbox,
-    &.Xbox,
-    &.XBox  {
+    &.xbox {
         background-image: url(../assets/images/_icons_platform/xbox.svg);
     }
     &.ps,
-    &.PS,
     &.playstation {
         background-image: url(../assets/images/_icons_platform/ps.svg);
     }
@@ -439,14 +445,10 @@ button.red {
     &.ie {
         background-image: url(../assets/images/_icons_platform/ie.svg);
     }
-    &.android,
-    &.Android,
-    &.ANDROID {
+    &.android {
         background-image: url(../assets/images/_icons_platform/android.svg);
     }
-    &.ios,
-    &.IOS,
-    &.iOS {
+    &.ios {
         background-image: url(../assets/images/_icons_platform/apple.svg);
     }
     &.unknown {

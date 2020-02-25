@@ -8,7 +8,10 @@ const testsRunsFilterDirective = function testsRunsFilterDirective() {
         template,
         controller,
         scope: {
-            onFilterChange: '&'
+            onFilterChange: '&',
+            onSwitcherChange: '&',
+            switcherState: '=',
+            isSwitcherDisabled: '<',
         },
         controllerAs: '$ctrl',
         restrict: 'E',

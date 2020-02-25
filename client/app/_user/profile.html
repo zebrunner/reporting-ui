@@ -11,23 +11,36 @@
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page page-profile">
-        <div class="profile-header" layout="row">
-            <div class="profile-img">
-                <profile-photo ng-model="$ctrl.currentUser.photoURL" size="48">
-                    <div class="profile-img-content">
-                        <i class="material-icons" ng-click="$ctrl.showUploadImageDialog($event)">add_a_photo</i>
-                    </div>
-                </profile-photo>
-            </div>
-            <div layout="column">
-                <div class="profile-personal-info" ng-if="$ctrl.currentUser.firstName || $ctrl.currentUser.lastName">
-                    {{$ctrl.currentUser.firstName}} {{$ctrl.currentUser.lastName}}
+        <div class="profile-header" layout="row" layout-xs="column">
+            <div layout="row" flex="auto">
+                <div class="profile-img">
+                    <profile-photo ng-model="$ctrl.currentUser.photoURL" size="48">
+                        <div class="profile-img-content">
+                            <i class="material-icons" ng-click="$ctrl.showUploadImageDialog($event)">add_a_photo</i>
+                        </div>
+                    </profile-photo>
                 </div>
-                <md-input-container flex class="no-margin">
-                    <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
-                </md-input-container>
+                <div class="profile-wrapper" layout="row" layout-xs="column" flex="100" layout-align="end start">
+                    <div class="profile-personal-content">
+                        <div class="profile-personal-info" ng-if="$ctrl.currentUser.firstName || $ctrl.currentUser.lastName">
+                            {{$ctrl.currentUser.firstName}} {{$ctrl.currentUser.lastName}}
+                        </div>
+                        <md-input-container flex class="no-margin">
+                            <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
+                        </md-input-container>
+                    </div>
+                    <div class="profile-versions-info" 
+                        flex="none" 
+                        layout="column" 
+                        layout-align="start end" 
+                        layout-align-xs="start start" 
+                        ng-if="$ctrl.appVersions.ui || $ctrl.appVersions.service || $ctrl.appVersions.client">
+                        <span class="md-caption no-margin" ng-if="$ctrl.appVersions.ui">ui: {{$ctrl.appVersions.ui}}</span>
+                        <span class="md-caption no-margin" ng-if="$ctrl.appVersions.service">server: {{$ctrl.appVersions.service}}</span>
+                        <span class="md-caption no-margin" ng-if="$ctrl.appVersions.client">client: {{$ctrl.appVersions.client}}</span>
+                    </div>
+                </div>
             </div>
-
         </div>
         <div layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Access token</div>
@@ -101,56 +114,46 @@
                             ng-disabled="profile_form.$invalid">Save</md-button>
             </form>
         </div>
-
-        <!--<div class="row">
-            <div class="col-lg-8 clearfix"> <h2 class="section-header">Preferences</h2> </div>
-            <div class="col-md-12">
-                <section class="panel panel-default">
-                    <div class="panel-body" zafira-background-theme>
-                        <div class="row">
-                            <div class="col-lg-8 col-lg-offset-2">
-                                <div class="md-inline-form">
-                                    <div layout-padding >
-                                        <form class="form-validation" name="preference_form" ng-submit="$ctrl.updateUserPreferences(preferenceForm);" >
-                                            <div layout-sm="column">
-                                                <md-input-container class="md-block">
-                                                    <md-radio-group ng-model="$ctrl.main.skin" class="md-primary">
-                                                        <md-radio-button id="lightSchema" value="32" class="radio-inline">Light color schema</md-radio-button>
-                                                        <md-radio-button id="darkSchema" value="22" class="radio-inline">Dark color schema</md-radio-button>
-                                                    </md-radio-group>
-                                                </md-input-container>
-                                            </div>
-                                            <div layout layout-sm="column">
-                                                <md-input-container class="flex">
-                                                    <label>Default Dashboard</label>
-                                                    <md-select id="defaultDashboard"  ng-model="preferenceForm.defaultDashboard" name="defaultDashboard" placeholder="Default Dashboard">
-                                                        <md-option ng-repeat="dashboard in $ctrl.dashboards" ng-value="dashboard.title" ng-selected="$ctrl.isDashboardSelected(dashboard)">{{dashboard.title}}</md-option>
-                                                    </md-select>
-                                                </md-input-container>
-                                            </div>
-                                            <div layout layout-sm="column">
-                                                <md-input-container class="flex">
-                                                    <label>Widget Refresh Interval</label>
-                                                    <md-select info-window="widgetRefreshInterval" ng-model="preferenceForm.refreshInterval" name="refreshInterval" id="refreshInterval" type="number" placeholder="Widget Refresh Interval">
-                                                        <md-option ng-repeat="interval in $ctrl.widgetRefreshIntervals" ng-value="interval" ng-selected="$ctrl.isIntervalSelected(interval)">{{$ctrl.convertMillis(interval)}}</md-option>
-                                                    </md-select>
-                                                </md-input-container>
-                                            </div>
-                                            <br/>
-                                            <div>
-                                                <md-button id="savePreference" type="submit" class="md-raised btn-w-md md-primary">Save</md-button>
-                                                <md-button id="resetPreference" class="md-raised btn-w-md md-warn" ng-click="$ctrl.resetPreferences(preferenceForm)">Reset to default</md-button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>-->
-
+        <div class="profile__form-wrapper layout-row">
+            <h2 class="profile__form-title">Preferences</h2>
+            <form class="form-validation profile__form" name="preference_form" ng-submit="$ctrl.updateUserPreference(preferenceForm);" >
+                <!--<div layout-sm="profile__form-row">
+                    <md-input-container class="md-block">
+                        <md-radio-group ng-model="$ctrl.main.skin" class="md-primary">
+                            <md-radio-button id="lightSchema" value="32" class="radio-inline">Light color schema</md-radio-button>
+                            <md-radio-button id="darkSchema" value="22" class="radio-inline">Dark color schema</md-radio-button>
+                        </md-radio-group>
+                    </md-input-container>
+                </div>
+                <div layout layout-sm="profile__form-row">
+                    <md-input-container class="flex">
+                        <label>Default Dashboard</label>
+                        <md-select id="defaultDashboard"  ng-model="preferenceForm.defaultDashboard" name="defaultDashboard" placeholder="Default Dashboard">
+                            <md-option ng-repeat="dashboard in $ctrl.dashboards" ng-value="dashboard.title" ng-selected="$ctrl.isDashboardSelected(dashboard)">{{dashboard.title}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout layout-sm="profile__form-row">
+                    <md-input-container class="flex">
+                        <label>Widget Refresh Interval</label>
+                        <md-select info-window="widgetRefreshInterval" ng-model="preferenceForm.refreshInterval" name="refreshInterval" id="refreshInterval" type="number" placeholder="Widget Refresh Interval">
+                            <md-option ng-repeat="interval in $ctrl.widgetRefreshIntervals" ng-value="interval" ng-selected="$ctrl.isIntervalSelected(interval)">{{$ctrl.convertMillis(interval)}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>-->
+                <div class="profile__form-row">
+                    <md-input-container class="flex">
+                        <label>Default tests view</label>
+                        <md-select id="defaultTests" ng-model="preferenceForm.defaultTests" name="defaultTests">
+                            <md-option ng-repeat="variant in $ctrl.testsVariants" ng-value="variant" ng-selected="$ctrl.currentUser.testsView === variant">{{variant}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-button id="savePreference" type="submit" class="md-raised btn-w-md md-primary pull-right">Save</md-button>
+                </div>
+            </form>
+        </div>
         <div ng-if="$ctrl.user.source === 'INTERNAL'" layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Change password</div>
             <form class="form-validation profile__form" name="password_form" ng-submit="$ctrl.updateUserPassword(); $ctrl.untouchForm(password_form);">
