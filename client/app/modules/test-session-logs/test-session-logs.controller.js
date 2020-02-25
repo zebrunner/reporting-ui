@@ -32,7 +32,7 @@ const testSessionLogsController = function testsSessionsController(
 
         get currentTitle() { return pageTitleService.pageTitle },
         get isMobile() { return windowWidthService.isMobile(); },
-    };  
+    };
 
     vm.$onInit = init;
 
