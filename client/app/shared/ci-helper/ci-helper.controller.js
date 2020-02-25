@@ -839,7 +839,7 @@ const CiHelperController = function CiHelperController(
     }
 
     $scope.build = function (launcher, launcher_form) {
-       if (launcher_form.$invalid) {
+        if (launcher_form.$invalid) {
             Object.keys(launcher_form.$error).forEach(key => {
                 launcher_form.$error[key].forEach(errEl => errEl.$touched = true)
             });
