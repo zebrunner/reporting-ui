@@ -4,7 +4,7 @@ import uploadImageModalController from '../shared/modals/upload-image-modal/uplo
 import uploadImageModalTemplate from '../shared/modals/upload-image-modal/upload-image-modal.html';
 
 const UserProfileController = function UserProfileController($mdDialog, UserService, DashboardService, UtilService,
-                                                             AuthService, appConfig, $q, $state, messageService, $rootScope) {
+                                                             AuthService, appConfig, $q, $state, messageService, $rootScope, pageTitleService) {
     'ngInject';
 
     const vm = {
@@ -36,6 +36,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         copyServiceUrl,
         goToState,
 
+        get currentTitle() { return pageTitleService.pageTitle },
         get currentUser() { return UserService.currentUser; },
         get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; },
         get appVersions() { return $rootScope.version; }

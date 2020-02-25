@@ -1020,9 +1020,10 @@ const ngModule = angular.module('app', [
         _defaultErrorHandler(rejection);
     });
 })
-.run(($transitions, AuthService, $document, UserService, messageService, $state, $rootScope, AuthIntercepter, $q) => {
+.run(($transitions, AuthService, $document, UserService, messageService, $state, $rootScope, AuthIntercepter, $q, pageTitleService) => {
     'ngInject';
 
+    $rootScope.pageTitleService = pageTitleService;
     window.isProd = isProd;
     function redirectToSignin(payload) {
         const params = {};
@@ -1147,6 +1148,10 @@ const ngModule = angular.module('app', [
         return access;
     });
     $transitions.onSuccess({}, function() {
+        if (!$state.current.data?.isDynamicTitle) {
+            pageTitleService.setTitle($state.current.data?.title);
+        }
+        
         $document.scrollTo(0, 0);
     });
 })

@@ -3,7 +3,7 @@
 import fileUploadTemplate from './file-upload-modal/file-upload-modal.html';
 import fileUploadController from './file-upload-modal/file-upload-modal.controller';
 
-const integrationsController = function integrationsController($state, $mdDialog, SettingsService, toolsService, windowWidthService, $q, messageService, $timeout, integrationsService, $transitions) {
+const integrationsController = function integrationsController($state, $mdDialog, SettingsService, toolsService, windowWidthService, messageService, integrationsService, $transitions, pageTitleService) {
     'ngInject';
 
     const SORT_POSTFIXES = {
@@ -42,6 +42,7 @@ const integrationsController = function integrationsController($state, $mdDialog
         isMobile: windowWidthService.isMobile,
 
         get chipsCtrl() { return _chipsCtrl; },
+        get currentTitle() { return pageTitleService.pageTitle; },
         set chipsCtrl(ctrl) {
             //let's init controller once
             if (!_chipsCtrl) {

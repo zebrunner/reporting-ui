@@ -15,7 +15,7 @@
                     abstract: true,
                     template: '<ui-view />',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     }
                 })
                 .state('dashboard.page', {
@@ -23,7 +23,8 @@
                     component: 'dashboardComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-dashboard'
+                        classes: 'p-dashboard',
+                        isDynamicTitle: true,
                     },
                     resolve: {
                         dashboard: ($transition$, $state, DashboardService, $q, $timeout, messageService) => {
@@ -79,7 +80,7 @@
                     url: '',
                     template: '',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     },
                     resolve: {
                         dashboardId: (AuthService, DashboardService, UserService, $state, $q, $timeout, messageService) => {
@@ -152,6 +153,7 @@
                     data: {
                         requireLogin: true,
                         permissions: ['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS'],
+                        isDynamicTitle: true,
                     }
                 })
                 .state('signin', {
@@ -164,6 +166,7 @@
                         user: null,
                     },
                     data: {
+                        title: 'Signin',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -183,6 +186,7 @@
                     url: '/signup?token',
                     component: 'signupComponent',
                     data: {
+                        title: 'Signup',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -210,13 +214,14 @@
                         }, 0, false);
                     },
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     }
                 })
                 .state('forgotPassword', {
                     url: '/password/forgot',
                     component: 'forgotPasswordComponent',
                     data: {
+                        title: 'Forgot password',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -236,6 +241,7 @@
                     url: '/password/reset?token',
                     component: 'resetPasswordComponent',
                     data: {
+                        title: 'Reset password',
                         onlyGuests: true,
                         classes: 'body-wide body-auth'
                     },
@@ -255,7 +261,7 @@
                     url: '/users',
                     template: '<ui-view />',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     },
                     redirectTo: (transisiton) => {
                         return transisiton.router.stateService.target('users.list', {}, { location: 'replace' });
@@ -265,6 +271,7 @@
                     url: '/list',
                     component: 'usersComponent',
                     data: {
+                        title: 'Users',
                         requireLogin: true,
                         classes: 'p-users',
                         permissions: ['VIEW_USERS', 'MODIFY_USERS'],
@@ -285,6 +292,7 @@
                     url: '/groups',
                     component: 'groupsComponent',
                     data: {
+                        title: 'Groups',
                         requireLogin: true,
                         classes: 'p-users-groups',
                         permissions: ['MODIFY_USER_GROUPS'],
@@ -305,6 +313,7 @@
                     url: '/invitations',
                     component: 'invitationsComponent',
                     data: {
+                        title: 'Invitations',
                         requireLogin: true,
                         classes: 'p-users',
                         permissions: ['INVITE_USERS', 'MODIFY_INVITATIONS'],
@@ -326,6 +335,7 @@
                     url: '/profile',
                     component: 'userComponent',
                     data: {
+                        title: 'Account & profile',
                         requireLogin: true,
                         classes: 'p-user-profile'
                     },
@@ -363,7 +373,7 @@
                     abstract: true,
                     template: '<ui-view />',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     }
                 })
                 .state('tests.runs', {
@@ -373,6 +383,7 @@
                         activeTestRunId: null
                     },
                     data: {
+                        title: 'Test runs',
                         requireLogin: true,
                         classes: 'p-tests-runs'
                     },
@@ -431,6 +442,7 @@
                         configSnapshot: null,
                     },
                     data: {
+                        title: 'Test results',
                         requireLogin: true,
                         classes: 'p-tests-run-details'
                     },
@@ -488,7 +500,8 @@
                     component: 'testRunInfoComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-tests-run-info'
+                        classes: 'p-tests-run-info',
+                        isDynamicTitle: true,
                     },
                     params: {
                         configSnapshot: null,
@@ -546,6 +559,7 @@
                     url: '/sessions',
                     component: 'testsSessionsComponent',
                     data: {
+                        title: 'Test sessions',
                         requireLogin: true,
                         classes: 'p-tests-sessions'
                     },
@@ -596,7 +610,8 @@
                     component: 'testSessionLogsComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-test-session-logs'
+                        classes: 'p-test-session-logs',
+                        isDynamicTitle: true,
                     },
                     resolve: {
                         testSession: function($stateParams, $q, $state, testsSessionsService, $timeout, messageService) {
@@ -653,6 +668,7 @@
                     url: '/integrations',
                     component: 'integrationsComponent',
                     data: {
+                        title: 'Integrations',
                         requireLogin: true,
                         classes: 'p-integrations',
                         permissions: ['VIEW_INTEGRATIONS'],
@@ -689,6 +705,7 @@
                     url: '/404',
                     component: 'notFoundComponent',
                     data: {
+                        title: 'Not found',
                         classes: 'body-wide body-err p-not-found'
                     },
                     lazyLoad: async ($transition$) => {
@@ -707,6 +724,7 @@
                     url: '/500',
                     component: 'serverErrorComponent',
                     data: {
+                        title: 'Server error',
                         classes: 'body-wide body-err p-server-error'
                     },
                     lazyLoad: async ($transition$) => {

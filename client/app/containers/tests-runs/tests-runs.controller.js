@@ -6,7 +6,7 @@ import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 const testsRunsController = function testsRunsController($mdDialog, $timeout, $q, $state, TestRunService,
                                                          UtilService, UserService, testsRunsService, $scope, API_URL,
                                                          $rootScope, $transitions, windowWidthService, TestService,
-                                                         toolsService, projectsService, messageService) {
+                                                         toolsService, projectsService, messageService, pageTitleService,) {
     'ngInject';
 
     let TENANT;
@@ -47,6 +47,8 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
         selectTestRun: selectTestRun,
         isToolConnected: toolsService.isToolConnected,
         onViewChange,
+
+        get currentTitle() { return pageTitleService.pageTitle; },
     };
 
     vm.$onInit = init;

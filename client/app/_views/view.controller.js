@@ -7,7 +7,8 @@
 
     // **************************************************************************
     function ViewController($scope, $location, $state, $mdDialog, $stateParams, UtilService, toolsService,
-                            TestRunService, JobService, ViewService, TestService, API_URL, messageService) {
+                            TestRunService, JobService, ViewService, TestService, API_URL, messageService, 
+                            pageTitleService) {
         'ngInject';
 
         $scope.view = {};
@@ -112,6 +113,7 @@
                 if(rs.success)
                 {
                     $scope.view = rs.data;
+                    pageTitleService.setTitle($scope.view.name);
                 }
                 else
                 {

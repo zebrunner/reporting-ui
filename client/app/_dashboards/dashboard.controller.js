@@ -25,7 +25,8 @@ const dashboardController = function dashboardController(
     $mapper,
     toolsService,
     messageService,
-    AuthService
+    AuthService,
+    pageTitleService
     ) {
     'ngInject';
 
@@ -659,6 +660,7 @@ const dashboardController = function dashboardController(
                     $scope.dashboard = rs.data;
                     $scope.getDataWithAttributes($scope.dashboard, false);
                     resolve(rs.data);
+                    pageTitleService.setTitle($scope.$ctrl.dashboard.title);
                 } else {
                     reject(rs.message);
                 }
