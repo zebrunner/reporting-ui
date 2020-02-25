@@ -32,25 +32,25 @@ const testSessionLogsController = function testsSessionsController(
 
         get currentTitle() { return pageTitleService.pageTitle },
         get isMobile() { return windowWidthService.isMobile(); },
-    };
+    };  
 
     vm.$onInit = init;
 
     return vm;
 
     function init() {
+        const testName = vm.testSession.testName ? vm.testSession.testName : 'Untitled';
+
         vm.videoURL = testSessionLogsService.getSessionVideoURL(vm.testSession.sessionId);
         vm.logURL = testSessionLogsService.getSessionLogURL(vm.testSession.sessionId);
+        pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Session logs' : testName);
         testSessionLogsService.getSessionLog(vm.testSession.sessionId)
-        .then(res => {
-            const testName = vm.testSession.testName ? vm.testSession.testName : 'Untitled';
-            pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Session logs' : testName);
-            
-            if (res.success) {
-                _rawLog = res.data || '';
-                vm.rawLog = _rawLog;
-                parseLog(vm.rawLog);
-            }
+            .then(res => {
+                if (res.success) {
+                    _rawLog = res.data || '';
+                    vm.rawLog = _rawLog;
+                    parseLog(vm.rawLog);
+                }
             });
         bindEvents();
     }

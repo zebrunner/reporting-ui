@@ -15,7 +15,7 @@
                     abstract: true,
                     template: '<ui-view />',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     }
                 })
                 .state('dashboard.page', {
@@ -23,7 +23,8 @@
                     component: 'dashboardComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-dashboard'
+                        classes: 'p-dashboard',
+                        isDynamicTitle: true,
                     },
                     resolve: {
                         dashboard: ($transition$, $state, DashboardService, $q, $timeout, messageService) => {
@@ -79,7 +80,7 @@
                     url: '',
                     template: '',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     },
                     resolve: {
                         dashboardId: (AuthService, DashboardService, UserService, $state, $q, $timeout, messageService) => {
@@ -152,6 +153,7 @@
                     data: {
                         requireLogin: true,
                         permissions: ['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS'],
+                        isDynamicTitle: true,
                     }
                 })
                 .state('signin', {
@@ -212,7 +214,7 @@
                         }, 0, false);
                     },
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     }
                 })
                 .state('forgotPassword', {
@@ -259,7 +261,7 @@
                     url: '/users',
                     template: '<ui-view />',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     },
                     redirectTo: (transisiton) => {
                         return transisiton.router.stateService.target('users.list', {}, { location: 'replace' });
@@ -371,7 +373,7 @@
                     abstract: true,
                     template: '<ui-view />',
                     data: {
-                        requireLogin: true
+                        requireLogin: true,
                     }
                 })
                 .state('tests.runs', {
@@ -498,7 +500,8 @@
                     component: 'testRunInfoComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-tests-run-info'
+                        classes: 'p-tests-run-info',
+                        isDynamicTitle: true,
                     },
                     params: {
                         configSnapshot: null,
@@ -607,7 +610,8 @@
                     component: 'testSessionLogsComponent',
                     data: {
                         requireLogin: true,
-                        classes: 'p-test-session-logs'
+                        classes: 'p-test-session-logs',
+                        isDynamicTitle: true,
                     },
                     resolve: {
                         testSession: function($stateParams, $q, $state, testsSessionsService, $timeout, messageService) {

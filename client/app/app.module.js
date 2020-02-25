@@ -1148,7 +1148,9 @@ const ngModule = angular.module('app', [
         return access;
     });
     $transitions.onSuccess({}, function() {
-        pageTitleService.setTitle($state.current.data?.title);
+        if (!$state.current.data?.isDynamicTitle) {
+            pageTitleService.setTitle($state.current.data?.title);
+        }
         
         $document.scrollTo(0, 0);
     });
