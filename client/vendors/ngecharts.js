@@ -104,10 +104,10 @@
                 createChart(newVal);
             });
 
-            // scope.$watch('dataset', function (newVal, oldVal) {
-            //     if (angular.equals(newVal, oldVal)) return;
-            //     createChart(scope.options);
-            // });
+            scope.$watch('dataset', function (newVal, oldVal) {
+                if (angular.equals(newVal, oldVal)) return;
+                createChart(scope.options);
+            });
 
             function applyActions(actions) {
                 actions.forEach(function (action, index) {
