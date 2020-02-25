@@ -11,7 +11,7 @@
         </zf-sub-header-button>
         <zf-sub-header-title class="_flex">
             <span class="test-session-logs__title-name">{{ ::$ctrl.testSession.testName || 'Untitled' }}</span>
-            <span class="test-session-logs__title-name _mobile">Session logs</span>
+            <span class="test-session-logs__title-name _mobile">{{ $ctrl.currentTitle }}</span>
 <!--            TODO: ?remove after A-B testing -->
 <!--            <small class="test-session-logs__title-link" ng-if="$ctrl.logURL">-->
 <!--                &nbsp;(<a target="_blank" href="{{::$ctrl.logURL}}">raw logs <md-icon>open_in_new</md-icon></a>)-->

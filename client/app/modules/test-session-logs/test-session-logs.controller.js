@@ -30,6 +30,7 @@ const testSessionLogsController = function testsSessionsController(
         openRawLogs,
         getFormattedPlainLog,
 
+        get currentTitle() { return pageTitleService.slicedTitle },
         get isMobile() { return windowWidthService.isMobile(); },
     };
 
