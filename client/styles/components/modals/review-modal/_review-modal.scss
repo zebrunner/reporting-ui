@@ -5,6 +5,7 @@
         padding-top: 0;
         padding-bottom: 36px;
         min-height: 36px;
+        flex-shrink: 0;
 
         @media screen and (max-width: $md-screen-phone) {
             padding: 16px;
