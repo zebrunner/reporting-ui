@@ -315,8 +315,8 @@ const AccessKeyModalController = function AccessKeyModalController(
             childControl.items = vm.platformsConfig.data[key].filter(child => Array.isArray(data.variants) && data.variants.includes(child.id));
             defaultItem = getDefaultControl(childControl);
         }
+        childControl.onChange = onPlatformControlSelect;
         if (data.type === 'select') {
-            childControl.onChange = onPlatformControlSelect;
             if (defaultItem) {
                 vm.platformModel[key] = defaultItem;
                 if (data.versions) {
