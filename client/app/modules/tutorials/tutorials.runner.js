@@ -7,7 +7,7 @@ export function TutorialsRunner($q, $transitions, $state, Tutorials, $http) {
 
     let allTutorials = null;
     let currentRouteTutorials = null;
-    let tutorialComponentRef = null;
+    let tutorialComponentRef = $q.resolve(null);
 
     fetchData()
         .then(response => response && response.tutorials || [])
@@ -28,7 +28,7 @@ export function TutorialsRunner($q, $transitions, $state, Tutorials, $http) {
 
             // If there isn't data remove it
             if (!newRouteTutorials || !Array.isArray(newRouteTutorials.steps) || !newRouteTutorials.steps.length) {
-                removeTutorialContainer(tutorialComponentRef).then(() => tutorialComponentRef = null);
+                tutorialComponentRef = removeTutorialContainer(tutorialComponentRef);
             } else if (currentRouteTutorials !== newRouteTutorials) {
                 // if current route was changed swap/render a new tutorials
                 const storageState = getStorageState(newRouteTutorials.route);
@@ -53,25 +53,23 @@ export function TutorialsRunner($q, $transitions, $state, Tutorials, $http) {
 
     function removeTutorialContainer(containerRef) {
         if (containerRef) {
-            return containerRef.then(({ remove }) => remove());
+            return containerRef.then(ref => ref && ref.remove()).then(() => null);
         }
         return $q.resolve(null);
     }
 
     function showNewTutorials(containerRef, routeData, storageState) {
-        if (containerRef) {
-            return swapTutorialContainer(containerRef, routeData.steps, storageState);
-        }
-        return renderTutorialContainer(routeData.steps, storageState);
+        return containerRef.then(ref => ref
+            ? swapTutorialContainer(ref, routeData.steps, storageState)
+            : renderTutorialContainer(routeData.steps, storageState));
     }
 
     function renderTutorialContainer(tutorials, params) {
         return Tutorials.render(tutorials, params);
     }
 
-    function swapTutorialContainer(containerRef, tutorials, params) {
-        return containerRef.then(oldRef =>
-            oldRef.replace(tutorials, params));
+    function swapTutorialContainer(oldRef, tutorials, params) {
+        return oldRef.replace(tutorials, params);
     }
 
     function findRouteTutorial(stateName) {
