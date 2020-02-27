@@ -1,0 +1,20 @@
+<div class="profile-container">
+    <div class="profile-container_container">
+        <div class="bottom-block" md-ink-ripple="grey">
+            <input type="file"
+                id="fileInput"
+                ng-attr-accept="{{acceptType}}"
+                class="content-input"
+                ng-class="{'not-empty': myImage}"/>
+            <div ng-if="!fileName || !fileName.length" class="upload-zone-label">Click or drop here</div>
+            <div ng-if="fileName && fileName.length" class="upload-zone-label">{{fileName}}</div>
+            <img-crop image="myImage"
+                ng-show="!otherType"
+                result-image="myCroppedImage"
+                change-on-fly="true"
+                area-type="{{areaType}}"
+                on-change="onChange()"
+                on-load-done="onDone()"></img-crop>
+        </div>
+    </div>
+</div>
