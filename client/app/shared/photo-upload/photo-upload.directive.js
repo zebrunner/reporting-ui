@@ -40,7 +40,7 @@ const photoUploadDirective = function (
                 if(!$scope.otherType) {
                     // Allowed only .PNG, JPG images 2Mb max
                     if ($scope.acceptType && !$scope.acceptType.split(/,\s*/).includes(file.type) || file.size > 2097152) {
-                        messageService.error('Use .PNG, JPG images 2Mb max');
+                        messageService.error('Use .PNG, .JPG images 2Mb max');
                         resetState();
 
                         return;
