@@ -30,7 +30,7 @@ COPY ./ /app/
 RUN npm run build
 
 
-FROM nginx:1.15.9-alpine
+FROM nginx:1.17.8-alpine
 
 ENV ZAFIRA_API_HOST=http://localhost:8080 \
     ZAFIRA_API_CONTEXT_PATH=zafira-ws
