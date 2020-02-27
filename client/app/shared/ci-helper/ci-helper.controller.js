@@ -263,7 +263,8 @@ const CiHelperController = function CiHelperController(
             return 'int';
         } else if (isString(value)) {
             return 'string';
-        } else return 'none';
+        }
+        return 'none';
     };
 
     $scope.getElement = function (item) {
