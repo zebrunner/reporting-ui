@@ -109,9 +109,10 @@
                                     <label>{{platformControl.label}}</label>
                                     <input
                                         type="text"
-                                        readonly
                                         name="{{platformControl.key}}"
-                                        ng-model="$ctrl.platformModel[platformControl.key].value" />
+                                        ng-model="$ctrl.platformModel[platformControl.key].value"
+                                        ng-model-options="{debounce: 700}"
+                                        ng-change="platformControl.onChange(platformControl)" />
                                 </md-input-container>
                             </div>
                         </div>

@@ -315,8 +315,8 @@ const AccessKeyModalController = function AccessKeyModalController(
             childControl.items = vm.platformsConfig.data[key].filter(child => Array.isArray(data.variants) && data.variants.includes(child.id));
             defaultItem = getDefaultControl(childControl);
         }
+        childControl.onChange = onPlatformControlSelect;
         if (data.type === 'select') {
-            childControl.onChange = onPlatformControlSelect;
             if (defaultItem) {
                 vm.platformModel[key] = defaultItem;
                 if (data.versions) {
@@ -465,23 +465,40 @@ const AccessKeyModalController = function AccessKeyModalController(
     function replacePlaceholders(text, data) {
         return text.replace(/\${([^{}]*)}/g, function (selection, group) {
             let replacer;
+            let type = 'value'; // if type doesn't provided consider it as "value" type by default
+            let placeholders = '';
+            const splitGroup = group.split(':');
 
-            // keys in the group can contain several items separated by "|"
-            group.split('|').some(key => {
-                replacer = data[`capabilities.${key}`] || data[key];
+            // get type and/or placeholders from selection group
+            if (splitGroup.length > 1) {
+                [type, placeholders] = splitGroup;
+            } else {
+                placeholders = splitGroup[0];
+            }
 
-                // special handling for platformName
-                if (replacer && key === 'platformName') {
-                    if (replacer === '*') {
-                        replacer = 'any';
+            // keys in the placeholders can contain several items separated by "|"
+            placeholders.split('|').some(key => {
+                if (type === 'value') {
+                    replacer = data[`capabilities.${key}`] || data[key];
+
+                    // special handling for platformName
+                    if (replacer && key === 'platformName') {
+                        if (replacer === '*') {
+                            replacer = 'any';
+                        }
+                        replacer = replacer.toUpperCase();
                     }
-                    replacer = replacer.toUpperCase();
-                }
 
-                return !!replacer;
+                    return !!replacer;
+                } else if (type === 'key' && (data.hasOwnProperty(`capabilities.${key}`) || data.hasOwnProperty(key))) {
+                    replacer = key;
+
+                    return !!replacer;
+                }
             });
 
-            return replacer && (typeof replacer === 'string' || typeof replacer === 'number') ? replacer : selection;
+            // if no replacer instead of leave placeholder as is we return empty string
+            return replacer && (typeof replacer === 'string' || typeof replacer === 'number') ? replacer : '';
         });
     }
 
