@@ -246,8 +246,25 @@ const CiHelperController = function CiHelperController(
         });
     }
 
+    function isNumeric(value) {
+        return !isNaN(value - parseFloat(value));
+    }
+
+    function isString(value) {
+        return typeof value === 'string' || value instanceof String;
+    }
+
     $scope.getType = function (value) {
-        return angular.isArray(value) ? 'array' : typeof value === "boolean" ? 'boolean' : !isNaN(+value) ? 'int' : typeof value === 'string' || value instanceof String ? 'string' : 'none';
+        if (angular.isArray(value)) {
+            return 'array';
+        } else if (typeof value === 'boolean') {
+            return 'boolean';
+        } else if (isNumeric(value)) {
+            return 'int';
+        } else if (isString(value)) {
+            return 'string';
+        }
+        return 'none';
     };
 
     $scope.getElement = function (item) {
