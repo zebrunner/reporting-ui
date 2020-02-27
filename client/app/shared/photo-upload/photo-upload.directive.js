@@ -25,7 +25,7 @@ const photoUploadDirective = function (
             let canRecognize = false;
 
             if (!inputElement) {
-                console.warn('Missed input element');
+                console.warn('Missed required input element');
                 return;
             }
 
@@ -36,11 +36,10 @@ const photoUploadDirective = function (
             function handleFileSelect(evt) {
                 const file = evt.currentTarget.files[0];
 
-                console.log(file);
                 // handle as image by default
                 if(!$scope.otherType) {
                     // Allowed only .PNG, JPG images 2Mb max
-                    if (file.type !== 'image/png' && file.type !== 'image/jpeg' || file.size > 2097152) {
+                    if ($scope.acceptType && !$scope.acceptType.split(/,\s*/).includes(file.type) || file.size > 2097152) {
                         messageService.error('Use .PNG, JPG images 2Mb max');
                         resetState();
 
@@ -109,8 +108,6 @@ const photoUploadDirective = function (
             }
 
             $scope.onChange = function (event) {
-                console.log(event);
-                console.log(canRecognize);
                 if(canRecognize) {
                     $timeout(function () {
                         ngModel.$setViewValue(blobToFormData());
