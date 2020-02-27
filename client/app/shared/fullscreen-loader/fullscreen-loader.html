@@ -1,0 +1,8 @@
+<div id="loader-container"
+    class="fullscreen-loader"
+    ng-hide="$ctrl.hidden"
+    ng-class="{'company-logo': $ctrl.companyLogo.value, 'company-init': $ctrl.companyLogo}">
+    <div ng-if="$ctrl.companyLogo.value" class="fullscreen-loader__image-wrapper">
+        <img class="fullscreen-loader__image img-circle imageRotateHorizontal" ng-src="{{ $ctrl.companyLogo.value }}">
+    </div>
+</div>

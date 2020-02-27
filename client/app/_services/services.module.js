@@ -1,5 +1,6 @@
 'use strict';
 
+import appHealthService from './app-health/app-health.service';
 import toolsService from './tools/tools.service';
 import progressbarService from './progressbar/progressbar.service';
 import messageService from './messages/message.service';
@@ -10,6 +11,7 @@ import testsSessionsService from './tests-sessions/tests-sessions.service';
 import pageTitleService from './page-title/page-title.service';
 
 angular.module('app.services', [])
+    .service({ appHealthService })
     .service({ ArtifactService})
     .service({ toolsService })
     .service({ messageService })

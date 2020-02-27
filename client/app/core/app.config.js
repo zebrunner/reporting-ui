@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('app.core')
+    angular.module('appCore')
         .factory('appConfig', [appConfig])
         .config(['$mdThemingProvider', mdConfig])
         .constant('OFFSET', new Date().getTimezoneOffset() * 60 * 1000)
