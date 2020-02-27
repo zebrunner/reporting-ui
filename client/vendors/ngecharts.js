@@ -105,7 +105,7 @@
             });
 
             scope.$watch('dataset', function (newVal, oldVal) {
-                // if (angular.equals(newVal, oldVal)) return;
+                if (angular.equals(newVal, oldVal) && !scope.forceWatch) return;
                 createChart(scope.options);
             });
 
