@@ -7,6 +7,7 @@ import jenkinsIcon from '../assets/images/_icons_tools/jenkins.svg';
 import { TutorialsModule } from './modules/tutorials';
 import { CoreModule } from './core/core.module';
 import sessionSwitcherComponent from './shared/sessions-switcher/sessions-switcher.component';
+import photoUpload from './shared/photo-upload/photo-upload.directive';
 
 const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular
@@ -495,107 +496,7 @@ const ngModule = angular
             }
         };
     })
-    .directive('photoUpload', ['$timeout', '$rootScope', function ($timeout, $rootScope) {
-        return {
-            restrict: 'E',
-            template: '<div class="profile-container">\n' +
-                '                    <div class="profile-container_container">\n' +
-                '                        <div class="bottom-block" md-ink-ripple="grey">\n' +
-                '                            <input type="file" id="fileInput" class="content-input" ng-class="{\'not-empty\': myImage}"/>\n' +
-                '                            <div ng-if="!fileName || !fileName.length" class="upload-zone-label">Click or drop here</div>' +
-                '                            <div ng-if="fileName && fileName.length" class="upload-zone-label">{{fileName}}</div>\n' +
-                '                            <img-crop image="myImage" ng-show="otherType == undefined" result-image="myCroppedImage" change-on-fly="true" area-type="{{areaType}}" on-change="onChange()" on-load-done="onDone()"></img-crop>\n' +
-                '                        </div>\n' +
-                '                    </div>\n' +
-                '                </div>',
-            require: 'ngModel',
-            replace: true,
-            transclude: true,
-            scope: {
-                ngModel: '=',
-                areaType: '@',
-                otherType: '@'
-            },
-            link: function ($scope, iElement, iAttrs, ngModel) {
-                $scope.myImage = '';
-                $scope.myCroppedImage = '';
-                $scope.fileName = '';
-                var canRecognize = false;
-
-                var otherType = $scope.otherType != undefined;
-
-                var handleFileSelect=function(evt) {
-                    var file=evt.currentTarget.files[0];
-                    $scope.fileName = file.name;
-                    var reader = new FileReader();
-                    if(! otherType) {
-                        reader.onload = function (evt) {
-                            $scope.imageLoading = true;
-                            $scope.$apply(function($scope){
-                                $scope.myImage=evt.target.result;
-                            });
-                            $scope.imageLoading = false;
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        reader.onload = function (evt) {
-                            $scope.$apply(function($scope){
-                                $scope.file=evt.target.result;
-                            });
-                            $scope.fileName = file.name;
-                            ngModel.$setViewValue(fileToFormData(file));
-                        };
-                        reader.readAsText(file);
-                    }
-                };
-
-                $timeout(function () {
-                    angular.element('#fileInput').on('change',handleFileSelect);
-                }, 100);
-
-                function dataURItoBlob(dataURI) {
-                    var binary = atob(dataURI.split(',')[1]);
-                    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-                    var array = [];
-                    for(var i = 0; i < binary.length; i++) {
-                        array.push(binary.charCodeAt(i));
-                    }
-                    return new Blob([new Uint8Array(array)], {type: mimeString});
-                }
-
-                function textToBlob(data) {
-                    return new Blob([data], { type: 'application/json' });
-                }
-
-                function blobToFormData() {
-                    var formData = new FormData();
-                    var croppedImage = dataURItoBlob($scope.myCroppedImage);
-                    formData.append("file", croppedImage, $scope.fileName);
-                    return formData;
-                };
-
-                function fileToFormData(file) {
-                    var formData = new FormData();
-                    var blobFile = textToBlob(file);
-                    formData.append('file', blobFile, $scope.fileName);
-                    return formData;
-                };
-
-                $scope.onChange = function (event) {
-                    if(canRecognize) {
-                        $timeout(function () {
-                            ngModel.$setViewValue(blobToFormData());
-                        }, 0);
-                    }
-                };
-
-                $scope.onDone = function () {
-                    canRecognize = true;
-                    $scope.onChange();
-                };
-            }
-        };
-    }])
+    .directive({ photoUpload })
     .directive('fieldError', function($q, $timeout, $compile) {
         'ngInject';
 
