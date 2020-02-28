@@ -22,6 +22,7 @@ const photoUploadDirective = function (
         },
         link: function ($scope, iElement, iAttrs, ngModel) {
             const inputElement = iElement[0].querySelector('input[type="file"]');
+            const maxFileSize = 2097152; // 2Mb in bytes
             let canRecognize = false;
 
             if (!inputElement) {
@@ -36,33 +37,30 @@ const photoUploadDirective = function (
             function handleFileSelect(evt) {
                 const file = evt.currentTarget.files[0];
 
+                // Allowed only .PNG, JPG images 2Mb max
+                if ($scope.acceptType && !$scope.acceptType.split(/,\s*/).includes(file.type) || file.size > maxFileSize) {
+                    messageService.error('Use .PNG, .JPG images 2Mb max');
+                    resetState();
+
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                $scope.fileName = file.name;
+
                 // handle as image by default
                 if(!$scope.otherType) {
-                    // Allowed only .PNG, JPG images 2Mb max
-                    if ($scope.acceptType && !$scope.acceptType.split(/,\s*/).includes(file.type) || file.size > 2097152) {
-                        messageService.error('Use .PNG, .JPG images 2Mb max');
-                        resetState();
-
-                        return;
-                    }
-                    const reader = new FileReader();
-
-                    $scope.fileName = file.name;
                     reader.onload = function (evt) {
-                        $scope.imageLoading = true;
                         $scope.$apply(function($scope){
-                            $scope.myImage=evt.target.result;
+                            $scope.myImage = evt.target.result;
                         });
-                        $scope.imageLoading = false;
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    const reader = new FileReader();
-
-                    $scope.fileName = file.name;
                     reader.onload = function (evt) {
                         $scope.$apply(function($scope){
-                            $scope.file=evt.target.result;
+                            $scope.file = evt.target.result;
                         });
                         ngModel.$setViewValue(fileToFormData(file));
                     };
