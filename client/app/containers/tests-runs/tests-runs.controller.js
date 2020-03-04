@@ -3,13 +3,29 @@
 import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
-const testsRunsController = function testsRunsController($mdDialog, $timeout, $q, $state, TestRunService,
-                                                         UtilService, UserService, testsRunsService, $scope, API_URL,
-                                                         $rootScope, $transitions, windowWidthService, TestService,
-                                                         toolsService, projectsService, messageService, pageTitleService,) {
+const testsRunsController = function testsRunsController(
+    $mdDialog,
+    $timeout,
+    $q,
+    $state,
+    TestRunService,
+    UtilService,
+    UserService,
+    testsRunsService,
+    $scope,
+    API_URL,
+    $rootScope,
+    $transitions,
+    windowWidthService,
+    TestService,
+    toolsService,
+    projectsService,
+    messageService,
+    pageTitleService,
+    authService,
+    ) {
     'ngInject';
 
-    let TENANT;
     let scrollTickingTimeout = null;
     const scrollableParentElement = document.querySelector('.page-wrapper');
 
@@ -47,6 +63,7 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
         selectTestRun: selectTestRun,
         isToolConnected: toolsService.isToolConnected,
         onViewChange,
+        userHasAnyPermission: authService.userHasAnyPermission,
 
         get currentTitle() { return pageTitleService.pageTitle; },
     };
@@ -63,7 +80,6 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
 
         initLaunchers();
         setTimersOnDestroyingLaunchers();
-        TENANT = $rootScope.globals.auth.tenant;
         readStoredParams();
         initWebsocket();
         bindEvents();
@@ -514,7 +530,7 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
     }
 
     function subscribeLaunchedTestRuns() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.launcherRuns', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.launcherRuns', function (data) {
             const event = getEventFromMessage(data.body);
             const launcher = event.launcher;
 
@@ -532,7 +548,7 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
     }
 
     function subscribeTestRunsTopic() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.testRuns', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.testRuns', function (data) {
             const event = getEventFromMessage(data.body);
             const testRun = angular.copy(event.testRun);
             const index = getTestRunIndexById(+testRun.id);
@@ -575,7 +591,7 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
     }
 
     function subscribeStatisticsTopic() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.statistics', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.statistics', function (data) {
             const event = getEventFromMessage(data.body);
             const index = getTestRunIndexById(+event.testRunStatistics.testRunId);
 

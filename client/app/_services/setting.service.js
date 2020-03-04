@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('SettingsService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', SettingsService])
+        .factory('SettingsService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', SettingsService])
 
-    function SettingsService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function SettingsService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.getCompanyLogo = getCompanyLogo;

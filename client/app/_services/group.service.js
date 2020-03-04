@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('GroupService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', GroupService])
+        .factory('GroupService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', GroupService])
 
-    function GroupService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function GroupService($httpMock, $rootScope, UtilService, API_URL) {
         let groups = [];
 
         var service = {

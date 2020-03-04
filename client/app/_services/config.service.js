@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('ConfigService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', ConfigService])
+        .factory('ConfigService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', ConfigService])
 
-    function ConfigService($httpMock, $cookies, $rootScope, UtilService, API_URL, $q) {
+    function ConfigService($httpMock, $rootScope, UtilService, API_URL, $q) {
 
         const data = {};
 

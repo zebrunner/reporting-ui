@@ -50,7 +50,7 @@
         }
 
         function updateStatus(user) {
-            return $httpMock.put(API_URL + '/api/users/status', user).then(UtilService.handleSuccess, UtilService.handleError('Unable to get extended user profile'));
+            return $httpMock.put(API_URL + '/api/users/status', user).then(UtilService.handleSuccess, UtilService.handleError('Unable to change user status'));
         }
 
         function searchUsers(criteria) {

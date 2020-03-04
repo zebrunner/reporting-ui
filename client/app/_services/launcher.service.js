@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('LauncherService', ['$httpMock', '$cookies', '$rootScope', '$httpParamSerializer', 'UtilService', 'API_URL', LauncherService])
+        .factory('LauncherService', ['$httpMock', '$rootScope', '$httpParamSerializer', 'UtilService', 'API_URL', LauncherService])
 
-    function LauncherService($http, $cookies, $rootScope, $httpParamSerializer, UtilService, API_URL) {
+    function LauncherService($http, $rootScope, $httpParamSerializer, UtilService, API_URL) {
 
         var service = {};
 

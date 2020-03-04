@@ -30,7 +30,7 @@ const mainMenuService = function mainMenuService() {
      * @param {string} item.link - link to the page
      * @param {string} item.className - additional class name for customize a menu
      * @param {string} item.matIcon - additional class name for customize a menu
-     * @param {string[]} item.permissions - permissions for `has-any-permission` directive
+     * @param {string} item.permissions - permissions, which define link visibility
      */
     function addSubItemDefaultMenu(name, item) {
         defaultMenu[name] = defaultMenu[name] || [];

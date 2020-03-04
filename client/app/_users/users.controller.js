@@ -8,6 +8,7 @@ const UsersController = function UserViewController(
     $location,
     $state,
     $mdDialog,
+    authService,
     UserService,
     messageService,
     GroupService,
@@ -44,6 +45,7 @@ const UsersController = function UserViewController(
         showChangePasswordDialog: showChangePasswordDialog,
         showCreateUserDialog: showCreateUserDialog,
         showInviteUsersDialog,
+        userHasAnyPermission: authService.userHasAnyPermission,
         usersSearchCriteria: {},
         searchValue: {
             selectedRange: {

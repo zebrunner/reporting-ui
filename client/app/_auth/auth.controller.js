@@ -1,7 +1,18 @@
 'use strict';
 
-const authController = function authController($scope, $rootScope, $location, $state, $cookies, $templateCache, AuthService, UserService,
-                            UtilService, InvitationService, messageService, $stateParams) {
+const authController = function authController(
+    $scope,
+    $rootScope,
+    $location,
+    $state,
+    $templateCache,
+    $stateParams,
+    authService,
+    UserService,
+    UtilService,
+    InvitationService,
+    messageService,
+    ) {
     'ngInject';
 
     $scope.UtilService = UtilService;
@@ -39,7 +50,7 @@ const authController = function authController($scope, $rootScope, $location, $s
     $scope.emailType = {};
 
     $scope.forgotPassword = function (forgotPassword) {
-        AuthService.forgotPassword(forgotPassword).then(function (rs) {
+        authService.forgotPassword(forgotPassword).then(function (rs) {
             if(rs.success) {
                 $scope.forgotPassword = {};
                 $scope.forgotPasswordEmailWasSent = true;
@@ -50,7 +61,7 @@ const authController = function authController($scope, $rootScope, $location, $s
     };
 
     $scope.getForgotPasswordInfo = function (token) {
-        AuthService.getForgotPasswordInfo(token).then(function (rs) {
+        authService.getForgotPasswordInfo(token).then(function (rs) {
             if(rs.success) {
                 $scope.forgotPasswordType.email = rs.data.email;
             }
@@ -59,7 +70,7 @@ const authController = function authController($scope, $rootScope, $location, $s
 
     $scope.resetPassword = function (credentials) {
         credentials.userId = 0;
-        AuthService.resetPassword(credentials, token).then(function (rs) {
+        authService.resetPassword(credentials, token).then(function (rs) {
             if(rs.success) {
                 messageService.success('Your password was changed successfully');
                 $state.go('signin');
@@ -95,11 +106,11 @@ const authController = function authController($scope, $rootScope, $location, $s
             $scope.credentials.usernameOrEmail = $stateParams.user.email;
             $scope.credentials.password = $stateParams.user.password;
         }
-        AuthService.ClearCredentials();
+        authService.clearCredentials();
     })();
 
     $scope.signin = function(credentials) {
-        AuthService.Login(credentials.usernameOrEmail, credentials.password)
+        authService.login(credentials.usernameOrEmail, credentials.password)
             .then(function(rs) {
                 if (rs.success) {
                     var payload = {
@@ -119,7 +130,7 @@ const authController = function authController($scope, $rootScope, $location, $s
     };
 
     $scope.signup = function(user, form) {
-        AuthService.signup(user, token).then(function(rs) {
+        authService.signUp(user, token).then(function(rs) {
                 if (rs.success) {
                     $state.go('signin', { user });
                 } else {

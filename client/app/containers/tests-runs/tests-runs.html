@@ -4,9 +4,8 @@
             {{ $ctrl.currentTitle }}
             <small id="itemsCount" class="fixed-page-header__additional-text">({{$ctrl.totalResults}})</small>
         </zf-sub-header-title>
-        <zf-sub-header-button>
-            <button has-any-permission="['MODIFY_LAUNCHERS', 'VIEW_LAUNCHERS']"
-                    class="fixed-page-header__btn _launcher zf-primary-button"
+        <zf-sub-header-button ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS', 'VIEW_LAUNCHERS'])">
+            <button class="fixed-page-header__btn _launcher zf-primary-button"
                     ng-click="$ctrl.showCiHelperDialog($event);">
                 <md-icon class="material-icons">play_arrow</md-icon>
                 <span>Test launcher</span>
@@ -15,7 +14,10 @@
     </zf-sub-header>
 
     <div class="page">
-        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.selectedTestRuns.length > 0 && !$ctrl.scrollTicking" md-direction="up" class="tests-runs-options md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
+        <md-fab-speed-dial id="main-fab"
+            ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length > 0 && !$ctrl.scrollTicking"
+            md-direction="up"
+            class="tests-runs-options md-scale md-fab-bottom-right">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
                     <span class="fa fa-bars" aria-hidden="true"></span>
@@ -26,15 +28,30 @@
                     <md-tooltip md-direction="top">Compare</md-tooltip>
                     <span class="fa fa-columns" aria-hidden="true"></span>
                 </md-button>
-                <md-button id="rerunTestRuns" data-ng-if="$ctrl.isToolConnected('JENKINS')" aria-label="menu" class="md-fab md-raised md-fab-sm" data-ng-really-message="Do you really want to rerun multiple test runs?" data-ng-really-click="$ctrl.batchRerun()" has-any-permission="['TEST_RUNS_CI']">
+                <md-button id="rerunTestRuns"
+                    ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.isToolConnected('JENKINS')"
+                    aria-label="menu"
+                    class="md-fab md-raised md-fab-sm"
+                    data-ng-really-message="Do you really want to rerun multiple test runs?"
+                    data-ng-really-click="$ctrl.batchRerun()">
                     <md-tooltip md-direction="top">Rerun</md-tooltip>
                     <span class="fa fa-undo" aria-hidden="true"></span>
                 </md-button>
-                <md-button id="deleteTestRuns" aria-label="menu" class="md-fab md-raised md-fab-sm" data-ng-really-message="Do you really want to delete multiple test runs?" data-ng-really-click="$ctrl.batchDelete()" has-any-permission="['MODIFY_TEST_RUNS']">
+                <md-button id="deleteTestRuns"
+                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS'])"
+                    aria-label="menu"
+                    class="md-fab md-raised md-fab-sm"
+                    data-ng-really-message="Do you really want to delete multiple test runs?"
+                    data-ng-really-click="$ctrl.batchDelete()">
                     <md-tooltip md-direction="top">Delete</md-tooltip>
                     <span class="fa fa-trash" aria-hidden="true"></span>
                 </md-button>
-                <md-button id="abortTestRuns" aria-label="menu" class="md-fab md-raised md-fab-sm" data-ng-really-message="Do you really want to abort multiple test runs?" data-ng-really-click="$ctrl.abortSelectedTestRuns()" has-any-permission="['TEST_RUNS_CI']">
+                <md-button id="abortTestRuns"
+                    ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI'])"
+                    aria-label="menu"
+                    class="md-fab md-raised md-fab-sm"
+                    data-ng-really-message="Do you really want to abort multiple test runs?"
+                    data-ng-really-click="$ctrl.abortSelectedTestRuns()">
                     <md-tooltip md-direction="top">Abort selected test runs</md-tooltip>
                     <span class="fa fa-ban" aria-hidden="true"></span>
                 </md-button>

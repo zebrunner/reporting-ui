@@ -4,7 +4,7 @@
     angular.module('app.services')
         .service('projectsService', projectsService);
 
-    function projectsService($cookies) {
+    function projectsService() {
         'ngInject';
 
         let _selectedProject;
@@ -15,8 +15,8 @@
         };
 
         function getSelectedProject() {
-            if (typeof _selectedProject === 'undefined') {
-                _selectedProject = $cookies.getObject('project');
+            if (typeof _selectedProject === 'undefined' && localStorage.getItem('project')) {
+                _selectedProject = JSON.parse(localStorage.getItem('project'));
             }
 
             return _selectedProject;
@@ -28,14 +28,14 @@
             }
 
             _selectedProject = project;
-            $cookies.putObject('project', _selectedProject);
+            localStorage.setItem('project', JSON.stringify(_selectedProject));
 
             return true;
         }
 
         function resetSelectedProject() {
             _selectedProject = null;
-            $cookies.remove('project');
+            localStorage.removeItem('project');
 
             return true;
         }

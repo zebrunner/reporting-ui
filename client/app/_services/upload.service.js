@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('UploadService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', UploadService])
+        .factory('UploadService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', UploadService])
 
-    function UploadService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function UploadService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.upload = upload;

@@ -4,7 +4,7 @@ import uploadImageModalController from '../shared/modals/upload-image-modal/uplo
 import uploadImageModalTemplate from '../shared/modals/upload-image-modal/upload-image-modal.html';
 
 const UserProfileController = function UserProfileController($mdDialog, UserService, DashboardService, UtilService,
-                                                             AuthService, appConfig, $q, $state, messageService, $rootScope, pageTitleService) {
+                                                             authService, appConfig, $q, $state, messageService, $rootScope, pageTitleService) {
     'ngInject';
 
     const vm = {
@@ -94,7 +94,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function generateAccessToken() {
-        AuthService.GenerateAccessToken()
+        authService.generateAccessToken()
             .then(function (rs) {
                 if (rs.success) {
                     vm.accessToken = rs.data.token;

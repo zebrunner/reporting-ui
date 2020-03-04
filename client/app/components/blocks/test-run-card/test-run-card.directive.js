@@ -4,11 +4,24 @@
     angular.module('app.testRunCard').directive('testRunCard', function() {
         return {
             template: require('./test-run-card.html'),
-            controller: function TestRunCardController(windowWidthService,
-                                                       testsRunsService, $rootScope, UtilService,
-                                                       $state, $timeout, $mdDialog, $mdToast,
-                                                       SlackService, TestRunService, UserService,
-                                                       $interval, DownloadService, toolsService, messageService) {
+            controller: function TestRunCardController(
+                authService,
+                windowWidthService,
+                testsRunsService,
+                $rootScope,
+                UtilService,
+                $state,
+                $timeout,
+                $mdDialog,
+                $mdToast,
+                SlackService,
+                TestRunService,
+                UserService,
+                $interval,
+                DownloadService,
+                toolsService,
+                messageService,
+            ) {
                 'ngInject';
 
                 const local = {
@@ -46,6 +59,7 @@
                     downloadApplication: downloadApplication,
                     goToTestRun: goToTestRun,
                     isToolConnected: toolsService.isToolConnected,
+                    userHasAnyPermission: authService.userHasAnyPermission,
 
                     get currentOffset() { return $rootScope.currentOffset; },
                     get formattedModel() {

@@ -5,7 +5,7 @@
         .module('app.services')
         .service('DashboardService', DashboardService);
 
-    function DashboardService($httpMock, $cookies, $rootScope, $location, $q, UtilService, AuthService, $httpParamSerializer, API_URL) {
+    function DashboardService($httpMock, $rootScope, $location, $q, UtilService, authService, $httpParamSerializer, API_URL) {
 
         'ngInject';
 
@@ -182,7 +182,7 @@
         };
 
         function hasHiddenDashboardPermission(){
-            return AuthService.UserHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
+            return authService.userHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
         };
 
     }

@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('ProjectService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', ProjectService])
+        .factory('ProjectService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', ProjectService])
 
-    function ProjectService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function ProjectService($httpMock, $rootScope, UtilService, API_URL) {
         const service = {
             createProject,
             deleteProject,

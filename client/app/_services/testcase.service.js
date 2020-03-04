@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('TestCaseService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', TestCaseService])
+        .factory('TestCaseService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', TestCaseService])
 
-    function TestCaseService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function TestCaseService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.searchTestCases = searchTestCases;

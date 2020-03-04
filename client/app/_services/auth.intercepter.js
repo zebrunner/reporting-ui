@@ -40,67 +40,67 @@
      * and broadcasts 'event:auth-loginRequired'.
      */
     .config(($httpProvider) => {
-      'ngInject';
-
-      $httpProvider.interceptors.push(($rootScope, $q, $injector, httpBuffer, API_URL) => {
         'ngInject';
 
-        const UNRECOGNIZED_STATES = ['signin', 'signup'];
+        $httpProvider.interceptors.push(($rootScope, $q, $injector, httpBuffer, API_URL) => {
+            'ngInject';
 
-        return {
-          request: function (request) {
-            // don't add auth header if skipAuthorization flag presents
-            if (request.skipAuthorization) {
-              delete request.skipAuthorization;
+            const UNRECOGNIZED_STATES = ['signin', 'signup'];
 
-              return request;
-            }
+            return {
+                request: function (request) {
+                    // don't add auth header if skipAuthorization flag presents
+                    if (request.skipAuthorization) {
+                        delete request.skipAuthorization;
 
-            const AuthService = $injector.get('AuthService');
-            const authData = AuthService.getAuthData();
-            // add authorization header to API requests
-            if (request.url.includes(API_URL) && authData) {
-              request.headers['Authorization'] = `${authData.type} ${authData.accessToken}`;
-            }
+                        return request;
+                    }
 
-            return request;
-          },
-          responseError: function (rejection) {
-            const location = window.location.href;
-            const $state = $injector.get('$state');
-            const stateName = $state.current.name;
+                    const authService = $injector.get('authService');
+                    const authData = authService.authData;
+                    // add authorization header to API requests
+                    if (request.url.includes(API_URL) && authData) {
+                        request.headers['Authorization'] = `${authData.type} ${authData.accessToken}`;
+                    }
 
-            if (UNRECOGNIZED_STATES.indexOf(stateName) === -1) {
-              var config = rejection.config || {};
+                    return request;
+                },
+                responseError: function (rejection) {
+                    const location = window.location.href;
+                    const $state = $injector.get('$state');
+                    const stateName = $state.current.name;
 
-              switch (rejection.status) {
-                case 401:
-                  const payload = { location };
-                  // handle 401 on refreshing expired token
-                  if (rejection.config.url.includes('/api/auth/refresh')) {
-                    $rootScope.$broadcast('event:auth-tokenHasExpired', location);
+                    if (UNRECOGNIZED_STATES.indexOf(stateName) === -1) {
+                        var config = rejection.config || {};
 
+                        switch (rejection.status) {
+                            case 401:
+                                const payload = { location };
+                                // handle 401 on refreshing expired token
+                                if (rejection.config.url.includes('/api/auth/refresh')) {
+                                    $rootScope.$broadcast('event:auth-tokenHasExpired', location);
+
+                                    return $q.reject(rejection);
+                                }
+                                // cache rejected requests
+                                var deferred = $q.defer();
+                                var bufferLength = httpBuffer.append(config, deferred, location);
+                                // handle 401 on first 401 rejection
+                                if (bufferLength === 1) {
+                                    $rootScope.$broadcast('event:auth-loginRequired', payload);
+                                }
+
+                                return deferred.promise;
+                            /*case 403:
+                                $injector.get('$state').go('403');
+                                break;*/
+                        }
+                    }
+                    // otherwise, default behaviour
                     return $q.reject(rejection);
-                  }
-                  // cache rejected requests
-                  var deferred = $q.defer();
-                  var bufferLength = httpBuffer.append(config, deferred, location);
-                  // handle 401 on first 401 rejection
-                  if (bufferLength === 1) {
-                    $rootScope.$broadcast('event:auth-loginRequired', payload);
-                  }
-
-                  return deferred.promise;
-                /*case 403:
-                    $injector.get('$state').go('403');
-                    break;*/
-              }
-            }
-            // otherwise, default behaviour
-            return $q.reject(rejection);
-          }
-        };
-      });
+                }
+            };
+        });
     });
 
   /**
@@ -123,11 +123,6 @@
           deferred.reject(response);
         }
         $http = $http || $injector.get('$http');
-        /*if($rootScope.globals && $rootScope.globals.auth)
-        {
-          var auth = $rootScope.globals.auth;
-          config.headers.Authorization = auth.type + " " + auth.accessToken;
-        }*/
         $http(config).then(successCallback, errorCallback);
       }
 

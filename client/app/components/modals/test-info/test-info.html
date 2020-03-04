@@ -42,7 +42,10 @@
                                                                     </div>
                                                                     <div class="col-lg-2 align-middle align-right">
                                                                         <div>
-                                                                            <md-button id="change" class="md-icon-button" ng-click="changeStatusIsVisible = !changeStatusIsVisible" has-any-permission="['MODIFY_TESTS']">
+                                                                            <md-button id="change"
+                                                                                class="md-icon-button"
+                                                                                ng-click="changeStatusIsVisible = !changeStatusIsVisible"
+                                                                                ng-if="userHasAnyPermission(['MODIFY_TESTS'])">
                                                                                 <md-tooltip md-direction="bottom" md-z-index="2000">Change status</md-tooltip>
                                                                                 <md-icon aria-label="Change status">edit</md-icon>
                                                                             </md-button>

@@ -922,7 +922,18 @@ const ngModule = angular
             _defaultErrorHandler(rejection);
         });
     })
-    .run(($transitions, AuthService, $document, UserService, messageService, $state, $rootScope, AuthIntercepter, $q, pageTitleService) => {
+    .run((
+        $transitions,
+        $document,
+        $q,
+        $rootScope,
+        $state,
+        authService,
+        UserService,
+        messageService,
+        AuthIntercepter,
+        pageTitleService,
+    ) => {
         'ngInject';
 
         $rootScope.pageTitleService = pageTitleService;
@@ -931,7 +942,7 @@ const ngModule = angular
             const params = {};
 
             payload && payload.location && (params.location = payload.location);
-            AuthService.ClearCredentials();
+            authService.clearCredentials();
             $state.go(
                 'signin',
                 params,
@@ -943,11 +954,11 @@ const ngModule = angular
         });
 
         $rootScope.$on('event:auth-loginRequired', function (e, payload) {
-            if (AuthService.hasValidToken()) {
-                AuthService.RefreshToken($rootScope.globals.auth.refreshToken)
+            if (authService.hasValidToken()) {
+                authService.refreshToken(authService.authData.refreshToken)
                     .then(function (rs) {
                         if (rs.success) {
-                            AuthService.SetCredentials(rs.data);
+                            authService.setCredentials(rs.data);
                             AuthIntercepter.loginConfirmed(payload);
                         } else if ($state.current.name !== 'signup') {
                             AuthIntercepter.loginCancelled(payload);
@@ -978,7 +989,7 @@ const ngModule = angular
         }
 
         function authGuard(transition) {
-            if (AuthService.hasValidToken()) {
+            if (authService.hasValidToken()) {
                 //try to fetch user's data, cause it's required by next steps
                 return fetchUserData()
                     .then((currentUser) => {
@@ -1007,7 +1018,7 @@ const ngModule = angular
 
         function guestGuard(transition) {
             //transition needs to be cancelled if user is authiruzed
-            if (AuthService.hasValidToken()) {
+            if (authService.hasValidToken()) {
                 //on page reload we don't have referrer URL, so we need to redirect to default user's page
                 if (!transition.from().name) {
                     return $q.resolve(transition.router.stateService.target('home'));
@@ -1022,7 +1033,7 @@ const ngModule = angular
         }
 
         function permissionsGuard(permissions, transition) {
-            const access = AuthService.UserHasAnyPermission(permissions);
+            const access = authService.userHasAnyPermission(permissions);
 
             if (!access) {
                 console.error('You don\'t have permission to view this page');
@@ -1177,7 +1188,6 @@ require('./_services/services.module');
 require('./_views/view.module');
 require('./core/app.config');
 require('./core/config.route');
-require('./layout/layout.module');
 require('./page/page.module');
 require('./layout/commons/common.module');
 require('./components/components');

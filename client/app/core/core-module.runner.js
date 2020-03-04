@@ -2,12 +2,12 @@
 
 export function CoreModuleRunner(
     $rootScope,
-    $cookies,
-    appHealthService,
     $urlRouter,
     $timeout,
     $state,
     $q,
+    appHealthService,
+    authService,
     UI_VERSION,
     SettingProvider,
     SettingsService,
@@ -16,11 +16,6 @@ export function CoreModuleRunner(
     toolsService,
 ) {
     'ngInject';
-
-    // try to load stored data
-    if (!$rootScope.globals?.auth) {
-        $rootScope.globals = $cookies.getObject('globals') ?? {};
-    }
 
     /**
      * Check API health and then activate UI Router.
@@ -31,7 +26,7 @@ export function CoreModuleRunner(
 
             getVersion();
             updateCompanyLogo();
-            if ($rootScope.globals.auth) {
+            if (authService.authData) {
                 UserService.initCurrentUser();
                 toolsService.getTools();
             }
