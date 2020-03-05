@@ -1,0 +1,59 @@
+<div class="page-wrapper">
+    <zf-sub-header>
+        <zf-sub-header-title>
+            {{ $ctrl.currentTitle }}
+            <span hide-xs>, {{ $ctrl.currentUser.firstName }} {{ $ctrl.currentUser.lastName }}</span>
+        </zf-sub-header-title>
+    </zf-sub-header>
+
+    <div class="page">
+        <div class="p-welcome__toggle-container">
+            <sessions-switcher is-disabled="true"></sessions-switcher>
+            <div class="toggle-el__message-container">
+                <span class="toggle-el__message color-gray-light">You'll be able to switch between views</span>
+            </div>
+        </div>
+        <div class="page-content__wrapper" layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
+            <div class="page-content__cards-wrapper">
+                <div class="page-content__card" layout-margin="" layout="column"> 
+                    <img class="card__icon" src="../../../assets/images/_icons_welcome-page/telescope.svg" alt="telescope">
+                    <p class="card__subheader md-body-2 color-gray-light">tests</p>
+                    <h2 class="card__header md-display-1 color-gray-light">Integration via agent</h2>
+                    <p class="card__text md-subhead color-gray">In this case you have to integrate Zebrunner agent into your automation framework. Agent allows to track the results of tests in real-time with detailed configuration and artifacts publication.</p>
+                    <div class="card__list-container">
+                            <ul ng-class="{'card__list color-gray': true, _expand: $ctrl.showRunsCardContent && $ctrl.isMobile}">
+                                <li class="card__listitem">Video recordings</li>
+                                <li class="card__listitem">Smart rerun</li>
+                                <li class="card__listitem">Session logs</li>
+                                <li class="card__listitem">Test artifacts</li>
+                                <li class="card__listitem">Known issues tracking</li>
+                            </ul>
+                    </div>
+                    <md-button class="card__button md-raised btn-w-md md-primary pull-right" hide-xs ng-click="$ctrl.onViewChange('runs')">Try Integration via agent</md-button>
+                    <div class="card__wrapper-buttons" hide-gt-xs layout="row" layout-align="space-between center">
+                        <md-button class="md-button md-primary md-ink-ripple" ng-click="$ctrl.showRunsCardContent = !$ctrl.showRunsCardContent">{{ $ctrl.showRunsCardContent ? 'collapse' : 'expand' }}</md-button>
+                        <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="$ctrl.onViewChange('runs')">try tests</md-button>
+                    </div>
+                </div>
+                <div class="page-content__card" layout-margin="" layout="column">
+                    <img class="card__icon" src="../../../assets/images/_icons_welcome-page/rocket.svg" alt="rocket">
+                    <p class="card__subheader md-body-2 color-gray-light">sessions</p>
+                    <h2 class="card__header md-display-1 color-gray-light">Selenium Hub</h2>
+                    <p class="card__text md-subhead color-gray">This is the easiest way of running the tests in Zebrunner infrastructure. You have to generate access token and configure your tests to use Zebrunner Selenium URL.</p>
+                    <div class="card__list-container">
+                        <ul ng-class="{'card__list color-gray _column _no-padding': true, _expand: $ctrl.showSessionsCardContent && $ctrl.isMobile}">
+                            <li class="card__listitem">Real-time test sessions tracking</li>
+                            <li class="card__listitem">Video recordings</li>
+                            <li class="card__listitem">Session logs</li>
+                        </ul>
+                    </div>
+                <md-button class="card__button md-raised btn-w-md md-primary pull-right" hide-xs ng-click="$ctrl.onViewChange('sessions')">Try selenium hub</md-button>
+                    <div class="card__wrapper-buttons" hide-gt-xs layout="row" layout-align="space-between center">
+                        <md-button class="md-button md-primary md-ink-ripple" ng-click="$ctrl.showSessionsCardContent = !$ctrl.showSessionsCardContent">{{ $ctrl.showSessionsCardContent ? 'collapse' : 'expand' }}</md-button>
+                        <md-button class="md-raised btn-w-md md-primary pull-right" ng-click="$ctrl.onViewChange('sessions')">try sessions</md-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
