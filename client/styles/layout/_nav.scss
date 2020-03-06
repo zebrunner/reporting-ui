@@ -37,10 +37,6 @@
             border-color: transparent;
         }
 
-        i.nav-close-icon {
-            display: none;
-        }
-
         >li>a>i,
         >li>a>.nav-icon {
             display: inline-block;
@@ -100,6 +96,7 @@
                     max-width: $sidebar-width;
                     min-width: $sidebar-width;
                     color: #ffffff;
+                    padding: 20px 15px;
                 }
                 .badge {
                     position: absolute;

@@ -3,9 +3,21 @@
 
     angular.module('app').controller('TestInfoController', TestInfoController);
 
-    function TestInfoController($scope, $rootScope, $mdDialog, $interval,  toolsService,
-                                TestService, test, isNewIssue, isNewTask, isConnectedToJira,
-                                isJiraEnabled, messageService) {
+    function TestInfoController(
+        $scope,
+        $rootScope,
+        $mdDialog,
+        $interval,
+        authService,
+        toolsService,
+        TestService,
+        test,
+        isNewIssue,
+        isNewTask,
+        isConnectedToJira,
+        isJiraEnabled,
+        messageService,
+    ) {
         'ngInject';
 
         $scope.jiraId;
@@ -37,6 +49,7 @@
         $scope.changeStatusIsVisible = false;
         $scope.taskListIsVisible = false;
         $scope.issueListIsVisible = false;
+        $scope.userHasAnyPermission = authService.userHasAnyPermission;
 
         /* TEST_STATUS functionality */
 

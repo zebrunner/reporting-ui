@@ -25,6 +25,7 @@ const testDetailsController = function testDetailsController(
     windowWidthService,
     ArtifactService,
     pageTitleService,
+    authService,
     ) {
     'ngInject';
 
@@ -37,7 +38,6 @@ const testDetailsController = function testDetailsController(
     let jiraSettings = {};
     let testRailSettings = {};
     let qTestSettings = {};
-    let TENANT;
     let observer;
     const defaultSortField = 'startTime';
     const defaultStatusFilter = {
@@ -121,6 +121,7 @@ const testDetailsController = function testDetailsController(
         resetStatusFilterAndOrdering,
         onPageChange,
         getArtifactIconId,
+        userHasAnyPermission: authService.userHasAnyPermission,
     };
 
     vm.$onInit = controlInit;
@@ -128,7 +129,6 @@ const testDetailsController = function testDetailsController(
     return vm;
 
     function controlInit() {
-        TENANT = $rootScope.globals.auth.tenant;
         initAllSettings();
         initFirstLastIndexes();
         initIntersectionObserver();
@@ -739,7 +739,7 @@ const testDetailsController = function testDetailsController(
                     }
                     /* FOR_DEV_ONLY:START */
                     //previous condition won't work on localhost, so lets check if it is not a production and link's host starts on correct tenant name
-                    if (!window.isProd && TENANT !== url.host.split('.')[0]) {
+                    if (!window.isProd && authService.tenant !== url.host.split('.')[0]) {
                         artifact.isExternalLink = true;
                     } else {
                         artifact.isExternalLink = false;
@@ -964,7 +964,7 @@ const testDetailsController = function testDetailsController(
      * @returns function to unsubscribe from socket
      */
     function subscribeLaunchedTestRuns() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.launcherRuns', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.launcherRuns', function (data) {
             const event = getEventFromMessage(data.body);
             const launcher = event.launcher;
 
@@ -980,7 +980,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function subscribeStatisticsTopic() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.statistics', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.statistics', function (data) {
             const event = getEventFromMessage(data.body);
 
             if (!isCurrentTestRunStatistics(event)) {
@@ -993,7 +993,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function subscribeTestRunsTopic() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.testRuns', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.testRuns', function (data) {
             const event = getEventFromMessage(data.body);
             const testRun = angular.copy(event.testRun);
 
@@ -1011,7 +1011,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function subscribeTestsTopic() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.testRuns.' + vm.testRun.id + '.tests', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.testRuns.' + vm.testRun.id + '.tests', function (data) {
             const { test } = getEventFromMessage(data.body);
 
             if (test) {

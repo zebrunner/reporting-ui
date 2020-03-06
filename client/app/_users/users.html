@@ -1,7 +1,7 @@
 <div class="page-wrapper">
     <zf-sub-header>
         <zf-sub-header-title>
-            {{ $ctrl.currentTitle }} 
+            {{ $ctrl.currentTitle }}
             <small class="fixed-page-header__additional-text" ng-if="$ctrl.sr">({{$ctrl.sr.totalResults}})</small>
         </zf-sub-header-title>
         <zf-sub-header-options layout="row" layout-align="start center">
@@ -11,19 +11,19 @@
                     <md-icon class="input-search-icon">search</md-icon>
                     <md-icon class="input-close-icon" ng-click="$ctrl.reset()">close</md-icon>
                 </md-input-container>
-                <md-button class="md-icon-button" ng-click="$ctrl.showCreateUserDialog($event)" has-any-permission="['MODIFY_USERS']">
+                <md-button class="md-icon-button" ng-click="$ctrl.showCreateUserDialog($event)" ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS'])">
                     <md-icon class="material-icons">person_add</md-icon>
                     <md-tooltip md-direction="bottom">New user</md-tooltip>
                 </md-button>
         </zf-sub-header-options>
         <zf-sub-header-button class="show-phone">
-            <button class="fixed-page-header__btn zf-primary-button" ng-click="$ctrl.showCreateUserDialog($event)" has-any-permission="['MODIFY_USERS']">
+            <button class="fixed-page-header__btn zf-primary-button" ng-click="$ctrl.showCreateUserDialog($event)" ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS'])">
                 <md-icon class="material-icons">person_add</md-icon>
                 <span>New user</span>
             </button>
         </zf-sub-header-button>
         <zf-sub-header-button>
-            <button class="fixed-page-header__btn zf-primary-button" ng-click="$ctrl.showInviteUsersDialog($event)" has-any-permission="['INVITE_USERS']">
+            <button class="fixed-page-header__btn zf-primary-button" ng-click="$ctrl.showInviteUsersDialog($event)" ng-if="$ctrl.userHasAnyPermission(['INVITE_USERS'])">
                 <md-icon class="material-icons">add</md-icon>
                 <span>Invite user</span>
             </button>
@@ -88,13 +88,13 @@
                                                         <md-icon class="material-icons">more_vert</md-icon>
                                                     </md-button>
                                                     <md-menu-content width="2">
-                                                        <md-menu-item has-any-permission="['MODIFY_USERS']">
+                                                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS'])">
                                                             <md-button name="userEdit" data-ng-click="$ctrl.showEditProfileDialog($event, user, $index)">
                                                                 <md-icon class="material-icons">settings</md-icon>
                                                                 <span>Edit</span>
                                                             </md-button>
                                                         </md-menu-item>
-                                                        <md-menu-item ng-if="user.source == 'INTERNAL'" has-any-permission="['MODIFY_USERS']">
+                                                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS']) && user.source == 'INTERNAL'">
                                                             <md-button name="userChangePassword" data-ng-click="$ctrl.showChangePasswordDialog($event, user, false)">
                                                                 <md-icon class="material-icons">lock_outline</md-icon>
                                                                 <span>Change password</span>

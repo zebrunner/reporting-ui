@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('ViewService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', ViewService])
+        .factory('ViewService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', ViewService])
 
-    function ViewService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function ViewService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.getViewById = getViewById;

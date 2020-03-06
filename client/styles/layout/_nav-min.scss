@@ -184,24 +184,26 @@
 
 }
 
-#app {
-    @media (max-width: $screen-phone) {
-        &.sidebar-toggled {
-            #nav {
-                .sidebar-menu-button {
-                    i {
-                        &.nav-menu-icon {
-                            display: none;
-                        }
-                        &.nav-close-icon {
-                            display: block;
-                            animation: rotateRight 0.09s linear forwards;
-                        }
-                    }
+@media (max-width: $screen-phone) {
+    .nav-container {
+        &.toggle-bottom {
+            i {
+                &.nav-menu-icon {
+                    display: none;
+                }
+                &.nav-close-icon {
+                    display: block;
+                    animation: rotateRight 0.09s linear forwards;
                 }
             }
         }
+        &:not(.toggle-bottom) {
+            i.nav-close-icon {
+                display: none;
+            }
+        }
     }
+
 }
 
 .nav .menu-actor {
@@ -212,13 +214,13 @@
     height: 100%;
     line-height: 40px;
     vertical-align: baseline;
-    z-index: 100000; 
+    z-index: 100000;
     &._drag {
         cursor: grab;
         &:active {
             cursor: grabbing;
         }
-    }   
+    }
     &._delete {
         cursor: pointer;
     }

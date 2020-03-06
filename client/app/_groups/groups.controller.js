@@ -3,6 +3,7 @@
 const GroupsController = function GroupsController(
     $scope,
     $mdDialog,
+    authService,
     UserService,
     GroupService,
     UtilService,
@@ -17,6 +18,7 @@ const GroupsController = function GroupsController(
         addUserToGroup: addUserToGroup,
         querySearch: querySearch,
         deleteUserFromGroup: deleteUserFromGroup,
+        userHasAnyPermission: authService.userHasAnyPermission,
         usersSearchCriteria: {},
         count: 0,
         get groups() { return GroupService.groups; },

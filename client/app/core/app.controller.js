@@ -6,10 +6,9 @@ const appCtrl = function appCtrl(
     $templateCache,
     $state,
     $window,
-    $cookies,
     $q,
     appConfig,
-    AuthService,
+    authService,
     UserService,
     SettingsService,
     ConfigService,
@@ -60,7 +59,7 @@ const appCtrl = function appCtrl(
     $scope.progressbarService = progressbarService;
 
     $rootScope.$on('event:auth-loginSuccess', function(ev, payload){
-        AuthService.SetCredentials(payload.auth);
+        authService.setCredentials(payload.auth);
         $scope.initSession();
         UserService.initCurrentUser(true)
             .then((user) => {

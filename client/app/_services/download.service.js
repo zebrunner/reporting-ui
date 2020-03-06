@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('DownloadService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', DownloadService])
+        .factory('DownloadService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', DownloadService])
 
-    function DownloadService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function DownloadService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.download = download;

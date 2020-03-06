@@ -3,6 +3,7 @@
 import appCtrl from './app.controller';
 import fullscreenLoader from '../shared/fullscreen-loader/fullscreen-loader.component';
 import {CoreModuleRunner} from './core-module.runner';
+import isOwner from '../shared/is-owner/is-owner.directive';
 
 export const CoreModule = angular
     .module('appCore', [
@@ -11,9 +12,6 @@ export const CoreModule = angular
         'ngAria',
         'ngMessages',
         'ngCookies',
-
-        // Custom modules
-        'app.layout',
 
         // 3rd Party Modules
         'ngMaterial',
@@ -31,5 +29,6 @@ export const CoreModule = angular
     })
     .run(CoreModuleRunner)
     .component({ fullscreenLoader })
+    .directive({ isOwner })
     .controller({ appCtrl })
     .name;

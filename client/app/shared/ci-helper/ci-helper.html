@@ -3,7 +3,11 @@
         <zf-modal-helper-container class="ci-runner-container_helper" ng-show="$ctrl.shouldBeDisplayed('helper')">
             <div class="ci-runner-container_helper_title hide-phone">
                 <span>Launcher</span>
-                <button type="button" ng-click="addRepo();" ng-disabled="!clientId" has-any-permission="['MODIFY_LAUNCHERS']" class="zf-primary-button">
+                <button type="button"
+                    ng-click="addRepo();"
+                    ng-disabled="!clientId"
+                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])"
+                    class="zf-primary-button">
                     <i class="material-icons">add</i>
                     <span>ADD REPO</span>
                 </button>
@@ -19,11 +23,11 @@
             </div>
             <div class="ci-runner-container_helper_section">
                 <ul class="folder-container folder-container-{{scmAccount.id}}" ng-repeat="scmAccount in scmAccounts | orderBy: 'repositoryName' track by scmAccount.id">
-                    <li class="folder-container_folder" ng-class="{ '_with-buttons': $ctrl.AuthService.UserHasAnyPermission(['MODIFY_LAUNCHERS']) }">
+                    <li class="folder-container_folder" ng-class="{ '_with-buttons': $ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS']) }">
                         <i class="material-icons folder-container_folder_icon hide-phone" ng-click="switchFolder($event)">arrow_drop_down</i>
                         <div class="folder-container_folder_name hide-phone" ng-click="switchFolder($event)">{{scmAccount.repositoryName}}</div>
                         <div class="folder-container_folder_name show-phone" ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
-                        <div class="folder-container_folder-buttons hide-phone" has-any-permission="['MODIFY_LAUNCHERS']">
+                        <div class="folder-container_folder-buttons hide-phone" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])">
                             <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount, true)">add_circle_outline</i>
                             <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount)">settings</i>
                         </div>
@@ -55,7 +59,7 @@
                         <div ng-click="chooseLauncherPhone(l);" class="ci-runner-container_helper_section_item_container show-phone">
                             {{l.name}}
                         </div>
-                        <i ng-click="editLauncher(l);" has-any-permission="['MODIFY_LAUNCHERS']" class="material-icons hide-phone">edit</i>
+                        <i ng-click="editLauncher(l);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons hide-phone">edit</i>
                     </div>
                 </div>-->
             </div>
@@ -240,7 +244,7 @@
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
                 <div class="ci-runner-container_content_title_action">
-                    <i ng-click="toEditLauncher(launcher);" has-any-permission="['MODIFY_LAUNCHERS']" class="material-icons hide-phone">edit</i>
+                    <i ng-click="toEditLauncher(launcher);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons hide-phone">edit</i>
                 </div>
             </div>
             <div class="ci-runner-container__scrollable">

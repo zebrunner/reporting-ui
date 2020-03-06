@@ -6,9 +6,23 @@
         .controller('ViewController', ViewController);
 
     // **************************************************************************
-    function ViewController($scope, $location, $state, $mdDialog, $stateParams, UtilService, toolsService,
-                            TestRunService, JobService, ViewService, TestService, API_URL, messageService, 
-                            pageTitleService) {
+    function ViewController(
+        $scope,
+        $location,
+        $state,
+        $mdDialog,
+        $stateParams,
+        authService,
+        UtilService,
+        toolsService,
+        TestRunService,
+        JobService,
+        ViewService,
+        TestService,
+        API_URL,
+        messageService,
+        pageTitleService,
+    ) {
         'ngInject';
 
         $scope.view = {};
@@ -16,7 +30,7 @@
         $scope.jobViews = {};
         $scope.testRuns = {};
         $scope.isToolConnected = toolsService.isToolConnected;
-
+        $scope.userHasAnyRole = authService.userHasAnyRole;
         $scope.UtilService = UtilService;
 
         /*$scope.testSearchCriteria = {

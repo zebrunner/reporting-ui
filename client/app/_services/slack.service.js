@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('SlackService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', SlackService])
+        .factory('SlackService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', SlackService])
 
-    function SlackService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function SlackService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.triggerReviewNotif = triggerReviewNotif;

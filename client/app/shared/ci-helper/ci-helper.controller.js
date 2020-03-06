@@ -18,7 +18,7 @@ const CiHelperController = function CiHelperController(
     LauncherService,
     UserService,
     ScmService,
-    AuthService,
+    authService,
     messageService,
     UtilService,
     API_URL,
@@ -33,7 +33,6 @@ const CiHelperController = function CiHelperController(
     let onAddNewGithubRepoClose; //TODO: seems like unused
     let zafiraWebsocket;
     let subscriptions = {};
-    const TENANT = $rootScope.globals.auth.tenant;
     const newGithubRepoCloseClass = 'zf-button-close';
     const newGithubRepoRevertCloseClass = 'zf-button-close-revert';
     const providersPriority =  {
@@ -63,7 +62,8 @@ const CiHelperController = function CiHelperController(
         selectProviderOnChipsInit,
         cancelFolderManaging,
         shouldBeDisplayed,
-        AuthService,
+        authService,
+        userHasAnyPermission: authService.userHasAnyPermission,
 
         get isMobile() { return windowWidthService.isMobile(); },
     };
@@ -734,7 +734,7 @@ const CiHelperController = function CiHelperController(
 
     function getTenantInfo() {
         return $q(function (resolve, reject) {
-            AuthService.getTenant().then(function (rs) {
+            authService.getTenant().then(function (rs) {
                 if (rs.success) {
                     resolve(rs.data);
                 } else {
@@ -913,7 +913,7 @@ const CiHelperController = function CiHelperController(
     };
 
     function subscribeLaunchersTopic() {
-        return zafiraWebsocket.subscribe('/topic/' + TENANT + '.launchers', function (data) {
+        return zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.launchers', function (data) {
             const event = getEventFromMessage(data.body);
             const success = event.success;
             const userId = event.userId;
@@ -1331,9 +1331,9 @@ const CiHelperController = function CiHelperController(
                 let providers = data.default || [];
 
                 //merge default and tenant specific providers
-                if (Array.isArray(data[TENANT])) {
+                if (Array.isArray(data[authService.tenant])) {
                     const defaultProviders = providers.reduce((out, provider) => {out[provider.id] = provider; return out;}, {});
-                    const specificProviders = data[TENANT].reduce((out, provider) => {out[provider.id] = provider; return out;}, {});
+                    const specificProviders = data[authService.tenant].reduce((out, provider) => {out[provider.id] = provider; return out;}, {});
                     const mergedProviders = {...defaultProviders, ...specificProviders};
 
                     providers = Object.values(mergedProviders);

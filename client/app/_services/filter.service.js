@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('FilterService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', FilterService])
+        .factory('FilterService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', FilterService])
 
-    function FilterService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function FilterService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.createFilter = createFilter;

@@ -2,26 +2,46 @@
 
 import dashboardSettingsModalController from '../../../shared/modals/dashboard-settings-modal/dashboard-settings-modal.controller';
 import dashboardSettingsModalTemplate from '../../../shared/modals/dashboard-settings-modal/dashboard-settings-modal.html';
-
 import deleteProjectModalController from '../../../shared/modals/delete-project-modal/delete-project-modal.controller';
 import deleteProjectModalTemplate from '../../../shared/modals/delete-project-modal/delete-project-modal.html';
-
-import uploadImageModalController
-    from '../../../shared/modals/upload-image-modal/upload-image-modal.controller';
-import uploadImageModalTemplate
-    from '../../../shared/modals/upload-image-modal/upload-image-modal.html';
-
+import uploadImageModalController from '../../../shared/modals/upload-image-modal/upload-image-modal.controller';
+import uploadImageModalTemplate from '../../../shared/modals/upload-image-modal/upload-image-modal.html';
 import 'jquery-ui/widgets/sortable';
-import 'angular-ui-sortable'
+import 'angular-ui-sortable';
 
-const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state, ViewService, ConfigService,
-                                       projectsService, UserService, DashboardService, messageService,
-                                       AuthService, SettingsService, $timeout, windowWidthService, mainMenuService) {
+const AppSidebarController = function (
+    $scope,
+    $rootScope,
+    $q,
+    $mdDialog,
+    $state,
+    $transitions,
+    ViewService,
+    ConfigService,
+    projectsService,
+    UserService,
+    DashboardService,
+    messageService,
+    authService,
+    SettingsService,
+    $timeout,
+    windowWidthService,
+    mainMenuService,
+) {
     'ngInject';
 
     const fakeProjectAll = {
         name: 'ALL',
         id: 'all',
+    };
+    let navElem = null;
+    let navContainerElem = null;
+    let transSubscription;
+    let isMainMenuOpened = false;
+    const mainMenuConfig = {
+        liSelector: 'main-nav__list-item',
+        openClassifier: 'open',
+        mobileClass: 'toggle-bottom',
     };
 
     const vm = {
@@ -50,6 +70,11 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
         },
 
         activateSorter: activateDashboardsSorter,
+        userHasAnyPermission: authService.userHasAnyPermission,
+        userHasAnyRole: authService.userHasAnyRole,
+        handleMenuClick,
+        $onDestroy() { unbindListeners(); },
+        toggleMobileMenu,
 
         get companyLogo() { return $rootScope.companyLogo; },
         get currentUser() { return UserService.currentUser; },
@@ -82,7 +107,7 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
                 vm.selectedProject = fakeProjectAll.id;
                 onProjectSelect();
             }
-        }, () => {})
+        }, () => {});
     }
 
     function activateDashboardsSorter(activate) {
@@ -112,10 +137,13 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
             .then(() => {
                 vm.selectedProjectShortName = cutSelectedProjectName();
             });
+        navElem = document.querySelector('.main-nav__list');
+        navContainerElem = navElem.closest('#nav-container');
+        bindListeners();
     }
 
     function hasHiddenDashboardPermission(){
-        return AuthService.UserHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
+        return authService.userHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
     }
 
     function getViews(){
@@ -298,9 +326,10 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
                             projectsService.resetSelectedProject();
                         }
                     }
-                } else {
-                    messageService.error('Unable to load projects');
                 }
+                // else {
+                //     messageService.error('Unable to load projects');
+                // }
             });
     }
 
@@ -392,6 +421,125 @@ const AppSidebarController = function ($scope, $rootScope, $q, $mdDialog, $state
         }
 
         return `${a}` === `${b}`;
+    }
+
+    function bindListeners() {
+        if (navElem) {
+            transSubscription = $transitions.onBefore({}, closeMenuOnRouteTransition);
+            window.addEventListener('resize', closeMenuOnResize);
+        }
+    }
+
+    function unbindListeners() {
+        if (transSubscription) {
+            transSubscription();
+        }
+        window.removeEventListener('resize', closeMenuOnResize);
+    }
+
+    function handleMenuClick($event) {
+        if (!navElem) { return; }
+
+        const btn = $event.target.classList.contains('nav-btn') ? $event.target : $event.target.closest('.nav-btn');
+
+        if (btn) {
+            const btnClassList = btn.classList;
+
+            // close menu handling
+            if (btnClassList.contains('js-menu-close')) {
+                closeMenu();
+            } else if (btnClassList.contains('js-menu-toggle')) {
+                // handle case if menu is opened, but we trying to open another one
+                const openedLiElement = navElem.querySelector(`.${mainMenuConfig.liSelector}.${mainMenuConfig.openClassifier}`);
+                const parentLiElement = btn.closest(`.${mainMenuConfig.liSelector}`);
+
+                if (openedLiElement) {
+                    closeMenu(openedLiElement);
+                }
+                if (openedLiElement !== parentLiElement) {
+                    openMenu(parentLiElement);
+                }
+            }
+            // TODO: [-] remove: looks like successfully replaced by closing on route transition
+            // close because of clicking on another menu item
+            // else {
+            //     const openedLiElement = navElem.querySelector(`.${mainMenuConfig.liSelector}.${mainMenuConfig.openClassifier}`);
+            //
+            //     if (openedLiElement) {
+            //         closeMenu(openedLiElement);
+            //     }
+            // }
+        }
+        // handle cases when we need to close menu on special action (for example, custom click handler)
+        else if ($event.target.classList.contains('js-menu-close') || $event.target.closest('.js-menu-close')) {
+            closeMenu();
+        }
+
+        // stop bubbling to prevent closing menu on document "click" listener
+        $event.stopPropagation();
+    }
+
+    function openMenu(liElem) {
+        if (!liElem) { return; }
+
+        removeListenerOnDocument();
+        liElem.classList.add(mainMenuConfig.openClassifier);
+        isMainMenuOpened = true;
+        addListenerOnDocument();
+    }
+
+    function addListenerOnDocument() {
+        document.addEventListener('click', closeMenuOnOutsideClick);
+    }
+
+    function removeListenerOnDocument() {
+        document.removeEventListener('click', closeMenuOnOutsideClick);
+    }
+
+    function closeMenuOnOutsideClick() {
+        closeMenu();
+    }
+
+    function closeMenuOnResize() {
+        if (isMainMenuOpened) {
+            closeMenu();
+        }
+    }
+
+    function closeMenuOnRouteTransition() {
+        closeMenu();
+    }
+
+    function toggleMobileMenu() {
+        if (navContainerElem.classList.contains(mainMenuConfig.mobileClass)) {
+            navContainerElem.classList.remove(mainMenuConfig.mobileClass);
+            closeMenu();
+        } else {
+            navContainerElem.classList.add(mainMenuConfig.mobileClass);
+        }
+    }
+
+    function closeMenu(openedLiElement = navElem.querySelector(`.${mainMenuConfig.liSelector}.${mainMenuConfig.openClassifier}`)) {
+        removeListenerOnDocument();
+        // there is no opened element
+        if (!openedLiElement) { return; }
+
+        openedLiElement.classList.remove(mainMenuConfig.openClassifier);
+        isMainMenuOpened = false;
+        clearInputs(openedLiElement);
+    }
+
+    function clearInputs(openedElement) {
+        const input = angular.element(openedElement).find('input[name="search"]');
+
+        if (input) {
+            const ngModel = input.controller('ngModel');
+
+            if (ngModel) {
+                input[0].value = '';
+                ngModel.$setViewValue('');
+            }
+        }
     }
 
     return vm;

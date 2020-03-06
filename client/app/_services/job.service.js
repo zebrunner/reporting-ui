@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('JobService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', JobService])
+        .factory('JobService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', JobService])
 
-    function JobService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function JobService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.createJob = createJob;

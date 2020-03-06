@@ -2,15 +2,32 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 
-const testRunInfoController = function testRunInfoController($scope, $rootScope, $mdDialog, $interval,
-    $filter, $anchorScroll, $location, $timeout, $q,
-    elasticsearchService, TestRunService, UtilService,
-    ArtifactService, $stateParams, OFFSET,
-    API_URL, $state, TestRunsStorage,
-    TestService, $transitions, pageTitleService) {
+const testRunInfoController = function testRunInfoController(
+    $scope,
+    $rootScope,
+    $mdDialog,
+    $interval,
+    $filter,
+    $anchorScroll,
+    $location,
+    $timeout,
+    $q,
+    elasticsearchService,
+    TestRunService,
+    UtilService,
+    ArtifactService,
+    $stateParams,
+    OFFSET,
+    API_URL,
+    $state,
+    TestRunsStorage,
+    TestService,
+    $transitions,
+    pageTitleService,
+    authService,
+) {
     'ngInject';
 
-    const TENANT = $rootScope.globals.auth.tenant;
     const mobileWidth = 480;
     const vm = {
         testRun: null,
@@ -546,7 +563,7 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
         $scope.testsWebsocket.ws.close = function() {};
         $scope.testsWebsocket.connect({ withCredentials: false }, function () {
             if ($scope.testsWebsocket.connected) {
-                vm.wsSubscription = $scope.testsWebsocket.subscribe("/topic/" + TENANT + ".testRuns." + testRun.id + ".tests", function (data) {
+                vm.wsSubscription = $scope.testsWebsocket.subscribe("/topic/" + authService.tenant + ".testRuns." + testRun.id + ".tests", function (data) {
                     var test = $scope.getEventFromMessage(data.body).test;
 
                     if ($scope.test && test.id === $scope.test.id) {

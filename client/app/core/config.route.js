@@ -83,7 +83,7 @@
                         requireLogin: true,
                     },
                     resolve: {
-                        dashboardId: (AuthService, DashboardService, UserService, $state, $q, $timeout, messageService) => {
+                        dashboardId: (authService, DashboardService, UserService, $state, $q, $timeout, messageService) => {
                             'ngInject';
 
                             const currentUser = UserService.currentUser;
@@ -91,7 +91,7 @@
 
                             if (!currentUser || defaultDashboardId === undefined) {
                                 //get first available dashboard
-                                const hideDashboards = !AuthService.UserHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
+                                const hideDashboards = !authService.userHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
 
                                 return DashboardService.GetDashboards(hideDashboards).then(function (rs) {
                                     if (rs.success) {
@@ -204,10 +204,10 @@
                 })
                 .state('logout', {
                     url: '/logout',
-                    controller: function($state, AuthService, $timeout) {
+                    controller: function($state, authService, $timeout) {
                         'ngInject';
 
-                        AuthService.ClearCredentials();
+                        authService.clearCredentials();
                         // Timeout to avoid digest issues
                         $timeout(function() {
                             $state.go('signin');

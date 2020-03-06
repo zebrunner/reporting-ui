@@ -25,7 +25,7 @@ const dashboardController = function dashboardController(
     $mapper,
     toolsService,
     messageService,
-    AuthService,
+    authService,
     pageTitleService
     ) {
     'ngInject';
@@ -33,15 +33,16 @@ const dashboardController = function dashboardController(
     const vm = {
         dashboard: null,
         isToolConnected: toolsService.isToolConnected,
+        userHasAnyPermission: authService.userHasAnyPermission,
     };
 
     $scope.emptyContent = {
         mobileText: ['No widget added.', 'Go to desktop version for more options or watch tutorial to learn more.'],
         imageUrl: require('../../assets/images/empty-pages/empty_screen_dashboards.svg'),
-        showArrow: AuthService.UserHasAnyPermission(['MODIFY_WIDGETS'])
+        showArrow: vm.userHasAnyPermission(['MODIFY_WIDGETS'])
     };
 
-    const emptyContentText = AuthService.UserHasAnyPermission(['MODIFY_WIDGETS']) ?
+    const emptyContentText = vm.userHasAnyPermission(['MODIFY_WIDGETS']) ?
         'No widget added. Use button at the top or watch tutorial to learn more.' :
         'No widget added';
     $scope.emptyContent.text = [emptyContentText];

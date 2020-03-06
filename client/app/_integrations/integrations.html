@@ -50,7 +50,7 @@
                            </md-input-container>
                        </div>
                    </div>
-                   <div has-any-permission="['MODIFY_INTEGRATIONS']" ng-if="$ctrl.newItem" class="integration-tool__item-footer integration-actions text-right" style="border-top: none;">
+                   <div ng-if="$ctrl.userHasAnyPermission(['MODIFY_INTEGRATIONS']) && $ctrl.newItem" class="integration-tool__item-footer integration-actions text-right" style="border-top: none;">
                         <md-button ng-click="$ctrl.cancel()" class="md-raised btn-w-md">
                             Cancel
                         </md-button>
@@ -77,7 +77,7 @@
                                               ng-if="tool.connectionChecking"
                                               ng-class="{'highlight_red': !$ctrl.isToolConnected(tool) && tool.enabled, 'highlight_green': $ctrl.isToolConnected(tool) && tool.enabled, 'highlight_gray': !tool.enabled}"
                                               class="integration-tool__item-loader"></md-progress-circular>
-                        <md-input-container has-any-permission="['MODIFY_INTEGRATIONS']" flex="none">
+                        <md-input-container ng-if="$ctrl.userHasAnyPermission(['MODIFY_INTEGRATIONS'])" flex="none">
                             <md-switch name="toolEnabled" style="margin-top: 0" class="md-primary" ng-model="tool.enabled" ng-change="$ctrl.changeStatus(tool)" aria-label="integr-switch"></md-switch>
                         </md-input-container>
                     </div>
@@ -94,7 +94,7 @@
                             </md-input-container>
                         </div>
                     </div>
-                    <div has-any-permission="['MODIFY_INTEGRATIONS']" data-ng-if="tool.enabled" class="integration-tool__item-footer integration-actions text-right" style="border-top: none;">
+                    <div ng-if="$ctrl.userHasAnyPermission(['MODIFY_INTEGRATIONS']) && tool.enabled" class="integration-tool__item-footer integration-actions text-right" style="border-top: none;">
                         <md-button name="save" ng-click="$ctrl.saveTool(tool)" class="md-raised btn-w-md md-primary" ng-disabled="!tool.enabled">Save</md-button>
                     </div>
                 </div>

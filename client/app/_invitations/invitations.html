@@ -13,7 +13,7 @@
             </md-input-container>
         </zf-sub-header-options>
         <zf-sub-header-button>
-            <button class="fixed-page-header__btn zf-primary-button" ng-click="$ctrl.showInviteUsersDialog($event)" has-any-permission="['INVITE_USERS']">
+            <button class="fixed-page-header__btn zf-primary-button" ng-click="$ctrl.showInviteUsersDialog($event)" ng-if="$ctrl.userHasAnyPermission(['INVITE_USERS'])">
                 <md-icon class="material-icons">add</md-icon>
                 <span>Invite user</span>
             </button>
@@ -72,7 +72,7 @@
                                         <span ng-class="{'text-success': invite.status == 'ACCEPTED', 'text-info': invite.status == 'PENDING'}" class="label">{{ invite.status }}</span>
                                     </td>
                                     <td md-cell>
-                                        <md-menu has-any-permission="['MODIFY_INVITATIONS']" class="pull-right">
+                                        <md-menu ng-if="$ctrl.userHasAnyPermission(['MODIFY_INVITATIONS'])" class="pull-right">
                                             <md-button name="userMenu" aria-label="User settings" class="md-icon-button" data-ng-click="$mdMenu.open($event);">
                                                 <md-icon class="material-icons">more_vert</md-icon>
                                             </md-button>
