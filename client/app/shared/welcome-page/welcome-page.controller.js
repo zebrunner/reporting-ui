@@ -1,9 +1,10 @@
-export default function welcomePageController($state,
+export default function welcomePageController (
+    $state,
     UserService,
     windowWidthService,
     messageService,
     pageTitleService,
-    ) {
+) {
     'ngInject'
 
     const vm = {
