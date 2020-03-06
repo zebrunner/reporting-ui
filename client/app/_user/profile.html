@@ -11,7 +11,7 @@
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page page-profile">
-        <div class="profile-header" layout="row" layout-xs="column">
+        <div class="profile-header">
             <div layout="row" flex="auto">
                 <div class="profile-img">
                     <profile-photo ng-model="$ctrl.currentUser.photoURL" size="48">
@@ -20,10 +20,11 @@
                         </div>
                     </profile-photo>
                 </div>
-                <div class="profile-wrapper" layout="row" layout-xs="column" flex="100" layout-align="end start">
+                <div class="profile-wrapper" layout-gt-xs="row" flex="100" layout-align="end start">
                     <div class="profile-personal-content">
                         <div class="profile-personal-info" ng-if="$ctrl.currentUser.firstName || $ctrl.currentUser.lastName">
-                            {{$ctrl.currentUser.firstName}} {{$ctrl.currentUser.lastName}}
+                            <div class="profile-personal-name">{{$ctrl.currentUser.firstName}}</div>
+                            <div class="profile-personal-name">{{$ctrl.currentUser.lastName}}</div>
                         </div>
                         <md-input-container flex class="no-margin">
                             <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
@@ -82,8 +83,14 @@
                 <div class="profile__form-row" layout="row">
                     <md-input-container flex class="_gray-bg">
                         <label>First Name</label>
-                        <input id="userFirstName" type="text" ng-model="$ctrl.user.firstName" name="firstName"
-                            ng-minlength="2" ng-maxlength="50" ng-pattern="/^[a-zA-Z]+$/"/>
+                        <input id="userFirstName"
+                            type="text"
+                            ng-model="$ctrl.user.firstName"
+                            name="firstName"
+                            ng-minlength="::$ctrl.getValidationValue('name', 'minlength')"
+                            ng-maxlength="::$ctrl.getValidationValue('name', 'maxlength')"
+                            ng-pattern="::$ctrl.getValidationValue('name', 'pattern')"
+                            />
                         <div ng-messages="profile_form.firstName.$error">
                             <div ng-repeat="validation in $ctrl.validations.name" ng-message="{{ validation.name }}">
                             <span ng-if="validation.additional">
@@ -96,8 +103,14 @@
                     </md-input-container>
                     <md-input-container flex class="_gray-bg">
                         <label>Last Name</label>
-                        <input id="userLastName" type="text" ng-model="$ctrl.user.lastName" name="lastName"
-                               ng-minlength="2" ng-maxlength="50" ng-pattern="/^[a-zA-Z]+$/"/>
+                        <input id="userLastName"
+                            type="text"
+                            ng-model="$ctrl.user.lastName"
+                            name="lastName"
+                            ng-minlength="::$ctrl.getValidationValue('name', 'minlength')"
+                            ng-maxlength="::$ctrl.getValidationValue('name', 'maxlength')"
+                            ng-pattern="::$ctrl.getValidationValue('name', 'pattern')"
+                        />
                         <div ng-messages="profile_form.lastName.$error">
                             <div ng-repeat="validation in $ctrl.validations.name" ng-message="{{ validation.name }}">
                                 <span ng-if="validation.additional">
