@@ -686,7 +686,7 @@
 
                             return $ocLazyLoad.load(mod.welcomePageModule);
                         } catch (err) {
-                            throw new Error('Can\'t load integrationsModule module, ' + err);
+                            throw new Error('Can\'t load welcomePage module, ' + err);
                         }
                     }
                 })
