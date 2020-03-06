@@ -32,6 +32,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         updateUserPassword,
         generateAccessToken,
         validations: UtilService.validations,
+        getValidationValue: UtilService.getValidationValue,
         untouchForm: UtilService.untouchForm,
         copyServiceUrl,
         goToState,

@@ -949,6 +949,8 @@ ul.profile-image-actions {
     font-size: 16px;
     font-weight: normal;
     color: $dark-new;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /* Profile photo mask logic */
