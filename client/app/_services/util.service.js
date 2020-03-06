@@ -105,7 +105,7 @@
                 {
                     name: 'pattern',
                     message: 'Name can only contain letters, numbers, dashes and dots.',
-                    value: new RegExp('^[A-Za-z]+[0-9A-Za-z.-]+$'),
+                    value: /^[A-Za-z]+[0-9A-Za-z.-]+$/,
                 }
             ]
         };
@@ -114,8 +114,9 @@
 
         function getValidationValue(objName, propName) {
             const validationsArray = service.validations[objName];
+            const item = validationsArray.find(item => item.name === propName);
 
-            return validationsArray.find(item => item.name === propName).value || null;
+            return item ? item.value : null;
         }
 
         function untouchForm(form) {
