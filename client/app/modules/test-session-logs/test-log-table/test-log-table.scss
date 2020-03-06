@@ -100,6 +100,27 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    md-table-pagination {
+        border: 0;
+        padding: 0 15px;
+        font-size: 14px;
+        font-weight: normal;
+        .limit-select {
+            margin-left: 0;
+            margin-right: auto;
+            .label {
+                padding-right: 0;
+                padding-left: 0;
+            }
+        }
+        .md-table-select {
+            min-width: 45px;
+        }
+        .buttons {
+            margin-right: 0;
+        }
+    }
+
 
     @media screen and (max-width: $md-screen-phone) {
         display: block;
