@@ -30,7 +30,6 @@ require('./utils/TableExpandUtil');
 require('./utils/testrun.storage');
 require('./utils/widget.util');
 require('./window-width/window-width.service');
-// require('./auth.service');
 require('./certification.service');
 require('./config.service');
 require('./dashboard.service');
