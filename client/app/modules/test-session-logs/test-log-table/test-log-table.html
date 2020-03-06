@@ -12,7 +12,7 @@
     <tr class="test-log-table__row"
         ng-class="{ '_selected': log === $ctrl.selectedLog}"
         ng-attr-id="log-{{ $index }}"
-        ng-repeat="log in $ctrl.logs">
+        ng-repeat="log in $ctrl.logsToDisplay">
         <td class="test-log-table__col _visuals" ng-if="$ctrl.withVisuals">
             <span ng-if="log.driver" class="label label-default">Driver {{log.driver.index + 1 }}</span>
             <div ng-if="log.blobLog" class="log-wrapper" ng-class="{ 'image-placeholder': log.isImageExists === false }">
@@ -26,10 +26,8 @@
             </div>
         </td>
         <td class="test-log-table__col _start"
-            ng-if="log.timestamp"
             ng-click="$ctrl.switchLogSelection(log)">{{log.timestamp}}</td>
         <td class="test-log-table__col _status"
-            ng-if="log.timestamp"
             ng-class="{ '_mobile-grow': !$ctrl.withVisuals }"
             ng-click="$ctrl.switchLogSelection(log)">
             <span class="test-log-table__status-icon {{log.level ? '_' + (log.level) : ''}}">
@@ -38,19 +36,7 @@
             </span>
         </td>
         <td class="test-log-table__col _action"
-            ng-if="log.timestamp"
             ng-click="$ctrl.switchLogSelection(log)"
-            ng-attr-id="log.timestamp">
-            <div ng-if="log.showMore" class="test-log-table__message">
-                <div class="full" ng-bind-html="$ctrl.getFullLogMessage(log)"></div>
-                <div><a href="#" ng-click="$ctrl.switchMoreLess($event, log)">Show less</a></div>
-            </div>
-            <div class="test-log-table__message" ng-if="!log.showMore">{{log.message | cut:true:255:' ...'}} <a href="#" ng-if="log.message.length > 255" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
-        </td>
-        <td class="test-log-table__col _action _not-a-log"
-            ng-click="$ctrl.switchLogSelection(log)"
-            ng-if="!log.timestamp"
-            colspan="3"
             ng-attr-id="log.timestamp">
             <div ng-if="log.showMore" class="test-log-table__message">
                 <div class="full" ng-bind-html="$ctrl.getFullLogMessage(log)"></div>
@@ -73,6 +59,24 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
+        </td>
+    </tr>
+    <tr ng-repeat-end
+        class="table-pagination">
+        <td class="no-padding"
+            ng-attr-colspan="{{$ctrl.withVisuals ? 5 : 4}}">
+            <md-table-pagination
+                id="pagination"
+                zafira-background-theme="pagination"
+                ng-if="$ctrl.logs.length && $ctrl.logs.length > $ctrl.countPerPage"
+                md-limit="$ctrl.countPerPage"
+                md-limit-options="$ctrl.limitOptions"
+                md-label="{rowsPerPage: 'Items per page:'}"
+                md-page="$ctrl.currentPage"
+                md-total="{{$ctrl.logs.length}}"
+                md-page-select=false
+                md-boundary-links=true
+                md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
         </td>
     </tr>
     </tbody>

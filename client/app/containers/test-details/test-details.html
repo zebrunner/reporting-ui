@@ -271,9 +271,9 @@
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && !$ctrl.testsToDisplay.length && $ctrl.getEptyTestsMessage(groupName)">
+                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && !$ctrl.testsToDisplay.length && $ctrl.getEmptyTestsMessage(groupName)">
                                         <td md-cell="md-cell" colspan="4" class="test-empty">
-                                            {{$ctrl.getEptyTestsMessage(groupName)}}
+                                            {{$ctrl.getEmptyTestsMessage(groupName)}}
                                         </td>
                                     </tr>
                                     <tr ng-repeat-end

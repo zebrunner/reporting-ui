@@ -103,7 +103,7 @@ const testDetailsController = function testDetailsController(
         get isSortingActive() { return isSortingActive(); },
         get currentTitle() { return pageTitleService.pageTitle; },
 
-        getEptyTestsMessage,
+        getEmptyTestsMessage,
         toggleGroupingFilter,
         changeViewMode,
         orderByElapsed,
@@ -569,7 +569,7 @@ const testDetailsController = function testDetailsController(
         return `artifacts:${type}`;
     }
 
-    function getEptyTestsMessage(groupName) {
+    function getEmptyTestsMessage(groupName) {
         let message = '';
 
         if (vm.empty && vm.testRun.status !== 'IN_PROGRESS') {
