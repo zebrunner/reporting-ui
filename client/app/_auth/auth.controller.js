@@ -117,9 +117,13 @@ const authController = function authController(
                         auth: rs.data
                     };
 
-                    $state.params.location && (payload.location = $state.params.location);
-                    $state.params.referrer && (payload.referrer = $state.params.referrer);
-                    $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
+                    if (rs.firstLogin) {
+                        payload.firstLogin = rs.firstLogin;
+                    } else {
+                        $state.params.location && (payload.location = $state.params.location);
+                        $state.params.referrer && (payload.referrer = $state.params.referrer);
+                        $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
+                    }
                     $rootScope.$broadcast('event:auth-loginSuccess', payload);
                 } else {
                     $scope.credentials = {

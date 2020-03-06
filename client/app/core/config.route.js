@@ -8,7 +8,7 @@
 
             $stateProvider
                 .state('home', {
-                    redirectTo: transisiton => transisiton.router.stateService.target('dashboard.list', {}, { location: 'replace', reload: true, inherit: false }),
+                    redirectTo: transition => transition.router.stateService.target('dashboard.list', {}, { location: 'replace', reload: true, inherit: false })
                 })
                 .state('dashboard', {
                     url: '/dashboards',
@@ -663,6 +663,32 @@
                             location: 'replace',
                         });
                     },
+                })
+                .state('welcomePage', {
+                    url: '/welcome',
+                    component: 'welcomePageComponent',
+                    data: {
+                        title: 'Welcome',
+                        requireLogin: true,
+                    },
+                    redirectTo: ($transition$) => {
+                        const UserService = $transition$.injector().get('UserService');
+
+                        if (!UserService.currentUser.firstLogin) {
+                            return $transition$.router.stateService.target('tests.default', {}, { location: 'replace', reload: true, inherit: false })
+                        }
+                    },
+                    lazyLoad: async ($transition$) => {
+                        const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                        try {
+                            const mod = await import(/* webpackChunkName: "welcomePage" */ '../shared/welcome-page/welcome-page.module');
+
+                            return $ocLazyLoad.load(mod.welcomePageModule);
+                        } catch (err) {
+                            throw new Error('Can\'t load welcomePage module, ' + err);
+                        }
+                    }
                 })
                 .state('integrations', {
                     url: '/integrations',

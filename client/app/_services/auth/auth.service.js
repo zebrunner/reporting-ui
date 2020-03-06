@@ -42,7 +42,11 @@ const authService = function authService(
 
     function login(username, password) {
         return $httpMock.post(API_URL + '/api/auth/login', { username, password })
-            .then(UtilService.handleSuccess, UtilService.handleError('Invalid credentials'));
+            .then((res) => {
+                const headers = res.headers();
+
+                return { success: true, data: res.data, 'firstLogin': headers['first-login'] };
+            }, UtilService.handleError('Invalid credentials'));
     }
 
     function getTenant() {

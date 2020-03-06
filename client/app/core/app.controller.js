@@ -65,6 +65,15 @@ const appCtrl = function appCtrl(
             .then((user) => {
                 $scope.main.skin = user.theme;
 
+                if (payload.firstLogin) {
+                    UserService.currentUser.firstLogin = true;
+
+                    $timeout(() => {
+                        $state.go('welcomePage');
+                    });
+                    return;
+                }
+
                 if (payload.location) {
                     $window.location.href = payload.location;
                 } else if (payload.referrer) {
