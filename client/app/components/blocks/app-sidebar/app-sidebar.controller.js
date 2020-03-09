@@ -43,13 +43,16 @@ const AppSidebarController = function (
         openClassifier: 'open',
         mobileClass: 'toggle-bottom',
     };
+    // breakpoint when menu ribbon becomes hidden
+    // TODO: refactor to use material mobile breakpoint (600)
+    const menuMobileBreakpoint = 480;
 
     const vm = {
         DashboardService: DashboardService,
         version: null,
         views: [],
         projects: [],
-        $state: $state,
+        $state,
         selectedProject: fakeProjectAll.id,
         hasHiddenDashboardPermission,
         loadViews,
@@ -519,9 +522,13 @@ const AppSidebarController = function (
     }
 
     function closeMenu(openedLiElement = navElem.querySelector(`.${mainMenuConfig.liSelector}.${mainMenuConfig.openClassifier}`)) {
+        // auto-close mobile menu
+        if (windowWidthService.windowWidth <= menuMobileBreakpoint && navContainerElem.classList.contains(mainMenuConfig.mobileClass)) {
+            navContainerElem.classList.remove(mainMenuConfig.mobileClass);
+        }
         // there is no opened element
         if (!openedLiElement) { return; }
-        
+
         removeListenerOnDocument();
         openedLiElement.classList.remove(mainMenuConfig.openClassifier);
         isMainMenuOpened = false;
