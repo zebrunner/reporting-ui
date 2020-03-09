@@ -75,7 +75,10 @@
                                         </div>
                                     </div>
                                     <div class="test-session-logs__tab-table-wrapper col-md-8 col-sm-12 no-padding">
-                                        <test-log-table ng-if="!$ctrl.parserNotFound && $ctrl.logs.length" logs="$ctrl.logs"></test-log-table>
+                                        <test-log-table
+                                            ng-if="!$ctrl.parserNotFound && $ctrl.logs.length"
+                                            scrollable-elem-selector="$ctrl.getScrollableElemSelector()"
+                                            logs="$ctrl.logs"></test-log-table>
                                         <div class="test-session-logs__plain-log" ng-if="$ctrl.parserNotFound" ng-bind-html="$ctrl.getFormattedPlainLog()"></div>
                                     </div>
                                 </div>
