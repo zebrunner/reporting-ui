@@ -13,7 +13,9 @@ const isOwnerDirective = function (
             scope.$watch(() => authService.isLoggedIn, function() {
                 const verifiedUser = attrs.user && attrs.user.length ? JSON.parse(attrs.user) : {};
 
-                if (verifiedUser && verifiedUser.id === attrs.isOwner) {
+                // attrs.isOwner - contains an user ID
+                // No strict rules are defined for ID, so use type–converting comparisons
+                if (verifiedUser && verifiedUser.id == attrs.isOwner) {
                     elem.show();
                 } else {
                     elem.hide();
