@@ -482,7 +482,6 @@ const AppSidebarController = function (
     function openMenu(liElem) {
         if (!liElem) { return; }
 
-        removeListenerOnDocument();
         liElem.classList.add(mainMenuConfig.openClassifier);
         isMainMenuOpened = true;
         addListenerOnDocument();
@@ -520,10 +519,10 @@ const AppSidebarController = function (
     }
 
     function closeMenu(openedLiElement = navElem.querySelector(`.${mainMenuConfig.liSelector}.${mainMenuConfig.openClassifier}`)) {
-        removeListenerOnDocument();
         // there is no opened element
         if (!openedLiElement) { return; }
-
+        
+        removeListenerOnDocument();
         openedLiElement.classList.remove(mainMenuConfig.openClassifier);
         isMainMenuOpened = false;
         clearInputs(openedLiElement);
