@@ -16,6 +16,7 @@ const testLogTableDirective = function testLogTableDirective() {
         scope: {
             logs: '<',
             withVisuals: '=',
+            scrollableElemSelector: '<',
         },
     };
 };

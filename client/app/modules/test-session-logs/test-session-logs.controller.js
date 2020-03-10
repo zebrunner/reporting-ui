@@ -15,7 +15,8 @@ const testSessionLogsController = function testsSessionsController(
     const splitPattern = '/* ZEBRUNNER_PARSING_SPLITTER */';
     const logLevels = ['info', 'error', 'warn', 'debug', 'trace', 'warning'];
     const mobileWidth = 480;
-    
+    const pageLayoutBreakpoint = 992; // breakpoint when scrollable element on page will be changed by css
+
     const vm = {
         testSession: null,
         rawLog: '',
@@ -27,6 +28,7 @@ const testSessionLogsController = function testsSessionsController(
         goToTestsSessions,
         openRawLogs,
         getFormattedPlainLog,
+        getScrollableElemSelector,
 
         get currentTitle() { return pageTitleService.pageTitle },
         get isMobile() { return windowWidthService.isMobile(); },
@@ -204,6 +206,16 @@ const testSessionLogsController = function testsSessionsController(
 
     function getFormattedPlainLog() {
         return vm.rawLog.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ *(\r?\n|\r)/g, '<br/>').replace(/\s/g, '&nbsp;');
+    }
+
+    function getScrollableElemSelector() {
+        let elemSelector = '.test-session-logs__tab-table-wrapper';
+
+        if (windowWidthService.windowWidth < pageLayoutBreakpoint) {
+            elemSelector = '.history-tab';
+        }
+
+        return elemSelector;
     }
 };
 

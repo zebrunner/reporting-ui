@@ -4,6 +4,7 @@ import appCtrl from './app.controller';
 import fullscreenLoader from '../shared/fullscreen-loader/fullscreen-loader.component';
 import {CoreModuleRunner} from './core-module.runner';
 import isOwner from '../shared/is-owner/is-owner.directive';
+import infiniteScroll from '../shared/infinite-scroll/infinite-scroll.directive';
 
 export const CoreModule = angular
     .module('appCore', [
@@ -30,5 +31,6 @@ export const CoreModule = angular
     .run(CoreModuleRunner)
     .component({ fullscreenLoader })
     .directive({ isOwner })
+    .directive({ infiniteScroll })
     .controller({ appCtrl })
     .name;

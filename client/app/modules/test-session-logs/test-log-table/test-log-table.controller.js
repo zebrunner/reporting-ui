@@ -3,74 +3,30 @@
 const testLogTableController = function testLogTableController(
     $timeout,
     messageService,
-    windowWidthService,
 ) {
     'ngInject';
 
-    let firstIndex;
     let lastIndex;
-    const initialCountToDisplay = 100;
-    let selectedCountToDisplay = initialCountToDisplay;
-    const defaultLimitOptions = [initialCountToDisplay, initialCountToDisplay * 2, initialCountToDisplay * 3];
+    const initialCountToDisplay = 150;
+    const itemsCountPerScroll = 50;
     const vm = {
         logs: [],
         selectedLog: null,
-        currentPage: 1,
+        logsToDisplay: [],
 
         getFullLogMessage,
         switchMoreLess,
         copyLogLine,
         switchLogSelection,
-        onPageChange,
         $onInit() {
-            initFirstLastIndexes();
-            readStoredCountToDisplay();
+            lastIndex = initialCountToDisplay > vm.logs.length ? vm.logs.length - 1 : initialCountToDisplay;
+            vm.logsToDisplay = vm.logs.slice(0, lastIndex);
         },
-
-        get countPerPage() { return  selectedCountToDisplay; },
-        set countPerPage(newCount) {
-            selectedCountToDisplay = newCount;
-            storeCountToDisplay();
-        },
-        get logsToDisplay() {
-            if (!this.logs) {
-                return [];
-            }
-
-            return this.logs.slice(firstIndex, lastIndex);
-        },
-        get limitOptions() {  return !windowWidthService.isMobile() ? defaultLimitOptions : false; },
+        onInfiniteScroll,
     };
-
-    function initFirstLastIndexes() {
-        firstIndex = 0;
-        lastIndex = initialCountToDisplay;
-    }
-
-    function readStoredCountToDisplay() {
-        if (localStorage.getItem('sessionLogsPerPage')) {
-            selectedCountToDisplay = parseInt(localStorage.getItem('sessionLogsPerPage'), 10);
-        }
-    }
-
-    function storeCountToDisplay() {
-        localStorage.setItem('sessionLogsPerPage', selectedCountToDisplay);
-    }
 
     function getFullLogMessage(log) {
         return log.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ *(\r?\n|\r)/g, '<br/>').replace(/\s/g, '&nbsp;');
-    }
-
-    function onPageChange() {
-        updateFirstLastIndexes();
-    }
-
-    function updateFirstLastIndexes() {
-        const newFirstIndex = (vm.currentPage - 1) * vm.countPerPage;
-        let newLastIndex = newFirstIndex + vm.countPerPage;
-
-        firstIndex = newFirstIndex;
-        lastIndex = newLastIndex;
     }
 
     function switchMoreLess(e, log) {
@@ -104,6 +60,21 @@ const testLogTableController = function testLogTableController(
         } else {
             vm.selectedLog = log;
         }
+    }
+
+    function onInfiniteScroll() {
+        // there is nothing to add
+        if (vm.logs.length <= lastIndex + 1) {
+            return;
+        }
+
+        const newLastIndex = lastIndex + itemsCountPerScroll;
+
+        $timeout(() => {
+            lastIndex = newLastIndex < vm.logs.length ? newLastIndex : vm.logs.length - 1;
+            vm.logsToDisplay = vm.logs.slice(0, lastIndex);
+        }, 0);
+
     }
 
     return vm;

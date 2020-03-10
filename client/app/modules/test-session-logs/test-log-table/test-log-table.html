@@ -1,4 +1,7 @@
-<table class="table table-striped test-log-table">
+<table class="table table-striped test-log-table"
+    infinite-scroll
+    scrollable-elem="{{$ctrl.scrollableElemSelector}}"
+    scroll-cb="$ctrl.onInfiniteScroll()">
     <thead>
     <tr class="test-log-table__row _header">
         <th class="test-log-table__col _visuals" ng-if="$ctrl.withVisuals">Visuals</th>
@@ -59,24 +62,6 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
-        </td>
-    </tr>
-    <tr ng-repeat-end
-        class="table-pagination">
-        <td class="no-padding"
-            ng-attr-colspan="{{$ctrl.withVisuals ? 5 : 4}}">
-            <md-table-pagination
-                id="pagination"
-                zafira-background-theme="pagination"
-                ng-if="$ctrl.logs.length && $ctrl.logs.length > $ctrl.countPerPage"
-                md-limit="$ctrl.countPerPage"
-                md-limit-options="$ctrl.limitOptions"
-                md-label="{rowsPerPage: 'Items per page:'}"
-                md-page="$ctrl.currentPage"
-                md-total="{{$ctrl.logs.length}}"
-                md-page-select=false
-                md-boundary-links=true
-                md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
         </td>
     </tr>
     </tbody>
