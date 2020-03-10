@@ -66,8 +66,13 @@
                                             <td data-title="Username" md-cell>
                                                 <b name="userUsername">{{user.username}}</b>
                                             </td>
-                                            <td data-title="Email" name="userEmail" md-cell>{{user.email}}</td>
-                                            <td data-title="First/Last name" name="userFirstLastName" md-cell>{{user.firstName}} {{user.lastName}}</td>
+                                            <td class="table-row-email" data-title="Email" name="userEmail" md-cell>{{user.email}}</td>
+                                            <td class="table-row-name" data-title="First/Last name" name="userFirstLastName" md-cell>
+                                                <div class="table-row-name-wrapper">
+                                                    <span class="row-name-content">{{user.firstName}}</span>
+                                                    <span class="row-name-content">{{user.lastName}}</span>
+                                                </div>
+                                            </td>
                                             <td data-title="Status" md-cell>
                                                 <span name="status" ng-class="{'text-success': user.status == 'ACTIVE', 'text-error': user.status == 'INACTIVE'}" class="label">{{ user.status}}</span>
                                             </td>

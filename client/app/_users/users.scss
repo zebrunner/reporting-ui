@@ -1,0 +1,31 @@
+@import '../../styles/global/var';
+
+.page-wrapper {
+    .page {
+        .ui-section {
+            .users-table{
+                width: 100%;
+                table-layout: fixed;
+            }
+
+            .table-row {
+                &-name {
+                    .row-name-content {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 100%;
+                        display: inline-block;
+                    }
+                }
+
+                &-name-wrapper {
+                    flex: auto;
+                    width: auto;
+                    min-width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+}
