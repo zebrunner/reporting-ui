@@ -28,7 +28,7 @@ const testsSessionsService = function testsSessionsService(
     };
 
     function refactorPlatformData(data) {
-        return [data.browserName.toLowerCase(), data.version];
+        return [data.browserName && data.browserName.toLowerCase(), data.version];
     }
 
     function searchSessions(params = lastParams) {

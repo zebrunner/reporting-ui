@@ -19,6 +19,7 @@ const testRunInfoController = function testRunInfoController(
     API_URL,
     $state,
     TestRunsStorage,
+    testsRunsService,
     TestService,
     $transitions,
     pageTitleService,
