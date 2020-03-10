@@ -4,7 +4,6 @@ import ImagesViewerController from '../../components/modals/images-viewer/images
 
 const testRunInfoController = function testRunInfoController(
     $scope,
-    $rootScope,
     $mdDialog,
     $interval,
     $filter,
@@ -13,7 +12,6 @@ const testRunInfoController = function testRunInfoController(
     $timeout,
     $q,
     elasticsearchService,
-    TestRunService,
     UtilService,
     ArtifactService,
     $stateParams,
@@ -21,6 +19,7 @@ const testRunInfoController = function testRunInfoController(
     API_URL,
     $state,
     TestRunsStorage,
+    testsRunsService,
     TestService,
     $transitions,
     pageTitleService,
@@ -42,7 +41,6 @@ const testRunInfoController = function testRunInfoController(
 
     vm.$onInit = controllerInit;
 
-    $scope.testRun = {};
     $scope.test = {};
     $scope.drivers = [];
     let logSizeCount = 0;
@@ -723,31 +721,6 @@ const testRunInfoController = function testRunInfoController(
         ArtifactService.resize(angular.element($scope.MODE.element)[0], rfb);
     };
 
-    /**************** Requests **************/
-    function getTestRun(id) {
-        return $q(function (resolve, reject) {
-            TestRunService.searchTestRuns({ id: id }).then(function (rs) {
-                if (rs.success && rs.data.results.length) {
-                    resolve(rs.data.results[0]);
-                } else {
-                    reject(rs.message);
-                }
-            });
-        });
-    };
-
-    function getTest(testRunId) {
-        return $q(function (resolve, reject) {
-            TestService.searchTests({ testRunId: testRunId, page: 1, pageSize: 100000 }).then(function (rs) {
-                if (rs.success && rs.data.results) {
-                    resolve(rs.data.results);
-                } else {
-                    reject(rs.message);
-                }
-            });
-        });
-    };
-
     /**************** On destroy **************/
     function bindEvents() {
         $scope.$on('$destroy', function () {
@@ -825,8 +798,8 @@ const testRunInfoController = function testRunInfoController(
     };
 
     function controllerInit() {
-        $scope.testRun = angular.copy(vm.testRun);
-        initTestsWebSocket($scope.testRun);
+        initTestsWebSocket(vm.testRun);
+        [vm.testRun.platformIcon, vm.testRun.platformVersion] = testsRunsService.refactorPlatformData(vm.testRun.config);
 
         const params = {
             'page': 1,
@@ -856,7 +829,7 @@ const testRunInfoController = function testRunInfoController(
 
         $scope.test = TestService.getTest(testId);
         if ($scope.test) {
-            SEARCH_CRITERIA = { 'correlation-id': $scope.testRun.ciRunId + '_' + $scope.test.ciTestId };
+            SEARCH_CRITERIA = { 'correlation-id': vm.testRun.ciRunId + '_' + $scope.test.ciTestId };
             ELASTICSEARCH_INDEX = buildIndex();
 
             setMode($scope.test.status === 'IN_PROGRESS' ? 'live' : 'record');

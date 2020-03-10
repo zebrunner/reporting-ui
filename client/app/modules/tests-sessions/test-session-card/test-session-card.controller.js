@@ -9,6 +9,7 @@ const testsSessionCardController = function testsSessionCardController(
     UtilService,
     $scope,
     messageService,
+    testsSessionsService,
 ) {
     'ngInject';
 
@@ -45,6 +46,7 @@ const testsSessionCardController = function testsSessionCardController(
     }
 
     function onInit() {
+        [vm.testSession.platformIcon, vm.testSession.platformVersion] = testsSessionsService.refactorPlatformData(vm.testSession);
         if ($stateParams.sessionId && $stateParams.sessionId === vm.testSession.sessionId) {
             highlightTestSession();
         }

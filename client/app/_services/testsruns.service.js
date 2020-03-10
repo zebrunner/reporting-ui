@@ -17,7 +17,6 @@
         return  {
             getSearchTypes: getSearchTypes,
             fetchTestRuns: fetchTestRuns,
-            addBrowserVersion: addBrowserVersion,
             getLastSearchParams: getLastSearchParams,
             isFilterActive: isFilterActive,
             isSearchActive: isSearchActive,
@@ -35,7 +34,28 @@
             deleteLauncherFromStorebyCiId: deleteLauncherFromStorebyCiId,
             addNewLauncher: addNewLauncher,
             checkForDestroyingLaunchersByTime: checkForDestroyingLaunchersByTime,
+            refactorPlatformData: refactorPlatformData,
         };
+
+        function refactorPlatformData(data) {
+            let item;
+            let itemVersion;
+
+            if (data.browser && (!data.platform || ((data.platform.toLowerCase() !== 'ios' && data.platform.toLowerCase() !== 'android')))) {
+                item = data.browser.toLowerCase();
+                itemVersion = data.browserVersion;
+            } else if (data.browser) {
+                item = `${data.browser.toLowerCase()}-mobile`;
+                itemVersion = data.browserVersion;
+            } else if (data.platform) {
+                item = data.platform.toLowerCase();
+                itemVersion = data.platformVersion;
+            } else {
+                item = 'unknown';
+            }
+
+            return [item, itemVersion];
+        }
 
         function getSearchTypes() {
             return searchTypes;
@@ -56,7 +76,6 @@
 
                         data.results = data.results || [];
                         data.results.forEach(function(testRun) {
-                            addBrowserVersion(testRun);
                             addJob(testRun);
                             testRun.tests = null;
                         });
@@ -93,16 +112,6 @@
 
         function getLastSearchParams() {
             return _lastParams;
-        }
-
-        function addBrowserVersion(testRun) {
-            let version = null;
-
-            if (testRun.config && testRun.config.browserVersion !== '*') {
-                version = testRun.config.browserVersion;
-            }
-
-            testRun.browserVersion = version;
         }
 
         function addJob(testRun) {
@@ -193,7 +202,6 @@
         }
 
         function addNewTestRun(testRun) {
-            addBrowserVersion(testRun);
             addJob(testRun);
             testRun.tests = null;
 

@@ -78,9 +78,8 @@
                                                             <tr>
                                                                 <td>Platform</td>
                                                                 <td>
-                                                                    <span data-ng-if="testRun.platform !== ''" class="platform-icon {{testRun.platform | lowercase}}"></span>
-                                                                    <span data-ng-if="testRun.platform === ''" class="platform-icon unknown"></span>
-                                                                    <span data-ng-if="testRun.browserVersion">{{ testRun.browserVersion }}</span>
+                                                                    <span ng-if="$ctrl.testRun.platformIcon" class="platform-icon {{$ctrl.testRun.platformIcon}}"></span>
+                                                                    <span ng-if="$ctrl.testRun.platformVersion">{{$ctrl.testRun.platformVersion}}</span>
                                                                 </td>
                                                             </tr>
                                                             </tbody>

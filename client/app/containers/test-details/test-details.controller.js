@@ -134,7 +134,7 @@ const testDetailsController = function testDetailsController(
         initIntersectionObserver();
         initWebsocket();
         initTests();
-        fillTestRunMetadata();
+        initJobMetadata();
         bindEvents();
         vm.testRun.downloadArtifacts = downloadArtifacts;
     }
@@ -495,11 +495,6 @@ const testDetailsController = function testDetailsController(
                     messageService.error('Failed to add event test "' + test.id);
                 }
             });
-    }
-
-    function fillTestRunMetadata() {
-        testsRunsService.addBrowserVersion(vm.testRun);
-        initJobMetadata();
     }
 
     function initJobMetadata() {

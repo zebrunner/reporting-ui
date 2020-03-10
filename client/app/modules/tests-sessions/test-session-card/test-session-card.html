@@ -41,9 +41,8 @@
                 <span class="label label-default" ng-if="$ctrl.testSession.status">{{$ctrl.testSession.status}}</span>
             </div>
             <div name="testSessionPlatform" class="test-session-card__cell _platform">
-                <span data-ng-if="$ctrl.testSession.browserName !== ''" class="platform-icon {{$ctrl.testSession.browserName | lowercase}}"></span>
-                <span data-ng-if="$ctrl.testSession.browserName === ''" class="platform-icon unknown"></span>
-                <span data-ng-if="$ctrl.testSession.version" class="label label-default">{{$ctrl.testSession.version}}</span>
+                <span ng-if="$ctrl.testSession.platformIcon" class="platform-icon {{$ctrl.testSession.platformIcon}}"></span>
+                <span ng-if="$ctrl.testSession.platformVersion" class="label label-default">{{$ctrl.testSession.platformVersion}}</span>
             </div>
             <div name="testSessionStarted" class="test-session-card__cell _date">
                 <div class="test-session-card__time _time">
