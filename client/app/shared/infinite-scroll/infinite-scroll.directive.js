@@ -57,15 +57,15 @@ const infiniteScrollDirective = function (
             function bindScrollWatchEvents(isBind) {
                 const addRemove = isBind ? 'addEventListener' : 'removeEventListener';
 
-                scrollableElem[ addRemove ]('scroll', onScroll);
-                $window[ addRemove ]('resize', onScroll);
+                scrollableElem[addRemove]('scroll', onScroll);
+                $window[addRemove]('resize', onScroll);
             }
 
             function throttle(fn, threshold = 200) {
                 let last, timeout;
 
                 return function(...args) {
-                    let now = +new Date();
+                    let now = Date.now();
                     const trigger = function() {
                         last = now;
                         fn.apply( this, args );
