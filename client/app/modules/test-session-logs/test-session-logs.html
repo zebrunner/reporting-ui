@@ -64,9 +64,8 @@
                                                     <tr>
                                                         <td>Platform</td>
                                                         <td>
-                                                            <span ng-if="$ctrl.testSession.browserName !== ''" class="platform-icon {{$ctrl.testSession.browserName | lowercase}}"></span>
-                                                            <span ng-if="$ctrl.testSession.browserName === ''" class="platform-icon unknown"></span>
-                                                            <span ng-if="$ctrl.testSession.version">{{ $ctrl.testSession.version }}</span>
+                                                            <span ng-if="$ctrl.testSession.platformIcon" class="platform-icon {{$ctrl.testSession.platformIcon}}"></span>
+                                                            <span ng-if="$ctrl.testSession.platformVersion">{{$ctrl.testSession.platformVersion}}</span>
                                                             <span ng-if="$ctrl.testSession.osName"> ({{ $ctrl.testSession.osName }})</span>
                                                         </td>
                                                     </tr>

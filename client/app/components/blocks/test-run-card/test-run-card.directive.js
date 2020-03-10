@@ -443,23 +443,7 @@
 
                 function normalizePlatformData() {
                     if (vm.testRun.config) {
-                        // it is a platform
-                        if (vm.testRun.config.platform && !vm.testRun.config.browser) {
-                            vm.testRun.platformIcon = vm.testRun.config.platform.toLowerCase();
-                            vm.testRun.platformVersion = vm.testRun.config.platformVersion;
-                        }
-                        // it is a browser
-                        else if (vm.testRun.config.browser && !vm.testRun.config.platform) {
-                            vm.testRun.platformIcon = vm.testRun.config.browser.toLowerCase();
-                            vm.testRun.platformVersion = vm.testRun.config.browserVersion;
-                        }
-                        // it is a mobile browser
-                        else if (vm.testRun.config.browser && vm.testRun.config.platform) {
-                            vm.testRun.platformIcon = `${vm.testRun.config.browser.toLowerCase()}-mobile`;
-                            vm.testRun.platformVersion = vm.testRun.config.browserVersion;
-                        } else {
-                            vm.testRun.platformIcon = 'unknown';
-                        }
+                        [vm.testRun.platformIcon, vm.testRun.platformVersion] = testsRunsService.refactorPlatformData(vm.testRun.config);
                     }
                 }
             },

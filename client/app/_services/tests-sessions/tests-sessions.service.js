@@ -5,7 +5,6 @@ const testsSessionsService = function testsSessionsService(
     API_URL,
     $httpParamSerializer,
     UtilService,
-    moment,
 ) {
     'ngInject';
 
@@ -22,10 +21,15 @@ const testsSessionsService = function testsSessionsService(
         resetCachedParams,
         fetchAdditionalSearchParams,
         getSessionById,
+        refactorPlatformData,
 
         get activeParams() { return lastParams; },
         set activeParams(newSC) { lastParams = newSC; return true; },
     };
+
+    function refactorPlatformData(data) {
+        return [data.browserName.toLowerCase(), data.version];
+    }
 
     function searchSessions(params = lastParams) {
         service.activeParams = params;

@@ -1,11 +1,9 @@
 'use strict';
 
 const testSessionLogsController = function testsSessionsController(
-    $q,
     windowWidthService,
     testSessionLogsService,
     testsSessionsService,
-    messageService,
     $transitions,
     $state,
     moment,
@@ -39,6 +37,7 @@ const testSessionLogsController = function testsSessionsController(
     return vm;
 
     function init() {
+        [vm.testSession.platformIcon, vm.testSession.platformVersion] = testsSessionsService.refactorPlatformData(vm.testSession);
         const testName = vm.testSession.testName ? vm.testSession.testName : 'Untitled';
 
         vm.videoURL = testSessionLogsService.getSessionVideoURL(vm.testSession.sessionId);
