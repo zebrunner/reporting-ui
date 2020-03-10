@@ -1,28 +1,20 @@
-.page-wrapper {
-    .page {
-        .ui-section {
-            .users-table{
-                width: 100%;
-                table-layout: fixed;
-            }
+.users-table {
+    width: 100%;
+    table-layout: fixed;
 
-            .table-row {
-                &-name {
-                    .row-name-content {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 100%;
-                        display: inline-block;
-                    }
-                }
-
-                &-name-wrapper {
-                    flex: auto;
-                    width: auto;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-            }
+    &-row {
+        &._name-wrapper {
+            flex: auto;
+            width: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        &._name-content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: inline-block;
         }
     }
 }
