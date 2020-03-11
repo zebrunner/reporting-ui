@@ -668,7 +668,7 @@
                     url: '/welcome',
                     component: 'welcomePageComponent',
                     data: {
-                        title: 'Welcome, let’s begin',
+                        title: 'Welcome, let\'s begin',
                         requireLogin: true,
                     },
                     redirectTo: ($transition$) => {
