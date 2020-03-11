@@ -243,9 +243,9 @@
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
-                <div class="ci-runner-container_content_title_action">
-                    <i ng-click="toEditLauncher(launcher);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons hide-phone">edit</i>
-                </div>
+                <span class="ci-runner-container_content_title_action">
+                    <i ng-click="toEditLauncher(launcher);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons hide-phone">settings</i>
+                </span>
             </div>
             <div class="ci-runner-container__scrollable">
                 <div class="ci-runner-container__providers">
@@ -281,7 +281,7 @@
                     <div class="ci-runner-container__platforms-controls"
                         ng-if="$ctrl.platformControls.length">
                         <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
-                            ng-repeat="platformControl in $ctrl.platformControls track by $index">
+                            ng-repeat="platformControl in $ctrl.platformControls">
                             <div class="zf-label" flex="none">
                                 <show-part text="platformControl.label" limit="30">
                                     <md-tooltip md-direction="top">{{platformControl.label}}</md-tooltip>
@@ -317,7 +317,7 @@
                 </div>
                 <div class="ci-runner-container_content_builder">
                     <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
-                        ng-repeat="(key, item) in jsonModel track by $index">
+                        ng-repeat="(key, item) in jsonModel">
                         <div class="zf-label" flex="none">
                             <show-part text="key" limit="25">
                                 <md-tooltip md-direction="top">{{key}}</md-tooltip>
