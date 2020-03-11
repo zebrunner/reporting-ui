@@ -15,12 +15,13 @@ import 'angular-ui-ace';
 import './access-key-modal.scss';
 
 const AccessKeyModalController = function AccessKeyModalController(
-    $mdDialog,
-    jsonConfigsService,
-    toolsService,
-    messageService,
-    $timeout,
     $q,
+    $mdDialog,
+    $timeout,
+    jsonConfigsService,
+    messageService,
+    testsSessionsService,
+    toolsService,
 ) {
     'ngInject';
 
@@ -51,7 +52,7 @@ const AccessKeyModalController = function AccessKeyModalController(
         selectLanguageOnChipsInit,
         onLanguageSelect,
         onPlatformSelect,
-        // refreshAccessUrl,
+        refreshAccessUrl,
         copyAccessUrl,
         onCodeCopy,
         $onInit: init,
@@ -164,9 +165,24 @@ const AccessKeyModalController = function AccessKeyModalController(
             });
     }
 
-    // function refreshAccessUrl() {
-    //     // TODO: will be implemented later
-    // }
+    function refreshAccessUrl() {
+        if (confirm('Your current access key will be revoked and you’ll have to change Selenium URL in your code. Do you want to proceed?')) {
+            toolsService.getTools()
+                .then(tools => {
+                    if (tools['ZEBRUNNER']) {
+                        const zebrunnerIntegration = tools['ZEBRUNNER'][0];
+
+                        testsSessionsService.getNewAccessUrl(zebrunnerIntegration.integrationId)
+                            .then((res => {
+                                console.log(res);
+                                if (res.success) {
+
+                                }
+                            }));
+                    }
+                });
+        }
+    }
 
     function initAccessUrl() {
         if (!vm.accessSettings) { return; }
