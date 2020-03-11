@@ -100,7 +100,7 @@
                 </ul>
             </li>
             <li class="main-nav__list-item tests"
-                ng-class="{'active':$ctrl.$state.includes('tests')}">
+                ng-class="{'active':$ctrl.$state.includes('tests') || $ctrl.$state.includes('welcomePage')}">
                 <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="tests.default">
                     <i class="material-icons">play_circle_outline</i>
                     <span>{{$ctrl.currentUser.testsView}}</span>
