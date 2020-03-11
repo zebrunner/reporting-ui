@@ -1,0 +1,18 @@
+.users-table {
+    width: 100%;
+    table-layout: fixed;
+
+    &__row {
+        &._name-wrapper {
+            flex: auto;
+            min-width: 0;
+        }
+        
+        &._name-content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: inline-block;
+        }
+    }
+}
