@@ -2,12 +2,10 @@
     width: 100%;
     table-layout: fixed;
 
-    &-row {
+    &__row {
         &._name-wrapper {
             flex: auto;
-            width: auto;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            min-width: 0;
         }
         
         &._name-content {
