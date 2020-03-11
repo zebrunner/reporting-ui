@@ -51,7 +51,7 @@ const testsSessionsService = function testsSessionsService(
     }
 
     function getNewAccessUrl(integrationId) {
-        return $httpMock.get(`${API_URL}/api/tests/sessions/token/reset?${$httpParamSerializer({ integrationId })}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to refresh access URL'));
+        return $httpMock.get(`${API_URL}/api/tests/sessions/token/refresh?${$httpParamSerializer({ integrationId })}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to refresh access URL'));
     }
 
     return service;

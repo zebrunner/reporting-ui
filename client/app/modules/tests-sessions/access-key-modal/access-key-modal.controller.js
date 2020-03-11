@@ -166,7 +166,7 @@ const AccessKeyModalController = function AccessKeyModalController(
     }
 
     function refreshAccessUrl() {
-        if (confirm('Your current access key will be revoked and you’ll have to change Selenium URL in your code. Do you want to proceed?')) {
+        if (vm.accessUrl && confirm('Your current access key will be revoked and you’ll have to change Selenium URL in your code. Do you want to proceed?')) {
             toolsService.getTools()
                 .then(tools => {
                     if (tools['ZEBRUNNER']) {
@@ -174,9 +174,15 @@ const AccessKeyModalController = function AccessKeyModalController(
 
                         testsSessionsService.getNewAccessUrl(zebrunnerIntegration.integrationId)
                             .then((res => {
-                                console.log(res);
-                                if (res.success) {
+                                if (res.success && res.data?.token) {
+                                    try {
+                                        const url = new URL(vm.accessUrl);
 
+                                        url.password = res.data.token;
+                                        vm.accessUrl = url.href;
+                                    } catch (error) {
+                                        messageService.error('Unable to refresh Access URL');
+                                    }
                                 }
                             }));
                     }
