@@ -14,7 +14,6 @@ export default function welcomePageController (
         showSessionsCardContent: false,
 
         get currentTitle() { return pageTitleService.pageTitle },
-        get currentUser() { return UserService.currentUser; },
         get isMobile() { return windowWidthService.isMobile(); },
     }
 
