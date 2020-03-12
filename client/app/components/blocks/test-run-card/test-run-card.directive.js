@@ -442,9 +442,7 @@
                 }
 
                 function normalizePlatformData() {
-                    if (vm.testRun.config) {
-                        [vm.testRun.platformIcon, vm.testRun.platformVersion] = testsRunsService.refactorPlatformData(vm.testRun.config);
-                    }
+                    [vm.testRun.platformIcon, vm.testRun.platformVersion] = testsRunsService.refactorPlatformData(vm.testRun.config);
                 }
             },
             scope: {
