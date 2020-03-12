@@ -28,6 +28,7 @@
                             ng-minlength="::UtilService.getValidationValue('name', 'minlength')"
                             ng-maxlength="::UtilService.getValidationValue('name', 'maxlength')"
                             ng-pattern="::UtilService.getValidationValue('name', 'pattern')"
+                            required
                         />
                         <div ng-messages="profile_form.firstName.$error">
                             <div ng-repeat="validation in UtilService.validations.name" ng-message="{{validation.name}}">
@@ -50,6 +51,7 @@
                             ng-minlength="::UtilService.getValidationValue('name', 'minlength')"
                             ng-maxlength="::UtilService.getValidationValue('name', 'maxlength')"
                             ng-pattern="::UtilService.getValidationValue('name', 'pattern')"
+                            required
                         />
                         <div ng-messages="profile_form.lastName.$error">
                             <div ng-repeat="validation in UtilService.validations.name" ng-message="{{validation.name}}">
