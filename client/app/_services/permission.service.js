@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('PermissionService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', PermissionService])
+        .factory('PermissionService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', PermissionService])
 
-    function PermissionService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function PermissionService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.createPermission = createPermission;

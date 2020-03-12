@@ -170,21 +170,6 @@ body {
 
     }
 
-    &.sidebar-toggled {
-        > .main-container {
-            > .content-container {
-                .btn-check {
-                    display: inline-block;
-                    button {
-                        @media (max-width: $screen-phone) {
-                            display: inline-block;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     &.body-wide {
         > .main-container {
             > .content-container {

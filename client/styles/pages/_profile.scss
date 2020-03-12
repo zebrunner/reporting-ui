@@ -13,6 +13,7 @@
 
     .profile-img {
         padding-right: 16px;
+        flex: none;
         img {
             border-radius: 8px;
             max-width: 48px;
@@ -23,8 +24,27 @@
         }
     }
 
+    .profile-wrapper {
+        flex: auto;
+        min-width: 0;
+    }
+
+    .profile-personal-content {
+        flex: auto;
+        min-width: 0;
+    }
+
     .profile-versions-info {
         margin-left: auto;
+        flex: none;
+    }
+
+    .profile-personal-name {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-right: 15px;
     }
 
     .profile-social {

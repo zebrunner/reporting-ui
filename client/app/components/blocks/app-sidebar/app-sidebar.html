@@ -1,34 +1,39 @@
 <aside id="nav-container" class="app-sidebar nav-container nav-vertical bg-dark">
     <div class="nav-wrapper" xmlns:font-size="http://www.w3.org/1999/xhtml">
-        <ul id="nav" class="nav" data-slim-scroll data-collapse-nav>
-            <li class="sidebar-menu-button bg-dark">
-                <a md-button  class="app-sidebar__link menu-btn toggle-min" toggle-nav-bottom aria-label="menu toggle-nul-collapsed-min">
-                    <i class="material-icons nav-menu-icon">menu</i>
-                    <i class="material-icons nav-close-icon">close</i>
-                </a>
+        <ul id="nav" class="nav main-nav__list" data-slim-scroll ng-click="$ctrl.handleMenuClick($event)">
+            <li class="main-nav__list-item sidebar-menu-button bg-dark mobile-switcher">
+                <md-button class="app-sidebar__link menu-btn nav-btn"
+                    ng-click="$ctrl.toggleMobileMenu()"
+                    aria-label="menu toggle-nul-collapsed-min">
+                    <i class="material-icons nav-menu-icon no-animate">menu</i>
+                    <i class="material-icons nav-close-icon no-animate">close</i>
+                </md-button>
             </li>
-            <li class="projects" toggle-menu>
-                <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="projects.list">
+            <li class="main-nav__list-item projects">
+                <md-button
+                    type="button"
+                    aria-label="menu"
+                    class="app-sidebar__link menu-btn nav-btn js-menu-toggle">
                     <div class="projects__selected">{{$ctrl.selectedProjectShortName}}</div>
-                    <div style="display: inline-block;">
+                    <div>
                         <profile-photo id="brandPhoto"
-                                        ng-model="$ctrl.companyLogo.value"
-                                        squared="8"
-                                        size="32"
-                                        auto-resize="false"
-                                        icon-visible="false">
+                            ng-model="$ctrl.companyLogo.value"
+                            squared="8"
+                            size="32"
+                            auto-resize="false"
+                            icon-visible="false">
                             <span ng-if="!$ctrl.companyLogo.value" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">flag</i></span>
                         </profile-photo>
                     </div>
-                </a>
-                <ul class="width-icon" toggle-nav-bottom>
+                </md-button>
+                <ul class="width-icon">
                     <li class="nav-controls search_close-button">
-                        <md-icon toggle-menu="close">close</md-icon>
+                        <md-icon class="nav-btn js-menu-close">close</md-icon>
                     </li>
                     <li class="sub-search search-menu">
                         <ul class="projects__wrapper">
-                            <li toggle-menu="close" id="createProject" has-any-permission="['MODIFY_PROJECTS']">
-                                <a class="nav__button zf-primary-button" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
+                            <li id="createProject" ng-if="$ctrl.userHasAnyPermission(['MODIFY_PROJECTS'])">
+                                <a class="nav__button zf-primary-button js-menu-close" ng-click="$ctrl.showProjectDialog()" aria-label="menu" href=""><i class="material-icons">add</i>Add project</a>
                             </li>
                             <li name="projectName" class="projects__list" md-prevent-menu-close>
                                 <md-radio-group ng-model="$ctrl.selectedProject" ng-change="$ctrl.chooseProject();">
@@ -43,29 +48,33 @@
                                             aria-label="project {{ ::project.id }}"
                                             class="projects__list-item md-primary"
                                             value="{{::project.id}}">{{::project.name}}</md-radio-button>
-                                        <span has-any-permission="['MODIFY_DASHBOARDS']" ng-if="project.name !== 'ALL' && project.name !== 'UNKNOWN'">
+                                        <span ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && project.name !== 'ALL' && project.name !== 'UNKNOWN'">
                                             <i class="material-icons menu-actor _delete show-icon-on-hover hide-tablet" ng-click="$ctrl.showDeleteModal(project)">delete_outline</i>
                                         </span>
                                     </div>
                                 </md-radio-group>
                             </li>
-                            <li toggle-menu="close" has-any-role="['ROLE_ADMIN']" class="nav__button _upload">
-                                <a ng-click="$ctrl.showUploadImageDialog($event)" href=""><i class="material-icons">add_circle_outline</i><span>Upload new logo</span></a>
+                            <li ng-if="$ctrl.userHasAnyRole(['ROLE_ADMIN'])" class="nav__button _upload">
+                                <a ng-click="$ctrl.showUploadImageDialog($event)" class="js-menu-close" href=""><i class="material-icons">add_circle_outline</i><span>Upload new logo</span></a>
                             </li>
                         </ul>
                     </li>
                 </ul>
-                </li>
-            <li toggle-menu ng-class="{'active':$ctrl.$state.includes('dashboard')}">
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="dashboard.list" data-ng-click="$ctrl.loadDashboards($event);">
+            </li>
+            <li class="main-nav__list-item dashboards" ng-class="{'active':$ctrl.$state.includes('dashboard')}">
+                <md-button
+                    type="button"
+                    aria-label="menu"
+                    class="app-sidebar__link menu-btn nav-btn js-menu-toggle"
+                    ng-click="$ctrl.loadDashboards($event);">
                     <i class="material-icons">equalizer</i><span>Boards</span>
-                </a>
+                </md-button>
                 <ul class="width-icon">
                     <li class="nav-controls search_close-button">
-                        <md-icon toggle-nav-bottom toggle-menu="close">close</md-icon>
+                        <md-icon class="nav-btn js-menu-close">close</md-icon>
                     </li>
-                    <li toggle-menu="close" has-any-permission="['MODIFY_DASHBOARDS']" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
-                        <a class="nav__button zf-primary-button" aria-label="menu" href="" data-ng-click="$ctrl.showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
+                    <li ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && !$ctrl.isMobile" class="nav-controls hide-phone">
+                        <a class="nav__button zf-primary-button js-menu-close" aria-label="menu" href="" ng-click="$ctrl.showDashboardSettingsModal($event, {}, true)"><i class="material-icons">add</i>Add dashboard</a>
                     </li>
                     <li class="sub-search nav-search">
                         <md-input-container class="no-margin _search _light">
@@ -77,11 +86,11 @@
                     </li>
                     <li class="sub-search search-menu">
                         <ul class="dashboards___list_wrapper" ui-sortable="$ctrl.dashboardSortableOptions" ng-model="$ctrl.dashboardList">
-                            <li toggle-nav-bottom data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy: 'position' | filter:navSC track by dashboard.id" ui-sref-active="active" class="show-on-hover">
-                                <span has-any-permission="['MODIFY_DASHBOARDS']" ng-if="$ctrl.dashboardList.length > 1">
+                            <li data-ng-repeat="dashboard in $ctrl.dashboardList | orderBy: 'position' | filter:navSC track by dashboard.id" ui-sref-active="active" class="show-on-hover">
+                                <span ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && $ctrl.dashboardList.length > 1">
                                     <i class="material-icons show-icon-on-hover menu-actor _drag hide-tablet" ng-mouseup="$ctrl.activateSorter(false)" ng-mousedown="$ctrl.activateSorter(true)">drag_indicator</i>
                                 </span>
-                                <a toggle-menu="close" md-button aria-label="menu" class="show-part" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
+                                <a md-button aria-label="menu" class="show-part" ui-sref="dashboard.page({ dashboardId: dashboard.id })">
                                     <span class="menu-link__text">{{::dashboard.title}}</span>
                                     <i data-ng-if="dashboard.hidden" class="material-icons _right _dark">visibility_off</i>
                                 </a>
@@ -90,22 +99,29 @@
                     </li>
                 </ul>
             </li>
-            <li ng-class="{'active':$ctrl.$state.includes('tests.sessions') || $ctrl.$state.includes('tests.runs')}" toggle-nav-bottom>
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="tests.default">
+            <li class="main-nav__list-item tests"
+                ng-class="{'active':$ctrl.$state.includes('tests') || $ctrl.$state.includes('welcomePage')}">
+                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="tests.default">
                     <i class="material-icons">play_circle_outline</i>
                     <span>{{$ctrl.currentUser.testsView}}</span>
                 </a>
             </li>
-            <li has-any-permission="['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS']" toggle-menu ui-sref-active="active">
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="views" data-ng-click="$ctrl.loadViews($event);">
+            <li class="main-nav__list-item views"
+                ng-if="$ctrl.userHasAnyPermission(['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS'])"
+                ui-sref-active="active">
+                <md-button
+                    type="button"
+                    aria-label="menu"
+                    class="app-sidebar__link menu-btn nav-btn js-menu-toggle"
+                    ng-click="$ctrl.loadViews($event);">
                     <i class="material-icons">remove_red_eye</i><span>Views</span>
-                </a>
+                </md-button>
                 <ul class="width-icon">
                     <li class="nav-controls search_close-button">
-                        <md-icon toggle-nav-bottom toggle-menu="close">close</md-icon>
+                        <md-icon class="nav-btn js-menu-close">close</md-icon>
                     </li>
-                    <li toggle-menu="close" ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
-                        <a class="nav__button zf-primary-button" aria-label="menu" href="" data-ng-click="$ctrl.showViewDialog($event)"><i class="material-icons">add</i>Add view</a>
+                    <li ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
+                        <a class="nav__button zf-primary-button js-menu-close" aria-label="menu" href="" ng-click="$ctrl.showViewDialog($event)"><i class="material-icons">add</i>Add view</a>
                     </li>
                     <li class="sub-search nav-search">
                         <md-input-container class="no-margin _search _light">
@@ -117,43 +133,51 @@
                     </li>
                     <li class="sub-search search-menu">
                         <ul>
-                            <li toggle-nav-bottom data-ng-repeat="view in $ctrl.views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="views({ id: view.id })" class="show-part">
+                            <li data-ng-repeat="view in $ctrl.views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
+                                <a md-button aria-label="menu" ui-sref="views({ id: view.id })" class="show-part">
                                     <span class="menu-link__text">{{::view.name}}</span>
                                 </a>
                                 <span class="edit show-icon-on-hover">
-                                    <i style="font-size: 14px;" class="material-icons" toggle-menu="close" data-ng-click="$ctrl.showViewDialog($event, view)" has-any-permission="['MODIFY_TEST_RUN_VIEWS']">edit</i>
+                                    <i style="font-size: 14px;"
+                                        class="material-icons"
+                                        data-ng-click="$ctrl.showViewDialog($event, view)"
+                                        ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUN_VIEWS'])">edit</i>
                                 </span>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </li>
-            <li has-any-role="['ROLE_ADMIN']" ng-class="{'active':$ctrl.$state.includes('users')}" toggle-menu>
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="users.list"  has-any-permission="['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS']">
+            <li class="main-nav__list-item users"
+                ng-if="$ctrl.userHasAnyRole(['ROLE_ADMIN']) && $ctrl.userHasAnyPermission(['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS'])"
+                ng-class="{'active':$ctrl.$state.includes('users')}">
+                <md-button
+                    type="button"
+                    aria-label="menu"
+                    class="app-sidebar__link menu-btn nav-btn js-menu-toggle">
                     <i class="material-icons">supervisor_account</i>
                     <span>Users</span>
-                </a>
+                </md-button>
                 <ul class="width-icon">
                     <li class="nav-controls search_close-button">
-                        <md-icon toggle-menu="close">close</md-icon>
+                        <md-icon class="nav-btn js-menu-close">close</md-icon>
                     </li>
                     <li class="sub-search search-menu">
                         <ul>
-                            <li toggle-nav-bottom style="position: relative;" ui-sref-active="active" has-any-permission="['MODIFY_USERS', 'VIEW_USERS']">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.list" class="show-part">
+                            <li style="position: relative;" ui-sref-active="active" ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS', 'VIEW_USERS'])">
+                                <a md-button aria-label="menu" ui-sref="users.list" class="show-part nav-btn">
                                     <i class="material-icons">account_circle</i>
                                     <span>Users</span>
                                 </a>
                             </li>
-                            <li toggle-nav-bottom style="position: relative;" ui-sref-active="active" has-any-permission="['MODIFY_USER_GROUPS']">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.groups" class="show-part">
+                            <li style="position: relative;" ui-sref-active="active" ng-if="$ctrl.userHasAnyPermission(['MODIFY_USER_GROUPS'])">
+                                <a md-button aria-label="menu" ui-sref="users.groups" class="show-part nav-btn">
                                     <i class="material-icons">people</i>
                                     <span>Groups</span>
                                 </a>
                             </li>
-                            <li toggle-nav-bottom style="position: relative;" ui-sref-active="active" has-any-permission="['INVITE_USERS', 'MODIFY_INVITATIONS']">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="users.invitations" class="show-part">
+                            <li style="position: relative;" ui-sref-active="active" ng-if="$ctrl.userHasAnyPermission(['INVITE_USERS', 'MODIFY_INVITATIONS'])">
+                                <a md-button aria-label="menu" ui-sref="users.invitations" class="show-part nav-btn">
                                     <i class="material-icons">person_add</i>
                                     <span>Invitations</span>
                                 </a>
@@ -162,89 +186,88 @@
                     </li>
                 </ul>
             </li>
-            <li ui-sref-active="active" toggle-nav-bottom>
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="integrations" has-any-permission="['VIEW_INTEGRATIONS']">
+            <li class="main-nav__list-item integrations" ui-sref-active="active">
+                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="integrations" ng-if="$ctrl.userHasAnyPermission(['VIEW_INTEGRATIONS'])">
                     <i class="material-icons">settings_input_component</i>
                     <span>Integrations</span>
                 </a>
             </li>
-            <li ui-sref-active="active" toggle-nav-bottom ng-repeat="menuItem in $ctrl.menuItems track by menuItem.name">
-                <a md-button class="app-sidebar__link" aria-label="menu" ui-sref="{{menuItem.state}}">
+            <li class="main-nav__list-item dynamic"
+                ui-sref-active="active"
+                ng-repeat="menuItem in $ctrl.menuItems track by menuItem.name">
+                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="{{menuItem.state}}">
                     <i class="material-icons">{{menuItem.icon}}</i>
                     <span>{{menuItem.name}}</span>
                 </a>
             </li>
-            <li style="flex-grow: 1"></li>
-            <li class="profile" ng-class="{'active':$ctrl.$state.includes('userProfile')}" toggle-menu>
-                <a md-button aria-label="menu" class="app-sidebar__link" ui-sref="userProfile">
+            <li class="main-nav__list-item _empty" style="flex-grow: 1"></li>
+            <li class="main-nav__list-item profile" ng-class="{'active':$ctrl.$state.includes('userProfile')}">
+                <md-button
+                    type="button"
+                    aria-label="menu"
+                    class="app-sidebar__link menu-btn nav-btn js-menu-toggle">
                     <div>
                         <profile-photo ng-model="$ctrl.currentUser.photoURL"
-                                       squared="8"
-                                       size="32"
-                                       icon-visible="false"
-                                       auto-resize="false">
+                            squared="8"
+                            size="32"
+                            icon-visible="false"
+                            auto-resize="false">
                             <span ng-if="!$ctrl.currentUser.photoURL" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">person</i></span>
                         </profile-photo>
                     </div>
-                </a>
+                </md-button>
                 <ul class="width-icon">
                     <li class="nav-controls search_close-button">
-                        <md-icon toggle-menu="close">close</md-icon>
+                        <md-icon class="js-menu-close">close</md-icon>
                     </li>
                     <li class="sub-search search-menu">
                         <ul class="profile__wrapper">
-                            <li toggle-nav-bottom style="position: relative;">
-                                <a toggle-menu="close" md-button aria-label="menu" ui-sref="userProfile" class="show-part">
+                            <li style="position: relative;">
+                                <a md-button aria-label="menu" ui-sref="userProfile" class="show-part">
                                     <i class="material-icons">person</i>
                                     <span>Account & profile</span>
                                 </a>
                             </li>
-                            <li toggle-nav-bottom style="position: relative;"
+                            <li style="position: relative;"
                                 ng-repeat="subitem in $ctrl.getSubitems('profile') track by subitem.name"
                                 ng-class="subitem.className">
-                                <a ng-if="subitem.permissions && subitem.linkType === 'internal'"
-                                   toggle-menu="close"
-                                   has-any-permission="{{ subitem.permissions | json }}"
-                                   md-button
-                                   aria-label="menu"
-                                   ui-sref="{{ subitem.link }}"
-                                   class="show-part">
+                                <a ng-if="subitem.permissions && $ctrl.userHasAnyPermission(subitem.permissions) && subitem.linkType === 'internal'"
+                                    md-button
+                                    aria-label="menu"
+                                    ui-sref="{{ subitem.link }}"
+                                    class="show-part">
                                     <i ng-if="subitem.matIcon" class="material-icons">{{ subitem.matIcon }}</i>
                                     <span>{{ subitem.title }}</span>
                                 </a>
-                                <a ng-if="subitem.permissions && subitem.linkType === 'external'"
-                                   toggle-menu="close"
-                                   has-any-permission="{{ subitem.permissions | json }}"
-                                   md-button
-                                   aria-label="menu"
-                                   ng-href="{{subitem.link}}"
-                                   type="_blank"
-                                   class="show-part">
+                                <a ng-if="subitem.permissions && $ctrl.userHasAnyPermission(subitem.permissions) && subitem.linkType === 'external'"
+                                    md-button
+                                    aria-label="menu"
+                                    ng-href="{{subitem.link}}"
+                                    type="_blank"
+                                    class="show-part js-menu-close">
                                     <i ng-if="subitem.matIcon" class="material-icons">{{ subitem.matIcon }}</i>
                                     <span>{{ subitem.title }}</span>
                                 </a>
                                 <a ng-if="!subitem.permissions && subitem.linkType === 'internal'"
-                                   toggle-menu="close"
-                                   md-button
-                                   aria-label="menu"
-                                   ui-sref="{{ subitem.link }}"
-                                   class="show-part">
+                                    md-button
+                                    aria-label="menu"
+                                    ui-sref="{{ subitem.link }}"
+                                    class="show-part">
                                     <i ng-if="subitem.matIcon" class="material-icons">{{ subitem.matIcon }}</i>
                                     <span>{{ subitem.title }}</span>
                                 </a>
                                 <a ng-if="!subitem.permissions && subitem.linkType === 'external'"
-                                   toggle-menu="close"
-                                   md-button
-                                   aria-label="menu"
-                                   ng-href="{{subitem.link}}"
-                                   type="_blank"
-                                   class="show-part">
+                                    md-button
+                                    aria-label="menu"
+                                    ng-href="{{subitem.link}}"
+                                    type="_blank"
+                                    class="show-part js-menu-close">
                                     <i ng-if="subitem.matIcon" class="material-icons">{{ subitem.matIcon }}</i>
                                     <span>{{ subitem.title }}</span>
                                 </a>
                             </li>
                             <li style="flex-grow: 1"></li>
-                            <li toggle-menu="close" class="nav__button _logout">
+                            <li class="nav__button _logout">
                                 <a ui-sref="logout"><i class="material-icons">exit_to_app</i><span>Logout</span></a>
                             </li>
                         </ul>

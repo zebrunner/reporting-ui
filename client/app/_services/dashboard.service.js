@@ -5,7 +5,13 @@
         .module('app.services')
         .service('DashboardService', DashboardService);
 
-    function DashboardService($httpMock, $cookies, $rootScope, $location, $q, UtilService, AuthService, $httpParamSerializer, API_URL) {
+    function DashboardService(
+        $httpMock,
+        $q,
+        UtilService,
+        authService,
+        API_URL,
+        ) {
 
         'ngInject';
 
@@ -140,20 +146,20 @@
         }
 
         function ExecuteWidgetSQL(params, sqlAdapter) {
-        	return $httpMock.post(API_URL + '/api/widgets/sql' + params, sqlAdapter).then(UtilService.handleSuccess, UtilService.handleError('Unable to execute SQL'));
+        	return $httpMock.post(API_URL + '/api/widgets/sql' + params, sqlAdapter).then(UtilService.handleSuccess, UtilService.handleError('Unable to load chart'));
         }
 
         function GetWidgetTemplates() {
             return $httpMock.get(API_URL + '/api/widgets/templates').then(UtilService.handleSuccess, UtilService.handleError('Unable to load widget templates'));
-        };
+        }
 
         function PrepareWidgetTemplate(id) {
             return $httpMock.get(API_URL + '/api/widgets/templates/' + id + '/prepare').then(UtilService.handleSuccess, UtilService.handleError('Unable to prepare widget template'));
-        };
+        }
 
         function ExecuteWidgetTemplateSQL(queryParams, sqlTemplateAdapter) {
             var url = UtilService.buildURL(API_URL + '/api/widgets/templates/sql', queryParams);
-            return $httpMock.post(url, sqlTemplateAdapter).then(UtilService.handleSuccess, UtilService.handleError('Unable to execute SQL'));
+            return $httpMock.post(url, sqlTemplateAdapter).then(UtilService.handleSuccess, UtilService.handleError('Unable to load chart'));
         }
 
         function RetrieveDashboards(hidden) {
@@ -179,11 +185,11 @@
                     });
                 }
             });
-        };
+        }
 
         function hasHiddenDashboardPermission(){
-            return AuthService.UserHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
-        };
+            return authService.userHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
+        }
 
     }
 })();

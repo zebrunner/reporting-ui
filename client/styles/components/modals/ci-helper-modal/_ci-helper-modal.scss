@@ -35,6 +35,19 @@
                     }
                 }
             }
+            &_title {
+                > span {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+                &_action {
+                    vertical-align: middle;
+                    i {
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
+                }
+            }
         }
         &__platforms {
             .warning-block {

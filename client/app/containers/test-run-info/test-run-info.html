@@ -8,7 +8,7 @@
         </zf-sub-header-button>
         <zf-sub-header-title class="_flex">
             <span class="testrun-info__title-name">{{ test.name }}</span>
-            <span class="testrun-info__title-name _mobile">Test details</span>
+            <span class="testrun-info__title-name _mobile">{{ $ctrl.currentTitle }}</span>
             <span class="recording-icon" ng-if="MODE.name == 'live'">
                     <div class="red-point" ng-class="{'flash-point': true}"></div>
                 </span>
@@ -75,12 +75,11 @@
                                                         </span>
                                                                 </td>
                                                             </tr>
-                                                            <tr>
+                                                            <tr ng-if="$ctrl.testRun.platformIcon || $ctrl.testRun.platformVersion">
                                                                 <td>Platform</td>
                                                                 <td>
-                                                                    <span data-ng-if="testRun.platform !== ''" class="platform-icon {{testRun.platform | lowercase}}"></span>
-                                                                    <span data-ng-if="testRun.platform === ''" class="platform-icon unknown"></span>
-                                                                    <span data-ng-if="testRun.browserVersion">{{ testRun.browserVersion }}</span>
+                                                                    <span ng-if="$ctrl.testRun.platformIcon" class="platform-icon {{$ctrl.testRun.platformIcon}}"></span>
+                                                                    <span ng-if="$ctrl.testRun.platformVersion">{{$ctrl.testRun.platformVersion}}</span>
                                                                 </td>
                                                             </tr>
                                                             </tbody>

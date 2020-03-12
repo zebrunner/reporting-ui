@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('InvitationService', ['$httpMock', '$cookies', '$rootScope', '$state', '$httpParamSerializer', 'UtilService', 'UserService', 'API_URL', InvitationService])
+        .factory('InvitationService', ['$httpMock', '$rootScope', '$state', '$httpParamSerializer', 'UtilService', 'UserService', 'API_URL', InvitationService])
 
-    function InvitationService($httpMock, $cookies, $rootScope, $state, $httpParamSerializer, UtilService, UserService, API_URL) {
+    function InvitationService($httpMock, $rootScope, $state, $httpParamSerializer, UtilService, UserService, API_URL) {
         let invitations = [];
         const service = {
             invite,

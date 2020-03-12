@@ -28,7 +28,7 @@
                             <div ng-message="duplicateKey">Duplicate title forbidden</div>
                         </div>
                     </md-input-container>
-                    <div class="dashboard-dialog-container_hidden" has-any-permission="['VIEW_HIDDEN_DASHBOARDS']">
+                    <div class="dashboard-dialog-container_hidden" ng-if="userHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS'])">
                         <div class="dashboard-dialog-container_hidden_label">Hidden</div>
                         <md-switch class="md-primary" ng-model="dashboard.hidden" ng-change="!dashboard.hidden" ng-required aria-label="integr-switch" ng-disabled="!isNew && !dashboard.editable"></md-switch>
                     </div>
@@ -72,7 +72,7 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <md-button has-any-permission="['MODIFY_DASHBOARDS']" id="delete" data-ng-if="! isNew && dashboard.editable" type="button" class="md-warn"
+            <md-button id="delete" ng-if="userHasAnyPermission(['MODIFY_DASHBOARDS']) && !isNew && dashboard.editable" type="button" class="md-warn"
                        ng-disabled="dashboard_form.info.$invalid" data-ng-click="deleteDashboard(dashboard);">
                 Delete
             </md-button>

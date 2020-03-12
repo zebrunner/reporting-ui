@@ -5,7 +5,6 @@ const testsSessionsService = function testsSessionsService(
     API_URL,
     $httpParamSerializer,
     UtilService,
-    moment,
 ) {
     'ngInject';
 
@@ -22,10 +21,16 @@ const testsSessionsService = function testsSessionsService(
         resetCachedParams,
         fetchAdditionalSearchParams,
         getSessionById,
+        refactorPlatformData,
+        getNewAccessUrl,
 
         get activeParams() { return lastParams; },
         set activeParams(newSC) { lastParams = newSC; return true; },
     };
+
+    function refactorPlatformData(data) {
+        return [data.browserName && data.browserName.toLowerCase(), data.version];
+    }
 
     function searchSessions(params = lastParams) {
         service.activeParams = params;
@@ -43,6 +48,10 @@ const testsSessionsService = function testsSessionsService(
 
     function getSessionById(sessionId) {
         return $httpMock.get(`${API_URL}/api/tests/sessions/${sessionId}`).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch test session with ID: ${sessionId}`));
+    }
+
+    function getNewAccessUrl(integrationId) {
+        return $httpMock.get(`${API_URL}/api/tests/sessions/token/refresh?${$httpParamSerializer({ integrationId })}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to refresh access URL'));
     }
 
     return service;

@@ -56,7 +56,7 @@
                                         </md-input-container>
                                         <div id="filterState" class="filter-state">
                                             <label>Public</label>
-                                            <md-checkbox has-any-role="['ROLE_ADMIN']"
+                                            <md-checkbox ng-if="$ctrl.userHasAnyRole(['ROLE_ADMIN'])"
                                                 ng-model="$ctrl.filter.publicAccess" aria-label="public access"
                                                 data-ng-true-value="true" data-ng-false-value="false">
                                             </md-checkbox>

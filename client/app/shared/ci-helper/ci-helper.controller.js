@@ -18,7 +18,7 @@ const CiHelperController = function CiHelperController(
     LauncherService,
     UserService,
     ScmService,
-    AuthService,
+    authService,
     messageService,
     UtilService,
     API_URL,
@@ -33,7 +33,6 @@ const CiHelperController = function CiHelperController(
     let onAddNewGithubRepoClose; //TODO: seems like unused
     let zafiraWebsocket;
     let subscriptions = {};
-    const TENANT = $rootScope.globals.auth.tenant;
     const newGithubRepoCloseClass = 'zf-button-close';
     const newGithubRepoRevertCloseClass = 'zf-button-close-revert';
     const providersPriority =  {
@@ -63,7 +62,8 @@ const CiHelperController = function CiHelperController(
         selectProviderOnChipsInit,
         cancelFolderManaging,
         shouldBeDisplayed,
-        AuthService,
+        authService,
+        userHasAnyPermission: authService.userHasAnyPermission,
 
         get isMobile() { return windowWidthService.isMobile(); },
     };
@@ -240,14 +240,31 @@ const CiHelperController = function CiHelperController(
         $scope.jsonModel = launcher.model.toJson();
         angular.forEach($scope.jsonModel, function (value, key) {
             var type = $scope.getType(value);
-            var val = type === 'array' && value.length ? value[0] : value;
+            var val = type === 'array' && value.length ? value[0] : type === 'int' ? +value : value;
             $scope.builtLauncher.model[key] = val;
             $scope.builtLauncher.type[key] = type;
         });
     }
 
+    function isNumeric(value) {
+        return !isNaN(value - parseFloat(value));
+    }
+
+    function isString(value) {
+        return typeof value === 'string' || value instanceof String;
+    }
+
     $scope.getType = function (value) {
-        return angular.isArray(value) ? 'array' : typeof value === "boolean" ? 'boolean' : typeof value === 'string' || value instanceof String ? 'string' : Number.isInteger(value) ? 'int' : 'none';
+        if (angular.isArray(value)) {
+            return 'array';
+        } else if (typeof value === 'boolean') {
+            return 'boolean';
+        } else if (isNumeric(value)) {
+            return 'int';
+        } else if (isString(value)) {
+            return 'string';
+        }
+        return 'none';
     };
 
     $scope.getElement = function (item) {
@@ -717,7 +734,7 @@ const CiHelperController = function CiHelperController(
 
     function getTenantInfo() {
         return $q(function (resolve, reject) {
-            AuthService.getTenant().then(function (rs) {
+            authService.getTenant().then(function (rs) {
                 if (rs.success) {
                     resolve(rs.data);
                 } else {
@@ -840,6 +857,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.build = function (launcher, launcher_form) {
         if (launcher_form.$invalid) {
+            // TODO: display error message;
             Object.keys(launcher_form.$error).forEach(key => {
                 launcher_form.$error[key].forEach(errEl => errEl.$touched = true)
             });
@@ -895,7 +913,7 @@ const CiHelperController = function CiHelperController(
     };
 
     function subscribeLaunchersTopic() {
-        return zafiraWebsocket.subscribe('/topic/' + TENANT + '.launchers', function (data) {
+        return zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.launchers', function (data) {
             const event = getEventFromMessage(data.body);
             const success = event.success;
             const userId = event.userId;
@@ -1313,9 +1331,9 @@ const CiHelperController = function CiHelperController(
                 let providers = data.default || [];
 
                 //merge default and tenant specific providers
-                if (Array.isArray(data[TENANT])) {
+                if (Array.isArray(data[authService.tenant])) {
                     const defaultProviders = providers.reduce((out, provider) => {out[provider.id] = provider; return out;}, {});
-                    const specificProviders = data[TENANT].reduce((out, provider) => {out[provider.id] = provider; return out;}, {});
+                    const specificProviders = data[authService.tenant].reduce((out, provider) => {out[provider.id] = provider; return out;}, {});
                     const mergedProviders = {...defaultProviders, ...specificProviders};
 
                     providers = Object.values(mergedProviders);

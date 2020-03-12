@@ -27,6 +27,7 @@
             filterUsersForSend,
             isTouchDevice,
             handleDateFilter,
+            getValidationValue,
         };
 
         service.validations = {
@@ -93,20 +94,30 @@
             name: [
                 {
                     name: 'minlength',
-                    message: 'Must be between 2 and 50 characters'
+                    message: 'Must be between 1 and 100 characters',
+                    value: 1,
                 },
                 {
                     name: 'maxlength',
-                    message: 'Must be between 2 and 50 characters'
+                    message: 'Must be between 1 and 100 characters',
+                    value: 100,
                 },
                 {
                     name: 'pattern',
-                    message: 'Must have only latin letters'
+                    message: 'Name can only contain letters, numbers, dashes and dots.',
+                    value: /^[A-Za-z]+[0-9A-Za-z.-]*$/,
                 }
             ]
         };
 
         return service;
+
+        function getValidationValue(objName, propName) {
+            const validationsArray = service.validations[objName];
+            const item = validationsArray.find(item => item.name === propName);
+
+            return item ? item.value : null;
+        }
 
         function untouchForm(form) {
         	form.$setPristine();

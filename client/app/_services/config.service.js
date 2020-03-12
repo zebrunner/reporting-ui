@@ -3,18 +3,31 @@
 
     angular
         .module('app.services')
-        .factory('ConfigService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', ConfigService])
+        .factory('ConfigService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', ConfigService])
 
-    function ConfigService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function ConfigService($httpMock, $rootScope, UtilService, API_URL, $q) {
 
-        var service = {};
+        const data = {};
 
-        service.getConfig = getConfig;
+        return {
+            getConfig,
+        };
 
-        return service;
+        function getConfig(name, force) {
+            if (data[name] && !force) {
+                return $q.resolve(data[name]);
+            }
 
-        function getConfig(name) {
-            return $httpMock.get(API_URL + '/api/config/' + name).then(UtilService.handleSuccess, UtilService.handleError('Unable to get config "' + name + '"'));
+
+            return $httpMock.get(API_URL + '/api/config/' + name)
+                .then(res => {
+                    if (res.data) {
+                        data[name] = res.data;
+                    }
+
+                    return res;
+                })
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get config "' + name + '"'));
         }
     }
 })();

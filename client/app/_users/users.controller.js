@@ -5,14 +5,15 @@ import inviteUserModalCtrl from '../shared/modals/invitation-modal/invitation-mo
 
 const UsersController = function UserViewController(
     $scope,
-    $rootScope,
     $location,
     $state,
     $mdDialog,
+    authService,
     UserService,
     messageService,
     GroupService,
-    toolsService
+    toolsService,
+    pageTitleService,
 ) {
     'ngInject';
 
@@ -44,12 +45,14 @@ const UsersController = function UserViewController(
         showChangePasswordDialog: showChangePasswordDialog,
         showCreateUserDialog: showCreateUserDialog,
         showInviteUsersDialog,
+        userHasAnyPermission: authService.userHasAnyPermission,
         usersSearchCriteria: {},
         searchValue: {
             selectedRange: {
                 showTemplate: null
             }
         },
+        get currentTitle() { return pageTitleService.pageTitle; },
         get currentUser() { return UserService.currentUser; },
     };
 

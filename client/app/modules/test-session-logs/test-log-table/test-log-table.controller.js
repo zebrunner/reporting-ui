@@ -1,21 +1,28 @@
 'use strict';
 
-// TODO: Fix styles especially for small screens
-
 const testLogTableController = function testLogTableController(
-    messageService,
     $timeout,
+    messageService,
 ) {
     'ngInject';
 
+    let lastIndex;
+    const initialCountToDisplay = 150;
+    const itemsCountPerScroll = 50;
     const vm = {
         logs: [],
         selectedLog: null,
+        logsToDisplay: [],
 
         getFullLogMessage,
         switchMoreLess,
         copyLogLine,
         switchLogSelection,
+        $onInit() {
+            lastIndex = initialCountToDisplay > vm.logs.length ? vm.logs.length - 1 : initialCountToDisplay;
+            vm.logsToDisplay = vm.logs.slice(0, lastIndex);
+        },
+        onInfiniteScroll,
     };
 
     function getFullLogMessage(log) {
@@ -53,6 +60,21 @@ const testLogTableController = function testLogTableController(
         } else {
             vm.selectedLog = log;
         }
+    }
+
+    function onInfiniteScroll() {
+        // there is nothing to add
+        if (vm.logs.length <= lastIndex + 1) {
+            return;
+        }
+
+        const newLastIndex = lastIndex + itemsCountPerScroll;
+
+        $timeout(() => {
+            lastIndex = newLastIndex < vm.logs.length ? newLastIndex : vm.logs.length - 1;
+            vm.logsToDisplay = vm.logs.slice(0, lastIndex);
+        }, 0);
+
     }
 
     return vm;

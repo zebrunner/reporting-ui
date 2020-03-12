@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('CertificationService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', CertificationService])
+        .factory('CertificationService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', CertificationService])
 
-    function CertificationService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function CertificationService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.loadCertificationDetails = loadCertificationDetails;

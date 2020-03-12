@@ -6,14 +6,19 @@
         .provider('SettingProvider', SettingProvider);
 
     function SettingProvider() {
-        this.$get = function($cookies) {
+        this.$get = function() {
             'ngInject';
+
             return {
                 getCompanyLogoURl: function() {
-                    return $cookies.get('companyLogoURL');
+                    return localStorage.getItem('companyLogoURL');
                 },
                 setCompanyLogoURL: function(logoURL) {
-                    $cookies.put('companyLogoURL', logoURL);
+                    if (logoURL) {
+                        localStorage.setItem('companyLogoURL', logoURL);
+                    } else {
+                        localStorage.removeItem('companyLogoURL');
+                    }
                 },
             };
         };

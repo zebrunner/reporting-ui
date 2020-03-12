@@ -6,7 +6,9 @@
         </div>
 
         <div class="err-body">
-            <md-button ui-sref="home" class="md-raised md-primary">
+            <md-button ng-click="$ctrl.backToSystem()"
+                ng-disabled="$ctrl.isChecking"
+                class="md-raised md-primary">
                 Back to system
             </md-button>
         </div>

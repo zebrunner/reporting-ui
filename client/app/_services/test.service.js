@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('TestService', ['$httpMock', '$cookies', '$rootScope', 'UtilService', 'API_URL', TestService])
+        .factory('TestService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', TestService])
 
-    function TestService($httpMock, $cookies, $rootScope, UtilService, API_URL) {
+    function TestService($httpMock, $rootScope, UtilService, API_URL) {
         const local = {
             tests: null,
             previousUrl: null,
@@ -39,7 +39,7 @@
             service.locationChange = $rootScope.$on("$locationChangeStart", function (event, newUrl, oldUrl) {
                 local.previousUrl = oldUrl;
             })
-            
+
         }
 
         function getPreviousUrl() {

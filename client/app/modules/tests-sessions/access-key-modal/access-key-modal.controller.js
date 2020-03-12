@@ -15,12 +15,13 @@ import 'angular-ui-ace';
 import './access-key-modal.scss';
 
 const AccessKeyModalController = function AccessKeyModalController(
-    $mdDialog,
-    jsonConfigsService,
-    toolsService,
-    messageService,
-    $timeout,
     $q,
+    $mdDialog,
+    $timeout,
+    jsonConfigsService,
+    messageService,
+    testsSessionsService,
+    toolsService,
 ) {
     'ngInject';
 
@@ -51,7 +52,7 @@ const AccessKeyModalController = function AccessKeyModalController(
         selectLanguageOnChipsInit,
         onLanguageSelect,
         onPlatformSelect,
-        // refreshAccessUrl,
+        refreshAccessUrl,
         copyAccessUrl,
         onCodeCopy,
         $onInit: init,
@@ -164,9 +165,27 @@ const AccessKeyModalController = function AccessKeyModalController(
             });
     }
 
-    // function refreshAccessUrl() {
-    //     // TODO: will be implemented later
-    // }
+    function refreshAccessUrl() {
+        if (vm.accessUrl && confirm('Your current access key will be revoked and you’ll have to change Selenium URL in your code. Do you want to proceed?')) {
+            toolsService.getTools()
+                .then(tools => {
+                    if (tools['ZEBRUNNER']) {
+                        const zebrunnerIntegration = tools['ZEBRUNNER'][0];
+
+                        testsSessionsService.getNewAccessUrl(zebrunnerIntegration.integrationId)
+                            .then((res => {
+                                if (res.success && res.data?.token && vm.accessSettings) {
+                                    vm.accessSettings.ZEBRUNNER_PASSWORD = res.data.token;
+
+                                    if (initAccessUrl()) {
+                                       updateEditorModel();
+                                    }
+                                }
+                            }));
+                    }
+                });
+        }
+    }
 
     function initAccessUrl() {
         if (!vm.accessSettings) { return; }
@@ -182,6 +201,8 @@ const AccessKeyModalController = function AccessKeyModalController(
                 }
 
                 vm.accessUrl = url.href;
+
+                return true;
             } catch (error) {
                 messageService.error('Unable to init Access URL');
             }
@@ -315,8 +336,8 @@ const AccessKeyModalController = function AccessKeyModalController(
             childControl.items = vm.platformsConfig.data[key].filter(child => Array.isArray(data.variants) && data.variants.includes(child.id));
             defaultItem = getDefaultControl(childControl);
         }
+        childControl.onChange = onPlatformControlSelect;
         if (data.type === 'select') {
-            childControl.onChange = onPlatformControlSelect;
             if (defaultItem) {
                 vm.platformModel[key] = defaultItem;
                 if (data.versions) {
@@ -465,23 +486,40 @@ const AccessKeyModalController = function AccessKeyModalController(
     function replacePlaceholders(text, data) {
         return text.replace(/\${([^{}]*)}/g, function (selection, group) {
             let replacer;
+            let type = 'value'; // if type doesn't provided consider it as "value" type by default
+            let placeholders = '';
+            const splitGroup = group.split(':');
 
-            // keys in the group can contain several items separated by "|"
-            group.split('|').some(key => {
-                replacer = data[`capabilities.${key}`] || data[key];
+            // get type and/or placeholders from selection group
+            if (splitGroup.length > 1) {
+                [type, placeholders] = splitGroup;
+            } else {
+                placeholders = splitGroup[0];
+            }
 
-                // special handling for platformName
-                if (replacer && key === 'platformName') {
-                    if (replacer === '*') {
-                        replacer = 'any';
+            // keys in the placeholders can contain several items separated by "|"
+            placeholders.split('|').some(key => {
+                if (type === 'value') {
+                    replacer = data[`capabilities.${key}`] || data[key];
+
+                    // special handling for platformName
+                    if (replacer && key === 'platformName') {
+                        if (replacer === '*') {
+                            replacer = 'any';
+                        }
+                        replacer = replacer.toUpperCase();
                     }
-                    replacer = replacer.toUpperCase();
-                }
 
-                return !!replacer;
+                    return !!replacer;
+                } else if (type === 'key' && (data.hasOwnProperty(`capabilities.${key}`) || data.hasOwnProperty(key))) {
+                    replacer = key;
+
+                    return !!replacer;
+                }
             });
 
-            return replacer && (typeof replacer === 'string' || typeof replacer === 'number') ? replacer : selection;
+            // if no replacer instead of leave placeholder as is we return empty string
+            return replacer && (typeof replacer === 'string' || typeof replacer === 'number') ? replacer : '';
         });
     }
 

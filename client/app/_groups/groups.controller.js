@@ -3,10 +3,12 @@
 const GroupsController = function GroupsController(
     $scope,
     $mdDialog,
+    authService,
     UserService,
     GroupService,
     UtilService,
-    messageService
+    messageService,
+    pageTitleService,
     ) {
     'ngInject';
 
@@ -16,9 +18,11 @@ const GroupsController = function GroupsController(
         addUserToGroup: addUserToGroup,
         querySearch: querySearch,
         deleteUserFromGroup: deleteUserFromGroup,
+        userHasAnyPermission: authService.userHasAnyPermission,
         usersSearchCriteria: {},
         count: 0,
-        get groups() { return GroupService.groups; }
+        get groups() { return GroupService.groups; },
+        get currentTitle() { return pageTitleService.pageTitle; },
     };
 
     vm.$onInit = initController;

@@ -407,14 +407,17 @@ button.red {
     &.safari {
         background-image: url(../assets/images/_icons_platform/safari.svg);
     }
-    &.safari-mobile {
+    &.safari-mobile,
+    &.iphone-mobile,
+    &.ipad-mobile {
         background-image: url(../assets/images/_icons_platform/safari_mobile.svg);
     }
     &.chrome {
         background-image: url(../assets/images/_icons_platform/chrome.svg);
     }
 
-    &.chrome-mobile {
+    &.chrome-mobile,
+    &.android-mobile {
         background-image: url(../assets/images/_icons_platform/chrome_mobile.svg);
     }
     &.firefox {
@@ -949,6 +952,8 @@ ul.profile-image-actions {
     font-size: 16px;
     font-weight: normal;
     color: $dark-new;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /* Profile photo mask logic */

@@ -1,8 +1,20 @@
 'use strict';
 
-const TestsRunsFilterController = function TestsRunsFilterController($scope, FilterService, DEFAULT_SC, TestRunService, $q, ProjectService,
-                                       testsRunsService, UserService, $timeout, $mdDateRangePicker,
-                                       windowWidthService, messageService) {
+const TestsRunsFilterController = function TestsRunsFilterController(
+    $scope,
+    FilterService,
+    DEFAULT_SC,
+    TestRunService,
+    $q,
+    authService,
+    ProjectService,
+    testsRunsService,
+    UserService,
+    $timeout,
+    $mdDateRangePicker,
+    windowWidthService,
+    messageService,
+) {
     'ngInject';
 
     const subjectName = 'TEST_RUN';
@@ -89,6 +101,7 @@ const TestsRunsFilterController = function TestsRunsFilterController($scope, Fil
         selectFilterForEdit: selectFilterForEdit,
         onFilterSliceUpdate: onFilterSliceUpdate,
         onSelect: onSelect,
+        userHasAnyRole: authService.userHasAnyRole,
     };
 
     vm.$onInit = init;

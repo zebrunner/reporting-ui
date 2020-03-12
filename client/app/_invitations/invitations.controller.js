@@ -3,9 +3,16 @@
 import inviteUserModalTpl from '../shared/modals/invitation-modal/invitation-modal.html';
 import inviteUserModalCtrl from '../shared/modals/invitation-modal/invitation-modal.controller';
 
-const InvitationsController = function InvitationsController($scope, $rootScope, $location, $state, $mdDialog,
-                                                   UserService, GroupService, InvitationService,
-                                                   AuthService, toolsService, messageService) {
+const InvitationsController = function InvitationsController(
+    $location,
+    $mdDialog,
+    authService,
+    GroupService,
+    InvitationService,
+    toolsService,
+    messageService,
+    pageTitleService,
+) {
 
     'ngInject';
 
@@ -28,6 +35,9 @@ const InvitationsController = function InvitationsController($scope, $rootScope,
         search: search,
         reset: reset,
         copyLink: copyLink,
+        userHasAnyPermission: authService.userHasAnyPermission,
+
+        get currentTitle() { return pageTitleService.pageTitle; },
         get groups() {return GroupService.groups;},
     };
 

@@ -1,9 +1,22 @@
-const dashboardSettingsModalController = function dashboardSettingsModalController($scope, $mdDialog, $location, UtilService, DashboardService, dashboard, position, messageService) {
+'use strict';
+
+const dashboardSettingsModalController = function dashboardSettingsModalController(
+    $scope,
+    $mdDialog,
+    $location,
+    authService,
+    UtilService,
+    DashboardService,
+    dashboard,
+    position,
+    messageService,
+    ) {
     'ngInject';
 
     $scope.isNew = ! dashboard.id;
     $scope.dashboard = angular.copy(dashboard);
     $scope.newAttribute = {};
+    $scope.userHasAnyPermission = authService.userHasAnyPermission;
 
     if($scope.isNew)
     {

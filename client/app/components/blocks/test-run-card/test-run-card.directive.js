@@ -4,11 +4,24 @@
     angular.module('app.testRunCard').directive('testRunCard', function() {
         return {
             template: require('./test-run-card.html'),
-            controller: function TestRunCardController(windowWidthService,
-                                                       testsRunsService, $rootScope, UtilService,
-                                                       $state, $timeout, $mdDialog, $mdToast,
-                                                       SlackService, TestRunService, UserService,
-                                                       $interval, DownloadService, toolsService, messageService) {
+            controller: function TestRunCardController(
+                authService,
+                windowWidthService,
+                testsRunsService,
+                $rootScope,
+                UtilService,
+                $state,
+                $timeout,
+                $mdDialog,
+                $mdToast,
+                SlackService,
+                TestRunService,
+                UserService,
+                $interval,
+                DownloadService,
+                toolsService,
+                messageService,
+            ) {
                 'ngInject';
 
                 const local = {
@@ -46,6 +59,7 @@
                     downloadApplication: downloadApplication,
                     goToTestRun: goToTestRun,
                     isToolConnected: toolsService.isToolConnected,
+                    userHasAnyPermission: authService.userHasAnyPermission,
 
                     get currentOffset() { return $rootScope.currentOffset; },
                     get formattedModel() {
@@ -63,10 +77,6 @@
                     get testRun() { return local.testRun; },
                     set testRun(run) {
                         local.testRun = run;
-
-                        if (local.testRun) {
-                            normalizePlatformData();
-                        }
                     },
                 };
 
@@ -425,28 +435,6 @@
                             messageService.error(rs.message);
                         }
                     });
-                }
-
-                function normalizePlatformData() {
-                    if (vm.testRun.config) {
-                        // it is a platform
-                        if (vm.testRun.config.platform && !vm.testRun.config.browser) {
-                            vm.testRun.platformIcon = vm.testRun.config.platform.toLowerCase();
-                            vm.testRun.platformVersion = vm.testRun.config.platformVersion;
-                        }
-                        // it is a browser
-                        else if (vm.testRun.config.browser && !vm.testRun.config.platform) {
-                            vm.testRun.platformIcon = vm.testRun.config.browser.toLowerCase();
-                            vm.testRun.platformVersion = vm.testRun.config.browserVersion;
-                        }
-                        // it is a mobile browser
-                        else if (vm.testRun.config.browser && vm.testRun.config.platform) {
-                            vm.testRun.platformIcon = `${vm.testRun.config.browser.toLowerCase()}-mobile`;
-                            vm.testRun.platformVersion = vm.testRun.config.browserVersion;
-                        } else {
-                            vm.testRun.platformIcon = 'unknown';
-                        }
-                    }
                 }
             },
             scope: {

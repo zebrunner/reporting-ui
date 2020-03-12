@@ -1,27 +1,36 @@
-(function () {
-    'use strict';
+'use strict';
 
-    angular.module('app.core', [
+import appCtrl from './app.controller';
+import fullscreenLoader from '../shared/fullscreen-loader/fullscreen-loader.component';
+import {CoreModuleRunner} from './core-module.runner';
+import isOwner from '../shared/is-owner/is-owner.directive';
+import infiniteScroll from '../shared/infinite-scroll/infinite-scroll.directive';
+
+export const CoreModule = angular
+    .module('appCore', [
         // Angular modules
-         'ngAnimate'
-        ,'ngAria'
-        ,'ngMessages'
-        ,'ngCookies'
+        'ngAnimate',
+        'ngAria',
+        'ngMessages',
+        'ngCookies',
 
-        // Custom modules
-        ,'app.layout'
-        // ,'app.i18n'
-        
         // 3rd Party Modules
-        ,'ngMaterial'
-        ,'ui.router'
-        ,'duScroll'
-        ,'angularMoment'
-    ]);
+        'ngMaterial',
+        'ui.router',
+        'duScroll',
+        'angularMoment',
+    ])
+    /**
+     * Make UI Router wait for health checking and loading initial data
+     */
+    .config(function($urlRouterProvider) {
+        'ngInject';
 
-    require('./app.config');
-    require('./app.controller');
-    // require('./config.lazyload');
-    require('./config.route');
-    // require('./i18n');
-})();
+        $urlRouterProvider.deferIntercept();
+    })
+    .run(CoreModuleRunner)
+    .component({ fullscreenLoader })
+    .directive({ isOwner })
+    .directive({ infiniteScroll })
+    .controller({ appCtrl })
+    .name;

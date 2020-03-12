@@ -1,20 +1,22 @@
 'use strict';
 
 const testSessionLogsController = function testsSessionsController(
-    $q,
     windowWidthService,
     testSessionLogsService,
     testsSessionsService,
-    messageService,
     $transitions,
     $state,
     moment,
+    pageTitleService,
 ) {
     'ngInject';
 
     let _rawLog = '';
     const splitPattern = '/* ZEBRUNNER_PARSING_SPLITTER */';
     const logLevels = ['info', 'error', 'warn', 'debug', 'trace', 'warning'];
+    const mobileWidth = 480;
+    const pageLayoutBreakpoint = 992; // breakpoint when scrollable element on page will be changed by css
+
     const vm = {
         testSession: null,
         rawLog: '',
@@ -26,7 +28,9 @@ const testSessionLogsController = function testsSessionsController(
         goToTestsSessions,
         openRawLogs,
         getFormattedPlainLog,
+        getScrollableElemSelector,
 
+        get currentTitle() { return pageTitleService.pageTitle },
         get isMobile() { return windowWidthService.isMobile(); },
     };
 
@@ -35,8 +39,12 @@ const testSessionLogsController = function testsSessionsController(
     return vm;
 
     function init() {
+        [vm.testSession.platformIcon, vm.testSession.platformVersion] = testsSessionsService.refactorPlatformData(vm.testSession);
+        const testName = vm.testSession.testName ? vm.testSession.testName : 'Untitled';
+
         vm.videoURL = testSessionLogsService.getSessionVideoURL(vm.testSession.sessionId);
         vm.logURL = testSessionLogsService.getSessionLogURL(vm.testSession.sessionId);
+        pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Session logs' : testName);
         testSessionLogsService.getSessionLog(vm.testSession.sessionId)
             .then(res => {
                 if (res.success) {
@@ -198,6 +206,16 @@ const testSessionLogsController = function testsSessionsController(
 
     function getFormattedPlainLog() {
         return vm.rawLog.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ *(\r?\n|\r)/g, '<br/>').replace(/\s/g, '&nbsp;');
+    }
+
+    function getScrollableElemSelector() {
+        let elemSelector = '.test-session-logs__tab-table-wrapper';
+
+        if (windowWidthService.windowWidth < pageLayoutBreakpoint) {
+            elemSelector = '.history-tab';
+        }
+
+        return elemSelector;
     }
 };
 

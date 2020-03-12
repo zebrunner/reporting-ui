@@ -3,9 +3,10 @@
 
     angular
         .module('app.services')
-        .factory('TestRunsStorage', ['$timeout', '$window', '$httpMock', '$q', TestRunsStorage])
+        .factory({ TestRunsStorage });
 
-    function TestRunsStorage($timeout, $window, $httpMock, $q) {
+    function TestRunsStorage($timeout, $window, $httpMock, $q, $rootScope) {
+        'ngInject';
 
         var storage = {};
         var additional;
@@ -72,16 +73,17 @@
         };
 
         function triggerLoad() {
-            var evt = document.createEvent('Event');
-            evt.initEvent('load-force', false, false);
-            window.dispatchEvent(evt);
-        };
+            $rootScope.$broadcast('event:fullscreen-logo', {
+                type: 'show',
+                autohideDelay: 2000,
+            });
+        }
 
         function triggerLoadFinish() {
-            var evt = document.createEvent('Event');
-            evt.initEvent('load-force-finish', false, false);
-            window.dispatchEvent(evt);
-        };
+            $rootScope.$broadcast('event:fullscreen-logo', {
+                type: 'hide',
+            });
+        }
 
         function waitUntilQueueIsEmpty(func) {
             $timeout(function () {

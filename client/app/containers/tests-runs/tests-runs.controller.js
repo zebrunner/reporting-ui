@@ -3,13 +3,29 @@
 import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
-const testsRunsController = function testsRunsController($mdDialog, $timeout, $q, $state, TestRunService,
-                                                         UtilService, UserService, testsRunsService, $scope, API_URL,
-                                                         $rootScope, $transitions, windowWidthService, TestService,
-                                                         toolsService, projectsService, messageService) {
+const testsRunsController = function testsRunsController(
+    $mdDialog,
+    $timeout,
+    $q,
+    $state,
+    TestRunService,
+    UtilService,
+    UserService,
+    testsRunsService,
+    $scope,
+    API_URL,
+    $rootScope,
+    $transitions,
+    windowWidthService,
+    TestService,
+    toolsService,
+    projectsService,
+    messageService,
+    pageTitleService,
+    authService,
+    ) {
     'ngInject';
 
-    let TENANT;
     let scrollTickingTimeout = null;
     const scrollableParentElement = document.querySelector('.page-wrapper');
 
@@ -47,6 +63,9 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
         selectTestRun: selectTestRun,
         isToolConnected: toolsService.isToolConnected,
         onViewChange,
+        userHasAnyPermission: authService.userHasAnyPermission,
+
+        get currentTitle() { return pageTitleService.pageTitle; },
     };
 
     vm.$onInit = init;
@@ -55,13 +74,15 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
 
     function init() {
         vm.testRuns = vm.resolvedTestRuns.results || [];
+        vm.testRuns.forEach((test) => {
+            [test.platformIcon, test.platformVersion] = testsRunsService.refactorPlatformData(test.config);
+        });
         vm.totalResults = vm.resolvedTestRuns.totalResults || 0;
         vm.pageSize = vm.resolvedTestRuns.pageSize;
         vm.currentPage = vm.resolvedTestRuns.page;
 
         initLaunchers();
         setTimersOnDestroyingLaunchers();
-        TENANT = $rootScope.globals.auth.tenant;
         readStoredParams();
         initWebsocket();
         bindEvents();
@@ -182,6 +203,9 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
                 vm.totalResults = rs.totalResults;
                 vm.pageSize = rs.pageSize;
                 vm.testRuns = testRuns;
+                vm.testRuns.forEach((test) => {
+                    [test.platformIcon, test.platformVersion] = testsRunsService.refactorPlatformData(test.config);
+                });
                 vm.launchers = rs.launchers;
 
                 return $q.resolve(vm.testRuns);
@@ -512,7 +536,7 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
     }
 
     function subscribeLaunchedTestRuns() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.launcherRuns', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.launcherRuns', function (data) {
             const event = getEventFromMessage(data.body);
             const launcher = event.launcher;
 
@@ -530,11 +554,12 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
     }
 
     function subscribeTestRunsTopic() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.testRuns', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.testRuns', function (data) {
             const event = getEventFromMessage(data.body);
             const testRun = angular.copy(event.testRun);
             const index = getTestRunIndexById(+testRun.id);
-
+            
+            [testRun.platformIcon, testRun.platformVersion] = testsRunsService.refactorPlatformData(testRun.config);
             if (vm.launchers) {
                 const indexOfLauncher = vm.launchers.findIndex((launcher) => { return launcher.ciRunId === testRun.ciRunId });
 
@@ -573,7 +598,7 @@ const testsRunsController = function testsRunsController($mdDialog, $timeout, $q
     }
 
     function subscribeStatisticsTopic() {
-        return vm.zafiraWebsocket.subscribe('/topic/' + TENANT + '.statistics', function (data) {
+        return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.statistics', function (data) {
             const event = getEventFromMessage(data.body);
             const index = getTestRunIndexById(+event.testRunStatistics.testRunId);
 

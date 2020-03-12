@@ -6,10 +6,10 @@
             </md-button>
         </zf-sub-header-button>
         <zf-sub-header-title class="_with-back-button">
-            <span>Test results</span>
+            <span>{{ $ctrl.currentTitle }}</span>
         </zf-sub-header-title>
-        <zf-sub-header-button>
-            <button has-any-permission="['MODIFY_LAUNCHERS', 'VIEW_LAUNCHERS']"
+        <zf-sub-header-button ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS', 'VIEW_LAUNCHERS'])">
+            <button
                 class="fixed-page-header__btn _launcher zf-primary-button"
                 ng-click="$ctrl.showCiHelperDialog($event);">
                 <md-icon class="material-icons">play_arrow</md-icon>
@@ -79,7 +79,10 @@
                 </div>
             </div>
         </div>
-        <md-fab-speed-dial id="main-fab" ng-if="$ctrl.isMobile && !$ctrl.testsLoading && !$ctrl.scrollTicking" md-direction="up" class="md-scale md-fab-bottom-right" has-any-permission="['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']">
+        <md-fab-speed-dial id="main-fab"
+            ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.isMobile && !$ctrl.testsLoading && !$ctrl.scrollTicking"
+            md-direction="up"
+            class="md-scale md-fab-bottom-right">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible" ng-click="$ctrl.showFilterDialog($event)">
                     <div class="search-fab" ng-class="{'_list': !$ctrl.isStausFilteringActive, '_checked-list': $ctrl.isStausFilteringActive}" aria-hidden="true"></div>
@@ -268,9 +271,9 @@
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && !$ctrl.testsToDisplay.length && $ctrl.getEptyTestsMessage(groupName)">
+                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && !$ctrl.testsToDisplay.length && $ctrl.getEmptyTestsMessage(groupName)">
                                         <td md-cell="md-cell" colspan="4" class="test-empty">
-                                            {{$ctrl.getEptyTestsMessage(groupName)}}
+                                            {{$ctrl.getEmptyTestsMessage(groupName)}}
                                         </td>
                                     </tr>
                                     <tr ng-repeat-end
