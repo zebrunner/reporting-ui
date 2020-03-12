@@ -174,14 +174,11 @@ const AccessKeyModalController = function AccessKeyModalController(
 
                         testsSessionsService.getNewAccessUrl(zebrunnerIntegration.integrationId)
                             .then((res => {
-                                if (res.success && res.data?.token) {
-                                    try {
-                                        const url = new URL(vm.accessUrl);
+                                if (res.success && res.data?.token && vm.accessSettings) {
+                                    vm.accessSettings.ZEBRUNNER_PASSWORD = res.data.token;
 
-                                        url.password = res.data.token;
-                                        vm.accessUrl = url.href;
-                                    } catch (error) {
-                                        messageService.error('Unable to refresh Access URL');
+                                    if (initAccessUrl()) {
+                                       updateEditorModel();
                                     }
                                 }
                             }));
@@ -204,6 +201,8 @@ const AccessKeyModalController = function AccessKeyModalController(
                 }
 
                 vm.accessUrl = url.href;
+
+                return true;
             } catch (error) {
                 messageService.error('Unable to init Access URL');
             }
