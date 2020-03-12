@@ -105,7 +105,7 @@
                 {
                     name: 'pattern',
                     message: 'Name can only contain letters, numbers, dashes and dots.',
-                    value: /^[A-Za-z]+[0-9A-Za-z.-]+$/,
+                    value: /^[A-Za-z]+[0-9A-Za-z.-]*$/,
                 }
             ]
         };
