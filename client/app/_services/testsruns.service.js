@@ -41,17 +41,19 @@
             let item;
             let itemVersion;
 
-            if (data.browser && (!data.platform || ((data.platform.toLowerCase() !== 'ios' && data.platform.toLowerCase() !== 'android')))) {
-                item = data.browser.toLowerCase();
-                itemVersion = data.browserVersion;
-            } else if (data.browser) {
-                item = `${data.browser.toLowerCase()}-mobile`;
-                itemVersion = data.browserVersion;
-            } else if (data.platform) {
-                item = data.platform.toLowerCase();
-                itemVersion = data.platformVersion;
-            } else {
-                item = 'unknown';
+            if (data) {
+                if (data.browser && (!data.platform || ((data.platform.toLowerCase() !== 'ios' && data.platform.toLowerCase() !== 'android')))) {
+                    item = data.browser.toLowerCase();
+                    itemVersion = data.browserVersion;
+                } else if (data.browser) {
+                    item = `${data.browser.toLowerCase()}-mobile`;
+                    itemVersion = data.browserVersion;
+                } else if (data.platform) {
+                    item = data.platform.toLowerCase();
+                    itemVersion = data.platformVersion;
+                } else {
+                    item = 'unknown';
+                }
             }
 
             return [item, itemVersion];

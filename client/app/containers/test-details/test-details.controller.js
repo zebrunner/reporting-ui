@@ -150,6 +150,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function initTests() {
+        [vm.testRun.platformIcon, vm.testRun.platformVersion] = testsRunsService.refactorPlatformData(vm.testRun.config);
         loadTests(vm.testRun.id)
             .then(function () {
                 vm.testId = getSelectedTestId();

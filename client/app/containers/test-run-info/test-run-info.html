@@ -75,7 +75,7 @@
                                                         </span>
                                                                 </td>
                                                             </tr>
-                                                            <tr>
+                                                            <tr ng-if="$ctrl.testRun.platformIcon || $ctrl.testRun.platformVersion">
                                                                 <td>Platform</td>
                                                                 <td>
                                                                     <span ng-if="$ctrl.testRun.platformIcon" class="platform-icon {{$ctrl.testRun.platformIcon}}"></span>

@@ -74,6 +74,9 @@ const testsRunsController = function testsRunsController(
 
     function init() {
         vm.testRuns = vm.resolvedTestRuns.results || [];
+        vm.testRuns.forEach((test) => {
+            [test.platformIcon, test.platformVersion] = testsRunsService.refactorPlatformData(test.config);
+        });
         vm.totalResults = vm.resolvedTestRuns.totalResults || 0;
         vm.pageSize = vm.resolvedTestRuns.pageSize;
         vm.currentPage = vm.resolvedTestRuns.page;
@@ -200,6 +203,9 @@ const testsRunsController = function testsRunsController(
                 vm.totalResults = rs.totalResults;
                 vm.pageSize = rs.pageSize;
                 vm.testRuns = testRuns;
+                vm.testRuns.forEach((test) => {
+                    [test.platformIcon, test.platformVersion] = testsRunsService.refactorPlatformData(test.config);
+                });
                 vm.launchers = rs.launchers;
 
                 return $q.resolve(vm.testRuns);
@@ -552,7 +558,8 @@ const testsRunsController = function testsRunsController(
             const event = getEventFromMessage(data.body);
             const testRun = angular.copy(event.testRun);
             const index = getTestRunIndexById(+testRun.id);
-
+            
+            [testRun.platformIcon, testRun.platformVersion] = testsRunsService.refactorPlatformData(testRun.config);
             if (vm.launchers) {
                 const indexOfLauncher = vm.launchers.findIndex((launcher) => { return launcher.ciRunId === testRun.ciRunId });
 

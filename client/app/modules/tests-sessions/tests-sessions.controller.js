@@ -39,6 +39,9 @@ const testsSessionsController = function testsSessionsController(
 
     function init() {
         vm.testSessions = vm.resolvedTestSessions.results || [];
+        vm.testSessions.forEach((test) => {
+            [test.platformIcon, test.platformVersion] = testsSessionsService.refactorPlatformData(test);
+        });
         vm.totalResults = vm.resolvedTestSessions.totalResults || 0;
         vm.pageSize = testsSessionsService.activeParams.pageSize;
         vm.currentPage = testsSessionsService.activeParams.page + 1;
@@ -84,6 +87,9 @@ const testsSessionsController = function testsSessionsController(
                     const data = rs.data || {};
 
                     vm.testSessions = data.results || [];
+                    vm.testSessions.forEach((test) => {
+                        [test.platformIcon, test.platformVersion] = testsSessionsService.refactorPlatformData(test);
+                    });
                     vm.totalResults = data.totalResults || 0;
 
                     return vm.testSessions;
