@@ -107,7 +107,8 @@
 
                                     
                 &._column {
-                    flex-direction: column;
+                    display: block;
+                    flex-wrap: nowrap;
                 }
 
                 &._no-padding {
@@ -125,6 +126,10 @@
                     max-width: 50%;
                     overflow: hidden;
                     text-overflow: ellipsis;
+
+                    &._column {
+                        margin: 0 auto;
+                    }
     
                     &::before {
                         content: '-';
