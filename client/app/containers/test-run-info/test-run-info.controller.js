@@ -799,7 +799,7 @@ const testRunInfoController = function testRunInfoController(
 
     function controllerInit() {
         initTestsWebSocket(vm.testRun);
-        vm.testRun.versions = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
+        vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
 
         const params = {
             'page': 1,

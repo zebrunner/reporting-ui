@@ -75,18 +75,18 @@
                                                         </span>
                                                                 </td>
                                                             </tr>
-                                                            <tr ng-if="$ctrl.testRun.versions.browser || $ctrl.testRun.versions.browserVersion">
+                                                            <tr ng-if="$ctrl.testRun.normalizedPlatformData.browser || $ctrl.testRun.normalizedPlatformData.browserVersion">
                                                                 <td>Browser</td>
                                                                 <td>
-                                                                    <span ng-if="$ctrl.testRun.versions.browser" class="platform-icon {{$ctrl.testRun.versions.browser}}"></span>
-                                                                    <span ng-if="$ctrl.testRun.versions.browserVersion">{{$ctrl.testRun.versions.browserVersion}}</span>
+                                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.browser" class="platform-icon {{$ctrl.testRun.normalizedPlatformData.browser}}"></span>
+                                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.browserVersion">{{$ctrl.testRun.normalizedPlatformData.browserVersion}}</span>
                                                                 </td>
                                                             </tr>
-                                                            <tr ng-if="$ctrl.testRun.versions.platform || $ctrl.testRun.versions.platformVersion">
+                                                            <tr ng-if="$ctrl.testRun.normalizedPlatformData.platform || $ctrl.testRun.normalizedPlatformData.platformVersion">
                                                                 <td>Platform</td>
                                                                 <td>
-                                                                    <span ng-if="$ctrl.testRun.versions.platform" class="platform-icon {{$ctrl.testRun.versions.platform}}"></span>
-                                                                    <span ng-if="$ctrl.testRun.versions.platformVersion">{{$ctrl.testRun.versions.platformVersion}}</span>
+                                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.platform" class="platform-icon {{$ctrl.testRun.normalizedPlatformData.platform}}"></span>
+                                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.platformVersion">{{$ctrl.testRun.normalizedPlatformData.platformVersion}}</span>
                                                                 </td>
                                                             </tr>
                                                             </tbody>

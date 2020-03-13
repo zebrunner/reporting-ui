@@ -30,9 +30,9 @@
                     stopConnectingDebug: null,
                     debugHost: null,
                     debugPort: null,
-                    testRun: null,
                 };
                 const vm = {
+                    testRun: null,
                     singleMode: false,
                     singleWholeInfo: false,
                     showNotifyInSlackOption: false,
@@ -73,16 +73,6 @@
                         }
 
                         return formattedModel.slice(0, -2);
-                    },
-                    get testRun() { return local.testRun; },
-                    set testRun(run) {
-                        local.testRun = run;
-
-                        if (local.testRun) {
-                            if (vm.testRun.config) {
-                                [vm.testRun.platformIcon, vm.testRun.platformVersion] = testsRunsService.refactorPlatformData(vm.testRun.config);
-                            }
-                        }
                     },
                 };
 

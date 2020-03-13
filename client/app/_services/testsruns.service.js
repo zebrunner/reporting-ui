@@ -49,13 +49,13 @@
                 platform = data.platform && data.platform.toLowerCase();
                 platformVersion = data.platformVersion;
                 if (data.browser && ((data.platform && data.platform.toLowerCase() === 'ios') || (data.platform && data.platform.toLowerCase() === 'android'))) {
-                    browser = data.browser && `${data.browser.toLowerCase()}-mobile`;
+                    browser = `${data.browser.toLowerCase()}-mobile`;
                 } else {
                     browser = data.browser && `${data.browser.toLowerCase()}`;
                 }
             }
             
-            return { browser: browser, browserVersion: browserVersion, platform: platform, platformVersion: platformVersion };
+            return { browser, browserVersion, platform, platformVersion };
         }
 
         function refactorPlatformData(data) {
