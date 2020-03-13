@@ -20,7 +20,9 @@ export function CoreModuleRunner(
     /**
      * Check API health and then activate UI Router.
      */
-    appHealthService.checkServerStatus()
+    // TODO: Temporarily disabled due errors
+    // appHealthService.checkServerStatus()
+    $q.resolve()
         .then(() => {
             appHealthService.changeHealthyStatus(true);
 
