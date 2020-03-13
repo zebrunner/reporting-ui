@@ -35,7 +35,28 @@
             addNewLauncher: addNewLauncher,
             checkForDestroyingLaunchersByTime: checkForDestroyingLaunchersByTime,
             refactorPlatformData: refactorPlatformData,
+            normalizeTestPlatformData: normalizeTestPlatformData,
         };
+
+        function normalizeTestPlatformData(data) {
+            let browser;
+            let browserVersion;
+            let platform;
+            let platformVersion;
+
+            if (data) {
+                browserVersion = data.browserVersion;
+                platform = data.platform && data.platform.toLowerCase();
+                platformVersion = data.platformVersion;
+                if (data.browser && ((data.platform && data.platform.toLowerCase() === 'ios') || (data.platform && data.platform.toLowerCase() === 'android'))) {
+                    browser = data.browser && `${data.browser.toLowerCase()}-mobile`;
+                } else {
+                    browser = data.browser && `${data.browser.toLowerCase()}`;
+                }
+            }
+            
+            return { browser: browser, browserVersion: browserVersion, platform: platform, platformVersion: platformVersion };
+        }
 
         function refactorPlatformData(data) {
             let item;

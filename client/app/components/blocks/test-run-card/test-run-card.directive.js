@@ -77,6 +77,12 @@
                     get testRun() { return local.testRun; },
                     set testRun(run) {
                         local.testRun = run;
+
+                        if (local.testRun) {
+                            if (vm.testRun.config) {
+                                [vm.testRun.platformIcon, vm.testRun.platformVersion] = testsRunsService.refactorPlatformData(vm.testRun.config);
+                            }
+                        }
                     },
                 };
 
