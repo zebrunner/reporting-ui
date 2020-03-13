@@ -4,6 +4,7 @@ const serverErrorController = function serverErrorController(
     appHealthService,
     $state,
     messageService,
+    $q,
 ) {
     'ngInject';
 
@@ -15,11 +16,13 @@ const serverErrorController = function serverErrorController(
 
     function backToSystem() {
         vm.isChecking = true;
-        appHealthService.checkServerStatus()
+        // TODO: Temporarily disabled due errors
+        // appHealthService.checkServerStatus()
+        $q.resolve()
             .then(() => {
                 appHealthService.changeHealthyStatus(true);
                 // TODO: redirect to the referrer page if available
-                $state.go('home');
+                return $state.go('home');
             })
             .catch(() => {
                 vm.isChecking = false;

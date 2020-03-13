@@ -558,7 +558,7 @@ const testsRunsController = function testsRunsController(
             const event = getEventFromMessage(data.body);
             const testRun = angular.copy(event.testRun);
             const index = getTestRunIndexById(+testRun.id);
-            
+
             [testRun.platformIcon, testRun.platformVersion] = testsRunsService.refactorPlatformData(testRun.config);
             if (vm.launchers) {
                 const indexOfLauncher = vm.launchers.findIndex((launcher) => { return launcher.ciRunId === testRun.ciRunId });
@@ -586,8 +586,7 @@ const testsRunsController = function testsRunsController(
                     status: testRun.status,
                     reviewed: testRun.reviewed,
                     elapsed: testRun.elapsed,
-                    platform: testRun.platform,
-                    env: testRun.env,
+                    config: testRun.config,
                     comments: testRun.comments,
                 };
 
