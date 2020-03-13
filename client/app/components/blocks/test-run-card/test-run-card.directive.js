@@ -412,7 +412,7 @@
                 function checkFilePresence() {
                     if (!vm.testRun.appVersionValid) {
                         vm.testRun.appVersionLoading = true;
-                        DownloadService.check(vm.testRun.appVersion).then(function (rs) {
+                        DownloadService.check(vm.testRun.config.appVersion).then(function (rs) {
                             if (rs.success) {
                                 vm.testRun.appVersionValid = rs.data;
                             } else {
@@ -426,7 +426,7 @@
                 }
 
                 function downloadApplication() {
-                    const appVersion = $ctrl.testRun.appVersion;
+                    const appVersion = $ctrl.testRun.config.appVersion;
 
                     DownloadService.download(appVersion).then(function (rs) {
                         if (rs.success) {
