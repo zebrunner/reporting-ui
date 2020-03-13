@@ -69,7 +69,7 @@
         </div>
         <div class="test-run-card__wrapper-right" ng-if="$ctrl.testRun.status !== 'LAUNCHING'">
             <div name="testRunEnv" class="test-run-card__cell _env">
-                <span class="label label-default" ng-if="$ctrl.testRun.env">{{$ctrl.testRun.env}}</span>
+                <span class="label label-default" ng-if="$ctrl.testRun.config.env">{{$ctrl.testRun.config.env}}</span>
             </div>
             <div name="testRunPlatform" class="test-run-card__cell _platform">
                 <span ng-if="$ctrl.testRun.platformIcon" class="platform-icon {{::$ctrl.testRun.platformIcon}}"></span>
@@ -296,8 +296,8 @@
                     class="test-run-card__app-icon _spinner tests-loading-spinner"></md-progress-circular>
             </div>
             <div class="test-run-card__row _tags">
-                <div name="testRunEnv" class="test-run-card__cell _env" ng-if="$ctrl.testRun.env">
-                    <span class="label label-default">{{$ctrl.testRun.env}}</span>
+                <div name="testRunEnv" class="test-run-card__cell _env" ng-if="$ctrl.testRun.config.env">
+                    <span class="label label-default">{{$ctrl.testRun.config.env}}</span>
                 </div>
                 <div name="testRunPlatform" class="test-run-card__cell _platform no-padding browser-version_column"
                      ng-if="$ctrl.testRun.platformIcon || $ctrl.testRun.platformVersion">

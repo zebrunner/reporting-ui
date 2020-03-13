@@ -998,8 +998,7 @@ const testDetailsController = function testDetailsController(
             vm.testRun.status = testRun.status;
             vm.testRun.reviewed = testRun.reviewed;
             vm.testRun.elapsed = testRun.elapsed;
-            vm.testRun.platform = testRun.platform;
-            vm.testRun.env = testRun.env;
+            vm.testRun.config = testRun.config;
             vm.testRun.comments = testRun.comments;
             vm.testRun.reviewed = testRun.reviewed;
             $scope.$apply();
