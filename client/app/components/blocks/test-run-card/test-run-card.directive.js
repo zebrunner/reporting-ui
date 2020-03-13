@@ -426,7 +426,7 @@
                 }
 
                 function downloadApplication() {
-                    const appVersion = $ctrl.testRun.config.appVersion;
+                    const appVersion = vm.testRun.config.appVersion;
 
                     DownloadService.download(appVersion).then(function (rs) {
                         if (rs.success) {
