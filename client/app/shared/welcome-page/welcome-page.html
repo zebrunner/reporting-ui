@@ -19,11 +19,11 @@
                     <p class="card__text md-subhead color-gray">In this case you have to integrate Zebrunner agent into your automation framework. Agent allows to track the results of tests in real-time with detailed configuration and artifacts publication.</p>
                     <div class="card__list-container">
                             <ul ng-class="{'card__list color-gray': true, _expand: $ctrl.showRunsCardContent && $ctrl.isMobile}">
-                                <li class="card__listitem">Video recordings</li>
-                                <li class="card__listitem">Smart rerun</li>
-                                <li class="card__listitem">Session logs</li>
-                                <li class="card__listitem">Test artifacts</li>
-                                <li class="card__listitem">Known issues tracking</li>
+                                <li class="card__list-item">Video recordings</li>
+                                <li class="card__list-item">Smart rerun</li>
+                                <li class="card__list-item">Session logs</li>
+                                <li class="card__list-item">Test artifacts</li>
+                                <li class="card__list-item">Known issues tracking</li>
                             </ul>
                     </div>
                     <md-button class="card__button md-raised btn-w-md md-primary pull-right" hide-xs ng-click="$ctrl.onViewChange('runs')">Try Integration via agent</md-button>
@@ -38,10 +38,10 @@
                     <h2 class="card__header md-display-1 color-gray-light">Selenium Hub</h2>
                     <p class="card__text md-subhead color-gray">This is the easiest way of running the tests in Zebrunner infrastructure. You have to generate access token and configure your tests to use Zebrunner Selenium URL.</p>
                     <div class="card__list-container">
-                        <ul ng-class="{'card__list color-gray _column _no-padding': true, _expand: $ctrl.showSessionsCardContent && $ctrl.isMobile}">
-                            <li class="card__listitem _column">Real-time test sessions tracking</li>
-                            <li class="card__listitem _column">Video recordings</li>
-                            <li class="card__listitem _column">Session logs</li>
+                        <ul ng-class="{'card__list color-gray _column no-padding': true, _expand: $ctrl.showSessionsCardContent && $ctrl.isMobile}">
+                            <li class="card__list-item">Real-time test sessions tracking</li>
+                            <li class="card__list-item">Video recordings</li>
+                            <li class="card__list-item">Session logs</li>
                         </ul>
                     </div>
                 <md-button class="card__button md-raised btn-w-md md-primary pull-right" hide-xs ng-click="$ctrl.onViewChange('sessions')">Try selenium hub</md-button>

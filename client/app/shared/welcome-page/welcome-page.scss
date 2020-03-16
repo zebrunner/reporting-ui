@@ -109,13 +109,13 @@
                 &._column {
                     display: block;
                     flex-wrap: nowrap;
-                }
 
-                &._no-padding {
-                    padding: 0;
+                    & .card__list-item {
+                        margin: 0 auto;
+                    }
                 }
     
-                &item {
+                &-item {
                     letter-spacing: 0.5px;
                     line-height: 1.5rem;
                     position: relative;
@@ -126,10 +126,6 @@
                     max-width: 50%;
                     overflow: hidden;
                     text-overflow: ellipsis;
-
-                    &._column {
-                        margin: 0 auto;
-                    }
     
                     &::before {
                         content: '-';
