@@ -283,21 +283,22 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
 }
 
 md-chips.filter-chip.custom-filter {
+    overflow-x: auto;
+    overflow-y: hidden;
+
     @media screen and (min-width: $breakpoint-mobile) {
         min-width: auto;
-        overflow-x: auto;
-        overflow-y: hidden;
         flex: 1 1 auto;
     }
     @media screen and (max-width: $breakpoint-mobile - 1) {
-        overflow-x: scroll;
-        overflow-y: hidden;
         -ms-overflow-style: none;
         overflow: -moz-scrollbars-none;
         display: block;
         max-width: 100%;
         &::-webkit-scrollbar {
-            display: none;
+            -webkit-appearance: none;
+            width: 0;
+            height: 0;
         }
     }
 
