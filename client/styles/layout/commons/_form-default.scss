@@ -291,6 +291,7 @@ md-chips.filter-chip.custom-filter {
     }
     @media screen and (max-width: $breakpoint-mobile - 1) {
         overflow-x: scroll;
+        overflow-y: hidden;
         -ms-overflow-style: none;
         overflow: -moz-scrollbars-none;
         display: block;
