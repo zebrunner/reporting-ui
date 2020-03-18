@@ -285,6 +285,7 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
 md-chips.filter-chip.custom-filter {
     overflow-x: auto;
     overflow-y: hidden;
+    height: 37px;
 
     @media screen and (min-width: $breakpoint-mobile) {
         min-width: auto;
@@ -313,7 +314,7 @@ md-chips.filter-chip.custom-filter {
 
     md-chips-wrap.md-chips{
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         height: 100%;
         &, &.md-focused {
             box-shadow: none;
