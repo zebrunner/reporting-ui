@@ -992,7 +992,7 @@ const testDetailsController = function testDetailsController(
         return vm.zafiraWebsocket.subscribe('/topic/' + authService.tenant + '.testRuns', function (data) {
             const event = getEventFromMessage(data.body);
             const testRun = angular.copy(event.testRun);
-            
+
             if (vm.testRun.id !== +testRun.id) { return; }
 
             vm.testRun.status = testRun.status;
