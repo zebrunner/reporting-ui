@@ -99,13 +99,12 @@
             }
     
             &__list-container {
-                margin-bottom: 30px;
+                margin: 16px 0 50px;
                 width: 100%;
             }
     
             &__list {
                 padding-left: 20%;
-                margin: 8px 0 20px;
                 list-style-type: none;
                 text-align: left;
                 display: flex;
@@ -216,7 +215,7 @@
                 }
 
                 &__list-container {
-                    margin-bottom: 0;
+                    margin: 0;
                 }
 
                 &__list {
@@ -226,9 +225,10 @@
                     flex-flow: column wrap;
                     align-content: space-around;
                     height: auto;
-                    transition: opacity 0.3s ease, max-height 0.3s ease;
+                    transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
 
                     &._expand {
+                        margin: 10px 0 20px;
                         max-height: 500px;
                         opacity: 1;
                     }
