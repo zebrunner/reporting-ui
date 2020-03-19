@@ -28,6 +28,7 @@
             isTouchDevice,
             handleDateFilter,
             getValidationValue,
+            handleCreateWidgetError,
         };
 
         service.validations = {
@@ -149,6 +150,12 @@
                 }
                 return { success: false, message: error, error: res };
             };
+        }
+
+        function handleCreateWidgetError(response) {
+            const message = + response.status === 400 ? 'Unable to create widget as widget with the same name exists' : 'Unable to create widget';
+
+            return service.handleError(message)(response);
         }
 
         function isEmpty(obj) {

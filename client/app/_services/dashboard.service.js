@@ -134,7 +134,7 @@
         }
 
         function CreateWidget(widget) {
-            return $httpMock.post(API_URL + '/api/widgets', widget).then(UtilService.handleSuccess, UtilService.handleError('Unable to create widget'));
+            return $httpMock.post(API_URL + '/api/widgets', widget).then(UtilService.handleSuccess, (response) => UtilService.handleCreateWidgetError(response));
         }
 
         function UpdateWidget(widget) {
