@@ -1,4 +1,4 @@
-# Zafira UI
+# Zebrunner Reporting UI
 
 ## Requirements
 * NPM  v6.0.0+
