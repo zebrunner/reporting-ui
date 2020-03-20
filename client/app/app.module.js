@@ -834,7 +834,7 @@ const ngModule = angular
                             test: controller.item,
                             isLast: scope.$last || scope.$parent.$last,
                             isFirst: scope.$first || scope.$parent.$first,
-                        }
+                        };
 
                         onDestroyCallback = controller.handler({ $data });
                     }
@@ -897,25 +897,24 @@ const ngModule = angular
             return angular.equals({}, object);
         }
     }])
-    // __ZAFIRA_UI_VERSION__ variable will be replaced by webpack
-    .constant('UI_VERSION', __ZAFIRA_UI_VERSION__)
-    .config($uiRouterProvider => {
+    // https://ui-router.github.io/ng1/docs/latest/enums/transition.rejecttype.html
+    .constant('REJECT_TYPES', {
+        ABORTED: 3,
+        ERROR: 6,
+        IGNORED: 5,
+        INVALID: 4,
+        SUPERSEDED: 2,
+    })
+    // ignore SUPERSEDED and IGNORED router transition rejections
+    .config(($uiRouterProvider, REJECT_TYPES) => {
         'ngInject';
 
-        const rejectTypes = { // https://ui-router.github.io/ng1/docs/latest/enums/transition.rejecttype.html
-            ABORTED: 3,
-            ERROR: 6,
-            IGNORED: 5,
-            INVALID: 4,
-            SUPERSEDED: 2,
-        };
         const _defaultErrorHandler = $uiRouterProvider.stateService._defaultErrorHandler;
 
         $uiRouterProvider.stateService.defaultErrorHandler((rejection) => {
-            // ignore SUPERSEDED and IGNORED transition rejections
             switch (rejection.type) {
-                case rejectTypes.SUPERSEDED:
-                case rejectTypes.IGNORED:
+                case REJECT_TYPES.SUPERSEDED:
+                case REJECT_TYPES.IGNORED:
                     return;
             }
 
@@ -923,6 +922,7 @@ const ngModule = angular
         });
     })
     .run((
+        $http,
         $transitions,
         $document,
         $q,
@@ -933,21 +933,13 @@ const ngModule = angular
         messageService,
         AuthIntercepter,
         pageTitleService,
+        REJECT_TYPES,
+        UI_VERSION,
     ) => {
         'ngInject';
 
         $rootScope.pageTitleService = pageTitleService;
         window.isProd = isProd;
-        function redirectToSignin(payload) {
-            const params = {};
-
-            payload && payload.location && (params.location = payload.location);
-            authService.clearCredentials();
-            $state.go(
-                'signin',
-                params,
-            );
-        };
 
         $rootScope.$on('event:auth-loginCancelled', function (e, payload) {
             redirectToSignin(payload);
@@ -968,6 +960,17 @@ const ngModule = angular
                 AuthIntercepter.loginCancelled(payload);
             }
         });
+
+        function redirectToSignin(payload) {
+            const params = {};
+
+            payload && payload.location && (params.location = payload.location);
+            authService.clearCredentials();
+            $state.go(
+                'signin',
+                params,
+            );
+        }
 
         function fetchUserData() {
             return UserService.initCurrentUser()
@@ -1066,6 +1069,25 @@ const ngModule = angular
             }
 
             $document.scrollTo(0, 0);
+        });
+        $transitions.onError({}, function(transition) {
+            const error = transition.error();
+
+            // handle lazyLoading errors when modules become unreachable due the project rebuild
+            if (error.type === REJECT_TYPES.ERROR && error.detail?.message && (/ChunkLoadError/i).test(error.detail.message)) {
+                // check if UI was rebuilt (version was changed)
+                $http.get('./config.json')
+                    .then(res => {
+                        const remoteUIVersion = res.data['UI_VERSION'];
+
+                        if (UI_VERSION !== remoteUIVersion) {
+                            const targetURL = $state.href(transition.to(), transition.params(), transition.options());
+
+                            // will trigger page reload, so we will have last UI
+                            window.location.assign(targetURL);
+                        }
+                    });
+            }
         });
     })
     .config($provide => {
@@ -1171,10 +1193,14 @@ class mdDialogDelegate {
     }
 }
 
-angular.injector(['ng']).get('$http').get('./config.json')
+angular.injector(['ng'])
+    .get('$http')
+    .get('./config.json')
     .then(function(response){
         // TODO: add error handler if incorrect data provided or missed
-        ngModule.constant('API_URL', response.data['API_URL'] || '');
+        ngModule
+            .constant('API_URL', response.data['API_URL'] || '')
+            .constant('UI_VERSION', response.data['UI_VERSION'] || '');
 
         //manually bootstrap application after we have gotten our config data
         angular.element(document).ready(function() {
