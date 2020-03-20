@@ -58,7 +58,7 @@
 
     &__card {
         padding: 5px;
-        width: 539px;
+        width: 570px;
         border-radius: 8px;
         box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.14);
         background-color: #fff;
@@ -72,28 +72,34 @@
     
         .card{
             &__icon {
-                margin: 20px 0 25px;
-                width: 150px;
-                height: 150px;
+                margin: 20px 0 24px;
+                width: 120px;
+                height: 120px;
                 object-fit: cover;
             }
     
             &__subheader {
+                margin: 2px 0 0 0;
                 text-transform: uppercase;
                 letter-spacing: 1.25px;
+                opacity: 0.7;
             }
         
             &__header {
+                margin: 2px 0 6px;
                 line-height: 36px;
                 font-weight: bold;
+                opacity: 0.7;
             }
     
             &__text {
-                margin: 8px;
+                margin: 20px 18px;
                 letter-spacing: 0.5px;
+                opacity: 0.9;
             }
     
             &__list-container {
+                margin: 16px 0 50px;
                 width: 100%;
             }
     
@@ -116,16 +122,18 @@
                 }
     
                 &-item {
+                    font-size: 16px;
                     letter-spacing: 0.5px;
                     line-height: 1.5rem;
                     position: relative;
-                    padding: 5px 0 5px 15px;
+                    padding: 0 0 6px 15px;
                     word-wrap: normal;
                     flex: 0 0 50%;
                     min-width: 50%;
                     max-width: 50%;
                     overflow: hidden;
                     text-overflow: ellipsis;
+                    opacity: 0.9;
     
                     &::before {
                         content: '-';
@@ -136,7 +144,7 @@
             }
     
             &__button {
-                margin-bottom: 5px;
+                margin-bottom: 20px;
                 margin-top: auto;
             }
 
@@ -165,7 +173,7 @@
 
         &__card {
             width: auto;
-            max-width: 549px;
+            max-width: 570px;
         
             &:first-child {
                 margin-right: 8px;
@@ -206,6 +214,10 @@
                     margin-top: 0;
                 }
 
+                &__list-container {
+                    margin: 0;
+                }
+
                 &__list {
                     padding-left: 0;
                     max-height: 0;
@@ -213,19 +225,22 @@
                     flex-flow: column wrap;
                     align-content: space-around;
                     height: auto;
-                    transition: opacity 0.3s ease, max-height 0.3s ease;
+                    transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
 
                     &._expand {
+                        margin: 10px 0 20px;
                         max-height: 500px;
                         opacity: 1;
                     }
 
                     &-item {
                         margin: 0 auto;
+                        font-size: 14px;
                     }
                 }
 
                 &__text {
+                    margin: 20px 12px 10px;
                     font-size: 14px;
                     letter-spacing: 0.25px;
                     line-height: 20px;
