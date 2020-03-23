@@ -15,10 +15,10 @@
         </zf-sub-header-title>
         <zf-sub-header-button>
             <button class="fixed-page-header__btn _launcher zf-primary-button"
-                ng-click="$ctrl.downloadImageArtifacts();"
-                ng-if="test.imageArtifacts && test.imageArtifacts.length">
+                ng-click="$ctrl.downloadAllArtifacts();"
+                ng-if="test.artifactsToDownload.length">
                     <md-icon aria-label="Download zip">archive</md-icon>
-                <span>Visuals</span>
+                <span>Artifacts</span>
             </button>
         </zf-sub-header-button>
     </zf-sub-header>

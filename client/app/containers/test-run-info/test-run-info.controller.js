@@ -35,6 +35,7 @@ const testRunInfoController = function testRunInfoController(
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
+        downloadAllArtifacts,
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
     };
@@ -111,6 +112,13 @@ const testRunInfoController = function testRunInfoController(
         ArtifactService.downloadArtifacts({
             data: [$scope.test],
             field: 'imageArtifacts',
+        });
+    }
+
+    function downloadAllArtifacts() {
+        ArtifactService.downloadArtifacts({
+            data: [$scope.test],
+            field: 'artifactsToDownload',
         });
     }
 
@@ -231,7 +239,7 @@ const testRunInfoController = function testRunInfoController(
             hits.forEach(function (hit) {
                 followUpOnLogs(hit);
             });
-            prepareArtifacts($scope.test);
+            prepareArtifacts();
             if (!from && from != 0 && (page * size < count)) {
                 page++;
                 collectElasticsearchLogs(from, page, size, count, resolveFunc);
@@ -500,8 +508,9 @@ const testRunInfoController = function testRunInfoController(
         return 0;
     }
 
-    function prepareArtifacts(test) {
-        const formattedArtifacts = $scope.logs.reduce(function (formatted, artifact) {
+    function prepareArtifacts() {
+        // extract image artifacts from logs
+        const imageArtifacts = $scope.logs.reduce((formatted, artifact) => {
             if (artifact.isImageExists && artifact.blobLog.image && artifact.blobLog.image.path) {
                 artifact.blobLog.image.path.forEach(path => {
                     if (path) {
@@ -517,15 +526,40 @@ const testRunInfoController = function testRunInfoController(
                             newArtifact.thumb = artifact.blobLog.thumb.path;
                         }
 
-                        formatted.imageArtifacts.push(newArtifact);
+                        formatted.push(newArtifact);
                     }
                 });
             }
 
             return formatted;
-        }, { imageArtifacts: [] });
+        }, []);
 
-        test.imageArtifacts = formattedArtifacts.imageArtifacts;
+        // extract artifacts from test
+        const artifactsToDownload = $scope.test.artifacts.reduce((formatted, artifact) => {
+            const name = artifact.name.toLowerCase();
+
+            if (!name.includes('live') && !name.includes('video') && artifact.link) {
+                const links = artifact.link.split(' ');
+                let url = null;
+
+                try {
+                    url = new URL(links[0]);
+                } catch (error) {
+                    artifact.hasBrokenLink = true;
+                    console.warn(`Artifact "${name}" has invalid link.`);
+                }
+
+                if (url instanceof URL) {
+                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
+                }
+                formatted.push(artifact);
+            }
+
+            return formatted;
+        }, []);
+
+        $scope.test.imageArtifacts = imageArtifacts;
+        $scope.test.artifactsToDownload = [...artifactsToDownload, ...imageArtifacts];
     }
 
     $scope.openImagesViewerModal = function (event, url) {
