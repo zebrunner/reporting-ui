@@ -48,6 +48,7 @@ const AppSidebarController = function (
     const menuMobileBreakpoint = 480;
 
     const vm = {
+        dashboardsLoadingThrottled: false,
         DashboardService: DashboardService,
         version: null,
         views: [],
@@ -217,10 +218,11 @@ const AppSidebarController = function (
         });
     }
 
-    function loadDashboards(e) {
-        if (vm.dashboardsLoading || vm.dashboardsLoaded) { return; }
 
-        vm.dashboardsLoading = true;
+    function loadDashboards(e) {
+        // prevent frequent calls on open-close by throttling (1min)
+        if (vm.dashboardsLoadingThrottled) { return; }
+        vm.dashboardsLoadingThrottled = true;
         $timeout(() => {
             const $el = angular.element(e.target).closest('li');
 
@@ -228,8 +230,11 @@ const AppSidebarController = function (
             if ($el.length && !$el.hasClass('open')) { return; }
 
             DashboardService.RetrieveDashboards()
-                .then(() => vm.dashboardsLoaded = true)
-                .finally(() => vm.dashboardsLoading = false);
+                .finally(() => {
+                    $timeout(() => {
+                        vm.dashboardsLoadingThrottled = false;
+                    }, 10000, false);
+                });
         });
     }
 
