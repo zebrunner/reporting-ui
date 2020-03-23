@@ -35,6 +35,7 @@ const testRunInfoController = function testRunInfoController(
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
+        downloadAllArtifacts,
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
     };
@@ -112,6 +113,40 @@ const testRunInfoController = function testRunInfoController(
             data: [$scope.test],
             field: 'imageArtifacts',
         });
+    }
+
+    function downloadAllArtifacts() {
+        ArtifactService.downloadArtifacts({
+            data: [$scope.test],
+            field: 'artifactsToDownload',
+        });
+    }
+
+    function extractArtifactsForDownload(test) {
+        const artifactsToDownload = test.artifacts.reduce(function (formatted, artifact) {
+            const name = artifact.name.toLowerCase();
+
+            if (!name.includes('live') && !name.includes('video') && artifact.link) {
+                const links = artifact.link.split(' ');
+                let url = null;
+
+                try {
+                    url = new URL(links[0]);
+                } catch (error) {
+                    artifact.hasBrokenLink = true;
+                    console.warn(`Artifact "${name}" has invalid link.`);
+                }
+
+                if (url instanceof URL) {
+                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
+                }
+                formatted.push(artifact);
+            }
+
+            return formatted;
+        }, []);
+
+        test.artifactsToDownload = [...artifactsToDownload, ...test.imageArtifacts];
     }
 
     function postModeConstruct(test) {
@@ -501,6 +536,7 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function prepareArtifacts(test) {
+        // extract image artifacts from logs
         const formattedArtifacts = $scope.logs.reduce(function (formatted, artifact) {
             if (artifact.isImageExists && artifact.blobLog.image && artifact.blobLog.image.path) {
                 artifact.blobLog.image.path.forEach(path => {
@@ -526,6 +562,8 @@ const testRunInfoController = function testRunInfoController(
         }, { imageArtifacts: [] });
 
         test.imageArtifacts = formattedArtifacts.imageArtifacts;
+        // prepare artifacts for download
+        extractArtifactsForDownload(test);
     }
 
     $scope.openImagesViewerModal = function (event, url) {
