@@ -233,7 +233,7 @@ const AppSidebarController = function (
                 .finally(() => {
                     $timeout(() => {
                         vm.dashboardsLoadingThrottled = false;
-                    }, 10000, false);
+                    }, 60000, false);
                 });
         });
     }
@@ -468,15 +468,6 @@ const AppSidebarController = function (
                     openMenu(parentLiElement);
                 }
             }
-            // TODO: [-] remove: looks like successfully replaced by closing on route transition
-            // close because of clicking on another menu item
-            // else {
-            //     const openedLiElement = navElem.querySelector(`.${mainMenuConfig.liSelector}.${mainMenuConfig.openClassifier}`);
-            //
-            //     if (openedLiElement) {
-            //         closeMenu(openedLiElement);
-            //     }
-            // }
         }
         // handle cases when we need to close menu on special action (for example, custom click handler)
         else if ($event.target.classList.contains('js-menu-close') || $event.target.closest('.js-menu-close')) {
