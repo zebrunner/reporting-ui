@@ -48,6 +48,7 @@ const AppSidebarController = function (
     const menuMobileBreakpoint = 480;
 
     const vm = {
+        dashboardsLoadingThrottled: false,
         DashboardService: DashboardService,
         version: null,
         views: [],
@@ -217,10 +218,11 @@ const AppSidebarController = function (
         });
     }
 
-    function loadDashboards(e) {
-        if (vm.dashboardsLoading || vm.dashboardsLoaded) { return; }
 
-        vm.dashboardsLoading = true;
+    function loadDashboards(e) {
+        // prevent frequent calls on open-close by throttling (1min)
+        if (vm.dashboardsLoadingThrottled) { return; }
+        vm.dashboardsLoadingThrottled = true;
         $timeout(() => {
             const $el = angular.element(e.target).closest('li');
 
@@ -228,8 +230,11 @@ const AppSidebarController = function (
             if ($el.length && !$el.hasClass('open')) { return; }
 
             DashboardService.RetrieveDashboards()
-                .then(() => vm.dashboardsLoaded = true)
-                .finally(() => vm.dashboardsLoading = false);
+                .finally(() => {
+                    $timeout(() => {
+                        vm.dashboardsLoadingThrottled = false;
+                    }, 60000, false);
+                });
         });
     }
 
@@ -463,15 +468,6 @@ const AppSidebarController = function (
                     openMenu(parentLiElement);
                 }
             }
-            // TODO: [-] remove: looks like successfully replaced by closing on route transition
-            // close because of clicking on another menu item
-            // else {
-            //     const openedLiElement = navElem.querySelector(`.${mainMenuConfig.liSelector}.${mainMenuConfig.openClassifier}`);
-            //
-            //     if (openedLiElement) {
-            //         closeMenu(openedLiElement);
-            //     }
-            // }
         }
         // handle cases when we need to close menu on special action (for example, custom click handler)
         else if ($event.target.classList.contains('js-menu-close') || $event.target.closest('.js-menu-close')) {
