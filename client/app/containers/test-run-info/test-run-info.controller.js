@@ -122,33 +122,6 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
-    function extractArtifactsForDownload(test) {
-        const artifactsToDownload = test.artifacts.reduce(function (formatted, artifact) {
-            const name = artifact.name.toLowerCase();
-
-            if (!name.includes('live') && !name.includes('video') && artifact.link) {
-                const links = artifact.link.split(' ');
-                let url = null;
-
-                try {
-                    url = new URL(links[0]);
-                } catch (error) {
-                    artifact.hasBrokenLink = true;
-                    console.warn(`Artifact "${name}" has invalid link.`);
-                }
-
-                if (url instanceof URL) {
-                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
-                }
-                formatted.push(artifact);
-            }
-
-            return formatted;
-        }, []);
-
-        test.artifactsToDownload = [...artifactsToDownload, ...test.imageArtifacts];
-    }
-
     function postModeConstruct(test) {
         var logGetter = MODES[$scope.MODE.name].logGetter;
         switch ($scope.MODE.name) {
@@ -266,7 +239,7 @@ const testRunInfoController = function testRunInfoController(
             hits.forEach(function (hit) {
                 followUpOnLogs(hit);
             });
-            prepareArtifacts($scope.test);
+            prepareArtifacts();
             if (!from && from != 0 && (page * size < count)) {
                 page++;
                 collectElasticsearchLogs(from, page, size, count, resolveFunc);
@@ -535,9 +508,9 @@ const testRunInfoController = function testRunInfoController(
         return 0;
     }
 
-    function prepareArtifacts(test) {
+    function prepareArtifacts() {
         // extract image artifacts from logs
-        const formattedArtifacts = $scope.logs.reduce(function (formatted, artifact) {
+        const imageArtifacts = $scope.logs.reduce((formatted, artifact) => {
             if (artifact.isImageExists && artifact.blobLog.image && artifact.blobLog.image.path) {
                 artifact.blobLog.image.path.forEach(path => {
                     if (path) {
@@ -553,17 +526,40 @@ const testRunInfoController = function testRunInfoController(
                             newArtifact.thumb = artifact.blobLog.thumb.path;
                         }
 
-                        formatted.imageArtifacts.push(newArtifact);
+                        formatted.push(newArtifact);
                     }
                 });
             }
 
             return formatted;
-        }, { imageArtifacts: [] });
+        }, []);
 
-        test.imageArtifacts = formattedArtifacts.imageArtifacts;
-        // prepare artifacts for download
-        extractArtifactsForDownload(test);
+        // extract artifacts from test
+        const artifactsToDownload = $scope.test.artifacts.reduce((formatted, artifact) => {
+            const name = artifact.name.toLowerCase();
+
+            if (!name.includes('live') && !name.includes('video') && artifact.link) {
+                const links = artifact.link.split(' ');
+                let url = null;
+
+                try {
+                    url = new URL(links[0]);
+                } catch (error) {
+                    artifact.hasBrokenLink = true;
+                    console.warn(`Artifact "${name}" has invalid link.`);
+                }
+
+                if (url instanceof URL) {
+                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
+                }
+                formatted.push(artifact);
+            }
+
+            return formatted;
+        }, []);
+
+        $scope.test.imageArtifacts = imageArtifacts;
+        $scope.test.artifactsToDownload = [...artifactsToDownload, ...imageArtifacts];
     }
 
     $scope.openImagesViewerModal = function (event, url) {
