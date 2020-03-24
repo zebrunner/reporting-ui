@@ -15,18 +15,19 @@ const AppSidebarController = function (
     $q,
     $mdDialog,
     $state,
-    $transitions,
-    ViewService,
-    ConfigService,
-    projectsService,
-    UserService,
-    DashboardService,
-    messageService,
-    authService,
-    SettingsService,
     $timeout,
-    windowWidthService,
+    $transitions,
+    authService,
+    ConfigService,
+    DashboardService,
     mainMenuService,
+    messageService,
+    observerService,
+    projectsService,
+    SettingsService,
+    UserService,
+    ViewService,
+    windowWidthService,
 ) {
     'ngInject';
 
@@ -38,6 +39,7 @@ const AppSidebarController = function (
     let navContainerElem = null;
     let transSubscription;
     let isMainMenuOpened = false;
+    let observerUnsubscribe;
     const mainMenuConfig = {
         liSelector: 'main-nav__list-item',
         openClassifier: 'open',
@@ -436,11 +438,19 @@ const AppSidebarController = function (
             transSubscription = $transitions.onBefore({}, closeMenuOnRouteTransition);
             window.addEventListener('resize', closeMenuOnResize);
         }
+        // clear dashboardList on logout
+        observerUnsubscribe = observerService.on('logout', () => {
+            vm.dashboardsLoadingThrottled = false;
+            DashboardService.dashboards = [];
+        });
     }
 
     function unbindListeners() {
         if (transSubscription) {
             transSubscription();
+        }
+        if (observerUnsubscribe) {
+            observerUnsubscribe();
         }
         window.removeEventListener('resize', closeMenuOnResize);
     }

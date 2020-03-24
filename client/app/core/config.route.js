@@ -204,10 +204,11 @@
                 })
                 .state('logout', {
                     url: '/logout',
-                    controller: function($state, authService, $timeout) {
+                    controller: function($state, authService, $timeout, observerService) {
                         'ngInject';
 
                         authService.clearCredentials();
+                        observerService.emit('logout');
                         // Timeout to avoid digest issues
                         $timeout(function() {
                             $state.go('signin');
