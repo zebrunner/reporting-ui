@@ -18,8 +18,7 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
     $scope.newAttribute = {};
     $scope.userHasAnyPermission = authService.userHasAnyPermission;
 
-    if($scope.isNew)
-    {
+    if($scope.isNew) {
         $scope.dashboard.hidden = false;
     }
 
@@ -37,10 +36,6 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
     };
 
     $scope.updateDashboard = function(dashboard){
-        if (!dashboard.editable) {
-            $scope.hide();
-            return;
-        }
         dashboard.widgets = null;
         DashboardService.UpdateDashboard(dashboard).then(function (rs) {
             if (rs.success) {
@@ -98,18 +93,6 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
             return d.title === title;
         });
         form.$setValidity('duplicateKey', ! duplicateAttribute);
-    };
-
-    $scope.updateAttribute = function(attribute){
-        DashboardService.UpdateDashboardAttribute(dashboard.id, attribute).then(function (rs) {
-            if (rs.success) {
-                $scope.dashboard.attributes = rs.data;
-                messageService.success('Dashboard attribute updated');
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        });
     };
 
     $scope.deleteAttribute = function(attribute){
