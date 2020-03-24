@@ -10,7 +10,6 @@ export default class observerService {
      * @returns {function(): *} - unsubscribe function
      */
     on(name, fn) {
-        console.log(name);
         this._subscribers[name] = this._subscribers[name] || [];
         this._subscribers[name].push(fn);
 
@@ -21,16 +20,10 @@ export default class observerService {
      * Emits event
      * @param {String} name - type of event
      * @param {*} [data] - emitted data
-     * @returns {boolean} - emission operation status
      */
     emit(name, data) {
-        console.log(name, this._subscribers);
-        if (!this._subscribers[name] || !this._subscribers[name].length) {
-            return false;
+        if (Array.isArray(this._subscribers[name])) {
+            this._subscribers[name].forEach(fn => typeof fn === 'function' && fn(data));
         }
-
-        this._subscribers[name].forEach(fn => typeof fn === 'function' && fn(data));
-
-        return true;
     }
 }
