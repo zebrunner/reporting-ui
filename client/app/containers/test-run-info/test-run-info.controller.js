@@ -27,7 +27,6 @@ const testRunInfoController = function testRunInfoController(
 ) {
     'ngInject';
 
-    const attemptsToLoadImages = 5;
     const mobileWidth = 480;
     const vm = {
         testRun: null,
@@ -142,8 +141,11 @@ const testRunInfoController = function testRunInfoController(
                 scrollEnable = false;
                 tryToGetLogsHistoryFromElasticsearch(logGetter)
                     .then(() => {
+                        // 10 attempts provide a 5-minute max interval
+                        const attemptsToLoadImages = 10;
                         let imagesLoadingAttempts = 0;
                         let delay = 5000;
+                        const maxDelay = 40000;
 
                         $timeout(() => {
                             logGetter.pageCount = null;
@@ -155,7 +157,8 @@ const testRunInfoController = function testRunInfoController(
                                         tryToGetLogsHistoryFromElasticsearch(logGetter);
                                         update();
                                         imagesLoadingAttempts += 1;
-                                        delay += delay;
+                                        // increase delay to next call up to maxDelay
+                                        delay = delay < maxDelay ? delay + delay : maxDelay;
                                     }
                                 }, delay, false);
                             }
