@@ -35,6 +35,7 @@ const testRunInfoController = function testRunInfoController(
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
+        downloadAllArtifacts,
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
     };
@@ -114,6 +115,13 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
+    function downloadAllArtifacts() {
+        ArtifactService.downloadArtifacts({
+            data: [$scope.test],
+            field: 'artifactsToDownload',
+        });
+    }
+
     function postModeConstruct(test) {
         var logGetter = MODES[$scope.MODE.name].logGetter;
         switch ($scope.MODE.name) {
@@ -131,23 +139,34 @@ const testRunInfoController = function testRunInfoController(
                 logSizeCount = 0;
                 unrecognizedImages = {};
                 scrollEnable = false;
-                tryToGetLogsHistoryFromElasticsearch(logGetter).then(function (rs) {
-                    $timeout(function () {
-                        logGetter.pageCount = null;
-                        logGetter.from = $scope.logs.length + logSizeCount;
-                        function update() {
-                            $timeout(function() {
-                                if (Object.size(unrecognizedImages) > 0) {
-                                    logGetter.from = $scope.logs.length + logSizeCount;
-                                    tryToGetLogsHistoryFromElasticsearch(logGetter);
+                tryToGetLogsHistoryFromElasticsearch(logGetter)
+                    .then(() => {
+                        // 10 attempts provide a 5-minute max interval
+                        const attemptsToLoadImages = 10;
+                        let imagesLoadingAttempts = 0;
+                        let delay = 5000;
+                        const maxDelay = 40000;
+
+                        $timeout(() => {
+                            logGetter.pageCount = null;
+                            logGetter.from = $scope.logs.length + logSizeCount;
+                            function update() {
+                                $timeout(function() {
+                                    if (Object.size(unrecognizedImages) > 0 && imagesLoadingAttempts < attemptsToLoadImages) {
+                                        logGetter.from = $scope.logs.length + logSizeCount;
+                                        tryToGetLogsHistoryFromElasticsearch(logGetter);
+                                        update();
+                                        imagesLoadingAttempts += 1;
+                                        // increase delay to next call up to maxDelay
+                                        delay = delay < maxDelay ? delay + delay : maxDelay;
+                                    }
+                                }, delay, false);
+                            }
+                            tryToGetLogsHistoryFromElasticsearch(logGetter)
+                                .then(() => {
                                     update();
-                                }
-                            }, 5000, false);
-                        }
-                        tryToGetLogsHistoryFromElasticsearch(logGetter).then(function (rs) {
-                            update();
-                        });
-                    }, 5000);
+                                });
+                        }, delay);
                 });
                 break;
             default:
@@ -163,23 +182,22 @@ const testRunInfoController = function testRunInfoController(
     };
 
     function getLogsFromElasticsearch(from, page, size) {
-        return $q(function (resolve, reject) {
-            elasticsearchService.search(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, from, page, size, $scope.test.startTime).then(function (rs) {
-                resolve(rs.map(function (r) {
-                    return r._source;
-                }));
-            });
+        return $q(resolve => {
+            elasticsearchService.search(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, from, page, size, $scope.test.startTime)
+                .then(rs => resolve(rs.map(r => r._source)));
         });
-    };
+    }
 
     function tryToGetLogsHistoryFromElasticsearch(logGetter) {
-        return $q(function (resolve, reject) {
-            elasticsearchService.count(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, $scope.test.startTime).then(function (count) {
-                if (logGetter.accessFunc ? logGetter.accessFunc.call(this, count) : true) {
-                    var size = logGetter.getSizeFunc.call(this, count);
-                    collectElasticsearchLogs(logGetter.from, logGetter.pageCount, size, count, resolve);
-                }
-            }, function() {});
+        return $q(resolve => {
+            elasticsearchService.count(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, $scope.test.startTime)
+                .then(count => {
+                    if (logGetter.accessFunc ? logGetter.accessFunc.call(this, count) : true) {
+                        const size = logGetter.getSizeFunc.call(this, count);
+
+                        collectElasticsearchLogs(logGetter.from, logGetter.pageCount, size, count, resolve);
+                    }
+                });
         });
     };
 
@@ -227,24 +245,22 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function collectElasticsearchLogs(from, page, size, count, resolveFunc) {
-        getLogsFromElasticsearch(from, page, size).then(function (hits) {
-            hits.forEach(function (hit) {
-                followUpOnLogs(hit);
-            });
-            prepareArtifacts($scope.test);
-            if (!from && from != 0 && (page * size < count)) {
-                page++;
-                collectElasticsearchLogs(from, page, size, count, resolveFunc);
-            } else {
-                $scope.elasticsearchDataLoaded = true;
-                resolveFunc.call(this, count);
-                var hash = $location.hash();
-                if (hash && scrollEnable) {
-                    $anchorScroll();
+        getLogsFromElasticsearch(from, page, size)
+            .then(hits => {
+                hits.forEach(hit => followUpOnLogs(hit));
+                prepareArtifacts();
+                if (!from && from !== 0 && (page * size < count)) {
+                    page++;
+                    collectElasticsearchLogs(from, page, size, count, resolveFunc);
+                } else {
+                    $scope.elasticsearchDataLoaded = true;
+                    resolveFunc.call(this, count);
+                    if (scrollEnable && $location.hash()) {
+                        $anchorScroll();
+                    }
                 }
-            }
-        });
-    };
+            });
+    }
 
     function initRecords(test) {
         var videoArtifacts = getArtifactsByPartName(test, 'video', 'live');
@@ -500,8 +516,9 @@ const testRunInfoController = function testRunInfoController(
         return 0;
     }
 
-    function prepareArtifacts(test) {
-        const formattedArtifacts = $scope.logs.reduce(function (formatted, artifact) {
+    function prepareArtifacts() {
+        // extract image artifacts from logs
+        const imageArtifacts = $scope.logs.reduce((formatted, artifact) => {
             if (artifact.isImageExists && artifact.blobLog.image && artifact.blobLog.image.path) {
                 artifact.blobLog.image.path.forEach(path => {
                     if (path) {
@@ -517,15 +534,40 @@ const testRunInfoController = function testRunInfoController(
                             newArtifact.thumb = artifact.blobLog.thumb.path;
                         }
 
-                        formatted.imageArtifacts.push(newArtifact);
+                        formatted.push(newArtifact);
                     }
                 });
             }
 
             return formatted;
-        }, { imageArtifacts: [] });
+        }, []);
 
-        test.imageArtifacts = formattedArtifacts.imageArtifacts;
+        // extract artifacts from test
+        const artifactsToDownload = $scope.test.artifacts.reduce((formatted, artifact) => {
+            const name = artifact.name.toLowerCase();
+
+            if (!name.includes('live') && !name.includes('video') && artifact.link) {
+                const links = artifact.link.split(' ');
+                let url = null;
+
+                try {
+                    url = new URL(links[0]);
+                } catch (error) {
+                    artifact.hasBrokenLink = true;
+                    console.warn(`Artifact "${name}" has invalid link.`);
+                }
+
+                if (url instanceof URL) {
+                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
+                }
+                formatted.push(artifact);
+            }
+
+            return formatted;
+        }, []);
+
+        $scope.test.imageArtifacts = imageArtifacts;
+        $scope.test.artifactsToDownload = [...artifactsToDownload, ...imageArtifacts];
     }
 
     $scope.openImagesViewerModal = function (event, url) {
@@ -596,12 +638,12 @@ const testRunInfoController = function testRunInfoController(
     var logsStomp;
 
     function followUpOnLogs(log) {
-        if ($scope.MODE.name == 'live' && driversQueue.length) {
+        if ($scope.MODE.name === 'live' && driversQueue.length) {
             log.driver = driversQueue.pop();
             driversQueue = [];
         }
         collectLogs(log);
-    };
+    }
 
     $scope.logs = [];
     var unrecognizedImages = {};
@@ -799,7 +841,7 @@ const testRunInfoController = function testRunInfoController(
 
     function controllerInit() {
         initTestsWebSocket(vm.testRun);
-        [vm.testRun.platformIcon, vm.testRun.platformVersion] = testsRunsService.refactorPlatformData(vm.testRun.config);
+        vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
 
         const params = {
             'page': 1,

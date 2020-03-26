@@ -30,9 +30,9 @@
                     stopConnectingDebug: null,
                     debugHost: null,
                     debugPort: null,
-                    testRun: null,
                 };
                 const vm = {
+                    testRun: null,
                     singleMode: false,
                     singleWholeInfo: false,
                     showNotifyInSlackOption: false,
@@ -73,10 +73,6 @@
                         }
 
                         return formattedModel.slice(0, -2);
-                    },
-                    get testRun() { return local.testRun; },
-                    set testRun(run) {
-                        local.testRun = run;
                     },
                 };
 

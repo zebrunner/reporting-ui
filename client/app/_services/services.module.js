@@ -10,6 +10,7 @@ import ArtifactService from './artifact.service';
 import jsonConfigsService from './json-configs/json-configs.service';
 import testsSessionsService from './tests-sessions/tests-sessions.service';
 import pageTitleService from './page-title/page-title.service';
+import observerService from './observer/observer.service';
 
 angular.module('app.services', [])
     .service({ appHealthService })
@@ -18,6 +19,7 @@ angular.module('app.services', [])
     .service({ toolsService })
     .service({ messageService })
     .service({ mainMenuService })
+    .service({ observerService })
     .service({ progressbarService })
     .service({ jsonConfigsService })
     .service({ pageTitleService })

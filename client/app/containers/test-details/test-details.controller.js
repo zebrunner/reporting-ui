@@ -1001,6 +1001,7 @@ const testDetailsController = function testDetailsController(
             vm.testRun.config = testRun.config;
             vm.testRun.comments = testRun.comments;
             vm.testRun.reviewed = testRun.reviewed;
+            vm.testRun.blocker = testRun.blocker;
             $scope.$apply();
         });
     }

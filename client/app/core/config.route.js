@@ -72,7 +72,7 @@
 
                             return $ocLazyLoad.load(mod.dashboardModule);
                         } catch (err) {
-                            throw new Error('Can\'t load dashboard module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load dashboard module, ' + err);
                         }
                     }
                 })
@@ -143,7 +143,7 @@
 
                             return $ocLazyLoad.load(mod.dashboardModule);
                         } catch (err) {
-                            throw new Error('Can\'t load dashboard module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load dashboard module, ' + err);
                         }
                     }
                 })
@@ -178,7 +178,7 @@
 
                             return $ocLazyLoad.load(mod.authModule);
                         } catch (err) {
-                            throw new Error('Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
                         }
                     }
                 })
@@ -198,16 +198,17 @@
 
                             return $ocLazyLoad.load(mod.authModule);
                         } catch (err) {
-                            throw new Error('Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
                         }
                     }
                 })
                 .state('logout', {
                     url: '/logout',
-                    controller: function($state, authService, $timeout) {
+                    controller: function($state, authService, $timeout, observerService) {
                         'ngInject';
 
                         authService.clearCredentials();
+                        observerService.emit('logout');
                         // Timeout to avoid digest issues
                         $timeout(function() {
                             $state.go('signin');
@@ -233,7 +234,7 @@
 
                             return $ocLazyLoad.load(mod.authModule);
                         } catch (err) {
-                            throw new Error('Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
                         }
                     }
                 })
@@ -253,7 +254,7 @@
 
                             return $ocLazyLoad.load(mod.authModule);
                         } catch (err) {
-                            throw new Error('Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
                         }
                     }
                 })
@@ -284,7 +285,7 @@
 
                             return $ocLazyLoad.load(mod.usersModule);
                         } catch (err) {
-                            throw new Error('Can\'t load usersModule module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load usersModule module, ' + err);
                         }
                     }
                 })
@@ -305,7 +306,7 @@
 
                             return $ocLazyLoad.load(mod.groupsModule);
                         } catch (err) {
-                            throw new Error('Can\'t load groupsModule module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load groupsModule module, ' + err);
                         }
                     }
                 })
@@ -327,7 +328,7 @@
                             return $ocLazyLoad.load(mod.invitationsModule);
                         }
                         catch (err) {
-                            throw new Error('Can\'t load invitationsModule module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load invitationsModule module, ' + err);
                         }
                     }
                 })
@@ -347,7 +348,7 @@
 
                             return $ocLazyLoad.load(mod.userModule);
                         } catch (err) {
-                            throw new Error('Can\'t load userModule module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load userModule module, ' + err);
                         }
                     }
                 })
@@ -364,7 +365,7 @@
 
                             return $ocLazyLoad.load(mod.scmModule);
                         } catch (err) {
-                            throw new Error('Can\'t load scm module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load scm module, ' + err);
                         }
                     }
                 })
@@ -429,7 +430,7 @@
 
                             return $ocLazyLoad.load(mod.testsRunsModule);
                         } catch (err) {
-                            throw new Error('Can\'t load testsRuns module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load testsRuns module, ' + err);
                         }
                     }
                 })
@@ -491,7 +492,7 @@
 
                             return $ocLazyLoad.load(mod.testDetailsModule);
                         } catch (err) {
-                            throw new Error('Can\'t load testDetails module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load testDetails module, ' + err);
                         }
                     }
                 })
@@ -551,7 +552,7 @@
 
                             return $ocLazyLoad.load(mod.testRunInfoModule);
                         } catch (err) {
-                            throw new Error('Can\'t load testRunInfo module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load testRunInfo module, ' + err);
                         }
                     }
                 })
@@ -601,7 +602,7 @@
 
                             return $ocLazyLoad.load(mod.testsSessionsModule);
                         } catch (err) {
-                            throw new Error('Can\'t load testsSessions module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load testsSessions module, ' + err);
                         }
                     }
                 })
@@ -650,7 +651,7 @@
 
                             return $ocLazyLoad.load(mod.testSessionLogsModule);
                         } catch (err) {
-                            throw new Error('Can\'t load testSessionLogs module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load testSessionLogs module, ' + err);
                         }
                     }
                 })
@@ -686,7 +687,7 @@
 
                             return $ocLazyLoad.load(mod.welcomePageModule);
                         } catch (err) {
-                            throw new Error('Can\'t load welcomePage module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load welcomePage module, ' + err);
                         }
                     }
                 })
@@ -723,7 +724,7 @@
 
                             return $ocLazyLoad.load(mod.integrationsModule);
                         } catch (err) {
-                            throw new Error('Can\'t load integrationsModule module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load integrationsModule module, ' + err);
                         }
                     }
                 })
@@ -742,7 +743,7 @@
 
                             return $ocLazyLoad.load(mod.notFoundModule);
                         } catch (err) {
-                            throw new Error('Can\'t load notFoundModule module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load notFoundModule module, ' + err);
                         }
                     }
                 })
@@ -761,7 +762,7 @@
 
                             return $ocLazyLoad.load(mod.serverErrorModule);
                         } catch (err) {
-                            throw new Error('Can\'t load serverErrorModule module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load serverErrorModule module, ' + err);
                         }
                     }
                 });
