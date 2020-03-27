@@ -1076,7 +1076,7 @@ const ngModule = angular
             // handle lazyLoading errors when modules become unreachable due the project rebuild
             if (error.type === REJECT_TYPES.ERROR && error.detail?.message && (/ChunkLoadError/i).test(error.detail.message)) {
                 // check if UI was rebuilt (version was changed)
-                $http.get('./config.json')
+                $http.get(`./config.json?timestamp=${Date.now()}`)
                     .then(res => {
                         const remoteUIVersion = res.data['UI_VERSION'];
 
@@ -1195,7 +1195,7 @@ class mdDialogDelegate {
 
 angular.injector(['ng'])
     .get('$http')
-    .get('./config.json')
+    .get(`./config.json?timestamp=${Date.now()}`)
     .then(function(response){
         // TODO: add error handler if incorrect data provided or missed
         ngModule
