@@ -1695,10 +1695,10 @@ div[aria-selected='true'] span.ng-binding {
 
 .disable-layer{
   position: absolute;
-  width: 100%;
+  width: calc(100% - 15px - 48px);
   height: 100%;
   top: 0;
-  left: 0;
+  right: 0;
   display: block;
   z-index: 2;
   background: rgba(255, 255, 255, .5);
