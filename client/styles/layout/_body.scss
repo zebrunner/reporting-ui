@@ -426,6 +426,9 @@ button.red {
     &.firefox-mobile {
         background-image: url(../assets/images/_icons_platform/firefox_mobile.svg);
     }
+    &.electron {
+        background-image: url(../assets/images/_icons_platform/electron.svg);
+    }
     &.microsoftedge,
     &.edge {
         background-image: url(../assets/images/_icons_platform/edge.svg);
