@@ -274,7 +274,7 @@
                             layout="row"
                             layout-wrap
                             ng-change="$ctrl.onPlatformSelect()">
-                            <md-radio-button ng-value="null">None</md-radio-button>
+                            <md-radio-button ng-value="$ctrl.noPlatformValue">None</md-radio-button>
                             <md-radio-button ng-value="platform" ng-repeat="platform in $ctrl.platforms track by platform.id">{{platform.name}}</md-radio-button>
                         </md-radio-group>
                     </div>
