@@ -39,7 +39,6 @@ require('./download.service');
 require('./filter.service');
 require('./group.service');
 require('./invitation.service');
-require('./job.service');
 require('./launcher.service');
 require('./modals.service');
 require('./permission.service');
