@@ -527,7 +527,6 @@ const AccessKeyModalController = function AccessKeyModalController(
         $timeout(() => {
             vm.aceModel.copyToClipboard();
             messageService.success('Code copied to clipboard');
-            $mdDialog.hide();
         }, 0, false);
     }
 
