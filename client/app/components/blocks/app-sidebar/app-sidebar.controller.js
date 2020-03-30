@@ -26,7 +26,6 @@ const AppSidebarController = function (
     projectsService,
     SettingsService,
     UserService,
-    ViewService,
     windowWidthService,
 ) {
     'ngInject';
@@ -53,14 +52,11 @@ const AppSidebarController = function (
         dashboardsLoadingThrottled: false,
         DashboardService: DashboardService,
         version: null,
-        views: [],
         projects: [],
         $state,
         selectedProject: fakeProjectAll.id,
         hasHiddenDashboardPermission,
-        loadViews,
         loadDashboards,
-        showViewDialog,
         showProjectDialog,
         showUploadImageDialog,
         chooseProject,
@@ -152,19 +148,6 @@ const AppSidebarController = function (
         return authService.userHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
     }
 
-    function getViews(){
-        return $q(function (resolve, reject) {
-            ViewService.getAllViews().then(function(rs) {
-                if (rs.success) {
-                    vm.views = rs.data;
-                    resolve(vm.views);
-                } else {
-                    reject(rs.message);
-                }
-            });
-        });
-    };
-
     function getNextEmptyPosition(dashboards) {
         let result = 0;
         dashboards.forEach(function (dashboard) {
@@ -200,27 +183,6 @@ const AppSidebarController = function (
             });
     }
 
-    function loadViews(e) {
-        if (vm.viewsLoading || vm.viewsLoaded) { return; }
-
-        $timeout(() => {
-            const $el = angular.element(e.target).closest('li');
-
-            //we are closing menu by clicking on link second time
-            if ($el.length && !$el.hasClass('open')) { return; }
-
-            vm.viewsLoading = true;
-            getViews()
-                .then(function() {
-                    vm.viewsLoaded = true;
-                })
-                .finally(() => {
-                    vm.viewsLoading = false;
-                });
-        });
-    }
-
-
     function loadDashboards(e) {
         // prevent frequent calls on open-close by throttling (1min)
         if (vm.dashboardsLoadingThrottled) { return; }
@@ -239,20 +201,6 @@ const AppSidebarController = function (
                 });
         });
     }
-
-    function showViewDialog(event, view) {
-        $mdDialog.show({
-            controller: ViewController,
-            template: require('./view_modal.html'), //TODO: move to separate component
-            parent: angular.element(document.body),
-            targetEvent: event,
-            clickOutsideToClose:true,
-            fullscreen: true,
-            locals: {
-                view: view
-            }
-        });
-    };
 
     function showProjectDialog(event) {
         $mdDialog.show({
@@ -358,70 +306,6 @@ const AppSidebarController = function (
         $timeout(() => {
             onProjectSelect();
         }, 0);
-    }
-
-    function ViewController($scope, $mdDialog, view) {
-        'ngInject';
-
-        $scope.view = {};
-
-        if (view) {
-            $scope.view.id = view.id;
-            $scope.view.name = view.name;
-            $scope.view.projectId = view.project.id;
-        }
-
-        ConfigService.getConfig('projects')
-            .then(function(rs) {
-                if (rs.success) {
-                    $scope.projects = rs.data;
-                }
-            });
-
-        $scope.createView = function(view) {
-            ViewService.createView(view)
-                .then(function(rs) {
-                    if (rs.success) {
-                        messageService.success("View created successfully");
-                    } else {
-                        messageService.error(rs.message);
-                    }
-                });
-
-            $scope.hide();
-        };
-
-        $scope.updateView = function(view){
-            ViewService.updateView(view)
-                .then(function(rs) {
-                    if (rs.success) {
-                        messageService.success("View updated successfully");
-                    } else {
-                        messageService.error(rs.message);
-                    }
-                });
-            $scope.hide();
-        };
-
-        $scope.deleteView = function(view){
-            ViewService.deleteView(view.id)
-                .then(function(rs) {
-                    if (rs.success) {
-                        messageService.success("View deleted successfully");
-                    } else {
-                        messageService.error(rs.message);
-                    }
-                });
-            $scope.hide();
-        };
-
-        $scope.hide = function() {
-            $mdDialog.hide();
-        };
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
     }
 
     //needs this helper because ID can be a string or a number
