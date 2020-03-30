@@ -1021,7 +1021,6 @@ const CiHelperController = function CiHelperController(
      * @param {Object} data - provider's config from JSON
      */
     function initPlatforms(data) {
-        console.log('::initPlatforms', data);
         if (!data || !data.rootKey) { return; }
 
         // keep link to the raw config
@@ -1057,7 +1056,6 @@ const CiHelperController = function CiHelperController(
      */
     function onPlatformSelect() {
         //we need to reset models because $scope.jsonModel can be modified by platform selection
-        console.log('::launcher before platform selection', {...$scope.launcher});
         applyBuilder($scope.launcher);
         clearPlatformControlsData();
         resetPlatformModel(vm.platformModel[vm.platformsConfig.rootKey]);
