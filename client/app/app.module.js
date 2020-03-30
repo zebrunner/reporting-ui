@@ -17,7 +17,6 @@ const ngModule = angular
         // Custom Feature modules
         'app.page',
         'app.services',
-        'app.view',
         'app.appSidebar',
         'app.appHeader',
         'app.common',
@@ -1211,7 +1210,6 @@ angular.injector(['ng'])
 //Services
 require('./_services/services.module');
 //Modules
-require('./_views/view.module');
 require('./core/app.config');
 require('./core/config.route');
 require('./page/page.module');

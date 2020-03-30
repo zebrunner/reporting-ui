@@ -57,5 +57,4 @@ require('./integrations.service');
 require('./upload.service');
 require('./user.service');
 require('./util.service');
-require('./view.service');
 require('./projects/projects.service');

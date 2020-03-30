@@ -106,48 +106,6 @@
                     <span>{{$ctrl.currentUser.testsView}}</span>
                 </a>
             </li>
-            <li class="main-nav__list-item views"
-                ng-if="$ctrl.userHasAnyPermission(['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS'])"
-                ui-sref-active="active">
-                <md-button
-                    type="button"
-                    aria-label="menu"
-                    class="app-sidebar__link menu-btn nav-btn js-menu-toggle"
-                    ng-click="$ctrl.loadViews($event);">
-                    <i class="material-icons">remove_red_eye</i><span>Views</span>
-                </md-button>
-                <ul class="width-icon">
-                    <li class="nav-controls search_close-button">
-                        <md-icon class="nav-btn js-menu-close">close</md-icon>
-                    </li>
-                    <li ng-if="!$ctrl.isMobile" class="nav-controls hide-phone">
-                        <a class="nav__button zf-primary-button js-menu-close" aria-label="menu" href="" ng-click="$ctrl.showViewDialog($event)"><i class="material-icons">add</i>Add view</a>
-                    </li>
-                    <li class="sub-search nav-search">
-                        <md-input-container class="no-margin _search _light">
-                            <label class="placeholder-label">Search</label>
-                            <input type="text" name="search" ng-model="navSCView.name" ng-model-options="{debounce: 700}" autocomplete="off"/>
-                            <md-icon class="input-search-icon">search</md-icon>
-                            <md-icon class="input-close-icon" ng-click="navSCView.name = ''">close</md-icon>
-                        </md-input-container>
-                    </li>
-                    <li class="sub-search search-menu">
-                        <ul>
-                            <li data-ng-repeat="view in $ctrl.views | orderBy:'name' | filter:navSCView" style="position: relative;" class="show-on-hover">
-                                <a md-button aria-label="menu" ui-sref="views({ id: view.id })" class="show-part">
-                                    <span class="menu-link__text">{{::view.name}}</span>
-                                </a>
-                                <span class="edit show-icon-on-hover">
-                                    <i style="font-size: 14px;"
-                                        class="material-icons"
-                                        data-ng-click="$ctrl.showViewDialog($event, view)"
-                                        ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUN_VIEWS'])">edit</i>
-                                </span>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
             <li class="main-nav__list-item users"
                 ng-if="$ctrl.userHasAnyRole(['ROLE_ADMIN']) && $ctrl.userHasAnyPermission(['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS'])"
                 ng-class="{'active':$ctrl.$state.includes('users')}">
