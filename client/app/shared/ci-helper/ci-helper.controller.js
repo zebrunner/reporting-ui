@@ -1015,15 +1015,22 @@ const CiHelperController = function CiHelperController(
             });
     }
 
+    /**
+     * parses platform's config
+     * @param {Object} data - provider's config from JSON
+     */
     function initPlatforms(data) {
+        console.log('::initPlatforms', data);
         if (!data || !data.rootKey) { return; }
 
+        // keep link to the raw config
         vm.platformsConfig = data;
+        // extract platforms from config
         vm.platforms = [...vm.platformsConfig.data[vm.platformsConfig.rootKey]]
             //any platform can be disabled in the config using 'disabled' field
             .filter(platform => !platform.disabled);
 
-        //if launcher has defined type, select first platform with the same type in 'job' field of the config
+        // if selected launcher has defined type, select first platform with the same type ('job' field)
         if ($scope.launcher.type) {
             // if type has '-web' postfix it should be used as 'web'
             const type = (/-web$/i).test($scope.launcher.type) ? 'web' : $scope.launcher.type;
@@ -1041,8 +1048,12 @@ const CiHelperController = function CiHelperController(
         }
     }
 
+    /**
+     * Resets models and (re)builds controls
+     */
     function onPlatformSelect() {
         //we need to reset models because $scope.jsonModel can be modified by platform selection
+        console.log('::launcher before platform selection', {...$scope.launcher});
         applyBuilder($scope.launcher);
         clearPlatformControlsData();
         resetPlatformModel(vm.platformModel[vm.platformsConfig.rootKey]);
@@ -1249,10 +1260,17 @@ const CiHelperController = function CiHelperController(
         clearPlatformControlsData();
     }
 
+    /**
+     * Resets platform controls to empty array
+     */
     function clearPlatformControlsData() {
         vm.platformControls = [];
     }
 
+    /**
+     * resets platform model and add to the reseted model a model if provided
+     * @param platform
+     */
     function resetPlatformModel(platform) {
         vm.platformModel = {};
 
