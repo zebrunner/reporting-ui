@@ -1077,7 +1077,6 @@ const CiHelperController = function CiHelperController(
             type: data.type,
             key,
             label: data.label,
-            index: vm.platformControls.length,
             data,
         };
 
@@ -1117,7 +1116,6 @@ const CiHelperController = function CiHelperController(
             key,
             items,
             onChange: onPlatformControlSelect,
-            index: vm.platformControls.length,
             data,
         };
 
@@ -1133,7 +1131,7 @@ const CiHelperController = function CiHelperController(
         const parentItem = vm.platformModel[control.key];
         const versionsData = parentItem.versions ? parentItem : control.data.versions ? control.data : undefined;
 
-        vm.platformControls = vm.platformControls.slice(0, control.index + 1);
+        vm.platformControls = vm.platformControls.slice(0, vm.platformControls.indexOf(control) + 1);
         filterPlatformModel();
 
         if (versionsData && !control.key.includes('-versions')) {
@@ -1283,7 +1281,6 @@ const CiHelperController = function CiHelperController(
             type: 'input',
             key,
             label,
-            index: vm.platformControls.length,
         };
 
         if (Array.isArray(value)) {
