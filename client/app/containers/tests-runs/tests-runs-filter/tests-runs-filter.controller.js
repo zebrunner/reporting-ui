@@ -401,6 +401,10 @@ const TestsRunsFilterController = function TestsRunsFilterController(
     }
 
     function selectFilterForEdit(filter) {
+        if (testsRunsService.getSearchParam('filterId') !== filter.id) {
+            searchByFilter(filter);
+        }
+
         vm.collapseFilter = true;
         vm.filter = angular.copy(filter);
     }
@@ -435,6 +439,7 @@ const TestsRunsFilterController = function TestsRunsFilterController(
         vm.chipsCtrl.selectedChip = index;
         // fire fetch data event;
         vm.onFilterChange();
+        clearAndOpenFilterBlock(false);
     }
 
     function addChip() {
