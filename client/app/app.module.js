@@ -1108,7 +1108,7 @@ const ngModule = angular
             const delegate = new mdDateRangePickerDelegate($delegate, $mdDialog);
 
             return delegate.decorate();
-        })
+        });
     });
 
 class mdDateRangePickerDelegate {
@@ -1211,7 +1211,7 @@ class mdDateRangePickerDelegate {
                 multiple: config.multiple,
                 targetEvent: config.targetEvent || document.body,
                 clickOutsideToClose: true,
-                fullscreen: config.model.fullscreen
+                fullscreen: config.model.fullscreen,
             });
         };
 
