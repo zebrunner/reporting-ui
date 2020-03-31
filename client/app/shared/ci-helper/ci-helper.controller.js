@@ -66,6 +66,7 @@ const CiHelperController = function CiHelperController(
         userHasAnyPermission: authService.userHasAnyPermission,
 
         get isMobile() { return windowWidthService.isMobile(); },
+        get noPlatformValue() { return getNoPlatformValue(); },
     };
 
     vm.$onInit = initController;
@@ -272,7 +273,7 @@ const CiHelperController = function CiHelperController(
         if (angular.isArray(item)) {
             result = 'select'
         } else if (item === true || item === false) {
-            result = 'checkbox'
+            result = 'checkbox';
         } else {
             result = 'input';
         }
@@ -399,7 +400,7 @@ const CiHelperController = function CiHelperController(
         closeConnectGithubBlock();
     };
 
-
+    // TODO: fix bug: prevent launcher selection until all data is loaded (providers configs)
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
         if ($scope.launcher) {
             //do nothing if clicked on active launcher
@@ -1015,20 +1016,25 @@ const CiHelperController = function CiHelperController(
             });
     }
 
+    /**
+     * parses platform's config
+     * @param {Object} data - provider's config from JSON
+     */
     function initPlatforms(data) {
         if (!data || !data.rootKey) { return; }
 
+        // keep link to the raw config
         vm.platformsConfig = data;
+        // extract platforms from config
         vm.platforms = [...vm.platformsConfig.data[vm.platformsConfig.rootKey]]
             //any platform can be disabled in the config using 'disabled' field
             .filter(platform => !platform.disabled);
 
-        //if launcher has defined type, select first platform with the same type in 'job' field of the config
+        // if selected launcher has defined type, select first platform with the same type ('job' field)
         if ($scope.launcher.type) {
             // if type has '-web' postfix it should be used as 'web'
             const type = (/-web$/i).test($scope.launcher.type) ? 'web' : $scope.launcher.type;
-
-            vm.platforms.some(platform => {
+            const isPreselectedPlatform =  vm.platforms.some(platform => {
                 if (Array.isArray(platform.job) && platform.job.includes(type)) {
                     vm.platformModel[vm.platformsConfig.rootKey] = platform;
                     onPlatformSelect();
@@ -1038,17 +1044,25 @@ const CiHelperController = function CiHelperController(
 
                 return false;
             });
+
+            if (!isPreselectedPlatform) {
+                checkForUnmatchedCapabilities();
+            }
         }
     }
 
+    /**
+     * Resets models and (re)builds controls
+     */
     function onPlatformSelect() {
         //we need to reset models because $scope.jsonModel can be modified by platform selection
         applyBuilder($scope.launcher);
         clearPlatformControlsData();
         resetPlatformModel(vm.platformModel[vm.platformsConfig.rootKey]);
-        if (vm.platformModel[vm.platformsConfig.rootKey] && vm.platformModel[vm.platformsConfig.rootKey].child) {
+        if (vm.platformModel[vm.platformsConfig.rootKey]?.child) {
             prepareChildControl(vm.platformModel[vm.platformsConfig.rootKey]);
         }
+        checkForUnmatchedCapabilities();
     }
 
     function prepareChildControl(parentItem) {
@@ -1063,7 +1077,6 @@ const CiHelperController = function CiHelperController(
             type: data.type,
             key,
             label: data.label,
-            index: vm.platformControls.length,
             data,
         };
 
@@ -1103,7 +1116,6 @@ const CiHelperController = function CiHelperController(
             key,
             items,
             onChange: onPlatformControlSelect,
-            index: vm.platformControls.length,
             data,
         };
 
@@ -1119,7 +1131,7 @@ const CiHelperController = function CiHelperController(
         const parentItem = vm.platformModel[control.key];
         const versionsData = parentItem.versions ? parentItem : control.data.versions ? control.data : undefined;
 
-        vm.platformControls = vm.platformControls.slice(0, control.index + 1);
+        vm.platformControls = vm.platformControls.slice(0, vm.platformControls.indexOf(control) + 1);
         filterPlatformModel();
 
         if (versionsData && !control.key.includes('-versions')) {
@@ -1149,7 +1161,7 @@ const CiHelperController = function CiHelperController(
                 });
             }
 
-            delete $scope.jsonModel[childControl.key];
+            Reflect.deleteProperty($scope.jsonModel, childControl.key);
         }
         //select by job (launcher type)
         if (!defaultItem && $scope.launcher.type) {
@@ -1188,7 +1200,7 @@ const CiHelperController = function CiHelperController(
                 });
             }
 
-            delete $scope.jsonModel[childControl.key];
+            Reflect.deleteProperty($scope.jsonModel, childControl.key);
         }
         //select by job (launcher type)
         if (!defaultItem && $scope.launcher.type) {
@@ -1210,12 +1222,13 @@ const CiHelperController = function CiHelperController(
         return defaultItem;
     }
 
+    // TODO: if value is Array?
     function getControlDefaultValue(key) {
         let value = '';
 
         if ($scope.jsonModel[key]) {
             value = $scope.jsonModel[key];
-            delete $scope.jsonModel[key];
+            Reflect.deleteProperty($scope.jsonModel, key);
         }
 
         return value;
@@ -1242,17 +1255,68 @@ const CiHelperController = function CiHelperController(
         });
     }
 
+    /**
+     * Returns value for "None" platform option. Sometimes capability option has the same name as platform's 'rootKey',
+     * so the platformModel won't be empty. To make 'None' option active we need to return this value instead of null.
+     * @returns {null|*}
+     */
+    function getNoPlatformValue() {
+        // check if platform Model is not empty and its value not a platform from provider's config
+        if (vm.platformModel[vm.platformsConfig.rootKey] && !vm.platforms.find(platform => platform === vm.platformModel[vm.platformsConfig.rootKey])) {
+            return vm.platformModel[vm.platformsConfig.rootKey];
+        }
+
+        return null;
+    }
+
+    /**
+     * creates platform control object from launcher capability
+     * @param {String} key - capability name
+     * @param {*} value - capability value
+     * @returns {Object} - platform control object
+     */
+    function createPlatformControl(key, value) {
+        const label = key.split('.')[1];
+        const control = {
+            type: 'input',
+            key,
+            label,
+        };
+
+        if (Array.isArray(value)) {
+            control.type = 'select';
+            control.items = value.map(item => ({
+                id: item,
+                name: item,
+                value: item,
+            }));
+        }
+
+        return control;
+    }
+
+    /**
+     * clears platforms data and related model and controls
+     */
     function clearPlatforms() {
+        applyBuilder($scope.launcher);
         resetPlatformModel();
         vm.platforms = [];
         vm.platformsConfig = null;
         clearPlatformControlsData();
     }
 
+    /**
+     * Resets platform controls to empty array
+     */
     function clearPlatformControlsData() {
         vm.platformControls = [];
     }
 
+    /**
+     * resets platform model and add a platform to it if provided
+     * @param {Object} [platform] - platform config data
+     */
     function resetPlatformModel(platform) {
         vm.platformModel = {};
 
@@ -1393,6 +1457,23 @@ const CiHelperController = function CiHelperController(
                 console.error('Unable to load the providers config');
                 vm.providersFail = true;
             });
+    }
+
+    /**
+     * handles capability options which come with launcher and not merged with provider's platform config.
+     * These options will be transformed to be as platform specific options (upper section on UI)
+     */
+    function checkForUnmatchedCapabilities() {
+        Object.keys($scope.jsonModel).forEach(key => {
+            if (key.includes('capabilities')) {
+                const platformControl = createPlatformControl(key, $scope.jsonModel[key]);
+                const defaultValue = platformControl.type === 'select' ? platformControl.items[0] : $scope.jsonModel[key] ?? '';
+
+                vm.platformControls.push(platformControl);
+                vm.platformModel[key] = { value: defaultValue };
+                Reflect.deleteProperty($scope.jsonModel, key);
+            }
+        });
     }
 
     function cancelFolderManaging() {
