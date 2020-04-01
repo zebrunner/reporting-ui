@@ -120,6 +120,7 @@ const testDetailsController = function testDetailsController(
         onTrackedTestRender,
         resetStatusFilterAndOrdering,
         onPageChange,
+        onTestSelect,
         getArtifactIconId,
         userHasAnyPermission: authService.userHasAnyPermission,
     };
@@ -1022,6 +1023,10 @@ const testDetailsController = function testDetailsController(
                 $scope.$apply();
             }
         });
+    }
+
+    function onTestSelect(test) {
+        //TODO: implement logic
     }
 };
 

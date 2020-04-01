@@ -216,6 +216,7 @@
                     }
                 }
                 &.success {
+                    & .test-selection,
                     & .test-info,
                     & .test-label,
                     & .test-settings {
@@ -223,18 +224,31 @@
                     }
                 }
                 &.danger {
+                    & .test-selection,
                     & .test-info,
                     & .test-label,
                     & .test-settings {
                         background-color: $pink-bg-light-new;
                     }
                 }
+                &-selection {
+                    width: 53px;
+                    font-size: 14px;
+                    padding: 10px 0 5px 5px;
+                    text-align: center;
+                    @media (max-width: 959px) {
+                        display: none;
+                    }
+                }
                 &-info {
                     width: 50vw;
                     flex-grow: 1;
-                    padding-left: 24px;
+                    padding-left: 5px;
                     @media (max-width:670px) {
                         width: 45vw;
+                    }
+                    @media (max-width: 959px) {
+                        padding-left: 24px;
                     }
                     @media(max-width: $breakpoint-mobile) {
                         width: 100%;
@@ -536,6 +550,48 @@
             padding: 0;
             md-card {
                 box-shadow: none;
+            }
+        }
+    }
+
+    .test-details {
+        &__test {
+            &-selection {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                md-checkbox {
+                    margin: 0 auto;
+                    width: 40px;
+                    height: 40px;
+                    .md-container {
+                        left: 50%;
+                        transform: translate3d(-50%, -50%, 0);
+                        backface-visibility: hidden;
+                    }
+                }
+            }
+            &-header {
+                &-selection {
+                    display: none;
+                }
+            }
+        }
+
+        @media (max-width: 959px) {
+            &__test {
+                &-header {
+                    display: flex;
+                    align-items: center;
+                    margin-left: -10px;
+                    &-selection {
+                        display: flex;
+                        flex: none;
+                        width: auto;
+                        font-size: 14px;
+                        padding: 0;
+                    }
+                }
             }
         }
     }

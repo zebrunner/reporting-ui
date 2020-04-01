@@ -94,74 +94,104 @@
                 <article class="article">
                     <md-card class="no-margin-h" ng-class="{'empty': $ctrl.empty || $ctrl.testsFilteredEmpty}">
                         <md-table-container>
-                            <table md-table="md-table" class="table">
+                            <table md-table="md-table" class="table test-details__table">
                                 <tbody>
-                                    <tr ng-if="$ctrl.testsViewMode !== 'plain'"
-                                        ng-repeat-start="groupName in $ctrl.groupingFilters[$ctrl.testsViewMode].data track by groupName"
-                                        class="test-run-group-row groups"
-                                        md-row="md-row">
-                                        <th class="test-run-group-column md-column" colspan="3">
-                                            <div class="test-run-group_name">
-                                                <i ng-click="$ctrl.toggleGroupingFilter(groupName);"
-                                                    ng-class="$ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue === groupName ? 'checked' : 'unchecked'"
-                                                    class="material-icons">
-                                                    keyboard_arrow_down
-                                                </i>
-                                                <span>{{ groupName }}</span>
+                                <tr ng-if="$ctrl.testsViewMode !== 'plain'"
+                                    ng-repeat-start="groupName in $ctrl.groupingFilters[$ctrl.testsViewMode].data track by groupName"
+                                    class="test-run-group-row groups test-details__table-row"
+                                    md-row="md-row">
+                                    <th class="test-run-group-column md-column" colspan="3">
+                                        <div class="test-run-group_name">
+                                            <i ng-click="$ctrl.toggleGroupingFilter(groupName);"
+                                                ng-class="$ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue === groupName ? 'checked' : 'unchecked'"
+                                                class="material-icons">
+                                                keyboard_arrow_down
+                                            </i>
+                                            <span>{{ groupName }}</span>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue"
+                                    class="table-pagination test-details__table-row">
+                                    <td class="test-details__table-col no-padding" colspan="3">
+                                        <md-table-pagination
+                                            id="pagination"
+                                            zafira-background-theme="pagination"
+                                            ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
+                                            md-limit="$ctrl.countPerPage"
+                                            md-limit-options="$ctrl.limitOptions"
+                                            md-label="{rowsPerPage: 'Items per page:'}"
+                                            md-page="$ctrl.currentPage"
+                                            md-total="{{$ctrl.activeTests.length}}"
+                                            md-page-select=false
+                                            md-boundary-links=true
+                                            md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
+                                    </td>
+                                </tr>
+                                <tr ng-attr-id="test_{{::test.id}}"
+                                    class="test test-details__table-row"
+                                    ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue"
+                                    load-on-scroll="test"
+                                    load-on-scroll-handler="$ctrl.onTrackedTestRender($data)"
+                                    ng-repeat="test in $ctrl.testsToDisplay track by test.id"
+                                    ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED', 'active-highlight': test.id === $ctrl.testId}"
+                                    data-source-id="{{test.id}}"
+                                    ng-init="$last && $ctrl.testId && $ctrl.highlightTest()">
+                                    <td class="test-details__table-col test-selection">
+                                            <span class="test-details__test-selection">
+                                                <md-checkbox name="testCheckbox"
+                                                    class="test-details__test-checkbox"
+                                                    aria-label="Select"
+                                                    ng-model="test.selected"
+                                                    ng-change="$ctrl.onTestSelect(test)"
+                                                    ng-true-value="true"
+                                                    ng-false-value="false">
+                                                </md-checkbox>
+                                            </span>
+                                    </td>
+                                    <td class="test-details__table-col test-info">
+                                        <div class="test-details__test-header">
+                                            <div class="test-details__test-header-selection">
+                                                <span class="test-details__test-selection">
+                                                    <md-checkbox name="testCheckbox"
+                                                        class="test-details__test-checkbox"
+                                                        aria-label="Select"
+                                                        ng-model="test.selected"
+                                                        ng-change="$ctrl.onTestSelect(test)"
+                                                        ng-true-value="true"
+                                                        ng-false-value="false">
+                                                    </md-checkbox>
+                                                </span>
                                             </div>
-                                        </th>
-                                    </tr>
-                                    <tr ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue" class="table-pagination">
-                                        <td class="no-padding" colspan="3">
-                                            <md-table-pagination
-                                                id="pagination"
-                                                zafira-background-theme="pagination"
-                                                ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
-                                                md-limit="$ctrl.countPerPage"
-                                                md-limit-options="$ctrl.limitOptions"
-                                                md-label="{rowsPerPage: 'Items per page:'}"
-                                                md-page="$ctrl.currentPage"
-                                                md-total="{{$ctrl.activeTests.length}}"
-                                                md-page-select=false
-                                                md-boundary-links=true
-                                                md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
-                                        </td>
-                                    </tr>
-                                    <tr ng-attr-id="test_{{::test.id}}"
-                                        class="test"
-                                        ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue"
-                                        load-on-scroll="test"
-                                        load-on-scroll-handler="$ctrl.onTrackedTestRender($data)"
-                                        ng-repeat="test in $ctrl.testsToDisplay track by test.id"
-                                        ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED', 'active-highlight': test.id === $ctrl.testId}"
-                                        data-source-id="{{test.id}}"
-                                        ng-init="$last && $ctrl.testId && $ctrl.highlightTest()">
-                                        <td class="test-info">
-                                            <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{::test.name}}
-                                                <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></p>
-                                            <div class="test-info__wrapper">
-                                                <span ng-if="test.finishTime && (test.finishTime - test.startTime) / 1000 > 0 && test.status !== 'QUEUED'"
-                                                    ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'"
-                                                    class="test-info__item">
-                                                    <i class="material-icons">schedule</i>
-                                                    <span>{{::(test.finishTime - test.startTime)/1000 | number:0}} seconds</span>
-                                                </span>
-                                                <span name="testOwner"
-                                                    ng-if="test.owner"
-                                                    class="test-info__item"
-                                                    ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                                    <span>{{::test.owner}}</span>
-                                                </span>
-                                                <span name="device"
-                                                    ng-if="test.testConfig.device"
-                                                    class="test-info__item"
-                                                    ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
-                                                    <i class="fa fa-mobile" aria-hidden="true"></i>
-                                                    <span>{{::test.testConfig.device}}</span>
-                                                </span>
+                                            <div class="test-info__test-header-caption">
+                                                <p name="testName" class="test-info__name" data-ng-class="test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{::test.name}}
+                                                    <span data-ng-if="test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span>
+                                                </p>
+                                                <div class="test-info__wrapper">
+                                                    <span ng-if="test.finishTime && (test.finishTime - test.startTime) / 1000 > 0 && test.status !== 'QUEUED'"
+                                                        ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'"
+                                                        class="test-info__item">
+                                                        <i class="material-icons">schedule</i>
+                                                        <span>{{::(test.finishTime - test.startTime)/1000 | number:0}} seconds</span>
+                                                    </span>
+                                                    <span name="testOwner"
+                                                        ng-if="test.owner"
+                                                        class="test-info__item"
+                                                        ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                                        <span>{{::test.owner}}</span>
+                                                    </span>
+                                                    <span name="device"
+                                                        ng-if="test.testConfig.device"
+                                                        class="test-info__item"
+                                                        ng-class="test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                                                        <i class="fa fa-mobile" aria-hidden="true"></i>
+                                                        <span>{{::test.testConfig.device}}</span>
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div ng-if="test.tags && test.tags.length" class="test-info__tags">
+                                        </div>
+                                        <div ng-if="test.tags && test.tags.length" class="test-info__tags">
                                                 <span class="test-info__tags-tag" ng-repeat="tag in test.tags">
                                                     <span class="test-info__tags-tag-inner" ng-if="(tag.name === 'TESTRAIL_TESTCASE_UUID' && !$ctrl.testRail['TESTRAIL_URL']) ||
                                                     (tag.name === 'QTEST_TESTCASE_UUID' && !$ctrl.qTest['QTEST_URL']) ||
@@ -175,49 +205,49 @@
                                                         target="_blank"
                                                         data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
                                                 </span>
+                                        </div>
+                                        <div class="result_error {{test.status}} {{::main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
+                                            <div>
+                                                <show-more name="errorMsg" element-id="test.id" class="test-error" text="test.message" limit="100"></show-more>
                                             </div>
-                                            <div class="result_error {{test.status}} {{::main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
-                                                <div>
-                                                    <show-more name="errorMsg" element-id="test.id" class="test-error" text="test.message" limit="100"></show-more>
-                                                </div>
-                                            </div>
-                                            <div class="test-settings__wrapper" ng-if="test.artifactsToShow.length">
-                                                <div ng-repeat="artifact in test.artifactsToShow">
-                                                    <a name="testArtifactsGallery"
-                                                        aria-label="Test artifacts"
-                                                        class="test-settings__attachment"
-                                                        ng-click="$ctrl.openImagesViewerModal($event, artifact, test)"
-                                                        href=""
-                                                        ng-if="::('png' === artifact.extension)">
-                                                        <md-icon md-svg-icon="artifacts:image" class="material-icons"></md-icon>
-                                                        <span>{{::artifact.name}}</span>
-                                                        <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
-                                                    </a>
-                                                    <a name="testArtifacts"
-                                                        href="{{::artifact.link}}"
-                                                        target="{{::(artifact.isExternalLink ? '_blank' : '_self')}}"
-                                                        aria-label="Test artifacts"
-                                                        class="test-settings__attachment"
-                                                        ng-if="::('png' !== artifact.extension && !artifact.hasBrokenLink)">
-                                                        <md-icon md-svg-icon="{{::$ctrl.getArtifactIconId(artifact.extension)}}" ng-if="::artifact.extension" class="material-icons"></md-icon>
-                                                        <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
-                                                        <span>{{::artifact.name}}</span>
-                                                        <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
-                                                    </a>
-                                                    <span name="testArtifactsBroken"
-                                                        aria-label="Test artifacts"
-                                                        class="test-settings__attachment _broken"
-                                                        ng-if="::artifact.hasBrokenLink">
+                                        </div>
+                                        <div class="test-settings__wrapper" ng-if="test.artifactsToShow.length">
+                                            <div ng-repeat="artifact in test.artifactsToShow">
+                                                <a name="testArtifactsGallery"
+                                                    aria-label="Test artifacts"
+                                                    class="test-settings__attachment"
+                                                    ng-click="$ctrl.openImagesViewerModal($event, artifact, test)"
+                                                    href=""
+                                                    ng-if="::('png' === artifact.extension)">
+                                                    <md-icon md-svg-icon="artifacts:image" class="material-icons"></md-icon>
+                                                    <span>{{::artifact.name}}</span>
+                                                    <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
+                                                </a>
+                                                <a name="testArtifacts"
+                                                    href="{{::artifact.link}}"
+                                                    target="{{::(artifact.isExternalLink ? '_blank' : '_self')}}"
+                                                    aria-label="Test artifacts"
+                                                    class="test-settings__attachment"
+                                                    ng-if="::('png' !== artifact.extension && !artifact.hasBrokenLink)">
+                                                    <md-icon md-svg-icon="{{::$ctrl.getArtifactIconId(artifact.extension)}}" ng-if="::artifact.extension" class="material-icons"></md-icon>
+                                                    <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
+                                                    <span>{{::artifact.name}}</span>
+                                                    <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
+                                                </a>
+                                                <span name="testArtifactsBroken"
+                                                    aria-label="Test artifacts"
+                                                    class="test-settings__attachment _broken"
+                                                    ng-if="::artifact.hasBrokenLink">
                                                         <md-icon md-font-library="material-icons" class="material-icons">broken_image</md-icon>
                                                         <span>{{::artifact.name}}</span>
                                                         <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
                                                     </span>
-                                                </div>
                                             </div>
-                                            <!-- TODO: clarify with designer -->
-                                            <!-- <div class="test__clickable-wrapper"></div> -->
-                                        </td>
-                                        <td class="test-label">
+                                        </div>
+                                        <!-- TODO: clarify with designer -->
+                                        <!-- <div class="test__clickable-wrapper"></div> -->
+                                    </td>
+                                    <td class="test-label">
                                             <span data-ng-repeat="issue in test.workItems" class="work-items">
                                                 <!-- URL pattern for Jira -->
                                                 <a name="taskTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</a>
@@ -228,70 +258,70 @@
                                                 <span name="taskTicket" ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</span>
                                                 <span name="bugTicket" ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</span>
                                             </span>
-                                        </td>
-                                        <td class="test-settings">
-                                            <div class="align-middle align-right" ng-if="test.status !== 'QUEUED' && test.isInView">
-                                                <div class="test-settings__button" >
-                                                    <md-button class="md-icon-button" ng-click="$ctrl.goToTestDetails(test.id);" aria-label="details">
-                                                        <md-icon class="material-icons">remove_red_eye</md-icon>
-                                                        <md-tooltip md-direction="bottom">Details</md-tooltip>
-                                                    </md-button>
-                                                </div>
-                                                <md-menu class="pull-right test-settings__menu">
-                                                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
-                                                        <md-icon class="material-icons">more_vert</md-icon>
-                                                        <md-tooltip md-direction="bottom">More options</md-tooltip>
-                                                    </md-button>
-                                                    <md-menu-content width="2" class="fixed-md-menu-content test-settings__menu-content">
-                                                        <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'PASSED');" ng-if="test.status !== 'PASSED'">
-                                                            <md-button>
-                                                                <md-icon class="material-icons point-icon _green">lens</md-icon><span>Mark as passed</span>
-                                                            </md-button>
-                                                        </md-menu-item>
-                                                        <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'FAILED');" ng-if="['PASSED', 'SKIPPED', 'ABORTED'].indexOf(test.status) !== -1">
-                                                            <md-button>
-                                                                <md-icon class="material-icons point-icon _red">lens</md-icon><span>Mark as failed</span>
-                                                            </md-button>
-                                                        </md-menu-item>
-                                                        <md-menu-item ng-click="$ctrl.showDetailsDialog(test, $event);" ng-if="test.status !== 'PASSED' && test.message">
-                                                            <md-button name="testDetails" aria-label="Test details">
-                                                                <md-icon class="material-icons assignment">assignment_return</md-icon><span>Link issue</span>
-                                                            </md-button>
-                                                        </md-menu-item>
-                                                    </md-menu-content>
-                                                </md-menu>
+                                    </td>
+                                    <td class="test-settings">
+                                        <div class="align-middle align-right" ng-if="test.status !== 'QUEUED' && test.isInView">
+                                            <div class="test-settings__button" >
+                                                <md-button class="md-icon-button" ng-click="$ctrl.goToTestDetails(test.id);" aria-label="details">
+                                                    <md-icon class="material-icons">remove_red_eye</md-icon>
+                                                    <md-tooltip md-direction="bottom">Details</md-tooltip>
+                                                </md-button>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <tr name="testLoading" md-row="md-row">
-                                        <td md-cell="md-cell" colspan="4" class="test-loading" data-ng-show="$ctrl.testsLoading">
+                                            <md-menu class="pull-right test-settings__menu">
+                                                <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
+                                                    <md-icon class="material-icons">more_vert</md-icon>
+                                                    <md-tooltip md-direction="bottom">More options</md-tooltip>
+                                                </md-button>
+                                                <md-menu-content width="2" class="fixed-md-menu-content test-settings__menu-content">
+                                                    <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'PASSED');" ng-if="test.status !== 'PASSED'">
+                                                        <md-button>
+                                                            <md-icon class="material-icons point-icon _green">lens</md-icon><span>Mark as passed</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'FAILED');" ng-if="['PASSED', 'SKIPPED', 'ABORTED'].indexOf(test.status) !== -1">
+                                                        <md-button>
+                                                            <md-icon class="material-icons point-icon _red">lens</md-icon><span>Mark as failed</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-click="$ctrl.showDetailsDialog(test, $event);" ng-if="test.status !== 'PASSED' && test.message">
+                                                        <md-button name="testDetails" aria-label="Test details">
+                                                            <md-icon class="material-icons assignment">assignment_return</md-icon><span>Link issue</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr name="testLoading" md-row="md-row">
+                                    <td md-cell="md-cell" colspan="4" class="test-loading" data-ng-show="$ctrl.testsLoading">
                                             <span>
                                                 <md-progress-circular md-mode="indeterminate" md-diameter="20px" class="tests-loading-spinner"></md-progress-circular>
                                                 Tests are loading...
                                             </span>
-                                        </td>
-                                    </tr>
-                                    <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && !$ctrl.testsToDisplay.length && $ctrl.getEmptyTestsMessage(groupName)">
-                                        <td md-cell="md-cell" colspan="4" class="test-empty">
-                                            {{$ctrl.getEmptyTestsMessage(groupName)}}
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat-end
-                                        ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue"
-                                        class="table-pagination">
-                                        <td class="no-padding">
-                                            <md-table-pagination
-                                                id="pagination"
-                                                zafira-background-theme="pagination"
-                                                ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
-                                                md-limit="$ctrl.countPerPage"
-                                                md-page="$ctrl.currentPage"
-                                                md-total="{{$ctrl.activeTests.length}}"
-                                                md-page-select=false
-                                                md-boundary-links=true
-                                                md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
-                                        </td>
-                                    </tr>
+                                    </td>
+                                </tr>
+                                <tr md-row="md-row" data-ng-if="!$ctrl.testsLoading && !$ctrl.testsToDisplay.length && $ctrl.getEmptyTestsMessage(groupName)">
+                                    <td md-cell="md-cell" colspan="4" class="test-empty">
+                                        {{$ctrl.getEmptyTestsMessage(groupName)}}
+                                    </td>
+                                </tr>
+                                <tr ng-repeat-end
+                                    ng-if="$ctrl.testsViewMode === 'plain' || groupName === $ctrl.groupingFilters[$ctrl.testsViewMode].selectedValue"
+                                    class="table-pagination">
+                                    <td class="no-padding">
+                                        <md-table-pagination
+                                            id="pagination"
+                                            zafira-background-theme="pagination"
+                                            ng-if="$ctrl.activeTests.length && $ctrl.activeTests.length > $ctrl.countPerPage"
+                                            md-limit="$ctrl.countPerPage"
+                                            md-page="$ctrl.currentPage"
+                                            md-total="{{$ctrl.activeTests.length}}"
+                                            md-page-select=false
+                                            md-boundary-links=true
+                                            md-on-paginate="$ctrl.onPageChange"></md-table-pagination>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </md-table-container>
