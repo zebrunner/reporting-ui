@@ -61,3 +61,19 @@
         }
     }
 }
+
+._blur-active {
+    position: relative;
+    transition: 0.25s filter ease-in;
+
+    &::after {
+        display: block;
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+    }
+}
