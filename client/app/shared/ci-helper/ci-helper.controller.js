@@ -514,6 +514,25 @@ const CiHelperController = function CiHelperController(
         });
     };
 
+    $scope.setFavouriteLauncher = function (launcher) {
+        const launcherFavoriteValue = launcher.preference?.favorite || false;
+        const params = {
+            'operation': 'SAVE_FAVORITE',
+            'value': !launcherFavoriteValue,
+        };
+
+        LauncherService.setFavouriteLauncher(launcher.id, params).then(function (rs) {
+            if (rs.success) {
+                const currentLauncher = $scope.launchers.find(item => item.id === launcher.id);
+
+                $scope.launcher.preference = rs.data;
+                currentLauncher.preference = rs.data;
+            } else {
+                messageService.error(rs.message);
+            }
+        });
+    }
+
     $scope.deleteLauncher = function (id) {
         if (id) {
             var index = $scope.launchers.indexOfField('id', id);
