@@ -18,10 +18,12 @@
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="page">
-        <div class="p-tests-run-details__sticky-header">
+        <div class="p-tests-run-details__sticky-header test-details__header">
             <test-run-card test-run="$ctrl.testRun" back="$ctrl.onBackClick()" single-mode="true"></test-run-card>
-            <div data-ng-hide="!$ctrl.testRun.tests" ng-if="!$ctrl.isMobile">
-                <div class="test-run-group-row">
+            <div data-ng-hide="!$ctrl.testRun.tests"
+                class="test-details__header-actions"
+                ng-if="!$ctrl.isMobile">
+                <div class="test-run-group-row test-details__header-actions-default">
                     <div class="sort-new test-run-group-column" colspan="4">
                         <div class="test-run-group">
                             <div class="test-run-group_wrapper _left">
@@ -76,6 +78,41 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="test-details__header-actions-bulk"
+                    layout="row"
+                    layout-align="start center"
+                    ng-if="$ctrl.selectedTests">
+                    <div class="test-details__test-selection _all" flex="none">
+                        <md-checkbox name="testCheckbox"
+                            class="test-details__test-checkbox"
+                            aria-label="Select"
+                            ng-model="$ctrl.isAllTestsSelected"
+                            ng-change="$ctrl.onAllTestsSelect()"
+                            ng-true-value="true"
+                            ng-false-value="false">
+                        </md-checkbox>
+                    </div>
+                    <div flex="auto" layout="row">
+                        <md-button
+                            flex="none"
+                            class="_default-md-style zf-primary-button"
+                            ng-click="$ctrl.bulkChangeStatus('PASSED')">
+                            <md-icon class="material-icons point-icon _green">lens</md-icon><span>Mark as passed</span>
+                        </md-button>
+                        <md-button
+                            flex="none"
+                            class="_default-md-style zf-primary-button"
+                            ng-click="$ctrl.bulkChangeStatus('FAILED')">
+                            <md-icon class="material-icons point-icon _red">lens</md-icon><span>Mark as failed</span>
+                        </md-button>
+                    </div>
+                    <md-button id="close"
+                        flex="none"
+                        class="md-icon-button _default-md-style"
+                        ng-click="$ctrl.clearTestsSelection()">
+                        <md-icon aria-label="Reset selection">close</md-icon>
+                    </md-button>
                 </div>
             </div>
         </div>

@@ -87,6 +87,8 @@ const testDetailsController = function testDetailsController(
         zafiraWebsocket: null,
         testId: null,
         configSnapshot: null,
+        selectedTests: 0,
+        isAllTestsSelected: false,
 
         get isMobile() { return windowWidthService.isMobile(); },
         get activeTests() { return _at || []; },
@@ -103,25 +105,28 @@ const testDetailsController = function testDetailsController(
         get isSortingActive() { return isSortingActive(); },
         get currentTitle() { return pageTitleService.pageTitle; },
 
-        getEmptyTestsMessage,
-        toggleGroupingFilter,
-        changeViewMode,
-        orderByElapsed,
-        filterByStatus,
+        bulkChangeStatus,
         changeTestStatus,
-        showDetailsDialog,
-        goToTestDetails,
-        showFilterDialog,
-        showCiHelperDialog,
-        onBackClick,
+        changeViewMode,
+        clearTestsSelection,
+        filterByStatus,
+        getArtifactIconId,
+        getEmptyTestsMessage,
         getTestURL,
+        goToTestDetails,
         highlightTest,
-        openImagesViewerModal,
-        onTrackedTestRender,
-        resetStatusFilterAndOrdering,
+        onAllTestsSelect,
+        onBackClick,
         onPageChange,
         onTestSelect,
-        getArtifactIconId,
+        onTrackedTestRender,
+        openImagesViewerModal,
+        orderByElapsed,
+        resetStatusFilterAndOrdering,
+        showCiHelperDialog,
+        showDetailsDialog,
+        showFilterDialog,
+        toggleGroupingFilter,
         userHasAnyPermission: authService.userHasAnyPermission,
     };
 
@@ -318,6 +323,30 @@ const testDetailsController = function testDetailsController(
                     }
                 });
         }
+    }
+
+    function bulkChangeStatus(status) {
+        const selectedTests = vm.testsToDisplay.filter(test => test.selected);
+        const ids = selectedTests.map(({ id }) => id);
+
+        TestService.updateTestsStatus(ids, status)
+            .then(res => {
+                console.log(res);
+                if (res.success) {
+                    const patchedTests = res.data || [];
+                    const selectedTestsObj = selectedTests.reduce((accum, test) => {
+                        accum[test.id] = test;
+
+                         return accum;
+                    }, {});
+
+                    patchedTests.forEach(patchedTest => {
+                        selectedTestsObj[patchedTest.id].status = patchedTest.status;
+                    });
+                } else {
+                    messageService.error(res.message);
+                }
+            });
     }
 
     function onBackClick() {
@@ -1025,8 +1054,19 @@ const testDetailsController = function testDetailsController(
         });
     }
 
-    function onTestSelect(test) {
-        //TODO: implement logic
+    function onTestSelect() {
+        vm.selectedTests = vm.testsToDisplay.filter(test => test.selected).length;
+    }
+
+    function onAllTestsSelect() {
+        vm.testsToDisplay.forEach(test => test.selected = vm.isAllTestsSelected);
+        onTestSelect();
+    }
+
+    function clearTestsSelection() {
+        vm.isAllTestsSelected = false;
+        onAllTestsSelect();
+        onTestSelect();
     }
 };
 

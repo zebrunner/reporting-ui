@@ -11,13 +11,11 @@
             margin-bottom: 2px;
         }
         .test-run-group-row {
-            border-top: 1px solid #edeff1;
-            background-color: white;
             &.groups {
                 height: 40px;
             }
             .sort-new.test-run-group-column {
-                padding: 12px 24px !important;
+                //padding: 12px 24px !important;
                 @media(max-width: $breakpoint-mobile - 1) {
                     padding: 0 10px !important;
                 }
@@ -555,11 +553,36 @@
     }
 
     .test-details {
+        &__header {
+            &-actions {
+                position: relative;
+                &-bulk,
+                &-default {
+                    padding: 12px 24px;
+                    border-top: 1px solid #edeff1;
+                    background-color: white;
+                }
+                &-bulk {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+                }
+                .zf-primary-button {
+
+                }
+            }
+        }
         &__test {
             &-selection {
                 display: flex;
                 width: 100%;
                 justify-content: center;
+                &._all {
+                    width: 50px;
+                }
                 md-checkbox {
                     margin: 0 auto;
                     width: 40px;
@@ -580,6 +603,11 @@
 
         @media (max-width: 959px) {
             &__test {
+                &-selection {
+                    &._all {
+                        width: 55px;
+                    }
+                }
                 &-header {
                     display: flex;
                     align-items: center;

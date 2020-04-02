@@ -9,7 +9,7 @@
         const local = {
             tests: null,
             previousUrl: null,
-        }
+        };
         const service = {
             searchTests,
             updateTest,
@@ -20,6 +20,7 @@
             getConnectionToJira,
             subscribeOnLocationChangeStart,
             get getTests() {
+                console.log(32131232321);
                 return local.tests;
             },
             set setTests(tests) {
@@ -30,16 +31,16 @@
             locationChange: null,
             clearPreviousUrl,
             getPreviousUrl,
-            unsubscribeFromLocationChangeStart
-        }
+            unsubscribeFromLocationChangeStart,
+            updateTestsStatus,
+        };
 
         return service;
 
         function subscribeOnLocationChangeStart() {
             service.locationChange = $rootScope.$on("$locationChangeStart", function (event, newUrl, oldUrl) {
                 local.previousUrl = oldUrl;
-            })
-
+            });
         }
 
         function getPreviousUrl() {
@@ -94,5 +95,20 @@
             return $httpMock.get(API_URL + '/api/tests/jira/connect').then(UtilService.handleSuccess, UtilService.handleError('Unable to get connection to Jira'));
         }
 
+        /**
+         *
+         * @param {Number[]} data - Array of IDs
+         * @param {String} status
+         * @returns {PromiseLike<any> | Promise<any>}
+         */
+        function updateTestsStatus(data = [], status = '') {
+            const params = {
+                ids: data,
+                operation: 'STATUS_UPDATE',
+                value: status,
+            };
+
+            return $httpMock.patch(API_URL + '/api/tests', params).then(UtilService.handleSuccess, UtilService.handleError('Unable to update statuses'));
+        }
     }
 })();
