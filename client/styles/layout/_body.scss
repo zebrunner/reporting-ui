@@ -54,7 +54,9 @@ body {
     to {opacity: 1}
 }
 
-#main-fab, .lonely-fab button {
+md-fab-speed-dial.md-fab-bottom-right,
+#main-fab,
+.lonely-fab button {
     position: fixed;
     z-index: 6;
     right: 60px;
@@ -64,6 +66,9 @@ body {
             bottom: 130px;
         }
     }
+}
+md-fab-speed-dial.md-fab-bottom-right + md-fab-speed-dial.md-fab-bottom-right {
+    bottom: 130px;
 }
 
 .result {

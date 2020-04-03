@@ -21,9 +21,9 @@
         <div class="p-tests-run-details__sticky-header test-details__header">
             <test-run-card test-run="$ctrl.testRun" back="$ctrl.onBackClick()" single-mode="true"></test-run-card>
             <div data-ng-hide="!$ctrl.testRun.tests"
-                class="test-details__header-actions"
+                class="test-details__header-actions-wrapper"
                 ng-if="!$ctrl.isMobile">
-                <div class="test-run-group-row test-details__header-actions-default">
+                <div class="test-run-group-row test-details__header-actions _default">
                     <div class="sort-new test-run-group-column" colspan="4">
                         <div class="test-run-group">
                             <div class="test-run-group_wrapper _left">
@@ -79,10 +79,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="test-details__header-actions-bulk"
+                <div class="test-details__header-actions _bulk"
                     layout="row"
                     layout-align="start center"
-                    ng-if="$ctrl.selectedTests">
+                    ng-if="!$ctrl.isMobile && $ctrl.selectedTests">
                     <div class="test-details__test-selection _all" flex="none">
                         <md-checkbox name="testCheckbox"
                             class="test-details__test-checkbox"
@@ -93,18 +93,20 @@
                             ng-false-value="false">
                         </md-checkbox>
                     </div>
-                    <div flex="auto" layout="row">
+                    <div flex="auto" layout="row" class="test-details__header-actions-btns">
                         <md-button
                             flex="none"
-                            class="_default-md-style zf-primary-button"
-                            ng-click="$ctrl.bulkChangeStatus('PASSED')">
-                            <md-icon class="material-icons point-icon _green">lens</md-icon><span>Mark as passed</span>
+                            class="_green-icon"
+                            ng-click="$ctrl.bulkChangeStatus($event,  'PASSED')">
+                            <span class="btn-icon"></span>
+                            <span class="btn-txt">Mark as Passed</span>
                         </md-button>
                         <md-button
                             flex="none"
-                            class="_default-md-style zf-primary-button"
-                            ng-click="$ctrl.bulkChangeStatus('FAILED')">
-                            <md-icon class="material-icons point-icon _red">lens</md-icon><span>Mark as failed</span>
+                            class="_red-icon"
+                            ng-click="$ctrl.bulkChangeStatus($event, 'FAILED')">
+                            <span class="btn-icon"></span>
+                            <span class="btn-txt">Mark as Failed</span>
                         </md-button>
                     </div>
                     <md-button id="close"
@@ -125,6 +127,39 @@
                     <div class="search-fab" ng-class="{'_list': !$ctrl.isStausFilteringActive, '_checked-list': $ctrl.isStausFilteringActive}" aria-hidden="true"></div>
                 </md-button>
             </md-fab-trigger>
+        </md-fab-speed-dial>
+        <md-fab-speed-dial id="bulk-fab"
+            ng-if="$ctrl.isMobile && $ctrl.selectedTests && !$ctrl.scrollTicking"
+            md-direction="up"
+            class="md-scale md-fab-bottom-right">
+            <md-fab-trigger>
+                <md-button id="bulkFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible">
+                    <span class="fa fa-bars" aria-hidden="true"></span>
+                </md-button>
+            </md-fab-trigger>
+            <md-fab-actions>
+                <md-button id="bulkMarkAsFailedMobile"
+                    aria-label="menu"
+                    class="md-fab md-raised md-fab-sm"
+                    ng-click="$ctrl.bulkChangeStatus($event,  'FAILED')">
+                    <md-tooltip md-direction="top">Marks as Failed</md-tooltip>
+                    <span class="fa fa-times-circle" aria-hidden="true"></span>
+                </md-button>
+                <md-button id="bulkMarkAsPassedMobile"
+                    aria-label="menu"
+                    class="md-fab md-raised md-fab-sm"
+                    ng-click="$ctrl.bulkChangeStatus($event,  'PASSED')">
+                    <md-tooltip md-direction="top">Mark as Passed</md-tooltip>
+                    <span class="fa fa-check-circle" aria-hidden="true"></span>
+                </md-button>
+                <md-button id="bulkMarkAsPassedMobile"
+                    aria-label="menu"
+                    class="md-fab md-raised md-fab-sm"
+                    ng-click="$ctrl.toggleAllTestsSelection()">
+                    <md-tooltip md-direction="top">Select all</md-tooltip>
+                    <span class="fa fa-check-square" aria-hidden="true"></span>
+                </md-button>
+            </md-fab-actions>
         </md-fab-speed-dial>
         <div class="row ui-section no-margin">
             <div class="col-md-12 no-padding">
@@ -305,7 +340,7 @@
                                                 </md-button>
                                             </div>
                                             <md-menu class="pull-right test-settings__menu">
-                                                <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
+                                                <md-button name="testRunSetting" aria-label="test run settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
                                                     <md-icon class="material-icons">more_vert</md-icon>
                                                     <md-tooltip md-direction="bottom">More options</md-tooltip>
                                                 </md-button>

@@ -89,6 +89,7 @@ const testDetailsController = function testDetailsController(
         configSnapshot: null,
         selectedTests: 0,
         isAllTestsSelected: false,
+        bulkChangeInProgress: false,
 
         get isMobile() { return windowWidthService.isMobile(); },
         get activeTests() { return _at || []; },
@@ -126,6 +127,7 @@ const testDetailsController = function testDetailsController(
         showCiHelperDialog,
         showDetailsDialog,
         showFilterDialog,
+        toggleAllTestsSelection,
         toggleGroupingFilter,
         userHasAnyPermission: authService.userHasAnyPermission,
     };
@@ -325,13 +327,17 @@ const testDetailsController = function testDetailsController(
         }
     }
 
-    function bulkChangeStatus(status) {
+    function bulkChangeStatus(event, status) {
+        if (vm.bulkChangeInProgress) { return; }
+        const btn = event.currentTarget;
+        const txtElem = btn.querySelector('.btn-txt');
+        const btnTxt = txtElem ? txtElem.innerText : '';
         const selectedTests = vm.testsToDisplay.filter(test => test.selected);
         const ids = selectedTests.map(({ id }) => id);
 
+        vm.bulkChangeInProgress = true;
         TestService.updateTestsStatus(ids, status)
             .then(res => {
-                console.log(res);
                 if (res.success) {
                     const patchedTests = res.data || [];
                     const selectedTestsObj = selectedTests.reduce((accum, test) => {
@@ -343,6 +349,17 @@ const testDetailsController = function testDetailsController(
                     patchedTests.forEach(patchedTest => {
                         selectedTestsObj[patchedTest.id].status = patchedTest.status;
                     });
+                    btn.classList.add('_completed');
+                    if (txtElem) {
+                        txtElem.innerText = btnTxt.split(' ').pop();
+                    }
+                    $timeout(() => {
+                        btn.classList.remove('_completed');
+                        if (txtElem) {
+                            txtElem.innerText = btnTxt;
+                        }
+                        vm.bulkChangeInProgress = false;
+                    }, 1000);
                 } else {
                     messageService.error(res.message);
                 }
@@ -407,7 +424,7 @@ const testDetailsController = function testDetailsController(
     function initAllSettings() {
         toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
             .then((res) => {
-                testCaseManagementTools = res.data;
+                testCaseManagementTools = res.data || [];
                 initJiraSettings();
                 initTestRailSettings();
                 initQTestSettings();
@@ -415,7 +432,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function findToolByName(name) {
-        return testCaseManagementTools.find((tool) => tool.name === name);
+        return Array.isArray(testCaseManagementTools) && testCaseManagementTools.find((tool) => tool.name === name);
     }
 
     function initJiraSettings() {
@@ -1061,6 +1078,11 @@ const testDetailsController = function testDetailsController(
     function onAllTestsSelect() {
         vm.testsToDisplay.forEach(test => test.selected = vm.isAllTestsSelected);
         onTestSelect();
+    }
+
+    function toggleAllTestsSelection() {
+        vm.isAllTestsSelected = !vm.isAllTestsSelected;
+        onAllTestsSelect();
     }
 
     function clearTestsSelection() {
