@@ -854,7 +854,7 @@ const testRunInfoController = function testRunInfoController(
                 if (rs.success) {
                     const data = rs.data.results || [];
                     vm.testRun.tests = {};
-                    TestService.setTests = data;
+                    TestService.tests = data;
                     setTestParams();
                     pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : $scope.test.name);
                 } else {

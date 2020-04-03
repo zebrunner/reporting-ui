@@ -19,11 +19,10 @@
             getJiraTicket,
             getConnectionToJira,
             subscribeOnLocationChangeStart,
-            get getTests() {
-                console.log(32131232321);
+            get tests() {
                 return local.tests;
             },
-            set setTests(tests) {
+            set tests(tests) {
                 local.tests = tests;
             },
             getTest,
