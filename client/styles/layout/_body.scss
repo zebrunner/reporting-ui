@@ -3229,6 +3229,11 @@ $light-inprogress: #68c9fd;
                                 @media(max-width: $md-screen-phone) {
                                     left: $item-list-margin;
                                 }
+
+                                &-favorite {
+                                    font-size: 15px;
+                                    transform: translateY(2px);
+                                }
                             }
 
                             &:hover {

@@ -41,6 +41,15 @@
                     vertical-align: middle;
                 }
                 &_action {
+                    & .icon {
+                        position: relative;
+                        transform: translateY(2px);
+                        left: 10px;
+
+                        &._active {
+                            color: #FF9800;
+                        }
+                    }
                     vertical-align: middle;
                     i {
                         top: 50%;

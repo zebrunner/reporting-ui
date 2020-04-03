@@ -18,6 +18,7 @@
         service.scanRepository = scanRepository;
         service.getBuildNumber = getBuildNumber;
         service.abortScanRepository = abortScanRepository;
+        service.setFavouriteLauncher = setFavouriteLauncher;
 
         return service;
 
@@ -44,6 +45,10 @@
 
         function buildLauncher(launcher, providerId) {
             return $http.post(API_URL + '/api/launchers/build' + (providerId ? `?providerId=${providerId}` : ''), launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to build with launcher'));
+        }
+
+        function setFavouriteLauncher(id, params) {
+            return $http.patch(`${API_URL}/api/launchers/${id}`, params).then(UtilService.handleSuccess, UtilService.handleError('Unable to update launcher parameter'));
         }
 
         function scanRepository(launcherScanner, automationServerId) {
