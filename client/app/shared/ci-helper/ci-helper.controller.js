@@ -63,6 +63,7 @@ const CiHelperController = function CiHelperController(
         cancelFolderManaging,
         shouldBeDisplayed,
         authService,
+        setFavouriteLauncher,
         userHasAnyPermission: authService.userHasAnyPermission,
 
         get isMobile() { return windowWidthService.isMobile(); },
@@ -514,11 +515,10 @@ const CiHelperController = function CiHelperController(
         });
     };
 
-    $scope.setFavouriteLauncher = function (launcher) {
-        const launcherFavoriteValue = launcher.preference?.favorite || false;
+    function setFavouriteLauncher(launcher) {
         const params = {
             'operation': 'SAVE_FAVORITE',
-            'value': !launcherFavoriteValue,
+            'value': !launcher.preference?.favorite,
         };
 
         LauncherService.setFavouriteLauncher(launcher.id, params).then(function (rs) {
@@ -995,9 +995,11 @@ const CiHelperController = function CiHelperController(
                 return $scope.launchers = launchers;
             });
         toolsService.fetchIntegrationOfTypeByName('AUTOMATION_SERVER').then((res) => {
-            $scope.servers = res.data;
-            if($scope.servers.length > 1) {
-                $scope.needServer = true;
+            if (res.success) {
+                $scope.servers = res.data;
+                if($scope.servers.length > 1) {
+                    $scope.needServer = true;
+                }
             }
         });
         getTenantInfo().then(function (tenant) {

@@ -246,8 +246,8 @@
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
                 <span class="ci-runner-container_content_title_action">
-                    <i ng-click="setFavouriteLauncher(launcher);" ng-if="!launcher.preference.favorite" class="material-icons icon hide-phone">star_border</i>
-                    <i ng-click="setFavouriteLauncher(launcher);" ng-if="launcher.preference.favorite" class="material-icons icon hide-phone _active">star</i>
+                    <i ng-click="$ctrl.setFavouriteLauncher(launcher);" ng-if="!launcher.preference.favorite" class="material-icons icon hide-phone">star_border</i>
+                    <i ng-click="$ctrl.setFavouriteLauncher(launcher);" ng-if="launcher.preference.favorite" class="material-icons icon hide-phone _active">star</i>
                     <i ng-click="toEditLauncher(launcher);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons icon hide-phone">settings</i>
                 </span>
             </div>
