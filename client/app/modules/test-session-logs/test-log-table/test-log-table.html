@@ -6,7 +6,22 @@
     <tr class="test-log-table__row _header">
         <th class="test-log-table__col _visuals" ng-if="$ctrl.withVisuals">Visuals</th>
         <th class="test-log-table__col _start">Start</th>
-        <th class="test-log-table__col _status">Status</th>
+        <th class="test-log-table__col _status">
+            <md-menu md-offset="-16 38">
+                <div aria-label="Open demo menu" ng-click="$mdMenu.open($event)" >
+                    <span class="test-log-table__status-icon _{{$ctrl.selectedLevel}}">{{$ctrl.selectedLevel}}</span>
+                    <span class="material-icons _button-icon">filter_list</span>
+                </div>
+                <md-menu-content width="2" class="_status dropdown-content">
+                  <md-menu-item ng-repeat="item in $ctrl.logsLevels" class="dropdown__list">
+                    <md-button ng-click="$ctrl.selectFilterRange($index)" class="listitem__button">
+                        <span class="test-log-table__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
+                        <span class="test-log-table__status-icon _{{item}} button__text" ng-if="item === 'status'">...</span>
+                    </md-button>
+                  </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </th>
         <th class="test-log-table__col _action">Action</th>
         <th class="test-log-table__col _menu"></th>
     </tr>
@@ -15,7 +30,8 @@
     <tr class="test-log-table__row"
         ng-class="{ '_selected': log === $ctrl.selectedLog}"
         ng-attr-id="log-{{ $index }}"
-        ng-repeat="log in $ctrl.logsToDisplay">
+        ng-repeat="log in $ctrl.logsToDisplay"
+        ng-if="$ctrl.filterResults(log.level)">
         <td class="test-log-table__col _visuals" ng-if="$ctrl.withVisuals">
             <span ng-if="log.driver" class="label label-default">Driver {{log.driver.index + 1 }}</span>
             <div ng-if="log.blobLog" class="log-wrapper" ng-class="{ 'image-placeholder': log.isImageExists === false }">

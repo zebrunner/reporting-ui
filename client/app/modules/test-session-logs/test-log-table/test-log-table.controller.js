@@ -12,18 +12,36 @@ const testLogTableController = function testLogTableController(
     const vm = {
         logs: [],
         selectedLog: null,
+        logsLevels: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'status'],
+        selectedLevels: [],
+        selectedLevel: 'status',
         logsToDisplay: [],
 
         getFullLogMessage,
         switchMoreLess,
         copyLogLine,
         switchLogSelection,
+        filterResults,
+        selectFilterRange,
         $onInit() {
             lastIndex = initialCountToDisplay > vm.logs.length ? vm.logs.length - 1 : initialCountToDisplay;
             vm.logsToDisplay = vm.logs.slice(0, lastIndex);
         },
         onInfiniteScroll,
     };
+
+    function filterResults(itemLevel) {
+        if (vm.selectedLevel === 'status') {
+            return true;
+        }
+
+        return vm.selectedLevels.includes(itemLevel);
+    }
+
+    function selectFilterRange(item) {
+        vm.selectedLevel = vm.logsLevels[item];
+        vm.selectedLevels = vm.logsLevels.slice(0, item + 1);
+    }
 
     function getFullLogMessage(log) {
         return log.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ *(\r?\n|\r)/g, '<br/>').replace(/\s/g, '&nbsp;');

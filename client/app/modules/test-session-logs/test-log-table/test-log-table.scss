@@ -21,8 +21,14 @@
             text-align: center;
         }
         &._status {
-            width: 70px;
+            width: 90px;
             text-align: center;
+
+            & ._button-icon {
+                margin-left: 2px;
+                transform: translateY(2px);
+                font-size: 14px;
+            }
         }
         &._action {
             width: auto;
@@ -82,13 +88,22 @@
                 color: #fff;
             }
 
-            &._error {
+            &._error,
+            &._fatal {
                 background-color: $red-new;
                 color: #fff;
             }
 
-            &._info {
+            &._info,
+            &._trace {
                 background-color: rgba($dark-new, 0.07);
+            }
+            &._status {
+                text-transform: capitalize;
+            }
+            &.button__text {
+                font-size: 12px;
+                line-height: 1.42857;
             }
         }
     }
@@ -147,7 +162,7 @@
                 order: 2;
             }
             &._status {
-                flex: 0 0 70px;
+                flex: 0 0 90px;
                 order: 1;
                 &._mobile-grow {
                     flex-grow: 1;
@@ -169,5 +184,13 @@
                 order: 3;
             }
         }
+    }
+}
+
+._status.dropdown-content {
+    max-height: none;
+
+    & .listitem__button {
+        text-align: center;
     }
 }
