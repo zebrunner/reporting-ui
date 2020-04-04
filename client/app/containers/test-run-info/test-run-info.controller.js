@@ -43,7 +43,6 @@ const testRunInfoController = function testRunInfoController(
         filterResults,
         selectFilterRange,
         changeTestStatus,
-        log,
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
     };
@@ -113,10 +112,6 @@ const testRunInfoController = function testRunInfoController(
 
     var LIVE_LOGS_INTERVAL_NAME = 'liveLogsFromElasticsearch';
     var scrollEnable = true;
-
-    function log(item) {
-        console.log(item);
-    }
 
     function filterResults(itemLevel) {
         if (vm.selectedLevel === 'status') {
