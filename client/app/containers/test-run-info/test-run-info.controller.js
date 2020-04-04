@@ -24,6 +24,7 @@ const testRunInfoController = function testRunInfoController(
     $transitions,
     pageTitleService,
     authService,
+    messageService,
 ) {
     'ngInject';
 
@@ -32,10 +33,17 @@ const testRunInfoController = function testRunInfoController(
         testRun: null,
         configSnapshot: null,
         wsSubscription: null,
+        logLevels: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'status'],
+        selectedLevels: [],
+        selectedLevel: 'status',
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
         downloadAllArtifacts,
+        filterResults,
+        selectFilterRange,
+        changeTestStatus,
+        log,
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
     };
@@ -106,6 +114,23 @@ const testRunInfoController = function testRunInfoController(
     var LIVE_LOGS_INTERVAL_NAME = 'liveLogsFromElasticsearch';
     var scrollEnable = true;
 
+    function log(item) {
+        console.log(item);
+    }
+
+    function filterResults(itemLevel) {
+        if (vm.selectedLevel === 'status') {
+            return true;
+        }
+
+        return vm.selectedLevels.includes(itemLevel.toLowerCase());
+    };
+
+    function selectFilterRange(item) {
+        vm.selectedLevel = vm.logLevels[item];
+        vm.selectedLevels = vm.logLevels.slice(0, item + 1);
+    };
+
     function downloadImageArtifacts() {
         ArtifactService.extractImageArtifacts([$scope.test]);
 
@@ -113,7 +138,24 @@ const testRunInfoController = function testRunInfoController(
             data: [$scope.test],
             field: 'imageArtifacts',
         });
-    }
+    };
+
+    function changeTestStatus(test, status) {
+        if (test.status !== status.toUpperCase()) {
+            const copy = {...test};
+
+            copy.status = status.toUpperCase();
+            TestService.updateTest(copy)
+                .then(rs => {
+                    if (rs.success) {
+                        messageService.success(`Test was marked as ${status}`);
+                        $scope.test = rs.data;
+                    } else {
+                        console.error(rs.message);
+                    }
+                });
+        }
+    };
 
     function downloadAllArtifacts() {
         ArtifactService.downloadArtifacts({

@@ -6,7 +6,8 @@ const testSessionLogsService = function testSessionLogsService(
 ) {
     'ngInject';
 
-    const sessionStorageURL = `${window.location.origin}/moon`;
+    // const sessionStorageURL = `${window.location.origin}/moon`;
+    const sessionStorageURL = `https://stage.qaprosoft.farm/moon`;
     const service = {
         getSessionLog,
         getSessionVideoURL,

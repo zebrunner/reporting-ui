@@ -58,7 +58,21 @@
                                                             <tbody>
                                                             <tr>
                                                                 <td>Status</td>
-                                                                <td><span style="text-transform: capitalize;">{{ test.status.split('_').join(' ').toLowerCase() }}</span></td>
+                                                                <td>
+                                                                    <md-menu class="tab-additional__menu">
+                                                                        <div class="menu__button" aria-label="Additional menu" ng-click="$mdMenu.open($event)">
+                                                                            <span class="button-text _{{test.status.split('_').join(' ').toLowerCase()}}">{{ test.status.split('_').join(' ').toLowerCase() }}</span>
+                                                                            <span class="material-icons button-icon">arrow_drop_down</span>
+                                                                        </div>
+                                                                        <md-menu-content class="tab-additional__menu-content">
+                                                                            <md-menu-item class="menu__item" ng-repeat="item in ['passed', 'failed']">
+                                                                                <md-button ng-click="$ctrl.changeTestStatus(test, item)">
+                                                                                    <span class="item-text {{item}}" md-menu-align-target>{{item}}</span>
+                                                                                </md-button>
+                                                                            </md-menu-item>
+                                                                        </md-menu-content>
+                                                                      </md-menu>
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Started</td>
@@ -101,7 +115,22 @@
                                                         <tr class="testrun-info__tab-table-row">
                                                             <th class="testrun-info__tab-table-col _visuals">Visuals</th>
                                                             <th class="testrun-info__tab-table-col _start">Start</th>
-                                                            <th class="testrun-info__tab-table-col _status">Status</th>
+                                                            <th class="testrun-info__tab-table-col _status">
+                                                                <md-menu md-offset="-16 38">
+                                                                    <div aria-label="Open demo menu" ng-click="$mdMenu.open($event); $ctrl.log($ctrl)" >
+                                                                        <span class="testrun-info__status-icon _{{$ctrl.selectedLevel}}">{{$ctrl.selectedLevel}}</span>
+                                                                        <span class="material-icons _button-icon">filter_list</span>
+                                                                    </div>
+                                                                    <md-menu-content width="2" class="_status dropdown-content">
+                                                                      <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
+                                                                        <md-button ng-click="$ctrl.selectFilterRange($index)" class="listitem__button">
+                                                                            <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
+                                                                            <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">...</span>
+                                                                        </md-button>
+                                                                      </md-menu-item>
+                                                                    </md-menu-content>
+                                                                </md-menu>
+                                                            </th>
                                                             <th class="testrun-info__tab-table-col _action">Action</th>
                                                             <th  class="testrun-info__tab-table-col _menu"></th>
                                                         </tr>
@@ -110,7 +139,7 @@
                                                         <tr ng-dblclick="getVideoState(log);"
                                                             class="testrun-info__tab-table-row"
                                                             ng-attr-id="log-{{ $index }}"
-                                                            ng-if="logs.length"
+                                                            ng-if="logs.length && $ctrl.filterResults(log.level)"
                                                             ng-repeat="log in logs">
                                                             <td class="testrun-info__tab-table-col _visuals testrun-info__tab-table-img-wrapper">
                                                                 <span ng-show="log.driver" style="border-radius: 8px"
