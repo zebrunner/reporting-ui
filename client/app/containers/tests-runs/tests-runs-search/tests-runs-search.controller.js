@@ -104,6 +104,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(
                 environments: vm.environments,
                 platforms: vm.platforms,
                 browsers: vm.browsers,
+                locales: vm.locales,
                 allProjects: vm.allProjects,
             }
         });
@@ -153,6 +154,7 @@ const TestsRunsSearchController = function TestsRunsSearchController(
         loadFilterDataPromises.push(loadEnvironments());
         loadFilterDataPromises.push(loadPlatforms());
         loadFilterDataPromises.push(loadBrowsers());
+        loadFilterDataPromises.push(loadLocales());
         loadFilterDataPromises.push(loadProjects());
 
         return $q.all(loadFilterDataPromises).then(function() {
@@ -193,12 +195,25 @@ const TestsRunsSearchController = function TestsRunsSearchController(
             .then(rs => {
                 if (rs.success) {
                     // TODO: remove when BE get rid of nullish values from DB
-                    vm.browsers = rs.data.filter(Boolean);
+                    vm.browsers = (rs.data  || []).filter(Boolean);
                 } else {
                     messageService.error(rs.message);
                 }
 
                 return vm.browsers;
+            });
+    }
+
+    function loadLocales() {
+        return TestRunService.getLocales()
+            .then(rs => {
+                if (rs.success) {
+                    vm.locales = rs.data || [];
+                } else {
+                    messageService.error(rs.message);
+                }
+
+                return vm.locales;
             });
     }
 
@@ -233,6 +248,9 @@ const TestsRunsSearchController = function TestsRunsSearchController(
                                 break;
                             case 'BROWSER':
                                 criteria.values = vm.browsers;
+                                break;
+                            case 'LOCALE':
+                                criteria.values = vm.locales;
                                 break;
                             case 'PROJECT':
                                 criteria.values = vm.allProjects;

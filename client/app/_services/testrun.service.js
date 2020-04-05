@@ -22,8 +22,9 @@
             rerunTestRun,
             debugTestRun,
             buildTestRun,
-            getJobParameters,
             getEnvironments,
+            getJobParameters,
+            getLocales,
             getPlatforms,
             getBrowsers,
             getConsoleOutput,
@@ -105,6 +106,10 @@
 
         function getBrowsers() {
             return $httpMock.get(API_URL + '/api/tests/runs/browsers').then(UtilService.handleSuccess, UtilService.handleError('Unable to get browsers list'));
+        }
+
+        function getLocales() {
+            return $httpMock.get(API_URL + '/api/tests/runs/locales').then(UtilService.handleSuccess, UtilService.handleError('Unable to get locales list'));
         }
 
         function getConsoleOutput(id, ciRunId, count, fullCount) {

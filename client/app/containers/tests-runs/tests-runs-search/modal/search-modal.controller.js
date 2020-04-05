@@ -8,6 +8,7 @@ const SearchModalController = function SearchModalController(
     allProjects,
     platforms,
     browsers,
+    locales,
     onReset,
     testsRunsService,
     windowWidthService,
@@ -39,6 +40,7 @@ const SearchModalController = function SearchModalController(
         environments,
         platforms,
         browsers,
+        locales,
         allProjects,
     };
 
