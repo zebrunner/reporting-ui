@@ -1,7 +1,7 @@
 <div class="page-wrapper">
     <zf-sub-header ng-class="{'_widget-placement': MODE === 'WIDGET_PLACEMENT'}">
         <zf-sub-header-title>{{dashboard.title}}</zf-sub-header-title>
-        <zf-sub-header-options >
+        <zf-sub-header-options ng-if="!isPageLoading">
             <div class="hide-phone">
                 <md-button class="md-icon-button" data-ng-if="MODE !== 'WIDGET_PLACEMENT' && $ctrl.isToolConnected('EMAIL') && dashboard.widgets.length" ng-click="showEmailDialog($event, dashboard);">
                     <i class="material-icons">
@@ -9,13 +9,17 @@
                     </i>
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </md-button>
-                <md-button class="md-icon-button" ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS']) && isGridStackEvailableToEdit() && dashboard.widgets.length" ng-click="startEditWidgets();">
+                <md-button class="md-icon-button"
+                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS']) && isGridStackEvailableToEdit() && dashboard.widgets.length && !dashboard.system"
+                    ng-click="startEditWidgets();">
                     <i class="material-icons">
                         dashboard
                     </i>
                     <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
                 </md-button>
-                <md-button class="md-icon-button" ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && MODE !== 'WIDGET_PLACEMENT'" ng-click="showDashboardSettingsModal($event, dashboard);">
+                <md-button class="md-icon-button"
+                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && MODE !== 'WIDGET_PLACEMENT' && !dashboard.system"
+                    ng-click="showDashboardSettingsModal($event, dashboard);">
                     <i class="material-icons">
                         edit
                     </i>
