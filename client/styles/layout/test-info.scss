@@ -370,7 +370,6 @@
                 &._no-video {
                     margin-top: 9px;
                     display: block;
-                    cursor: default;
 
                     & .no-video__icon-wrapper {
                         position: absolute;
@@ -430,7 +429,7 @@
 
                         & .controls {
                             color: #808080;
-                            
+
                             &._play{
                                 flex: 0 0 32px;
 
@@ -460,7 +459,6 @@
                                     text-align: end;
                                 }
                             }
-                            
                         }
 
                         &._progress-bar {

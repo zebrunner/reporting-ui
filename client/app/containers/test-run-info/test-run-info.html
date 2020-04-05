@@ -97,7 +97,7 @@
                                                                                 </md-button>
                                                                             </md-menu-item>
                                                                         </md-menu-content>
-                                                                      </md-menu>
+                                                                    </md-menu>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -148,12 +148,12 @@
                                                                         <span class="material-icons _button-icon">filter_list</span>
                                                                     </div>
                                                                     <md-menu-content width="2" class="_status dropdown-content">
-                                                                      <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
-                                                                        <md-button ng-click="$ctrl.selectFilterRange($index)" class="listitem__button">
-                                                                            <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
-                                                                            <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">...</span>
-                                                                        </md-button>
-                                                                      </md-menu-item>
+                                                                        <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
+                                                                            <md-button ng-click="$ctrl.selectFilterRange($index)" class="listitem__button">
+                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
+                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">...</span>
+                                                                            </md-button>
+                                                                        </md-menu-item>
                                                                     </md-menu-content>
                                                                 </md-menu>
                                                             </th>
