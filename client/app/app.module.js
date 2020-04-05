@@ -6,6 +6,7 @@ import progressbarInterceptor from './http-interceptors/progressbar.interceptor'
 import jenkinsIcon from '../assets/images/_icons_tools/jenkins.svg';
 import { TutorialsModule } from './modules/tutorials';
 import { CoreModule } from './core/core.module';
+import { testRunCardModule } from './shared/test-run-card/test-run-card.module';
 import sessionSwitcherComponent from './shared/sessions-switcher/sessions-switcher.component';
 import photoUpload from './shared/photo-upload/photo-upload.directive';
 
@@ -20,7 +21,7 @@ const ngModule = angular
         'app.appSidebar',
         'app.appHeader',
         'app.common',
-        'app.testRunCard',
+        testRunCardModule,
         // 3rd party feature modules
         'ngImgCrop',
         'md.data.table',
