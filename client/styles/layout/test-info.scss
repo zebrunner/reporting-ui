@@ -366,6 +366,119 @@
                     padding: 10px 8px;
                     position: absolute;
                 }
+
+                &._no-video {
+                    margin-top: 9px;
+                    display: block;
+                    cursor: default;
+
+                    & .no-video__icon-wrapper {
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        transform: translate(-50%,-50%);
+
+                        & .icon {
+                            display: block;
+                            color: #fff;
+                            font-size: 66px;
+                            opacity: 0.5;
+                            text-align: center;
+                            position: relative;
+
+                            &::before {
+                                position: absolute;
+                                display: block;
+                                content: '';
+                                top: 22px;
+                                left: 38px;
+                                height: 23px;
+                                width: 28px;
+                                border-radius: 2px;
+                                opacity: 1;
+                                background-color: #000;
+                            }
+
+                            &::after {
+                                position: absolute;
+                                display: block;
+                                content: '';
+                                top: 30px;
+                                left: 21px;
+                                height: 6px;
+                                width: 70px;
+                                transform: rotate(45deg);
+                                opacity: 1;
+                                background-color: #fff;
+                            }
+                        }
+
+                        & .icon__text {
+                            font-weight: 500;
+                            color: #fff;
+                            opacity: 0.5;
+                        }
+                    }
+
+                    & .no-video__controls-wrapper {
+                        position: absolute;
+                        padding: 0 5%;
+                        height: 30px;
+                        width: 100%;
+                        bottom: 40px;
+                        display: flex;
+
+                        & .controls {
+                            color: #808080;
+                            
+                            &._play{
+                                flex: 0 0 32px;
+
+                                & > span {
+                                    font-size: 32px;
+                                    transform: translate(-10px, -5px);
+                                }
+                            }
+
+                            &._time {
+                                flex: 1 1 auto;
+
+                                & > span {
+                                    font-size: 14px;
+                                    line-height: 20px;
+                                }
+                            }
+
+                            &._fullscreen,
+                            &._volume,
+                            &._options {
+                                flex: 0 1 20px;
+                                margin-left: 5%;
+
+                                & > span {
+                                    font-size: 20px;
+                                    text-align: end;
+                                }
+                            }
+                            
+                        }
+
+                        &._progress-bar {
+                            height: 40px;
+                            bottom: 0;
+                            justify-content: center;
+
+                            & .progress-bar {
+                                width: 100%;
+                                margin-top: 5px;
+                                height: 4px;
+                                background-color: #fff;
+                                opacity: 0.5;
+                                border-radius: 1px;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

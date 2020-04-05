@@ -53,13 +53,39 @@
                                                             <i ng-click="fullScreen();" class="material-icons video-control">fullscreen</i>
                                                         </div>
                                                     </div>
+                                                    <div ng-show="!$ctrl.hasVideo" class="testrun-info__tab-video-wrapper _no-video">
+                                                        <div class="no-video__icon-wrapper">
+                                                            <div class="material-icons icon">videocam_off</div>
+                                                            <span class="icon__text">No video attached</span>
+                                                        </div>
+                                                        <div class="no-video__controls-wrapper">
+                                                            <div class="controls _play">
+                                                                <span class="material-icons">arrow_right</span>
+                                                            </div>
+                                                            <div class="controls _time">
+                                                                <span>0:00</span>
+                                                            </div>
+                                                            <div class="controls _volume">
+                                                                <span class="material-icons">volume_up</span>
+                                                            </div>
+                                                            <div class="controls _fullscreen">
+                                                                <span class="material-icons">crop_free</span>
+                                                            </div>
+                                                            <div class="controls _options">
+                                                                <span class="material-icons">more_vert</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="no-video__controls-wrapper _progress-bar">
+                                                            <div class="progress-bar"></div>
+                                                        </div>
+                                                    </div>
                                                     <div class="testrun-info__tab-additional" ng-class="{'__no-video': !$ctrl.hasVideo}">
                                                         <table>
                                                             <tbody>
                                                             <tr>
                                                                 <td>Status</td>
                                                                 <td>
-                                                                    <md-menu class="tab-additional__menu">
+                                                                    <md-menu md-offset="30 20" class="tab-additional__menu">
                                                                         <div class="menu__button" aria-label="Additional menu" ng-click="$mdMenu.open($event)">
                                                                             <span class="button-text _{{test.status.split('_').join(' ').toLowerCase()}}">{{ test.status.split('_').join(' ').toLowerCase() }}</span>
                                                                             <span class="material-icons button-icon">arrow_drop_down</span>
