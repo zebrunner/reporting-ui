@@ -68,6 +68,17 @@
                             class="test-run-card__app-icon _spinner tests-loading-spinner"></md-progress-circular>
                     </div>
                 </div>
+                <div class="test-run-card__artifacts" ng-if="true || $ctrl.testRun.artifacts.length">
+                    <a ng-repeat="artifact in $ctrl.testRun.artifacts"
+                        href="{{artifact.link}}"
+                        target="_blank"
+                        aria-label="Test Run artifact"
+                        class="test-run-card__artifact">
+                        <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
+                        <span>{{artifact.name}}</span>
+                        <md-tooltip md-direction="bottom">{{artifact.name}}</md-tooltip>
+                    </a>
+                </div>
             </div>
             <div class="test-run-card__clickable" ng-class="{ '_highlighting': $ctrl.testRun.highlighting }" ng-if="$ctrl.testRun.status !== 'LAUNCHING'" ng-click="$ctrl.goToTestRun()"></div>
         </div>
@@ -304,6 +315,17 @@
                         ng-class="{ _show: $ctrl.testRun.appVersionLoading }"
                         class="test-run-card__app-icon _spinner tests-loading-spinner"></md-progress-circular>
                 </div>
+            </div>
+            <div class="test-run-card__row _artifacts  test-run-card__artifacts" ng-if="true || $ctrl.testRun.artifacts.length">
+                <a ng-repeat="artifact in $ctrl.testRun.artifacts"
+                    href="{{artifact.link}}"
+                    target="_blank"
+                    aria-label="Test Run artifact"
+                    class="test-run-card__artifact">
+                    <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
+                    <span>{{artifact.name}}</span>
+                    <md-tooltip md-direction="bottom">{{artifact.name}}</md-tooltip>
+                </a>
             </div>
             <div class="test-run-card__row _tags">
                 <div name="testRunEnv" class="test-run-card__cell _env" ng-if="$ctrl.testRun.config.env">
