@@ -118,28 +118,6 @@
             flex-shrink: 1;
             min-width: 200px;
         }
-        &._env {
-            justify-content: center;
-            flex-grow: 1;
-            width: 11%;
-            min-width: 100px;
-            & .label {
-                font-weight: bold !important;
-            }
-        }
-        &._platform {
-            flex-grow: 2;
-            width: 11%;
-            min-width: 40px;
-            flex-wrap: wrap;
-            justify-content: center;
-            @media(min-width: $breakpoint-mid-tablet + 1) and (max-width: 1120px){
-                flex-grow: 0;
-            }
-            @media(min-width: $breakpoint-mobile) and (max-width: 630px){
-                flex-grow: 1;
-            }
-        }
         &._back {
             padding: 0;
         }
@@ -161,6 +139,32 @@
             .label,
             .platform-icon {
                 margin: 0 2px;
+            }
+        }
+
+        &._env {
+            justify-content: center;
+            flex-grow: 1;
+            width: 11%;
+            min-width: 100px;
+            & .label {
+                font-weight: bold;
+            }
+        }
+        &._platform {
+            flex-grow: 2;
+            width: 11%;
+            min-width: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            @media(min-width: $breakpoint-mid-tablet + 1) and (max-width: 1120px){
+                flex-grow: 0;
+            }
+            @media(min-width: $breakpoint-mobile) and (max-width: 630px){
+                flex-grow: 1;
+            }
+            .label {
+                background-color: transparent;
             }
         }
         &._date {
