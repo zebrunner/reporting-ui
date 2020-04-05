@@ -87,9 +87,29 @@ const testDetailsController = function testDetailsController(
         zafiraWebsocket: null,
         testId: null,
         configSnapshot: null,
-        selectedTests: 0,
+        selectedTestsCount: 0,
         isAllTestsSelected: false,
         bulkChangeInProgress: false,
+        batchButtons: [
+            {
+                text: 'Mark as Passed',
+                altText: 'Passed',
+                onClick: bulkChangeStatus,
+                completed: false,
+                class: '_green-icon',
+                action: 'PASSED',
+                mobileIconClass: 'fa-check-circle'
+            },
+            {
+                text: 'Mark as Failed',
+                altText: 'Failed',
+                onClick: bulkChangeStatus,
+                completed: false,
+                class: '_red-icon',
+                action: 'FAILED',
+                mobileIconClass: 'fa-times-circle'
+            },
+        ],
 
         get isMobile() { return windowWidthService.isMobile(); },
         get activeTests() { return _at || []; },
@@ -106,7 +126,6 @@ const testDetailsController = function testDetailsController(
         get isSortingActive() { return isSortingActive(); },
         get currentTitle() { return pageTitleService.pageTitle; },
 
-        bulkChangeStatus,
         changeTestStatus,
         changeViewMode,
         clearTestsSelection,
@@ -327,16 +346,13 @@ const testDetailsController = function testDetailsController(
         }
     }
 
-    function bulkChangeStatus(event, status) {
+    function bulkChangeStatus(event, btn) {
         if (vm.bulkChangeInProgress) { return; }
-        const btn = event.currentTarget;
-        const txtElem = btn.querySelector('.btn-txt');
-        const btnTxt = txtElem ? txtElem.innerText : '';
         const selectedTests = vm.testsToDisplay.filter(test => test.selected);
         const ids = selectedTests.map(({ id }) => id);
 
         vm.bulkChangeInProgress = true;
-        TestService.updateTestsStatus(ids, status)
+        TestService.updateTestsStatus(ids, btn.action)
             .then(res => {
                 if (res.success) {
                     const patchedTests = res.data || [];
@@ -349,15 +365,10 @@ const testDetailsController = function testDetailsController(
                     patchedTests.forEach(patchedTest => {
                         selectedTestsObj[patchedTest.id].status = patchedTest.status;
                     });
-                    btn.classList.add('_completed');
-                    if (txtElem) {
-                        txtElem.innerText = btnTxt.split(' ').pop();
-                    }
+                    // display alt text for a while (1sec)
+                    btn.completed = true;
                     $timeout(() => {
-                        btn.classList.remove('_completed');
-                        if (txtElem) {
-                            txtElem.innerText = btnTxt;
-                        }
+                        btn.completed = false;
                         vm.bulkChangeInProgress = false;
                     }, 1000);
                 } else {
@@ -733,7 +744,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function onAddingNewTest(test) {
-        updateGroupingData(test)
+        updateGroupingData(test);
         onFilterChange();
     }
 
@@ -1072,7 +1083,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function onTestSelect() {
-        vm.selectedTests = vm.testsToDisplay.filter(test => test.selected).length;
+        vm.selectedTestsCount = vm.testsToDisplay.filter(test => test.selected).length;
     }
 
     function onAllTestsSelect() {

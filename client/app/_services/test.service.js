@@ -96,13 +96,13 @@
 
         /**
          *
-         * @param {Number[]} data - Array of IDs
+         * @param {Number[]} ids - Array of IDs
          * @param {String} status
          * @returns {PromiseLike<any> | Promise<any>}
          */
-        function updateTestsStatus(data = [], status = '') {
+        function updateTestsStatus(ids = [], status = '') {
             const params = {
-                ids: data,
+                ids,
                 operation: 'STATUS_UPDATE',
                 value: status,
             };

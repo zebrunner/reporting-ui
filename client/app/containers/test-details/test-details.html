@@ -82,7 +82,7 @@
                 <div class="test-details__header-actions _bulk"
                     layout="row"
                     layout-align="start center"
-                    ng-if="!$ctrl.isMobile && $ctrl.selectedTests">
+                    ng-if="!$ctrl.isMobile && $ctrl.selectedTestsCount">
                     <div class="test-details__test-selection _all" flex="none">
                         <md-checkbox name="testCheckbox"
                             class="test-details__test-checkbox"
@@ -95,18 +95,13 @@
                     </div>
                     <div flex="auto" layout="row" class="test-details__header-actions-btns">
                         <md-button
+                            ng-repeat="btn in $ctrl.batchButtons"
                             flex="none"
-                            class="_green-icon"
-                            ng-click="$ctrl.bulkChangeStatus($event,  'PASSED')">
+                            class="{{  btn.class }}"
+                            ng-class="{ '_completed': btn.completed }"
+                            ng-click="btn.onClick($event,  btn)">
                             <span class="btn-icon"></span>
-                            <span class="btn-txt">Mark as Passed</span>
-                        </md-button>
-                        <md-button
-                            flex="none"
-                            class="_red-icon"
-                            ng-click="$ctrl.bulkChangeStatus($event, 'FAILED')">
-                            <span class="btn-icon"></span>
-                            <span class="btn-txt">Mark as Failed</span>
+                            <span class="btn-txt">{{ btn.completed ? btn.altText: btn.text }}</span>
                         </md-button>
                     </div>
                     <md-button id="close"
@@ -129,7 +124,7 @@
             </md-fab-trigger>
         </md-fab-speed-dial>
         <md-fab-speed-dial id="bulk-fab"
-            ng-if="$ctrl.isMobile && $ctrl.selectedTests && !$ctrl.scrollTicking"
+            ng-if="$ctrl.isMobile && $ctrl.selectedTestsCount && !$ctrl.scrollTicking"
             md-direction="up"
             class="md-scale md-fab-bottom-right">
             <md-fab-trigger>
@@ -138,19 +133,13 @@
                 </md-button>
             </md-fab-trigger>
             <md-fab-actions>
-                <md-button id="bulkMarkAsFailedMobile"
+                <md-button
                     aria-label="menu"
-                    class="md-fab md-raised md-fab-sm"
-                    ng-click="$ctrl.bulkChangeStatus($event,  'FAILED')">
-                    <md-tooltip md-direction="top">Marks as Failed</md-tooltip>
-                    <span class="fa fa-times-circle" aria-hidden="true"></span>
-                </md-button>
-                <md-button id="bulkMarkAsPassedMobile"
-                    aria-label="menu"
-                    class="md-fab md-raised md-fab-sm"
-                    ng-click="$ctrl.bulkChangeStatus($event,  'PASSED')">
-                    <md-tooltip md-direction="top">Mark as Passed</md-tooltip>
-                    <span class="fa fa-check-circle" aria-hidden="true"></span>
+                    ng-repeat="fabBtn in $ctrl.batchButtons"
+                    class="md-fab md-raised md-fab-sm {{ fabBtn.class }}"
+                    ng-click="fabBtn.onClick($event,  fabBtn)">
+                    <md-tooltip md-direction="top">{{ fabBtn.text }}</md-tooltip>
+                    <span class="fa {{ fabBtn.mobileIconClass }}" aria-hidden="true"></span>
                 </md-button>
                 <md-button id="bulkMarkAsPassedMobile"
                     aria-label="menu"
@@ -263,7 +252,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div ng-if="test.tags && test.tags.length" class="test-info__tags">
+                                        <div ng-if="test.tags.length" class="test-info__tags">
                                                 <span class="test-info__tags-tag" ng-repeat="tag in test.tags">
                                                     <span class="test-info__tags-tag-inner" ng-if="(tag.name === 'TESTRAIL_TESTCASE_UUID' && !$ctrl.testRail['TESTRAIL_URL']) ||
                                                     (tag.name === 'QTEST_TESTCASE_UUID' && !$ctrl.qTest['QTEST_URL']) ||
