@@ -36,7 +36,7 @@ const testRunCardController = function testRunCardController(
             showDeleteTestRunOption: false,
             isMobile: windowWidthService.isMobile,
 
-            addToSelectedtestRuns: addToSelectedtestRuns,
+            addToSelectedTestRuns,
             showDetails: showDetails,
             openMenu: openMenu,
             openTestRun: openTestRun,
@@ -74,7 +74,7 @@ const testRunCardController = function testRunCardController(
 
         return vm;
 
-        function addToSelectedtestRuns() {
+        function addToSelectedTestRuns() {
             vm.onSelect && vm.onSelect(vm.testRun);
         }
 
@@ -410,7 +410,7 @@ const testRunCardController = function testRunCardController(
                     } else {
                         //messageService.error(rs.message);
                     }
-                    delete vm.testRun.appVersionLoading;
+                    vm.testRun.appVersionLoading = false;
 
                     return rs.data;
                 });

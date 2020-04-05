@@ -10,7 +10,7 @@
          class="test-run-card__wrapper {{$ctrl.testRun.status}}">
         <div class="test-run-card__wrapper-left">
             <div ng-if="!$ctrl.singleMode" name="testRunStatus" class="test-run-card__cell _selection">
-                <span ng-click="$ctrl.addToSelectedtestRuns()">
+                <span ng-click="$ctrl.addToSelectedTestRuns()">
                     <md-checkbox name="testRunCheckbox"
                                  aria-label="Select"
                                  data-ng-model="$ctrl.testRun.selected"
@@ -52,7 +52,11 @@
                         <span ng-if="!$ctrl.testRun.jenkinsURL || $ctrl.testRun.job.name === 'local'">{{$ctrl.testRun.job.name}}</span>
                     </div>
                     <div class="test-run-card__model" ng-if="$ctrl.testRun.status === 'LAUNCHING'">{{$ctrl.formattedModel}}</div>
-                    <div class="test-run-card__job-file">
+                    <div class="test-run-card__locale" ng-if="$ctrl.testRun.config.locale">
+                        <md-icon class="test-run-card__locale-icon material-icons">public</md-icon>
+                        <span class="test-run-card__locale-text">{{ $ctrl.testRun.config.locale }}</span>
+                    </div>
+                    <div class="test-run-card__job-file" ng-if="$ctrl.testRun.config.appVersion">
                         <md-icon class="test-run-card__app-icon _file material-icons testrun-appversion-icon" data-ng-if="!$ctrl.testRun.appVersionValid && $ctrl.testRun.config.appVersion">insert_drive_file</md-icon>
                         <md-icon class="test-run-card__app-icon _file material-icons testrun-appversion-icon" data-ng-if="$ctrl.testRun.appVersionValid && $ctrl.testRun.config.appVersion">file_download</md-icon>
                         <div class="test-run-card__app-name" ng-if="!$ctrl.testRun.appVersionValid" ng-mouseenter="$ctrl.checkFilePresence()">{{$ctrl.testRun.config.appVersion}}</div>
@@ -182,7 +186,7 @@
          class="test-run-card__wrapper {{$ctrl.testRun.status}}">
         <div class="test-run-card__row _top">
             <div ng-if="!$ctrl.singleMode" name="testRunStatus" class="test-run-card__cell _selection">
-                <span ng-click="$ctrl.addToSelectedtestRuns()">
+                <span ng-click="$ctrl.addToSelectedTestRuns()">
                     <md-checkbox name="testRunCheckbox" aria-label="Select" data-ng-model="$ctrl.testRun.selected"
                                  data-ng-if="$ctrl.testRun.selected || ($ctrl.testRun.status !== 'IN_PROGRESS' && $ctrl.testRun.status !== 'LAUNCHING')"
                                  data-ng-true-value="true" data-ng-false-value="false">
@@ -284,16 +288,22 @@
         </div>
 
         <div class="test-run-card__row _wrapper _middle" ng-if="$ctrl.testRun.status !== 'LAUNCHING'">
-            <div class="test-run-card__row _app-file" ng-hide="!$ctrl.singleMode && ! $ctrl.testRun.config.appVersion">
-                <md-icon class="test-run-card__app-icon _file material-icons testrun-appversion-icon" data-ng-if="!$ctrl.testRun.appVersionValid && $ctrl.testRun.config.appVersion">insert_drive_file</md-icon>
-                <md-icon class="test-run-card__app-icon _file material-icons testrun-appversion-icon" data-ng-if="$ctrl.testRun.appVersionValid && $ctrl.testRun.config.appVersion">file_download</md-icon>
-                <div class="test-run-card__app-name" ng-if="!$ctrl.testRun.appVersionValid" ng-mouseenter="$ctrl.checkFilePresence()">{{$ctrl.testRun.config.appVersion}}</div>
-                <div class="test-run-card__app-name" ng-if="$ctrl.testRun.appVersionValid" ng-click="$ctrl.downloadApplication()">{{$ctrl.testRun.config.appVersion}}</div>
-                <md-progress-circular
-                    md-mode="indeterminate"
-                    md-diameter="10px"
-                    ng-class="{ _show: $ctrl.testRun.appVersionLoading }"
-                    class="test-run-card__app-icon _spinner tests-loading-spinner"></md-progress-circular>
+            <div class="test-run-card__row _app-file" ng-if="$ctrl.testRun.config.appVersion || $ctrl.testRun.config.locale">
+                <div class="test-run-card__locale" ng-if="$ctrl.testRun.config.locale">
+                    <md-icon class="test-run-card__locale-icon material-icons">public</md-icon>
+                    <span class="test-run-card__locale-text">{{ $ctrl.testRun.config.locale }}</span>
+                </div>
+                <div class="test-run-card__job-file" ng-if="$ctrl.testRun.config.appVersion">
+                    <md-icon class="test-run-card__app-icon _file material-icons testrun-appversion-icon" data-ng-if="!$ctrl.testRun.appVersionValid && $ctrl.testRun.config.appVersion">insert_drive_file</md-icon>
+                    <md-icon class="test-run-card__app-icon _file material-icons testrun-appversion-icon" data-ng-if="$ctrl.testRun.appVersionValid && $ctrl.testRun.config.appVersion">file_download</md-icon>
+                    <div class="test-run-card__app-name" ng-if="!$ctrl.testRun.appVersionValid" ng-mouseenter="$ctrl.checkFilePresence()">{{$ctrl.testRun.config.appVersion}}</div>
+                    <div class="test-run-card__app-name" ng-if="$ctrl.testRun.appVersionValid" ng-click="$ctrl.downloadApplication()">{{$ctrl.testRun.config.appVersion}}</div>
+                    <md-progress-circular
+                        md-mode="indeterminate"
+                        md-diameter="10px"
+                        ng-class="{ _show: $ctrl.testRun.appVersionLoading }"
+                        class="test-run-card__app-icon _spinner tests-loading-spinner"></md-progress-circular>
+                </div>
             </div>
             <div class="test-run-card__row _tags">
                 <div name="testRunEnv" class="test-run-card__cell _env" ng-if="$ctrl.testRun.config.env">

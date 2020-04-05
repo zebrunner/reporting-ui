@@ -1,5 +1,5 @@
-@import "../global/var";
-@import "../ui/components/animation";
+@import "../../../styles/global/var";
+@import "../../../styles/ui/components/animation";
 
 .test-run-card {
     .p-test-details & {
@@ -321,7 +321,28 @@
             max-width: 100%;
         }
     }
-
+    &__locale {
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
+        &-icon {
+            height: 12px;
+            width: 12px;
+            min-height: 12px;
+            min-width: 12px;
+            margin-right: 2px;
+            font-size: 12px;
+        }
+        &-text {
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, .5);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
     &__app {
         &-icon {
             flex-grow: 0;
