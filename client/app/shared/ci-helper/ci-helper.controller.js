@@ -51,6 +51,7 @@ const CiHelperController = function CiHelperController(
         platforms: [],
         platformModel: {},
         providers: [],
+        launcherPreferences: [],
         platformsConfig: null,
         providersFail: false,
         loadingScm: true,
@@ -64,6 +65,8 @@ const CiHelperController = function CiHelperController(
         shouldBeDisplayed,
         authService,
         setFavouriteLauncher,
+        saveLauchersPreferencesForRescan,
+        applySavedPreferences,
         userHasAnyPermission: authService.userHasAnyPermission,
 
         get isMobile() { return windowWidthService.isMobile(); },
@@ -196,6 +199,21 @@ const CiHelperController = function CiHelperController(
             }
         }
     };
+
+    function saveLauchersPreferencesForRescan() {
+        $scope.launchers.forEach((item) => {
+            vm.launcherPreferences.push({id: item.id, preference: item.preference});
+        });
+    };
+
+    function applySavedPreferences() {
+        $scope.launchers.forEach((item) => {
+            const savedObj = vm.launcherPreferences.find(obj => obj.id === item.id);
+            if (savedObj) {
+                item.preference = savedObj.preference;
+            }
+        })
+    }
 
     function addNewGithubRepoCssApply(element, isAdd) {
         var el = angular.element(element).closest('button');
@@ -601,6 +619,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.scanRepository = function (launcherScan, rescan) {
         if (launcherScan && launcherScan.branch && $scope.scmAccount.id) {
+            saveLauchersPreferencesForRescan();
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !!rescan;
@@ -958,6 +977,7 @@ const CiHelperController = function CiHelperController(
                 messageService.error('Unable to scan repository');
             }
             $scope.onScanRepositoryFinish();
+            applySavedPreferences();
             $scope.$apply();
         });
     }
