@@ -3,13 +3,14 @@
 const IssuesModalController = function IssuesModalController(
     $scope,
     $mdDialog,
+    $mdMedia,
     $interval,
     TestService,
     test,
     isNewIssue,
     toolsService,
     messageService,
-    windowWidthService) {
+) {
     'ngInject';
 
     const vm = {
@@ -30,7 +31,7 @@ const IssuesModalController = function IssuesModalController(
         cancel: cancel,
         isToolConnected: toolsService.isToolConnected,
         get isConnectedToJira() { return toolsService.isToolConnected('JIRA'); },
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
     };
 
     vm.$onInit = initController;

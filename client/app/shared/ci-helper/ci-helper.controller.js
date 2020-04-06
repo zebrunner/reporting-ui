@@ -12,9 +12,9 @@ const CiHelperController = function CiHelperController(
     toolsService,
     $window,
     $mdDialog,
+    $mdMedia,
     $timeout,
     $interval,
-    windowWidthService,
     LauncherService,
     UserService,
     ScmService,
@@ -69,7 +69,7 @@ const CiHelperController = function CiHelperController(
         applySavedPreferences,
         userHasAnyPermission: authService.userHasAnyPermission,
 
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
         get noPlatformValue() { return getNoPlatformValue(); },
     };
 

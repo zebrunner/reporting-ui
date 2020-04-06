@@ -69,7 +69,7 @@
             blur-filter
             blur-radius="1px"
             blur-active="{{$ctrl.isUserParamSaving}}">
-            <div class="p-tests-runs__section _header">
+            <div class="p-tests-runs__section _header test-runs__header">
                 <tests-runs-search on-filter-change="$ctrl.getTestRuns(1)">
                     <span>
                         <md-checkbox name="testRunSearchCheckbox"
@@ -81,6 +81,64 @@
                         </md-checkbox>
                     </span>
                 </tests-runs-search>
+                <div class="test-runs__bulk"
+                    layout="row"
+                    layout-align="start center"
+                    ng-if="!$ctrl.isMobile && $ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length">
+                    <div class="test-runs__test-selection _all" flex="none">
+                        <md-checkbox name="testCheckbox"
+                            class="test-runs__test-checkbox"
+                            aria-label="Select"
+                            ng-model="$ctrl.isAllTestsSelected"
+                            ng-change="$ctrl.onAllTestsSelect()"
+                            ng-true-value="true"
+                            ng-false-value="false">
+                        </md-checkbox>
+                    </div>
+                    <div flex="auto" layout="row" class="test-runs__header-actions-btns">
+                        <md-button id="compareTestRuns" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-if="$ctrl.selectedTestRuns.length > 1 && $ctrl.areTestRunsFromOneSuite()" ng-click="$ctrl.showCompareDialog($event)">
+                            <md-tooltip md-direction="top">Compare</md-tooltip>
+                            <span class="fa fa-columns" aria-hidden="true"></span>
+                        </md-button>
+                        <md-button id="rerunTestRuns"
+                            ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.isToolConnected('JENKINS')"
+                            aria-label="menu"
+                            class="md-fab md-raised md-fab-sm"
+                            data-ng-really-message="Do you really want to rerun multiple test runs?"
+                            data-ng-really-click="$ctrl.batchRerun()">
+                            <md-tooltip md-direction="top">Rerun</md-tooltip>
+                            <span class="fa fa-undo" aria-hidden="true"></span>
+                        </md-button>
+                        <md-button id="deleteTestRuns"
+                            ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS'])"
+                            aria-label="menu"
+                            class="md-fab md-raised md-fab-sm"
+                            data-ng-really-message="Do you really want to delete multiple test runs?"
+                            data-ng-really-click="$ctrl.batchDelete()">
+                            <md-tooltip md-direction="top">Delete</md-tooltip>
+                            <span class="fa fa-trash" aria-hidden="true"></span>
+                        </md-button>
+                        <md-button id="abortTestRuns"
+                            ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI'])"
+                            aria-label="menu"
+                            class="md-fab md-raised md-fab-sm"
+                            data-ng-really-message="Do you really want to abort multiple test runs?"
+                            data-ng-really-click="$ctrl.abortSelectedTestRuns()">
+                            <md-tooltip md-direction="top">Abort selected test runs</md-tooltip>
+                            <span class="fa fa-ban" aria-hidden="true"></span>
+                        </md-button>
+                        <md-button id="sendTestRunsAsEmail" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-click="$ctrl.batchEmail($event)" data-ng-if="$ctrl.isToolConnected('EMAIL')">
+                            <md-tooltip md-direction="top">Send as email</md-tooltip>
+                            <span class="fa fa-envelope-o" aria-hidden="true"></span>
+                        </md-button>
+                    </div>
+                    <md-button id="close"
+                        flex="none"
+                        class="md-icon-button _default-md-style"
+                        ng-click="$ctrl.clearTestsSelection()">
+                        <md-icon aria-label="Reset selection">close</md-icon>
+                    </md-button>
+                </div>
             </div>
             <div class="p-tests-runs__section _content row ui-section no-margin">
                 <div class="col-md-12 no-padding">

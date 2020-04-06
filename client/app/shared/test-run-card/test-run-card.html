@@ -1,11 +1,11 @@
 <div class="test-run-card" ng-class="{
             '_single': $ctrl.singleMode,
-            '_mobile': $ctrl.isMobile(),
+            '_mobile': $ctrl.isMobile,
             '_details': $ctrl.singleWholeInfo,
             '_launch': $ctrl.testRun.status === 'LAUNCHING'
         }">
     <div ng-attr-id="testRun_{{$ctrl.testRun.id}}"
-         ng-if="!$ctrl.isMobile()"
+         ng-if="!$ctrl.isMobile"
          ng-class="{'background-gray': $ctrl.testRun.selected}"
          class="test-run-card__wrapper {{$ctrl.testRun.status}}">
         <div class="test-run-card__wrapper-left">
@@ -76,7 +76,6 @@
                         class="test-run-card__artifact">
                         <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
                         <span>{{artifact.name}}</span>
-                        <md-tooltip md-direction="bottom">{{artifact.name}}</md-tooltip>
                     </a>
                 </div>
             </div>
@@ -193,7 +192,7 @@
     <!--MOBILE VERSION-->
     <div ng-attr-id="testRun_{{$ctrl.testRun.id}}"
          ng-class="{'background-gray': $ctrl.testRun.selected}"
-         ng-if="$ctrl.isMobile()"
+         ng-if="$ctrl.isMobile"
          class="test-run-card__wrapper {{$ctrl.testRun.status}}">
         <div class="test-run-card__row _top">
             <div ng-if="!$ctrl.singleMode" name="testRunStatus" class="test-run-card__cell _selection">
@@ -324,7 +323,6 @@
                     class="test-run-card__artifact">
                     <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
                     <span>{{artifact.name}}</span>
-                    <md-tooltip md-direction="bottom">{{artifact.name}}</md-tooltip>
                 </a>
             </div>
             <div class="test-run-card__row _tags">

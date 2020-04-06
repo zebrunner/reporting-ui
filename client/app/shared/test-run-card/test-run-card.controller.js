@@ -3,6 +3,7 @@
 const testRunCardController = function testRunCardController(
     $interval,
     $mdDialog,
+    $mdMedia,
     $mdToast,
     $rootScope,
     $state,
@@ -16,7 +17,6 @@ const testRunCardController = function testRunCardController(
     toolsService,
     UserService,
     UtilService,
-    windowWidthService,
     ) {
         'ngInject';
 
@@ -34,7 +34,6 @@ const testRunCardController = function testRunCardController(
             showNotifyInSlackOption: false,
             showBuildNowOption: false,
             showDeleteTestRunOption: false,
-            isMobile: windowWidthService.isMobile,
 
             addToSelectedTestRuns,
             showDetails: showDetails,
@@ -56,7 +55,11 @@ const testRunCardController = function testRunCardController(
             goToTestRun: goToTestRun,
             isToolConnected: toolsService.isToolConnected,
             userHasAnyPermission: authService.userHasAnyPermission,
+            $onInit() {
+                console.log(this.testRun);
+            },
 
+            get isMobile() { return $mdMedia('xs'); },
             get currentOffset() { return $rootScope.currentOffset; },
             get formattedModel() {
                 let jsonModel = JSON.parse(vm.testRun.model);

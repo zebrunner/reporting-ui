@@ -23,11 +23,10 @@ const testDetailsController = function testDetailsController(
     $mdDialog,
     toolsService,
     messageService,
-    windowWidthService,
     ArtifactService,
     pageTitleService,
     authService,
-    ) {
+) {
     'ngInject';
 
     const initialCountToDisplay = 50;
@@ -112,7 +111,7 @@ const testDetailsController = function testDetailsController(
             },
         ],
 
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
         get isTablet() { return !$mdMedia('gt-md'); },
         get activeTests() { return _at || []; },
         set activeTests(data) { _at = data; return _at; },

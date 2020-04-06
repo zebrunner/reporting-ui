@@ -1,6 +1,7 @@
 'use strict';
 
 const TestsRunsFilterController = function TestsRunsFilterController(
+    $mdMedia,
     $scope,
     FilterService,
     DEFAULT_SC,
@@ -12,7 +13,6 @@ const TestsRunsFilterController = function TestsRunsFilterController(
     UserService,
     $timeout,
     $mdDateRangePicker,
-    windowWidthService,
     messageService,
 ) {
     'ngInject';
@@ -87,8 +87,8 @@ const TestsRunsFilterController = function TestsRunsFilterController(
             LAST_14_DAYS: 'last 14 days',
             LAST_30_DAYS: 'last 30 days'        },
         get currentUser() { return UserService.currentUser; },
+        get isMobile() { return $mdMedia('xs'); },
         chipsCtrl: null,
-        isMobile: windowWidthService.isMobile,
         isMobileSearchActive: false,
 
         matchMode: matchMode,
@@ -254,6 +254,7 @@ const TestsRunsFilterController = function TestsRunsFilterController(
             if(rs.success) {
                 vm.subjectBuilder = rs.data;
                 vm.subjectBuilder.criterias.forEach(function(criteria) {
+                    console.log(criteria);
                     if (isSelectCriteria(criteria)) {
                         switch(criteria.name) {
                             case 'ENV':

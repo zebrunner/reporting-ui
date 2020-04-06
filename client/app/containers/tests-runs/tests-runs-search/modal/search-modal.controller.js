@@ -3,6 +3,7 @@
 const SearchModalController = function SearchModalController(
     $mdDateRangePicker,
     $mdDialog,
+    $mdMedia,
     onApply,
     environments,
     allProjects,
@@ -11,7 +12,6 @@ const SearchModalController = function SearchModalController(
     locales,
     onReset,
     testsRunsService,
-    windowWidthService,
     DEFAULT_SC,
     UtilService,
     ) {
@@ -19,7 +19,7 @@ const SearchModalController = function SearchModalController(
 
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
     const vm = {
-        isMobile: windowWidthService.isMobile,
+        get isMobile() { return $mdMedia('xs'); },
         statuses: STATUSES,
         selectedRange: {
             selectedTemplate: null,

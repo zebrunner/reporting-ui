@@ -14,6 +14,7 @@ const AppSidebarController = function (
     $rootScope,
     $q,
     $mdDialog,
+    $mdMedia,
     $state,
     $timeout,
     $transitions,
@@ -26,7 +27,6 @@ const AppSidebarController = function (
     projectsService,
     SettingsService,
     UserService,
-    windowWidthService,
 ) {
     'ngInject';
 
@@ -80,7 +80,7 @@ const AppSidebarController = function (
 
         get companyLogo() { return $rootScope.companyLogo; },
         get currentUser() { return UserService.currentUser; },
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
         get dashboardList() { return DashboardService.dashboards; },
         get menuItems() { return mainMenuService.items; },
         getSubitems(name) { return mainMenuService.getSubItemsDefaultMenu(name); },
@@ -413,7 +413,7 @@ const AppSidebarController = function (
 
     function closeMenu(openedLiElement = navElem.querySelector(`.${mainMenuConfig.liSelector}.${mainMenuConfig.openClassifier}`)) {
         // auto-close mobile menu
-        if (windowWidthService.windowWidth <= menuMobileBreakpoint && navContainerElem.classList.contains(mainMenuConfig.mobileClass)) {
+        if ($mdMedia(`max-width: ${menuMobileBreakpoint}px`) && navContainerElem.classList.contains(mainMenuConfig.mobileClass)) {
             navContainerElem.classList.remove(mainMenuConfig.mobileClass);
         }
         // there is no opened element

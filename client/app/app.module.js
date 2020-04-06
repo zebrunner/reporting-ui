@@ -793,26 +793,6 @@ const ngModule = angular
             }
         };
     })
-    .directive('windowWidth', function ($window, windowWidthService) {
-        'ngInject';
-
-        return {
-            restrict: 'A',
-            link: function($scope) {
-                angular.element($window).on('resize', function() {
-                    windowWidthService.windowWidth = $window.innerWidth;
-                    windowWidthService.windowHeight = $window.innerHeight;
-
-                    $scope.$digest();
-
-                    $scope.$emit('resize.getWindowSize', {
-                        innerWidth: windowWidthService.windowWidth,
-                        innerHeight: windowWidthService.windowHeight
-                    });
-                });
-            }
-        };
-    })
     .directive('loadOnScroll', ($timeout) => {
         'ngInject';
 
