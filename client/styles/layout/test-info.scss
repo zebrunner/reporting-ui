@@ -118,7 +118,7 @@
             height: 16px;
             text-align: center;
             text-transform: uppercase;
-
+            
             &._debug {
                 background-color: $green-new;
                 color: #fff;
@@ -136,17 +136,27 @@
             }
 
             &._info,
-            &._trace {
-                background-color: rgba($dark-new, 0.07);
-            }
-
+            &._trace,
             &._status {
-                text-transform: capitalize;
+                background-color: rgba($dark-new, 0.07);
             }
 
             &.button__text {
                 font-size: 12px;
                 line-height: 1.42857;
+            }
+        }
+
+        &-button-icon {
+            display: inline-block;
+            min-width: 44px;
+            border-radius: 2px;
+            height: 16px;
+            text-align: center;
+            text-transform: capitalize;
+
+            &:not(._status) + ._button-icon {
+                color: $brand-primary;
             }
         }
     }
