@@ -8,7 +8,7 @@ const logLevelService = function logLevelService() {
     function filterLogs(logs, selectedLevel) {
         if (selectedLevel !== 'status') {
             const selectedRange = logLevels.slice(0, logLevels.indexOf(selectedLevel) + 1);
-            
+
             return logs.filter((log) => selectedRange.includes(log.level.toLowerCase()));
         }
 
@@ -24,7 +24,6 @@ const logLevelService = function logLevelService() {
         setFilterRange,
 
         get logLevels() { return logLevels; },
-
         get initialLevel() { return initialLevel; },
     };
 };
