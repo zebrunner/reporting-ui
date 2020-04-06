@@ -8,6 +8,7 @@ import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
 const testDetailsController = function testDetailsController(
+    $mdMedia,
     $scope,
     $timeout,
     $rootScope,
@@ -112,6 +113,7 @@ const testDetailsController = function testDetailsController(
         ],
 
         get isMobile() { return windowWidthService.isMobile(); },
+        get isTablet() { return !$mdMedia('gt-md'); },
         get activeTests() { return _at || []; },
         set activeTests(data) { _at = data; return _at; },
         get testsToDisplay() {

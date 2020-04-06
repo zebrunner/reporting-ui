@@ -82,7 +82,7 @@
                 <div class="test-details__header-actions _bulk"
                     layout="row"
                     layout-align="start center"
-                    ng-if="!$ctrl.isMobile && $ctrl.selectedTestsCount">
+                    ng-if="!$ctrl.isTablet && $ctrl.selectedTestsCount">
                     <div class="test-details__test-selection _all" flex="none">
                         <md-checkbox name="testCheckbox"
                             class="test-details__test-checkbox"
@@ -124,7 +124,7 @@
             </md-fab-trigger>
         </md-fab-speed-dial>
         <md-fab-speed-dial id="bulk-fab"
-            ng-if="$ctrl.isMobile && $ctrl.selectedTestsCount && !$ctrl.scrollTicking"
+            ng-if="$ctrl.isTablet && $ctrl.selectedTestsCount && !$ctrl.scrollTicking"
             md-direction="up"
             class="md-scale md-fab-bottom-right">
             <md-fab-trigger>
@@ -309,7 +309,7 @@
                                         <!-- <div class="test__clickable-wrapper"></div> -->
                                     </td>
                                     <td class="test-label">
-                                            <span data-ng-repeat="issue in test.workItems" class="work-items">
+                                            <div data-ng-repeat="issue in test.workItems" class="work-items">
                                                 <!-- URL pattern for Jira -->
                                                 <a name="taskTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</a>
                                                 <a name="bugTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</a>
@@ -318,7 +318,7 @@
                                                 <a name="bugTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && !$ctrl.jira['JIRA_URL'].includes('atlassian') && !$ctrl.jira['JIRA_URL'].includes('jira') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</a>
                                                 <span name="taskTicket" ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</span>
                                                 <span name="bugTicket" ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</span>
-                                            </span>
+                                            </div>
                                     </td>
                                     <td class="test-settings">
                                         <div class="align-middle align-right" ng-if="test.status !== 'QUEUED' && test.isInView">

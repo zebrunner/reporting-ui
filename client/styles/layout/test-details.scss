@@ -6,7 +6,7 @@
         top: $header_height;
         z-index: 4;
         box-shadow: 0 4px 8px 0 rgba(4, 0, 0, 0.2);
-        @media (max-width: $breakpoint-mobile - 1) {
+        @media (max-width: $md-screen-phone) {
             box-shadow: none;
             margin-bottom: 2px;
         }
@@ -15,7 +15,7 @@
                 height: 40px;
             }
             .sort-new.test-run-group-column {
-                @media(max-width: $breakpoint-mobile - 1) {
+                @media(max-width: $md-screen-phone) {
                     padding: 0 10px !important;
                 }
                 .test-run-group {
@@ -26,7 +26,7 @@
                         align-items: center;
                         &._left {
                             flex-grow: 1;
-                            @media(max-width: $breakpoint-mobile - 1) {
+                            @media(max-width: $md-screen-phone) {
                                 overflow-x: scroll;
                                 display: none;
                             }
@@ -50,7 +50,7 @@
                         @media (max-width: 998px) {
                             margin-right: 10px;
                         }
-                        @media(max-width: $breakpoint-mobile - 1) {
+                        @media(max-width: $md-screen-phone) {
                             display: none;
                         }
 
@@ -83,7 +83,7 @@
                             }
                         }
 
-                        @media(max-width: $breakpoint-mobile) {
+                        @media(max-width: $md-screen-phone) {
                             padding: 3px 0;
                             min-width: auto;
                             & .pointer {
@@ -131,13 +131,13 @@
                     &_tags {
                         min-width: 260px;
                         width: auto;
-                        @media(max-width: $breakpoint-mobile) {
+                        @media(max-width: $md-screen-phone) {
                             display: flex;
                             max-width: calc(100vw - 20px);
                         }
                         md-chips {
                             md-chips-wrap.md-chips {
-                                @media(max-width: $breakpoint-mobile) {
+                                @media(max-width: $md-screen-phone) {
                                     display: flex;
                                 }
                                 md-chip {
@@ -172,12 +172,13 @@
     }
     md-table-container {
         background-color: $gray-bg-light-new;
+        overflow: unset;
         .table {
             margin-bottom: 0;
             .test {
                 position: relative;
                 display: flex;
-                @media(max-width: $breakpoint-mobile) {
+                @media(max-width: $md-screen-phone) {
                     flex-wrap: wrap;
                     width: calc(100vw - 60px);
                 }
@@ -229,25 +230,25 @@
                     }
                 }
                 &-selection {
-                    width: 53px;
+                    width: 50px;
                     font-size: 14px;
-                    padding: 10px 0 5px 5px;
+                    padding: 7px 0 5px 0;
                     text-align: center;
-                    @media (max-width: 959px) {
+                    @media (max-width: 599px) {
                         display: none;
                     }
                 }
                 &-info {
                     width: 50vw;
                     flex-grow: 1;
-                    padding-left: 5px;
+                    padding-left: 0;
                     @media (max-width:670px) {
                         width: 45vw;
                     }
                     @media (max-width: 959px) {
-                        padding-left: 24px;
+                        padding-left: 0;
                     }
-                    @media(max-width: $breakpoint-mobile) {
+                    @media(max-width: $md-screen-phone) {
                         width: 100%;
                         border-top: 0 !important;
                         padding-bottom: 0 !important;
@@ -262,7 +263,7 @@
                         flex-wrap: wrap;
                         font-size: 12px;
 
-                        @media(max-width: $breakpoint-mobile) {
+                        @media(max-width: $md-screen-phone) {
                             margin-top: 5px;
                         }
                         .material-icons,
@@ -307,7 +308,7 @@
                         padding-left: 0;
                         margin-left: 0;
                         min-height: 25px;
-                        @media(max-width: $breakpoint-mobile) {
+                        @media(max-width: $md-screen-phone) {
                             margin-top: 10px;
                             margin-left: 0 !important;
                         }
@@ -327,39 +328,56 @@
                         }
                     }
                 }
-                & .test-label {
+                &-label {
                     max-width: 110px;
                     width: 110px;
                     padding: 15px 5px;
                     @extend %noBorderPadding;
-                    @media (max-width: $breakpoint-mobile) {
+                    .work-items {
+                        font-size: 0;
+                        .badge {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            max-width: 100px;
+                        }
+                        &:not(:last-of-type) .badge {
+                            margin-bottom: 12px;
+                        }
+                    }
+
+                    @media (max-width: $md-screen-phone) {
                         padding: 15px;
                         width: 100%;
                         max-width: 100%;
                         text-align: left;
-                        & .work-items .badge {
-                            margin-top: 7px;
+                        .work-items {
+                            display: inline-block;
+                            margin-right: 4px;
+                            .badge {
+                                margin-top: 8px;
+                            }
+                            &:not(:last-of-type) .badge {
+                                margin-bottom: 0;
+                            }
                         }
-                    }
-                    & .work-items .badge {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 100px;
                     }
                 }
                 &-settings {
+                    max-width: 100px;
+                    padding: 8px 8px 15px 15px;
                     .divider {
                         width: 28px;
                         height: 2px;
                         background-color: #c9d6ca;
                         transform: rotate(-90deg);
-                        @media(max-width: $breakpoint-mobile) {
+                        @media(max-width: $md-screen-phone) {
                             display: none;
                         }
                     }
-                    @media(max-width: $breakpoint-mobile) {
+                    @media(max-width: $md-screen-phone) {
                         flex-grow: 1;
                         padding: 0 9px 5px 15px;
+                        max-width: unset;
                     }
                     &__attachment {
                         display: flex;
@@ -397,7 +415,7 @@
                             padding: 0;
                             margin: 0;
                             height: auto;
-                            @media (max-width: $breakpoint-mobile - 1) {
+                            @media (max-width: $md-screen-phone) {
                                 md-icon {
                                     font-size: 20px;
                                     width: 20px;
@@ -435,7 +453,6 @@
                 opacity: 0.5;
                 position: relative;
                 vertical-align: middle;
-                // top: -4px;
 
                 &.checked {
                     transform: rotate(-180deg);
@@ -542,7 +559,7 @@
             }
         }
     }
-    @media (max-width: $breakpoint-mobile - 1) {
+    @media (max-width: $md-screen-phone) {
         .page {
             padding: 0;
             md-card {
@@ -711,16 +728,23 @@
                         width: 55px;
                     }
                 }
+
+            }
+        }
+
+        @media (max-width: $md-screen-phone) {
+            &__test {
                 &-header {
                     display: flex;
-                    align-items: center;
-                    margin-left: -10px;
+                    align-items: flex-start;
                     &-selection {
                         display: flex;
                         flex: none;
                         width: auto;
                         font-size: 14px;
                         padding: 0;
+                        margin-top: -9px;
+                        margin-left: -11px;
                     }
                 }
             }
@@ -751,7 +775,7 @@
 }
 
 %noBorderPadding {
-    @media(max-width: $breakpoint-mobile) {
+    @media(max-width: $md-screen-phone) {
         border-top: 0 !important;
         padding-top: 0 !important;
         padding-bottom: 0 !important;
