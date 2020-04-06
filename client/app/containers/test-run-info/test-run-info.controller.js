@@ -25,6 +25,7 @@ const testRunInfoController = function testRunInfoController(
     pageTitleService,
     authService,
     messageService,
+    logLevelService,
 ) {
     'ngInject';
 
@@ -33,15 +34,14 @@ const testRunInfoController = function testRunInfoController(
         testRun: null,
         configSnapshot: null,
         wsSubscription: null,
-        logLevels: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'status'],
-        selectedLevels: [],
-        selectedLevel: 'status',
+        logLevels: logLevelService.logLevels,
+        filteredLogs: [],
+        selectedLevel: logLevelService.initialLevel,
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
         downloadAllArtifacts,
         filterResults,
-        selectFilterRange,
         changeTestStatus,
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
@@ -113,17 +113,13 @@ const testRunInfoController = function testRunInfoController(
     var LIVE_LOGS_INTERVAL_NAME = 'liveLogsFromElasticsearch';
     var scrollEnable = true;
 
-    function filterResults(itemLevel) {
-        if (vm.selectedLevel === 'status') {
-            return true;
+    function filterResults(item) {
+        if (vm.selectedLevel === logLevelService.logLevels[item]) {
+            return;
         }
 
-        return vm.selectedLevels.includes(itemLevel.toLowerCase());
-    };
-
-    function selectFilterRange(item) {
-        vm.selectedLevel = vm.logLevels[item];
-        vm.selectedLevels = vm.logLevels.slice(0, item + 1);
+        vm.selectedLevel = logLevelService.logLevels[item];
+        vm.filteredLogs = logLevelService.filterLogs($scope.logs, vm.selectedLevel);
     };
 
     function downloadImageArtifacts() {
@@ -694,6 +690,7 @@ const testRunInfoController = function testRunInfoController(
                 $scope.logs.push(log);
                 break;
         }
+        vm.filteredLogs = $scope.logs;
         $scope.$applyAsync();
     };
 

@@ -149,7 +149,7 @@
                                                                     </div>
                                                                     <md-menu-content width="2" class="_status dropdown-content">
                                                                         <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
-                                                                            <md-button ng-click="$ctrl.selectFilterRange($index)" class="listitem__button">
+                                                                            <md-button ng-click="$ctrl.filterResults($index)" class="listitem__button">
                                                                                 <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
                                                                                 <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">...</span>
                                                                             </md-button>
@@ -165,8 +165,8 @@
                                                         <tr ng-dblclick="getVideoState(log);"
                                                             class="testrun-info__tab-table-row"
                                                             ng-attr-id="log-{{ $index }}"
-                                                            ng-if="logs.length && $ctrl.filterResults(log.level)"
-                                                            ng-repeat="log in logs">
+                                                            ng-if="logs.length"
+                                                            ng-repeat="log in $ctrl.filteredLogs">
                                                             <td class="testrun-info__tab-table-col _visuals testrun-info__tab-table-img-wrapper">
                                                                 <span ng-show="log.driver" style="border-radius: 8px"
                                                                     class="label label-default">Driver {{
