@@ -113,12 +113,12 @@ const testRunInfoController = function testRunInfoController(
     var LIVE_LOGS_INTERVAL_NAME = 'liveLogsFromElasticsearch';
     var scrollEnable = true;
 
-    function filterResults(item) {
-        if (vm.selectedLevel === logLevelService.logLevels[item]) {
+    function filterResults(index) {
+        if (vm.selectedLevel === logLevelService.logLevels[index]) {
             return;
         }
 
-        vm.selectedLevel = logLevelService.logLevels[item];
+        vm.selectedLevel = logLevelService.logLevels[index];
         vm.filteredLogs = logLevelService.filterLogs($scope.logs, vm.selectedLevel);
     };
 
