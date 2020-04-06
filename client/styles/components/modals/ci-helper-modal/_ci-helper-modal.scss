@@ -49,6 +49,12 @@
                         &._active {
                             color: #FF9800;
                         }
+
+                        &._settings-icon {
+                            &:hover {
+                                color: $dark-coal-light-new;
+                            }
+                        }
                     }
                     vertical-align: middle;
                     i {

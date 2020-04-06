@@ -51,7 +51,7 @@ const CiHelperController = function CiHelperController(
         platforms: [],
         platformModel: {},
         providers: [],
-        launcherPreferences: [],
+        launcherPreferences: {},
         platformsConfig: null,
         providersFail: false,
         loadingScm: true,
@@ -202,18 +202,16 @@ const CiHelperController = function CiHelperController(
 
     function saveLauchersPreferencesForRescan() {
         $scope.launchers.forEach((item) => {
-            vm.launcherPreferences.push({id: item.id, preference: item.preference});
+            vm.launcherPreferences[item.id] = item.preference;
         });
     };
 
     function applySavedPreferences() {
         $scope.launchers.forEach((item) => {
-            const savedObj = vm.launcherPreferences.find(obj => obj.id === item.id);
-            if (savedObj) {
-                item.preference = savedObj.preference;
-            }
-        })
-    }
+            item.preference = vm.launcherPreferences[item.id];
+        });
+        vm.launcherPreferences = {};
+    };
 
     function addNewGithubRepoCssApply(element, isAdd) {
         var el = angular.element(element).closest('button');
