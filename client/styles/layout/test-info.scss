@@ -155,7 +155,14 @@
             text-align: center;
             text-transform: capitalize;
 
-            &:not(._status) + ._button-icon {
+            & + .selected-icon {
+                display: inline-block;
+                height: 18px;
+                width: 16px;
+                min-height: 14px;
+                min-width: 14px;
+                font-size: 14px;
+                transform: translateY(-2px);
                 color: $brand-primary;
             }
         }
