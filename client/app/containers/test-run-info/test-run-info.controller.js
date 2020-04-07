@@ -208,7 +208,7 @@ const testRunInfoController = function testRunInfoController(
     };
 
     function setMode(modeName) {
-        if ($scope.MODE != modeName) {
+        if ($scope.MODE.name !== modeName) {
             $scope.drivers = [];
             $scope.MODE = MODES[modeName];
         }
