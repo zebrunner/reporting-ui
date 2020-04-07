@@ -123,7 +123,6 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             .then(function (rs) {
                 if (rs.success) {
                     vm.user = rs.data;
-                    console.log(vm.user);
                     vm.changePassword.userId = vm.user.id;
                     if (vm.user.preferences.length) {
                         vm.preferences = vm.user.preferences;
