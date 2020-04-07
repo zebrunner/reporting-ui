@@ -6,6 +6,7 @@ import progressbarInterceptor from './http-interceptors/progressbar.interceptor'
 import jenkinsIcon from '../assets/images/_icons_tools/jenkins.svg';
 import { TutorialsModule } from './modules/tutorials';
 import { CoreModule } from './core/core.module';
+import { testRunCardModule } from './shared/test-run-card/test-run-card.module';
 import sessionSwitcherComponent from './shared/sessions-switcher/sessions-switcher.component';
 import photoUpload from './shared/photo-upload/photo-upload.directive';
 
@@ -20,7 +21,7 @@ const ngModule = angular
         'app.appSidebar',
         'app.appHeader',
         'app.common',
-        'app.testRunCard',
+        testRunCardModule,
         // 3rd party feature modules
         'ngImgCrop',
         'md.data.table',
@@ -788,26 +789,6 @@ const ngModule = angular
                 eyeElement.on(iAttrs.passwordEye, function () {
                     currentMode = currentMode == 'text' ? 'password' : 'text';
                     iElement[0].type = currentMode;
-                });
-            }
-        };
-    })
-    .directive('windowWidth', function ($window, windowWidthService) {
-        'ngInject';
-
-        return {
-            restrict: 'A',
-            link: function($scope) {
-                angular.element($window).on('resize', function() {
-                    windowWidthService.windowWidth = $window.innerWidth;
-                    windowWidthService.windowHeight = $window.innerHeight;
-
-                    $scope.$digest();
-
-                    $scope.$emit('resize.getWindowSize', {
-                        innerWidth: windowWidthService.windowWidth,
-                        innerHeight: windowWidthService.windowHeight
-                    });
                 });
             }
         };

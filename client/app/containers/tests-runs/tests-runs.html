@@ -15,7 +15,7 @@
 
     <div class="page">
         <md-fab-speed-dial id="main-fab"
-            ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length > 0 && !$ctrl.scrollTicking"
+            ng-if="$ctrl.isTablet && $ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length && !$ctrl.scrollTicking"
             md-direction="up"
             class="tests-runs-options md-scale md-fab-bottom-right">
             <md-fab-trigger>
@@ -69,18 +69,85 @@
             blur-filter
             blur-radius="1px"
             blur-active="{{$ctrl.isUserParamSaving}}">
-            <div class="p-tests-runs__section _header">
+            <div class="p-tests-runs__section _header test-runs__header">
                 <tests-runs-search on-filter-change="$ctrl.getTestRuns(1)">
                     <span>
                         <md-checkbox name="testRunSearchCheckbox"
-                                    data-ng-model="$ctrl.selectedAll"
-                                    ng-change="$ctrl.selectAllTestRuns()"
-                                    aria-label="Select"
-                                    data-ng-true-value="true"
-                                    data-ng-false-value="false">
+                            data-ng-model="$ctrl.selectedAll"
+                            ng-change="$ctrl.selectAllTestRuns()"
+                            aria-label="Select"
+                            data-ng-true-value="true"
+                            data-ng-false-value="false">
                         </md-checkbox>
                     </span>
                 </tests-runs-search>
+                <div class="test-runs__bulk"
+                    layout="row"
+                    layout-align="start center"
+                    ng-if="!$ctrl.isTablet && $ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length">
+                    <div class="test-runs__test-selection _all" flex="none">
+                        <md-checkbox name="testCheckbox"
+                            class="test-runs__test-checkbox"
+                            aria-label="Select"
+                            data-ng-model="$ctrl.selectedAll"
+                            ng-change="$ctrl.selectAllTestRuns()"
+                            ng-true-value="true"
+                            ng-false-value="false">
+                        </md-checkbox>
+                    </div>
+                    <div flex="auto" layout="row" class="test-runs__header-actions-btns">
+                        <md-button id="bulkDeleteTestRuns"
+                            ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS'])"
+                            aria-label="menu"
+                            class="zb-slim-btn _left-icon"
+                            data-ng-really-message="Do you really want to delete multiple test runs?"
+                            data-ng-really-click="$ctrl.batchDelete()">
+                            <span class="zb-slim-btn__icon fa fa-trash"></span>
+                            <span class="zb-slim-btn__txt">Delete</span>
+                        </md-button>
+                        <md-button id="bulkSendTestRunsAsEmail"
+                            ng-if="$ctrl.isToolConnected('EMAIL')"
+                            aria-label="menu"
+                            class="zb-slim-btn _left-icon"
+                            ng-click="$ctrl.batchEmail($event)">
+                            <span class="zb-slim-btn__icon fa fa-envelope-o"></span>
+                            <span class="zb-slim-btn__txt">Send as email</span>
+                        </md-button>
+
+                        <md-menu md-offset="30 20" class="tab-additional__menu">
+                            <div class="menu__button" aria-label="Additional menu" ng-click="$mdMenu.open($event)">
+                                <span class="button-text">More</span>
+                                <span class="material-icons button-icon">arrow_drop_down</span>
+                            </div>
+                            <md-menu-content class="tab-additional__menu-content">
+                                <md-menu-item class="menu__item" ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.isToolConnected('JENKINS')">
+                                    <md-button id="bulkRerunTestRuns"
+                                        aria-label="menu"
+                                        data-ng-really-message="Do you really want to rerun multiple test runs?"
+                                        data-ng-really-click="$ctrl.batchRerun()">
+                                        <span class="fa fa-undo" aria-hidden="true"></span>
+                                        <span class="item-text" md-menu-align-target>Rerun</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item class="menu__item" ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI'])">
+                                    <md-button id="bulkAbortTestRuns"
+                                        aria-label="menu"
+                                        data-ng-really-message="Do you really want to abort multiple test runs?"
+                                        data-ng-really-click="$ctrl.abortSelectedTestRuns()">
+                                        <span class="fa fa-ban" aria-hidden="true"></span>
+                                        <span class="item-text" md-menu-align-target>Abort selected test runs</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+                    <md-button id="close"
+                        flex="none"
+                        class="md-icon-button _default-md-style"
+                        ng-click="$ctrl.clearTestRunsSelection()">
+                        <md-icon aria-label="Reset selection">close</md-icon>
+                    </md-button>
+                </div>
             </div>
             <div class="p-tests-runs__section _content row ui-section no-margin">
                 <div class="col-md-12 no-padding">

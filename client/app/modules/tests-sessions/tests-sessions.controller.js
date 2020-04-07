@@ -4,9 +4,9 @@ import accessKeyModalController from './access-key-modal/access-key-modal.contro
 import accessKeyModalTemplate from './access-key-modal/access-key-modal.html';
 
 const testsSessionsController = function testsSessionsController(
+    $mdMedia,
     $q,
     $state,
-    windowWidthService,
     testsSessionsService,
     messageService,
     $transitions,
@@ -32,7 +32,7 @@ const testsSessionsController = function testsSessionsController(
 
         get isEmpty() { return this.testSessions && !this.testSessions.length; },
         get currentTitle() { return pageTitleService.pageTitle; },
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
     };
 
     return vm;

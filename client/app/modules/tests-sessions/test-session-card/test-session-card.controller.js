@@ -1,7 +1,7 @@
 'use strict';
 
 const testsSessionCardController = function testsSessionCardController(
-    windowWidthService,
+    $mdMedia,
     $rootScope,
     $state,
     $stateParams,
@@ -21,7 +21,7 @@ const testsSessionCardController = function testsSessionCardController(
         openMenu,
         openLogs,
 
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
         get currentOffset() { return $rootScope.currentOffset; },
     };
 

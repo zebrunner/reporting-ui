@@ -23,11 +23,10 @@ const testDetailsController = function testDetailsController(
     $mdDialog,
     toolsService,
     messageService,
-    windowWidthService,
     ArtifactService,
     pageTitleService,
     authService,
-    ) {
+) {
     'ngInject';
 
     const initialCountToDisplay = 50;
@@ -112,14 +111,14 @@ const testDetailsController = function testDetailsController(
             },
         ],
 
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
         get isTablet() { return !$mdMedia('gt-md'); },
         get activeTests() { return _at || []; },
         set activeTests(data) { _at = data; return _at; },
         get testsToDisplay() {
             return this.activeTests.slice(firstIndex, lastIndex);
         },
-        get limitOptions() {  return !windowWidthService.isMobile() ? defaultLimitOptions : false; },
+        get limitOptions() {  return !$mdMedia('xs') ? defaultLimitOptions : false; },
         get empty() { return !this.testRun.tests || !this.testRun.tests.length; },
         get jira() { return jiraSettings; },
         get testRail() { return testRailSettings; },

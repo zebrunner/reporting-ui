@@ -6,11 +6,11 @@ import fileUploadController from './file-upload-modal/file-upload-modal.controll
 const integrationsController = function integrationsController(
     $state,
     $mdDialog,
+    $mdMedia,
     $transitions,
     authService,
     SettingsService,
     toolsService,
-    windowWidthService,
     messageService,
     integrationsService,
     pageTitleService,
@@ -50,9 +50,9 @@ const integrationsController = function integrationsController(
         isToolConnected: toolsService.isToolConnected,
         isEmptyTool: toolsService.isEmptyTool,
         isNewToolAdding: false,
-        isMobile: windowWidthService.isMobile,
         userHasAnyPermission: authService.userHasAnyPermission,
 
+        get isMobile() { return $mdMedia('xs'); },
         get chipsCtrl() { return _chipsCtrl; },
         get currentTitle() { return pageTitleService.pageTitle; },
         set chipsCtrl(ctrl) {

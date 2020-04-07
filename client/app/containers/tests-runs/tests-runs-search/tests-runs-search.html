@@ -73,6 +73,19 @@
                 <md-option ng-repeat="browser in $ctrl.browsers" ng-value="browser">{{browser}}</md-option>
             </md-select>
         </md-input-container>
+        <md-input-container ng-if="$ctrl.locales.length"
+            class="select-wrapper selectPlatform no-padding without-animation"
+            flex="grow">
+            <md-select id="searchLocales"
+                ng-model="$ctrl.searchParams.locale"
+                class="form-fields__select"
+                name="locale"
+                placeholder="Locale"
+                ng-change="$ctrl.onChangeSearchCriteria()">
+                <md-option value="">None</md-option>
+                <md-option ng-repeat="locale in $ctrl.locales" ng-value="locale">{{locale}}</md-option>
+            </md-select>
+        </md-input-container>
         <md-input-container class="date-picker-container select-wrapper no-padding form-fields__input" flex="grow"
             flex-sm="33" flex-xs="100">
             <span>{{$ctrl.selectedRange.selectedTemplateName || 'Date'}}</span>
