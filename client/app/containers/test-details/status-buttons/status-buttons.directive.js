@@ -23,27 +23,46 @@ const statusButtonsDirective = function($timeout) {
                 buttons: [
                     {
                         key: 'FAILED',
+                        class: 'failed',
+                        txt: 'Failed',
                     },
                     {
                         key: 'SKIPPED',
+                        class: 'skipped',
+                        txt: 'Skipped',
                     },
                     {
                         key: 'PASSED',
+                        class: 'passed',
+                        txt: 'Passed',
                     },
                     {
                         key: 'ABORTED',
+                        class: 'aborted',
+                        txt: 'Aborted',
                     },
                     //at the moment we don't display queued tests, so we don't need in this button
                     // {
                     //     key: 'QUEUED',
+                    //     class: 'queued',
+                    //     txt: 'Queued',
                     // },
                     {
                         key: 'IN_PROGRESS',
+                        class: 'in-progress',
+                        txt: 'In Progress',
                     }
                 ],
 
                 getFormattedName,
                 changeSelection,
+                $onInit() {
+                    initSelections();
+                    bindListeners();
+                },
+                $onDestroy() {
+                    unbindListeners();
+                },
             };
 
             function getFormattedName(button) {
@@ -77,20 +96,11 @@ const statusButtonsDirective = function($timeout) {
             function bindListeners() {
                 initialSelectionsWatcher = $scope.$watch('$ctrl.initialSelections', function(newValue, oldValue) {
                     updateSelections();
-                }, true); 
+                }, true);
             }
 
             function unbindListeners() {
                 initialSelectionsWatcher && initialSelectionsWatcher();
-            }
-
-            vm.$onInit = () => {
-                initSelections();
-                bindListeners();
-            }
-
-            vm.$onDestroy = () => {
-                unbindListeners();
             }
 
             return vm;
