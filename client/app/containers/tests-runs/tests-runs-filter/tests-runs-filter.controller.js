@@ -254,7 +254,6 @@ const TestsRunsFilterController = function TestsRunsFilterController(
             if(rs.success) {
                 vm.subjectBuilder = rs.data;
                 vm.subjectBuilder.criterias.forEach(function(criteria) {
-                    console.log(criteria);
                     if (isSelectCriteria(criteria)) {
                         switch(criteria.name) {
                             case 'ENV':

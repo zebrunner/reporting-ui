@@ -17,7 +17,7 @@ const testRunCardController = function testRunCardController(
     toolsService,
     UserService,
     UtilService,
-    ) {
+) {
         'ngInject';
 
         const local = {
@@ -55,9 +55,6 @@ const testRunCardController = function testRunCardController(
             goToTestRun: goToTestRun,
             isToolConnected: toolsService.isToolConnected,
             userHasAnyPermission: authService.userHasAnyPermission,
-            $onInit() {
-                console.log(this.testRun);
-            },
 
             get isMobile() { return $mdMedia('xs'); },
             get currentOffset() { return $rootScope.currentOffset; },
@@ -250,7 +247,7 @@ const testRunCardController = function testRunCardController(
                                         if (debugLog !== value) {
                                             $timeout.cancel(disconnectDebugTimeout);
                                             $interval.cancel(parseLogsInterval);
-                                            mdToast.hide();
+                                            $mdToast.hide();
                                             messageService.success('Tests started in debug');
                                         }
                                     }
@@ -410,8 +407,6 @@ const testRunCardController = function testRunCardController(
                 DownloadService.check(vm.testRun.config.appVersion).then(function (rs) {
                     if (rs.success) {
                         vm.testRun.appVersionValid = rs.data;
-                    } else {
-                        //messageService.error(rs.message);
                     }
                     vm.testRun.appVersionLoading = false;
 

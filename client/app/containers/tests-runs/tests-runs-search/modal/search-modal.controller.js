@@ -3,7 +3,6 @@
 const SearchModalController = function SearchModalController(
     $mdDateRangePicker,
     $mdDialog,
-    $mdMedia,
     onApply,
     environments,
     allProjects,
@@ -14,12 +13,11 @@ const SearchModalController = function SearchModalController(
     testsRunsService,
     DEFAULT_SC,
     UtilService,
-    ) {
+) {
     'ngInject';
 
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
     const vm = {
-        get isMobile() { return $mdMedia('xs'); },
         statuses: STATUSES,
         selectedRange: {
             selectedTemplate: null,
