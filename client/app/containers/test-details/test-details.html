@@ -26,6 +26,16 @@
                 <div class="test-run-group-row test-details__header-actions _default">
                     <div class="sort-new test-run-group-column" colspan="4">
                         <div class="test-run-group">
+                            <div class="test-details__test-selection _all" flex="none">
+                                <md-checkbox name="testCheckbox"
+                                    class="test-details__test-checkbox"
+                                    aria-label="Select"
+                                    ng-model="$ctrl.isAllTestsSelected"
+                                    ng-change="$ctrl.onAllTestsSelect()"
+                                    ng-true-value="true"
+                                    ng-false-value="false">
+                                </md-checkbox>
+                            </div>
                             <div class="test-run-group_wrapper _left">
                                 <div class="test-run-group_controls-buttons">
                                     <button id="plainToggle"

@@ -2178,6 +2178,9 @@ $light-inprogress: #68c9fd;
             > * {
                 display: inline-block;
                 vertical-align: middle;
+                &.test-details__test-selection {
+                    display: inline-flex;
+                }
             }
             &_controls-buttons {
                 width: 15.48%;
