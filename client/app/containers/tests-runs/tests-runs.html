@@ -73,11 +73,11 @@
                 <tests-runs-search on-filter-change="$ctrl.getTestRuns(1)">
                     <span>
                         <md-checkbox name="testRunSearchCheckbox"
-                                    data-ng-model="$ctrl.selectedAll"
-                                    ng-change="$ctrl.selectAllTestRuns()"
-                                    aria-label="Select"
-                                    data-ng-true-value="true"
-                                    data-ng-false-value="false">
+                            data-ng-model="$ctrl.selectedAll"
+                            ng-change="$ctrl.selectAllTestRuns()"
+                            aria-label="Select"
+                            data-ng-true-value="true"
+                            data-ng-false-value="false">
                         </md-checkbox>
                     </span>
                 </tests-runs-search>
@@ -89,53 +89,62 @@
                         <md-checkbox name="testCheckbox"
                             class="test-runs__test-checkbox"
                             aria-label="Select"
-                            ng-model="$ctrl.isAllTestsSelected"
-                            ng-change="$ctrl.onAllTestsSelect()"
+                            data-ng-model="$ctrl.selectedAll"
+                            ng-change="$ctrl.selectAllTestRuns()"
                             ng-true-value="true"
                             ng-false-value="false">
                         </md-checkbox>
                     </div>
                     <div flex="auto" layout="row" class="test-runs__header-actions-btns">
-                        <md-button id="compareTestRuns" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-if="$ctrl.selectedTestRuns.length > 1 && $ctrl.areTestRunsFromOneSuite()" ng-click="$ctrl.showCompareDialog($event)">
-                            <md-tooltip md-direction="top">Compare</md-tooltip>
-                            <span class="fa fa-columns" aria-hidden="true"></span>
-                        </md-button>
-                        <md-button id="rerunTestRuns"
-                            ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.isToolConnected('JENKINS')"
-                            aria-label="menu"
-                            class="md-fab md-raised md-fab-sm"
-                            data-ng-really-message="Do you really want to rerun multiple test runs?"
-                            data-ng-really-click="$ctrl.batchRerun()">
-                            <md-tooltip md-direction="top">Rerun</md-tooltip>
-                            <span class="fa fa-undo" aria-hidden="true"></span>
-                        </md-button>
-                        <md-button id="deleteTestRuns"
+                        <md-button id="bulkDeleteTestRuns"
                             ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS'])"
                             aria-label="menu"
-                            class="md-fab md-raised md-fab-sm"
+                            class="zb-slim-btn _left-icon"
                             data-ng-really-message="Do you really want to delete multiple test runs?"
                             data-ng-really-click="$ctrl.batchDelete()">
-                            <md-tooltip md-direction="top">Delete</md-tooltip>
-                            <span class="fa fa-trash" aria-hidden="true"></span>
+                            <span class="zb-slim-btn__icon fa fa-trash"></span>
+                            <span class="zb-slim-btn__txt">Delete</span>
                         </md-button>
-                        <md-button id="abortTestRuns"
-                            ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI'])"
+                        <md-button id="bulkSendTestRunsAsEmail"
+                            ng-if="$ctrl.isToolConnected('EMAIL')"
                             aria-label="menu"
-                            class="md-fab md-raised md-fab-sm"
-                            data-ng-really-message="Do you really want to abort multiple test runs?"
-                            data-ng-really-click="$ctrl.abortSelectedTestRuns()">
-                            <md-tooltip md-direction="top">Abort selected test runs</md-tooltip>
-                            <span class="fa fa-ban" aria-hidden="true"></span>
+                            class="zb-slim-btn _left-icon"
+                            ng-click="$ctrl.batchEmail($event)">
+                            <span class="zb-slim-btn__icon fa fa-envelope-o"></span>
+                            <span class="zb-slim-btn__txt">Send as email</span>
                         </md-button>
-                        <md-button id="sendTestRunsAsEmail" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-click="$ctrl.batchEmail($event)" data-ng-if="$ctrl.isToolConnected('EMAIL')">
-                            <md-tooltip md-direction="top">Send as email</md-tooltip>
-                            <span class="fa fa-envelope-o" aria-hidden="true"></span>
-                        </md-button>
+
+                        <md-menu md-offset="30 20" class="tab-additional__menu">
+                            <div class="menu__button" aria-label="Additional menu" ng-click="$mdMenu.open($event)">
+                                <span class="button-text">More</span>
+                                <span class="material-icons button-icon">arrow_drop_down</span>
+                            </div>
+                            <md-menu-content class="tab-additional__menu-content">
+                                <md-menu-item class="menu__item" ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.isToolConnected('JENKINS')">
+                                    <md-button id="bulkRerunTestRuns"
+                                        aria-label="menu"
+                                        data-ng-really-message="Do you really want to rerun multiple test runs?"
+                                        data-ng-really-click="$ctrl.batchRerun()">
+                                        <span class="fa fa-undo" aria-hidden="true"></span>
+                                        <span class="item-text" md-menu-align-target>Rerun</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item class="menu__item" ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI'])">
+                                    <md-button id="bulkAbortTestRuns"
+                                        aria-label="menu"
+                                        data-ng-really-message="Do you really want to abort multiple test runs?"
+                                        data-ng-really-click="$ctrl.abortSelectedTestRuns()">
+                                        <span class="fa fa-ban" aria-hidden="true"></span>
+                                        <span class="item-text" md-menu-align-target>Abort selected test runs</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
                     </div>
                     <md-button id="close"
                         flex="none"
                         class="md-icon-button _default-md-style"
-                        ng-click="$ctrl.clearTestsSelection()">
+                        ng-click="$ctrl.clearTestRunsSelection()">
                         <md-icon aria-label="Reset selection">close</md-icon>
                     </md-button>
                 </div>

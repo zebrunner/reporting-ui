@@ -46,6 +46,7 @@ const testsRunsController = function testsRunsController(
         switcherState: 'runs',
         isUserParamSaving: false,
 
+        clearTestRunsSelection,
         isTestRunsEmpty: isTestRunsEmpty,
         getTestRuns: getTestRuns,
         areTestRunsFromOneSuite: areTestRunsFromOneSuite,
@@ -473,6 +474,12 @@ const testsRunsController = function testsRunsController(
     }
 
     function selectAllTestRuns() {
+        vm.testRuns.forEach(testRun => testRun.selected = vm.selectedAll);
+        updateSelectedTestRuns();
+    }
+
+    function clearTestRunsSelection() {
+        vm.selectedAll = false;
         vm.testRuns.forEach(testRun => testRun.selected = vm.selectedAll);
         updateSelectedTestRuns();
     }
