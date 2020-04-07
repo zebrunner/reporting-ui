@@ -155,8 +155,22 @@
             text-align: center;
             text-transform: capitalize;
 
-            &:not(._status) + ._button-icon {
-                color: $brand-primary;
+            &:not(._status) {
+                & ~ ._button-icon {
+                    display: none;
+                }
+
+                & ~ .selected-icon {
+                    display: inline-block;
+                    width: 14px;
+                    height: 14px;
+                    background: url('../assets/images/check_list.svg') center no-repeat;
+                    transform: translate(2px, 1px);
+                }
+            }
+
+            &._status ~ .selected-icon {
+                display: none;
             }
         }
     }
