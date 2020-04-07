@@ -66,6 +66,7 @@ const testsRunsController = function testsRunsController(
 
         get currentTitle() { return pageTitleService.pageTitle; },
         get isMobile() { return $mdMedia('xs'); },
+        get isTablet() { return !$mdMedia('gt-md'); },
     };
 
     vm.$onInit = init;

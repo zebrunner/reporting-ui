@@ -118,7 +118,7 @@ const testDetailsController = function testDetailsController(
         get testsToDisplay() {
             return this.activeTests.slice(firstIndex, lastIndex);
         },
-        get limitOptions() {  return !windowWidthService.isMobile() ? defaultLimitOptions : false; },
+        get limitOptions() {  return !$mdMedia('xs') ? defaultLimitOptions : false; },
         get empty() { return !this.testRun.tests || !this.testRun.tests.length; },
         get jira() { return jiraSettings; },
         get testRail() { return testRailSettings; },

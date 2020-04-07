@@ -71,6 +71,7 @@
                 <div class="test-run-card__artifacts" ng-if="true || $ctrl.testRun.artifacts.length">
                     <a ng-repeat="artifact in $ctrl.testRun.artifacts"
                         href="{{artifact.link}}"
+                        download
                         target="_blank"
                         aria-label="Test Run artifact"
                         class="test-run-card__artifact">

@@ -15,7 +15,7 @@
 
     <div class="page">
         <md-fab-speed-dial id="main-fab"
-            ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length > 0 && !$ctrl.scrollTicking"
+            ng-if="$ctrl.isTablet && $ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length && !$ctrl.scrollTicking"
             md-direction="up"
             class="tests-runs-options md-scale md-fab-bottom-right">
             <md-fab-trigger>
@@ -84,7 +84,7 @@
                 <div class="test-runs__bulk"
                     layout="row"
                     layout-align="start center"
-                    ng-if="!$ctrl.isMobile && $ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length">
+                    ng-if="!$ctrl.isTablet && $ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.selectedTestRuns.length">
                     <div class="test-runs__test-selection _all" flex="none">
                         <md-checkbox name="testCheckbox"
                             class="test-runs__test-checkbox"
