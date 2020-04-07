@@ -11,12 +11,14 @@ import jsonConfigsService from './json-configs/json-configs.service';
 import testsSessionsService from './tests-sessions/tests-sessions.service';
 import pageTitleService from './page-title/page-title.service';
 import observerService from './observer/observer.service';
+import logLevelService from './log-level.service';
 
 angular.module('app.services', [])
     .service({ appHealthService })
     .service({ authService })
     .service({ ArtifactService})
     .service({ toolsService })
+    .service({ logLevelService })
     .service({ messageService })
     .service({ mainMenuService })
     .service({ observerService })

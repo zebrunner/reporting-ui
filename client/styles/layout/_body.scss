@@ -54,7 +54,9 @@ body {
     to {opacity: 1}
 }
 
-#main-fab, .lonely-fab button {
+md-fab-speed-dial.md-fab-bottom-right,
+#main-fab,
+.lonely-fab button {
     position: fixed;
     z-index: 6;
     right: 60px;
@@ -64,6 +66,9 @@ body {
             bottom: 130px;
         }
     }
+}
+md-fab-speed-dial.md-fab-bottom-right + md-fab-speed-dial.md-fab-bottom-right {
+    bottom: 130px;
 }
 
 .result {
@@ -2173,6 +2178,9 @@ $light-inprogress: #68c9fd;
             > * {
                 display: inline-block;
                 vertical-align: middle;
+                &.test-details__test-selection {
+                    display: inline-flex;
+                }
             }
             &_controls-buttons {
                 width: 15.48%;
@@ -2317,12 +2325,6 @@ $light-inprogress: #68c9fd;
 .test-run-group_menu {
     md-checkbox {
         margin-right: 15px !important;
-    }
-}
-
-.work-items {
-    > * {
-        margin-top: 12px;
     }
 }
 
