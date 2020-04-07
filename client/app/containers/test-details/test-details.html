@@ -62,7 +62,9 @@
                                 </div>
                             </div>
                             <div class="test-run-group_wrapper _right">
-                                <status-buttons on-button-click="$ctrl.filterByStatus($statuses)" initial-selections="$ctrl.filters.status.values"></status-buttons>
+                                <status-buttons on-button-click="$ctrl.filterByStatus($statuses)"
+                                    ng-if="!$ctrl.isTablet"
+                                    initial-selections="$ctrl.filters.status.values"></status-buttons>
                                 <div class="test-run-group_sorts" ng-class="{'active': $ctrl.sortConfig.field === 'elapsed'}">
                                     <div name="sortElapsed" sort-item="{{$ctrl.sortConfig.reverse}}" class="pointer" data-ng-click="$ctrl.orderByElapsed()">Elapsed&nbsp;</div>
                                 </div>
@@ -114,7 +116,7 @@
             </div>
         </div>
         <md-fab-speed-dial id="main-fab"
-            ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.isMobile && !$ctrl.testsLoading && !$ctrl.scrollTicking"
+            ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS', 'TEST_RUNS_CI']) && $ctrl.isTablet && !$ctrl.testsLoading && !$ctrl.scrollTicking"
             md-direction="up"
             class="md-scale md-fab-bottom-right">
             <md-fab-trigger>
