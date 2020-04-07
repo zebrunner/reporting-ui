@@ -67,7 +67,7 @@
          * @returns {Promise<T | {success: boolean, message: string, error: *}>}
          */
         function updateUserProfile(userId, profileData) {
-        	return $httpMock.put(`${API_URL}/api/users/${userId}`, profileData)
+            return $httpMock.put(`${API_URL}/api/users/${userId}`, profileData)
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to update user profile'));
         }
 
