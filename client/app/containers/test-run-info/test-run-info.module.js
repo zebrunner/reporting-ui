@@ -9,5 +9,5 @@ export const testRunInfoModule = angular.module('app.testRunInfo', [])
         'ngInject';
         
         $mdIconProvider
-            .icon('artifacts:checkedList', checkedListIcon);
+            .icon('checkedListIcon', checkedListIcon);
     });
