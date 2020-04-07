@@ -162,10 +162,13 @@
 
                 & ~ .selected-icon {
                     display: inline-block;
-                    width: 14px;
-                    height: 14px;
-                    background: url('../assets/images/check_list.svg') center no-repeat;
-                    transform: translate(2px, 1px);
+                    height: 18px;
+                    width: 16px;
+                    min-height: 14px;
+                    min-width: 14px;
+                    font-size: 14px;
+                    transform: translateY(-2px);
+                    color: $brand-primary;
                 }
             }
 
