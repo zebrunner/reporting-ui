@@ -972,6 +972,7 @@ const CiHelperController = function CiHelperController(
                 //update current scm account
                 $scope.scmAccount.launchers = $scope.launchers.filter(({ scmAccountType }) => scmAccountType.id === $scope.scmAccount.id);
             } else {
+                vm.launcherPreferences = {};
                 messageService.error('Unable to scan repository');
             }
             $scope.onScanRepositoryFinish();
