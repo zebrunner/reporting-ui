@@ -20,7 +20,6 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         testsVariants: ['runs', 'sessions'],
 
         copyAccessToken,
-        deleteUserProfilePhoto,
         isIntervalSelected,
         isDashboardSelected,
         showUploadImageDialog,
@@ -49,18 +48,6 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
 
     function isIntervalSelected(interval) {
         return vm.currentUser && vm.currentUser.refreshInterval === interval;
-    }
-
-    function deleteUserProfilePhoto() {
-        UserService.deleteUserProfilePhoto().then(function (rs) {
-            if (rs.success) {
-                vm.currentUser.photoURL = '';
-                messageService.success('Photo was deleted');
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        });
     }
 
     function updateUserPreference(preferenceForm) {

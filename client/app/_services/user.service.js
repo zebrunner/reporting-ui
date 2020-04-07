@@ -17,7 +17,6 @@
             searchUsers,
             searchUsersWithQuery,
             updateUserProfile,
-            deleteUserProfilePhoto,
             updateUserPassword,
             createOrUpdateUser,
             addUserToGroup,
@@ -63,10 +62,6 @@
 
         function updateUserProfile(profile) {
         	return $httpMock.put(API_URL + '/api/users/profile', profile).then(UtilService.handleSuccess, UtilService.handleError('Unable to update user profile'));
-        }
-
-        function deleteUserProfilePhoto() {
-            return $httpMock.delete(API_URL + '/api/users/profile/photo').then(UtilService.handleSuccess, UtilService.handleError('Unable to delete profile photo'));
         }
 
         function updateUserPassword(password) {
