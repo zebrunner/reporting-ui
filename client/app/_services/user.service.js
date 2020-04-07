@@ -17,7 +17,6 @@
             searchUsers,
             searchUsersWithQuery,
             updateUserProfile,
-            deleteUserProfilePhoto,
             updateUserPassword,
             createOrUpdateUser,
             addUserToGroup,
@@ -61,12 +60,15 @@
             return $httpMock.post(API_URL + '/api/users/search?public=true', searchCriteria, {params: {q: criteria}}).then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
         }
 
-        function updateUserProfile(profile) {
-        	return $httpMock.put(API_URL + '/api/users/profile', profile).then(UtilService.handleSuccess, UtilService.handleError('Unable to update user profile'));
-        }
-
-        function deleteUserProfilePhoto() {
-            return $httpMock.delete(API_URL + '/api/users/profile/photo').then(UtilService.handleSuccess, UtilService.handleError('Unable to delete profile photo'));
+        /**
+         * updated users profile data
+         * @param {Number} userId - user's identifier
+         * @param {Object} profileData - user's profile data. Required fields are: username, firstName, lastName
+         * @returns {Promise<T | {success: boolean, message: string, error: *}>}
+         */
+        function updateUserProfile(userId, profileData) {
+            return $httpMock.put(`${API_URL}/api/users/${userId}`, profileData)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update user profile'));
         }
 
         function updateUserPassword(password) {

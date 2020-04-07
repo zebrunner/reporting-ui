@@ -20,7 +20,6 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         testsVariants: ['runs', 'sessions'],
 
         copyAccessToken,
-        deleteUserProfilePhoto,
         isIntervalSelected,
         isDashboardSelected,
         showUploadImageDialog,
@@ -51,18 +50,6 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         return vm.currentUser && vm.currentUser.refreshInterval === interval;
     }
 
-    function deleteUserProfilePhoto() {
-        UserService.deleteUserProfilePhoto().then(function (rs) {
-            if (rs.success) {
-                vm.currentUser.photoURL = '';
-                messageService.success('Photo was deleted');
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        });
-    }
-
     function updateUserPreference(preferenceForm) {
         const { defaultTests } = preferenceForm;
         const params = {name: 'DEFAULT_TEST_VIEW', value: defaultTests};
@@ -78,15 +65,14 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function updateUserProfile() {
-        const profile = angular.copy(vm.user);
+        const { username, firstName, lastName } = vm.user;
 
-        delete profile.preferences;
-        UserService.updateUserProfile(profile)
+        UserService.updateUserProfile(vm.user.id, { username, firstName, lastName })
             .then(function (rs) {
                 if (rs.success) {
-                    vm.user = rs.data;
-                    UserService.currentUser.firstName = vm.user.firstName;
-                    UserService.currentUser.lastName = vm.user.lastName;
+                    vm.user = { ...vm.user, ...rs.data };
+                    UserService.currentUser.firstName = firstName;
+                    UserService.currentUser.lastName = lastName;
                     messageService.success('User profile updated');
                 } else {
                     messageService.error(rs.message);
@@ -239,22 +225,27 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             locals: {
                 urlHandler: (url) => {
                     if (url) {
-                        const profile = angular.copy(vm.user);
+                        const { username, firstName, lastName } = vm.user;
+                        const params = {
+                            username,
+                            firstName,
+                            lastName,
+                            photoURL: url,
+                        };
 
-                        profile.photoURL = url;
-                        delete profile.preferences;
-                        return UserService.updateUserProfile(profile).then((prs) => {
-                            if (prs.success) {
-                                vm.currentUser.photoURL = `${url}?${(new Date()).getTime()}`;
-                                messageService.success('Profile was successfully updated');
+                        return UserService.updateUserProfile(vm.user.id, params)
+                            .then((prs) => {
+                                if (prs.success) {
+                                    vm.currentUser.photoURL = `${url}?${(new Date()).getTime()}`;
+                                    messageService.success('Profile was successfully updated');
 
-                                return true;
-                            } else {
-                                messageService.error(prs.message);
+                                    return true;
+                                } else {
+                                    messageService.error(prs.message);
 
-                                return false;
-                            }
-                        });
+                                    return false;
+                                }
+                            });
                     }
 
                     return $q.reject(false);
