@@ -601,7 +601,7 @@ const testRunInfoController = function testRunInfoController(
         $scope.testsWebsocket = Stomp.over(new SockJS(API_URL + "/api/websockets"));
         $scope.testsWebsocket.debug = null;
         $scope.testsWebsocket.ws.close = function() {};
-        $scope.testsWebsocket.connect({ withCredentials: false }, function () {
+        $scope.testsWebsocket.connect({ withCredentials: false , 'Accept' : 'application/json'}, function () {
             if ($scope.testsWebsocket.connected) {
                 vm.wsSubscription = $scope.testsWebsocket.subscribe("/topic/" + authService.tenant + ".testRuns." + testRun.id + ".tests", function (data) {
                     var test = $scope.getEventFromMessage(data.body).test;

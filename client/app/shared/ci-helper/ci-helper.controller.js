@@ -924,7 +924,7 @@ const CiHelperController = function CiHelperController(
         zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
         zafiraWebsocket.debug = null;
         zafiraWebsocket.ws.close = function() {};
-        zafiraWebsocket.connect({ withCredentials: false }, function () {
+        zafiraWebsocket.connect({ withCredentials: false , 'Accept' : 'application/json'}, function () {
             subscriptions.launchers = subscribeLaunchersTopic();
             UtilService.websocketConnected(wsName);
         }, function () {

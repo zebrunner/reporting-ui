@@ -525,7 +525,7 @@ const testsRunsController = function testsRunsController(
         vm.zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
         vm.zafiraWebsocket.debug = null;
         vm.zafiraWebsocket.ws.close = function() {};
-        vm.zafiraWebsocket.connect({withCredentials: false}, function () {
+        vm.zafiraWebsocket.connect({withCredentials: false, 'Accept' : 'application/json'}, function () {
             vm.subscriptions.statistics = subscribeStatisticsTopic();
             vm.subscriptions.testRuns = subscribeTestRunsTopic();
             vm.subscriptions.launchedTestRuns = subscribeLaunchedTestRuns();

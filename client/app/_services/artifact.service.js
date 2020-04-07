@@ -48,7 +48,7 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
                 var testLogsStomp = Stomp.over(new SockJS(rabbitmq.ws));
                 testLogsStomp.debug = null;
                 testLogsStomp.ws.close = function() {};
-                testLogsStomp.connect(rabbitmq.user, rabbitmq.pass, function () {
+                testLogsStomp.connect(rabbitmq.user, rabbitmq.pass, {'Accept' : 'application/json'}, function () {
 
                     UtilService.websocketConnected(wsName);
 
@@ -76,11 +76,11 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
         tests.forEach(test => {
             const imageArtifacts = test.artifacts.reduce((collected, artifact) => {
                 const name = artifact.name.toLowerCase();
-    
+
                 if (!name.includes('live') && !name.includes('video')) {
                     const links = artifact.link.split(' ');
                     const url = new URL(links[0]);
-    
+
                     artifact.extension = url.pathname.split('/').pop().split('.').pop();
                     if (artifact.extension === 'png') {
                         if (links[1]) {
@@ -90,7 +90,7 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
                         collected.push(artifact);
                     }
                 }
-    
+
                 return collected;
             }, []);
 
@@ -126,7 +126,7 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
                             if (response.success) {
                                 return response.res.data;
                             }
-        
+
                             //broken artifact will be an empty file
                             return '';
                         });
