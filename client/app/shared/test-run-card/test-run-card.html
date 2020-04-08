@@ -87,8 +87,10 @@
                 <span class="label label-default" ng-if="$ctrl.testRun.config.env">{{$ctrl.testRun.config.env}}</span>
             </div>
             <div name="testRunPlatform" class="test-run-card__cell _platform">
-                <span ng-if="$ctrl.testRun.platformIcon" class="platform-icon {{::$ctrl.testRun.platformIcon}}"></span>
-                <span ng-if="$ctrl.testRun.platformVersion" class="label label-default">{{::$ctrl.testRun.platformVersion}}</span>
+                <div class="test-run-card__platform-wrapper">
+                    <span ng-if="$ctrl.testRun.platformIcon" class="platform-icon {{::$ctrl.testRun.platformIcon}}"></span>
+                    <span ng-if="$ctrl.testRun.platformVersion" class="label label-default">{{::$ctrl.testRun.platformVersion}}</span>
+                </div>
             </div>
             <div name="testRunStatistics" class="test-run-card__cell _statistics fixed-testcount-column"><span title="Passed"
                     class="label arrowed arrowed-in-right label-success-border" data-ng-class="$ctrl.testRun.passed ? 'label-success' : 'label-success-empty'">{{$ctrl.testRun.passed}}</span>
