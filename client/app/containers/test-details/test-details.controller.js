@@ -1085,6 +1085,13 @@ const testDetailsController = function testDetailsController(
 
     function onTestSelect() {
         vm.selectedTestsCount = vm.testsToDisplay.filter(test => test.selected).length;
+
+        // handle case when all tests are (de)selected manually one by one
+        if (vm.selectedTestsCount === vm.testsToDisplay.length && !vm.isAllTestsSelected) {
+            vm.isAllTestsSelected = true;
+        } else if (vm.selectedTestsCount !== vm.testsToDisplay.length && vm.isAllTestsSelected) {
+            vm.isAllTestsSelected = false;
+        }
     }
 
     function onAllTestsSelect() {
