@@ -156,8 +156,8 @@
         &._platform {
             flex-grow: 2;
             width: 8%;
-            min-width: 70px;
-            flex-wrap: wrap;
+            min-width: 90px;
+            justify-content: center;
             @media(min-width: $breakpoint-mid-tablet + 1) and (max-width: 1120px){
                 flex-grow: 0;
             }
@@ -472,6 +472,13 @@
             }
         }
     }
+
+    &__platform-wrapper {
+        width: 80px;
+        display: flex;
+        align-items: center;
+    }
+
     @media(min-width: $breakpoint-mobile) and (max-width:  $breakpoint-mid-tablet) {
         &__wrapper {
             &-left {
