@@ -52,7 +52,7 @@
                     class="md-fab md-raised md-fab-sm"
                     data-ng-really-message="Do you really want to abort multiple test runs?"
                     data-ng-really-click="$ctrl.abortSelectedTestRuns()">
-                    <md-tooltip md-direction="top">Abort selected test runs</md-tooltip>
+                    <md-tooltip md-direction="top">Abort</md-tooltip>
                     <span class="fa fa-ban" aria-hidden="true"></span>
                 </md-button>
                 <md-button id="sendTestRunsAsEmail" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-click="$ctrl.batchEmail($event)" data-ng-if="$ctrl.isToolConnected('EMAIL')">
@@ -135,7 +135,7 @@
                                         data-ng-really-message="Do you really want to abort multiple test runs?"
                                         data-ng-really-click="$ctrl.abortSelectedTestRuns()">
                                         <span class="fa fa-ban" aria-hidden="true"></span>
-                                        <span class="item-text" md-menu-align-target>Abort selected test runs</span>
+                                        <span class="item-text" md-menu-align-target>Abort</span>
                                     </md-button>
                                 </md-menu-item>
                             </md-menu-content>

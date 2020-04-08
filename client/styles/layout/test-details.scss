@@ -65,11 +65,24 @@
                         }
                     }
                     &_sorts {
-                        @extend %detailsItems;
+                        max-height: 28px;
+                        border-radius: 14px;
+                        letter-spacing: 0.2px;
+                        text-align: center;
+                        color: $dark-coal-light-new;
                         background-color: $dark-coal-light-new-op01;
                         padding: 3px 15px;
                         min-width: 90px;
                         margin-left: 17px;
+                        line-height: 18px;
+                        font-size: 14px;
+                        font-weight: 400;
+
+                        &.md-focused,
+                        &.active {
+                            background-color: $dark-coal-light-new;
+                            color: #ffffff;
+                        }
                         &:hover {
                             background-color: rgba(0, 0, 0, .35);
                         }
@@ -170,19 +183,6 @@
                 &:not(:nth-last-child(2)){
                     margin-bottom: 2px;
                 }
-                &__clickable-wrapper {
-                    @media(min-width: $breakpoint-mobile + 1) {
-                        position: absolute;
-                        top: 0;
-                        bottom: 0;
-                        right: 0;
-                        left: 0;
-                        cursor: pointer;
-                        &:hover {
-                            background-color: rgba(0,0,0,.05);
-                        }
-                    }
-                }
                 &.success {
                     & .test-selection,
                     & .test-info,
@@ -227,6 +227,8 @@
                     &__name {
                         margin-bottom: 0;
                         font-weight: 500;
+                        position: relative;
+                        z-index: 2;
                     }
                     &__wrapper {
                         display: flex;
@@ -285,6 +287,8 @@
                         &-tag {
                             margin: 2px 4px 2px 0;
                             display: inherit;
+                            position: relative;
+                            z-index: 2;
                             &-inner {
                                 @extend %detailsItems;
                                 background-color: #00000026;
@@ -309,6 +313,8 @@
                             overflow: hidden;
                             text-overflow: ellipsis;
                             max-width: 100px;
+                            position: relative;
+                            z-index: 2;
                         }
                         &:not(:last-of-type) .badge {
                             margin-bottom: 12px;
@@ -379,8 +385,14 @@
                         position: relative;
                         display: flex;
                         flex-wrap: wrap;
+                        a {
+                            position: relative;
+                            z-index: 2;
+                        }
                     }
                     &__menu {
+                        position: relative;
+                        z-index: 2;
                         button.md-icon-button.md-button.md-ink-ripple {
                             padding: 0;
                             margin: 0;
@@ -564,7 +576,7 @@
                         min-height: 24px;
                         font-size: 0;
                         line-height: 1;
-                        padding: 4px 8px 4px 26px;
+                        padding: 3px 8px 3px 26px;
                         color: #979797;
                         border-radius: 12px;
                         border: 1px solid #e9e9e9;
@@ -603,8 +615,9 @@
                             }
                         }
                         .btn-txt {
-                            font-size: 12px;
+                            font-size: 14px;
                             line-height: 1;
+                            font-weight: 400;
                             text-transform: none;
                         }
                         &._green-icon {
@@ -677,6 +690,8 @@
                     margin: 0 auto;
                     width: 40px;
                     height: 40px;
+                    position: relative;
+                    z-index: 2;
                     .md-container {
                         left: 50%;
                         transform: translate3d(-50%, -50%, 0);
@@ -693,9 +708,6 @@
         &__status-filter {
             display: flex;
             flex-wrap: wrap;
-            .status-button {
-                margin-bottom: 8px;
-            }
         }
 
         @media (max-width: 959px) {
@@ -726,6 +738,21 @@
                 }
             }
         }
+        &__clickable {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 1;
+            cursor: pointer;
+            &:hover {
+                background-color: rgba(0,0,0,.05);
+            }
+            &._highlighting {
+                animation: change-color 3s ease-in-out 1;
+            }
+        }
     }
     md-fab-actions .fa-times-circle {
         color: $red-new;
@@ -743,7 +770,7 @@
             min-height: 24px;
             font-size: 0;
             line-height: 1;
-            padding: 4px 8px 4px 26px;
+            padding: 3px 8px 3px 26px;
             color: $dark-coal-light-new;
             border-radius: 12px;
             border: 1px solid #e9e9e9;
@@ -785,9 +812,10 @@
             }
         }
         &__txt {
-            font-size: 12px;
+            font-size: 14px;
             line-height: 1;
             text-transform: none;
+            font-weight: 400;
         }
 
         &.failed {

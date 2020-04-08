@@ -128,17 +128,17 @@
                 background-color: rgba(31, 36, 42, .1);
                 display: inline-block;
                 vertical-align: middle;
-                font-size: 10px;
+                font-size: 12px;
                 font-weight: 500;
                 text-transform: uppercase;
-                padding: 0 8px;
+                padding: 0;
                 height: 20px;
                 border-radius: 10px;
                 line-height: 20px;
             }
             .label,
             .platform-icon {
-                margin: 0 2px;
+                margin: 0 8px 0 0;
             }
         }
 
@@ -149,14 +149,15 @@
             min-width: 100px;
             & .label {
                 font-weight: bold;
+                padding: 0 8px;
+                margin: 0;
             }
         }
         &._platform {
             flex-grow: 2;
-            width: 11%;
-            min-width: 40px;
+            width: 8%;
+            min-width: 70px;
             flex-wrap: wrap;
-            justify-content: center;
             @media(min-width: $breakpoint-mid-tablet + 1) and (max-width: 1120px){
                 flex-grow: 0;
             }
