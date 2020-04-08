@@ -281,9 +281,7 @@ const UsersController = function UserViewController(
                         }
                     });
                 };
-                $scope.updateUser = updateUserProfile;
-
-                function updateUserProfile() {
+                $scope.updateUser = function updateUserProfile() {
                     const { username, firstName, lastName, email } = $scope.user;
 
                     UserService.updateUserProfile($scope.user.id, { username, firstName, lastName, email })
