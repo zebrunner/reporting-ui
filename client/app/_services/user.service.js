@@ -18,7 +18,7 @@
             searchUsersWithQuery,
             updateUserProfile,
             updateUserPassword,
-            createOrUpdateUser,
+            createUser,
             addUserToGroup,
             deleteUserFromGroup,
             getDefaultPreferences,
@@ -75,8 +75,8 @@
         	return $httpMock.put(API_URL + '/api/users/password', password).then(UtilService.handleSuccess, UtilService.handleError('Unable to update user password'));
         }
 
-        function createOrUpdateUser(user){
-            return $httpMock.put(API_URL + '/api/users', user).then(UtilService.handleSuccess, UtilService.handleError('Failed to update user'));
+        function createUser(user){
+            return $httpMock.post(API_URL + '/api/users', user).then(UtilService.handleSuccess, UtilService.handleError('Failed to create user'));
         }
 
         function addUserToGroup(user, id){

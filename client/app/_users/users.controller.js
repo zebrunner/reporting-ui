@@ -130,7 +130,7 @@ const UsersController = function UserViewController(
 
                 $scope.UtilService = UtilService;
                 $scope.createUser = function () {
-                    UserService.createOrUpdateUser($scope.user).then(function (rs) {
+                    UserService.createUser($scope.user).then(function (rs) {
                         if (rs.success) {
                             $scope.hide(rs.data);
                             messageService.success('User created');
@@ -281,17 +281,27 @@ const UsersController = function UserViewController(
                         }
                     });
                 };
-                $scope.updateUser = function () {
-                    UserService.createOrUpdateUser($scope.user).then(function (rs) {
-                        if (rs.success) {
-                            $scope.hide(rs.data);
-                            messageService.success('Profile changed');
-                        }
-                        else {
-                            messageService.error(rs.message);
-                        }
-                    });
-                };
+                $scope.updateUser = function updateUserProfile() {
+                    const { username, firstName, lastName, email } = $scope.user;
+
+                    UserService.updateUserProfile($scope.user.id, { username, firstName, lastName, email })
+                        .then(rs => {
+                            if (rs.success) {
+                                $scope.user = { ...$scope.user, ...rs.data };
+
+                                if (UserService.currentUser.id === $scope.user.id) {
+                                    UserService.currentUser.firstName = firstName;
+                                    UserService.currentUser.lastName = lastName;
+                                    UserService.currentUser.email = email;
+                                }
+                                $scope.hide(rs.data);
+                                messageService.success('Profile changed');
+                            } else {
+                                messageService.error(rs.message);
+                            }
+                        });
+                }
+
                 $scope.hide = function (res) {
                     $mdDialog.hide(res);
                 };
