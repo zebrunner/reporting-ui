@@ -96,19 +96,12 @@
 
         /**
          * Bulk updates statuses
-         * @param {Number} testRunId - testRun ID
-         * @param {Number[]} ids - Array of IDs
-         * @param {String} status
+         * @param {Number} testRunId - ID of the test run which holds passed tests
+         * @param {Object} ids - action params (array of tests IDs, action type and status value)
          * @returns {PromiseLike<any> | Promise<any>}
          */
-        function updateTestsStatus(testRunId, ids = [], status = '') {
-            const params = {
-                ids,
-                operation: 'STATUS_UPDATE',
-                value: status,
-            };
-
-            return $httpMock.patch(`${API_URL}/tests/runs/${testRunId}`, params)
+        function updateTestsStatus(testRunId, params) {
+            return $httpMock.patch(`${API_URL}/api/tests/runs/${testRunId}`, params)
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to update statuses'));
         }
     }

@@ -351,9 +351,14 @@ const testDetailsController = function testDetailsController(
         if (vm.bulkChangeInProgress) { return; }
         const selectedTests = vm.testsToDisplay.filter(test => test.selected);
         const ids = selectedTests.map(({ id }) => id);
+        const params = {
+            ids,
+            operation: 'STATUS_UPDATE',
+            value: btn.action,
+        };
 
         vm.bulkChangeInProgress = true;
-        TestService.updateTestsStatus(ids, btn.action)
+        TestService.updateTestsStatus(vm.testRun.id, params)
             .then(res => {
                 if (res.success) {
                     const patchedTests = res.data || [];
