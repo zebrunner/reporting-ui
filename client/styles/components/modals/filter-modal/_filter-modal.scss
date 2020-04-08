@@ -5,6 +5,9 @@
     .test-run-group_group-items {
         padding-top: 18px;
     }
+    .test-details__status-filter .status-button {
+        margin-bottom: 8px;
+    }
 
     @media (min-width: $md-screen-phone + 1) {
         min-width: 550px;

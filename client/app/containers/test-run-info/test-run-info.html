@@ -152,7 +152,7 @@
                                                                         <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
                                                                             <md-button ng-click="$ctrl.filterResults($index)" class="listitem__button">
                                                                                 <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
-                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">...</span>
+                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">All</span>
                                                                             </md-button>
                                                                         </md-menu-item>
                                                                     </md-menu-content>

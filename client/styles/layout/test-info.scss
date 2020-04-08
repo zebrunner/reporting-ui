@@ -118,9 +118,9 @@
             height: 16px;
             text-align: center;
             text-transform: uppercase;
-            
+
             &._debug {
-                background-color: $green-new;
+                background-color: $blue-new;
                 color: #fff;
             }
 
@@ -135,7 +135,10 @@
                 color: #fff;
             }
 
-            &._info,
+            &._info {
+                background-color: $green-new;
+                color: #fff;
+            }
             &._trace,
             &._status {
                 background-color: rgba($dark-new, 0.07);
@@ -614,6 +617,7 @@
             text-transform: capitalize;
             position: relative;
             margin-left: 20px;
+            font-size: 14px;
 
             &.passed {
                 &::before {
