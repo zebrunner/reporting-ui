@@ -15,6 +15,7 @@
             updateTest,
             getTestCaseWorkItemsByType,
             createTestWorkItem,
+            createTestsWorkItems,
             deleteTestWorkItem,
             getJiraTicket,
             getConnectionToJira,
@@ -102,6 +103,17 @@
          */
         function updateTestsStatus(testRunId, params) {
             return $httpMock.patch(`${API_URL}/api/tests/runs/${testRunId}`, params)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update statuses'));
+        }
+
+        /**
+         * Bulk creates test workItems
+         * @param {Number} testRunId - ID of the test run which holds passed tests
+         * @param {Object[]} workItemsData - array of objects which hold test ID and array of workItem objects)
+         * @returns {PromiseLike<any> | Promise<any>}
+         */
+        function createTestsWorkItems(testRunId, workItemsData) {
+            return $httpMock.post(`${API_URL}/api/tests/runs/${testRunId}/workitems`, workItemsData)
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to update statuses'));
         }
     }
