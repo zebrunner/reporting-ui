@@ -692,6 +692,10 @@
         }
         &__status-filter {
             display: flex;
+            flex-wrap: wrap;
+            .status-button {
+                margin-bottom: 8px;
+            }
         }
 
         @media (max-width: 959px) {
@@ -874,40 +878,40 @@
             &,
             &:not([disabled]).md-focused {
                 color: white;
-            }
 
-            .status-button__icon {
-                background-color: transparent;
-                border-color: transparent;
-                &::before,
-                &::after {
-                    opacity: 1;
+                .status-button__icon {
+                    background-color: transparent;
+                    border-color: transparent;
+                    &::before,
+                    &::after {
+                        opacity: 1;
+                    }
                 }
-            }
 
-            &.failed {
-                background-color: $red-new;
-                border-color: $red-new;
-            }
-            &.skipped {
-                background-color: $yellow-light-new;
-                border-color: $yellow-light-new;
-            }
-            &.passed {
-                background-color: rgba($green-light-new, .5);
-                border-color: rgba($green-light-new, .1);
-            }
-            &.aborted {
-                background-color: rgba($gray-light-new, .5);
-                border-color: rgba($gray-light-new, .1);
-            }
-            &.queued {
-                background-color: white;
-                border-color: rgba($gray-light-new, .5);
-            }
-            &.in-progress {
-                background-color: rgba($blue-light-new, .5);
-                border-color: rgba($blue-light-new, .1);
+                &.failed {
+                    background-color: $red-new;
+                    border-color: $red-new;
+                }
+                &.skipped {
+                    background-color: $yellow-light-new;
+                    border-color: $yellow-light-new;
+                }
+                &.passed {
+                    background-color: rgba($green-light-new, .5);
+                    border-color: rgba($green-light-new, .1);
+                }
+                &.aborted {
+                    background-color: rgba($gray-light-new, .5);
+                    border-color: rgba($gray-light-new, .1);
+                }
+                &.queued {
+                    background-color: white;
+                    border-color: rgba($gray-light-new, .5);
+                }
+                &.in-progress {
+                    background-color: rgba($blue-light-new, .5);
+                    border-color: rgba($blue-light-new, .1);
+                }
             }
         }
     }
