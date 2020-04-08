@@ -138,6 +138,14 @@
                                         <span class="item-text" md-menu-align-target>Abort</span>
                                     </md-button>
                                 </md-menu-item>
+                                <md-menu-item class="menu__item" ng-if="$ctrl.selectedTestRuns.length > 1 && $ctrl.areTestRunsFromOneSuite()">
+                                    <md-button id="bulkCompareTestRuns"
+                                        aria-label="menu"
+                                        ng-click="$ctrl.showCompareDialog($event)">
+                                        <span class="fa fa-columns" aria-hidden="true"></span>
+                                        <span class="item-text" md-menu-align-target>Compare</span>
+                                    </md-button>
+                                </md-menu-item>
                             </md-menu-content>
                         </md-menu>
                     </div>
