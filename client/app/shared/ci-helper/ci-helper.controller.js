@@ -1168,6 +1168,7 @@ const CiHelperController = function CiHelperController(
         if (!control) { return; }
         //we need to reset models because $scope.jsonModel can be modified by platform controls selection
         applyBuilder($scope.launcher);
+        useLaunchersPlatformIfExists();
         const parentItem = vm.platformModel[control.key];
         const versionsData = parentItem.versions ? parentItem : control.data.versions ? control.data : undefined;
 
@@ -1362,11 +1363,15 @@ const CiHelperController = function CiHelperController(
 
         if (platform) {
             vm.platformModel[vm.platformsConfig.rootKey] = platform;
+            useLaunchersPlatformIfExists();
+        }
+    }
 
-            // if launcher has appropriate param we need to use this value
-            if ($scope.jsonModel && $scope.jsonModel[vm.platformsConfig.rootKey]) {
-                vm.platformModel[vm.platformsConfig.rootKey].value = getControlDefaultValue(vm.platformsConfig.rootKey);
-            }
+
+    function useLaunchersPlatformIfExists() {
+        // if launcher has appropriate param we need to use this value
+        if ($scope.jsonModel && $scope.jsonModel[vm.platformsConfig.rootKey]) {
+            vm.platformModel[vm.platformsConfig.rootKey].value = getControlDefaultValue(vm.platformsConfig.rootKey);
         }
     }
 
