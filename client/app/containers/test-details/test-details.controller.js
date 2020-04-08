@@ -395,11 +395,9 @@ const testDetailsController = function testDetailsController(
 
             return {
                 testId: test.id,
-                workItems: [testEvent]
+                workItems: [testEvent],
             };
         });
-
-        console.log(params);
 
         TestService.createTestsWorkItems(vm.testRun.id, params)
             .then(rs => {
