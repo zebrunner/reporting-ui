@@ -374,6 +374,7 @@ const testDetailsController = function testDetailsController(
                     }, 1000);
                 } else {
                     messageService.error(res.message);
+                    vm.bulkChangeInProgress = false;
                 }
             });
     }
