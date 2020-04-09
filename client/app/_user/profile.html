@@ -30,11 +30,11 @@
                             <div id="userRole" class="label label-default" data-ng-repeat="role in $ctrl.user.roles" style="margin-right: 5px;">{{role}}</div>
                         </md-input-container>
                     </div>
-                    <div class="profile-versions-info" 
-                        flex="none" 
-                        layout="column" 
-                        layout-align="start end" 
-                        layout-align-xs="start start" 
+                    <div class="profile-versions-info"
+                        flex="none"
+                        layout="column"
+                        layout-align="start end"
+                        layout-align-xs="start start"
                         ng-if="$ctrl.appVersions.ui || $ctrl.appVersions.service || $ctrl.appVersions.client">
                         <span class="md-caption no-margin" ng-if="$ctrl.appVersions.ui">ui: {{$ctrl.appVersions.ui}}</span>
                         <span class="md-caption no-margin" ng-if="$ctrl.appVersions.service">server: {{$ctrl.appVersions.service}}</span>
@@ -64,7 +64,7 @@
         </div>
         <div layout="row" class="profile__form-wrapper">
             <div class="profile__form-title">Personal data</div>
-            <form name="profile_form" class="profile__form" ng-submit="$ctrl.updateUserProfile(user)">
+            <form name="profile_form" class="profile__form" ng-submit="$ctrl.updateUserProfile()">
                 <div class="profile__form-row" layout="row">
                     <md-input-container flex class="_gray-bg">
                         <label>Username</label>

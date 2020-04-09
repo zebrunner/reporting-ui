@@ -1,7 +1,7 @@
 'use strict';
 
 const testSessionLogsController = function testsSessionsController(
-    windowWidthService,
+    $mdMedia,
     testSessionLogsService,
     testsSessionsService,
     $transitions,
@@ -31,7 +31,7 @@ const testSessionLogsController = function testsSessionsController(
         getScrollableElemSelector,
 
         get currentTitle() { return pageTitleService.pageTitle },
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
     };
 
     vm.$onInit = init;
@@ -211,7 +211,7 @@ const testSessionLogsController = function testsSessionsController(
     function getScrollableElemSelector() {
         let elemSelector = '.test-session-logs__tab-table-wrapper';
 
-        if (windowWidthService.windowWidth < pageLayoutBreakpoint) {
+        if ($mdMedia(`max-width: ${pageLayoutBreakpoint - 1}px`)) {
             elemSelector = '.history-tab';
         }
 

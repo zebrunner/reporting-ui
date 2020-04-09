@@ -147,15 +147,6 @@
                         }
                     }
                 })
-                .state('views', {
-                    url: '/views/:id',
-                    template: require('../_views/list.html'),
-                    data: {
-                        requireLogin: true,
-                        permissions: ['VIEW_TEST_RUN_VIEWS', 'MODIFY_TEST_RUN_VIEWS'],
-                        isDynamicTitle: true,
-                    }
-                })
                 .state('signin', {
                     url: '/signin',
                     component: 'signinComponent',

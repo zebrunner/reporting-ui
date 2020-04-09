@@ -34,13 +34,15 @@
                     </li>
                     <li class="folder-container_item">
                         <ul class="folder-container_item_list">
-                            <li class="folder-container_item_list_item hide-phone launcher-{{launcher.id}}" ng-click="chooseLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
+                            <li class="folder-container_item_list_item hide-phone launcher-{{launcher.id}}" ng-click="chooseLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: ['!preference.favorite', 'name'] | filter: filerSc track by launcher.id">
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 {{launcher.name}}
+                                <i ng-if="launcher.preference.favorite" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
                             </li>
-                            <li class="folder-container_item_list_item show-phone launcher-{{launcher.id}}" ng-click="selectLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: 'name' | filter: filerSc track by launcher.id">
+                            <li class="folder-container_item_list_item show-phone launcher-{{launcher.id}}" ng-click="selectLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: ['!preference.favorite', 'name'] | filter: filerSc track by launcher.id">
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 {{launcher.name}}
+                                <i ng-if="launcher.preference.favorite" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
                             </li>
                             <li ng-if="!scmAccount.launchers.length" class="folder-container_item_list_item-empty">
                                 No templates added
@@ -244,7 +246,9 @@
                 <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
                 <span class="ci-runner-container_content_title_action">
-                    <i ng-click="toEditLauncher(launcher);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons hide-phone">settings</i>
+                    <i ng-click="$ctrl.setFavouriteLauncher(launcher);" ng-if="!launcher.preference.favorite" class="material-icons icon hide-phone">star_border</i>
+                    <i ng-click="$ctrl.setFavouriteLauncher(launcher);" ng-if="launcher.preference.favorite" class="material-icons icon hide-phone _active">star</i>
+                    <i ng-click="toEditLauncher(launcher);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons icon hide-phone _settings-icon">settings</i>
                 </span>
             </div>
             <div class="ci-runner-container__scrollable">
@@ -274,7 +278,7 @@
                             layout="row"
                             layout-wrap
                             ng-change="$ctrl.onPlatformSelect()">
-                            <md-radio-button ng-value="null">None</md-radio-button>
+                            <md-radio-button ng-value="$ctrl.noPlatformValue">None</md-radio-button>
                             <md-radio-button ng-value="platform" ng-repeat="platform in $ctrl.platforms track by platform.id">{{platform.name}}</md-radio-button>
                         </md-radio-group>
                     </div>

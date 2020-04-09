@@ -24,6 +24,8 @@ const testRunInfoController = function testRunInfoController(
     $transitions,
     pageTitleService,
     authService,
+    messageService,
+    logLevelService,
 ) {
     'ngInject';
 
@@ -32,10 +34,15 @@ const testRunInfoController = function testRunInfoController(
         testRun: null,
         configSnapshot: null,
         wsSubscription: null,
+        logLevels: logLevelService.logLevels,
+        filteredLogs: [],
+        selectedLevel: logLevelService.initialLevel,
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
         downloadAllArtifacts,
+        filterResults,
+        changeTestStatus,
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
     };
@@ -106,6 +113,15 @@ const testRunInfoController = function testRunInfoController(
     var LIVE_LOGS_INTERVAL_NAME = 'liveLogsFromElasticsearch';
     var scrollEnable = true;
 
+    function filterResults(index) {
+        if (vm.selectedLevel === logLevelService.logLevels[index]) {
+            return;
+        }
+
+        vm.selectedLevel = logLevelService.logLevels[index];
+        vm.filteredLogs = logLevelService.filterLogs($scope.logs, vm.selectedLevel);
+    };
+
     function downloadImageArtifacts() {
         ArtifactService.extractImageArtifacts([$scope.test]);
 
@@ -113,7 +129,24 @@ const testRunInfoController = function testRunInfoController(
             data: [$scope.test],
             field: 'imageArtifacts',
         });
-    }
+    };
+
+    function changeTestStatus(test, status) {
+        if (test.status !== status.toUpperCase()) {
+            const copy = {...test};
+
+            copy.status = status.toUpperCase();
+            TestService.updateTest(copy)
+                .then(rs => {
+                    if (rs.success) {
+                        messageService.success(`Test was marked as ${status}`);
+                        $scope.test = rs.data;
+                    } else {
+                        console.error(rs.message);
+                    }
+                });
+        }
+    };
 
     function downloadAllArtifacts() {
         ArtifactService.downloadArtifacts({
@@ -175,7 +208,7 @@ const testRunInfoController = function testRunInfoController(
     };
 
     function setMode(modeName) {
-        if ($scope.MODE != modeName) {
+        if ($scope.MODE.name !== modeName) {
             $scope.drivers = [];
             $scope.MODE = MODES[modeName];
         }
@@ -657,6 +690,7 @@ const testRunInfoController = function testRunInfoController(
                 $scope.logs.push(log);
                 break;
         }
+        vm.filteredLogs = $scope.logs;
         $scope.$applyAsync();
     };
 
@@ -854,7 +888,7 @@ const testRunInfoController = function testRunInfoController(
                 if (rs.success) {
                     const data = rs.data.results || [];
                     vm.testRun.tests = {};
-                    TestService.setTests = data;
+                    TestService.tests = data;
                     setTestParams();
                     pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : $scope.test.name);
                 } else {

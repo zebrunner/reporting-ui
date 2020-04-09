@@ -1,9 +1,11 @@
-<div class="test-run-group_group-items">
-    <div ng-repeat="button in ::$ctrl.buttons track by button.key"
-        title="{{::$ctrl.getFormattedName(button)}}"
-        name="{{::button.key.toLowerCase()}}"
-        class="test-run-group_group-items_item {{::button.key}}"
-        ng-class="{'item-checked': button.isSelected}"
-        ng-click="$ctrl.changeSelection(button);">
-    </div>
+<div class="test-run-group_group-items test-details__status-filter">
+    <md-button
+        ng-repeat="btn in ::$ctrl.buttons track by btn.key"
+        flex="none"
+        class="status-button {{  btn.class }}"
+        ng-class="{'_active': btn.isSelected}"
+        ng-click="$ctrl.changeSelection(btn)">
+        <span class="status-button__icon"></span>
+        <span class="status-button__txt">{{ ::btn.txt }}</span>
+    </md-button>
 </div>

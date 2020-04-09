@@ -6,6 +6,7 @@ import progressbarInterceptor from './http-interceptors/progressbar.interceptor'
 import jenkinsIcon from '../assets/images/_icons_tools/jenkins.svg';
 import { TutorialsModule } from './modules/tutorials';
 import { CoreModule } from './core/core.module';
+import { testRunCardModule } from './shared/test-run-card/test-run-card.module';
 import sessionSwitcherComponent from './shared/sessions-switcher/sessions-switcher.component';
 import photoUpload from './shared/photo-upload/photo-upload.directive';
 
@@ -17,11 +18,10 @@ const ngModule = angular
         // Custom Feature modules
         'app.page',
         'app.services',
-        'app.view',
         'app.appSidebar',
         'app.appHeader',
         'app.common',
-        'app.testRunCard',
+        testRunCardModule,
         // 3rd party feature modules
         'ngImgCrop',
         'md.data.table',
@@ -793,26 +793,6 @@ const ngModule = angular
             }
         };
     })
-    .directive('windowWidth', function ($window, windowWidthService) {
-        'ngInject';
-
-        return {
-            restrict: 'A',
-            link: function($scope) {
-                angular.element($window).on('resize', function() {
-                    windowWidthService.windowWidth = $window.innerWidth;
-                    windowWidthService.windowHeight = $window.innerHeight;
-
-                    $scope.$digest();
-
-                    $scope.$emit('resize.getWindowSize', {
-                        innerWidth: windowWidthService.windowWidth,
-                        innerHeight: windowWidthService.windowHeight
-                    });
-                });
-            }
-        };
-    })
     .directive('loadOnScroll', ($timeout) => {
         'ngInject';
 
@@ -1076,7 +1056,7 @@ const ngModule = angular
             // handle lazyLoading errors when modules become unreachable due the project rebuild
             if (error.type === REJECT_TYPES.ERROR && error.detail?.message && (/ChunkLoadError/i).test(error.detail.message)) {
                 // check if UI was rebuilt (version was changed)
-                $http.get('./config.json')
+                $http.get(`./config.json?timestamp=${Date.now()}`)
                     .then(res => {
                         const remoteUIVersion = res.data['UI_VERSION'];
 
@@ -1102,8 +1082,123 @@ const ngModule = angular
                 return delegate.decorate();
             }
             return $delegate;
-        })
+        });
+        $provide.decorator('$mdDateRangePicker', ($delegate, $mdDialog) => {
+            'ngInject';
+
+            const delegate = new mdDateRangePickerDelegate($delegate, $mdDialog);
+
+            return delegate.decorate();
+        });
     });
+
+class mdDateRangePickerDelegate {
+    constructor($delegate, $mdDialog) {
+        this._$delegate = $delegate;
+        this._$mdDialog = $mdDialog;
+    }
+
+    decorate() {
+        const cachedShowFunction = this._$delegate.show;
+
+        // "show" function from source code with custom changes in its template
+        this._$delegate.show = (config) => {
+            return this._$mdDialog.show({
+                locals: {
+                    mdDateRangePickerServiceModel: angular.copy(config.model),
+                    mdDateRangePickerServiceConfig: angular.copy(config),
+                },
+                controller: ($mdDialog, $scope, mdDateRangePickerServiceModel, mdDateRangePickerServiceConfig) => {
+                    'ngInject';
+
+                    $scope.model = mdDateRangePickerServiceModel || {};
+                    $scope.config = mdDateRangePickerServiceConfig || {};
+                    $scope.model.selectedTemplateName = $scope.model.selectedTemplateName || '';
+                    $scope.ok = function () {
+                        $scope.model.dateStart && $scope.model.dateStart.setHours(0, 0, 0, 0);
+                        $scope.model.dateEnd && $scope.model.dateEnd.setHours(23, 59, 59, 999);
+                        $mdDialog.hide($scope.model);
+                    };
+                    $scope.cancel = function () {
+                        $mdDialog.cancel();
+                    };
+                    $scope.clear = function clear() {
+                        $scope.model.selectedTemplateName = '';
+                        $scope.model.selectedTemplate = null;
+                        $scope.model.dateStart = null;
+                        $scope.model.dateEnd = null;
+                    };
+                    $scope.handleOnSelect = function ($dates) {
+                        if (typeof $scope.config.mdOnSelect === 'function') {
+                            $scope.config.mdOnSelect($dates);
+                        }
+                        if ($scope.config.autoConfirm) {
+                            $scope.ok();
+                        }
+                    };
+                    $scope.getLocalizationVal = function getLocalizationVal(val) {
+                        var ret = null;
+                        if ($scope.model && $scope.model.localizationMap != null && $scope.model.localizationMap[val] != null) {
+                            ret = $scope.model.localizationMap[val];
+                        } else {
+                            ret = val;
+                        }
+                        return ret;
+                    };
+                    if ($scope.model.customTemplates) console.warn('model.customTemplates will be removed from model on next release, please use root config e.g. $mdDateRangePicker.show({customTemplates}) instead');
+                    if ($scope.model.localizationMap) console.warn('model.localizationMap will be removed from model on next release, please use root config e.g. $mdDateRangePicker.show({localizationMap}) instead');
+                    if ($scope.model.firstDayOfWeek) console.warn('model.firstDayOfWeek will be removed from model on next release, please use root config e.g. $mdDateRangePicker.show({firstDayOfWeek}) instead');
+                    if ($scope.model.showTemplate) console.warn('model.showTemplate will be removed from model on next release, please use root config e.g. $mdDateRangePicker.show({showTemplate}) instead');
+                    if ($scope.model.maxRange) console.warn('model.maxRange will be removed from model on next release, please use root config e.g. $mdDateRangePicker.show({maxRange}) instead');
+                    if ($scope.model.onePanel) console.warn('model.onePanel will be removed from model on next release, please use root config e.g. $mdDateRangePicker.show({onePanel}) instead');
+                    if ($scope.model.isDisabledDate) console.warn('model.isDisabledDate({ $date: $date }) will be removed from model on next release, please use root config e.g. $mdDateRangePicker.show({isDisabledDate:($date)=>{}}) instead');
+
+                },
+                template: ['<md-dialog aria-label="Date Range Picker">',
+                    '<md-toolbar class="md-primary" layout="row" layout-align="start center">',
+                    '<div class="md-toolbar-tools">\n' +
+                    '<h2 md-truncate id="modalTitle">Date range{{model.selectedTemplateName ? ": " + model.selectedTemplateName : ""}}</h2>\n' +
+                    '<span flex></span>\n' +
+                    '<md-button id="close" class="md-icon-button _default-md-style" data-ng-click="cancel()" flex="none">\n' +
+                    '<md-icon aria-label="Close dialog">close</md-icon>\n' +
+                    '</md-button>\n' +
+                    '</div>',
+                    '</md-toolbar>',
+                    '<md-dialog-content>',
+                    '<md-date-range-picker ',
+                    'date-start="model.dateStart" ',
+                    'date-end="model.dateEnd" ',
+                    'show-template="config.showTemplate || model.showTemplate" ',
+                    'selected-template="model.selectedTemplate" ',
+                    'selected-template-name="model.selectedTemplateName" ',
+                    'first-day-of-week="config.firstDayOfWeek || model.firstDayOfWeek" ',
+                    'localization-map="config.localizationMap || model.localizationMap" ',
+                    'custom-templates="config.customTemplates || model.customTemplates" ',
+                    'format="config.format" ',
+                    'disable-templates="{{model.disableTemplates}}" ',
+                    'md-on-select="handleOnSelect($dates)" ',
+                    'is-disabled-date="config.isDisabledDate ? config.isDisabledDate($date) : model.isDisabledDate({ $date: $date })" ',
+                    'max-range="config.maxRange || model.maxRange" ',
+                    'one-panel="config.onePanel || model.onePanel" ',
+                    '>',
+                    '</md-date-range-picker>',
+                    '</md-dialog-content>',
+                    '<md-dialog-actions layout="row" layout-align="end center">',
+                    '<md-button ng-if="!config.autoConfirm" class="md-raised" ng-click="clear()">{{getLocalizationVal("Clear")}}</md-button>',
+                    '<md-button ng-if="!config.autoConfirm" class="md-raised md-primary" ng-click="ok()">{{getLocalizationVal("Ok")}}</md-button>',
+                    '</md-dialog-actions>',
+                    '</md-dialog>'].join(''),
+                parent: angular.element(document.body),
+                multiple: config.multiple,
+                targetEvent: config.targetEvent || document.body,
+                clickOutsideToClose: true,
+                fullscreen: config.model.fullscreen,
+            });
+        };
+
+        return this._$delegate;
+    }
+}
 
 class mdDialogDelegate {
     constructor($delegate, $timeout, $rootElement, $document, $window) {
@@ -1195,7 +1290,7 @@ class mdDialogDelegate {
 
 angular.injector(['ng'])
     .get('$http')
-    .get('./config.json')
+    .get(`./config.json?timestamp=${Date.now()}`)
     .then(function(response){
         // TODO: add error handler if incorrect data provided or missed
         ngModule
@@ -1211,7 +1306,6 @@ angular.injector(['ng'])
 //Services
 require('./_services/services.module');
 //Modules
-require('./_views/view.module');
 require('./core/app.config');
 require('./core/config.route');
 require('./page/page.module');

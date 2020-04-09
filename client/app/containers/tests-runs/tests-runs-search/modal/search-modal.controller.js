@@ -8,17 +8,16 @@ const SearchModalController = function SearchModalController(
     allProjects,
     platforms,
     browsers,
+    locales,
     onReset,
     testsRunsService,
-    windowWidthService,
     DEFAULT_SC,
     UtilService,
-    ) {
+) {
     'ngInject';
 
     const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
     const vm = {
-        isMobile: windowWidthService.isMobile,
         statuses: STATUSES,
         selectedRange: {
             selectedTemplate: null,
@@ -39,6 +38,7 @@ const SearchModalController = function SearchModalController(
         environments,
         platforms,
         browsers,
+        locales,
         allProjects,
     };
 

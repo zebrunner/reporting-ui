@@ -72,6 +72,16 @@
                             <md-option ng-repeat="browser in $ctrl.browsers" ng-value="browser">{{browser}}</md-option>
                         </md-select>
                     </md-input-container>
+                    <md-input-container ng-if="$ctrl.locales.length" flex="grow" class="no-padding without-animation">
+                        <md-select id="searchLocale"
+                            ng-model="$ctrl.searchParams.locale"
+                            name="locale"
+                            placeholder="Locale"
+                            ng-change="$ctrl.onChangeSearchCriteria()">
+                            <md-option value="">None</md-option>
+                            <md-option ng-repeat="locale in $ctrl.locales" ng-value="locale">{{locale}}</md-option>
+                        </md-select>
+                    </md-input-container>
                 </div>
                 <div layout="row"
                     layout-align="none end"

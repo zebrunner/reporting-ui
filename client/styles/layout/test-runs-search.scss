@@ -20,9 +20,9 @@
 
     md-input-container.select-wrapper {
         padding-top: 0;
-        width: 144px;
-        max-width: 144px;
-        min-width: 144px;
+        width: 120px;
+        max-width: 120px;
+        min-width: 120px;
     }
 
     &__helpers {
@@ -38,6 +38,7 @@
             font-weight: normal;
             flex-grow: 1;
             flex-shrink: 1;
+            min-width: 180px;
         }
 
         &-btn {
@@ -74,6 +75,7 @@
         width: 36px;
         height: 36px;
         margin: 0 12px 0 0;
+        z-index: 3;
         .md-container {
             left: 50%;
             transform: translate(-50%, -50%);

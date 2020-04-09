@@ -9,20 +9,21 @@
         const local = {
             tests: null,
             previousUrl: null,
-        }
+        };
         const service = {
             searchTests,
             updateTest,
             getTestCaseWorkItemsByType,
             createTestWorkItem,
+            createTestsWorkItems,
             deleteTestWorkItem,
             getJiraTicket,
             getConnectionToJira,
             subscribeOnLocationChangeStart,
-            get getTests() {
+            get tests() {
                 return local.tests;
             },
-            set setTests(tests) {
+            set tests(tests) {
                 local.tests = tests;
             },
             getTest,
@@ -30,16 +31,16 @@
             locationChange: null,
             clearPreviousUrl,
             getPreviousUrl,
-            unsubscribeFromLocationChangeStart
-        }
+            unsubscribeFromLocationChangeStart,
+            updateTestsStatus,
+        };
 
         return service;
 
         function subscribeOnLocationChangeStart() {
             service.locationChange = $rootScope.$on("$locationChangeStart", function (event, newUrl, oldUrl) {
                 local.previousUrl = oldUrl;
-            })
-
+            });
         }
 
         function getPreviousUrl() {
@@ -94,5 +95,26 @@
             return $httpMock.get(API_URL + '/api/tests/jira/connect').then(UtilService.handleSuccess, UtilService.handleError('Unable to get connection to Jira'));
         }
 
+        /**
+         * Bulk updates statuses
+         * @param {Number} testRunId - ID of the test run which holds passed tests
+         * @param {Object} ids - action params (array of tests IDs, action type and status value)
+         * @returns {PromiseLike<any> | Promise<any>}
+         */
+        function updateTestsStatus(testRunId, params) {
+            return $httpMock.patch(`${API_URL}/api/tests/runs/${testRunId}`, params)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update statuses'));
+        }
+
+        /**
+         * Bulk creates test workItems
+         * @param {Number} testRunId - ID of the test run which holds passed tests
+         * @param {Object[]} workItemsData - array of objects which hold test ID and array of workItem objects)
+         * @returns {PromiseLike<any> | Promise<any>}
+         */
+        function createTestsWorkItems(testRunId, workItemsData) {
+            return $httpMock.post(`${API_URL}/api/tests/runs/${testRunId}/workitems`, workItemsData)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update statuses'));
+        }
     }
 })();

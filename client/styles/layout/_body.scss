@@ -54,7 +54,9 @@ body {
     to {opacity: 1}
 }
 
-#main-fab, .lonely-fab button {
+md-fab-speed-dial.md-fab-bottom-right,
+#main-fab,
+.lonely-fab button {
     position: fixed;
     z-index: 6;
     right: 60px;
@@ -64,6 +66,9 @@ body {
             bottom: 130px;
         }
     }
+}
+md-fab-speed-dial.md-fab-bottom-right + md-fab-speed-dial.md-fab-bottom-right {
+    bottom: 130px;
 }
 
 .result {
@@ -425,6 +430,9 @@ button.red {
     }
     &.firefox-mobile {
         background-image: url(../assets/images/_icons_platform/firefox_mobile.svg);
+    }
+    &.electron {
+        background-image: url(../assets/images/_icons_platform/electron.svg);
     }
     &.microsoftedge,
     &.edge {
@@ -2170,6 +2178,9 @@ $light-inprogress: #68c9fd;
             > * {
                 display: inline-block;
                 vertical-align: middle;
+                &.test-details__test-selection {
+                    display: inline-flex;
+                }
             }
             &_controls-buttons {
                 width: 15.48%;
@@ -2229,9 +2240,6 @@ $light-inprogress: #68c9fd;
                 }
                 > * {
                     padding-left: 0;
-                }
-                * {
-                    font-size: 13px;
                 }
                 md-icon {
                     height: 15px;
@@ -2314,12 +2322,6 @@ $light-inprogress: #68c9fd;
 .test-run-group_menu {
     md-checkbox {
         margin-right: 15px !important;
-    }
-}
-
-.work-items {
-    > * {
-        margin-top: 12px;
     }
 }
 
@@ -3225,6 +3227,11 @@ $light-inprogress: #68c9fd;
 
                                 @media(max-width: $md-screen-phone) {
                                     left: $item-list-margin;
+                                }
+
+                                &-favorite {
+                                    font-size: 15px;
+                                    transform: translateY(2px);
                                 }
                             }
 

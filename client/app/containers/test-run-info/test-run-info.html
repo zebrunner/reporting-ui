@@ -53,12 +53,52 @@
                                                             <i ng-click="fullScreen();" class="material-icons video-control">fullscreen</i>
                                                         </div>
                                                     </div>
+                                                    <div ng-show="!$ctrl.hasVideo" class="testrun-info__tab-video-wrapper _no-video">
+                                                        <div class="no-video__icon-wrapper">
+                                                            <div class="material-icons icon">videocam_off</div>
+                                                            <span class="icon__text">No video attached</span>
+                                                        </div>
+                                                        <div class="no-video__controls-wrapper">
+                                                            <div class="controls _play">
+                                                                <span class="material-icons">arrow_right</span>
+                                                            </div>
+                                                            <div class="controls _time">
+                                                                <span>0:00</span>
+                                                            </div>
+                                                            <div class="controls _volume">
+                                                                <span class="material-icons">volume_up</span>
+                                                            </div>
+                                                            <div class="controls _fullscreen">
+                                                                <span class="material-icons">crop_free</span>
+                                                            </div>
+                                                            <div class="controls _options">
+                                                                <span class="material-icons">more_vert</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="no-video__controls-wrapper _progress-bar">
+                                                            <div class="progress-bar"></div>
+                                                        </div>
+                                                    </div>
                                                     <div class="testrun-info__tab-additional" ng-class="{'__no-video': !$ctrl.hasVideo}">
                                                         <table>
                                                             <tbody>
                                                             <tr>
                                                                 <td>Status</td>
-                                                                <td><span style="text-transform: capitalize;">{{ test.status.split('_').join(' ').toLowerCase() }}</span></td>
+                                                                <td>
+                                                                    <md-menu md-offset="30 20" class="tab-additional__menu">
+                                                                        <div class="menu__button" aria-label="Additional menu" ng-click="$mdMenu.open($event)">
+                                                                            <span class="button-text _{{test.status.split('_').join(' ').toLowerCase()}}">{{ test.status.split('_').join(' ').toLowerCase() }}</span>
+                                                                            <span class="material-icons button-icon">arrow_drop_down</span>
+                                                                        </div>
+                                                                        <md-menu-content class="tab-additional__menu-content">
+                                                                            <md-menu-item class="menu__item" ng-repeat="item in ['passed', 'failed']">
+                                                                                <md-button ng-click="$ctrl.changeTestStatus(test, item)">
+                                                                                    <span class="item-text {{item}}" md-menu-align-target>{{item}}</span>
+                                                                                </md-button>
+                                                                            </md-menu-item>
+                                                                        </md-menu-content>
+                                                                    </md-menu>
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Started</td>
@@ -101,7 +141,23 @@
                                                         <tr class="testrun-info__tab-table-row">
                                                             <th class="testrun-info__tab-table-col _visuals">Visuals</th>
                                                             <th class="testrun-info__tab-table-col _start">Start</th>
-                                                            <th class="testrun-info__tab-table-col _status">Status</th>
+                                                            <th class="testrun-info__tab-table-col _status">
+                                                                <md-menu md-offset="-16 38">
+                                                                    <div aria-label="Open demo menu" ng-click="$mdMenu.open($event); $ctrl.log($ctrl)" >
+                                                                        <span class="testrun-info__status-button-icon _{{$ctrl.selectedLevel}}">Status</span>
+                                                                        <span ng-if="$ctrl.selectedLevel === 'status'" class="material-icons _button-icon">filter_list</span>
+                                                                        <md-icon md-svg-icon="checkedListIcon" ng-if="$ctrl.selectedLevel !== 'status'" class="material-icons selected-icon"></md-icon>
+                                                                    </div>
+                                                                    <md-menu-content width="2" class="_status dropdown-content">
+                                                                        <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
+                                                                            <md-button ng-click="$ctrl.filterResults($index)" class="listitem__button">
+                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
+                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">All</span>
+                                                                            </md-button>
+                                                                        </md-menu-item>
+                                                                    </md-menu-content>
+                                                                </md-menu>
+                                                            </th>
                                                             <th class="testrun-info__tab-table-col _action">Action</th>
                                                             <th  class="testrun-info__tab-table-col _menu"></th>
                                                         </tr>
@@ -111,7 +167,7 @@
                                                             class="testrun-info__tab-table-row"
                                                             ng-attr-id="log-{{ $index }}"
                                                             ng-if="logs.length"
-                                                            ng-repeat="log in logs">
+                                                            ng-repeat="log in $ctrl.filteredLogs">
                                                             <td class="testrun-info__tab-table-col _visuals testrun-info__tab-table-img-wrapper">
                                                                 <span ng-show="log.driver" style="border-radius: 8px"
                                                                     class="label label-default">Driver {{

@@ -17,7 +17,8 @@
             'post': request('post'),
             'get': request('get'),
             'delete': request('delete'),
-            'put': request('put')
+            'put': request('put'),
+            'patch': request('patch'),
         };
 
         var storage = {};

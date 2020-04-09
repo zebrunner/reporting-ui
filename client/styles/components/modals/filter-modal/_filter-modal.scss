@@ -2,82 +2,14 @@
     md-dialog-content {
         padding: 0 16px 16px 16px;
     }
-    &__chips {
-        min-height: 134px;
-        padding-top: 18px;
-        md-chips-wrap {
-            box-shadow: none;
-            padding: 0;
-        }
-        md-chip {
-            margin: 0 12px 12px 0;
-            border-radius: 8px;
-            color: #000000;
-            font-size: 14px;
-            font-weight: 500;
-            background-color: white;
-            border: 1px solid rgba($dark-new, .15);
-            &.md-focused {
-                background-color: $dark-new;
-            }
-        }
-    }
     .test-run-group_group-items {
         padding-top: 18px;
-        &_item {
-            margin: 0 12px 12px 0;
-            float: left;
-            height: 32px;
-            width: fit-content;
-            border: 1px solid rgba($dark-new, .15);
-            border-radius: 8px;
-            padding: 0 10px;
-            display: flex;
-            align-items: center;
-            &.item-checked {
-                background-color: $dark-new;
-                &:after {
-                    color: white;
-                }
-            }
-            &.FAILED:before {
-                background-color: #eb4554;
-            }
-            &.PASSED:before {
-                background-color: #43c480;
-            }
-            &.SKIPPED:before {
-                background-color: #ffc741;
-            }
-            &.ABORTED:before {
-                background-color: #aeaeae;
-            }
-            &.QUEUED:before {
-                border: 1px solid #aeaeae;
-                background-color: white;
-            }
-            &.IN_PROGRESS:before {
-                background-color: #4dade9;
-            }
-            &:before {
-                margin-right: 8px;
-                text-transform: capitalize;
-                display: block;
-                content: "";
-                border-radius: 50%;
-                height: 12px;
-                width: 12px;
-            }
-            &:after {
-                content: attr(name);
-                color: #000000;
-                font-weight: 500;
-                text-transform: capitalize;
-            }
-            &.IN_PROGRESS:after {
-                content: "In progress";
-                text-transform: none;
-            }
-        }
+    }
+    .test-details__status-filter .status-button {
+        margin-bottom: 8px;
+    }
+
+    @media (min-width: $md-screen-phone + 1) {
+        min-width: 550px;
     }
 }

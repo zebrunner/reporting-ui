@@ -327,7 +327,6 @@ const AccessKeyModalController = function AccessKeyModalController(
             type: data.type,
             key,
             label: data.label,
-            index: vm.platformControls.length,
             data,
         };
 
@@ -367,7 +366,6 @@ const AccessKeyModalController = function AccessKeyModalController(
             key,
             items,
             onChange: onPlatformControlSelect,
-            index: vm.platformControls.length,
             data,
         };
 
@@ -383,7 +381,7 @@ const AccessKeyModalController = function AccessKeyModalController(
         const parentItem = vm.platformModel[control.key];
         const versionsData = parentItem.versions ? parentItem : control.data.versions ? control.data : undefined;
 
-        vm.platformControls = vm.platformControls.slice(0, control.index + 1);
+        vm.platformControls = vm.platformControls.slice(0, vm.platformControls.indexOf(control) + 1);
         filterPlatformModel();
 
         if (versionsData && !control.key.includes('-versions')) {
@@ -527,7 +525,6 @@ const AccessKeyModalController = function AccessKeyModalController(
         $timeout(() => {
             vm.aceModel.copyToClipboard();
             messageService.success('Code copied to clipboard');
-            $mdDialog.hide();
         }, 0, false);
     }
 

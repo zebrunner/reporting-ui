@@ -4,9 +4,9 @@ import SearchModalController from './modal/search-modal.controller';
 import modalTemplate from './modal/search-modal.html';
 
 const TestsSessionsSearchController = function TestsSessionsSearchController(
+    $mdMedia,
     testsSessionsService,
     UtilService,
-    windowWidthService,
     testsRunsService,
     $scope,
     TestRunService,
@@ -42,7 +42,7 @@ const TestsSessionsSearchController = function TestsSessionsSearchController(
         showSearchDialog,
         $onInit: init,
 
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
     };
 
     return vm;

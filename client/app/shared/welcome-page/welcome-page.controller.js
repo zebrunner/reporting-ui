@@ -1,11 +1,13 @@
+'use strict';
+
 export default function welcomePageController (
+    $mdMedia,
     $state,
     UserService,
-    windowWidthService,
     messageService,
     pageTitleService,
 ) {
-    'ngInject'
+    'ngInject';
 
     const vm = {
         onViewChange,
@@ -13,9 +15,9 @@ export default function welcomePageController (
         showRunsCardContent: false,
         showSessionsCardContent: false,
 
-        get currentTitle() { return pageTitleService.pageTitle },
-        get isMobile() { return windowWidthService.isMobile(); },
-    }
+        get currentTitle() { return pageTitleService.pageTitle; },
+        get isMobile() { return $mdMedia('xs'); },
+    };
 
     function onViewChange(state) {
         const param = {name: 'DEFAULT_TEST_VIEW', value: state};

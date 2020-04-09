@@ -1,4 +1,4 @@
-<md-dialog flex="50" aria-label="User profile" zafira-background-theme="modal" class="modal-default _has-shadows review-modal">
+<md-dialog flex="50" aria-label="Comments" zafira-background-theme="modal" class="modal-default review-modal">
     <form class="form-validation" name="comments_form" ng-submit="createUser(); UtilService.untouchForm(comments_form)" ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -15,7 +15,14 @@
                 <div layout layout-sm="column">
                     <md-input-container flex class="no-margin-bottom">
                         <label>Comment</label>
-                        <textarea id="comment" name="comment" rows=10 class="textarea_border" data-ng-model="testRun.comments"></textarea>
+                        <textarea id="comment"
+                            name="comment"
+                            class="textarea_border"
+                            data-ng-model="testRun.comments"
+                            rows="5"
+                            max-rows="5"
+                            md-no-resize
+                            md-detect-hidde></textarea>
                     </md-input-container>
                 </div>
             </div>

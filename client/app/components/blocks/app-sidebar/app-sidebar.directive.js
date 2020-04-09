@@ -1,4 +1,5 @@
 'use strict';
+
 import controller from './app-sidebar.controller';
 import template from './app-sidebar.html';
 

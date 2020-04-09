@@ -8,6 +8,7 @@ import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
 const testDetailsController = function testDetailsController(
+    $mdMedia,
     $scope,
     $timeout,
     $rootScope,
@@ -22,11 +23,10 @@ const testDetailsController = function testDetailsController(
     $mdDialog,
     toolsService,
     messageService,
-    windowWidthService,
     ArtifactService,
     pageTitleService,
     authService,
-    ) {
+) {
     'ngInject';
 
     const initialCountToDisplay = 50;
@@ -87,14 +87,38 @@ const testDetailsController = function testDetailsController(
         zafiraWebsocket: null,
         testId: null,
         configSnapshot: null,
+        selectedTestsCount: 0,
+        isAllTestsSelected: false,
+        bulkChangeInProgress: false,
+        batchButtons: [
+            {
+                text: 'Mark as Passed',
+                altText: 'Passed',
+                onClick: bulkChangeStatus,
+                completed: false,
+                class: '_green-icon',
+                action: 'PASSED',
+                mobileIconClass: 'fa-check-circle'
+            },
+            {
+                text: 'Mark as Failed',
+                altText: 'Failed',
+                onClick: bulkChangeStatus,
+                completed: false,
+                class: '_red-icon',
+                action: 'FAILED',
+                mobileIconClass: 'fa-times-circle'
+            },
+        ],
 
-        get isMobile() { return windowWidthService.isMobile(); },
+        get isMobile() { return $mdMedia('xs'); },
+        get isTablet() { return !$mdMedia('gt-md'); },
         get activeTests() { return _at || []; },
         set activeTests(data) { _at = data; return _at; },
         get testsToDisplay() {
             return this.activeTests.slice(firstIndex, lastIndex);
         },
-        get limitOptions() {  return !windowWidthService.isMobile() ? defaultLimitOptions : false; },
+        get limitOptions() {  return !$mdMedia('xs') ? defaultLimitOptions : false; },
         get empty() { return !this.testRun.tests || !this.testRun.tests.length; },
         get jira() { return jiraSettings; },
         get testRail() { return testRailSettings; },
@@ -103,24 +127,28 @@ const testDetailsController = function testDetailsController(
         get isSortingActive() { return isSortingActive(); },
         get currentTitle() { return pageTitleService.pageTitle; },
 
-        getEmptyTestsMessage,
-        toggleGroupingFilter,
-        changeViewMode,
-        orderByElapsed,
-        filterByStatus,
         changeTestStatus,
-        showDetailsDialog,
-        goToTestDetails,
-        showFilterDialog,
-        showCiHelperDialog,
-        onBackClick,
-        getTestURL,
-        highlightTest,
-        openImagesViewerModal,
-        onTrackedTestRender,
-        resetStatusFilterAndOrdering,
-        onPageChange,
+        changeViewMode,
+        clearTestsSelection,
+        filterByStatus,
         getArtifactIconId,
+        getEmptyTestsMessage,
+        getTestURL,
+        goToTestDetails,
+        highlightTest,
+        onAllTestsSelect,
+        onBackClick,
+        onPageChange,
+        onTestSelect,
+        onTrackedTestRender,
+        openImagesViewerModal,
+        orderByElapsed,
+        resetStatusFilterAndOrdering,
+        showCiHelperDialog,
+        showDetailsDialog,
+        showFilterDialog,
+        toggleAllTestsSelection,
+        toggleGroupingFilter,
         userHasAnyPermission: authService.userHasAnyPermission,
     };
 
@@ -319,6 +347,75 @@ const testDetailsController = function testDetailsController(
         }
     }
 
+    function bulkChangeStatus(event, btn) {
+        if (vm.bulkChangeInProgress) { return; }
+        const selectedTests = vm.testsToDisplay.filter(test => test.selected);
+        const ids = selectedTests.map(({ id }) => id);
+        const params = {
+            ids,
+            operation: 'STATUS_UPDATE',
+            value: btn.action,
+        };
+
+        vm.bulkChangeInProgress = true;
+        TestService.updateTestsStatus(vm.testRun.id, params)
+            .then(res => {
+                if (res.success) {
+                    const patchedTests = res.data || [];
+                    const selectedTestsObj = selectedTests.reduce((accum, test) => {
+                        accum[test.id] = test;
+
+                         return accum;
+                    }, {});
+
+                    patchedTests.forEach(patchedTest => {
+                        selectedTestsObj[patchedTest.id].status = patchedTest.status;
+                    });
+                    // display alt text for a while (1sec)
+                    btn.completed = true;
+                    $timeout(() => {
+                        btn.completed = false;
+                        vm.bulkChangeInProgress = false;
+                    }, 1000);
+
+                    const message = 'Test was marked as ' + btn.action;
+
+                    messageService.success('Tests were marked as ' + btn.action);
+                    bulkCreateWorkItems(message, selectedTests);
+                } else {
+                    messageService.error(res.message);
+                    vm.bulkChangeInProgress = false;
+                }
+            });
+    }
+
+    function bulkCreateWorkItems(message, tests) {
+        const params = tests.map(test => {
+            const testEvent = createWorkItem('EVENT', test, message);
+
+            return {
+                testId: test.id,
+                workItems: [testEvent],
+            };
+        });
+
+        TestService.createTestsWorkItems(vm.testRun.id, params)
+            .then(rs => {
+                if (!rs.success) {
+                    messageService.error('Failed to add tests events');
+                }
+            });
+    }
+
+    function createWorkItem(type, test, description) {
+        return {
+            description,
+            jiraId: Math.floor(Math.random() * 90000) + 10000,
+            testCaseId: test.testCaseId,
+            type,
+        };
+    }
+
     function onBackClick() {
         $state.go('tests.runs', { activeTestRunId: vm.testRun.id });
     }
@@ -377,7 +474,7 @@ const testDetailsController = function testDetailsController(
     function initAllSettings() {
         toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
             .then((res) => {
-                testCaseManagementTools = res.data;
+                testCaseManagementTools = res.data || [];
                 initJiraSettings();
                 initTestRailSettings();
                 initQTestSettings();
@@ -385,7 +482,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function findToolByName(name) {
-        return testCaseManagementTools.find((tool) => tool.name === name);
+        return Array.isArray(testCaseManagementTools) && testCaseManagementTools.find((tool) => tool.name === name);
     }
 
     function initJiraSettings() {
@@ -484,12 +581,8 @@ const testDetailsController = function testDetailsController(
     }
 
     function addTestEvent(message, test) {
-        const testEvent = {};
+        const testEvent = createWorkItem('EVENT', test, message);
 
-        testEvent.description = message;
-        testEvent.jiraId = Math.floor(Math.random() * 90000) + 10000;
-        testEvent.testCaseId = test.testCaseId;
-        testEvent.type = 'EVENT';
         TestService.createTestWorkItem(test.id, testEvent)
             .then(rs => {
                 if (!rs.success) {
@@ -686,7 +779,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function onAddingNewTest(test) {
-        updateGroupingData(test)
+        updateGroupingData(test);
         onFilterChange();
     }
 
@@ -1022,6 +1115,33 @@ const testDetailsController = function testDetailsController(
                 $scope.$apply();
             }
         });
+    }
+
+    function onTestSelect() {
+        vm.selectedTestsCount = vm.testsToDisplay.filter(test => test.selected).length;
+
+        // handle case when all tests are (de)selected manually one by one
+        if (vm.selectedTestsCount === vm.testsToDisplay.length && !vm.isAllTestsSelected) {
+            vm.isAllTestsSelected = true;
+        } else if (vm.selectedTestsCount !== vm.testsToDisplay.length && vm.isAllTestsSelected) {
+            vm.isAllTestsSelected = false;
+        }
+    }
+
+    function onAllTestsSelect() {
+        vm.testsToDisplay.forEach(test => test.selected = vm.isAllTestsSelected);
+        onTestSelect();
+    }
+
+    function toggleAllTestsSelection() {
+        vm.isAllTestsSelected = !vm.isAllTestsSelected;
+        onAllTestsSelect();
+    }
+
+    function clearTestsSelection() {
+        vm.isAllTestsSelected = false;
+        onAllTestsSelect();
+        onTestSelect();
     }
 };
 

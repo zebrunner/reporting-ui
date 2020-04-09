@@ -1,6 +1,7 @@
 'use strict';
 
 const TestsRunsFilterController = function TestsRunsFilterController(
+    $mdMedia,
     $scope,
     FilterService,
     DEFAULT_SC,
@@ -12,7 +13,6 @@ const TestsRunsFilterController = function TestsRunsFilterController(
     UserService,
     $timeout,
     $mdDateRangePicker,
-    windowWidthService,
     messageService,
 ) {
     'ngInject';
@@ -87,8 +87,8 @@ const TestsRunsFilterController = function TestsRunsFilterController(
             LAST_14_DAYS: 'last 14 days',
             LAST_30_DAYS: 'last 30 days'        },
         get currentUser() { return UserService.currentUser; },
+        get isMobile() { return $mdMedia('xs'); },
         chipsCtrl: null,
-        isMobile: windowWidthService.isMobile,
         isMobileSearchActive: false,
 
         matchMode: matchMode,
@@ -162,6 +162,7 @@ const TestsRunsFilterController = function TestsRunsFilterController(
         loadFilterDataPromises.push(loadEnvironments());
         loadFilterDataPromises.push(loadPlatforms());
         loadFilterDataPromises.push(loadBrowsers());
+        loadFilterDataPromises.push(loadLocales());
         loadFilterDataPromises.push(loadProjects());
 
         return $q.all(loadFilterDataPromises).then(function() {
@@ -211,12 +212,25 @@ const TestsRunsFilterController = function TestsRunsFilterController(
             .then(rs => {
                 if (rs.success) {
                     // TODO: remove when BE get rid of nullish values from DB
-                    vm.browsers = rs.data.filter(Boolean);
+                    vm.browsers = (rs.data || []).filter(Boolean);
                 } else {
                     messageService.error(rs.message);
                 }
 
                 return vm.browsers;
+            });
+    }
+
+    function loadLocales() {
+        return TestRunService.getLocales()
+            .then(rs => {
+                if (rs.success) {
+                    vm.locales = rs.data || [];
+                } else {
+                    messageService.error(rs.message);
+                }
+
+                return vm.locales;
             });
     }
 
@@ -250,6 +264,9 @@ const TestsRunsFilterController = function TestsRunsFilterController(
                                 break;
                             case 'BROWSER':
                                 criteria.values = vm.browsers;
+                                break;
+                            case 'LOCALE':
+                                criteria.values = vm.locales;
                                 break;
                             case 'PROJECT':
                                 criteria.values = vm.allProjects;
@@ -401,6 +418,10 @@ const TestsRunsFilterController = function TestsRunsFilterController(
     }
 
     function selectFilterForEdit(filter) {
+        if (testsRunsService.getSearchParam('filterId') !== filter.id) {
+            searchByFilter(filter);
+        }
+
         vm.collapseFilter = true;
         vm.filter = angular.copy(filter);
     }
@@ -435,6 +456,7 @@ const TestsRunsFilterController = function TestsRunsFilterController(
         vm.chipsCtrl.selectedChip = index;
         // fire fetch data event;
         vm.onFilterChange();
+        clearAndOpenFilterBlock(false);
     }
 
     function addChip() {

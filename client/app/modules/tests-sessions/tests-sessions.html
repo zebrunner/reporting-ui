@@ -18,7 +18,10 @@
             <sessions-switcher switcher-state="$ctrl.switcherState"
             on-change="$ctrl.onViewChange($value)" is-disabled="$ctrl.isUserParamSaving"></sessions-switcher>
         </div>
-        <div class="p-tests-sessions__content-wrapper">
+        <div class="p-tests-sessions__content-wrapper"
+            blur-filter
+            blur-radius="1px"
+            blur-active="{{$ctrl.isUserParamSaving}}">
             <div class="p-tests-sessions__section _header">
                 <tests-sessions-search on-search="$ctrl.onSearch($params)" additional-search-params="$ctrl.additionalSearchParams"></tests-sessions-search>
             </div>

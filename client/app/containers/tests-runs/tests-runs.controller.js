@@ -5,6 +5,7 @@ import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
 const testsRunsController = function testsRunsController(
     $mdDialog,
+    $mdMedia,
     $timeout,
     $q,
     $state,
@@ -16,7 +17,6 @@ const testsRunsController = function testsRunsController(
     API_URL,
     $rootScope,
     $transitions,
-    windowWidthService,
     TestService,
     toolsService,
     projectsService,
@@ -38,7 +38,6 @@ const testsRunsController = function testsRunsController(
         selectedTestRuns: [],
         zafiraWebsocket: null,
         subscriptions: {},
-        isMobile: windowWidthService.isMobile,
         isFilterActive: testsRunsService.isFilterActive,
         isSearchActive: testsRunsService.isSearchActive,
         projects: null,
@@ -47,6 +46,7 @@ const testsRunsController = function testsRunsController(
         switcherState: 'runs',
         isUserParamSaving: false,
 
+        clearTestRunsSelection,
         isTestRunsEmpty: isTestRunsEmpty,
         getTestRuns: getTestRuns,
         areTestRunsFromOneSuite: areTestRunsFromOneSuite,
@@ -66,6 +66,8 @@ const testsRunsController = function testsRunsController(
         userHasAnyPermission: authService.userHasAnyPermission,
 
         get currentTitle() { return pageTitleService.pageTitle; },
+        get isMobile() { return $mdMedia('xs'); },
+        get isTablet() { return !$mdMedia('gt-md'); },
     };
 
     vm.$onInit = init;
@@ -153,7 +155,7 @@ const testsRunsController = function testsRunsController(
 
                 //scroll to the element
                 if (!isElementInViewport(el)) {
-                    const headerOffset = vm.isMobile() && !vm.isSearchActive() ? 144 : 96;
+                    const headerOffset = vm.isMobile && !vm.isSearchActive() ? 144 : 96;
                     const elOffsetTop = $(el).offset().top;
 
                     $('html,body').animate({ scrollTop: elOffsetTop - headerOffset }, 'slow', function() {
@@ -472,6 +474,12 @@ const testsRunsController = function testsRunsController(
     }
 
     function selectAllTestRuns() {
+        vm.testRuns.forEach(testRun => testRun.selected = vm.selectedAll);
+        updateSelectedTestRuns();
+    }
+
+    function clearTestRunsSelection() {
+        vm.selectedAll = false;
         vm.testRuns.forEach(testRun => testRun.selected = vm.selectedAll);
         updateSelectedTestRuns();
     }
