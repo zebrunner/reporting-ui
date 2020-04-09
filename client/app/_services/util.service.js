@@ -108,7 +108,19 @@
                     message: 'Name can only contain letters, numbers, dashes and dots.',
                     value: /^[A-Za-z]+[0-9A-Za-z.-]*$/,
                 }
-            ]
+            ],
+            firstName: [
+                {
+                    name: 'required',
+                    message: 'First name required'
+                },
+            ],
+            lastName: [
+                {
+                    name: 'required',
+                    message: 'Last name required'
+                },
+            ],
         };
 
         return service;
