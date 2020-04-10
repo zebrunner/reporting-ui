@@ -261,7 +261,6 @@ const CiHelperController = function CiHelperController(
 
     function applyBuilder(launcher) {
         const launcherModel = launcher.model || launcher.params;
-        console.log(launcherModel);
         $scope.jsonModel = {};
         $scope.builtLauncher = { model: {}, type: {} };
         $scope.jsonModel = launcherModel.toJson();
@@ -463,9 +462,6 @@ const CiHelperController = function CiHelperController(
     }
 
     function updateLauncherConfig(config) {
-        console.log(config);
-        console.log($scope);
-        console.log(vm);
         const params = {
             name: config.name,
             params: config.model,
@@ -478,8 +474,6 @@ const CiHelperController = function CiHelperController(
 
                 savedConfig.name = rs.data.name;
                 savedConfig.params = rs.data.params;
-                console.log(currentLauncher);
-                console.log(savedConfig);
 
                 $timeout(function () {
                     switchToLauncherPreview(savedConfig);
@@ -1654,7 +1648,6 @@ const CiHelperController = function CiHelperController(
     function editLauncherConfig() {
         vm.selectedLaunherConfig = angular.copy($scope.launcher);
         vm.selectedLaunherConfig.name = '';
-        console.log(vm.selectedLaunherConfig);
 
         if (vm.chipsCtrl) {
             vm.lastSelectedProvider = vm.chipsCtrl.selectedChip;
