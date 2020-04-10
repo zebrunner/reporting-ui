@@ -57,6 +57,7 @@ const CiHelperController = function CiHelperController(
         loadingScm: true,
         cardNumber: 0,
         creatingLauncher: false,
+        selectedLauncherId: -1,
 
         onProviderSelect,
         onPlatformSelect,
@@ -67,6 +68,11 @@ const CiHelperController = function CiHelperController(
         setFavouriteLauncher,
         saveLauchersPreferencesForRescan,
         applySavedPreferences,
+        editLauncherConfig,
+        saveLauncherConfig,
+        chooseSavedLauncherConfig,
+        updateLauncherConfig,
+        getWebHook,
         userHasAnyPermission: authService.userHasAnyPermission,
 
         get isMobile() { return $mdMedia('xs'); },
@@ -254,9 +260,11 @@ const CiHelperController = function CiHelperController(
     };
 
     function applyBuilder(launcher) {
+        const launcherModel = launcher.model || launcher.params;
+        console.log(launcherModel);
         $scope.jsonModel = {};
         $scope.builtLauncher = { model: {}, type: {} };
-        $scope.jsonModel = launcher.model.toJson();
+        $scope.jsonModel = launcherModel.toJson();
         angular.forEach($scope.jsonModel, function (value, key) {
             var type = $scope.getType(value);
             var val = type === 'array' && value.length ? value[0] : type === 'int' ? +value : value;
@@ -430,6 +438,7 @@ const CiHelperController = function CiHelperController(
         }
         highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
+        vm.selectedLauncherId = launcher.id;
         $scope.needServer = false;
         $scope.currentServerId = null;
         $scope.DEFAULT_TEMPLATES.model = {};
@@ -437,6 +446,71 @@ const CiHelperController = function CiHelperController(
             switchToLauncherPreview(launcher);
         }
     };
+
+    function chooseSavedLauncherConfig(config) {
+        if (config) {
+            if ($scope.launcher.id === config.id) { return; }
+            $scope.launcher.id = config.id;
+            $scope.launcher.name = config.name;
+            $scope.launcher.model = config.params;
+            $scope.launcher.presets = [];
+            $scope.launcher.preference = {};
+            $scope.launcher.isSavedConfig = true;
+
+            highlightLauncher(config.id);
+            applyBuilder(config);
+        }
+    }
+
+    function updateLauncherConfig(config) {
+        console.log(config);
+        console.log($scope);
+        console.log(vm);
+        const params = {
+            name: config.name,
+            params: config.model,
+        };
+
+        LauncherService.updateLauncherConfig(vm.selectedLauncherId, config.id, params).then(function (rs) {
+            if (rs.success) {
+                const currentLauncher = $scope.launchers.find(item => item.id === vm.selectedLauncherId);
+                const savedConfig = currentLauncher.presets.find(config => config.id === rs.data.id);
+
+                savedConfig.name = rs.data.name;
+                savedConfig.params = rs.data.params;
+                console.log(currentLauncher);
+                console.log(savedConfig);
+
+                $timeout(function () {
+                    switchToLauncherPreview(savedConfig);
+                }, 0, false);
+
+                messageService.success('Launcher was updated');
+            } else {
+                messageService.error(rs.message);
+            }
+        });
+    }
+
+    function getWebHook(config) {
+        LauncherService.getConfigHook(vm.selectedLauncherId, config.id).then(function (rs) {
+            if (rs.success) {
+                const textArea = document.createElement('textarea');
+
+                textArea.value = rs.data;
+                textArea.setAttribute('readonly', '');
+                textArea.style.position = 'absolute';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                messageService.success('Copied');
+            } else {
+                messageService.error(rs.message);
+            }
+        });
+    }
 
     function switchToLauncherPreview(launcher) {
         $scope.applyBuilder(launcher);
@@ -1577,6 +1651,33 @@ const CiHelperController = function CiHelperController(
         clearLauncher();
     }
 
+    function editLauncherConfig() {
+        vm.selectedLaunherConfig = angular.copy($scope.launcher);
+        vm.selectedLaunherConfig.name = '';
+        console.log(vm.selectedLaunherConfig);
+
+        if (vm.chipsCtrl) {
+            vm.lastSelectedProvider = vm.chipsCtrl.selectedChip;
+        }
+
+        vm.cardNumber = 4;
+    }
+
+    function saveLauncherConfig() {
+        const params = {
+            name: vm.selectedLaunherConfig.name,
+            params: vm.selectedLaunherConfig.model,
+        };
+
+        LauncherService.saveLauncherConfig(vm.selectedLaunherConfig.id, params).then(function (rs) {
+            if (rs.success) {
+                $scope.launcher.presets.push(rs.data);
+            } else {
+                messageService.error(rs.message);
+            }
+        });
+    }
+
     function shouldBeDisplayed(section) {
         switch (section) {
             case 'helper':
@@ -1595,6 +1696,9 @@ const CiHelperController = function CiHelperController(
                 return vm.cardNumber === 2 && (!$scope.needServer || ($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length)) && $scope.launcher && $scope.launcher.id;
             case 'create-launcher':
                 return vm.cardNumber === 2 && vm.creatingLauncher && (!$scope.needServer || ($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length)) && !($scope.launcher && $scope.launcher.id);
+            case 'save-launcher-config':
+                return vm.cardNumber === 4 && (!$scope.needServer || ($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length)) && $scope.launcher && $scope.launcher.id;
+                // ------------
             case 'server-select':
                 return $scope.needServer && vm.cardNumber !== 0 && !($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length);
             default:
