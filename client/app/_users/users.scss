@@ -8,7 +8,8 @@
             min-width: 0;
         }
         
-        &._name-content {
+        &._name-content,
+        &._email-content {
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
