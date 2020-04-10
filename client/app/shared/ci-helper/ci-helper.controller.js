@@ -1691,7 +1691,6 @@ const CiHelperController = function CiHelperController(
                 return vm.cardNumber === 2 && vm.creatingLauncher && (!$scope.needServer || ($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length)) && !($scope.launcher && $scope.launcher.id);
             case 'save-launcher-config':
                 return vm.cardNumber === 4 && (!$scope.needServer || ($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length)) && $scope.launcher && $scope.launcher.id;
-                // ------------
             case 'server-select':
                 return $scope.needServer && vm.cardNumber !== 0 && !($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length);
             default:
