@@ -92,6 +92,7 @@ const CiHelperController = function CiHelperController(
         determinateValue: 20,
         started: false,
         finished: false,
+        failed: false,
         buildNumber: null,
         rescan: false
     };
@@ -640,9 +641,50 @@ const CiHelperController = function CiHelperController(
     function getBuildNumber(queueItemUrl) {
         LauncherService.getBuildNumber(queueItemUrl).then(function (rs) {
             if (rs.success) {
-                $scope.launcherLoaderStatus.buildNumber = rs.data
+                $scope.launcherLoaderStatus.buildNumber = rs.data;
+                startCheckScannerInProgressTimeout();
             }
         });
+    };
+
+    let checkScannerInProgressTimeout;
+    function startCheckScannerInProgressTimeout() {
+        const buildNumber = $scope.launcherLoaderStatus.buildNumber;
+        const scmAccountId = $scope.scmAccount.id;
+        const rescan = $scope.launcherLoaderStatus.rescan;
+        checkScannerInProgressTimeout = $timeout(function () {
+            isScannerInProgress(buildNumber, scmAccountId, rescan).then(rs => {
+                const inProgress = rs.success && rs.data;
+                if (inProgress) {
+                    startCheckScannerInProgressTimeout();
+                } else {
+                    $scope.launcherLoaderStatus.started = false;
+                    $scope.launcherLoaderStatus.failed = true;
+                    $scope.launcherLoaderStatus.finished = true;
+
+                    onScanRepositoryFinish();
+                }
+            });
+        }, 30000);
+    };
+
+    function isScannerInProgress(buildNumber, scmAccountId, rescan) {
+        return LauncherService.isScannerInProgress(buildNumber, scmAccountId, rescan);
+    };
+
+    function finishCheckScannerInProgressTimeout() {
+        if (!!checkScannerInProgressTimeout) {
+            $timeout.cancel(checkScannerInProgressTimeout);
+            checkScannerInProgressTimeout = undefined;
+        }
+    };
+
+    function onScanRepositoryFinish() {
+        disconnectWebsocket();
+        runPseudoDeterminateProgress(150, 5);
+        $scope.launcherLoaderStatus.determinateValue = 20;
+
+        finishCheckScannerInProgressTimeout();
     };
 
     $scope.cancelScanRepository = function () {
@@ -662,11 +704,12 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.onScanRepositoryFinish = function () {
-        disconnectWebsocket();
-        runPseudoDeterminateProgress(150, 5);
         $scope.launcherLoaderStatus.started = false;
         $scope.launcherLoaderStatus.finished = true;
+        $scope.launcherLoaderStatus.failed = false;
         $scope.launcherLoaderStatus.determinateValue = 20;
+
+        onScanRepositoryFinish();
     };
 
     function runPseudoDeterminateProgress(millisToLoad, step) {
@@ -997,6 +1040,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.$on('$destroy', function () {
         disconnectWebsocket();
+        finishCheckScannerInProgressTimeout();
     });
 
     $scope.hide = function (testRun) {

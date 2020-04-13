@@ -383,7 +383,8 @@
                 <div class="ci-runner-container_loader_container_title">
                     <div ng-if="launcherLoaderStatus.started">Keep calm and have a cup of tea.</div>
                     <div ng-if="launcherLoaderStatus.started">It may take a few minutes.</div>
-                    <div ng-if="launcherLoaderStatus.finished">Done!</div>
+                    <div ng-if="launcherLoaderStatus.finished && !launcherLoaderStatus.failed">Done!</div>
+                    <div ng-if="launcherLoaderStatus.finished && launcherLoaderStatus.failed">Sorry, we were not able to scan the repository, contact support or try again later.</div>
                 </div>
                 <div class="ci-runner-container_loader_container_bar">
                     <div class="ci-runner-container_loader_container_bar_progress">
@@ -392,7 +393,7 @@
                     <div class="ci-runner-container_loader_container_bar_status" ng-if="launcherLoaderStatus.started">
                         Adding data...
                     </div>
-                    <div class="ci-runner-container_loader_container_bar_status" ng-if="launcherLoaderStatus.finished">
+                    <div class="ci-runner-container_loader_container_bar_status" ng-if="launcherLoaderStatus.finished && !launcherLoaderStatus.failed">
                         Now you can start launching!
                     </div>
                 </div>
