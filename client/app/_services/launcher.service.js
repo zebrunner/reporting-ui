@@ -18,6 +18,7 @@
         service.scanRepository = scanRepository;
         service.getBuildNumber = getBuildNumber;
         service.abortScanRepository = abortScanRepository;
+        service.isScannerInProgress = isScannerInProgress;
         service.setFavouriteLauncher = setFavouriteLauncher;
 
         return service;
@@ -62,7 +63,12 @@
 
         function abortScanRepository(buildNumber, scmAccountId, rescan) {
             const query = $httpParamSerializer({scmAccountId: scmAccountId, rescan: rescan});
-            return $http.delete(API_URL + '/api/launchers/scanner/' + buildNumber + '?' + query).then(UtilService.handleSuccess, UtilService.handleError('Unable to scan repository'));
+            return $http.delete(API_URL + '/api/launchers/scanner/' + buildNumber + '?' + query).then(UtilService.handleSuccess, UtilService.handleError('Unable to cancel repository scanning'));
+        }
+
+        function isScannerInProgress(buildNumber, scmAccountId, rescan) {
+            const query = $httpParamSerializer({scmAccountId: scmAccountId, rescan: rescan});
+            return $http.get(API_URL + '/api/launchers/scanner/' + buildNumber + '/status?' + query).then(UtilService.handleSuccess, UtilService.handleError('Unable to check repository scanning state'));
         }
     }
 })();
