@@ -654,15 +654,17 @@ const CiHelperController = function CiHelperController(
         const rescan = $scope.launcherLoaderStatus.rescan;
         checkScannerInProgressTimeout = $timeout(function () {
             isScannerInProgress(buildNumber, scmAccountId, rescan).then(rs => {
-                const inProgress = rs.success && rs.data;
-                if (inProgress) {
-                    startCheckScannerInProgressTimeout();
-                } else {
-                    $scope.launcherLoaderStatus.started = false;
-                    $scope.launcherLoaderStatus.failed = true;
-                    $scope.launcherLoaderStatus.finished = true;
+                if (rs.success) {
+                    const inProgress = rs.data;
+                    if (inProgress) {
+                        startCheckScannerInProgressTimeout();
+                    } else {
+                        $scope.launcherLoaderStatus.started = false;
+                        $scope.launcherLoaderStatus.failed = true;
+                        $scope.launcherLoaderStatus.finished = true;
 
-                    onScanRepositoryFinish();
+                        onScanRepositoryFinish();
+                    }
                 }
             });
         }, 30000);
