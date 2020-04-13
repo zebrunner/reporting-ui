@@ -667,7 +667,7 @@ const CiHelperController = function CiHelperController(
                     }
                 }
             });
-        }, 300);
+        }, 30000);
     };
 
     function isScannerInProgress(buildNumber, scmAccountId, rescan) {
