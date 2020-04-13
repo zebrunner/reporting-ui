@@ -24,8 +24,8 @@
         return service;
 
         function createLauncher(launcher, automationServerId) {
-            const query = `automationServerId=${automationServerId}`;
-            return $http.post(API_URL + '/api/launchers' + '?' + query, launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to create launcher'));
+            const path = `/api/launchers?automationServerId=${automationServerId}`;
+            return $http.post(API_URL + path, launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to create launcher'));
         }
 
         function getLauncherById(id) {
@@ -53,8 +53,8 @@
         }
 
         function scanRepository(launcherScanner, automationServerId) {
-            const query = `automationServerId=${automationServerId}`;
-            return $http.post(API_URL + '/api/launchers/scanner' + '?' + query, launcherScanner).then(UtilService.handleSuccess, UtilService.handleError('Unable to scan repository'));
+            const path = `/api/launchers/scanner?automationServerId=${automationServerId}`;
+            return $http.post(API_URL + path, launcherScanner).then(UtilService.handleSuccess, UtilService.handleError('Unable to scan repository'));
         }
 
         function getBuildNumber(queueItemUrl) {
@@ -62,13 +62,13 @@
         }
 
         function abortScanRepository(buildNumber, scmAccountId, rescan) {
-            const query = `scmAccountId=${scmAccountId}&rescan=${rescan}`;
-            return $http.delete(API_URL + '/api/launchers/scanner/' + buildNumber + '?' + query).then(UtilService.handleSuccess, UtilService.handleError('Unable to cancel repository scanning'));
+            const path = `/api/launchers/scanner/${buildNumber}?scmAccountId=${scmAccountId}&rescan=${rescan}`;
+            return $http.delete(API_URL + path).then(UtilService.handleSuccess, UtilService.handleError('Unable to cancel repository scanning'));
         }
 
         function isScannerInProgress(buildNumber, scmAccountId, rescan) {
-            const query = `scmAccountId=${scmAccountId}&rescan=${rescan}`;
-            return $http.get(API_URL + '/api/launchers/scanner/' + buildNumber + '/status?' + query).then(UtilService.handleSuccess, UtilService.handleError('Unable to check repository scanning state'));
+            const path = `/api/launchers/scanner/${buildNumber}?scmAccountId=${scmAccountId}&rescan=${rescan}`;
+            return $http.get(API_URL + path).then(UtilService.handleSuccess, UtilService.handleError('Unable to check repository scanning state'));
         }
     }
 })();
