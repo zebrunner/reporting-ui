@@ -64,7 +64,7 @@
         }
 
         function isScannerInProgress(buildNumber, scmAccountId, rescan) {
-            return $http.get(`${API_URL}/api/launchers/scanner/${buildNumber}?scmAccountId=${scmAccountId}&rescan=${rescan}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to check repository scanning state'));
+            return $http.get(`${API_URL}/api/launchers/scanner/${buildNumber}/status?scmAccountId=${scmAccountId}&rescan=${rescan}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to check repository scanning state'));
         }
     }
 })();
