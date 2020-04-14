@@ -41,11 +41,11 @@
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 <span>{{launcher.name}}</span>
                                 <i ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
-                                    <ul class="folder-container_item_list" ng-if="$ctrl.selectedLauncherId === launcher.id">
-                                        <li class="folder-container_item_list_item hide-phone launcher-{{preset.id}}" ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();" ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
-                                            <span>{{preset.name}}</span>
-                                        </li>
-                                    </ul>
+                                <ul class="folder-container_item_list" ng-if="$ctrl.selectedLauncherId === launcher.id">
+                                    <li class="folder-container_item_list_item hide-phone launcher-{{preset.id}}" ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();" ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
+                                        <span>{{preset.name}}</span>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="folder-container_item_list_item show-phone launcher-{{launcher.id}}"
                                 ng-class="{'_no-padding-bottom': $ctrl.selectedLauncherId === launcher.id && launcher.presets.length > 0}"
@@ -224,17 +224,17 @@
             <ng-form name="manualInfo">
                 <div class="ci-runner-container_content_block __lancher-save">
                     <div class="ci-runner-container_content_block_title __ci-runner-lg-title">
-                        <span ng-if="launcher.id">{{launcher.name}} > {{$ctrl.selectedLaunherConfig.name}}</span>
+                        <span ng-if="launcher.id">{{launcher.name}} > {{$ctrl.selectedLauncherConfig.name}}</span>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="$ctrl.selectedLaunherConfig.name" />
+                            <input type="text" ng-model="$ctrl.selectedLauncherConfig.name" />
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
                         <md-input-container class="no-margin">
-                            <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="$ctrl.selectedLaunherConfig.model"></div>
+                            <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="$ctrl.selectedLauncherConfig.model"></div>
                             <md-input-container class="no-margin">
                             </md-input-container>
                         </md-input-container>
@@ -244,7 +244,7 @@
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.saveLauncherConfig();" ng-disabled="!$ctrl.selectedLaunherConfig.name || !launcher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.saveLauncherConfig();" ng-disabled="!$ctrl.selectedLauncherConfig.name || !launcher.model">
                         SAVE
                     </md-button>
                 </div>
@@ -278,6 +278,9 @@
                 <div class="ci-runner-container_content_actions">
                     <md-button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete template?" class="md-warn" ng-if="!launcher.isSavedConfig">
                         DELETE LAUNCHER
+                    </md-button>
+                    <md-button ng-click="$ctrl.deleteLauncherConfig(launcher)" class="md-warn" ng-if="launcher.isSavedConfig">
+                        DELETE CONFIG
                     </md-button>
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
@@ -410,7 +413,7 @@
                 <md-button class="md-raised" ng-click="navigateBack();" ng-if="$ctrl.cardNumber === 3 && $ctrl.isMobile">
                     Back
                 </md-button>
-                <md-button class="md-raised" ng-click="$ctrl.editLauncherConfig();" ng-if="($ctrl.cardNumber === 2 || $ctrl.cardNumber === 3) && !$ctrl.isMobile && !launcher.isSavedConfig">
+                <md-button class="md-raised" ng-click="$ctrl.prepareLauncherConfigForSave();" ng-if="($ctrl.cardNumber === 2 || $ctrl.cardNumber === 3) && !$ctrl.isMobile && !launcher.isSavedConfig">
                     Save config
                 </md-button>
                 <md-button class="md-raised" ng-click="$ctrl.getWebHook(launcher);" ng-if="($ctrl.cardNumber === 2 || $ctrl.cardNumber === 3) && launcher.isSavedConfig">

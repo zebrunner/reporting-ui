@@ -68,10 +68,11 @@ const CiHelperController = function CiHelperController(
         setFavouriteLauncher,
         saveLauchersPreferencesForRescan,
         applySavedPreferences,
-        editLauncherConfig,
+        prepareLauncherConfigForSave,
         saveLauncherConfig,
         chooseSavedLauncherConfig,
         updateLauncherConfig,
+        deleteLauncherConfig,
         getWebHook,
         userHasAnyPermission: authService.userHasAnyPermission,
 
@@ -447,18 +448,18 @@ const CiHelperController = function CiHelperController(
     };
 
     function chooseSavedLauncherConfig(config) {
-        if (config) {
-            if ($scope.launcher.id === config.id) { return; }
-            $scope.launcher.id = config.id;
-            $scope.launcher.name = config.name;
-            $scope.launcher.model = config.params;
-            $scope.launcher.presets = [];
-            $scope.launcher.preference = {};
-            $scope.launcher.isSavedConfig = true;
+        if (!config || $scope.launcher.id === config.id) { return; }
+        $scope.launcher.parentLauncherId = $scope.launcher.parentLauncherId || $scope.launcher.id;
+        $scope.launcher.id = config.id;
+        $scope.launcher.name = config.name;
+        $scope.launcher.model = config.params;
+        $scope.launcher.presets = [];
+        $scope.launcher.preference = {};
+        $scope.launcher.isSavedConfig = true;
+        vm.cardNumber = 3;
 
-            highlightLauncher(config.id);
-            applyBuilder(config);
-        }
+        highlightLauncher(config.id);
+        applyBuilder(config);
     }
 
     function updateLauncherConfig(config) {
@@ -467,43 +468,36 @@ const CiHelperController = function CiHelperController(
             params: config.model,
         };
 
-        LauncherService.updateLauncherConfig(vm.selectedLauncherId, config.id, params).then(function (rs) {
-            if (rs.success) {
-                const currentLauncher = $scope.launchers.find(item => item.id === vm.selectedLauncherId);
-                const savedConfig = currentLauncher.presets.find(config => config.id === rs.data.id);
+        LauncherService.updateLauncherConfig(config.parentLauncherId, config.id, params)
+            .then((rs) => {
+                if (rs.success) {
+                    const currentLauncher = $scope.launchers.find(item => item.id === config.parentLauncherId);
+                    const savedConfig = currentLauncher.presets.find(config => config.id === rs.data.id);
 
-                savedConfig.name = rs.data.name;
-                savedConfig.params = rs.data.params;
+                    savedConfig.name = rs.data.name;
+                    savedConfig.params = rs.data.params;
 
-                $timeout(function () {
-                    switchToLauncherPreview(savedConfig);
-                }, 0, false);
+                    $timeout(function () {
+                        switchToLauncherPreview(savedConfig);
+                    }, 0, false);
 
-                messageService.success('Launcher was updated');
-            } else {
-                messageService.error(rs.message);
-            }
-        });
+                    messageService.success('Launcher was updated');
+                } else {
+                    messageService.error(rs.message);
+                }
+            });
     }
 
     function getWebHook(config) {
-        LauncherService.getConfigHook(vm.selectedLauncherId, config.id).then(function (rs) {
-            if (rs.success) {
-                const textArea = document.createElement('textarea');
-
-                textArea.value = rs.data;
-                textArea.setAttribute('readonly', '');
-                textArea.style.position = 'absolute';
-                textArea.style.left = '-9999px';
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                messageService.success('Copied');
-            } else {
-                messageService.error(rs.message);
-            }
-        });
+        LauncherService.getConfigHook(config.parentLauncherId, config.id)
+            .then((rs) => {
+                if (rs.success) {
+                    rs.data.copyToClipboard();
+                    messageService.success('Copied');
+                } else {
+                    messageService.error(rs.message);
+                }
+            });
     }
 
     function switchToLauncherPreview(launcher) {
@@ -641,6 +635,22 @@ const CiHelperController = function CiHelperController(
             });
         }
     };
+
+    function deleteLauncherConfig(config) {
+        LauncherService.deleteLauncherConfig(config.parentLauncherId, config.id)
+        .then((rs) => {
+            if (rs.success) {
+                const parentLauncher = $scope.launchers.find((item) => item.id === config.parentLauncherId);
+                const configIndex = parentLauncher.presets.findIndex((item) => item.id === config.id);
+                parentLauncher.presets.splice(configIndex, 1);
+                vm.cardNumber = 0;
+
+                messageService.success('Config was deleted');
+                } else {
+                    messageService.error(rs.message);
+                }
+            });
+    }
 
     $scope.deleteRepository = function (scmAccountId) {
         ScmService.deleteScmAccount(scmAccountId).then(function (rs) {
@@ -1645,30 +1655,30 @@ const CiHelperController = function CiHelperController(
         clearLauncher();
     }
 
-    function editLauncherConfig() {
-        vm.selectedLaunherConfig = angular.copy($scope.launcher);
-        vm.selectedLaunherConfig.name = '';
-
-        if (vm.chipsCtrl) {
-            vm.lastSelectedProvider = vm.chipsCtrl.selectedChip;
-        }
+    function prepareLauncherConfigForSave() {
+        vm.selectedLauncherConfig = angular.copy($scope.launcher);
+        vm.selectedLauncherConfig.name = '';
 
         vm.cardNumber = 4;
     }
 
     function saveLauncherConfig() {
         const params = {
-            name: vm.selectedLaunherConfig.name,
-            params: vm.selectedLaunherConfig.model,
+            name: vm.selectedLauncherConfig.name,
+            params: vm.selectedLauncherConfig.model,
         };
-
-        LauncherService.saveLauncherConfig(vm.selectedLaunherConfig.id, params).then(function (rs) {
-            if (rs.success) {
-                $scope.launcher.presets.push(rs.data);
-            } else {
-                messageService.error(rs.message);
-            }
-        });
+        
+        LauncherService.saveLauncherConfig(vm.selectedLauncherConfig.id, params)
+            .then((rs) => {
+                if (rs.success) {
+                    const launcherInScope = $scope.launchers.find((item) => item.id === vm.selectedLauncherConfig.id);
+                    launcherInScope.presets.push(rs.data);
+                    vm.chooseSavedLauncherConfig(rs.data);
+                    messageService.success('Launcher config was saved');
+                } else {
+                    messageService.error(rs.message);
+                }
+            });
     }
 
     function shouldBeDisplayed(section) {
