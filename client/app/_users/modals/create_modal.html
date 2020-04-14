@@ -88,8 +88,16 @@
                 <div layout layout-sm="column">
                     <md-input-container nonautocomplete flex>
                         <label>Password</label>
-                        <input id="password" type="password" ng-model="user.password" name="password" required
-                               ng-minlength="5" ng-maxlength="50" ng-pattern="/^[A-Za-z0-9_@!#&quot;\$%&'()*+,-.\/:;<>=\?@\[\]\\^_`{}|~]+$/" autocomplete="new-password"/>
+                        <input id="password"
+                            type="password"
+                            ng-model="user.password"
+                            name="password"
+                            ng-minlength="::UtilService.getValidationValue('password', 'minlength')"
+                            ng-maxlength="::UtilService.getValidationValue('password', 'maxlength')"
+                            ng-pattern="::UtilService.getValidationValue('password', 'pattern')"
+                            autocomplete="new-password"
+                            required
+                            />
                         <div ng-messages="user_form.password.$error">
                             <div ng-repeat="validation in UtilService.validations.password" ng-message="{{validation.name}}">
                                 <span ng-if="validation.additional">

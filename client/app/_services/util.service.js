@@ -54,16 +54,19 @@
             password: [
                 {
                     name: 'minlength',
-                    message: 'Password must be between 5 and 50 characters'
+                    message: 'Password must be between 8 and 50 characters',
+                    value: 8,
                 },
                 {
                     name: 'maxlength',
-                    message: 'Password must be between 5 and 50 characters'
+                    message: 'Password must be between 8 and 50 characters',
+                    value: 50,
                 },
                 {
                     name: 'pattern',
-                    message: 'Password must have only latin letters, numbers or special symbols',
-                    additional: '_@!#"$%&\'()*+,-./:;<>=?@[]^_`{}|~'
+                    message: 'Password must have latin upper case and lower case letters, numbers and special symbols',
+                    additional: '_@!#"$%&\'()*+,-./:;<>=?@[]^_`{}|~',
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{1,}$/,
                 },
                 {
                     name: 'required',
