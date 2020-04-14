@@ -642,6 +642,7 @@ const CiHelperController = function CiHelperController(
             if (rs.success) {
                 const parentLauncher = $scope.launchers.find((item) => item.id === config.parentLauncherId);
                 const configIndex = parentLauncher.presets.findIndex((item) => item.id === config.id);
+
                 parentLauncher.presets.splice(configIndex, 1);
                 vm.cardNumber = 0;
 
@@ -1672,8 +1673,10 @@ const CiHelperController = function CiHelperController(
             .then((rs) => {
                 if (rs.success) {
                     const launcherInScope = $scope.launchers.find((item) => item.id === vm.selectedLauncherConfig.id);
+
                     launcherInScope.presets.push(rs.data);
                     vm.chooseSavedLauncherConfig(rs.data);
+
                     messageService.success('Launcher config was saved');
                 } else {
                     messageService.error(rs.message);
