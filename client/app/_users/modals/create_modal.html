@@ -99,7 +99,7 @@
                             required
                             />
                         <div ng-messages="user_form.password.$error">
-                            <div ng-repeat="validation in UtilService.validations.password" ng-message="{{validation.name}}">
+                            <div ng-repeat="validation in ::UtilService.validations.password" ng-message="{{validation.name}}">
                                 <span ng-if="validation.additional">
                                     <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
                                     {{ validation.message }}
