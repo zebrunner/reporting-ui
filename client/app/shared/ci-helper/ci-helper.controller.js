@@ -475,11 +475,9 @@ const CiHelperController = function CiHelperController(
 
                     savedConfig.name = rs.data.name;
                     savedConfig.params = rs.data.params;
-
                     $timeout(function () {
                         switchToLauncherPreview(savedConfig);
-                    }, 0, true);
-
+                    }, 0);
                     messageService.success('Launcher was updated');
                 } else {
                     messageService.error(rs.message);
@@ -644,12 +642,11 @@ const CiHelperController = function CiHelperController(
 
                     parentLauncher.presets.splice(configIndex, 1);
                     vm.cardNumber = 0;
-
                     messageService.success('Config was deleted');
-                    } else {
-                        messageService.error(rs.message);
-                    }
-                });
+                } else {
+                    messageService.error(rs.message);
+                }
+            });
     }
 
     $scope.deleteRepository = function (scmAccountId) {
@@ -1658,7 +1655,6 @@ const CiHelperController = function CiHelperController(
     function prepareLauncherConfigForSave() {
         vm.selectedLauncherConfig = angular.copy($scope.launcher);
         vm.selectedLauncherConfig.name = '';
-
         vm.cardNumber = 4;
     }
 
@@ -1675,7 +1671,6 @@ const CiHelperController = function CiHelperController(
 
                     launcherInScope.presets.push(rs.data);
                     vm.chooseSavedLauncherConfig(rs.data);
-
                     messageService.success('Launcher config was saved');
                 } else {
                     messageService.error(rs.message);

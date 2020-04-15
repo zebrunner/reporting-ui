@@ -8,21 +8,21 @@
     function LauncherService($http, $rootScope, UtilService, API_URL) {
 
         const service = {
-            createLauncher,
-            getLauncherById,
-            getAllLaunchers,
-            updateLauncher,
-            deleteLauncherById,
-            buildLauncher,
-            scanRepository,
-            getBuildNumber,
             abortScanRepository,
-            setFavouriteLauncher,
-            saveLauncherConfig,
-            updateLauncherConfig,
+            buildLauncher,
+            createLauncher,
+            deleteLauncherById,
             deleteLauncherConfig,
+            getAllLaunchers,
+            getBuildNumber,
             getConfigHook,
+            getLauncherById,
             isScannerInProgress,
+            saveLauncherConfig,
+            scanRepository,
+            setFavouriteLauncher,
+            updateLauncher,
+            updateLauncherConfig,
         };
 
         return service;
