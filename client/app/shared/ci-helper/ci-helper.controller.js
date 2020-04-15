@@ -57,7 +57,6 @@ const CiHelperController = function CiHelperController(
         loadingScm: true,
         cardNumber: 0,
         creatingLauncher: false,
-        selectedLauncherId: -1,
 
         onProviderSelect,
         onPlatformSelect,
@@ -78,6 +77,7 @@ const CiHelperController = function CiHelperController(
 
         get isMobile() { return $mdMedia('xs'); },
         get noPlatformValue() { return getNoPlatformValue(); },
+        get activeLauncherId() { return $scope.launcher.parentLauncherId || $scope.launcher.id },
     };
 
     vm.$onInit = initController;
@@ -438,7 +438,6 @@ const CiHelperController = function CiHelperController(
         }
         highlightLauncher(launcher.id);
         $scope.launcher = angular.copy(launcher);
-        vm.selectedLauncherId = launcher.id;
         $scope.needServer = false;
         $scope.currentServerId = null;
         $scope.DEFAULT_TEMPLATES.model = {};
@@ -479,7 +478,7 @@ const CiHelperController = function CiHelperController(
 
                     $timeout(function () {
                         switchToLauncherPreview(savedConfig);
-                    }, 0, false);
+                    }, 0, true);
 
                     messageService.success('Launcher was updated');
                 } else {
@@ -638,19 +637,19 @@ const CiHelperController = function CiHelperController(
 
     function deleteLauncherConfig(config) {
         LauncherService.deleteLauncherConfig(config.parentLauncherId, config.id)
-        .then((rs) => {
-            if (rs.success) {
-                const parentLauncher = $scope.launchers.find((item) => item.id === config.parentLauncherId);
-                const configIndex = parentLauncher.presets.findIndex((item) => item.id === config.id);
+            .then((rs) => {
+                if (rs.success) {
+                    const parentLauncher = $scope.launchers.find((item) => item.id === config.parentLauncherId);
+                    const configIndex = parentLauncher.presets.findIndex((item) => item.id === config.id);
 
-                parentLauncher.presets.splice(configIndex, 1);
-                vm.cardNumber = 0;
+                    parentLauncher.presets.splice(configIndex, 1);
+                    vm.cardNumber = 0;
 
-                messageService.success('Config was deleted');
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
+                    messageService.success('Config was deleted');
+                    } else {
+                        messageService.error(rs.message);
+                    }
+                });
     }
 
     $scope.deleteRepository = function (scmAccountId) {
@@ -1681,6 +1680,9 @@ const CiHelperController = function CiHelperController(
                 } else {
                     messageService.error(rs.message);
                 }
+            })
+            .finally(() => {
+                vm.selectedLauncherConfig = null;
             });
     }
 

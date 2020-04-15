@@ -7,24 +7,24 @@
 
     function LauncherService($http, $rootScope, UtilService, API_URL) {
 
-        var service = {};
+        const service = {
+            createLauncher,
+            getLauncherById,
+            getAllLaunchers,
+            updateLauncher,
+            deleteLauncherById,
+            buildLauncher,
+            scanRepository,
+            getBuildNumber,
+            abortScanRepository,
+            setFavouriteLauncher,
+            saveLauncherConfig,
+            updateLauncherConfig,
+            deleteLauncherConfig,
+            getConfigHook,
+            isScannerInProgress,
+        };
 
-        service.createLauncher = createLauncher;
-        service.getLauncherById = getLauncherById;
-        service.getAllLaunchers = getAllLaunchers;
-        service.updateLauncher = updateLauncher;
-        service.deleteLauncherById = deleteLauncherById;
-        service.buildLauncher = buildLauncher;
-        service.scanRepository = scanRepository;
-        service.getBuildNumber = getBuildNumber;
-        service.abortScanRepository = abortScanRepository;
-        service.isScannerInProgress = isScannerInProgress;
-        service.setFavouriteLauncher = setFavouriteLauncher;
-        service.saveLauncherConfig = saveLauncherConfig;
-        service.updateLauncherConfig = updateLauncherConfig;
-        service.deleteLauncherConfig = deleteLauncherConfig;
-        service.getConfigHook = getConfigHook;
-        
         return service;
 
         function createLauncher(launcher, automationServerId) {

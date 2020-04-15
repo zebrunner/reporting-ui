@@ -35,25 +35,25 @@
                     <li class="folder-container_item">
                         <ul class="folder-container_item_list">
                             <li class="folder-container_item_list_item hide-phone launcher-{{launcher.id}}"
-                                ng-class="{'_no-padding-bottom': $ctrl.selectedLauncherId === launcher.id && launcher.presets.length > 0}"
+                                ng-class="{'_no-padding-bottom': $ctrl.activeLauncherId === launcher.id && launcher.presets.length}"
                                 ng-click="chooseLauncher(launcher)"
                                 ng-repeat="launcher in scmAccount.launchers | orderBy: ['!preference.favorite', 'name'] | filter: filerSc track by launcher.id">
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 <span>{{launcher.name}}</span>
                                 <i ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
-                                <ul class="folder-container_item_list" ng-if="$ctrl.selectedLauncherId === launcher.id">
+                                <ul class="folder-container_item_list" ng-if="$ctrl.activeLauncherId === launcher.id">
                                     <li class="folder-container_item_list_item hide-phone launcher-{{preset.id}}" ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();" ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
                                         <span>{{preset.name}}</span>
                                     </li>
                                 </ul>
                             </li>
                             <li class="folder-container_item_list_item show-phone launcher-{{launcher.id}}"
-                                ng-class="{'_no-padding-bottom': $ctrl.selectedLauncherId === launcher.id && launcher.presets.length > 0}"
+                                ng-class="{'_no-padding-bottom': $ctrl.activeLauncherId === launcher.id && launcher.presets.length}"
                                 ng-click="selectLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: ['!preference.favorite', 'name'] | filter: filerSc track by launcher.id">
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 <span>{{launcher.name}}</span>
                                 <i ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
-                                <ul class="folder-container_item_list" ng-if="$ctrl.selectedLauncherId === launcher.id">
+                                <ul class="folder-container_item_list" ng-if="$ctrl.activeLauncherId === launcher.id">
                                     <li class="folder-container_item_list_item show-phone launcher-{{preset.id}}" ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();" ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
                                         <span>{{preset.name}}</span>
                                     </li>
@@ -393,8 +393,8 @@
                         <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">
                             <md-input-container class="no-margin _gray-bg">
                                 <label>{{key}}</label>
-                                <md-select ng-model="builtLauncher.model[key]">
-                                    <md-option ng-repeat="val in item" ng-value="val" ng-disabled="launcher.isSavedConfig">
+                                <md-select ng-model="builtLauncher.model[key]" ng-disabled="launcher.isSavedConfig">
+                                    <md-option ng-repeat="val in item" ng-value="val">
                                         {{val}}
                                     </md-option>
                                 </md-select>
