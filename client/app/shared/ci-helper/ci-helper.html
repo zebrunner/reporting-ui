@@ -121,7 +121,7 @@
                         <md-input-container>
                             <label>Repository</label>
                             <md-select ng-model="scmAccount.repository" ng-disabled="! repositories.length">
-                                <md-option ng-repeat="repository in repositories track by $index" ng-value="repository">
+                                <md-option ng-repeat="repository in repositories track by $index| orderBy: 'name'" ng-value="repository">
                                     {{repository.name}}
                                 </md-option>
                             </md-select>
