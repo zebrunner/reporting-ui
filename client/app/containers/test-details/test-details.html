@@ -279,7 +279,8 @@
                                                         data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
                                                 </span>
                                         </div>
-                                        <div class="result_error {{test.status}} {{::main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
+                                        <div class="test-info__message result_error {{test.status}} {{::main.theme}}"
+                                            ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
                                             <div>
                                                 <show-more name="errorMsg" element-id="test.id" class="test-error" text="test.message" limit="100"></show-more>
                                             </div>

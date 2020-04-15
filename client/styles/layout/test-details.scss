@@ -258,19 +258,6 @@
                         margin-right: 10px;
                         line-height: 16px;
                     }
-                    & .result_error {
-                        word-wrap: break-word;
-                        [id^="more"], [id^="less"] {
-                            z-index: 3;
-                            position: relative;
-                        }
-                        &.FAILED {
-                            background-color: $pink-bg-new;
-                            & .test-error {
-                                word-wrap: break-word;
-                            }
-                        }
-                    }
 
                     &__tags {
                         position: relative;
@@ -298,6 +285,17 @@
                                         background-color: rgba(0, 0, 0, .35);
                                     }
                                 }
+                            }
+                        }
+                    }
+                    &__message {
+                        position: relative;
+                        z-index: 2;
+                        word-wrap: break-word;
+                        &.FAILED {
+                            background-color: $pink-bg-new;
+                            .test-error {
+                                word-wrap: break-word;
                             }
                         }
                     }
