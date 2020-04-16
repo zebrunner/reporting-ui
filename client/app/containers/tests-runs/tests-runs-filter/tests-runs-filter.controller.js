@@ -87,6 +87,7 @@ const TestsRunsFilterController = function TestsRunsFilterController(
             LAST_14_DAYS: 'last 14 days',
             LAST_30_DAYS: 'last 30 days'        },
         get currentUser() { return UserService.currentUser; },
+        get isCloudReporting() { return authService.isMultitenant; },
         get isMobile() { return $mdMedia('xs'); },
         chipsCtrl: null,
         isMobileSearchActive: false,
