@@ -78,6 +78,7 @@ const CiHelperController = function CiHelperController(
         get isMobile() { return $mdMedia('xs'); },
         get noPlatformValue() { return getNoPlatformValue(); },
         get activeLauncherId() { return $scope.launcher.parentLauncherId || $scope.launcher.id },
+        get activeLauncherName() { return $scope.launchers.find(item => item.id === $scope.launcher.parentLauncherId).name },
     };
 
     vm.$onInit = initController;
@@ -449,6 +450,7 @@ const CiHelperController = function CiHelperController(
     function chooseSavedLauncherConfig(config) {
         if (!config || $scope.launcher.id === config.id) { return; }
         $scope.launcher.parentLauncherId = $scope.launcher.parentLauncherId || $scope.launcher.id;
+        $scope.launcher.parentName = $scope.launcher.name;
         $scope.launcher.id = config.id;
         $scope.launcher.name = config.name;
         $scope.launcher.model = config.params;

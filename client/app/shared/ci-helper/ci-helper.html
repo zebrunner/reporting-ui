@@ -296,8 +296,9 @@
         </zf-modal-content-container>
         <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.shouldBeDisplayed('launcher')" ng-show="launcher">
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
-                <show-part class="hide-phone" text="launcher.name" limit="40"></show-part>
+                <show-part class="hide-phone" text="launcher.name" limit="40" ng-if="!launcher.isSavedConfig"></show-part>
                 <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
+                <show-part class="hide-phone" text="$ctrl.activeLauncherName + ' > ' + launcher.name" limit="40" ng-if="launcher.isSavedConfig"></show-part>
                 <span class="ci-runner-container_content_title_action">
                     <i ng-click="$ctrl.setFavouriteLauncher(launcher);" ng-if="!launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons icon hide-phone">star_border</i>
                     <i ng-click="$ctrl.setFavouriteLauncher(launcher);" ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons icon hide-phone _active">star</i>
