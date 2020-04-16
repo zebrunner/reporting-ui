@@ -279,7 +279,7 @@
                     <md-button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete template?" class="md-warn" ng-if="!launcher.isSavedConfig">
                         DELETE LAUNCHER
                     </md-button>
-                    <md-button ng-click="$ctrl.deleteLauncherConfig(launcher)" class="md-warn" ng-if="launcher.isSavedConfig">
+                    <md-button ng-really-click="$ctrl.deleteLauncherConfig(launcher)" ng-really-message="Do you really want to delete config?" class="md-warn" ng-if="launcher.isSavedConfig">
                         DELETE CONFIG
                     </md-button>
                     <md-button ng-click="cancelLauncher();">
