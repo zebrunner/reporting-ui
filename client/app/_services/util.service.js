@@ -64,9 +64,9 @@
                 },
                 {
                     name: 'pattern',
-                    message: 'Password must have latin upper case and lower case letters, numbers and special symbols',
+                    message: 'Password must have only latin letters, numbers or special symbols',
                     additional: '_@!#"$%&\'()*+,-./:;<>=?@[]^_`{}|~',
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{1,}$/,
+                    value: /^[A-Za-z0-9_@!#&quot;\$%&'()*+,-.\/:;<>=\?@\[\]\\^_`{}|~]+$/,
                 },
                 {
                     name: 'required',
