@@ -236,13 +236,13 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
             position: relative;
             margin-right: 12px;
             min-width: 80px;
+            &._left-icon {
+                padding-left: 26px;
+                justify-content: flex-start;
+            }
         }
     }
 
-    &._left-icon {
-        padding-left: 26px;
-        justify-content: flex-start;
-    }
     &._left-icon & {
         &__icon {
             position: absolute;
