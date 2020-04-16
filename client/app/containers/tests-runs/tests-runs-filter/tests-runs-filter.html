@@ -35,7 +35,9 @@
                             </md-chips>
                         </div>
                         <sessions-switcher switcher-state="$ctrl.switcherState"
-                            on-change="$ctrl.onSwitcherChange({$value})" is-disabled="$ctrl.isSwitcherDisabled">
+                            ng-if="$ctrl.isCloudReporting"
+                            on-change="$ctrl.onSwitcherChange({$value})"
+                            is-disabled="$ctrl.isSwitcherDisabled">
                         </sessions-switcher>
                     </div>
                     <div id="filter-editor" class="tests-runs-filter__editor" ng-if=" !$ctrl.isMobile"
