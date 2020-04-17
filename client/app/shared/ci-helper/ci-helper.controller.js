@@ -245,6 +245,7 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.mergeTemplate = function (template) {
+        console.log(template);
         if (template) {
             $scope.launcher.model = $scope.launcher.model && $scope.launcher.model.isJsonValid() ? $scope.launcher.model : '{}';
             $scope.launcher.model = JSON.stringify(/*angular.merge(json, template)*/template, null, 2);
@@ -429,6 +430,9 @@ const CiHelperController = function CiHelperController(
 
     // TODO: fix bug: prevent launcher selection until all data is loaded (providers configs)
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
+        console.log(launcher);
+        console.log(vm);
+        console.log($scope);
         if ($scope.launcher) {
             //do nothing if clicked on active launcher
             if ($scope.launcher.id === launcher.id) { return; }
@@ -448,6 +452,7 @@ const CiHelperController = function CiHelperController(
     };
 
     function chooseSavedLauncherConfig(config) {
+        console.log(config);
         if (!config || $scope.launcher.id === config.id) { return; }
         $scope.launcher.parentLauncherId = $scope.launcher.parentLauncherId || $scope.launcher.id;
         $scope.launcher.parentName = $scope.launcher.name;
@@ -457,6 +462,14 @@ const CiHelperController = function CiHelperController(
         $scope.launcher.presets = [];
         $scope.launcher.preference = {};
         $scope.launcher.isSavedConfig = true;
+
+        const integration = vm.integrations.find((item) => item.id === config.providerId);
+        console.log('integration', integration);
+        const provider = vm.providers.find((item) => item.name.toLowerCase() === integration.name.toLowerCase());
+        console.log('provider', provider);
+        if (vm.chipsCtrl) {
+            $timeout(() => { handleProviderSelection(provider); });
+        }
         vm.cardNumber = 3;
 
         highlightLauncher(config.id);
@@ -467,6 +480,7 @@ const CiHelperController = function CiHelperController(
         const params = {
             name: config.name,
             params: config.model,
+            providerId: vm.integrations.find((item) => item.name.toUpperCase() === vm.selectedProviderName.toUpperCase()).id,
         };
 
         LauncherService.updateLauncherConfig(config.parentLauncherId, config.id, params)
@@ -842,6 +856,7 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.cancelLauncher = function () {
+        console.log($scope.launcher);
         vm.cardNumber = 3;
     };
 
@@ -1038,15 +1053,16 @@ const CiHelperController = function CiHelperController(
         }
 
         launcher.model = JSON.stringify($scope.builtLauncher.model, null, 2);
-
-        LauncherService.buildLauncher(launcher, providerId).then(function (rs) {
-            if (rs.success) {
-                messageService.success("Job is in progress");
-                $scope.hide();
-            } else {
-                messageService.error(rs.message);
-            }
-        });
+        console.log($scope.builtLauncher.model);
+        return false;
+        // LauncherService.buildLauncher(launcher, providerId).then(function (rs) {
+        //     if (rs.success) {
+        //         messageService.success("Job is in progress");
+        //         $scope.hide();
+        //     } else {
+        //         messageService.error(rs.message);
+        //     }
+        // });
     };
 
     function appendLauncher(launcher) {
@@ -1184,6 +1200,7 @@ const CiHelperController = function CiHelperController(
      * @param {Object} data - provider's config from JSON
      */
     function initPlatforms(data) {
+        console.log(data);
         if (!data || !data.rootKey) { return; }
 
         // keep link to the raw config
@@ -1222,6 +1239,8 @@ const CiHelperController = function CiHelperController(
         applyBuilder($scope.launcher);
         clearPlatformControlsData();
         resetPlatformModel(vm.platformModel[vm.platformsConfig.rootKey]);
+        console.log(vm.platformsConfig.rootKey);
+        console.log(vm.platformModel[vm.platformsConfig.rootKey]);
         if (vm.platformModel[vm.platformsConfig.rootKey]?.child) {
             prepareChildControl(vm.platformModel[vm.platformsConfig.rootKey]);
         }
@@ -1482,6 +1501,7 @@ const CiHelperController = function CiHelperController(
      * @param {Object} [platform] - platform config data
      */
     function resetPlatformModel(platform) {
+        console.log(platform);
         vm.platformModel = {};
 
         if (platform) {
@@ -1511,6 +1531,7 @@ const CiHelperController = function CiHelperController(
     }
 
     function handleProviderSelection(provider) {
+        console.log('handle' , provider);
         if (!vm.chipsCtrl || !provider) { return; }
 
         const index = vm.chipsCtrl.items.findIndex(({ id }) => {
@@ -1520,7 +1541,9 @@ const CiHelperController = function CiHelperController(
         clearPlatforms();
         vm.failedProvider = provider.failed;
         vm.chipsCtrl.selectedChip = index;
+        vm.selectedProviderName = provider.name;
         provider.data && initPlatforms(provider.data);
+        console.log(vm.selectedProviderName);
     }
 
     function handleProviderDeselection() {
@@ -1657,6 +1680,8 @@ const CiHelperController = function CiHelperController(
     function prepareLauncherConfigForSave() {
         vm.selectedLauncherConfig = angular.copy($scope.launcher);
         vm.selectedLauncherConfig.name = '';
+        extractPlatformSelections();
+        vm.selectedLauncherConfig.model = JSON.stringify($scope.builtLauncher.model, null, 2);
         vm.cardNumber = 4;
     }
 
@@ -1664,8 +1689,9 @@ const CiHelperController = function CiHelperController(
         const params = {
             name: vm.selectedLauncherConfig.name,
             params: vm.selectedLauncherConfig.model,
+            providerId: vm.integrations.find((item) => item.name.toUpperCase() === vm.selectedProviderName.toUpperCase()).id,
         };
-        
+
         LauncherService.saveLauncherConfig(vm.selectedLauncherConfig.id, params)
             .then((rs) => {
                 if (rs.success) {
