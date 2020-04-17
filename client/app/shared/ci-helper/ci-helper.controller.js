@@ -955,8 +955,11 @@ const CiHelperController = function CiHelperController(
         if (selectedProvider && vm.integrations) {
             const selectedIntegration = vm.integrations.find(({ name }) => name.toLowerCase() === selectedProvider.name.toLowerCase())
 
-            if (selectedIntegration) {
+            if (selectedIntegration && selectedIntegration.connected) {
                 providerId = selectedIntegration.id;
+            } else {
+                messageService.error('Unable to run test with disconnected integration');
+                return false;
             }
         }
 
