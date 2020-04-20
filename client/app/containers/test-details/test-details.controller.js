@@ -1119,7 +1119,8 @@ const testDetailsController = function testDetailsController(
     }
 
     function onTestSelect() {
-        vm.isAllTestsSelected = !!vm.testsToDisplay.length && vm.testsToDisplay.filter(test => test.selected).length === vm.testsToDisplay.length;
+        vm.selectedTestsCount = vm.testsToDisplay.filter(test => test.selected).length;
+        vm.isAllTestsSelected = !!vm.testsToDisplay.length && vm.selectedTestsCount === vm.testsToDisplay.length;
     }
 
     function onAllTestsSelect() {
