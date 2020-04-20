@@ -32,6 +32,7 @@
                                     aria-label="Select"
                                     ng-model="$ctrl.isAllTestsSelected"
                                     ng-change="$ctrl.onAllTestsSelect()"
+                                    ng-disabled="!$ctrl.testsToDisplay.length"
                                     ng-true-value="true"
                                     ng-false-value="false">
                                 </md-checkbox>
@@ -152,13 +153,6 @@
                     ng-click="fabBtn.onClick($event,  fabBtn)">
                     <md-tooltip md-direction="top">{{ fabBtn.text }}</md-tooltip>
                     <span class="fa {{ fabBtn.mobileIconClass }}" aria-hidden="true"></span>
-                </md-button>
-                <md-button id="bulkMarkAsPassedMobile"
-                    aria-label="menu"
-                    class="md-fab md-raised md-fab-sm"
-                    ng-click="$ctrl.toggleAllTestsSelection()">
-                    <md-tooltip md-direction="top">Select all</md-tooltip>
-                    <span class="fa fa-check-square" aria-hidden="true"></span>
                 </md-button>
             </md-fab-actions>
         </md-fab-speed-dial>
