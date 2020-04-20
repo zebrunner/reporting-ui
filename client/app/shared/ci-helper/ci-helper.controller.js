@@ -22,7 +22,7 @@ const CiHelperController = function CiHelperController(
     messageService,
     UtilService,
     API_URL,
-    $http
+    $http,
 ) {
     'ngInject';
 
@@ -48,6 +48,7 @@ const CiHelperController = function CiHelperController(
     // TODO: use json-configs service
     const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
     const vm = {
+        launchers: [],
         platforms: [],
         platformModel: {},
         providers: [],
@@ -57,6 +58,10 @@ const CiHelperController = function CiHelperController(
         loadingScm: true,
         cardNumber: 0,
         creatingLauncher: false,
+        launcherControls: [],
+        platformControls: [],
+        resultModel: {},
+        launcherModel: {},
 
         onProviderSelect,
         onPlatformSelect,
@@ -77,8 +82,8 @@ const CiHelperController = function CiHelperController(
 
         get isMobile() { return $mdMedia('xs'); },
         get noPlatformValue() { return getNoPlatformValue(); },
-        get activeLauncherId() { return $scope.launcher.parentLauncherId || $scope.launcher.id },
-        get activeLauncherName() { return $scope.launchers.find(item => item.id === $scope.launcher.parentLauncherId).name },
+        get activeLauncherId() { return $scope.launcher.parentLauncherId || $scope.launcher.id; },
+        get activeLauncherName() { return vm.launchers.find(item => item.id === $scope.launcher.parentLauncherId).name; },
     };
 
     vm.$onInit = initController;
@@ -210,13 +215,13 @@ const CiHelperController = function CiHelperController(
     };
 
     function saveLauchersPreferencesForRescan() {
-        $scope.launchers.forEach((item) => {
+        vm.launchers.forEach((item) => {
             vm.launcherPreferences[item.id] = item.preference;
         });
     };
 
     function applySavedPreferences() {
-        $scope.launchers.forEach((item) => {
+        vm.launchers.forEach((item) => {
             item.preference = vm.launcherPreferences[item.id];
         });
         vm.launcherPreferences = {};
@@ -267,12 +272,22 @@ const CiHelperController = function CiHelperController(
         $scope.jsonModel = {};
         $scope.builtLauncher = { model: {}, type: {} };
         $scope.jsonModel = launcherModel.toJson();
+        vm.launcherModel = { ...$scope.jsonModel }; ////////////////////////////
         angular.forEach($scope.jsonModel, function (value, key) {
             var type = $scope.getType(value);
             var val = type === 'array' && value.length ? value[0] : type === 'int' ? +value : value;
             $scope.builtLauncher.model[key] = val;
             $scope.builtLauncher.type[key] = type;
         });
+
+        $timeout(() => {
+            console.log('launcherModel', $scope.launcherModel);
+            prepareControls();
+            console.log('builtLauncher', $scope.builtLauncher);
+            console.log('platformModel', vm.platformModel);
+        }, 3000);
+
+
     }
 
     function isNumeric(value) {
@@ -295,6 +310,18 @@ const CiHelperController = function CiHelperController(
         }
         return 'none';
     };
+
+    function getControlType(value) {
+        if (Array.isArray(value)) {
+            return 'select';
+        } else if (typeof value === 'boolean') {
+            return 'checkbox';
+        } else if (isNumeric(value)) {
+            return 'number';
+        }
+
+        return 'text';
+    }
 
     $scope.getElement = function (item) {
         var result;
@@ -415,8 +442,6 @@ const CiHelperController = function CiHelperController(
         }, 0, false);
     };
 
-    $scope.launchers = [];
-
     function clearLauncher() {
         $scope.launcher = {};
         $scope.launcher.scmAccountType = {};
@@ -481,12 +506,13 @@ const CiHelperController = function CiHelperController(
             name: config.name,
             params: config.model,
             providerId: vm.integrations.find((item) => item.name.toUpperCase() === vm.selectedProviderName.toUpperCase()).id,
+            selectedPlatform: '',
         };
 
         LauncherService.updateLauncherConfig(config.parentLauncherId, config.id, params)
             .then((rs) => {
                 if (rs.success) {
-                    const currentLauncher = $scope.launchers.find(item => item.id === config.parentLauncherId);
+                    const currentLauncher = vm.launchers.find(item => item.id === config.parentLauncherId);
                     const savedConfig = currentLauncher.presets.find(config => config.id === rs.data.id);
 
                     savedConfig.name = rs.data.name;
@@ -572,7 +598,7 @@ const CiHelperController = function CiHelperController(
             LauncherService.createLauncher(launcher, $scope.currentServerId).then(function (rs) {
                 if (rs.success) {
                     $scope.launcher = rs.data;
-                    $scope.launchers.push(rs.data);
+                    vm.launchers.push(rs.data);
                     messageService.success('Launcher was created');
                     resolve($scope.launcher);
                 } else {
@@ -585,11 +611,11 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.updateLauncher = function (launcher) {
-        var index = $scope.launchers.indexOfField('id', launcher.id);
+        var index = vm.launchers.indexOfField('id', launcher.id);
         LauncherService.updateLauncher(launcher).then(function (rs) {
             if (rs.success) {
                 const l = rs.data;
-                $scope.launchers.splice(index, 1, l);
+                vm.launchers.splice(index, 1, l);
                 const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
                 if (indexScmAccount !== -1) {
                     const scmAccount = $scope.scmAccounts[indexScmAccount];
@@ -615,7 +641,7 @@ const CiHelperController = function CiHelperController(
 
         LauncherService.setFavouriteLauncher(launcher.id, params).then(function (rs) {
             if (rs.success) {
-                const currentLauncher = $scope.launchers.find(item => item.id === launcher.id);
+                const currentLauncher = vm.launchers.find(item => item.id === launcher.id);
 
                 $scope.launcher.preference = rs.data;
                 currentLauncher.preference = rs.data;
@@ -627,13 +653,13 @@ const CiHelperController = function CiHelperController(
 
     $scope.deleteLauncher = function (id) {
         if (id) {
-            var index = $scope.launchers.indexOfField('id', id);
+            var index = vm.launchers.indexOfField('id', id);
             LauncherService.deleteLauncherById(id).then(function (rs) {
                 if (rs.success) {
-                    $scope.launchers.splice(index, 1);
+                    vm.launchers.splice(index, 1);
                     cancelFolderManaging();
 
-                    const l = $scope.launchers[index];
+                    const l = vm.launchers[index];
                     const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
                     if (indexScmAccount !== -1) {
                         const scmAccount = $scope.scmAccounts[indexScmAccount];
@@ -653,7 +679,7 @@ const CiHelperController = function CiHelperController(
         LauncherService.deleteLauncherConfig(config.parentLauncherId, config.id)
             .then((rs) => {
                 if (rs.success) {
-                    const parentLauncher = $scope.launchers.find((item) => item.id === config.parentLauncherId);
+                    const parentLauncher = vm.launchers.find((item) => item.id === config.parentLauncherId);
                     const configIndex = parentLauncher.presets.findIndex((item) => item.id === config.id);
 
                     parentLauncher.presets.splice(configIndex, 1);
@@ -685,10 +711,10 @@ const CiHelperController = function CiHelperController(
         launcher.errorMessage = buildError(launcher);
         if (!launcher.errorMessage && !launcher.errorMessage.length) {
             if (launcher.id) {
-                var index = $scope.launchers.indexOfField('id', launcher.id);
+                var index = vm.launchers.indexOfField('id', launcher.id);
                 LauncherService.updateLauncher(launcher).then(function (rs) {
                     if (rs.success) {
-                        $scope.launchers.splice(index, 1, rs.data);
+                        vm.launchers.splice(index, 1, rs.data);
                     } else {
                         messageService.error(rs.message);
                     }
@@ -697,7 +723,7 @@ const CiHelperController = function CiHelperController(
                 LauncherService.createLauncher(launcher).then(function (rs) {
                     if (rs.success) {
                         $scope.launcher = rs.data;
-                        $scope.launchers.push(rs.data);
+                        vm.launchers.push(rs.data);
                     } else {
                         messageService.error(rs.message);
                     }
@@ -875,7 +901,7 @@ const CiHelperController = function CiHelperController(
     // $scope.updateLauncher = function(launcher, index) {
     //     LauncherService.updateLauncher(launcher).then(function (rs) {
     //         if(rs.success) {
-    //             $scope.launchers.splice(index, 1, rs.data);
+    //             vm.launchers.splice(index, 1, rs.data);
     //         } else {
     //             messageService.error(rs.message);
     //         }
@@ -885,7 +911,7 @@ const CiHelperController = function CiHelperController(
     $scope.deleteLauncherById = function (id, index) {
         LauncherService.deleteLauncherById(id).then(function (rs) {
             if (rs.success) {
-                $scope.launchers.splice(index, 1);
+                vm.launchers.splice(index, 1);
             } else {
                 messageService.error(rs.message);
             }
@@ -1066,7 +1092,7 @@ const CiHelperController = function CiHelperController(
     };
 
     function appendLauncher(launcher) {
-        $scope.launchers.push(launcher);
+        vm.launchers.push(launcher);
         const scmAccountIndex = $scope.scmAccounts.indexOfField('id', launcher.scmAccountType.id);
         const scmAccount = $scope.scmAccounts[scmAccountIndex];
         scmAccount.launchers = scmAccount.launchers || [];
@@ -1096,7 +1122,7 @@ const CiHelperController = function CiHelperController(
             if (UserService.currentUser.id === userId && success) {
                 //remove all launchers of current scm account, except of defaults ones
                 if (Array.isArray($scope.scmAccount.launchers) && $scope.scmAccount.launchers.length) {
-                    $scope.launchers = $scope.launchers.filter(launcher => {
+                    vm.launchers = vm.launchers.filter(launcher => {
                         //skip default Zafira's demo launchers to keep them in data collection
                         if (launcher.job && launcher.job.name === 'launcher') {
                             return true;
@@ -1106,9 +1132,9 @@ const CiHelperController = function CiHelperController(
                     });
                 }
                 //add new scanned launchers
-                $scope.launchers = [...$scope.launchers, ...event.launchers];
+                vm.launchers = [...vm.launchers, ...event.launchers];
                 //update current scm account
-                $scope.scmAccount.launchers = $scope.launchers.filter(({ scmAccountType }) => scmAccountType.id === $scope.scmAccount.id);
+                $scope.scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType.id === $scope.scmAccount.id);
             } else {
                 vm.launcherPreferences = {};
                 messageService.error('Unable to scan repository');
@@ -1147,10 +1173,12 @@ const CiHelperController = function CiHelperController(
     };
 
     function initController() {
-        clearLauncher();
+        clearLauncher(); //TODO: why do we need this?
         const launchersPromise = getAllLaunchers()
-            .then(function (launchers) {
-                return $scope.launchers = launchers;
+            .then(launchers => {
+                console.log('============', launchers);
+
+                return vm.launchers = launchers;
             });
         toolsService.fetchIntegrationOfTypeByName('AUTOMATION_SERVER').then((res) => {
             if (res.success) {
@@ -1187,7 +1215,7 @@ const CiHelperController = function CiHelperController(
         $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise])
             .then(function (data) {
                 $scope.scmAccounts.forEach(function (scmAccount) {
-                    scmAccount.launchers = $scope.launchers.filter(({ scmAccountType }) => scmAccountType.id === scmAccount.id);
+                    scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType.id === scmAccount.id);
                 });
             })
             .finally(() => {
@@ -1200,7 +1228,6 @@ const CiHelperController = function CiHelperController(
      * @param {Object} data - provider's config from JSON
      */
     function initPlatforms(data) {
-        console.log(data);
         if (!data || !data.rootKey) { return; }
 
         // keep link to the raw config
@@ -1211,6 +1238,7 @@ const CiHelperController = function CiHelperController(
             .filter(platform => !platform.disabled);
 
         // if selected launcher has defined type, select first platform with the same type ('job' field)
+        // TODO: if it is a launcher's config we have to select it's value instead
         if ($scope.launcher.type) {
             // if type has '-web' postfix it should be used as 'web'
             const type = (/-web$/i).test($scope.launcher.type) ? 'web' : $scope.launcher.type;
@@ -1333,18 +1361,19 @@ const CiHelperController = function CiHelperController(
 
         //if we have in the launcher model ($scope.jsonModel) property with the same name as this control's key, try to find appropriate item in childControl
         //and remove that property from launcher model to prevent duplication
-        if ($scope.jsonModel[childControl.key]) {
-            if (typeof $scope.jsonModel[childControl.key] === 'string') {
+        // TODO: we are searching existing value and not expand if absent
+        if (vm.launcherModel[childControl.key]) {
+            if (typeof vm.launcherModel[childControl.key] === 'string') { //TODO convert to this type any value except array
                 defaultItem = childControl.items.find((item) => {
-                    return item.value === $scope.jsonModel[childControl.key];
+                    return item.value === vm.launcherModel[childControl.key];
                 });
-            } else if (Array.isArray($scope.jsonModel[childControl.key])) {
+            } else if (Array.isArray(vm.launcherModel[childControl.key])) {
                 defaultItem = childControl.items.find((item) => {
-                    return $scope.jsonModel[childControl.key].includes(item.value);
+                    return vm.launcherModel[childControl.key].includes(item.value);
                 });
             }
 
-            Reflect.deleteProperty($scope.jsonModel, childControl.key);
+            // Reflect.deleteProperty($scope.jsonModel, childControl.key);
         }
         //select by job (launcher type)
         if (!defaultItem && $scope.launcher.type) {
@@ -1409,9 +1438,9 @@ const CiHelperController = function CiHelperController(
     function getControlDefaultValue(key) {
         let value = '';
 
-        if ($scope.jsonModel[key]) {
-            value = $scope.jsonModel[key];
-            Reflect.deleteProperty($scope.jsonModel, key);
+        if (vm.launcherModel.hasOwnProperty(key)) {
+            value = vm.launcherModel[key];
+            // Reflect.deleteProperty($scope.jsonModel, key);
         }
 
         return value;
@@ -1478,6 +1507,77 @@ const CiHelperController = function CiHelperController(
         return control;
     }
 
+    // TODO: map value before control creation
+    function createControl(key, value, label) {
+        const control = {
+            type: getControlType(value),
+            key,
+            label,
+            value,
+        };
+
+        // 1 - is minimal value for such control type
+        if (control.type === 'number') {
+            const parsedValue = parseInt(control.value, 10);
+
+            control.value = !isNaN(parsedValue) ? parsedValue : 1;
+        }
+
+        return control;
+    }
+
+    // extract capability params before
+    function prepareLauncherControls() {
+        const activeProvider = getSelectedProvider();
+
+        if (activeProvider) {
+            // extract capability params tu use with provider controls
+            // TODO: maybe do not extract and use filter instead?
+            const capabilityParams = Object.keys(vm.launcherModel).reduce((accum, key) => {
+                if (key.includes('capabilities')) {
+                    accum[key] = vm.launcherModel[key];
+                }
+
+                return accum;
+            }, {});
+            console.log('capabilityParams', capabilityParams);
+        }
+
+        vm.launcherControls = Object.keys(vm.launcherModel)
+            .filter(key => !key.includes('capabilities'))  //TODO: do not filter if no selected provider
+            .map(key => {
+                let value = vm.launcherModel[key];
+
+                if (Array.isArray(value)) {
+                    value = value.map(item => ({
+                        id: item,
+                        name: item,
+                        value: item,
+                    }));
+                }
+
+                return createControl(key, value, key);
+            });
+
+        console.log('launcherControls', vm.launcherControls);
+        // populate model with default values
+        vm.launcherControls.forEach(control => {
+            let value = control.value;
+
+            if (control.type === 'select') {
+                // todo: get default value
+                value = value[0].value;
+            }
+            vm.resultModel[control.key] = value;
+        });
+
+        console.log('resultModel', vm.resultModel);
+    }
+
+    function prepareControls() {
+        prepareLauncherControls();
+    }
+
     /**
      * clears platforms data and related model and controls
      */
@@ -1513,6 +1613,7 @@ const CiHelperController = function CiHelperController(
 
     function useLaunchersPlatformIfExists() {
         // if launcher has appropriate param we need to use this value
+        // TODO: move this on extraction action?
         if ($scope.jsonModel && $scope.jsonModel[vm.platformsConfig.rootKey]) {
             vm.platformModel[vm.platformsConfig.rootKey].value = getControlDefaultValue(vm.platformsConfig.rootKey);
         }
@@ -1522,7 +1623,7 @@ const CiHelperController = function CiHelperController(
         return $http.get(`${url}?timestamp=${Date.now()}`);
     }
 
-    function onProviderSelect(selectedProvider) {
+    function onProvonProviderSelectiderSelect(selectedProvider) {
         if (vm.chipsCtrl.selectedChip === -1 || selectedProvider !== vm.chipsCtrl.items[vm.chipsCtrl.selectedChip]) {
             handleProviderSelection(selectedProvider);
         } else {
@@ -1531,7 +1632,7 @@ const CiHelperController = function CiHelperController(
     }
 
     function handleProviderSelection(provider) {
-        console.log('handle' , provider);
+        console.log('handleProviderSelection' , provider);
         if (!vm.chipsCtrl || !provider) { return; }
 
         const index = vm.chipsCtrl.items.findIndex(({ id }) => {
@@ -1655,16 +1756,15 @@ const CiHelperController = function CiHelperController(
      * These options will be transformed to be as platform specific options (upper section on UI)
      */
     function checkForUnmatchedCapabilities() {
-        Object.keys($scope.jsonModel).forEach(key => {
-            if (key.includes('capabilities')) {
-                const platformControl = createPlatformControl(key, $scope.jsonModel[key]);
-                const defaultValue = platformControl.type === 'select' ? platformControl.items[0] : $scope.jsonModel[key] ?? '';
+        Object.keys(vm.launcherModel)
+            .filter(key => key.includes('capabilities'))
+            .forEach(key => {
+                const platformControl = createPlatformControl(key, vm.launcherModel[key]);
+                const defaultValue = platformControl.type === 'select' ? platformControl.items[0] : vm.launcherModel[key] ?? '';
 
                 vm.platformControls.push(platformControl);
                 vm.platformModel[key] = { value: defaultValue };
-                Reflect.deleteProperty($scope.jsonModel, key);
-            }
-        });
+            });
     }
 
     function cancelFolderManaging() {
@@ -1695,7 +1795,7 @@ const CiHelperController = function CiHelperController(
         LauncherService.saveLauncherConfig(vm.selectedLauncherConfig.id, params)
             .then((rs) => {
                 if (rs.success) {
-                    const launcherInScope = $scope.launchers.find((item) => item.id === vm.selectedLauncherConfig.id);
+                    const launcherInScope = vm.launchers.find((item) => item.id === vm.selectedLauncherConfig.id);
 
                     launcherInScope.presets.push(rs.data);
                     vm.chooseSavedLauncherConfig(rs.data);
