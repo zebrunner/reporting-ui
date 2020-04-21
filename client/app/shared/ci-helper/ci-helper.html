@@ -307,7 +307,7 @@
             <div class="ci-runner-container__scrollable">
                 <div class="ci-runner-container__providers">
                     <div class="warning-block" ng-if="$ctrl.providersFail">
-                            Unable to load provider configs, contact your administrator!
+                        Unable to load provider configs, contact your administrator!
                     </div>
                     <md-chips ng-if="$ctrl.providers.length"
                         class="filter-chip custom-filter"
@@ -322,9 +322,14 @@
                         </md-chip-template>
                     </md-chips>
                 </div>
+                <div class="ci-runner-container__platforms" ng-if="!$ctrl.providers.length && !$ctrl.failedProvider">
+                    <div class="warning-block">
+                        No available providers.
+                    </div>
+                </div>
                 <div class="ci-runner-container__platforms" ng-if="$ctrl.failedProvider">
                     <div class="warning-block">
-                            Unable to load provider's config, contact your administrator!
+                        Unable to load provider's config, contact your administrator!
                     </div>
                 </div>
                 <div class="ci-runner-container__platforms"
@@ -442,6 +447,32 @@
                 <div ng-if="!$ctrl.loadingScm && scmAccounts.length">
                     <div>Choose template to launch.</div>
                 </div>
+            </div>
+        </zf-modal-content-container>
+        <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.shouldBeDisplayed('ci-error')">
+            <div class="ci-runner-container_content_title _mobile-message no-data">
+                <div>
+                    <div>Opps, integration with CI is broken...</div>
+                    <div>Please, contact admin.</div>
+                </div>
+            </div>
+            <div class="ci-runner-container_content_actions">
+                <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.hideCIErrorPage()" ng-if="$ctrl.cardNumber === 4">
+                    Ok
+                </md-button>
+            </div>
+        </zf-modal-content-container>
+        <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.shouldBeDisplayed('ci-error')">
+            <div class="ci-runner-container_content_title _mobile-message no-data">
+                <div>
+                    <div>Opps, integration with CI is broken...</div>
+                    <div>Please, contact admin.</div>
+                </div>
+            </div>
+            <div class="ci-runner-container_content_actions">
+                <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.hideCIErrorPage()" ng-if="$ctrl.cardNumber === 4">
+                    Ok
+                </md-button>
             </div>
         </zf-modal-content-container>
         <md-icon class="close-button" ng-click="cancel()" aria-label="Close dialog">close</md-icon>

@@ -81,6 +81,9 @@ const CiHelperController = function CiHelperController(
         updateLauncherConfig,
         deleteLauncherConfig,
         getWebHook,
+        showCIErrorPage,
+        hideCIErrorPage,
+        getCurrentServer,
         userHasAnyPermission: authService.userHasAnyPermission,
 
         get isMobile() { return $mdMedia('xs'); },
@@ -376,6 +379,26 @@ const CiHelperController = function CiHelperController(
                 $scope.launcherScan.branch = rs.data;
             }
         });
+    }
+
+    function showCIErrorPage() {
+        vm.previousPage = vm.cardNumber;
+        vm.cardNumber = 4;
+    }
+
+    function hideCIErrorPage() {
+        vm.cardNumber = vm.previousPage;
+        vm.previousPage = null;
+    }
+
+    function showCIErrorPage() {
+        vm.previousPage = vm.cardNumber;
+        vm.cardNumber = 4;
+    }
+
+    function hideCIErrorPage() {
+        vm.cardNumber = vm.previousPage;
+        vm.previousPage = null;
     }
 
     $scope.onFilterSearchChange = function (value) {
@@ -690,6 +713,11 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.scanRepository = function (launcherScan, rescan) {
+        if (!getCurrentServer.connected) {
+            vm.showCIErrorPage();
+            return false;
+        }
+
         if (launcherScan && launcherScan.branch && $scope.scmAccount.id) {
             saveLaunchersPreferencesForRescan();
             initWebsocket();
@@ -710,6 +738,10 @@ const CiHelperController = function CiHelperController(
                 });
         }
     };
+
+    function getCurrentServer() {
+        return $scope.currentServerId ? $scope.servers.find((server) => server.id === $scope.currentServerId) : $scope.servers.find((server) => server.default === true);
+    }
 
     function getBuildNumber(queueItemUrl) {
         LauncherService.getBuildNumber(queueItemUrl).then(function (rs) {
@@ -1038,16 +1070,15 @@ const CiHelperController = function CiHelperController(
         // merge launcher and provider models here
         const resultModel = { ...providerModel, ...vm.launcherModel };
 
-        launcher.model = JSON.stringify(resultModel, null, 2);
-        LauncherService.buildLauncher(launcher, providerId)
-            .then(function (response) {
-                if (response.success) {
-                    messageService.success("Job is in progress");
-                    $scope.hide();
-                } else {
-                    messageService.error(response.message);
-                }
-            });
+        launcher.model = resultModel;
+        LauncherService.buildLauncher(launcher, providerId).then(function (rs) {
+            if (rs.success) {
+                messageService.success("Job is in progress");
+                $scope.hide();
+            } else {
+                vm.showCIErrorPage();
+            }
+        });
     };
 
     function appendLauncher(launcher) {
@@ -1638,8 +1669,10 @@ const CiHelperController = function CiHelperController(
                         if (res.success) {
                             vm.integrations = res.data || [];
 
-                            const integrationNames = vm.integrations
-                                .filter(integration => integration.enabled)
+                            vm.integrations = (res.data || []);
+
+                            integrationNames = vm.integrations
+                                .filter(integration => integration.enabled && integration.connected)
                                 .map(item => item.name.toLowerCase());
 
                             vm.providers = providers
@@ -1776,6 +1809,8 @@ const CiHelperController = function CiHelperController(
                 return vm.cardNumber === 3;
             case 'welcome':
                 return vm.cardNumber === 0;
+            case 'ci-error':
+                return vm.cardNumber === 4;
             case 'waiting':
                 return $scope.launcherLoaderStatus && ($scope.launcherLoaderStatus.started || $scope.launcherLoaderStatus.finished);
             case 'add-repo':
