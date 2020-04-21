@@ -551,21 +551,19 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.createLauncher = function (launcher) {
-        return $q(function (resolve, reject) {
-            LauncherService.createLauncher(launcher, $scope.currentServerId)
-                .then(function (rs) {
-                    if (rs.success) {
-                        vm.activeLauncher = rs.data || {};
-                        vm.launchers.push(vm.activeLauncher);
-                        messageService.success('Launcher was created');
-                        resolve(vm.activeLauncher);
-                    } else {
-                        messageService.error(rs.message);
-                        reject();
-                    }
-                    $scope.applyBuilder(launcher); //TODO: why the old object but not from response one?
-                });
-        });
+        return LauncherService.createLauncher(launcher, $scope.currentServerId)
+            .then(function (rs) {
+                if (rs.success) {
+                    vm.activeLauncher = rs.data || {};
+                    vm.launchers.push(vm.activeLauncher);
+                    messageService.success('Launcher was created');
+                    resolve(vm.activeLauncher);
+                } else {
+                    messageService.error(rs.message);
+                    reject();
+                }
+                $scope.applyBuilder(launcher); //TODO: why the old object but not from response one?
+            });
     };
 
     $scope.updateLauncher = function (launcher) {
@@ -1147,34 +1145,27 @@ const CiHelperController = function CiHelperController(
                 }
             });
         getTenantInfo()
-            .then(tenant => {
+            .then((tenant) => {
                 isMultitenant = tenant.multitenant;
-                getClientId()
-                    .then(clientId => {
-                        $scope.clientId = clientId;
-                    });
-            });
+                return getClientId();
+            })
+            .then(clientId => $scope.clientId = clientId);
         const scmAccountsPromise = ScmService.getAllScmAccounts()
             .then(function (rs) {
-                //TODO: why do we use $q here?
-                return $q(function (resolve, reject) {
-                    if (rs.success) {
-                        if (rs.data && rs.data.length) {
-                            $scope.scmAccounts = rs.data.filter(function (scmAccount) {
-                                return scmAccount.repositoryURL;
-                            });
-                        }
-                        resolve();
-                    } else {
-                        messageService.error(rs.message);
-                        reject();
+                if (rs.success) {
+                    if (rs.data && rs.data.length) {
+                        $scope.scmAccounts = rs.data.filter(function (scmAccount) {
+                            return scmAccount.repositoryURL;
+                        });
                     }
-                });
+                } else {
+                    messageService.error(rs.message);
+                }
             });
         const providersConfigPromise = getProvidersConfig();
 
         $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise])
-            .then(data =>{
+            .then(data => {
                 $scope.scmAccounts.forEach(scmAccount => {
                     scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType.id === scmAccount.id);
                 });
@@ -1211,7 +1202,7 @@ const CiHelperController = function CiHelperController(
             // if type has '-web' postfix it should be used as 'web'
             const type = (/-web$/i).test(vm.activeLauncher.type) ? 'web' : vm.activeLauncher.type;
 
-            preselectedPlatform =  vm.platforms.find(platform => {
+            preselectedPlatform = vm.platforms.find(platform => {
                 return Array.isArray(platform.job) && platform.job.includes(type);
             });
         }
@@ -1597,7 +1588,7 @@ const CiHelperController = function CiHelperController(
     function handleProviderDeselection() {
         clearPlatforms();
         vm.chipsCtrl && (vm.chipsCtrl.selectedChip = -1);
-        prepareLauncherControls()
+        prepareLauncherControls();
     }
 
     function getSelectedProvider() {
