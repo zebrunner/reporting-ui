@@ -2880,7 +2880,7 @@ $light-inprogress: #68c9fd;
             &_container {
                 font-size: 0;
                 position: relative;
-                &:not(.builder-boolean) {
+                &:not(.builder-checkbox) {
 
                     @media (max-width: 768px) {
                         .zf-label {
@@ -2927,7 +2927,7 @@ $light-inprogress: #68c9fd;
                     }
                 }
 
-                &.builder-boolean {
+                &.builder-checkbox {
                     .zf-label {
                         line-height: 20px !important;
                         vertical-align: top;
@@ -3194,6 +3194,10 @@ $light-inprogress: #68c9fd;
                             padding: 6px 0;
                             position: relative;
 
+                            &._no-padding-bottom {
+                                padding-bottom: 0;
+                            }
+
                             @media(max-width: $md-screen-phone) {
                                 font-size: 16px;
                                 line-height: 20px;
@@ -3235,8 +3239,10 @@ $light-inprogress: #68c9fd;
                                 }
                             }
 
-                            &:hover {
-                                color: black;
+                            & span {
+                                &:hover {
+                                    color: black;
+                                }
                             }
                         }
                         &_item-empty {

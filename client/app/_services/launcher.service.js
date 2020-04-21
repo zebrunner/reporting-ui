@@ -7,24 +7,48 @@
 
     function LauncherService($http, $rootScope, UtilService, API_URL) {
 
-        var service = {};
-
-        service.createLauncher = createLauncher;
-        service.getLauncherById = getLauncherById;
-        service.getAllLaunchers = getAllLaunchers;
-        service.updateLauncher = updateLauncher;
-        service.deleteLauncherById = deleteLauncherById;
-        service.buildLauncher = buildLauncher;
-        service.scanRepository = scanRepository;
-        service.getBuildNumber = getBuildNumber;
-        service.abortScanRepository = abortScanRepository;
-        service.isScannerInProgress = isScannerInProgress;
-        service.setFavouriteLauncher = setFavouriteLauncher;
+        const service = {
+            abortScanRepository,
+            buildLauncher,
+            createLauncher,
+            deleteLauncherById,
+            deleteLauncherConfig,
+            getAllLaunchers,
+            getBuildNumber,
+            getConfigHook,
+            getLauncherById,
+            isScannerInProgress,
+            saveLauncherConfig,
+            scanRepository,
+            setFavouriteLauncher,
+            updateLauncher,
+            updateLauncherConfig,
+        };
 
         return service;
 
         function createLauncher(launcher, automationServerId) {
             return $http.post(`${API_URL}/api/launchers?automationServerId=${automationServerId}`, launcher).then(UtilService.handleSuccess, UtilService.handleError('Unable to create launcher'));
+        }
+
+        function saveLauncherConfig(launcherId, params) {
+            return $http.post(`${API_URL}/api/launchers/${launcherId}/presets`, params)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to save launcher config'));
+        }
+
+        function updateLauncherConfig(laucnherId, configId, params) {
+            return $http.put(`${API_URL}/api/launchers/${laucnherId}/presets/${configId}`, params)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update launcher config'));
+        }
+
+        function deleteLauncherConfig(laucnherId, configId) {
+            return $http.delete(`${API_URL}/api/launchers/${laucnherId}/presets/${configId}`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to delete launcher config'));
+        }
+
+        function getConfigHook(laucnherId, configId) {
+            return $http.get(`${API_URL}/api/launchers/${laucnherId}/presets/${configId}/hook`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get webhook'));
         }
 
         function getLauncherById(id) {
