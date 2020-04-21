@@ -462,19 +462,6 @@
                 </md-button>
             </div>
         </zf-modal-content-container>
-        <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.shouldBeDisplayed('ci-error')">
-            <div class="ci-runner-container_content_title _mobile-message no-data">
-                <div>
-                    <div>Opps, integration with CI is broken...</div>
-                    <div>Please, contact admin.</div>
-                </div>
-            </div>
-            <div class="ci-runner-container_content_actions">
-                <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.hideCIErrorPage()" ng-if="$ctrl.cardNumber === 4">
-                    Ok
-                </md-button>
-            </div>
-        </zf-modal-content-container>
         <md-icon class="close-button" ng-click="cancel()" aria-label="Close dialog">close</md-icon>
         <div class="ci-runner-container_loader" ng-if="$ctrl.shouldBeDisplayed('waiting')">
             <div class="ci-runner-container_loader_container">

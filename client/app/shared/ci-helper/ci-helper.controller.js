@@ -391,16 +391,6 @@ const CiHelperController = function CiHelperController(
         vm.previousPage = null;
     }
 
-    function showCIErrorPage() {
-        vm.previousPage = vm.cardNumber;
-        vm.cardNumber = 4;
-    }
-
-    function hideCIErrorPage() {
-        vm.cardNumber = vm.previousPage;
-        vm.previousPage = null;
-    }
-
     $scope.onFilterSearchChange = function (value) {
         $timeout(function () {
             const emptySearchClassName = '__empty-search';
@@ -1668,8 +1658,6 @@ const CiHelperController = function CiHelperController(
                     .then(res => {
                         if (res.success) {
                             vm.integrations = res.data || [];
-
-                            vm.integrations = (res.data || []);
 
                             integrationNames = vm.integrations
                                 .filter(integration => integration.enabled && integration.connected)
