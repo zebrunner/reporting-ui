@@ -81,8 +81,8 @@
                 </div>-->
             </div>
             <div class="ci-runner-container_content_actions show-phone">
-                <md-button class="md-raised md-primary pull-right" ng-click="chooseLauncherPhone(launcher);"
-                           ng-disabled="!launcher.id">
+                <md-button class="md-raised md-primary pull-right" ng-click="chooseLauncherPhone($ctrl.activeLauncher);"
+                           ng-disabled="!$ctrl.activeLauncher.id">
                     Next
                 </md-button>
             </div>
@@ -108,10 +108,10 @@
                         </zf-radio-button-body>
                     </zf-radio-button>
                     <div class="ci-runner-container_content_actions">
-                        <md-button ng-really-click="deleteRepository(launcher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !launcher.id">
+                        <md-button ng-really-click="deleteRepository($ctrl.activeLauncher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
                             DELETE REPO
                         </md-button>
-                        <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
+                        <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
                             CANCEL
                         </md-button>
                     </div>
@@ -165,10 +165,10 @@
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_actions">
-                        <md-button ng-really-click="deleteRepository(launcher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !launcher.id">
+                        <md-button ng-really-click="deleteRepository($ctrl.activeLauncher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
                             DELETE REPO
                         </md-button>
-                        <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !launcher.id">
+                        <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
                             CANCEL
                         </md-button>
                         <md-button class="md-raised md-primary pull-right" md-no-ink ng-click="scanRepository(launcherScan)" ng-if="!hasAutoScannedLaunchers(scmAccount.launchers)" ng-disabled="launcher_form.scanInfo.$invalid">
@@ -194,12 +194,12 @@
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="launcher.name" />
+                            <input type="text" ng-model="$ctrl.activeLauncher.name" />
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
                         <md-input-container class="no-margin">
-                            <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
+                            <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="$ctrl.activeLauncher.model"></div>
                             <md-input-container class="no-margin">
                                 <label>Platform</label>
                                 <md-select ng-change="mergeTemplate(DEFAULT_TEMPLATES.model.json);" ng-model="DEFAULT_TEMPLATES.model">
@@ -213,7 +213,7 @@
                     <md-button ng-click="$ctrl.cancelFolderManaging();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="addLauncher(launcher);" ng-disabled="!launcher.name || !launcher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="addLauncher(launcher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model">
                         CREATE
                     </md-button>
                 </div>
@@ -224,7 +224,7 @@
             <ng-form name="manualInfo">
                 <div class="ci-runner-container_content_block __lancher-save">
                     <div class="ci-runner-container_content_block_title __ci-runner-lg-title">
-                        <span ng-if="launcher.id">{{launcher.name}} > {{$ctrl.selectedLauncherConfig.name}}</span>
+                        <span ng-if="$ctrl.activeLauncher.id">{{ $ctrl.activeLauncher.name }} > {{$ctrl.selectedLauncherConfig.name}}</span>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
@@ -244,7 +244,7 @@
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.saveLauncherConfig();" ng-disabled="!$ctrl.selectedLauncherConfig.name || !launcher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.saveLauncherConfig();" ng-disabled="!$ctrl.selectedLauncherConfig.name || !$ctrl.activeLauncher.model">
                         SAVE
                     </md-button>
                 </div>
@@ -255,17 +255,17 @@
             <ng-form name="manualInfo">
                 <div class="ci-runner-container_content_block __lancher-add">
                     <div class="ci-runner-container_content_block_title __ci-runner-lg-title">
-                        <span ng-if="launcher.id">{{launcher.name}}</span>
+                        <span ng-if="$ctrl.activeLauncher.id">{{ $ctrl.activeLauncher.name }}</span>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="launcher.name" />
+                            <input type="text" ng-model="$ctrl.activeLauncher.name" />
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
                         <md-input-container class="no-margin">
-                            <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="launcher.model"></div>
+                            <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="$ctrl.activeLauncher.model"></div>
                             <md-input-container class="no-margin">
                                 <label>Platform</label>
                                 <md-select ng-change="mergeTemplate(DEFAULT_TEMPLATES.model.json);" ng-model="DEFAULT_TEMPLATES.model">
@@ -276,33 +276,33 @@
                     </div>
                 </div>
                 <div class="ci-runner-container_content_actions">
-                    <md-button ng-really-click="deleteLauncher(launcher.id);" ng-really-message="Do you really want to delete template?" class="md-warn" ng-if="!launcher.isSavedConfig">
+                    <md-button ng-really-click="deleteLauncher($ctrl.activeLauncher.id);" ng-really-message="Do you really want to delete template?" class="md-warn" ng-if="!$ctrl.activeLauncher.isSavedConfig">
                         DELETE LAUNCHER
                     </md-button>
-                    <md-button ng-really-click="$ctrl.deleteLauncherConfig(launcher)" ng-really-message="Do you really want to delete config?" class="md-warn" ng-if="launcher.isSavedConfig">
+                    <md-button ng-really-click="$ctrl.deleteLauncherConfig($ctrl.activeLauncher)" ng-really-message="Do you really want to delete config?" class="md-warn" ng-if="$ctrl.activeLauncher.isSavedConfig">
                         DELETE CONFIG
                     </md-button>
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher(launcher);" ng-disabled="!launcher.name || !launcher.model" ng-if="!launcher.isSavedConfig">
+                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model" ng-if="!$ctrl.activeLauncher.isSavedConfig">
                         SAVE
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.updateLauncherConfig(launcher);" ng-disabled="!launcher.name || !launcher.model" ng-if="launcher.isSavedConfig">
+                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.updateLauncherConfig($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model" ng-if="$ctrl.activeLauncher.isSavedConfig">
                         UPDATE
                     </md-button>
                 </div>
             </ng-form>
         </zf-modal-content-container>
-        <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.shouldBeDisplayed('launcher')" ng-show="launcher">
+        <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.shouldBeDisplayed('launcher')" ng-show="$ctrl.activeLauncher">
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
-                <show-part class="hide-phone" text="launcher.name" limit="40" ng-if="!launcher.isSavedConfig"></show-part>
-                <show-part class="show-phone" text="launcher.name" limit="20"></show-part>
-                <show-part class="hide-phone" text="$ctrl.activeLauncherName + ' > ' + launcher.name" limit="40" ng-if="launcher.isSavedConfig"></show-part>
+                <show-part class="hide-phone" text="$ctrl.activeLauncher.name" limit="40" ng-if="!$ctrl.activeLauncher.isSavedConfig"></show-part>
+                <show-part class="show-phone" text="$ctrl.activeLauncher.name" limit="20"></show-part>
+                <show-part class="hide-phone" text="$ctrl.activeLauncherName + ' > ' + $ctrl.activeLauncher.name" limit="40" ng-if="$ctrl.activeLauncher.isSavedConfig"></show-part>
                 <span class="ci-runner-container_content_title_action">
-                    <i ng-click="$ctrl.setFavouriteLauncher(launcher);" ng-if="!launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons icon hide-phone">star_border</i>
-                    <i ng-click="$ctrl.setFavouriteLauncher(launcher);" ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons icon hide-phone _active">star</i>
-                    <i ng-click="toEditLauncher(launcher);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons icon hide-phone _settings-icon">settings</i>
+                    <i ng-click="$ctrl.setFavouriteLauncher($ctrl.activeLauncher);" ng-if="!$ctrl.activeLauncher.preference.favorite && !$ctrl.activeLauncher.isSavedConfig" class="material-icons icon hide-phone">star_border</i>
+                    <i ng-click="$ctrl.setFavouriteLauncher($ctrl.activeLauncher);" ng-if="$ctrl.activeLauncher.preference.favorite && !$ctrl.activeLauncher.isSavedConfig" class="material-icons icon hide-phone _active">star</i>
+                    <i ng-click="toEditLauncher($ctrl.activeLauncher);" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])" class="material-icons icon hide-phone _settings-icon">settings</i>
                 </span>
             </div>
             <div class="ci-runner-container__scrollable">
@@ -310,7 +310,11 @@
                     <div class="warning-block" ng-if="$ctrl.providersFail">
                             Unable to load provider configs, contact your administrator!
                     </div>
-                    <md-chips ng-if="$ctrl.providers.length" class="filter-chip custom-filter" ng-model="$ctrl.providers" md-removable="false" readonly="true">
+                    <md-chips ng-if="$ctrl.providers.length"
+                        class="filter-chip custom-filter"
+                        ng-model="$ctrl.providers"
+                        md-removable="false"
+                        readonly="true">
                         <md-chip-template>
                             <div style="display: inline-block;" ng-init="$ctrl.selectProviderOnChipsInit($index, $mdChipsCtrl)" ng-click="$ctrl.onProviderSelect($chip)">
                                 <img class="custom-filter__img" ng-if="$chip.icon" ng-src="{{$chip.icon}}"/>
@@ -333,12 +337,15 @@
                             layout-wrap
                             ng-change="$ctrl.onPlatformSelect()">
                             <md-radio-button ng-value="$ctrl.noPlatformValue">None</md-radio-button>
-                            <md-radio-button ng-value="platform" ng-repeat="platform in $ctrl.platforms track by platform.id">{{platform.name}}</md-radio-button>
+                            <md-radio-button ng-value="platform"
+                                ng-repeat="platform in $ctrl.platforms track by platform.id">
+                                {{ platform.name }}
+                            </md-radio-button>
                         </md-radio-group>
                     </div>
                     <div class="ci-runner-container__platforms-controls"
                         ng-if="$ctrl.platformControls.length">
-                        <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
+                        <div class="ci-runner-container_content_builder_container builder-{{launcherControl.type}}"
                             ng-repeat="platformControl in $ctrl.platformControls track by platformControl.key">
                             <div class="zf-label" flex="none">
                                 <show-part text="platformControl.label" limit="30">
@@ -384,17 +391,17 @@
 <!--                        <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">-->
 <!--                                <md-input-container class="_gray-bg no-margin" ng-if="builtLauncher.type[key] === 'int'">-->
 <!--                                    <label>{{key}}</label>-->
-<!--                                    <input type="number" min="1" step="1" pattern="^[0-9]+$" ng-model="builtLauncher.model[key]" ng-disabled="launcher.isSavedConfig"/>-->
+<!--                                    <input type="number" min="1" step="1" pattern="^[0-9]+$" ng-model="builtLauncher.model[key]" ng-disabled="$ctrl.activeLauncher.isSavedConfig"/>-->
 <!--                                </md-input-container>-->
 <!--                                <md-input-container class="_gray-bg no-margin" ng-if="builtLauncher.type[key] !== 'int'">-->
 <!--                                    <label>{{key}}</label>-->
-<!--                                    <input type="text" ng-model="builtLauncher.model[key]" ng-disabled="launcher.isSavedConfig"/>-->
+<!--                                    <input type="text" ng-model="builtLauncher.model[key]" ng-disabled="$ctrl.activeLauncher.isSavedConfig"/>-->
 <!--                                </md-input-container>-->
 <!--                        </div>-->
 <!--                        <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">-->
 <!--                            <md-input-container class="no-margin _gray-bg">-->
 <!--                                <label>{{key}}</label>-->
-<!--                                <md-select ng-model="builtLauncher.model[key]" ng-disabled="launcher.isSavedConfig">-->
+<!--                                <md-select ng-model="builtLauncher.model[key]" ng-disabled="$ctrl.activeLauncher.isSavedConfig">-->
 <!--                                    <md-option ng-repeat="val in item" ng-value="val">-->
 <!--                                        {{val}}-->
 <!--                                    </md-option>-->
@@ -402,12 +409,12 @@
 <!--                            </md-input-container>-->
 <!--                        </div>-->
 <!--                        <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'boolean'">-->
-<!--                            <md-checkbox ng-model="builtLauncher.model[key]" aria-label="checkbox" ng-disabled="launcher.isSavedConfig"></md-checkbox>-->
+<!--                            <md-checkbox ng-model="builtLauncher.model[key]" aria-label="checkbox" ng-disabled="$ctrl.activeLauncher.isSavedConfig"></md-checkbox>-->
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </div>-->
                 <div class="ci-runner-container_content_builder" ng-if="$ctrl.launcherControls.length">
-                    <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"
+                    <div class="ci-runner-container_content_builder_container builder-{{launcherControl.type}}"
                         ng-repeat="launcherControl in $ctrl.launcherControls track by launcherControl.key">
                         <div class="zf-label" flex="none">
                             <show-part text="launcherControl.label" limit="25">
@@ -417,26 +424,26 @@
                         <div class="ci-runner-container_content_builder_container_item">
                             <md-input-container class="_gray-bg no-margin" ng-if="launcherControl.type === 'number'">
                                 <label>{{ launcherControl.label }}</label>
-                                <input type="number" min="1" step="1" pattern="^[0-9]+$" ng-model="$ctrl.resultModel[launcherControl.key]" ng-disabled="launcher.isSavedConfig"/>
+                                <input type="number" min="1" step="1" pattern="^[0-9]+$" ng-model="$ctrl.launcherModel[launcherControl.key]" ng-disabled="$ctrl.activeLauncher.isSavedConfig"/>
                             </md-input-container>
                             <md-input-container class="_gray-bg no-margin" ng-if="launcherControl.type === 'text'">
                                 <label>{{ launcherControl.label }}</label>
-                                <input type="text" ng-model="$ctrl.resultModel[launcherControl.key]" ng-disabled="launcher.isSavedConfig"/>
+                                <input type="text" ng-model="$ctrl.launcherModel[launcherControl.key]" ng-disabled="$ctrl.activeLauncher.isSavedConfig"/>
                             </md-input-container>
                             <md-input-container class="no-margin _gray-bg" ng-if="launcherControl.type === 'select'">
                                 <label>{{ launcherControl.label }}</label>
-                                <md-select ng-model="$ctrl.resultModel[launcherControl.key]"
-                                    ng-disabled="launcher.isSavedConfig">
+                                <md-select ng-model="$ctrl.launcherModel[launcherControl.key]"
+                                    ng-disabled="$ctrl.activeLauncher.isSavedConfig">
                                     <md-option ng-repeat="optionItem in launcherControl.value"
                                         ng-value="optionItem.value">
                                         {{ optionItem.name }}
                                     </md-option>
                                 </md-select>
                             </md-input-container>
-                            <md-checkbox ng-model="$ctrl.resultModel[launcherControl.key]"
+                            <md-checkbox ng-model="$ctrl.launcherModel[launcherControl.key]"
                                 ng-if="launcherControl.type === 'checkbox'"
                                 aria-label="checkbox"
-                                ng-disabled="launcher.isSavedConfig"></md-checkbox>
+                                ng-disabled="$ctrl.activeLauncher.isSavedConfig"></md-checkbox>
                         </div>
                     </div>
                 </div>
@@ -448,16 +455,16 @@
                 <md-button class="md-raised" ng-click="navigateBack();" ng-if="$ctrl.cardNumber === 3 && $ctrl.isMobile">
                     Back
                 </md-button>
-                <md-button class="md-raised" ng-click="$ctrl.prepareLauncherConfigForSave();" ng-if="($ctrl.cardNumber === 2 || $ctrl.cardNumber === 3) && !$ctrl.isMobile && !launcher.isSavedConfig">
+                <md-button class="md-raised" ng-click="$ctrl.prepareLauncherConfigForSave();" ng-if="($ctrl.cardNumber === 2 || $ctrl.cardNumber === 3) && !$ctrl.isMobile && !$ctrl.activeLauncher.isSavedConfig">
                     Save config
                 </md-button>
-                <md-button class="md-raised" ng-click="$ctrl.getWebHook(launcher);" ng-if="($ctrl.cardNumber === 2 || $ctrl.cardNumber === 3) && launcher.isSavedConfig">
+                <md-button class="md-raised" ng-click="$ctrl.getWebHook($ctrl.activeLauncher);" ng-if="($ctrl.cardNumber === 2 || $ctrl.cardNumber === 3) && $ctrl.activeLauncher.isSavedConfig">
                     Copy webhook
                 </md-button>
-                <md-button class="md-raised md-primary pull-right" ng-click="build(launcher, launcher_form);" ng-disabled="!launcher.job.jobURL" ng-if="$ctrl.cardNumber === 2 || $ctrl.cardNumber === 3">
+                <md-button class="md-raised md-primary pull-right" ng-click="build($ctrl.activeLauncher, launcher_form);" ng-disabled="!$ctrl.activeLauncher.job.jobURL" ng-if="$ctrl.cardNumber === 2 || $ctrl.cardNumber === 3">
                     Launch
                 </md-button>
-                <div ng-if="! launcher.job.jobURL" class="ci-runner-container_content_actions_error">Launcher job is not configured, contact admin.</div>
+                <div ng-if="!$ctrl.activeLauncher.job.jobURL" class="ci-runner-container_content_actions_error">Launcher job is not configured, contact admin.</div>
             </div>
         </zf-modal-content-container>
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('welcome')">
