@@ -557,12 +557,12 @@ const CiHelperController = function CiHelperController(
                     vm.activeLauncher = rs.data || {};
                     vm.launchers.push(vm.activeLauncher);
                     messageService.success('Launcher was created');
-                    resolve(vm.activeLauncher);
+                    $scope.applyBuilder(vm.activeLauncher);
+                    return vm.activeLauncher;
                 } else {
                     messageService.error(rs.message);
-                    reject();
+                    return $q.reject();
                 }
-                $scope.applyBuilder(launcher); //TODO: why the old object but not from response one?
             });
     };
 

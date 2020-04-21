@@ -265,7 +265,7 @@
                     <div class="ci-runner-container_content_code" ng-cloak>
                         <md-input-container class="no-margin">
                             <div id="aceEditor" required class="ci-runner-container_content_code_editor" ui-ace="{{aceOptions}}" ng-model="$ctrl.activeLauncher.model"></div>
-                            <md-input-container class="no-margin">
+                            <md-input-container class="no-margin" ng-if="!$ctrl.activeLauncher.isSavedConfig">
                                 <label>Platform</label>
                                 <md-select ng-change="mergeTemplate(DEFAULT_TEMPLATES.model.json);" ng-model="DEFAULT_TEMPLATES.model">
                                     <md-option ng-repeat="dt in DEFAULT_TEMPLATES.variants track by $index" ng-value="dt">{{dt.name}}</md-option>
