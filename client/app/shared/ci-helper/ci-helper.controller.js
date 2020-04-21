@@ -1061,14 +1061,15 @@ const CiHelperController = function CiHelperController(
         const resultModel = { ...providerModel, ...vm.launcherModel };
 
         launcher.model = JSON.stringify(resultModel, null, 2);
-        LauncherService.buildLauncher(launcher, providerId).then(function (rs) {
-            if (rs.success) {
-                messageService.success("Job is in progress");
-                $scope.hide();
-            } else {
-                vm.showCIErrorPage();
-            }
-        });
+        LauncherService.buildLauncher(launcher, providerId)
+            .then(function (response) {
+                if (response.success) {
+                    messageService.success("Job is in progress");
+                    $scope.hide();
+                } else {
+                    vm.showCIErrorPage();
+                }
+            });
     };
 
     function appendLauncher(launcher) {
@@ -1659,7 +1660,7 @@ const CiHelperController = function CiHelperController(
                         if (res.success) {
                             vm.integrations = res.data || [];
 
-                            integrationNames = vm.integrations
+                            const integrationNames = vm.integrations
                                 .filter(integration => integration.enabled && integration.connected)
                                 .map(item => item.name.toLowerCase());
 
