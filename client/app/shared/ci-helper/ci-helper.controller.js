@@ -258,7 +258,7 @@ const CiHelperController = function CiHelperController(
         vm.cardNumber = isPhone ? 3 : 2;
     };
 
-    function applyBuilder(launcher, isConfig) {
+    function applyBuilder(launcher) {
         const launcherModel = launcher.model || launcher.params;
 
         // init launcher models
@@ -269,7 +269,8 @@ const CiHelperController = function CiHelperController(
         $timeout(() => {
             if (vm.chipsCtrl && vm.providers.length) {
                 let provider = vm.providers[0];
-                if (isConfig) {
+                //is config
+                if (launcher.hasOwnProperty('parentLauncherId')) {
                     const integration = vm.integrations.find(({ id }) => id === launcher.providerId);
                     const predefinedProvider = vm.providers.find(({ name }) => name.toLowerCase() === integration.name.toLowerCase());
 
@@ -437,19 +438,22 @@ const CiHelperController = function CiHelperController(
 
     function chooseSavedLauncherConfig(config) {
         if (!config || vm.activeLauncher.id === config.id) { return; }
-        vm.activeLauncher.parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
-        vm.activeLauncher.parentName = vm.activeLauncher.name;
-        vm.activeLauncher.id = config.id;
-        vm.activeLauncher.name = config.name;
-        vm.activeLauncher.model = config.params;
-        vm.activeLauncher.presets = [];
-        vm.activeLauncher.preference = {};
-        vm.activeLauncher.isSavedConfig = true;
+        const parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
+
+        vm.activeLauncher = {
+            ...vm.activeLauncher,
+            ...config,
+            parentLauncherId,
+            presets: [],
+            preference: {},
+            isSavedConfig: true,
+        };
+        vm.activeLauncher.model = vm.activeLauncher.params;
 
         vm.cardNumber = 3;
 
         highlightLauncher(config.id);
-        applyBuilder(config, true);
+        applyBuilder(vm.activeLauncher);
     }
 
     function updateLauncherConfig(config) {
@@ -457,7 +461,6 @@ const CiHelperController = function CiHelperController(
             name: config.name,
             params: config.model,
             providerId: vm.integrations.find((item) => item.name.toUpperCase() === vm.selectedProviderName.toUpperCase()).id,
-            selectedPlatform: '',
         };
 
         LauncherService.updateLauncherConfig(config.parentLauncherId, config.id, params)
@@ -468,8 +471,10 @@ const CiHelperController = function CiHelperController(
 
                     savedConfig.name = rs.data.name;
                     savedConfig.params = rs.data.params;
+                    config.name = rs.data.name;
+                    config.params = rs.data.params;
                     $timeout(function () {
-                        switchToLauncherPreview(savedConfig);
+                        switchToLauncherPreview(config);
                     }, 0);
                     messageService.success('Launcher was updated');
                 } else {
@@ -1195,9 +1200,10 @@ const CiHelperController = function CiHelperController(
             .filter(platform => !platform.disabled);
 
         // if it is a launcher's config we have to select it's value instead
-        if (vm.activeLauncher.hasOwnProperty('parentLauncherId') && vm.launcherRawModel.hasOwnProperty(`uiInternal.${vm.platformsConfig.rootKey}`)) {
+        if (vm.activeLauncher.hasOwnProperty('parentLauncherId')) {
+            const key = vm.launcherRawModel.hasOwnProperty(`uiInternal.${vm.platformsConfig.rootKey}`) ? `uiInternal.${vm.platformsConfig.rootKey}` : vm.platformsConfig.rootKey;
             preselectedPlatform = vm.platforms.find(platform => {
-                return platform.value === vm.launcherRawModel[`uiInternal.${vm.platformsConfig.rootKey}`];
+                return platform.value === vm.launcherRawModel[key];
             });
         }
         // if selected launcher has defined type, select first platform with the same type ('job' field)
@@ -1493,7 +1499,7 @@ const CiHelperController = function CiHelperController(
 
         vm.launcherControls = Object.keys(vm.launcherRawModel)
             // filter capability params which will be used as provider's
-            .filter(key => !(activeProvider && !vm.failedProvider && key.includes('capabilities')))
+            .filter(key => !(activeProvider && !vm.failedProvider && key.includes('capabilities')) && !key.includes('uiInternal'))
             .map(key => {
                 const label = key.includes('capabilities') ? key.split('.')[1] : key;
                 let value = vm.launcherRawModel[key];
@@ -1698,7 +1704,7 @@ const CiHelperController = function CiHelperController(
         Object.keys(vm.launcherRawModel)
             .filter(key => {
                 // we need only capability params
-                const isCapability = key.includes('capabilities');
+                const isCapability = key.includes('capabilities') && !key.includes('uiInternal');
 
                 // if it's a platform config, we don't need to create a control if any provider's platform is selected
                 if (
@@ -1756,6 +1762,9 @@ const CiHelperController = function CiHelperController(
                 if (rs.success) {
                     const launcherInScope = vm.launchers.find((item) => item.id === vm.selectedLauncherConfig.id);
 
+                    if (!launcherInScope.presets) {
+                        launcherInScope.presets = [];
+                    }
                     launcherInScope.presets.push(rs.data);
                     vm.chooseSavedLauncherConfig(rs.data);
                     messageService.success('Launcher config was saved');

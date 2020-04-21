@@ -213,7 +213,7 @@
                     <md-button ng-click="$ctrl.cancelFolderManaging();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="addLauncher(launcher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="addLauncher($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model">
                         CREATE
                     </md-button>
                 </div>
