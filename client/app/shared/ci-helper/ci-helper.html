@@ -380,39 +380,6 @@
                         </div>
                     </div>
                 </div>
-<!--                <div class="ci-runner-container_content_builder">-->
-<!--                    <div class="ci-runner-container_content_builder_container builder-{{builtLauncher.type[key]}}"-->
-<!--                        ng-repeat="(key, item) in jsonModel">-->
-<!--                        <div class="zf-label" flex="none">-->
-<!--                            <show-part text="key" limit="25">-->
-<!--                                <md-tooltip md-direction="top">{{key}}</md-tooltip>-->
-<!--                            </show-part>-->
-<!--                        </div>-->
-<!--                        <div class="ci-runner-container_content_builder_container_item" ng-if="['string', 'int'].indexOf(builtLauncher.type[key]) !== -1">-->
-<!--                                <md-input-container class="_gray-bg no-margin" ng-if="builtLauncher.type[key] === 'int'">-->
-<!--                                    <label>{{key}}</label>-->
-<!--                                    <input type="number" min="1" step="1" pattern="^[0-9]+$" ng-model="builtLauncher.model[key]" ng-disabled="$ctrl.activeLauncher.isSavedConfig"/>-->
-<!--                                </md-input-container>-->
-<!--                                <md-input-container class="_gray-bg no-margin" ng-if="builtLauncher.type[key] !== 'int'">-->
-<!--                                    <label>{{key}}</label>-->
-<!--                                    <input type="text" ng-model="builtLauncher.model[key]" ng-disabled="$ctrl.activeLauncher.isSavedConfig"/>-->
-<!--                                </md-input-container>-->
-<!--                        </div>-->
-<!--                        <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'array'">-->
-<!--                            <md-input-container class="no-margin _gray-bg">-->
-<!--                                <label>{{key}}</label>-->
-<!--                                <md-select ng-model="builtLauncher.model[key]" ng-disabled="$ctrl.activeLauncher.isSavedConfig">-->
-<!--                                    <md-option ng-repeat="val in item" ng-value="val">-->
-<!--                                        {{val}}-->
-<!--                                    </md-option>-->
-<!--                                </md-select>-->
-<!--                            </md-input-container>-->
-<!--                        </div>-->
-<!--                        <div class="ci-runner-container_content_builder_container_item" ng-if="builtLauncher.type[key] === 'boolean'">-->
-<!--                            <md-checkbox ng-model="builtLauncher.model[key]" aria-label="checkbox" ng-disabled="$ctrl.activeLauncher.isSavedConfig"></md-checkbox>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
                 <div class="ci-runner-container_content_builder" ng-if="$ctrl.launcherControls.length">
                     <div class="ci-runner-container_content_builder_container builder-{{launcherControl.type}}"
                         ng-repeat="launcherControl in $ctrl.launcherControls track by launcherControl.key">

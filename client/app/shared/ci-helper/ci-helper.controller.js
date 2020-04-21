@@ -73,7 +73,7 @@ const CiHelperController = function CiHelperController(
         shouldBeDisplayed,
         authService,
         setFavouriteLauncher,
-        saveLauchersPreferencesForRescan,
+        saveLaunchersPreferencesForRescan,
         applySavedPreferences,
         prepareLauncherConfigForSave,
         saveLauncherConfig,
@@ -190,7 +190,6 @@ const CiHelperController = function CiHelperController(
 
     $scope.switchFolderMobile = function (event, scmAccountId) {
         $scope.switchFolder(event);
-        //$scope.highlightFolder(scmAccountId);
         vm.activeLauncher = {};
     };
 
@@ -212,18 +211,18 @@ const CiHelperController = function CiHelperController(
         }
     };
 
-    function saveLauchersPreferencesForRescan() {
+    function saveLaunchersPreferencesForRescan() {
         vm.launchers.forEach((item) => {
             vm.launcherPreferences[item.id] = item.preference;
         });
-    };
+    }
 
     function applySavedPreferences() {
         vm.launchers.forEach((item) => {
             item.preference = vm.launcherPreferences[item.id];
         });
         vm.launcherPreferences = {};
-    };
+    }
 
     function addNewGithubRepoCssApply(element, isAdd) {
         var el = angular.element(element).closest('button');
@@ -232,7 +231,7 @@ const CiHelperController = function CiHelperController(
             onAddNewGithubRepoClose = function () {
                 $scope.addNewGithubRepo(el);
                 addNewGithubRepoCssApply(element, $scope.states.addGitRepo);
-            }
+            };
         } else {
             el.removeClass(newGithubRepoCloseClass);
             el.addClass(newGithubRepoRevertCloseClass);
@@ -241,11 +240,11 @@ const CiHelperController = function CiHelperController(
                 el.removeClass(newGithubRepoRevertCloseClass);
             }, 500);
         }
-    };
+    }
 
     function closeConnectGithubBlock() {
         $scope.addNewGithubRepo(angular.element("#connect-github"), true);
-    };
+    }
 
     $scope.mergeTemplate = function (template) {
         if (template) {
@@ -278,38 +277,15 @@ const CiHelperController = function CiHelperController(
                         provider = predefinedProvider;
                     }
                 }
-                console.warn('>>>>>>>Should be selected provider');
                 handleProviderSelection(provider);
             }
             prepareLauncherControls();
-            console.log('launcherModel', vm.launcherRawModel);
-            console.log('resultModel', vm.launcherModel);
-            console.log('platformModel', vm.platformModel);
         }, 0);
-
-
     }
 
     function isNumeric(value) {
         return !isNaN(value - parseFloat(value));
     }
-
-    function isString(value) {
-        return typeof value === 'string' || value instanceof String;
-    }
-
-    $scope.getType = function (value) {
-        if (angular.isArray(value)) {
-            return 'array';
-        } else if (typeof value === 'boolean') {
-            return 'boolean';
-        } else if (isNumeric(value)) {
-            return 'int';
-        } else if (isString(value)) {
-            return 'string';
-        }
-        return 'none';
-    };
 
     function getControlType(value) {
         if (Array.isArray(value)) {
@@ -322,18 +298,6 @@ const CiHelperController = function CiHelperController(
 
         return 'text';
     }
-
-    $scope.getElement = function (item) {
-        var result;
-        if (angular.isArray(item)) {
-            result = 'select';
-        } else if (item === true || item === false) {
-            result = 'checkbox';
-        } else {
-            result = 'input';
-        }
-        return result;
-    };
 
     $scope.addTemplate = function () {
         vm.cardNumber = 2;
@@ -460,6 +424,7 @@ const CiHelperController = function CiHelperController(
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
         //do nothing if clicked on active launcher
         if (vm.activeLauncher?.id === launcher.id) { return; }
+
         highlightLauncher(launcher.id);
         vm.activeLauncher = angular.copy(launcher);
         $scope.needServer = false;
@@ -470,7 +435,6 @@ const CiHelperController = function CiHelperController(
         }
     };
 
-    //TODO: restore platform controls using 'uiInternal' param key
     function chooseSavedLauncherConfig(config) {
         if (!config || vm.activeLauncher.id === config.id) { return; }
         vm.activeLauncher.parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
@@ -724,7 +688,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.scanRepository = function (launcherScan, rescan) {
         if (launcherScan && launcherScan.branch && $scope.scmAccount.id) {
-            saveLauchersPreferencesForRescan();
+            saveLaunchersPreferencesForRescan();
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !!rescan;
@@ -1072,17 +1036,15 @@ const CiHelperController = function CiHelperController(
         const resultModel = { ...providerModel, ...vm.launcherModel };
 
         launcher.model = JSON.stringify(resultModel, null, 2);
-        console.log(resultModel);
-        return false;
-        // LauncherService.buildLauncher(launcher, providerId)
-        //     .then(function (response) {
-        //         if (response.success) {
-        //             messageService.success("Job is in progress");
-        //             $scope.hide();
-        //         } else {
-        //             messageService.error(response.message);
-        //         }
-        //     });
+        LauncherService.buildLauncher(launcher, providerId)
+            .then(function (response) {
+                if (response.success) {
+                    messageService.success("Job is in progress");
+                    $scope.hide();
+                } else {
+                    messageService.error(response.message);
+                }
+            });
     };
 
     function appendLauncher(launcher) {
@@ -1117,7 +1079,7 @@ const CiHelperController = function CiHelperController(
                 //remove all launchers of current scm account, except of defaults ones
                 if (Array.isArray($scope.scmAccount.launchers) && $scope.scmAccount.launchers.length) {
                     vm.launchers = vm.launchers.filter(launcher => {
-                        //skip default Zafira's demo launchers to keep them in data collection
+                        //skip default Zebrunner's demo launchers to keep them in data collection
                         if (launcher.job && launcher.job.name === 'launcher') {
                             return true;
                         }
@@ -1224,6 +1186,7 @@ const CiHelperController = function CiHelperController(
     function initPlatforms(data) {
         if (!data || !data.rootKey) { return; }
 
+        let preselectedPlatform;
         // keep link to the raw config
         vm.platformsConfig = data;
         // extract platforms from config
@@ -1231,25 +1194,27 @@ const CiHelperController = function CiHelperController(
             //any platform can be disabled in the config using 'disabled' field
             .filter(platform => !platform.disabled);
 
+        // if it is a launcher's config we have to select it's value instead
+        if (vm.activeLauncher.hasOwnProperty('parentLauncherId') && vm.launcherRawModel.hasOwnProperty(`uiInternal.${vm.platformsConfig.rootKey}`)) {
+            preselectedPlatform = vm.platforms.find(platform => {
+                return platform.value === vm.launcherRawModel[`uiInternal.${vm.platformsConfig.rootKey}`];
+            });
+        }
         // if selected launcher has defined type, select first platform with the same type ('job' field)
-        // TODO: if it is a launcher's config we have to select it's value instead
-        if (vm.activeLauncher.type) {
+        else if (vm.activeLauncher.type) {
             // if type has '-web' postfix it should be used as 'web'
             const type = (/-web$/i).test(vm.activeLauncher.type) ? 'web' : vm.activeLauncher.type;
-            const isPreselectedPlatform =  vm.platforms.some(platform => {
-                if (Array.isArray(platform.job) && platform.job.includes(type)) {
-                    vm.platformModel[vm.platformsConfig.rootKey] = platform;
-                    onPlatformSelect();
 
-                    return true;
-                }
-
-                return false;
+            preselectedPlatform =  vm.platforms.find(platform => {
+                return Array.isArray(platform.job) && platform.job.includes(type);
             });
+        }
 
-            if (!isPreselectedPlatform) {
-                checkForUnmatchedCapabilities();
-            }
+        if (preselectedPlatform) {
+            vm.platformModel[vm.platformsConfig.rootKey] = preselectedPlatform;
+            onPlatformSelect();
+        } else {
+            checkForUnmatchedCapabilities();
         }
     }
 
@@ -1257,8 +1222,6 @@ const CiHelperController = function CiHelperController(
      * Resets models and (re)builds controls
      */
     function onPlatformSelect() {
-        //we need to reset models because $scope.jsonModel can be modified by platform selection
-        // applyBuilder(vm.activeLauncher);
         clearPlatformControlsData();
         resetPlatformModel(vm.platformModel[vm.platformsConfig.rootKey]);
         if (vm.platformModel[vm.platformsConfig.rootKey]?.child) {
@@ -1328,9 +1291,7 @@ const CiHelperController = function CiHelperController(
 
     function onPlatformControlSelect(control) {
         if (!control) { return; }
-        //we need to reset models because $scope.jsonModel can be modified by platform controls selection
-        // applyBuilder(vm.activeLauncher);
-        // useLaunchersPlatformIfExists();
+
         const parentItem = vm.platformModel[control.key];
         const versionsData = parentItem.versions ? parentItem : control.data.versions ? control.data : undefined;
 
@@ -1355,17 +1316,15 @@ const CiHelperController = function CiHelperController(
         //and remove that property from launcher model to prevent duplication
         // TODO: we are searching existing value and not expand if absent
         if (vm.launcherRawModel[childControl.key]) {
-            if (typeof vm.launcherRawModel[childControl.key] === 'string') { //TODO convert to this type any value except array
-                defaultItem = childControl.items.find((item) => {
-                    return item.value === vm.launcherRawModel[childControl.key];
-                });
-            } else if (Array.isArray(vm.launcherRawModel[childControl.key])) {
+            if (Array.isArray(vm.launcherRawModel[childControl.key])) {
                 defaultItem = childControl.items.find((item) => {
                     return vm.launcherRawModel[childControl.key].includes(item.value);
                 });
+            } else {
+                defaultItem = childControl.items.find((item) => {
+                    return item.value === vm.launcherRawModel[childControl.key];
+                });
             }
-
-            // Reflect.deleteProperty($scope.jsonModel, childControl.key);
         }
         //select by job (launcher type)
         if (!defaultItem && vm.activeLauncher.type) {
@@ -1457,7 +1416,7 @@ const CiHelperController = function CiHelperController(
                 // handle case when launcher has platform param: we need to use its value
                 if (
                     key === vm.platformsConfig.rootKey &&
-                    vm.launcherModel.hasOwnProperty(key) &&
+                    vm.launcherRawModel.hasOwnProperty(key) &&
                     vm.launcherRawModel[key] !== vm.platformModel[key].value
                 ) {
                     accum[key] = vm.launcherRawModel[key];
@@ -1575,7 +1534,6 @@ const CiHelperController = function CiHelperController(
      * clears platforms data and related model and controls
      */
     function clearPlatforms() {
-        // applyBuilder(vm.activeLauncher);
         resetPlatformModel();
         vm.platforms = [];
         vm.platformsConfig = null;
@@ -1598,16 +1556,6 @@ const CiHelperController = function CiHelperController(
 
         if (platform) {
             vm.platformModel[vm.platformsConfig.rootKey] = platform;
-            // useLaunchersPlatformIfExists();
-        }
-    }
-
-
-    function useLaunchersPlatformIfExists() {
-        // if launcher has appropriate param we need to use this value
-        // TODO: move this on extraction action?
-        if (vm.launcherRawModel && vm.launcherRawModel[vm.platformsConfig.rootKey]) {
-            vm.platformModel[vm.platformsConfig.rootKey].value = getControlDefaultValue(vm.platformsConfig.rootKey);
         }
     }
 
