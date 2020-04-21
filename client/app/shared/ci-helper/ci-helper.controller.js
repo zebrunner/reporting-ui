@@ -713,7 +713,7 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.scanRepository = function (launcherScan, rescan) {
-        if (!getCurrentServer.connected) {
+        if (!getCurrentServer?.connected) {
             vm.showCIErrorPage();
             return false;
         }
@@ -1070,7 +1070,7 @@ const CiHelperController = function CiHelperController(
         // merge launcher and provider models here
         const resultModel = { ...providerModel, ...vm.launcherModel };
 
-        launcher.model = resultModel;
+        launcher.model = JSON.stringify(resultModel, null, 2);
         LauncherService.buildLauncher(launcher, providerId).then(function (rs) {
             if (rs.success) {
                 messageService.success("Job is in progress");
