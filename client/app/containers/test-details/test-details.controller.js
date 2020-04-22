@@ -110,6 +110,7 @@ const testDetailsController = function testDetailsController(
                 mobileIconClass: 'fa-times-circle'
             },
         ],
+        isNotificationAvailable: false,
 
         get isMobile() { return $mdMedia('xs'); },
         get isTablet() { return !$mdMedia('gt-md'); },
@@ -162,6 +163,7 @@ const testDetailsController = function testDetailsController(
         initWebsocket();
         initTests();
         initJobMetadata();
+        getNotificationAvailability();
         bindEvents();
         vm.testRun.downloadArtifacts = downloadArtifacts;
     }
@@ -1132,6 +1134,11 @@ const testDetailsController = function testDetailsController(
         vm.isAllTestsSelected = false;
         onAllTestsSelect();
         onTestSelect();
+    }
+
+    function getNotificationAvailability() {
+        return toolsService.getNotificationToolConnection()
+            .then(state => vm.isNotificationAvailable = state);
     }
 };
 
