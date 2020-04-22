@@ -81,6 +81,9 @@ const CiHelperController = function CiHelperController(
         updateLauncherConfig,
         deleteLauncherConfig,
         getWebHook,
+        showCIErrorPage,
+        hideCIErrorPage,
+        getCurrentServer,
         userHasAnyPermission: authService.userHasAnyPermission,
 
         get isMobile() { return $mdMedia('xs'); },
@@ -376,6 +379,16 @@ const CiHelperController = function CiHelperController(
                 $scope.launcherScan.branch = rs.data;
             }
         });
+    }
+
+    function showCIErrorPage() {
+        vm.previousPage = vm.cardNumber;
+        vm.cardNumber = 4;
+    }
+
+    function hideCIErrorPage() {
+        vm.cardNumber = vm.previousPage;
+        vm.previousPage = null;
     }
 
     $scope.onFilterSearchChange = function (value) {
@@ -690,6 +703,13 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.scanRepository = function (launcherScan, rescan) {
+        const currentServer = getCurrentServer();
+        
+        if (!currentServer?.connected) {
+            vm.showCIErrorPage();
+            return false;
+        }
+
         if (launcherScan && launcherScan.branch && $scope.scmAccount.id) {
             saveLaunchersPreferencesForRescan();
             initWebsocket();
@@ -710,6 +730,10 @@ const CiHelperController = function CiHelperController(
                 });
         }
     };
+
+    function getCurrentServer() {
+        return $scope.currentServerId ? $scope.servers.find((server) => server.id === $scope.currentServerId) : $scope.servers.find((server) => server.default === true);
+    }
 
     function getBuildNumber(queueItemUrl) {
         LauncherService.getBuildNumber(queueItemUrl).then(function (rs) {
@@ -1045,7 +1069,7 @@ const CiHelperController = function CiHelperController(
                     messageService.success("Job is in progress");
                     $scope.hide();
                 } else {
-                    messageService.error(response.message);
+                    vm.showCIErrorPage();
                 }
             });
     };
@@ -1639,7 +1663,7 @@ const CiHelperController = function CiHelperController(
                             vm.integrations = res.data || [];
 
                             const integrationNames = vm.integrations
-                                .filter(integration => integration.enabled)
+                                .filter(integration => integration.enabled && integration.connected)
                                 .map(item => item.name.toLowerCase());
 
                             vm.providers = providers
@@ -1776,6 +1800,8 @@ const CiHelperController = function CiHelperController(
                 return vm.cardNumber === 3;
             case 'welcome':
                 return vm.cardNumber === 0;
+            case 'ci-error':
+                return vm.cardNumber === 4;
             case 'waiting':
                 return $scope.launcherLoaderStatus && ($scope.launcherLoaderStatus.started || $scope.launcherLoaderStatus.finished);
             case 'add-repo':
