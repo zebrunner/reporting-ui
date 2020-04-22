@@ -385,7 +385,7 @@ const CiHelperController = function CiHelperController(
 
     function showCIErrorPage() {
         vm.previousPage = vm.cardNumber;
-        vm.cardNumber = 4;
+        vm.cardNumber = 5;
     }
 
     function hideCIErrorPage() {
@@ -1797,7 +1797,7 @@ const CiHelperController = function CiHelperController(
             case 'welcome':
                 return vm.cardNumber === 0;
             case 'ci-error':
-                return vm.cardNumber === 4;
+                return vm.cardNumber === 5;
             case 'waiting':
                 return $scope.launcherLoaderStatus && ($scope.launcherLoaderStatus.started || $scope.launcherLoaderStatus.finished);
             case 'add-repo':
