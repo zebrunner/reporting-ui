@@ -439,7 +439,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
         //do nothing if clicked on already selected launcher
-        if (vm.activeLauncher === launcher) { return; }
+        if (launcher.isActive) { return; }
 
         highlightLauncher(launcher);
         vm.activeLauncher = angular.copy(launcher);
@@ -452,7 +452,7 @@ const CiHelperController = function CiHelperController(
     };
 
     function chooseSavedLauncherConfig(config) {
-        if (!config || vm.activeLauncher.id === config.id) { return; }
+        if (!config || config.isActive) { return; }
         const parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
 
         vm.activeLauncher = {
