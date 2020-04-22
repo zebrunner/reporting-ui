@@ -2865,6 +2865,10 @@ $light-inprogress: #68c9fd;
                     width: calc(100% - 224px);
                 }
             }
+
+            & ._less-width-button {
+                min-width: 50px;
+            }
         }
 
         &_builder {

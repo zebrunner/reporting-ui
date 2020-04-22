@@ -451,7 +451,7 @@ const CiHelperController = function CiHelperController(
         }
     };
 
-    function chooseSavedLauncherConfig(config) {
+    function chooseSavedLauncherConfig(config, skipBuilderApply) {
         if (!config || config.isActive) { return; }
         const parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
 
@@ -465,10 +465,10 @@ const CiHelperController = function CiHelperController(
         };
         vm.activeLauncher.model = vm.activeLauncher.params;
 
-        vm.cardNumber = 3;
-
         highlightLauncher(config);
-        applyBuilder(vm.activeLauncher);
+        if (!skipBuilderApply) {
+            switchToLauncherPreview(vm.activeLauncher);
+        }
     }
 
     function updateLauncherConfig(config) {
