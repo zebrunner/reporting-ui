@@ -703,7 +703,9 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.scanRepository = function (launcherScan, rescan) {
-        if (!getCurrentServer?.connected) {
+        const currentServer = getCurrentServer();
+        
+        if (!currentServer?.connected) {
             vm.showCIErrorPage();
             return false;
         }
