@@ -323,11 +323,13 @@ const CiHelperController = function CiHelperController(
         }
     };
 
-    $scope.highlightFolder = function (id) {
-        clearPrevLauncherElement();
-        clearPrevFolderElement();
-        chooseFolderElement(id);
-    };
+    function highlightFolder(scmAccount) {
+        $timeout(() => {
+            clearPrevLauncherElement();
+            clearPrevFolderElement();
+            chooseFolderElement(scmAccount);
+        }, 0);
+    }
 
     $scope.manageFolder = function (scmAccount, isCreating) {
         vm.creatingLauncher = !!isCreating;
@@ -338,7 +340,7 @@ const CiHelperController = function CiHelperController(
             getScmAccountDefaultBranchName(scmAccount.id);
         }
         resetLauncher();
-        $scope.highlightFolder(scmAccount.id);
+        highlightFolder(scmAccount);
         vm.cardNumber = 2;
         vm.activeLauncher.scmAccountType = scmAccount;
     };
@@ -436,10 +438,10 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
-        //do nothing if clicked on active launcher
-        if (vm.activeLauncher?.id === launcher.id) { return; }
+        //do nothing if clicked on already selected launcher
+        if (launcher.isActive) { return; }
 
-        highlightLauncher(launcher.id);
+        highlightLauncher(launcher);
         vm.activeLauncher = angular.copy(launcher);
         $scope.needServer = false;
         $scope.currentServerId = null;
@@ -450,7 +452,7 @@ const CiHelperController = function CiHelperController(
     };
 
     function chooseSavedLauncherConfig(config) {
-        if (!config || vm.activeLauncher.id === config.id) { return; }
+        if (!config || config.isActive) { return; }
         const parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
 
         vm.activeLauncher = {
@@ -465,7 +467,7 @@ const CiHelperController = function CiHelperController(
 
         vm.cardNumber = 3;
 
-        highlightLauncher(config.id);
+        highlightLauncher(config);
         applyBuilder(vm.activeLauncher);
     }
 
@@ -518,42 +520,36 @@ const CiHelperController = function CiHelperController(
         applyBuilder(launcher);
     };
 
-    // TODO: move this logic to the template
-    function highlightLauncher(launcherId) {
-        $timeout(function () {
+    function highlightLauncher(launcher) {
+        $timeout(() => {
             clearPrevLauncherElement();
             clearPrevFolderElement();
-            chooseLauncherElement(launcherId);
-        }, 0, false);
+            chooseLauncherElement(launcher);
+        }, 0);
     }
 
-    function chooseLauncherElement(launcherId) {
-        const chosenLauncherClass = 'chosen-launcher';
-        const launcherElement = angular.element('.launcher-' + launcherId);
-        prevLauncher = launcherElement;
-        launcherElement.addClass(chosenLauncherClass)
+    function chooseLauncherElement(launcher) {
+        launcher.isActive = true;
+        prevLauncher = launcher;
     }
 
-    function chooseFolderElement(folderId) {
-        const chosenFolderClass = 'chosen-launcher';
-        const folderElement = angular.element('.folder-container-' + folderId + ' .folder-container_folder_name');
-        prevFolder = folderElement;
-        folderElement.addClass(chosenFolderClass)
-    };
+    function chooseFolderElement(folder) {
+        folder.isActive = true;
+        prevFolder = folder;
+    }
 
     function clearPrevLauncherElement() {
-        const chosenLauncherClass = 'chosen-launcher';
         if (prevLauncher) {
-            prevLauncher.removeClass(chosenLauncherClass);
+            prevLauncher.isActive = false;
         }
-    };
+    }
+
 
     function clearPrevFolderElement() {
-        const chosenFolderClass = 'chosen-launcher';
         if (prevFolder) {
-            prevFolder.removeClass(chosenFolderClass);
+            prevFolder.isActive = false;
         }
-    };
+    }
 
     $scope.chooseLauncherPhone = function () {
         vm.cardNumber = 3;
@@ -704,7 +700,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.scanRepository = function (launcherScan, rescan) {
         const currentServer = getCurrentServer();
-        
+
         if (!currentServer?.connected) {
             vm.showCIErrorPage();
             return false;
