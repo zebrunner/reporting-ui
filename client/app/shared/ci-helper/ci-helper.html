@@ -51,7 +51,7 @@
                                 <i ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
                                 <ul class="folder-container_item_list" ng-if="$ctrl.activeLauncherId === launcher.id">
                                     <li class="folder-container_item_list_item hide-phone launcher-{{preset.id}}"
-                                        ng-click="$ctrl.chooseSavedLauncherConfig(preset, false); $event.stopPropagation();"
+                                        ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();"
                                         ng-class="{'chosen-launcher': preset.isActive}"
                                         ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
                                         <span>{{preset.name}}</span>
