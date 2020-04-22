@@ -22,11 +22,16 @@
                 </md-input-container>
             </div>
             <div class="ci-runner-container_helper_section">
-                <ul class="folder-container folder-container-{{scmAccount.id}}" ng-repeat="scmAccount in scmAccounts | orderBy: 'repositoryName' track by scmAccount.id">
+                <ul class="folder-container folder-container-{{scmAccount.id}}"
+                    ng-repeat="scmAccount in scmAccounts | orderBy: 'repositoryName' track by scmAccount.id">
                     <li class="folder-container_folder" ng-class="{ '_with-buttons': $ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS']) }">
                         <i class="material-icons folder-container_folder_icon hide-phone" ng-click="switchFolder($event)">arrow_drop_down</i>
-                        <div class="folder-container_folder_name hide-phone" ng-click="switchFolder($event)">{{scmAccount.repositoryName}}</div>
-                        <div class="folder-container_folder_name show-phone" ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
+                        <div class="folder-container_folder_name hide-phone"
+                            ng-class="{'chosen-launcher': scmAccount.isActive}"
+                            ng-click="switchFolder($event)">{{scmAccount.repositoryName}}</div>
+                        <div class="folder-container_folder_name show-phone"
+                            ng-class="{'chosen-launcher': scmAccount.isActive}"
+                            ng-click="switchFolderMobile($event, scmAccount.id)">{{scmAccount.repositoryName}}</div>
                         <div class="folder-container_folder-buttons hide-phone" ng-if="$ctrl.userHasAnyPermission(['MODIFY_LAUNCHERS'])">
                             <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount, true)">add_circle_outline</i>
                             <i class="material-icons folder-container_folder_icon_settings" ng-click="manageFolder(scmAccount)">settings</i>
@@ -35,14 +40,20 @@
                     <li class="folder-container_item">
                         <ul class="folder-container_item_list">
                             <li class="folder-container_item_list_item hide-phone launcher-{{launcher.id}}"
-                                ng-class="{'_no-padding-bottom': $ctrl.activeLauncherId === launcher.id && launcher.presets.length}"
+                                ng-class="{
+                                    '_no-padding-bottom': $ctrl.activeLauncherId === launcher.id && launcher.presets.length,
+                                    'chosen-launcher': launcher.isActive,
+                                }"
                                 ng-click="chooseLauncher(launcher)"
                                 ng-repeat="launcher in scmAccount.launchers | orderBy: ['!preference.favorite', 'name'] | filter: filerSc track by launcher.id">
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 <span>{{launcher.name}}</span>
                                 <i ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
                                 <ul class="folder-container_item_list" ng-if="$ctrl.activeLauncherId === launcher.id">
-                                    <li class="folder-container_item_list_item hide-phone launcher-{{preset.id}}" ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();" ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
+                                    <li class="folder-container_item_list_item hide-phone launcher-{{preset.id}}"
+                                        ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();"
+                                        ng-class="{'chosen-launcher': preset.isActive}"
+                                        ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
                                         <span>{{preset.name}}</span>
                                     </li>
                                 </ul>
