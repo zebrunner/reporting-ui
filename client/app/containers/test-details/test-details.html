@@ -19,7 +19,10 @@
     </zf-sub-header>
     <div class="page">
         <div class="p-tests-run-details__sticky-header test-details__header">
-            <test-run-card test-run="$ctrl.testRun" back="$ctrl.onBackClick()" single-mode="true"></test-run-card>
+            <test-run-card is-notification-available="$ctrl.isNotificationAvailable"
+                test-run="$ctrl.testRun"
+                back="$ctrl.onBackClick()"
+                single-mode="true"></test-run-card>
             <div data-ng-hide="!$ctrl.testRun.tests"
                 class="test-details__header-actions-wrapper"
                 ng-if="!$ctrl.isMobile">

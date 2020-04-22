@@ -31,9 +31,10 @@ const testRunCardController = function testRunCardController(
             testRun: null,
             singleMode: false,
             singleWholeInfo: false,
-            showNotifyInSlackOption: false,
+            showNotificationOption: false,
             showBuildNowOption: false,
             showDeleteTestRunOption: false,
+            isNotificationAvailable: false,
 
             addToSelectedTestRuns,
             showDetails: showDetails,
@@ -83,7 +84,7 @@ const testRunCardController = function testRunCardController(
         }
 
         function initMenuRights() {
-            vm.showNotifyInSlackOption = (vm.isToolConnected('NOTIFICATION_SERVICE') && vm.testRun.channels) && vm.testRun.reviewed;
+            vm.showNotificationOption = (vm.isNotificationAvailable && vm.testRun.channels) && vm.testRun.reviewed;
             vm.showBuildNowOption = vm.isToolConnected('JENKINS');
             vm.showDeleteTestRunOption = true;
         }

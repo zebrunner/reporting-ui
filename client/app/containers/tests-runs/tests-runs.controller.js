@@ -45,6 +45,7 @@ const testsRunsController = function testsRunsController(
         scrollTicking: false,
         switcherState: 'runs',
         isUserParamSaving: false,
+        isNotificationAvailable: false,
 
         clearTestRunsSelection,
         isTestRunsEmpty: isTestRunsEmpty,
@@ -84,6 +85,7 @@ const testsRunsController = function testsRunsController(
         vm.currentPage = vm.resolvedTestRuns.page;
 
         initLaunchers();
+        getNotificationAvailability();
         setTimersOnDestroyingLaunchers();
         readStoredParams();
         initWebsocket();
@@ -755,6 +757,11 @@ const testsRunsController = function testsRunsController(
                 vm.scrollTicking = false;
             }, 300);
         }
+    }
+
+    function getNotificationAvailability() {
+        return toolsService.getNotificationToolConnection()
+            .then(state => vm.isNotificationAvailable = state);
     }
 };
 
