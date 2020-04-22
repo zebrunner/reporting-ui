@@ -154,8 +154,8 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS']) && $ctrl.showNotifyInSlackOption">
-                            <md-button name="notifyInSlack" data-ng-click="$ctrl.notifyInSlack()">
-                                Notify in Slack
+                            <md-button name="sendNotification" data-ng-click="$ctrl.sendNotification()">
+                                Send notification
                             </md-button>
                         </md-menu-item>
                         <md-divider ng-if="$ctrl.isToolConnected('JENKINS')"></md-divider>
@@ -263,8 +263,8 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS']) && $ctrl.showNotifyInSlackOption">
-                            <md-button name="notifyInSlack" data-ng-click="$ctrl.notifyInSlack()">
-                                Notify in Slack
+                            <md-button name="sendNotification" data-ng-click="$ctrl.sendNotification()">
+                                Send notification
                             </md-button>
                         </md-menu-item>
                         <md-divider ng-if="$ctrl.isToolConnected('JENKINS')"></md-divider>

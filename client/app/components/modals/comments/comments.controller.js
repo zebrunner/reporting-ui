@@ -3,7 +3,7 @@
 
     angular.module('app').controller('CommentsController', CommentsController);
 
-    function CommentsController($scope, $mdDialog, TestRunService, SlackService, testRun, toolsService, messageService) {
+    function CommentsController($scope, $mdDialog, TestRunService, notificationService, testRun, toolsService, messageService) {
         'ngInject';
 
         $scope.title = testRun.testSuite.name;
@@ -18,9 +18,9 @@
                     $scope.testRun.reviewed = true;
                     $scope.hide($scope.testRun);
                     messageService.success('Test run #' + $scope.testRun.id + ' marked as reviewed');
-                    if (toolsService.isToolConnected('NOTIFICATION_SERVICE') && $scope.testRun.slackChannels) {
-                        if (confirm("Would you like to post latest test run status to slack?")) {
-                            SlackService.triggerReviewNotif($scope.testRun.id);
+                    if (toolsService.isToolConnected('NOTIFICATION_SERVICE') && $scope.testRun.channels) {
+                        if (confirm("Would you like to post latest test run status to notificationService?")) {
+                            notificationService.triggerReviewNotif($scope.testRun.id);
                         }
                     }
                 } else {

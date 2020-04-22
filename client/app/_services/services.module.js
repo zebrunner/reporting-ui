@@ -48,7 +48,7 @@ require('./utils/mapper.util');
 require('./scm.service');
 require('./setting.provider');
 require('./setting.service');
-require('./slack.service');
+require('./notification.service');
 require('./test.service');
 require('./testcase.service');
 require('./testrun.service');
