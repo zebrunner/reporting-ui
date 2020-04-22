@@ -436,8 +436,8 @@ const CiHelperController = function CiHelperController(
     };
 
     $scope.chooseLauncher = function (launcher, skipBuilderApply) {
-        //do nothing if clicked on active launcher
-        if (vm.activeLauncher?.id === launcher.id) { return; }
+        //do nothing if clicked on already selected launcher
+        if (vm.activeLauncher === launcher) { return; }
 
         highlightLauncher(launcher.id);
         vm.activeLauncher = angular.copy(launcher);
@@ -704,7 +704,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.scanRepository = function (launcherScan, rescan) {
         const currentServer = getCurrentServer();
-        
+
         if (!currentServer?.connected) {
             vm.showCIErrorPage();
             return false;
