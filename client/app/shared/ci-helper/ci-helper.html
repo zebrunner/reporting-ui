@@ -51,7 +51,7 @@
                                 <i ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
                                 <ul class="folder-container_item_list" ng-if="$ctrl.activeLauncherId === launcher.id">
                                     <li class="folder-container_item_list_item hide-phone launcher-{{preset.id}}"
-                                        ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();"
+                                        ng-click="$ctrl.chooseSavedLauncherConfig(preset, false); $event.stopPropagation();"
                                         ng-class="{'chosen-launcher': preset.isActive}"
                                         ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
                                         <span>{{preset.name}}</span>
@@ -59,13 +59,19 @@
                                 </ul>
                             </li>
                             <li class="folder-container_item_list_item show-phone launcher-{{launcher.id}}"
-                                ng-class="{'_no-padding-bottom': $ctrl.activeLauncherId === launcher.id && launcher.presets.length}"
+                                ng-class="{
+                                    '_no-padding-bottom': $ctrl.activeLauncherId === launcher.id && launcher.presets.length,
+                                    'chosen-launcher': launcher.isActive || $ctrl.activeLauncherId === launcher.id,
+                                }"
                                 ng-click="selectLauncher(launcher)" ng-repeat="launcher in scmAccount.launchers | orderBy: ['!preference.favorite', 'name'] | filter: filerSc track by launcher.id">
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 <span>{{launcher.name}}</span>
                                 <i ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
                                 <ul class="folder-container_item_list" ng-if="$ctrl.activeLauncherId === launcher.id">
-                                    <li class="folder-container_item_list_item show-phone launcher-{{preset.id}}" ng-click="$ctrl.chooseSavedLauncherConfig(preset); $event.stopPropagation();" ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
+                                    <li class="folder-container_item_list_item show-phone launcher-{{preset.id}}"
+                                        ng-class="{'chosen-launcher': preset.isActive}"
+                                        ng-click="$ctrl.chooseSavedLauncherConfig(preset, true); $event.stopPropagation();"
+                                        ng-repeat="preset in launcher.presets | orderBy: ['!preference.favorite', 'name']">
                                         <span>{{preset.name}}</span>
                                     </li>
                                 </ul>
@@ -434,7 +440,7 @@
                 <md-button ng-click="cancelLauncher();" class="md-raised" ng-if="$ctrl.cardNumber === 2">
                     Cancel
                 </md-button>
-                <md-button class="md-raised" ng-click="navigateBack();" ng-if="$ctrl.cardNumber === 3 && $ctrl.isMobile">
+                <md-button class="md-raised _less-width-button" ng-click="navigateBack();" ng-if="$ctrl.cardNumber === 3 && $ctrl.isMobile">
                     Back
                 </md-button>
                 <md-button class="md-raised" ng-click="$ctrl.prepareLauncherConfigForSave();" ng-if="($ctrl.cardNumber === 2 || $ctrl.cardNumber === 3) && !$ctrl.isMobile && !$ctrl.activeLauncher.isSavedConfig">
