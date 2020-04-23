@@ -3208,6 +3208,12 @@ $light-inprogress: #68c9fd;
                                 padding-bottom: 0;
                             }
 
+                            &._subitem {
+                                @media(max-width: $md-screen-phone) {
+                                    width: calc(100vw - 20px);
+                                }
+                            }
+
                             @media(max-width: $md-screen-phone) {
                                 font-size: 16px;
                                 line-height: 20px;
