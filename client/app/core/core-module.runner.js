@@ -22,7 +22,16 @@ export function CoreModuleRunner(
      */
     // TODO: Temporarily disabled due errors
     // appHealthService.checkServerStatus()
-    $q.resolve()
+    /**
+     * Get tenant info to detect if it is a cloud version of reporting (it's could when multitenant is true).
+     * TODO: Should be run after health checking
+     */
+    authService.getTenant()
+        .then(response => {
+            if (response.success) {
+                authService.isMultitenant = response.data?.multitenant;
+            }
+        })
         .then(() => {
             appHealthService.changeHealthyStatus(true);
 

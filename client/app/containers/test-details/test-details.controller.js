@@ -110,6 +110,7 @@ const testDetailsController = function testDetailsController(
                 mobileIconClass: 'fa-times-circle'
             },
         ],
+        isNotificationAvailable: false,
 
         get isMobile() { return $mdMedia('xs'); },
         get isTablet() { return !$mdMedia('gt-md'); },
@@ -147,7 +148,6 @@ const testDetailsController = function testDetailsController(
         showCiHelperDialog,
         showDetailsDialog,
         showFilterDialog,
-        toggleAllTestsSelection,
         toggleGroupingFilter,
         userHasAnyPermission: authService.userHasAnyPermission,
     };
@@ -163,6 +163,7 @@ const testDetailsController = function testDetailsController(
         initWebsocket();
         initTests();
         initJobMetadata();
+        getNotificationAvailability();
         bindEvents();
         vm.testRun.downloadArtifacts = downloadArtifacts;
     }
@@ -799,6 +800,8 @@ const testDetailsController = function testDetailsController(
             return filters.every(filter => isFitsByFilter(test[filter.field], filter.values)) && skipQueued;
         });
 
+        //reset tests selection
+        clearTestsSelection();
         shouldResetPagination && resetPagination();
         getOrderedTests(filteredData);
     }
@@ -1119,13 +1122,7 @@ const testDetailsController = function testDetailsController(
 
     function onTestSelect() {
         vm.selectedTestsCount = vm.testsToDisplay.filter(test => test.selected).length;
-
-        // handle case when all tests are (de)selected manually one by one
-        if (vm.selectedTestsCount === vm.testsToDisplay.length && !vm.isAllTestsSelected) {
-            vm.isAllTestsSelected = true;
-        } else if (vm.selectedTestsCount !== vm.testsToDisplay.length && vm.isAllTestsSelected) {
-            vm.isAllTestsSelected = false;
-        }
+        vm.isAllTestsSelected = !!vm.testsToDisplay.length && vm.selectedTestsCount === vm.testsToDisplay.length;
     }
 
     function onAllTestsSelect() {
@@ -1133,15 +1130,15 @@ const testDetailsController = function testDetailsController(
         onTestSelect();
     }
 
-    function toggleAllTestsSelection() {
-        vm.isAllTestsSelected = !vm.isAllTestsSelected;
-        onAllTestsSelect();
-    }
-
     function clearTestsSelection() {
         vm.isAllTestsSelected = false;
         onAllTestsSelect();
         onTestSelect();
+    }
+
+    function getNotificationAvailability() {
+        return toolsService.getNotificationToolConnection()
+            .then(state => vm.isNotificationAvailable = state);
     }
 };
 

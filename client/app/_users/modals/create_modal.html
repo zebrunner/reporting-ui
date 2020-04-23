@@ -42,7 +42,7 @@
                             required
                         />
                         <div ng-messages="user_form.firstName.$error">
-                            <div ng-repeat="validation in UtilService.validations.name" ng-message="{{validation.name}}">
+                            <div ng-repeat="validation in ::UtilService.validations.name.concat(UtilService.validations.firstName)" ng-message="{{validation.name}}">
                                 <span ng-if="validation.additional">
                                     <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
                                     {{ validation.message }}
@@ -65,7 +65,7 @@
                             required
                         />
                         <div ng-messages="user_form.lastName.$error">
-                            <div ng-repeat="validation in UtilService.validations.name" ng-message="{{validation.name}}">
+                            <div ng-repeat="validation in ::UtilService.validations.name.concat(UtilService.validations.lastName)" ng-message="{{validation.name}}">
                                 <span ng-if="validation.additional">
                                     <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
                                     {{ validation.message }}
@@ -88,10 +88,18 @@
                 <div layout layout-sm="column">
                     <md-input-container nonautocomplete flex>
                         <label>Password</label>
-                        <input id="password" type="password" ng-model="user.password" name="password" required
-                               ng-minlength="5" ng-maxlength="50" ng-pattern="/^[A-Za-z0-9_@!#&quot;\$%&'()*+,-.\/:;<>=\?@\[\]\\^_`{}|~]+$/" autocomplete="new-password"/>
+                        <input id="password"
+                            type="password"
+                            ng-model="user.password"
+                            name="password"
+                            ng-minlength="::UtilService.getValidationValue('password', 'minlength')"
+                            ng-maxlength="::UtilService.getValidationValue('password', 'maxlength')"
+                            ng-pattern="::UtilService.getValidationValue('password', 'pattern')"
+                            autocomplete="new-password"
+                            required
+                            />
                         <div ng-messages="user_form.password.$error">
-                            <div ng-repeat="validation in UtilService.validations.password" ng-message="{{validation.name}}">
+                            <div ng-repeat="validation in ::UtilService.validations.password" ng-message="{{validation.name}}">
                                 <span ng-if="validation.additional">
                                     <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
                                     {{ validation.message }}

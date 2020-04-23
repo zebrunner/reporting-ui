@@ -11,7 +11,7 @@ const testRunCardController = function testRunCardController(
     authService,
     DownloadService,
     messageService,
-    SlackService,
+    notificationService,
     TestRunService,
     testsRunsService,
     toolsService,
@@ -31,9 +31,10 @@ const testRunCardController = function testRunCardController(
             testRun: null,
             singleMode: false,
             singleWholeInfo: false,
-            showNotifyInSlackOption: false,
+            showNotificationOption: false,
             showBuildNowOption: false,
             showDeleteTestRunOption: false,
+            isNotificationAvailable: false,
 
             addToSelectedTestRuns,
             showDetails: showDetails,
@@ -44,7 +45,7 @@ const testRunCardController = function testRunCardController(
             showCommentsDialog: showCommentsDialog,
             sendAsEmail: sendAsEmail,
             exportTestRun: exportTestRun,
-            notifyInSlack: notifyInSlack,
+            sendNotification,
             buildNow: buildNow,
             abort: abort,
             rerun: rerun,
@@ -83,7 +84,7 @@ const testRunCardController = function testRunCardController(
         }
 
         function initMenuRights() {
-            vm.showNotifyInSlackOption = (vm.isToolConnected('SLACK') && vm.testRun.slackChannels) && vm.testRun.reviewed;
+            vm.showNotificationOption = (vm.isNotificationAvailable && vm.testRun.channels) && vm.testRun.reviewed;
             vm.showBuildNowOption = vm.isToolConnected('JENKINS');
             vm.showDeleteTestRunOption = true;
         }
@@ -130,6 +131,7 @@ const testRunCardController = function testRunCardController(
                 fullscreen: true,
                 locals: {
                     testRun: vm.testRun,
+                    isNotificationAvailable: vm.isNotificationAvailable,
                 }
             }).then(function(answer) {
                 vm.testRun.reviewed = answer.reviewed;
@@ -181,8 +183,8 @@ const testRunCardController = function testRunCardController(
             }, 10000);
         }
 
-        function notifyInSlack() {
-            SlackService.triggerReviewNotif(vm.testRun.id);
+        function sendNotification() {
+            notificationService.triggerReviewNotif(vm.testRun.id);
         }
 
         function buildNow(event) {

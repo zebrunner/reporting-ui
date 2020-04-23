@@ -13,6 +13,7 @@ const authService = function authService(
 
     let authData = null;
     const service = {
+        isMultitenant: false,
         login,
         invite, // TODO: looks like unused, see invitationService
         forgotPassword,

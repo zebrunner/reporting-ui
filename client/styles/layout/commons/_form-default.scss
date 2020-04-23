@@ -216,27 +216,33 @@ md-select-menu[multiple] md-option.md-checkbox-enabled {
 }
 
 .zb-slim-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 24px;
-    min-height: 24px;
-    font-size: 0;
-    line-height: 1;
-    padding: 3px 8px;
-    color: $dark-coal-light-new;
-    border-radius: 12px;
-    border: 1px solid #e9e9e9;
-    background-color: white;
-    transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out;
-    position: relative;
-    margin-right: 12px;
-    min-width: 80px;
-
-    &._left-icon {
-        padding-left: 26px;
-        justify-content: flex-start;
+    &,
+    &.md-focused:not(.md-icon-button) {
+        &,
+        &:not([disabled]) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+            min-height: 24px;
+            font-size: 0;
+            line-height: 1;
+            padding: 3px 8px;
+            color: $dark-coal-light-new;
+            border-radius: 12px;
+            border: 1px solid #e9e9e9;
+            background-color: white;
+            transition: color .25s ease-in-out, background-color .25s ease-in-out, border-color .25s ease-in-out;
+            position: relative;
+            margin-right: 12px;
+            min-width: 80px;
+            &._left-icon {
+                padding-left: 26px;
+                justify-content: flex-start;
+            }
+        }
     }
+
     &._left-icon & {
         &__icon {
             position: absolute;

@@ -19,7 +19,10 @@
     </zf-sub-header>
     <div class="page">
         <div class="p-tests-run-details__sticky-header test-details__header">
-            <test-run-card test-run="$ctrl.testRun" back="$ctrl.onBackClick()" single-mode="true"></test-run-card>
+            <test-run-card is-notification-available="$ctrl.isNotificationAvailable"
+                test-run="$ctrl.testRun"
+                back="$ctrl.onBackClick()"
+                single-mode="true"></test-run-card>
             <div data-ng-hide="!$ctrl.testRun.tests"
                 class="test-details__header-actions-wrapper"
                 ng-if="!$ctrl.isMobile">
@@ -32,6 +35,7 @@
                                     aria-label="Select"
                                     ng-model="$ctrl.isAllTestsSelected"
                                     ng-change="$ctrl.onAllTestsSelect()"
+                                    ng-disabled="!$ctrl.testsToDisplay.length"
                                     ng-true-value="true"
                                     ng-false-value="false">
                                 </md-checkbox>
@@ -153,13 +157,6 @@
                     <md-tooltip md-direction="top">{{ fabBtn.text }}</md-tooltip>
                     <span class="fa {{ fabBtn.mobileIconClass }}" aria-hidden="true"></span>
                 </md-button>
-                <md-button id="bulkMarkAsPassedMobile"
-                    aria-label="menu"
-                    class="md-fab md-raised md-fab-sm"
-                    ng-click="$ctrl.toggleAllTestsSelection()">
-                    <md-tooltip md-direction="top">Select all</md-tooltip>
-                    <span class="fa fa-check-square" aria-hidden="true"></span>
-                </md-button>
             </md-fab-actions>
         </md-fab-speed-dial>
         <div class="row ui-section no-margin">
@@ -279,7 +276,8 @@
                                                         data-ng-if="tag.name === 'QTEST_TESTCASE_UUID' && $ctrl.qTest['QTEST_URL']">#{{::(tag.normalizedValue ? tag.normalizedValue : tag.value)}}</a>
                                                 </span>
                                         </div>
-                                        <div class="result_error {{test.status}} {{::main.theme}}" data-ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
+                                        <div class="test-info__message result_error {{test.status}} {{::main.theme}}"
+                                            ng-if="test.message && (test.status === 'FAILED' || test.status === 'SKIPPED' || test.status === 'ABORTED')">
                                             <div>
                                                 <show-more name="errorMsg" element-id="test.id" class="test-error" text="test.message" limit="100"></show-more>
                                             </div>

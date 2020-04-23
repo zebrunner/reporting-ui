@@ -3,30 +3,40 @@
 
     angular.module('app').controller('CommentsController', CommentsController);
 
-    function CommentsController($scope, $mdDialog, TestRunService, SlackService, testRun, toolsService, messageService) {
+    function CommentsController(
+        $mdDialog,
+        $scope,
+        isNotificationAvailable,
+        messageService,
+        notificationService,
+        testRun,
+        TestRunService,
+    ) {
         'ngInject';
 
         $scope.title = testRun.testSuite.name;
         $scope.testRun = angular.copy(testRun);
 
         $scope.markReviewed = function(){
-            var rq = {};
+            const params = {
+                comment: $scope.testRun.comments || '',
+            };
 
-            rq.comment = $scope.testRun.comments || '';
-            TestRunService.markTestRunAsReviewed($scope.testRun.id, rq).then(function(rs) {
-                if(rs.success) {
-                    $scope.testRun.reviewed = true;
-                    $scope.hide($scope.testRun);
-                    messageService.success('Test run #' + $scope.testRun.id + ' marked as reviewed');
-                    if (toolsService.isToolConnected('SLACK') && $scope.testRun.slackChannels) {
-                        if (confirm("Would you like to post latest test run status to slack?")) {
-                            SlackService.triggerReviewNotif($scope.testRun.id);
+            TestRunService.markTestRunAsReviewed($scope.testRun.id, params)
+                .then(rs => {
+                    if (rs.success) {
+                        $scope.testRun.reviewed = true;
+                        messageService.success('Test run #' + $scope.testRun.id + ' marked as reviewed');
+                        if (isNotificationAvailable && $scope.testRun.channels) {
+                            if (confirm('Would you like to post latest test run status to notificationService?')) {
+                                notificationService.triggerReviewNotif($scope.testRun.id);
+                            }
                         }
+                        $scope.hide($scope.testRun);
+                    } else {
+                        messageService.error(rs.message);
                     }
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
+                });
         };
         $scope.hide = function(testRun) {
             $mdDialog.hide(testRun);

@@ -558,6 +558,14 @@
                     params: {
                         sessionId: null
                     },
+                    // TODO: instead of redirection this state shouldn't be registered if it's not a cloud version
+                    redirectTo: ($transition$) => {
+                        const authService = $transition$.injector().get('authService');
+
+                        if (!authService.isMultitenant) {
+                            return $transition$.router.stateService.target('tests.runs', {}, { location: 'replace', reload: true, inherit: false });
+                        }
+                    },
                     resolve: {
                         resolvedTestSessions: function($state, testsSessionsService, $q, projectsService, messageService) {
                             'ngInject';
@@ -605,6 +613,14 @@
                         classes: 'p-test-session-logs',
                         isDynamicTitle: true,
                     },
+                    // TODO: instead of redirection this state shouldn't be registered if it's not a cloud version
+                    redirectTo: ($transition$) => {
+                        const authService = $transition$.injector().get('authService');
+
+                        if (!authService.isMultitenant) {
+                            return $transition$.router.stateService.target('tests.runs', {}, { location: 'replace', reload: true, inherit: false });
+                        }
+                    },
                     resolve: {
                         testSession: function($stateParams, $q, $state, testsSessionsService, $timeout, messageService) {
                             'ngInject';
@@ -648,12 +664,12 @@
                 })
                 .state('tests.default', {
                     url: '',
-                    controller: ($state, UserService) => {
+                    controller: ($state, UserService, authService) => {
                         'ngInject';
 
-                        $state.go(`tests.${UserService.currentUser.testsView}`, {}, {
-                            location: 'replace',
-                        });
+                        const view = authService.isMultitenant ? UserService.currentUser.testsView : 'runs';
+
+                        $state.go(`tests.${view}`, {}, { location: 'replace' });
                     },
                 })
                 .state('welcomePage', {
@@ -665,9 +681,10 @@
                     },
                     redirectTo: ($transition$) => {
                         const UserService = $transition$.injector().get('UserService');
+                        const authService = $transition$.injector().get('authService');
 
-                        if (!UserService.currentUser.firstLogin) {
-                            return $transition$.router.stateService.target('tests.default', {}, { location: 'replace', reload: true, inherit: false })
+                        if (!authService.isMultitenant || !UserService.currentUser.firstLogin) {
+                            return $transition$.router.stateService.target('tests.default', {}, { location: 'replace', reload: true, inherit: false });
                         }
                     },
                     lazyLoad: async ($transition$) => {

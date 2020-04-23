@@ -13,6 +13,7 @@ const testRunCardDirective = function testRunCardDirective() {
             onSelect: '&',
             onDelete: '&',
             back: '&',
+            isNotificationAvailable: '=',
         },
         controllerAs: '$ctrl',
         restrict: 'E',

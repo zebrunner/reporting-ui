@@ -54,16 +54,19 @@
             password: [
                 {
                     name: 'minlength',
-                    message: 'Password must be between 5 and 50 characters'
+                    message: 'Password must be between 8 and 50 characters',
+                    value: 8,
                 },
                 {
                     name: 'maxlength',
-                    message: 'Password must be between 5 and 50 characters'
+                    message: 'Password must be between 8 and 50 characters',
+                    value: 50,
                 },
                 {
                     name: 'pattern',
                     message: 'Password must have only latin letters, numbers or special symbols',
-                    additional: '_@!#"$%&\'()*+,-./:;<>=?@[]^_`{}|~'
+                    additional: '_@!#"$%&\'()*+,-./:;<>=?@[]^_`{}|~',
+                    value: /^[A-Za-z0-9_@!#&quot;\$%&'()*+,-.\/:;<>=\?@\[\]\\^_`{}|~]+$/,
                 },
                 {
                     name: 'required',
@@ -108,7 +111,19 @@
                     message: 'Name can only contain letters, numbers, dashes and dots.',
                     value: /^[A-Za-z]+[0-9A-Za-z.-]*$/,
                 }
-            ]
+            ],
+            firstName: [
+                {
+                    name: 'required',
+                    message: 'First name required'
+                },
+            ],
+            lastName: [
+                {
+                    name: 'required',
+                    message: 'Last name required'
+                },
+            ],
         };
 
         return service;

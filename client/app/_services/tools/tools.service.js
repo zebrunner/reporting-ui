@@ -12,6 +12,7 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
 
         get tools() { return tools; },
         getTools,
+        getNotificationToolConnection,
         fetchToolSettings,
         updateSettings,
         fetchToolConnectionStatus,
@@ -92,6 +93,19 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
         }
 
         return formattedTools;
+    }
+
+    function getNotificationToolConnection() {
+        return fetchIntegrationOfTypeByName('NOTIFICATION_SERVICE')
+            .then(response => {
+                if (response.success) {
+                    const data = response.data || [];
+
+                    return data.some(tool => tool.connected);
+                }
+
+                return false;
+            });
     }
 
     function fetchToolSettings(toolName) {
