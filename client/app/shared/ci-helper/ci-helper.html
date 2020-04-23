@@ -67,7 +67,7 @@
                                 <md-icon class="folder-container_item_list_item_icon" ng-if="!launcher.autoScan" md-svg-src="../../../assets/images/launcher_manual.svg"></md-icon>
                                 <span>{{launcher.name}}</span>
                                 <i ng-if="launcher.preference.favorite && !launcher.isSavedConfig" class="material-icons folder-container_item_list_item_icon-favorite">star</i>
-                                <ul class="folder-container_item_list" ng-if="$ctrl.activeLauncherId === launcher.id">
+                                <ul class="folder-container_item_list _sublist" ng-if="$ctrl.activeLauncherId === launcher.id && launcher.presets.length">
                                     <li class="folder-container_item_list_item show-phone launcher-{{preset.id}}"
                                         ng-class="{'chosen-launcher': preset.isActive}"
                                         ng-click="$ctrl.chooseSavedLauncherConfig(preset, true); $event.stopPropagation();"
@@ -245,7 +245,7 @@
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="$ctrl.selectedLauncherConfig.name" />
+                            <input type="text" ng-model="$ctrl.selectedLauncherConfig.name" ng-maxlength="255"/>
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
@@ -469,7 +469,7 @@
         <zf-modal-content-container class="ci-runner-container_content" ng-if="$ctrl.shouldBeDisplayed('ci-error')">
             <div class="ci-runner-container_content_title _mobile-message no-data">
                 <div>
-                    <div>Opps, integration with CI is broken...</div>
+                    <div>Oops, integration with CI is broken...</div>
                     <div>Please, contact admin.</div>
                 </div>
             </div>

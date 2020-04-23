@@ -3194,6 +3194,12 @@ $light-inprogress: #68c9fd;
                         list-style-type: none;
                         margin: 0 0 0 $item-list-margin;
                         padding: 0;
+
+                        &._sublist {
+                            @media(max-width: $md-screen-phone) {
+                                padding-top: 20px;
+                            }
+                        }
                         &_item, &_item-empty {
                             padding: 6px 0;
                             position: relative;
