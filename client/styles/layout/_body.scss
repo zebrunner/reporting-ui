@@ -3211,6 +3211,8 @@ $light-inprogress: #68c9fd;
                             &._subitem {
                                 @media(max-width: $md-screen-phone) {
                                     width: calc(100vw - 20px);
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
                                 }
                             }
 
