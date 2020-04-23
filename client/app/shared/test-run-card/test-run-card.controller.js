@@ -131,6 +131,7 @@ const testRunCardController = function testRunCardController(
                 fullscreen: true,
                 locals: {
                     testRun: vm.testRun,
+                    isNotificationAvailable: vm.isNotificationAvailable,
                 }
             }).then(function(answer) {
                 vm.testRun.reviewed = answer.reviewed;
