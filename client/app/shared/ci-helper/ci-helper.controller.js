@@ -274,13 +274,19 @@ const CiHelperController = function CiHelperController(
                 let provider = vm.providers[0];
                 //is config
                 if (launcher.hasOwnProperty('parentLauncherId')) {
-                    const integration = vm.integrations.find(({ id }) => id === launcher.providerId);
-                    const predefinedProvider = vm.providers.find(({ name }) => name.toLowerCase() === integration.name.toLowerCase());
-
-                    if (predefinedProvider) {
-                        provider = predefinedProvider;
+                    if (launcher.hasOwnProperty('providerId')) {
+                        const integration = vm.integrations.find(({ id }) => id === launcher.providerId);
+                        const predefinedProvider = vm.providers.find(({ name }) => name.toLowerCase() === integration.name?.toLowerCase());
+    
+                        if (predefinedProvider) {
+                            provider = predefinedProvider;
+                        }
+                    } else {
+                        handleProviderDeselection();
+                        prepareLauncherControls();
+                        return;
                     }
-                }
+                } 
                 handleProviderSelection(provider);
             }
             prepareLauncherControls();
@@ -454,6 +460,8 @@ const CiHelperController = function CiHelperController(
     function chooseSavedLauncherConfig(config, skipBuilderApply) {
         if (!config || config.isActive) { return; }
         const parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
+
+        delete vm.activeLauncher.providerId;
 
         vm.activeLauncher = {
             ...vm.activeLauncher,
@@ -1607,6 +1615,7 @@ const CiHelperController = function CiHelperController(
 
     function handleProviderDeselection() {
         clearPlatforms();
+        vm.selectedProviderName = null;
         vm.chipsCtrl && (vm.chipsCtrl.selectedChip = -1);
         prepareLauncherControls();
     }
@@ -1765,7 +1774,7 @@ const CiHelperController = function CiHelperController(
         const params = {
             name: vm.selectedLauncherConfig.name,
             params: vm.selectedLauncherConfig.model,
-            providerId: vm.integrations.find((item) => item.name.toUpperCase() === vm.selectedProviderName.toUpperCase())?.id,
+            providerId: vm.integrations.find((item) => item.name.toUpperCase() === vm.selectedProviderName?.toUpperCase())?.id || null,
         };
 
         LauncherService.saveLauncherConfig(vm.selectedLauncherConfig.id, params)
