@@ -143,21 +143,23 @@
                     <div class="ci-runner-container_content_scm-connector_items_add">
                         <md-input-container>
                             <label>Organization</label>
-                            <md-select ng-model="scmAccount.organization" ng-change="getRepositories(scmAccount.organization.name);" ng-disabled="! organizations.length">
-                                <md-option ng-repeat="organization in organizations track by $index" ng-value="organization">
+                            <md-select ng-model="scmAccount.organization"
+                                ng-change="$ctrl.getRepositories(scmAccount.organization.name);"
+                                ng-disabled="!$ctrl.organizations.length">
+                                <md-option ng-repeat="organization in $ctrl.organizations track by organization.name" ng-value="organization">
                                     {{organization.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                         <md-input-container>
                             <label>Repository</label>
-                            <md-select ng-model="scmAccount.repository" ng-disabled="! repositories.length">
-                                <md-option ng-repeat="repository in repositories | orderBy: 'name' track by $index" ng-value="repository">
+                            <md-select ng-model="scmAccount.repository" ng-disabled="!$ctrl.repositories.length">
+                                <md-option ng-repeat="repository in $ctrl.repositories | orderBy: 'name' track by repository.name" ng-value="repository">
                                     {{repository.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
-                        <md-button class="md-raised" md-no-ink ng-click="addScmAccount(scmAccount);" ng-disabled="! scmAccount.organization || !scmAccount.repository">
+                        <md-button class="md-raised" md-no-ink ng-click="addScmAccount(scmAccount);" ng-disabled="!scmAccount.organization || !scmAccount.repository">
                             Add
                         </md-button>
                     </div>
