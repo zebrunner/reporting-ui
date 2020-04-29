@@ -56,8 +56,10 @@ const CiHelperController = function CiHelperController(
         platformModel: {},
         providers: [],
         launcherPreferences: {},
+        organizations: [],
         platformsConfig: null,
         providersFail: false,
+        repositories: [],
         loadingScm: true,
         cardNumber: 0,
         creatingLauncher: false,
@@ -66,6 +68,7 @@ const CiHelperController = function CiHelperController(
         launcherRawModel: {},
         launcherModel: {},
 
+        getRepositories,
         onProviderSelect,
         onPlatformSelect,
         selectProviderOnChipsInit,
@@ -901,8 +904,6 @@ const CiHelperController = function CiHelperController(
         });
     };
 
-    $scope.repositories = [];
-    $scope.organizations = [];
     $scope.scmAccount = {};
 
     function getClientId() {
@@ -964,31 +965,35 @@ const CiHelperController = function CiHelperController(
     };
 
     function codeExchange(code) {
-        if (code) {
-            initAccessToken(code).then(function (scmAccount) {
+        if (!code) { return; }
+
+        initAccessToken(code)
+            .then(function (scmAccount) {
                 $scope.scmAccount = scmAccount;
-                $scope.getOrganizations();
+                getOrganizations();
             });
-        }
-    };
+    }
 
-    $scope.getOrganizations = function () {
-        ScmService.getOrganizations($scope.scmAccount.id).then(function (rs) {
-            if (rs.success) {
-                $scope.organizations = rs.data;
-            }
-        });
-    };
+    function getOrganizations() {
+        return ScmService.getOrganizations($scope.scmAccount.id)
+            .then(response => {
+                if (response.success) {
+                    vm.organizations = response.data || [];
+                }
+            });
+    }
 
-    $scope.getRepositories = function (organization) {
-        $scope.repositories = {};
-        const organizationName = organization ? organization : '';
-        ScmService.getRepositories($scope.scmAccount.id, organizationName).then(function (rs) {
-            if (rs.success) {
-                $scope.repositories = rs.data;
-            }
-        });
-    };
+    function getRepositories(organization = '') {
+        vm.repositories = [];
+        $scope.scmAccount.repository = null;
+
+        return ScmService.getRepositories($scope.scmAccount.id, organization)
+            .then(response => {
+                if (response.success) {
+                    vm.repositories = response.data || [];
+                }
+            });
+    }
 
     $scope.addScmAccount = function (scmAccount) {
         scmAccount.organizationName = scmAccount.organization.name;
@@ -1000,8 +1005,8 @@ const CiHelperController = function CiHelperController(
                 $scope.scmAccounts.push(rs.data);
                 $scope.scmAccount = rs.data;
                 vm.activeLauncher.scmAccountType = rs.data;
-                $scope.organizations = [];
-                $scope.repositories = [];
+                vm.organizations = [];
+                vm.repositories = [];
                 vm.cardNumber = 0;
 
                 // switch folder if new
