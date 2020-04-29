@@ -769,20 +769,22 @@ md-input-container {
     }
 }
 
-md-select-menu:not(.md-overflow) {
+md-select-menu {
     box-shadow: 0 0 5.6px 0.4px rgba(5, 0, 0, 0.25);
-    md-content {
-        padding-top: 0;
-        padding-bottom: 0;
-        md-option {
+    & :not(.md-overflow) {
+        md-content {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+    md-option {
+        color: $dark-new;
+        &[selected] {
+            background-color: rgba($dark-new, .07);
             color: $dark-new;
-            &[selected] {
-                background-color: rgba($dark-new, .07);
-                color: $dark-new;
-            }
-            &:hover {
-                background-color: rgba($dark-new, .07);
-            }
+        }
+        &:hover {
+            background-color: rgba($dark-new, .07);
         }
     }
 }
