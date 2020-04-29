@@ -276,7 +276,7 @@ const CiHelperController = function CiHelperController(
                 if (launcher.hasOwnProperty('parentLauncherId')) {
                     if (launcher.hasOwnProperty('providerId')) {
                         const integration = vm.integrations.find(({ id }) => id === launcher.providerId);
-                        const predefinedProvider = vm.providers.find(({ name }) => name.toLowerCase() === integration.name?.toLowerCase());
+                        const predefinedProvider = integration ? vm.providers.find(({ name }) => name.toLowerCase() === integration.name?.toLowerCase()) : null;
     
                         if (predefinedProvider) {
                             provider = predefinedProvider;
@@ -461,7 +461,7 @@ const CiHelperController = function CiHelperController(
         if (!config || config.isActive) { return; }
         const parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
 
-        delete vm.activeLauncher.providerId;
+        Reflect.deleteProperty(vm.activeLauncher, 'providerId');
 
         vm.activeLauncher = {
             ...vm.activeLauncher,
@@ -1774,7 +1774,7 @@ const CiHelperController = function CiHelperController(
         const params = {
             name: vm.selectedLauncherConfig.name,
             params: vm.selectedLauncherConfig.model,
-            providerId: vm.integrations.find((item) => item.name.toUpperCase() === vm.selectedProviderName?.toUpperCase())?.id || null,
+            providerId: vm.integrations.find((item) => item.name.toLowerCase() === vm.selectedProviderName?.toLowerCase())?.id || null,
         };
 
         LauncherService.saveLauncherConfig(vm.selectedLauncherConfig.id, params)
