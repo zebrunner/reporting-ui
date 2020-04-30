@@ -771,7 +771,7 @@ md-input-container {
 
 md-select-menu {
     box-shadow: 0 0 5.6px 0.4px rgba(5, 0, 0, 0.25);
-    & :not(.md-overflow) {
+    &:not(.md-overflow) {
         md-content {
             padding-top: 0;
             padding-bottom: 0;
