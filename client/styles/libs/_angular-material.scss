@@ -781,8 +781,12 @@ md-select-menu {
         md-option {
             color: $dark-new;
             &[selected] {
-                background-color: rgba($dark-new, .07);
-                color: $dark-new;
+                &,
+                &:hover,
+                &:focus {
+                    background-color: rgba($dark-new, .07);
+                    color: $dark-new;
+                }
             }
             &:hover {
                 background-color: rgba($dark-new, .07);
