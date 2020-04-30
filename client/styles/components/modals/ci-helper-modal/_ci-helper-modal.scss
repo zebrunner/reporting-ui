@@ -37,13 +37,12 @@
             }
             &_title {
                 > span {
-                    display: inline-block;
+                    display: inline;
                     vertical-align: middle;
                 }
                 &_action {
                     & .icon {
                         position: relative;
-                        transform: translateY(2px);
                         left: 10px;
 
                         &._active {
