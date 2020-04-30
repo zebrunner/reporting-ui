@@ -777,14 +777,16 @@ md-select-menu {
             padding-bottom: 0;
         }
     }
-    md-option {
-        color: $dark-new;
-        &[selected] {
-            background-color: rgba($dark-new, .07);
+    md-content {
+        md-option {
             color: $dark-new;
-        }
-        &:hover {
-            background-color: rgba($dark-new, .07);
+            &[selected] {
+                background-color: rgba($dark-new, .07);
+                color: $dark-new;
+            }
+            &:hover {
+                background-color: rgba($dark-new, .07);
+            }
         }
     }
 }
