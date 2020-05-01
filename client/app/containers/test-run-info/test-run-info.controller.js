@@ -77,6 +77,24 @@ const testRunInfoController = function testRunInfoController(
     var SEARCH_CRITERIA = '';
     var ELASTICSEARCH_INDEX = '';
     var UTC = 'UTC';
+    const AGENT_BUIlDER = {
+        oldAgent: {
+            prefix: 'logs-',
+            sc: () => {
+                return [ {'correlation-id': vm.testRun.ciRunId + '_' + $scope.test.ciTestId} ];
+            }
+        },
+        newAgent: {
+            prefix: 'test-run-data-',
+            sc: () => {
+                return [
+                    {'testRunId': vm.testRun.id},
+                    {'testId': $scope.test.id}
+                ];
+            }
+        }
+    };
+    let agent = AGENT_BUIlDER.oldAgent;
 
     var MODES = {
         live: {
@@ -680,19 +698,58 @@ const testRunInfoController = function testRunInfoController(
 
     $scope.logs = [];
     var unrecognizedImages = {};
+    const screenshotExtension = '.png';
 
     function collectLogs(log) {
-        switch (log.level) {
-            case 'META_INFO':
-                collectScreenshots(log);
-                break;
-            default:
-                $scope.logs.push(log);
-                break;
+        if (log.level === 'META_INFO') {
+            collectScreenshots(log);
+        } else if (log.kind === 'screenshot') {
+            collectScreenshotsForNewAgent(log);
+        } else {
+            $scope.logs.push(log);
         }
         vm.filteredLogs = $scope.logs;
         $scope.$applyAsync();
     };
+
+    function collectScreenshotsForNewAgent(log) {
+        const logToAttache = $scope.logs.find((l, index) => {
+            const logIsBefore = l.timestamp <= log.timestamp;
+            const nextLogIsAfter = !$scope.logs[index + 1] || ($scope.logs[index + 1].timestamp > log.timestamp);
+            return logIsBefore && nextLogIsAfter;
+        });
+
+        let imageKey = log.message;
+        let thumbnainKey = log.message.substring(0, log.message.indexOf(screenshotExtension)) + '_thumbnail' + screenshotExtension;
+
+        imageKey = removeTenantPrefix(imageKey);
+        thumbnainKey = removeTenantPrefix(thumbnainKey);
+
+        const imageUrl = authService.serviceUrl + '/' + imageKey;
+        const thumbnailUrl = authService.serviceUrl + '/' + thumbnainKey;
+
+        logToAttache.blobLog = {
+            thumb : { path : [thumbnailUrl] },
+            image : { path : [imageUrl] }
+        }
+        logToAttache.thumb = {
+            path: thumbnainKey
+        }
+        logToAttache.image = {
+            path: log.message
+        }
+        logToAttache.isImageExists = true;
+
+        logSizeCount++;
+    };
+
+    function removeTenantPrefix(key) {
+        const tanantSubPath = authService.tenantName + '/';
+        if (key.startsWith(tanantSubPath)) {
+            return key.substring(tanantSubPath.length);
+        }
+        return key;
+    }
 
     function collectScreenshots(log) {
         var correlationId = getMetaLogCorrelationId(log);
@@ -867,12 +924,6 @@ const testRunInfoController = function testRunInfoController(
         postModeConstruct(test);
     };
 
-    function buildIndex() {
-        var startTime = 'logs-' + $filter('date')($scope.test.startTime, 'yyyy.MM.dd', UTC);
-        var finishTime = $scope.test.finishTime ? 'logs-' + $filter('date')($scope.test.finishTime, 'yyyy.MM.dd', UTC) : 'logs-' + $filter('date')(new Date().getTime(), 'yyyy.MM.dd', UTC);
-        return startTime == finishTime ? startTime : startTime + ',' + finishTime;
-    };
-
     function controllerInit() {
         initTestsWebSocket(vm.testRun);
         vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
@@ -904,13 +955,28 @@ const testRunInfoController = function testRunInfoController(
         const testId = parseInt($stateParams.testId, 10);
 
         $scope.test = TestService.getTest(testId);
+
+        // Agent to proceed is recognizing
+        agent = !!$scope.test.uuid ? AGENT_BUIlDER.newAgent : AGENT_BUIlDER.oldAgent;
+
         if ($scope.test) {
-            SEARCH_CRITERIA = { 'correlation-id': vm.testRun.ciRunId + '_' + $scope.test.ciTestId };
+            SEARCH_CRITERIA = agent.sc();
             ELASTICSEARCH_INDEX = buildIndex();
 
             setMode($scope.test.status === 'IN_PROGRESS' ? 'live' : 'record');
             $scope.MODE.initFunc.call(this, $scope.test);
         }
+    }
+
+    function buildIndex() {
+        let startTime = $filter('date')($scope.test.startTime, 'yyyy.MM.dd', UTC);
+        let finishTime = $scope.test.finishTime ? $filter('date')($scope.test.finishTime, 'yyyy.MM.dd', UTC)
+            : $filter('date')(new Date().getTime(), 'yyyy.MM.dd', UTC);
+
+        const startIndex = agent.prefix + startTime;
+        const finishIndex = agent.prefix + finishTime
+
+        return startIndex === finishIndex ? startIndex : startIndex + ',' + finishIndex;
     }
 
     return vm;

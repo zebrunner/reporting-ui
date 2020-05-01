@@ -14,6 +14,8 @@ const authService = function authService(
     let authData = null;
     const service = {
         isMultitenant: false,
+        serviceUrl: null,
+        tenantName: null,
         login,
         invite, // TODO: looks like unused, see invitationService
         forgotPassword,
