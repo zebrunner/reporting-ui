@@ -5,8 +5,13 @@
         "init": "npm install",
         "start": "npm run dev",
         "dev": "webpack-dev-server -d --config ./webpack/webpack.dev.js",
-        "build": "webpack"
+        "lib": "webpack --config ./webpack/webpack.lib.js",
+        "build": "webpack",
+        "prepare": "npm run lib"
     },
+    "files": [
+        "dist/**/*"
+    ],
     "devDependencies": {
         "@babel/core": "^7.8.3",
         "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
