@@ -88,6 +88,8 @@ const CiHelperController = function CiHelperController(
         hideCIErrorPage,
         getCurrentServer,
         userHasAnyPermission: authService.userHasAnyPermission,
+        validations: UtilService.validations,
+        getValidationValue: UtilService.getValidationValue,
 
         get isMobile() { return $mdMedia('xs'); },
         get noPlatformValue() { return getNoPlatformValue(); },

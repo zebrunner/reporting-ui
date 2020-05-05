@@ -212,7 +212,22 @@
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="$ctrl.activeLauncher.name" />
+                            <input type="text"
+                                name="launcherName"
+                                ng-model="$ctrl.activeLauncher.name"
+                                ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
+                                ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
+                                required
+                                />
+                            <div ng-messages="manualInfo.launcherName.$error">
+                                <div ng-repeat="validation in $ctrl.validations.launcherName" ng-message="{{ validation.name }}">
+                                <span ng-if="validation.additional">
+                                    <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
+                                    {{ validation.message }}
+                                </span>
+                                    <span ng-if="! validation.additional">{{ validation.message }}</span>
+                                </div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
@@ -241,13 +256,30 @@
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('save-launcher-config')">
             <ng-form name="manualInfo">
                 <div class="ci-runner-container_content_block __lancher-save">
-                    <div class="ci-runner-container_content_block_title __ci-runner-lg-title">
-                        <span ng-if="$ctrl.activeLauncher.id">{{ $ctrl.activeLauncher.name }} > {{$ctrl.selectedLauncherConfig.name}}</span>
+                    <div class="ci-runner-container_content_block_title _inline __ci-runner-lg-title">
+                        <show-part text="$ctrl.activeLauncher.name" ng-if="$ctrl.activeLauncher.id" limit="20"></show-part>
+                        <span>></span>
+                        <show-part text="$ctrl.selectedLauncherConfig.name" ng-if="$ctrl.activeLauncher.id" limit="20"></show-part>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="$ctrl.selectedLauncherConfig.name" ng-maxlength="50"/>
+                            <input type="text" 
+                                name="launcherName"
+                                ng-model="$ctrl.selectedLauncherConfig.name" 
+                                ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
+                                ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
+                                required
+                                />
+                            <div ng-messages="manualInfo.launcherName.$error">
+                                <div ng-repeat="validation in $ctrl.validations.launcherName" ng-message="{{ validation.name }}">
+                                <span ng-if="validation.additional">
+                                    <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
+                                    {{ validation.message }}
+                                </span>
+                                    <span ng-if="! validation.additional">{{ validation.message }}</span>
+                                </div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
@@ -278,7 +310,22 @@
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="$ctrl.activeLauncher.name" />
+                            <input type="text"
+                                name="launcherName"
+                                ng-model="$ctrl.activeLauncher.name"
+                                ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
+                                ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
+                                required
+                                />
+                            <div ng-messages="manualInfo.launcherName.$error">
+                                <div ng-repeat="validation in $ctrl.validations.launcherName" ng-message="{{ validation.name }}">
+                                <span ng-if="validation.additional">
+                                    <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
+                                    {{ validation.message }}
+                                </span>
+                                    <span ng-if="! validation.additional">{{ validation.message }}</span>
+                                </div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
@@ -316,7 +363,9 @@
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
                 <show-part class="hide-phone" text="$ctrl.activeLauncher.name" limit="40" ng-if="!$ctrl.activeLauncher.isSavedConfig"></show-part>
                 <show-part class="show-phone" text="$ctrl.activeLauncher.name" limit="20"></show-part>
-                <show-part class="hide-phone" text="$ctrl.activeLauncherName + ' > ' + $ctrl.activeLauncher.name" limit="40" ng-if="$ctrl.activeLauncher.isSavedConfig"></show-part>
+                <show-part class="hide-phone" text="$ctrl.activeLauncherName" limit="18" ng-if="$ctrl.activeLauncher.isSavedConfig"></show-part>
+                <span class="hide-phone" ng-if="$ctrl.activeLauncher.isSavedConfig">></span>
+                <show-part class="hide-phone" text="$ctrl.activeLauncher.name" limit="18" ng-if="$ctrl.activeLauncher.isSavedConfig"></show-part>
                 <span class="ci-runner-container_content_title_action">
                     <i ng-click="$ctrl.setFavouriteLauncher($ctrl.activeLauncher);" ng-if="!$ctrl.activeLauncher.preference.favorite && !$ctrl.activeLauncher.isSavedConfig" class="material-icons icon hide-phone">star_border</i>
                     <i ng-click="$ctrl.setFavouriteLauncher($ctrl.activeLauncher);" ng-if="$ctrl.activeLauncher.preference.favorite && !$ctrl.activeLauncher.isSavedConfig" class="material-icons icon hide-phone _active">star</i>
