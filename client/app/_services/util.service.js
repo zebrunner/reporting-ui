@@ -124,6 +124,22 @@
                     message: 'Last name required'
                 },
             ],
+            launcherName: [
+                {
+                    name: 'required',
+                    message: 'Name required'
+                },
+                {
+                    name: 'minlength',
+                    message: 'Must be between 1 and 50 characters',
+                    value: 1,
+                },
+                {
+                    name: 'maxlength',
+                    message: 'Must be between 1 and 50 characters',
+                    value: 50,
+                },
+            ],
         };
 
         return service;
