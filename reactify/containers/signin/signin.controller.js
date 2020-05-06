@@ -3,6 +3,7 @@
 export default (
     $rootScope,
     AuthService,
+    RouterService,
 ) => {
     'ngInject';
 
@@ -19,7 +20,7 @@ export default (
         console.log(credentials, fetch);
         return AuthService.signin(credentials)
             // TODO: the rest of logic that were ignored for now
-            .then(() => this.history.push('/'))
+            .then(() => RouterService.go('/'))
             .catch(e => { /* TODO: Error handler */ });
     };
 };
