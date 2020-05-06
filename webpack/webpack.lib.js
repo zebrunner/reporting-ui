@@ -25,6 +25,7 @@ module.exports = {
     // Remove libraries from the output build
     externals: {
       angular: 'commonjs2 angular',
+      '@zebrunner/core': 'commonjs2 @zebrunner/core',
     },
     resolve: {
         modules: [
@@ -224,60 +225,63 @@ module.exports = {
             filename: '[name].css',
         }),
     ],
-    optimization: {
-        runtimeChunk: false,
-        splitChunks: false,
-        minimizer: [
-            new TerserPlugin({
-                terserOptions: {
-                    compress: {
-                        // turn off flags with small gains to speed up minification
-                        arrows: false,
-                        collapse_vars: false, // 0.3kb
-                        comparisons: false,
-                        computed_props: false,
-                        hoist_funs: false,
-                        hoist_props: false,
-                        hoist_vars: false,
-                        inline: false,
-                        loops: false,
-                        negate_iife: false,
-                        properties: false,
-                        reduce_funcs: false,
-                        reduce_vars: false,
-                        switches: false,
-                        toplevel: false,
-                        typeofs: false,
+    // optimization: {
+    //     runtimeChunk: false,
+    //     splitChunks: false,
+    //     minimizer: [
+    //         new TerserPlugin({
+    //             terserOptions: {
+    //                 compress: {
+    //                     // turn off flags with small gains to speed up minification
+    //                     arrows: false,
+    //                     collapse_vars: false, // 0.3kb
+    //                     comparisons: false,
+    //                     computed_props: false,
+    //                     hoist_funs: false,
+    //                     hoist_props: false,
+    //                     hoist_vars: false,
+    //                     inline: false,
+    //                     loops: false,
+    //                     negate_iife: false,
+    //                     properties: false,
+    //                     reduce_funcs: false,
+    //                     reduce_vars: false,
+    //                     switches: false,
+    //                     toplevel: false,
+    //                     typeofs: false,
 
-                        // a few flags with noticable gains/speed ratio
-                        // numbers based on out of the box vendor bundle
-                        booleans: true, // 0.7kb
-                        if_return: true, // 0.4kb
-                        sequences: true, // 0.7kb
-                        unused: true, // 2.3kb
+    //                     // a few flags with noticable gains/speed ratio
+    //                     // numbers based on out of the box vendor bundle
+    //                     booleans: true, // 0.7kb
+    //                     if_return: true, // 0.4kb
+    //                     sequences: true, // 0.7kb
+    //                     unused: true, // 2.3kb
 
-                        // required features to drop conditional branches
-                        conditionals: true,
-                        dead_code: true,
-                        evaluate: true
-                    },
-                    mangle: {
-                        safari10: true
-                    },
-                    output: {
-                      comments: false,
-                    },
-                  },
-            }),
-            new OptimizeCssAssetsPlugin({
-                cssProcessorOptions: {
-                    parser: safePostCssParser,
-                },
-            }),
-        ],
-    },
+    //                     // required features to drop conditional branches
+    //                     conditionals: true,
+    //                     dead_code: true,
+    //                     evaluate: true
+    //                 },
+    //                 mangle: {
+    //                     safari10: true
+    //                 },
+    //                 output: {
+    //                   comments: false,
+    //                 },
+    //               },
+    //         }),
+    //         new OptimizeCssAssetsPlugin({
+    //             cssProcessorOptions: {
+    //                 parser: safePostCssParser,
+    //             },
+    //         }),
+    //     ],
+    // },
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.
+    optimization: {
+        minimize: false,
+    },
     node: {
         module: 'empty',
         dgram: 'empty',
