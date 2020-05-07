@@ -1043,9 +1043,14 @@ const ngModule = angular
 
             return access;
         });
-        $transitions.onSuccess({}, function() {
+        $transitions.onSuccess({}, () => {
             if (!$state.current.data?.isDynamicTitle) {
                 pageTitleService.setTitle($state.current.data?.title);
+            }
+
+            // re-init Zendesk widget
+            if (typeof zE === 'function') {
+                zE('webWidget', 'helpCenter:setSuggestions', { url: true });
             }
 
             $document.scrollTo(0, 0);
