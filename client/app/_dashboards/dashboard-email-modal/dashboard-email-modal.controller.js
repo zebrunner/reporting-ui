@@ -59,8 +59,11 @@ const dashboardEmailModalController = function dashboardEmailModalController(
                             messageService.error(rs.message);
                         }
                     });
+            })
+            .catch(error => {
+                messageService.error(error.message);
             });
-    };
+    }
 
     function querySearch() {
         usersSearchCriteria.query = vm.searchText;

@@ -1,54 +1,77 @@
+'use strict';
+
 import html2canvas from 'html2canvas';
 
-const ScreenshotService = function ScreenshotService($q, $timeout) {
+const ScreenshotService = function ScreenshotService(
+    $q,
+) {
     'ngInject';
 
-    var body = angular.element('body');
-
     return {
-        take: function (locator, name = guid()) {
-            return $q(function (resolve, reject) { //TODO: if error we don't resolve/reject promise at all
-                crop(locator).then(function (canvasObj) {
-                    var formData = new FormData();
-                    formData.append("file", dataURItoBlob(canvasObj.dataURL), name + ".png");
-                    resolve(formData);
-                })
+        take: (locator, name = guid()) => {
+            return crop(locator)
+                .then(function (canvasObj) {
+                    const formData = new FormData();
+
+                    formData.append('file', dataURItoBlob(canvasObj.dataURL), name + '.png');
+
+                    return formData;
+                });
+        }
+    };
+
+    function crop(elemSelector) {
+        const deferred = $q.defer();
+        const elem = document.querySelector(elemSelector);
+
+        if (!elem) {
+            deferred.reject({ message: `Unable to create screenshot: can't find an element with selector ${elemSelector}` });
+        } else {
+            const bodyClass = 'widgets-cropping';
+            const gridClass = 'grid-stack-one-column-mode';
+            const gridElem = document.querySelector('.grid-stack');
+            let needRestoreClass = false;
+
+            document.body.classList.add(bodyClass);
+            if (gridElem && gridElem.classList.contains(gridClass)) {
+                gridElem.classList.remove(gridClass);
+                needRestoreClass = true;
+            }
+            //force layout/reflow
+            window.getComputedStyle(document.querySelector('div'));
+            //to make sure that reflow is finished
+            window.requestAnimationFrame(() => {
+                html2canvas(elem)
+                    .then(canvas => {
+                        document.body.classList.remove(bodyClass);
+
+                        if (needRestoreClass) {
+                            gridElem.classList.add(gridClass);
+                        }
+
+                        deferred.resolve({
+                            canvas,
+                            dataURL: canvas.toDataURL('image/png'),
+                        });
+                    })
+                    .catch(() => {
+                        deferred.reject({ message: 'Unable to create screenshot' });
+                    });
             });
         }
-    };
 
-    function crop(locator) {
-        return $q(function (resolve, reject) {
-            body.addClass('widgets-cropping');
-            var grid = angular.element('.grid-stack');
-            var classesToAdd = {};
-            if(grid.hasClass('grid-stack-one-column-mode')) {
-                classesToAdd['grid-stack-one-column-mode'] = grid;
-                grid.removeClass('grid-stack-one-column-mode');
-            }
-            $timeout(function () {
-                const element = angular.element(locator);
-                if (element && element.length) { //TODO: if error we don't resolve/reject promise at all
-                    html2canvas(element[0]).then(function (canvas) {
-                        body.removeClass('widgets-cropping');
-                        angular.forEach(classesToAdd, function (element, key) {
-                            element.addClass(key);
-                        });
-                        classesToAdd = {};
-                        resolve({canvas: canvas, dataURL: canvas.toDataURL("image/png")});
-                    });
-                }
-            }, 0, false);
-        });
-    };
+        return deferred.promise;
+    }
 
     function dataURItoBlob(dataURI) {
-        var binary = atob(dataURI.split(',')[1]);
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        var array = [];
-        for(var i = 0; i < binary.length; i++) {
+        const binary = atob(dataURI.split(',')[1]);
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const array = [];
+
+        for (let i = 0; i < binary.length; i++) {
             array.push(binary.charCodeAt(i));
         }
+
         return new Blob([new Uint8Array(array)], {type: mimeString});
     }
 
