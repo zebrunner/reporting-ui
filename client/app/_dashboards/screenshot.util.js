@@ -64,6 +64,7 @@ const ScreenshotService = function ScreenshotService(
 
     function dataURItoBlob(dataURI) {
         const binary = atob(dataURI.split(',')[1]);
+        // extract mime type from base64 string "data:image/png;base64, ..."
         const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]; // TODO: refactoring: use RegExp
         const array = [];
 
