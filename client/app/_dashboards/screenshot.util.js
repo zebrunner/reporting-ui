@@ -30,12 +30,11 @@ const ScreenshotService = function ScreenshotService(
             const bodyClass = 'widgets-cropping';
             const gridClass = 'grid-stack-one-column-mode';
             const gridElem = document.querySelector('.grid-stack');
-            let needRestoreClass = false;
+            const needRestoreClass = gridElem && gridElem.classList.contains(gridClass);
 
             document.body.classList.add(bodyClass);
-            if (gridElem && gridElem.classList.contains(gridClass)) {
+            if (needRestoreClass) {
                 gridElem.classList.remove(gridClass);
-                needRestoreClass = true;
             }
             //force layout/reflow
             window.getComputedStyle(document.querySelector('div'));
@@ -65,7 +64,7 @@ const ScreenshotService = function ScreenshotService(
 
     function dataURItoBlob(dataURI) {
         const binary = atob(dataURI.split(',')[1]);
-        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]; // TODO: refactoring: use RegExp
         const array = [];
 
         for (let i = 0; i < binary.length; i++) {
