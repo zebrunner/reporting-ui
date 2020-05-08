@@ -269,6 +269,7 @@
                                 ng-model="$ctrl.selectedLauncherConfig.name" 
                                 ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
                                 ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
+                                ng-model-options="{ allowInvalid: true }"
                                 required
                                 />
                             <div ng-messages="manualInfo.launcherName.$error">
@@ -294,7 +295,7 @@
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.saveLauncherConfig();" ng-disabled="!$ctrl.selectedLauncherConfig.name || !$ctrl.activeLauncher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.saveLauncherConfig();" ng-disabled="!$ctrl.activeLauncher.model || !!manualInfo.launcherName.$error.maxlength || !!manualInfo.launcherName.$error.required">
                         SAVE
                     </md-button>
                 </div>
@@ -315,6 +316,7 @@
                                 ng-model="$ctrl.activeLauncher.name"
                                 ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
                                 ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
+                                ng-model-options="{ allowInvalid: true }"
                                 required
                                 />
                             <div ng-messages="manualInfo.launcherName.$error">
@@ -350,10 +352,10 @@
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model" ng-if="!$ctrl.activeLauncher.isSavedConfig">
+                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.model || !!manualInfo.launcherName.$error.maxlength || !!manualInfo.launcherName.$error.required" ng-if="!$ctrl.activeLauncher.isSavedConfig">
                         SAVE
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.updateLauncherConfig($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model" ng-if="$ctrl.activeLauncher.isSavedConfig">
+                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.updateLauncherConfig($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.model || !!manualInfo.launcherName.$error.maxlength || !!manualInfo.launcherName.$error.required" ng-if="$ctrl.activeLauncher.isSavedConfig">
                         UPDATE
                     </md-button>
                 </div>

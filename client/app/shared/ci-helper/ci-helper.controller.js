@@ -87,6 +87,7 @@ const CiHelperController = function CiHelperController(
         showCIErrorPage,
         hideCIErrorPage,
         getCurrentServer,
+        log,
         userHasAnyPermission: authService.userHasAnyPermission,
         validations: UtilService.validations,
         getValidationValue: UtilService.getValidationValue,
@@ -96,6 +97,10 @@ const CiHelperController = function CiHelperController(
         get activeLauncherId() { return vm.activeLauncher.parentLauncherId || vm.activeLauncher.id; },
         get activeLauncherName() { return vm.launchers.find(item => item.id === vm.activeLauncher.parentLauncherId).name; },
     };
+
+    function log(item) {
+        console.log(item);
+    }
 
     vm.$onInit = initController;
 
