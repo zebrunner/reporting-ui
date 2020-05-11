@@ -2,8 +2,6 @@
 
 export default (
     $rootScope,
-    AuthService,
-    RouterService,
 ) => {
     'ngInject';
 
@@ -18,9 +16,9 @@ export default (
 
     function signin(credentials) {
         console.log(credentials, fetch);
-        return AuthService.signin(credentials)
-            // TODO: the rest of logic that were ignored for now
-            .then(() => RouterService.go('/'))
-            .catch(e => { /* TODO: Error handler */ });
+        // return AuthService.signin(credentials)
+        //     // TODO: the rest of logic that were ignored for now
+        //     .then(() => RouterService.go('/'))
+        //     .catch(e => { /* TODO: Error handler */ });
     };
 };
