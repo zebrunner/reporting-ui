@@ -17,9 +17,7 @@
                     </i>
                     <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
                 </md-button>
-                <md-button class="md-icon-button"
-                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && MODE !== 'WIDGET_PLACEMENT' && dashboard.editable"
-                    ng-click="showDashboardSettingsModal($event, dashboard);">
+                <md-button class="md-icon-button" ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && MODE !== 'WIDGET_PLACEMENT' && dashboard.editable" ng-click="showDashboardSettingsModal($event, dashboard);">
                     <i class="material-icons">
                         edit
                     </i>

@@ -18,8 +18,7 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
     $scope.newAttribute = {};
     $scope.userHasAnyPermission = authService.userHasAnyPermission;
 
-    if($scope.isNew)
-    {
+    if($scope.isNew) {
         $scope.dashboard.hidden = false;
     }
 
@@ -36,13 +35,10 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
         });
     };
 
-    $scope.updateDashboard = function(dashboard){
-        if (!dashboard.editable) {
-            $scope.hide();
-            return;
-        }
+    $scope.updateDashboard = async function(dashboard){
         dashboard.widgets = null;
-        DashboardService.UpdateDashboard(dashboard).then(function (rs) {
+        await $scope.addAtributes();
+        await DashboardService.UpdateDashboard(dashboard).then(function (rs) {
             if (rs.success) {
                 messageService.success("Dashboard updated");
                 $scope.hide(rs.data, 'UPDATE');
@@ -72,18 +68,29 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
 
      // Dashboard attributes
     $scope.createAttribute = function(attribute, form){
-        DashboardService.CreateDashboardAttribute(dashboard.id, attribute).then(function (rs) {
+        $scope.dashboard.attributes.push(attribute);
+        $scope.newAttribute = {};
+        UtilService.untouchForm(form);
+    };
+
+    $scope.addAtributes = function() {
+        const attributes = angular.copy($scope.dashboard.attributes);
+        const unsavedAttributes = attributes.filter(item => !item.hasOwnProperty('id'));
+
+        if (!unsavedAttributes.length) {
+            return;
+        }
+
+        DashboardService.CreateDashboardAttributes(dashboard.id, unsavedAttributes).then(function (rs) {
             if (rs.success) {
                 $scope.dashboard.attributes = rs.data;
-                $scope.newAttribute = {};
-                UtilService.untouchForm(form);
-                messageService.success('Dashboard attribute created');
+                messageService.success("Attributes updated");
             }
             else {
                 messageService.error(rs.message);
             }
         });
-    };
+    }
 
     $scope.checkDuplicateAttributeKey = function(key, form) {
         let duplicateAttribute = $scope.dashboard.attributes.find(function (attr) {
@@ -98,18 +105,6 @@ const dashboardSettingsModalController = function dashboardSettingsModalControll
             return d.title === title;
         });
         form.$setValidity('duplicateKey', ! duplicateAttribute);
-    };
-
-    $scope.updateAttribute = function(attribute){
-        DashboardService.UpdateDashboardAttribute(dashboard.id, attribute).then(function (rs) {
-            if (rs.success) {
-                $scope.dashboard.attributes = rs.data;
-                messageService.success('Dashboard attribute updated');
-            }
-            else {
-                messageService.error(rs.message);
-            }
-        });
     };
 
     $scope.deleteAttribute = function(attribute){

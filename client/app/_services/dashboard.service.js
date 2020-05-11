@@ -91,7 +91,7 @@
         }
 
         function CreateDashboardAttributes(dashboardId, attributes) {
-            return $httpMock.post(API_URL + '/api/dashboards/' + dashboardId + '/attributes/queries', attributes).then(UtilService.handleSuccess, UtilService.handleError('Unable to create dashboard attributes'));
+            return $httpMock.post(API_URL + '/api/dashboards/' + dashboardId + '/attributes/batch', attributes).then(UtilService.handleSuccess, UtilService.handleError('Unable to create dashboard attributes'));
         }
 
         function UpdateDashboardAttribute(dashboardId, attribute) {

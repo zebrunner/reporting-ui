@@ -26,7 +26,7 @@ const dashboardController = function dashboardController(
     toolsService,
     messageService,
     authService,
-    pageTitleService
+    pageTitleService,
     ) {
     'ngInject';
 
@@ -250,8 +250,7 @@ const dashboardController = function dashboardController(
         })
             .then(function (rs) {
                 if(rs) {
-                    rs.widgets = $scope.dashboard.widgets;
-                    $scope.dashboard = angular.copy(rs);
+                    getDashboardById(rs.id);
                     delete rs.action;
                 }
             }, function () {
