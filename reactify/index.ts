@@ -1,4 +1,4 @@
 import React from 'react';
 
-declare const SigninModule: string;
-declare const SigninComponent: React.FC;
+export declare const SigninModule: string;
+export declare const SigninComponent: React.FC;
