@@ -2,13 +2,14 @@
     "name": "@zebrunner/reporting",
     "version": "0.0.1-beta.2",
     "main": "dist/index.js",
+    "types": "./dist/types/index.d.ts",
     "scripts": {
         "init": "npm install",
         "start": "npm run dev",
         "dev": "webpack-dev-server -d --config ./webpack/webpack.dev.js",
         "lib": "webpack --config ./webpack/webpack.lib.js",
         "build": "webpack",
-        "prepare": "npm run lib"
+        "prepare": "npm run lib && tsc"
     },
     "files": [
         "dist/**/*"
@@ -43,6 +44,7 @@
         "style-loader": "^1.1.3",
         "svgo": "1.3.0",
         "terser-webpack-plugin": "^2.3.2",
+        "typescript": "^3.8.3",
         "url-loader": "^2.3.0",
         "webpack": "4.41.5",
         "webpack-cli": "^3.3.10",
