@@ -7,7 +7,7 @@ import { SigninModule } from './containers';
 
 export * from './containers';
 
-export const ZebrunnerReportingModule = angular('zebrunner.reporting', [
+export const ZebrunnerReportingModule = angular.module('zebrunner.reporting', [
     'ngMessages',
     'ngMaterial',
     SigninModule,
