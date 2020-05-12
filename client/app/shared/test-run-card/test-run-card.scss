@@ -446,29 +446,21 @@
             margin-left: 10px;
         }
         &._badge {
-            display: flex;
             height: 18px;
             width: 18px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: 700;
             &._blockers {
-                color: $red-new;
-                border-color: currentColor;
+                background: url(../../../assets/images/_icons_test-run-card/icon_block.svg) 0% 0% no-repeat;
+
             }
             &._reviewed {
-                color: $green-new;
-                border-color: currentColor;
+                background: url(../../../assets/images/_icons_test-run-card/icon_reviewed.svg) 0% 0% no-repeat;
             }
         }
         &._comments {
             .comments-area {
-                color: rgba(0,0,0,.5);
+                width: 18px;
+                height: 18px;
+                background: url(../../../assets/images/_icons_test-run-card/icon_comment.svg) 0% 0% no-repeat;
             }
         }
     }

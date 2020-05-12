@@ -33,16 +33,15 @@
                         <md-tooltip ng-if="$ctrl.testRun.status !== 'LAUNCHING'" md-direction="right">{{$ctrl.testRun.testSuite.fileName}}</md-tooltip>
                     </div>
                     <div class="test-run-card__title-additions">
+                        <div data-ng-if="$ctrl.testRun.reviewed" class="test-run-card__state _badge _reviewed" title="REVIEWED"><md-tooltip
+                            md-direction="right">Reviewed</md-tooltip>
+                        </div>
+                        <div data-ng-if="$ctrl.testRun.blocker" class="test-run-card__state _badge _blockers" title="BLOCKERS"><md-tooltip
+                            md-direction="right">Blockers</md-tooltip>
+                        </div>
                         <div data-ng-if="$ctrl.testRun.comments" class="test-run-card__state _comments">
-                            <md-icon data-ng-click="$ctrl.showCommentsDialog($event)" aria-label="Comments"
-                                aria-hidden="true" class="comments-area">comments</md-icon>
+                            <div data-ng-click="$ctrl.showCommentsDialog($event)" aria-label="Comments" aria-hidden="true" class="comments-area"></div>
                             <md-tooltip md-direction="right">Comments</md-tooltip>
-                        </div>
-                        <div data-ng-if="$ctrl.testRun.reviewed" class="test-run-card__state _badge _reviewed" title="REVIEWED">R<md-tooltip
-                                md-direction="right">Reviewed</md-tooltip>
-                        </div>
-                        <div data-ng-if="$ctrl.testRun.blocker" class="test-run-card__state _badge _blockers" title="BLOCKERS">B<md-tooltip
-                                md-direction="right">Blockers</md-tooltip>
                         </div>
                     </div>
                 </div>
@@ -371,14 +370,14 @@
             </div>
             <div class="test-run-card__row _additional" ng-if="$ctrl.singleMode || $ctrl.testRun.comments || $ctrl.testRun.reviewed || $ctrl.testRun.blocker">
                 <div data-ng-if="$ctrl.testRun.comments" class="test-run-card__state _comments">
-                    <md-icon data-ng-click="$ctrl.showCommentsDialog($event)" aria-label="Comments" aria-hidden="true"
-                            class="comments-area">comments</md-icon>
+                    <div data-ng-click="$ctrl.showCommentsDialog($event)" aria-label="Comments" aria-hidden="true"
+                            class="comments-area"></div>
                     <md-tooltip md-direction="right">Comments</md-tooltip>
                 </div>
-                <div data-ng-if="$ctrl.testRun.reviewed" class="test-run-card__state _badge _reviewed" title="REVIEWED">R<md-tooltip
+                <div data-ng-if="$ctrl.testRun.reviewed" class="test-run-card__state _badge _reviewed" title="REVIEWED"><md-tooltip
                     md-direction="right">Reviewed</md-tooltip>
                 </div>
-                <div data-ng-if="$ctrl.testRun.blocker" class="test-run-card__state _badge _blockers" title="BLOCKERS">B<md-tooltip
+                <div data-ng-if="$ctrl.testRun.blocker" class="test-run-card__state _badge _blockers" title="BLOCKERS"><md-tooltip
                     md-direction="right">Blockers</md-tooltip>
                 </div>
             </div>
