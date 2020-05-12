@@ -7,7 +7,7 @@
                         <img class="logo" src="../../../client/assets/images/background/zf.svg">
                     </section>
 
-                    <form name="signin_form" class="md-form-login form-validation" data-ng-submit="$ctrl.signin($ctrl.credentials);">
+                    <form name="signin_form" class="md-form-login form-validation" data-ng-submit="$ctrl.signin($ctrl.credentials, signin_form)">
                         <div class="callout callout-danger" ng-if="!$ctrl.credentials.valid">
                             <p>Invalid credentials</p>
                         </div>
