@@ -15,6 +15,7 @@ window.moment = require('moment');
 require('angular-moment');
 require('angular-material');
 require('oclazyload');
+require('ng-file-upload');
 
 window.SockJS = require('vendors/sockjs-1.3.0.min');
 require('vendors/stomp.min');

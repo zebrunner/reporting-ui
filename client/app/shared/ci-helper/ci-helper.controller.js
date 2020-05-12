@@ -23,6 +23,7 @@ const CiHelperController = function CiHelperController(
     UtilService,
     API_URL,
     $http,
+    Upload,
 ) {
     'ngInject';
 
@@ -51,6 +52,8 @@ const CiHelperController = function CiHelperController(
         activeLauncher: {
             scmAccountType: {},
         },
+        appFormats: '.app, .ipa, .apk, .apks',
+        appMaxSize: '100MB',
         launchers: [],
         platforms: [],
         platformModel: {},
@@ -282,7 +285,7 @@ const CiHelperController = function CiHelperController(
                     if (launcher.hasOwnProperty('providerId')) {
                         const integration = vm.integrations.find(({ id }) => id === launcher.providerId);
                         const predefinedProvider = integration ? vm.providers.find(({ name }) => name.toLowerCase() === integration.name?.toLowerCase()) : null;
-    
+
                         if (predefinedProvider) {
                             provider = predefinedProvider;
                         }
@@ -291,7 +294,7 @@ const CiHelperController = function CiHelperController(
                         prepareLauncherControls();
                         return;
                     }
-                } 
+                }
                 handleProviderSelection(provider);
             }
             prepareLauncherControls();
@@ -916,7 +919,7 @@ const CiHelperController = function CiHelperController(
                 }
             });
         });
-    };
+    }
 
     function getTenantInfo() {
         return $q(function (resolve, reject) {
@@ -929,7 +932,7 @@ const CiHelperController = function CiHelperController(
                 }
             });
         });
-    };
+    }
 
     $scope.clientId = '';
 
@@ -939,9 +942,7 @@ const CiHelperController = function CiHelperController(
                 var host = $window.location.host;
                 var tenant = host.split('\.')[0];
                 const servletPath = $window.location.pathname.split('/tests/runs')[0];
-                var redirectURI = isMultitenant ?
-                    $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant
-                    : $window.location.protocol + "//" + host + servletPath + "/scm/callback";
+                var redirectURI = isMultitenant ? `${$window.location.protocol}//${host.replace(tenant, 'api')}/github/callback/${tenant}` : `${$window.location.protocol}//${host}${servletPath}/scm/callback`;
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
@@ -1292,7 +1293,10 @@ const CiHelperController = function CiHelperController(
                     prepareChildControl(defaultItem);
                 }
             }
-        } else if (data.type === 'input') {
+        } else if (data.type === 'input' || data.type === 'file') {
+            if (data.type === 'file') {
+                childControl.onChange = onFileUpload;
+            }
             if (!defaultItem) {
                 defaultItem = {
                     value: getControlDefaultValue(data.key),
@@ -1830,6 +1834,53 @@ const CiHelperController = function CiHelperController(
                 return $scope.needServer && vm.cardNumber !== 0 && !($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length);
             default:
                 return false;
+        }
+    }
+
+    function onFileUpload($file, $invalidFiles, control) {
+        if ($invalidFiles?.length) {
+            messageService.error(`Use ${vm.appFormats} files ${vm.appMaxSize} max`);
+        } else if ($file) {
+            vm.platformModel[control.key].file = $file;
+            $file.isUploading = true;
+            $file.upload = Upload
+                .upload({
+                    url: `${API_URL}/api/upload?file=`,
+                    method: 'POST',
+                    headers: {
+                        'FileType': 'APP',
+                        'Content-Type': $file.type !== '' ? $file.type : 'application/octet-stream',
+                    },
+                    data: {
+                        key: $file.name,
+                        'Content-Type': $file.type !== '' ? $file.type : 'application/octet-stream',
+                        filename: $file.name,
+                        file: $file,
+                    }
+                })
+                .success(response => {
+                    $timeout(() => {
+                        $file.result = response;
+                        vm.platformModel[control.key].value = $file.result.url;
+                    }, 0);
+                })
+                .progress(evt => {
+                    $file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                })
+                .error(response => {
+                    if (response?.error?.message) {
+                        messageService.error(response.error.message);
+                    } else {
+                        messageService.error('Unable to upload file, please try later');
+                    }
+                });
+
+            $file.upload
+                .finally(() => {
+                    $timeout(() => {
+                        $file.isUploading = false;
+                    }, 0);
+                });
         }
     }
 
