@@ -2,6 +2,7 @@
 
 export default (
     $rootScope,
+    UtilService,
 ) => {
     'ngInject';
 
@@ -14,7 +15,8 @@ export default (
         signin,
     };
 
-    function signin(credentials) {
+    function signin(credentials, form) {
+        this.UtilService.untouchForm(form);
         console.log(credentials, fetch);
         // return AuthService.signin(credentials)
         //     // TODO: the rest of logic that were ignored for now
