@@ -61,6 +61,10 @@ const testRunInfoController = function testRunInfoController(
     $scope.tab = { title: 'History', content: "Tabs will become paginated if there isn't enough room for them." };
     $scope.TestRunsStorage = TestRunsStorage;
 
+    $scope.logs = [];
+    var unrecognizedImages = {};
+    const screenshotExtension = '.png';
+
     $scope.goToTestRuns = function () {
         $state.go('tests.runDetails', {
             testRunId: vm.testRun.id,
@@ -80,16 +84,16 @@ const testRunInfoController = function testRunInfoController(
     const AGENT_BUIlDER = {
         oldAgent: {
             prefix: 'logs-',
-            sc: () => {
+            searchCriteria: () => {
                 return [ {'correlation-id': vm.testRun.ciRunId + '_' + $scope.test.ciTestId} ];
             }
         },
         newAgent: {
             prefix: 'test-run-data-',
-            sc: () => {
+            searchCriteria: () => {
                 return [
                     {'testRunId': vm.testRun.id},
-                    {'testId': $scope.test.id}
+                    {'testId': $scope.test.id},
                 ];
             }
         }
@@ -696,10 +700,6 @@ const testRunInfoController = function testRunInfoController(
         collectLogs(log);
     }
 
-    $scope.logs = [];
-    var unrecognizedImages = {};
-    const screenshotExtension = '.png';
-
     function collectLogs(log) {
         if (log.level === 'META_INFO') {
             collectScreenshots(log);
@@ -960,7 +960,7 @@ const testRunInfoController = function testRunInfoController(
         agent = !!$scope.test.uuid ? AGENT_BUIlDER.newAgent : AGENT_BUIlDER.oldAgent;
 
         if ($scope.test) {
-            SEARCH_CRITERIA = agent.sc();
+            SEARCH_CRITERIA = agent.searchCriteria();
             ELASTICSEARCH_INDEX = buildIndex();
 
             setMode($scope.test.status === 'IN_PROGRESS' ? 'live' : 'record');

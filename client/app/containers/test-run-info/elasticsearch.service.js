@@ -26,7 +26,7 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
     }
 
     function doAction(action, func, index, searchFields, from, size, fromTime, query) {
-        if (!angular.isArray(searchFields)) {
+        if (!Array.isArray(searchFields)) {
             searchFields = [searchFields];
         }
         var body = {};
@@ -44,7 +44,7 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
             case 'COUNT':
                 body.query = {
                     bool: {
-                        must: buildMustClause(searchFields)
+                        must: buildMustClause(searchFields),
                     }
                 };
                 break;
@@ -52,7 +52,7 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
                 body = {
                     index: index,
                     query: {
-                        term: searchFields
+                        term: searchFields,
                     }
                 };
                 break;
@@ -71,7 +71,7 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
 
     function buildMustClause(termsArray) {
         return termsArray.map((searchField) => {
-            return {'term': searchField};
+            return { 'term': searchField };
         });
     }
 
