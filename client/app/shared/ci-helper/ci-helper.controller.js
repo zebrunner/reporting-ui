@@ -1846,17 +1846,10 @@ const CiHelperController = function CiHelperController(
             $file.upload = Upload
                 .upload({
                     url: `${API_URL}/api/upload?file=`,
-                    method: 'POST',
                     headers: {
                         'FileType': 'APP',
-                        'Content-Type': $file.type !== '' ? $file.type : 'application/octet-stream',
                     },
-                    data: {
-                        key: $file.name,
-                        'Content-Type': $file.type !== '' ? $file.type : 'application/octet-stream',
-                        filename: $file.name,
-                        file: $file,
-                    }
+                    file: $file,
                 })
                 .success(response => {
                     $timeout(() => {
