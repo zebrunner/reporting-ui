@@ -24,6 +24,54 @@
                         margin-bottom: 0;
                     }
 
+                    &_item {
+                        &._file-control {
+                            position: relative;
+
+                            input[type="text"] {
+                                padding-right: 40px;
+                            }
+                            button[type="file"] {
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                height: 100%;
+                                width: 36px;
+                                z-index: 1;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                padding: 0;
+                                margin: 0;
+                                pointer-events: auto;
+                                cursor: pointer;
+                                background-color: transparent;
+                                border: 0;
+                            }
+                            .ci-runner-container__progressbar {
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                height: 100%;
+                                width: 36px;
+                                z-index: 1;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+
+                                small {
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    color: #000;
+                                    font-size: 8px !important;
+                                    line-height: 1;
+                                }
+                            }
+                        }
+                    }
+
                     .zf-label {
                         width: 190px;
                         margin-right: 20px;

@@ -264,9 +264,9 @@
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" 
+                            <input type="text"
                                 name="launcherName"
-                                ng-model="$ctrl.selectedLauncherConfig.name" 
+                                ng-model="$ctrl.selectedLauncherConfig.name"
                                 ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
                                 ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
                                 ng-model-options="{ allowInvalid: true }"
@@ -426,7 +426,8 @@
                                     <md-tooltip md-direction="top">{{platformControl.label}}</md-tooltip>
                                 </show-part>
                             </div>
-                            <div class="ci-runner-container_content_builder_container_item">
+                            <div class="ci-runner-container_content_builder_container_item"
+                                ng-class="{ '_file-control': platformControl.type === 'file'}">
                                 <md-input-container class="no-margin _gray-bg"
                                     ng-if="platformControl.type === 'select' && platformControl.items.length">
                                     <label>{{platformControl.label}}</label>
@@ -442,7 +443,7 @@
                                     </md-select>
                                 </md-input-container>
                                 <md-input-container class="no-margin _gray-bg"
-                                    ng-if="platformControl.type === 'input'">
+                                    ng-if="platformControl.type === 'input' || platformControl.type === 'file'">
                                     <label>{{platformControl.label}}</label>
                                     <input
                                         type="text"
@@ -450,6 +451,17 @@
                                         ng-model="$ctrl.platformModel[platformControl.key].value"
                                         ng-model-options="{debounce: 700}"/>
                                 </md-input-container>
+                                <button type="file"
+                                    class="no-animate"
+                                    ngf-select="platformControl.onChange($file, $invalidFiles, platformControl)"
+                                    ng-if="platformControl.type === 'file' && !$ctrl.platformModel[platformControl.key].file.isUploading"
+                                    accept="{{::$ctrl.appFormats}}"
+                                    ngf-max-size="{{::$ctrl.appMaxSize}}"><md-icon>cloud_upload</md-icon></button>
+                                <div class="ci-runner-container__progressbar no-animate"
+                                    ng-if="platformControl.type === 'file' && $ctrl.platformModel[platformControl.key].file.isUploading">
+                                    <md-progress-circular md-diameter="28px"></md-progress-circular>
+                                    <small>{{$ctrl.platformModel[platformControl.key].file.progress}}%</small>
+                                </div>
                             </div>
                         </div>
                     </div>
