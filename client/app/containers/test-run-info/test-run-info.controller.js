@@ -85,7 +85,7 @@ const testRunInfoController = function testRunInfoController(
         oldAgent: {
             prefix: 'logs-',
             searchCriteria: () => {
-                return [ {'correlation-id': vm.testRun.ciRunId + '_' + $scope.test.ciTestId} ];
+                return [{ 'correlation-id': `${vm.testRun.ciRunId}_${$scope.test.ciTestId}` }];
             }
         },
         newAgent: {
@@ -744,9 +744,9 @@ const testRunInfoController = function testRunInfoController(
     };
 
     function removeTenantPrefix(key) {
-        const tanantSubPath = authService.tenantName + '/';
-        if (key.startsWith(tanantSubPath)) {
-            return key.substring(tanantSubPath.length);
+        const tenantSubPath = authService.tenant + '/';
+        if (key.startsWith(tenantSubPath)) {
+            return key.substring(tenantSubPath.length);
         }
         return key;
     }
