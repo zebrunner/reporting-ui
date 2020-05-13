@@ -25,7 +25,10 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
         });
     }
 
-    function doAction(action, func, index, searchField, from, size, fromTime, query) {
+    function doAction(action, func, index, searchFields, from, size, fromTime, query) {
+        if (!Array.isArray(searchFields)) {
+            searchFields = [searchFields];
+        }
         var body = {};
         switch (action) {
             case 'SEARCH':
@@ -41,9 +44,7 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
             case 'COUNT':
                 body.query = {
                     bool: {
-                        must: [{
-                            term: searchField
-                        }]
+                        must: buildMustClause(searchFields),
                     }
                 };
                 break;
@@ -51,7 +52,7 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
                 body = {
                     index: index,
                     query: {
-                        term: searchField
+                        term: searchFields,
                     }
                 };
                 break;
@@ -66,6 +67,12 @@ const elasticsearchService = function elasticsearchService($http, $q, $location,
             body: body
         };
         func(params);
+    }
+
+    function buildMustClause(termsArray) {
+        return termsArray.map((searchField) => {
+            return { 'term': searchField };
+        });
     }
 
     function search(index, searchField, from, page, size, fromTime, query) {

@@ -30,6 +30,7 @@ export function CoreModuleRunner(
         .then(response => {
             if (response.success) {
                 authService.isMultitenant = response.data?.multitenant;
+                authService.serviceUrl = response.data?.serviceUrl;
             }
         })
         .then(() => {

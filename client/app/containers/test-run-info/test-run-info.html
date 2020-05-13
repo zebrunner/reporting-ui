@@ -184,7 +184,7 @@
                                                             </td>
                                                             <td class="testrun-info__tab-table-col _start" ng-click="selectLogRow($event, $index);">{{log.timestamp | date: 'HH:mm:ss'}}</td>
                                                             <td class="testrun-info__tab-table-col _status" ng-click="selectLogRow($event, $index);">
-                                                                <span class="testrun-info__status-icon {{log.level ? '_' + (log.level | lowercase) : ''}}">{{log.level}}<md-tooltip md-direction="right">{{log.threadName}}</md-tooltip></span>
+                                                                <span class="testrun-info__status-icon {{log.level ? '_' + (log.level | lowercase) : ''}}">{{log.level}}<md-tooltip ng-if="log.threadName" md-direction="right">{{log.threadName}}</md-tooltip></span>
                                                             </td>
                                                             <td class="testrun-info__tab-table-col _action" ng-click="selectLogRow($event, $index);" ng-attr-id="log.timestamp">
                                                                 <div ng-if="log.showMore" class="log_message" name="logFullMessage">
