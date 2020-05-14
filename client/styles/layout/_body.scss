@@ -3214,8 +3214,6 @@ $light-inprogress: #68c9fd;
                         &_item, &_item-empty {
                             padding: 6px 0;
                             position: relative;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
 
                             &._no-padding-bottom {
                                 padding-bottom: 0;
@@ -3245,6 +3243,11 @@ $light-inprogress: #68c9fd;
                         }
                         &_item {
                             color: #7f7f7f;
+
+                            &-wrapper {
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
 
                             @media(max-width: $md-screen-phone) {
                                 width: 100vw;
