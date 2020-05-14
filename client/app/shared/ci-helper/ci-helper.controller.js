@@ -23,6 +23,7 @@ const CiHelperController = function CiHelperController(
     UtilService,
     API_URL,
     $http,
+    Upload,
 ) {
     'ngInject';
 
@@ -51,13 +52,17 @@ const CiHelperController = function CiHelperController(
         activeLauncher: {
             scmAccountType: {},
         },
+        appFormats: '.app, .ipa, .apk, .apks',
+        appMaxSize: '100MB',
         launchers: [],
         platforms: [],
         platformModel: {},
         providers: [],
         launcherPreferences: {},
+        organizations: [],
         platformsConfig: null,
         providersFail: false,
+        repositories: [],
         loadingScm: true,
         cardNumber: 0,
         creatingLauncher: false,
@@ -66,6 +71,7 @@ const CiHelperController = function CiHelperController(
         launcherRawModel: {},
         launcherModel: {},
 
+        getRepositories,
         onProviderSelect,
         onPlatformSelect,
         selectProviderOnChipsInit,
@@ -85,6 +91,8 @@ const CiHelperController = function CiHelperController(
         hideCIErrorPage,
         getCurrentServer,
         userHasAnyPermission: authService.userHasAnyPermission,
+        validations: UtilService.validations,
+        getValidationValue: UtilService.getValidationValue,
 
         get isMobile() { return $mdMedia('xs'); },
         get noPlatformValue() { return getNoPlatformValue(); },
@@ -274,11 +282,17 @@ const CiHelperController = function CiHelperController(
                 let provider = vm.providers[0];
                 //is config
                 if (launcher.hasOwnProperty('parentLauncherId')) {
-                    const integration = vm.integrations.find(({ id }) => id === launcher.providerId);
-                    const predefinedProvider = vm.providers.find(({ name }) => name.toLowerCase() === integration.name.toLowerCase());
+                    if (launcher.hasOwnProperty('providerId')) {
+                        const integration = vm.integrations.find(({ id }) => id === launcher.providerId);
+                        const predefinedProvider = integration ? vm.providers.find(({ name }) => name.toLowerCase() === integration.name?.toLowerCase()) : null;
 
-                    if (predefinedProvider) {
-                        provider = predefinedProvider;
+                        if (predefinedProvider) {
+                            provider = predefinedProvider;
+                        }
+                    } else {
+                        handleProviderDeselection();
+                        prepareLauncherControls();
+                        return;
                     }
                 }
                 handleProviderSelection(provider);
@@ -454,6 +468,8 @@ const CiHelperController = function CiHelperController(
     function chooseSavedLauncherConfig(config, skipBuilderApply) {
         if (!config || config.isActive) { return; }
         const parentLauncherId = vm.activeLauncher.parentLauncherId || vm.activeLauncher.id;
+
+        Reflect.deleteProperty(vm.activeLauncher, 'providerId');
 
         vm.activeLauncher = {
             ...vm.activeLauncher,
@@ -893,8 +909,6 @@ const CiHelperController = function CiHelperController(
         });
     };
 
-    $scope.repositories = [];
-    $scope.organizations = [];
     $scope.scmAccount = {};
 
     function getClientId() {
@@ -905,7 +919,7 @@ const CiHelperController = function CiHelperController(
                 }
             });
         });
-    };
+    }
 
     function getTenantInfo() {
         return $q(function (resolve, reject) {
@@ -918,7 +932,7 @@ const CiHelperController = function CiHelperController(
                 }
             });
         });
-    };
+    }
 
     $scope.clientId = '';
 
@@ -928,9 +942,7 @@ const CiHelperController = function CiHelperController(
                 var host = $window.location.host;
                 var tenant = host.split('\.')[0];
                 const servletPath = $window.location.pathname.split('/tests/runs')[0];
-                var redirectURI = isMultitenant ?
-                    $window.location.protocol + "//" + host.replace(tenant, 'api') + "/github/callback/" + tenant
-                    : $window.location.protocol + "//" + host + servletPath + "/scm/callback";
+                var redirectURI = isMultitenant ? `${$window.location.protocol}//${host.replace(tenant, 'api')}/github/callback/${tenant}` : `${$window.location.protocol}//${host}${servletPath}/scm/callback`;
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
@@ -956,31 +968,35 @@ const CiHelperController = function CiHelperController(
     };
 
     function codeExchange(code) {
-        if (code) {
-            initAccessToken(code).then(function (scmAccount) {
+        if (!code) { return; }
+
+        initAccessToken(code)
+            .then(function (scmAccount) {
                 $scope.scmAccount = scmAccount;
-                $scope.getOrganizations();
+                getOrganizations();
             });
-        }
-    };
+    }
 
-    $scope.getOrganizations = function () {
-        ScmService.getOrganizations($scope.scmAccount.id).then(function (rs) {
-            if (rs.success) {
-                $scope.organizations = rs.data;
-            }
-        });
-    };
+    function getOrganizations() {
+        return ScmService.getOrganizations($scope.scmAccount.id)
+            .then(response => {
+                if (response.success) {
+                    vm.organizations = response.data || [];
+                }
+            });
+    }
 
-    $scope.getRepositories = function (organization) {
-        $scope.repositories = {};
-        const organizationName = organization ? organization : '';
-        ScmService.getRepositories($scope.scmAccount.id, organizationName).then(function (rs) {
-            if (rs.success) {
-                $scope.repositories = rs.data;
-            }
-        });
-    };
+    function getRepositories(organization = '') {
+        vm.repositories = [];
+        $scope.scmAccount.repository = null;
+
+        return ScmService.getRepositories($scope.scmAccount.id, organization)
+            .then(response => {
+                if (response.success) {
+                    vm.repositories = response.data || [];
+                }
+            });
+    }
 
     $scope.addScmAccount = function (scmAccount) {
         scmAccount.organizationName = scmAccount.organization.name;
@@ -992,8 +1008,8 @@ const CiHelperController = function CiHelperController(
                 $scope.scmAccounts.push(rs.data);
                 $scope.scmAccount = rs.data;
                 vm.activeLauncher.scmAccountType = rs.data;
-                $scope.organizations = [];
-                $scope.repositories = [];
+                vm.organizations = [];
+                vm.repositories = [];
                 vm.cardNumber = 0;
 
                 // switch folder if new
@@ -1277,7 +1293,10 @@ const CiHelperController = function CiHelperController(
                     prepareChildControl(defaultItem);
                 }
             }
-        } else if (data.type === 'input') {
+        } else if (data.type === 'input' || data.type === 'file') {
+            if (data.type === 'file') {
+                childControl.onChange = onFileUpload;
+            }
             if (!defaultItem) {
                 defaultItem = {
                     value: getControlDefaultValue(data.key),
@@ -1607,6 +1626,7 @@ const CiHelperController = function CiHelperController(
 
     function handleProviderDeselection() {
         clearPlatforms();
+        vm.selectedProviderName = null;
         vm.chipsCtrl && (vm.chipsCtrl.selectedChip = -1);
         prepareLauncherControls();
     }
@@ -1765,7 +1785,7 @@ const CiHelperController = function CiHelperController(
         const params = {
             name: vm.selectedLauncherConfig.name,
             params: vm.selectedLauncherConfig.model,
-            providerId: vm.integrations.find((item) => item.name.toUpperCase() === vm.selectedProviderName.toUpperCase())?.id,
+            providerId: vm.integrations.find((item) => item.name.toLowerCase() === vm.selectedProviderName?.toLowerCase())?.id || null,
         };
 
         LauncherService.saveLauncherConfig(vm.selectedLauncherConfig.id, params)
@@ -1814,6 +1834,46 @@ const CiHelperController = function CiHelperController(
                 return $scope.needServer && vm.cardNumber !== 0 && !($scope.scmAccount && $scope.scmAccount.launchers && $scope.scmAccount.launchers.length);
             default:
                 return false;
+        }
+    }
+
+    function onFileUpload($file, $invalidFiles, control) {
+        if ($invalidFiles?.length) {
+            messageService.error(`Use ${vm.appFormats} files ${vm.appMaxSize} max`);
+        } else if ($file) {
+            vm.platformModel[control.key].file = $file;
+            $file.isUploading = true;
+            $file.upload = Upload
+                .upload({
+                    url: `${API_URL}/api/upload?file=`,
+                    headers: {
+                        'FileType': 'APP',
+                    },
+                    file: $file,
+                })
+                .success(response => {
+                    $timeout(() => {
+                        $file.result = response;
+                        vm.platformModel[control.key].value = $file.result.url;
+                    }, 0);
+                })
+                .progress(evt => {
+                    $file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                })
+                .error(response => {
+                    if (response?.error?.message) {
+                        messageService.error(response.error.message);
+                    } else {
+                        messageService.error('Unable to upload file, please try later');
+                    }
+                });
+
+            $file.upload
+                .finally(() => {
+                    $timeout(() => {
+                        $file.isUploading = false;
+                    }, 0);
+                });
         }
     }
 

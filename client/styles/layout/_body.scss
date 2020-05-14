@@ -2629,10 +2629,19 @@ $light-inprogress: #68c9fd;
 
         &_block {
             &_title {
+                display: inline-block;
                 height: 14px;
+                width: 100%;
                 font-weight: normal;
                 line-height: 12px;
                 margin-bottom: 14px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+                &._inline {
+                    display: inline;
+                }
 
                 &.__scan-repo {
                     margin-bottom: 24px;
@@ -2978,6 +2987,8 @@ $light-inprogress: #68c9fd;
         &_manual-launcher-add {
             font-size: 0;
             display: flex;
+            margin-bottom: 10px;
+            font-weight: 400;
             md-input-container {
                 max-width: 228px;
             }
@@ -3203,6 +3214,8 @@ $light-inprogress: #68c9fd;
                         &_item, &_item-empty {
                             padding: 6px 0;
                             position: relative;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
 
                             &._no-padding-bottom {
                                 padding-bottom: 0;

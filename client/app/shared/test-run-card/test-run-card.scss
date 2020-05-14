@@ -446,29 +446,24 @@
             margin-left: 10px;
         }
         &._badge {
-            display: flex;
-            height: 18px;
-            width: 18px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: 700;
-            &._blockers {
-                color: $red-new;
-                border-color: currentColor;
-            }
-            &._reviewed {
-                color: $green-new;
-                border-color: currentColor;
+            height: 20px;
+            width: 20px;
+
+            .icon {
+                min-height: 20px;
+                min-width: 20px;
+                width: 20px;
+                height: 20px;
             }
         }
         &._comments {
             .comments-area {
-                color: rgba(0,0,0,.5);
+                .icon {
+                    min-height: 20px;
+                    min-width: 20px;
+                    width: 20px;
+                    height: 20px;
+                }
             }
         }
     }

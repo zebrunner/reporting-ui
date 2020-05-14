@@ -10,7 +10,7 @@
                     <md-tooltip md-direction="bottom">Send by email</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button"
-                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS']) && isGridStackEvailableToEdit() && dashboard.widgets.length && !dashboard.system"
+                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS']) && isGridStackEvailableToEdit() && dashboard.widgets.length && dashboard.editable"
                     ng-click="startEditWidgets();">
                     <i class="material-icons">
                         dashboard
@@ -18,7 +18,7 @@
                     <md-tooltip md-direction="bottom">Widget placement</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button"
-                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && MODE !== 'WIDGET_PLACEMENT' && !dashboard.system"
+                    ng-if="$ctrl.userHasAnyPermission(['MODIFY_DASHBOARDS']) && MODE !== 'WIDGET_PLACEMENT' && dashboard.editable"
                     ng-click="showDashboardSettingsModal($event, dashboard);">
                     <i class="material-icons">
                         edit
@@ -27,7 +27,7 @@
                 </md-button>
             </div>
         </zf-sub-header-options>
-        <zf-sub-header-button class="hide-phone">
+        <zf-sub-header-button ng-if="dashboard.editable" class="hide-phone">
             <div ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS']) && MODE !== 'WIDGET_PLACEMENT'">
                 <button class="fixed-page-header__btn _dashboard zf-primary-button" ng-click="showWidgetWizardDialog($event, {model : '{}'}, dashboard);">
                     <md-icon class="material-icons">add</md-icon>
@@ -74,7 +74,7 @@
                                                 Edit widget
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS'])">
+                                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS']) && dashboard.editable">
                                             <md-button name="editWidget" data-ng-click="deleteDashboardWidget(widget)">
                                                 <md-icon class="material-icons">remove_circle_outline</md-icon>
                                                 Remove from dashboard

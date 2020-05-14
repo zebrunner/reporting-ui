@@ -143,21 +143,23 @@
                     <div class="ci-runner-container_content_scm-connector_items_add">
                         <md-input-container>
                             <label>Organization</label>
-                            <md-select ng-model="scmAccount.organization" ng-change="getRepositories(scmAccount.organization.name);" ng-disabled="! organizations.length">
-                                <md-option ng-repeat="organization in organizations track by $index" ng-value="organization">
+                            <md-select ng-model="scmAccount.organization"
+                                ng-change="$ctrl.getRepositories(scmAccount.organization.name);"
+                                ng-disabled="!$ctrl.organizations.length">
+                                <md-option ng-repeat="organization in $ctrl.organizations track by organization.name" ng-value="organization">
                                     {{organization.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                         <md-input-container>
                             <label>Repository</label>
-                            <md-select ng-model="scmAccount.repository" ng-disabled="! repositories.length">
-                                <md-option ng-repeat="repository in repositories | orderBy: 'name' track by $index" ng-value="repository">
+                            <md-select ng-model="scmAccount.repository" ng-disabled="!$ctrl.repositories.length">
+                                <md-option ng-repeat="repository in $ctrl.repositories | orderBy: 'name' track by repository.name" ng-value="repository">
                                     {{repository.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
-                        <md-button class="md-raised" md-no-ink ng-click="addScmAccount(scmAccount);" ng-disabled="! scmAccount.organization || !scmAccount.repository">
+                        <md-button class="md-raised" md-no-ink ng-click="addScmAccount(scmAccount);" ng-disabled="!scmAccount.organization || !scmAccount.repository">
                             Add
                         </md-button>
                     </div>
@@ -210,7 +212,22 @@
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="$ctrl.activeLauncher.name" />
+                            <input type="text"
+                                name="launcherName"
+                                ng-model="$ctrl.activeLauncher.name"
+                                ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
+                                ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
+                                required
+                                />
+                            <div ng-messages="manualInfo.launcherName.$error">
+                                <div ng-repeat="validation in $ctrl.validations.launcherName" ng-message="{{ validation.name }}">
+                                <span ng-if="validation.additional">
+                                    <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
+                                    {{ validation.message }}
+                                </span>
+                                    <span ng-if="! validation.additional">{{ validation.message }}</span>
+                                </div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
@@ -239,13 +256,31 @@
         <zf-modal-content-container class="ci-runner-container_content hide-phone" ng-if="$ctrl.shouldBeDisplayed('save-launcher-config')">
             <ng-form name="manualInfo">
                 <div class="ci-runner-container_content_block __lancher-save">
-                    <div class="ci-runner-container_content_block_title __ci-runner-lg-title">
-                        <span ng-if="$ctrl.activeLauncher.id">{{ $ctrl.activeLauncher.name }} > {{$ctrl.selectedLauncherConfig.name}}</span>
+                    <div class="ci-runner-container_content_block_title _inline __ci-runner-lg-title">
+                        <show-part text="$ctrl.activeLauncher.name" ng-if="$ctrl.activeLauncher.id" limit="20"></show-part>
+                        <span>></span>
+                        <show-part text="$ctrl.selectedLauncherConfig.name" ng-if="$ctrl.activeLauncher.id" limit="20"></show-part>
                     </div>
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="$ctrl.selectedLauncherConfig.name" ng-maxlength="50"/>
+                            <input type="text"
+                                name="launcherName"
+                                ng-model="$ctrl.selectedLauncherConfig.name"
+                                ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
+                                ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
+                                ng-model-options="{ allowInvalid: true }"
+                                required
+                                />
+                            <div ng-messages="manualInfo.launcherName.$error">
+                                <div ng-repeat="validation in $ctrl.validations.launcherName" ng-message="{{ validation.name }}">
+                                <span ng-if="validation.additional">
+                                    <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
+                                    {{ validation.message }}
+                                </span>
+                                    <span ng-if="! validation.additional">{{ validation.message }}</span>
+                                </div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
@@ -260,7 +295,7 @@
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.saveLauncherConfig();" ng-disabled="!$ctrl.selectedLauncherConfig.name || !$ctrl.activeLauncher.model">
+                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.saveLauncherConfig();" ng-disabled="!$ctrl.activeLauncher.model || !!manualInfo.launcherName.$error.maxlength || !!manualInfo.launcherName.$error.required">
                         SAVE
                     </md-button>
                 </div>
@@ -276,7 +311,23 @@
                     <div class="ci-runner-container_content_manual-launcher-add ci-runner-container_inline-input">
                         <md-input-container class="_gray-bg">
                             <label class="placeholder-label">Name</label>
-                            <input type="text" ng-model="$ctrl.activeLauncher.name" />
+                            <input type="text"
+                                name="launcherName"
+                                ng-model="$ctrl.activeLauncher.name"
+                                ng-minlength="::$ctrl.getValidationValue('launcherName', 'minlength')"
+                                ng-maxlength="::$ctrl.getValidationValue('launcherName', 'maxlength')"
+                                ng-model-options="{ allowInvalid: true }"
+                                required
+                                />
+                            <div ng-messages="manualInfo.launcherName.$error">
+                                <div ng-repeat="validation in $ctrl.validations.launcherName" ng-message="{{ validation.name }}">
+                                <span ng-if="validation.additional">
+                                    <md-tooltip md-direction="top">{{ validation.additional }}</md-tooltip>
+                                    {{ validation.message }}
+                                </span>
+                                    <span ng-if="! validation.additional">{{ validation.message }}</span>
+                                </div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_code" ng-cloak>
@@ -301,10 +352,10 @@
                     <md-button ng-click="cancelLauncher();">
                         CANCEL
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model" ng-if="!$ctrl.activeLauncher.isSavedConfig">
+                    <md-button class="md-raised md-primary pull-right" ng-click="updateLauncher($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.model || !!manualInfo.launcherName.$error.maxlength || !!manualInfo.launcherName.$error.required" ng-if="!$ctrl.activeLauncher.isSavedConfig">
                         SAVE
                     </md-button>
-                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.updateLauncherConfig($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.name || !$ctrl.activeLauncher.model" ng-if="$ctrl.activeLauncher.isSavedConfig">
+                    <md-button class="md-raised md-primary pull-right" ng-click="$ctrl.updateLauncherConfig($ctrl.activeLauncher);" ng-disabled="!$ctrl.activeLauncher.model || !!manualInfo.launcherName.$error.maxlength || !!manualInfo.launcherName.$error.required" ng-if="$ctrl.activeLauncher.isSavedConfig">
                         UPDATE
                     </md-button>
                 </div>
@@ -314,7 +365,9 @@
             <div class="ci-runner-container_content_title __ci-runner-lg-title">
                 <show-part class="hide-phone" text="$ctrl.activeLauncher.name" limit="40" ng-if="!$ctrl.activeLauncher.isSavedConfig"></show-part>
                 <show-part class="show-phone" text="$ctrl.activeLauncher.name" limit="20"></show-part>
-                <show-part class="hide-phone" text="$ctrl.activeLauncherName + ' > ' + $ctrl.activeLauncher.name" limit="40" ng-if="$ctrl.activeLauncher.isSavedConfig"></show-part>
+                <show-part class="hide-phone" text="$ctrl.activeLauncherName" limit="18" ng-if="$ctrl.activeLauncher.isSavedConfig"></show-part>
+                <span class="hide-phone" ng-if="$ctrl.activeLauncher.isSavedConfig">></span>
+                <show-part class="hide-phone" text="$ctrl.activeLauncher.name" limit="18" ng-if="$ctrl.activeLauncher.isSavedConfig"></show-part>
                 <span class="ci-runner-container_content_title_action">
                     <i ng-click="$ctrl.setFavouriteLauncher($ctrl.activeLauncher);" ng-if="!$ctrl.activeLauncher.preference.favorite && !$ctrl.activeLauncher.isSavedConfig" class="material-icons icon hide-phone">star_border</i>
                     <i ng-click="$ctrl.setFavouriteLauncher($ctrl.activeLauncher);" ng-if="$ctrl.activeLauncher.preference.favorite && !$ctrl.activeLauncher.isSavedConfig" class="material-icons icon hide-phone _active">star</i>
@@ -373,7 +426,8 @@
                                     <md-tooltip md-direction="top">{{platformControl.label}}</md-tooltip>
                                 </show-part>
                             </div>
-                            <div class="ci-runner-container_content_builder_container_item">
+                            <div class="ci-runner-container_content_builder_container_item"
+                                ng-class="{ '_file-control': platformControl.type === 'file'}">
                                 <md-input-container class="no-margin _gray-bg"
                                     ng-if="platformControl.type === 'select' && platformControl.items.length">
                                     <label>{{platformControl.label}}</label>
@@ -389,7 +443,7 @@
                                     </md-select>
                                 </md-input-container>
                                 <md-input-container class="no-margin _gray-bg"
-                                    ng-if="platformControl.type === 'input'">
+                                    ng-if="platformControl.type === 'input' || platformControl.type === 'file'">
                                     <label>{{platformControl.label}}</label>
                                     <input
                                         type="text"
@@ -397,6 +451,17 @@
                                         ng-model="$ctrl.platformModel[platformControl.key].value"
                                         ng-model-options="{debounce: 700}"/>
                                 </md-input-container>
+                                <button type="file"
+                                    class="no-animate"
+                                    ngf-select="platformControl.onChange($file, $invalidFiles, platformControl)"
+                                    ng-if="platformControl.type === 'file' && !$ctrl.platformModel[platformControl.key].file.isUploading"
+                                    accept="{{::$ctrl.appFormats}}"
+                                    ngf-max-size="{{::$ctrl.appMaxSize}}"><md-icon>cloud_upload</md-icon></button>
+                                <div class="ci-runner-container__progressbar no-animate"
+                                    ng-if="platformControl.type === 'file' && $ctrl.platformModel[platformControl.key].file.isUploading">
+                                    <md-progress-circular md-diameter="28px"></md-progress-circular>
+                                    <small>{{$ctrl.platformModel[platformControl.key].file.progress}}%</small>
+                                </div>
                             </div>
                         </div>
                     </div>

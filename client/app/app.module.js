@@ -908,6 +908,7 @@ const ngModule = angular
         $q,
         $rootScope,
         $state,
+        $timeout,
         authService,
         UserService,
         messageService,
@@ -1043,9 +1044,16 @@ const ngModule = angular
 
             return access;
         });
-        $transitions.onSuccess({}, function() {
+        $transitions.onSuccess({}, () => {
             if (!$state.current.data?.isDynamicTitle) {
                 pageTitleService.setTitle($state.current.data?.title);
+            }
+
+            // re-init Zendesk widget
+            if (typeof zE === 'function') {
+                $timeout(() => {
+                    zE('webWidget', 'helpCenter:setSuggestions', { url: true });
+                }, 0, false);
             }
 
             $document.scrollTo(0, 0);
