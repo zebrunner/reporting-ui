@@ -21,6 +21,7 @@
     "emitDeclarationOnly": true,
     "module": "esnext",
     "importHelpers": true,
+    "noImplicitAny": false,
     "target": "es2015"
   },
   "files": ["reactify/index.ts"],

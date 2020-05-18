@@ -2,7 +2,6 @@
 
 export default (
     $rootScope,
-    UtilService,
 ) => {
     'ngInject';
 
@@ -16,11 +15,6 @@ export default (
     };
 
     function signin(credentials, form) {
-        UtilService.untouchForm(form);
-        console.log(credentials, fetch);
-        // return AuthService.signin(credentials)
-        //     // TODO: the rest of logic that were ignored for now
-        //     .then(() => RouterService.go('/'))
-        //     .catch(e => { /* TODO: Error handler */ });
+        throw new Error('Not implemented');
     };
 };
