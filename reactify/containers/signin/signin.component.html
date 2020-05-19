@@ -4,7 +4,7 @@
             <div class="card bg-white">
                 <div class="card-content">
                     <section class="logo-container">
-                        <img class="logo" src="../../../client/assets/images/background/zf.svg">
+                        <div class="signin__logo"></div>
                     </section>
 
                     <form name="signin_form" class="md-form-login form-validation" data-ng-submit="$ctrl.signin($ctrl.credentials, signin_form)">
@@ -49,12 +49,12 @@
                                 ng-disabled="signin_form.$invalid">Login</md-button>
                         </div>
                     </form>
-                    <copyright-component></copyright-component>
+                    <copyright-component versions="$ctrl.versions"></copyright-component>
                 </div>
 
                 <div class="additional-background">
                     <div class="version-container">
-                        <img class="logo" ng-if="companyLogo.value" ng-src="{{ companyLogo.value }}">
+                        <img class="logo" ng-if="$ctrl.application.tenantImage" ng-src="{{ $ctrl.application.tenantImage }}">
                     </div>
                     <background-component></background-component>
                 </div>

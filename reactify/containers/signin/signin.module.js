@@ -9,6 +9,4 @@ export const SigninModule = angular.module('zebrunner.reporting.signin', [
     BackgroundModule,
 ])
 
-    .component({ signinComponent })
-
-    .name;
+    .component({ signinComponent });

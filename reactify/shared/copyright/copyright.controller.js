@@ -1,11 +1,5 @@
 'use strict';
 
-export default (
-    $rootScope,
-) => {
+export default () => {
     'ngInject';
-
-    return {
-        get version() { return $rootScope.version; },
-    };
 };

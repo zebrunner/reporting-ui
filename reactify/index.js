@@ -1,18 +1,22 @@
 import angular from 'angular';
+import ngReduxModule from 'ng-redux';
 
-import {
-    UtilService,
-} from './services';
 import { SigninModule } from './containers';
+import { ZebrunnerReportingServicesModule } from './services';
 
 export * from './containers';
 
 export const ZebrunnerReportingModule = angular.module('zebrunner.reporting', [
     'ngMessages',
     'ngMaterial',
+    ngReduxModule,
     SigninModule,
+    ZebrunnerReportingServicesModule,
 ])
 
-    .service({ UtilService })
+    .config(($ngReduxProvider) => {
+        'ngInject';
+        $ngReduxProvider.provideStore(getStore());
+    })
 
     .name;

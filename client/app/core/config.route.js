@@ -165,13 +165,13 @@
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
                         try {
-                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+                            const mod = await import(/* webpackChunkName: "signin" */ '../../../reactify/containers/signin');
 
-                            return $ocLazyLoad.load(mod.authModule);
+                            return $ocLazyLoad.load(mod.SigninModule);
                         } catch (err) {
                             throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
                         }
-                    }
+                    },
                 })
                 .state('signup', {
                     url: '/signup?token',

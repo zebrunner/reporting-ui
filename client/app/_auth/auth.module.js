@@ -1,5 +1,5 @@
 import signupComponent from './signup.component';
-import signinComponent from './signin.component';
+// import signinComponent from './signin.component';
 import forgotPasswordComponent from './forgot-password.component';
 import resetPasswordComponent from './reset-password.component';
 
@@ -11,6 +11,6 @@ export const authModule = angular.module('app.auth', [
     'app.copyright',
     ])
     .component({ signupComponent })
-    .component({ signinComponent })
+    // .component({ signinComponent })
     .component({ resetPasswordComponent })
     .component({ forgotPasswordComponent });

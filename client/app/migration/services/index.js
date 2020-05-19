@@ -2,12 +2,10 @@ import angular from 'angular';
 
 import { AuthService } from './auth.service';
 import { RequestService } from './request.service';
-import { UtilService } from './util.service';
 
-export const ZebrunnerReportingServicesModule = angular.module('zebrunner.reporting.services', [])
+export const ZebrunnerReportingMigrationServicesModule = angular.module('zebrunner.reporting.migration.services', [])
 
     .service({ AuthService })
     .service({ RequestService })
-    .service({ UtilService })
 
     .name;

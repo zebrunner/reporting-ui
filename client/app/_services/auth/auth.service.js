@@ -2,7 +2,7 @@
 
 const authService = function authService(
     $httpMock,
-    $rootScope,
+    // $rootScope,
     $state,
     UtilService,
     UserService,
@@ -15,7 +15,7 @@ const authService = function authService(
     const service = {
         isMultitenant: false,
         serviceUrl: null,
-        login,
+        // login,
         invite, // TODO: looks like unused, see invitationService
         forgotPassword,
         getForgotPasswordInfo,
@@ -42,14 +42,14 @@ const authService = function authService(
         get tenant() { return this.authData?.tenant; },
     };
 
-    function login(username, password) {
-        return $httpMock.post(API_URL + '/api/auth/login', { username, password })
-            .then((res) => {
-                const headers = res.headers();
+    // function login(username, password) {
+    //     return $httpMock.post(API_URL + '/api/auth/login', { username, password })
+    //         .then((res) => {
+    //             const headers = res.headers();
 
-                return { success: true, data: res.data, 'firstLogin': headers['first-login'] };
-            }, UtilService.handleError('Invalid credentials'));
-    }
+    //             return { success: true, data: res.data, 'firstLogin': headers['first-login'] };
+    //         }, UtilService.handleError('Invalid credentials'));
+    // }
 
     function getTenant() {
         return $httpMock.get(API_URL + '/api/auth/tenant')

@@ -83,7 +83,10 @@ module.exports = (env) => {
                         // Process application JS with Babel.
                         {
                             test: /\.m?js$/,
-                            include: path.join(process.cwd(), './client/app'),
+                            include: [
+                                path.join(process.cwd(), './client/app'),
+                                path.join(process.cwd(), './reactify'),
+                            ],
                             use: [
                                 {
                                     loader: 'babel',

@@ -109,29 +109,29 @@ const authController = function authController(
         authService.clearCredentials();
     })();
 
-    $scope.signin = function(credentials) {
-        authService.login(credentials.usernameOrEmail, credentials.password)
-            .then(function(rs) {
-                if (rs.success) {
-                    var payload = {
-                        auth: rs.data
-                    };
+    // $scope.signin = function(credentials) {
+    //     authService.login(credentials.usernameOrEmail, credentials.password)
+    //         .then(function(rs) {
+    //             if (rs.success) {
+    //                 var payload = {
+    //                     auth: rs.data
+    //                 };
 
-                    if (rs.firstLogin) {
-                        payload.firstLogin = rs.firstLogin;
-                    } else {
-                        $state.params.location && (payload.location = $state.params.location);
-                        $state.params.referrer && (payload.referrer = $state.params.referrer);
-                        $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
-                    }
-                    $rootScope.$broadcast('event:auth-loginSuccess', payload);
-                } else {
-                    $scope.credentials = {
-                        valid: false
-                    };
-                }
-            });
-    };
+    //                 if (rs.firstLogin) {
+    //                     payload.firstLogin = rs.firstLogin;
+    //                 } else {
+    //                     $state.params.location && (payload.location = $state.params.location);
+    //                     $state.params.referrer && (payload.referrer = $state.params.referrer);
+    //                     $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
+    //                 }
+    //                 $rootScope.$broadcast('event:auth-loginSuccess', payload);
+    //             } else {
+    //                 $scope.credentials = {
+    //                     valid: false
+    //                 };
+    //             }
+    //         });
+    // };
 
     $scope.signup = function(user, form) {
         authService.signUp(user, token).then(function(rs) {

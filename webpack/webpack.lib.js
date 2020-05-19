@@ -65,6 +65,28 @@ module.exports = {
                 oneOf: [
                     // Process application JS with Babel.
                     {
+                        test: /\.tjs$/,
+                        include: [
+                            path.join(process.cwd(), './client/app'),
+                            path.join(process.cwd(), './reactify'),
+                            path.join(process.cwd(), './example'),
+                        ],
+                        use: [
+                            {
+                                loader: 'babel',
+                                options: {
+                                    babelrc: false,
+                                    configFile: false,
+                                    presets: ['@babel/preset-env', '@babel/preset-react'],
+                                    compact: 'auto',
+                                    cacheDirectory: true,
+                                    cacheCompression: true,
+                                }
+                            },
+                        ]
+
+                    },
+                    {
                         test: /\.m?js$/,
                         include: [
                             path.join(process.cwd(), './client/app'),

@@ -1,5 +1,7 @@
 'use-strict';
 
+import { setApplicationConfig } from '@zebrunner/core/store';
+
 export function CoreModuleRunner(
     $rootScope,
     $urlRouter,
@@ -14,6 +16,7 @@ export function CoreModuleRunner(
     ConfigService,
     UserService,
     toolsService,
+    $ngRedux,
 ) {
     'ngInject';
 
@@ -36,8 +39,20 @@ export function CoreModuleRunner(
         .then(() => {
             appHealthService.changeHealthyStatus(true);
 
-            getVersion();
-            updateCompanyLogo();
+            Promise.allSettled([
+                getVersion(),
+                updateCompanyLogo(),
+            ]).then(() => {
+                $ngRedux.dispatch(setApplicationConfig({
+                    api: $rootScope.version.service_url,
+                    tenantImage: $rootScope.companyLogo.value,
+                    versions: {
+                        service: $rootScope.version.service,
+                        ui: UI_VERSION,
+                    },
+                    multitenant: authService.isMultitenant,
+                }));
+            })
             if (authService.authData) {
                 UserService.initCurrentUser();
                 toolsService.getTools();
