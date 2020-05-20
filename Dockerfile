@@ -7,9 +7,10 @@ ENV UI_VERSION=${version}
 WORKDIR /app
 COPY ./ /app/
 
-RUN npm cache clean --force \
-  && npm i \
-  && npm run build
+RUN npm cache clean --force && npm i
+
+# build from sources performed in a different layer to benefit from previous layers caching
+RUN npm run build
 
 FROM nginx:1.17.10-alpine
 
