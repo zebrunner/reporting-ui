@@ -5,11 +5,12 @@ ARG version=1.0-SNAPSHOT
 ENV UI_VERSION=${version}
 
 WORKDIR /app
-COPY ./ /app/
 
+COPY ./package.json /app/
 RUN npm cache clean --force && npm i
 
 # build from sources performed in a different layer to benefit from previous layers caching
+COPY ./ /app/
 RUN npm run build
 
 FROM nginx:1.17.10-alpine
