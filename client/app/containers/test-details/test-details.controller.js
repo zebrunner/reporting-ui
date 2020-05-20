@@ -383,6 +383,7 @@ const testDetailsController = function testDetailsController(
 
                     messageService.success('Tests were marked as ' + btn.action);
                     bulkCreateWorkItems(message, selectedTests);
+                    clearTestsSelection();
                 } else {
                     messageService.error(res.message);
                     vm.bulkChangeInProgress = false;
@@ -1133,7 +1134,6 @@ const testDetailsController = function testDetailsController(
     function clearTestsSelection() {
         vm.isAllTestsSelected = false;
         onAllTestsSelect();
-        onTestSelect();
     }
 
     function getNotificationAvailability() {
