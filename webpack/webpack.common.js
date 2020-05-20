@@ -14,13 +14,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = (env) => {
     const isProd = env === 'production';
     const isDev = env === 'development';
-    const host = process.env.ZAFIRA_API_HOST || 'http://localhost:8080';
-    const context_path = process.env.ZAFIRA_API_CONTEXT_PATH || 'zafira-ws';
     const __PRODUCTION__ = JSON.stringify(isProd);
-    const __ZAFIRA_API_URL__ = host + '/' + context_path; //TODO: move WS_URL fallback value from this file
-    const __ZAFIRA_UI_VERSION__ = process.env.ZAFIRA_UI_VERSION || 'local';
-    const packageName = JSON.stringify(process.env.npm_package_name) || 'Zafira';
-    const base = JSON.stringify(process.env.ZAFIRA_UI_BASE || '/');
+    const __SERVER_HOSTNAME__ = process.env.SERVER_HOSTNAME || 'http://localhost:8080/reporting-service';
+    const __UI_VERSION__ = process.env.UI_VERSION || 'local';
+    const packageName = JSON.stringify(process.env.npm_package_name) || 'Reporting UI';
+    const base = JSON.stringify('/');
     const showProgress = isDev || process.env.SHOW_PROGRESS;
     const htmlWebpackConfig = Object.assign(
         {},
@@ -215,7 +213,7 @@ module.exports = (env) => {
             new CleanWebpackPlugin(),
             new webpack.DefinePlugin({
                 __PRODUCTION__,
-                __ZAFIRA_UI_VERSION__,
+                __UI_VERSION__,
             }),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), '@babel/runtime/helpers/asyncToGenerator.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), '@babel/runtime/regenerator/index.js'),
@@ -282,8 +280,8 @@ module.exports = (env) => {
                     from: '../config.json',
                     transform(data) {
                         const str = data.toString('utf8')
-                            .replace('__ZAFIRA_API_URL__', __ZAFIRA_API_URL__)
-                            .replace('__ZAFIRA_UI_VERSION__', __ZAFIRA_UI_VERSION__);
+                            .replace('__SERVER_HOSTNAME__', __SERVER_HOSTNAME__)
+                            .replace('__UI_VERSION__', __UI_VERSION__);
 
                         return Buffer.from(str);
                     }
