@@ -30,6 +30,7 @@ const testRunInfoController = function testRunInfoController(
     'ngInject';
 
     const mobileWidth = 480;
+    const vncFullScreenClass = 'vnc-fullscreen-mode';
     const vm = {
         testRun: null,
         configSnapshot: null,
@@ -37,12 +38,15 @@ const testRunInfoController = function testRunInfoController(
         logLevels: logLevelService.logLevels,
         filteredLogs: [],
         selectedLevel: logLevelService.initialLevel,
+
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
         downloadAllArtifacts,
         filterResults,
         changeTestStatus,
+        toggleVNCFullScreen,
+
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
     };
@@ -341,8 +345,6 @@ const testRunInfoController = function testRunInfoController(
             videoElements[0].addEventListener('webkitfullscreenchange', onFullScreenChange, false);
             videoElements[0].addEventListener('mozfullscreenchange', onFullScreenChange, false);
             videoElements[0].addEventListener('fullscreenchange', onFullScreenChange, false);
-            videoElements[0].addEventListener('ratechange', onRateChange, false);
-
             videoElements[0].addEventListener('playing', function() {
                 $scope.$apply(function () {
                     $scope.videoMode.mode = "PLAYING";
@@ -368,7 +370,15 @@ const testRunInfoController = function testRunInfoController(
         const currentDriver = $scope.drivers[$scope.selectedDriver];
 
         return currentDriver && currentDriver.link;
-    };
+    }
+
+    function isVideo(link) {
+        return link && link.split('.').pop() === 'mp4';
+    }
+
+    function isVNC(link) {
+        return link && link.includes('/vnc/');
+    }
 
     function reloadVideoOnError(videoElement) {
         var sourceElement = videoElement.getElementsByTagName('source')[0];
@@ -380,7 +390,7 @@ const testRunInfoController = function testRunInfoController(
             }
             attempt--;
         }, false);
-    };
+    }
 
     function onMetadataLoaded(ev) {
         track = this.addTextTrack("captions", "English", "en");
@@ -417,11 +427,8 @@ const testRunInfoController = function testRunInfoController(
     };
 
     function onFullScreenChange(ev) {
-        track.mode = track.mode == 'showing' ? 'hidden' : 'showing';
-    };
-
-    function onRateChange(ev) {
-    };
+        track.mode = track.mode === 'showing' ? 'hidden' : 'showing';
+    }
 
     function addSubtitles(track, videoDuration) {
         if (track && !track.cues.length) {
@@ -432,7 +439,7 @@ const testRunInfoController = function testRunInfoController(
                 track.addCue(vttCue);
             });
         }
-    };
+    }
 
     function getLogsStartErrorTime(duration, logs) {
         let logsDuration = 0;
@@ -512,27 +519,24 @@ const testRunInfoController = function testRunInfoController(
         }
     });
 
-    $scope.fullScreen = function(minimizeOnly) {
-        var fullScreenClass = 'full-screen';
-        var vncContainer = angular.element(MODES.live.element)[0];
-        var hideArray = ['.testrun-info__tab-table-wrapper', '.testrun-info__tab-additional'];
-        if (vncContainer.classList.contains(fullScreenClass)) {
-            vncContainer.classList.remove(fullScreenClass);
-            hideArray.forEach(function (value) {
-                angular.element(value)[0].style.display = 'block';
-            });
-            $scope.onResize();
-        } else if (!minimizeOnly) {
-            vncContainer.classList.add(fullScreenClass);
-            hideArray.forEach(function (value) {
-                angular.element(value)[0].style.display = 'none';
-            });
-            $scope.onResize();
+    function toggleVNCFullScreen() {
+        document.body.classList.toggle(vncFullScreenClass);
+        $timeout(() => {
+            ArtifactService.resize(angular.element($scope.MODE.element)[0], rfb);
+        }, 0);
+    }
+
+    function exitVNCFullScreen() {
+        if (document.body.classList.contains(vncFullScreenClass)) {
+            document.body.classList.remove(vncFullScreenClass);
+            $timeout(() => {
+                ArtifactService.resize(angular.element($scope.MODE.element)[0], rfb);
+            }, 0);
         }
-    };
+    }
 
     $scope.switchDriver = function (index) {
-        if ($scope.selectedDriver != index) {
+        if ($scope.selectedDriver !== index) {
             $scope.selectedDriver = index;
             postDriverChanged();
         }
@@ -668,7 +672,7 @@ const testRunInfoController = function testRunInfoController(
                             driversCount = $scope.drivers.length;
                         } else {
                             pseudoLiveCloseAction(LIVE_LOGS_INTERVAL_NAME);
-                            $scope.fullScreen(true);
+                            exitVNCFullScreen();
                             setMode('record');
                             var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
                             if (videoArtifacts.length === driversCount) {
@@ -686,7 +690,7 @@ const testRunInfoController = function testRunInfoController(
             UtilService.reconnectWebsocket(testsWebsocketName, initTestsWebSocket);
         });
         UtilService.websocketConnected(testsWebsocketName);
-    };
+    }
 
     var rfb;
     var logsStompName;
@@ -710,7 +714,7 @@ const testRunInfoController = function testRunInfoController(
         }
         vm.filteredLogs = $scope.logs;
         $scope.$applyAsync();
-    };
+    }
 
     function collectScreenshotsForNewAgent(log) {
         const logToAttache = $scope.logs.find((l, index) => {
@@ -731,17 +735,16 @@ const testRunInfoController = function testRunInfoController(
         logToAttache.blobLog = {
             thumb : { path : [thumbnailUrl] },
             image : { path : [imageUrl] }
-        }
+        };
         logToAttache.thumb = {
             path: thumbnainKey
-        }
+        };
         logToAttache.image = {
             path: log.message
-        }
+        };
         logToAttache.isImageExists = true;
-
         logSizeCount++;
-    };
+    }
 
     function removeTenantPrefix(key) {
         const tenantSubPath = authService.tenant + '/';
@@ -761,7 +764,7 @@ const testRunInfoController = function testRunInfoController(
         } else {
             preScreenshot(log, correlationId, isThumbnail);
         }
-    };
+    }
 
     function preScreenshot(log, correlationId, isThumbnail) {
         var index = $scope.logs.length - 1;
@@ -779,7 +782,7 @@ const testRunInfoController = function testRunInfoController(
         } else {
             unrecognizedImages[correlationId].image = { 'log': appenToLog, 'index': index };
         }
-    };
+    }
 
     function catchScreenshot(log, preScreenshot, correlationId, isThumbnail) {
         var path;
@@ -802,49 +805,46 @@ const testRunInfoController = function testRunInfoController(
                 delete unrecognizedImages[correlationId].image;
             }
         }
-    };
+    }
 
     function getUnrecognizedImageExists(isThumbnail, correlationId) {
         if (!unrecognizedImages[correlationId]) {
             return false;
         }
         return isThumbnail ? unrecognizedImages[correlationId].thumb : unrecognizedImages[correlationId].image;
-    };
+    }
 
     function getMetaLogCorrelationId(log) {
         return getMetaLogHeader(log, 'AMAZON_PATH_CORRELATION_ID');
-    };
+    }
 
     function getMetaLogAmazonPath(log) {
         return getMetaLogHeader(log, 'AMAZON_PATH');
-    };
+    }
 
     function getMetaLogThumbAmazonPath(log) {
         return getMetaLogHeader(log, 'THUMB_AMAZON_PATH');
-    };
+    }
 
     function getMetaLogHeader(log, headerName) {
         return log.headers[headerName];
-    };
+    }
 
     function isThumb(log) {
         return getMetaLogThumbAmazonPath(log) !== undefined;
-    };
+    }
 
     function provideVideo() {
         var driversWatcher = $scope.$watchCollection('drivers', function (newVal) {
             if (newVal && newVal.length) {
                 var wsUrl = $scope.drivers[$scope.selectedDriver].link;
                 watchUntilPainted('#vnc', function (e) {
-                    rfb = ArtifactService.connectVnc(angular.element($scope.MODE.element)[0], 'offsetHeight', 'offsetWidth', wsUrl, vncDisconnected);
+                    rfb = ArtifactService.connectVnc(angular.element($scope.MODE.element)[0], 'offsetHeight', 'offsetWidth', wsUrl);
                 });
                 driversWatcher();
             }
         });
-    };
-
-    function vncDisconnected() {
-    };
+    }
 
     $scope.getEventFromMessage = function (message) {
         return JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
@@ -883,10 +883,10 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function closeRfbConnection() {
-        if (rfb && rfb._rfb_connection_state == 'connected') {
+        if (rfb && rfb._rfb_connection_state === 'connected') {
             rfb.disconnect();
         }
-    };
+    }
 
     function closeTestsWebsocket() {
         if ($scope.testsWebsocket && $scope.testsWebsocket.connected) {
@@ -899,7 +899,7 @@ const testRunInfoController = function testRunInfoController(
                 }
             });
         }
-    };
+    }
 
     function closeAll() {
         closeRfbConnection();
@@ -907,7 +907,7 @@ const testRunInfoController = function testRunInfoController(
             logsStomp.disconnect();
             UtilService.websocketConnected(logsStompName);
         }
-    };
+    }
 
     /**************** Initialization **************/
 
@@ -916,13 +916,13 @@ const testRunInfoController = function testRunInfoController(
         addDrivers(videoArtifacts);
         driversCount = $scope.drivers.length;
         postModeConstruct(test);
-    };
+    }
 
     function initRecordMode(test) {
         var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
         addDrivers(videoArtifacts);
         postModeConstruct(test);
-    };
+    }
 
     function controllerInit() {
         initTestsWebSocket(vm.testRun);

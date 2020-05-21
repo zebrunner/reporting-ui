@@ -50,7 +50,7 @@
                                                         </video>
                                                         <div ng-init="vncPained = true;" ng-if="MODE.name == 'live';"
                                                             id="vnc">
-                                                            <i ng-click="fullScreen();" class="material-icons video-control">fullscreen</i>
+                                                            <i ng-click="$ctrl.toggleVNCFullScreen()" class="material-icons video-control">fullscreen</i>
                                                         </div>
                                                     </div>
                                                     <div ng-show="!$ctrl.hasVideo" class="testrun-info__tab-video-wrapper _no-video">
