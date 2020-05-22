@@ -391,48 +391,22 @@
                     margin-top: 9px;
                     display: block;
 
-                    & .no-video__icon-wrapper {
+                    .no-video__icon-wrapper {
                         position: absolute;
-                        left: 50%;
+                        left: 0;
+                        right: 0;
                         top: 50%;
-                        transform: translate(-50%,-50%);
+                        transform: translateY(-50%);
+                        text-align: center;
 
-                        & .icon {
-                            display: block;
+                        .material-icons {
                             color: #fff;
-                            font-size: 66px;
+                            height: 66px;
                             opacity: 0.5;
-                            text-align: center;
-                            position: relative;
-
-                            &::before {
-                                position: absolute;
-                                display: block;
-                                content: '';
-                                top: 22px;
-                                left: 38px;
-                                height: 23px;
-                                width: 28px;
-                                border-radius: 2px;
-                                opacity: 1;
-                                background-color: #000;
-                            }
-
-                            &::after {
-                                position: absolute;
-                                display: block;
-                                content: '';
-                                top: 30px;
-                                left: 21px;
-                                height: 6px;
-                                width: 70px;
-                                transform: rotate(45deg);
-                                opacity: 1;
-                                background-color: #fff;
-                            }
+                            width: 70px;
                         }
 
-                        & .icon__text {
+                        .icon__text {
                             font-weight: 500;
                             color: #fff;
                             opacity: 0.5;
@@ -599,6 +573,35 @@
                     }
                 }
             }
+        }
+    }
+}
+
+.p-tests-run-info {
+    &.vnc-fullscreen-mode {
+        .testrun-info__container,
+        .content-container,
+        .main-container {
+            position: relative;
+            z-index: $zindex-fixed + 2; // +1 has zendesk button, so we need to add 2 to display video over it
+        }
+        md-tab-content.md-active {
+            transform: none;
+        }
+        .testrun-info__tab-video-wrapper {
+            background: #000;
+            min-height: 100%;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            z-index: 1;
         }
     }
 }
