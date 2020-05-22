@@ -22,9 +22,6 @@ const testRunCardController = function testRunCardController(
 
         const local = {
             currentUser: UserService.currentUser,
-            stopConnectingDebug: null,
-            debugHost: null,
-            debugPort: null,
         };
         const vm = {
             testRun: null,
@@ -48,7 +45,6 @@ const testRunCardController = function testRunCardController(
             buildNow: buildNow,
             abort: abort,
             rerun: rerun,
-            startDebug: startDebug,
             onTestRunDelete: onTestRunDelete,
             checkFilePresence: checkFilePresence,
             downloadApplication: downloadApplication,
