@@ -238,6 +238,12 @@
                 }
             }
 
+            &-row {
+                &._head {
+                    background-color: rgba($gray-base, 0.03);
+                }
+            }
+
             &-col {
                 font-size: 12px;
                 line-height: 16px;
@@ -246,6 +252,7 @@
                 &._heading {
                     text-transform: uppercase;
                     line-height: 28px;
+                    border-bottom-width: 1px;
                 }
 
                 &._start,
@@ -301,6 +308,11 @@
                     width: 40px;
                     text-align: center;
                     padding: 6px !important;
+
+                    & .setting-menu_button.md-button.md-icon-button {
+                        max-height: 36px;
+                        height: 36px;
+                    }
                 }
                 &._visuals .image-placeholder {
                     position: absolute;
@@ -803,6 +815,14 @@
                 &-wrapper {
                     height: auto !important;
                     overflow: visible;
+                }
+                &-col {
+                    &._menu {
+                        & .setting-menu_button.md-button.md-icon-button {
+                            max-height: 46px;
+                            height: 46px;
+                        }
+                    }
                 }
             }
             &-video {

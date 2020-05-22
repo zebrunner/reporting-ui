@@ -238,7 +238,7 @@
                                                                 </md-menu>
                                                             </th>
                                                             <th class="testrun-info__tab-table-col _heading _action">Action</th>
-                                                            <th  class="testrun-info__tab-table-col _menu"></th>
+                                                            <th  class="testrun-info__tab-table-col _heading _menu"></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="logs">
@@ -281,7 +281,7 @@
                                                             <td ng-click="selectLogRow($event, $index);" class="testrun-info__tab-table-col _menu settings-cell">
                                                                 <md-menu ng-if="selectedLogRow == $index">
                                                                     <md-button name="logsSetting" aria-label="Logs settings"
-                                                                        class="md-icon-button" data-ng-click="$mdMenu.open($event);">
+                                                                        class="md-icon-button setting-menu_button" data-ng-click="$mdMenu.open($event);">
                                                                         <md-icon class="material-icons">more_vert</md-icon>
                                                                     </md-button>
                                                                     <md-menu-content width="2" class="fixed-md-menu-content">
