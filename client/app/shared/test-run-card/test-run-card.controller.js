@@ -22,7 +22,6 @@ const testRunCardController = function testRunCardController(
 
         const local = {
             currentUser: UserService.currentUser,
-            testRunInDebugMode: null,
             stopConnectingDebug: null,
             debugHost: null,
             debugPort: null,
@@ -56,6 +55,7 @@ const testRunCardController = function testRunCardController(
             goToTestRun: goToTestRun,
             isToolConnected: toolsService.isToolConnected,
             userHasAnyPermission: authService.userHasAnyPermission,
+            isButtonVisible,
 
             get isMobile() { return $mdMedia('xs'); },
             get currentOffset() { return $rootScope.currentOffset; },
@@ -85,7 +85,6 @@ const testRunCardController = function testRunCardController(
 
         function initMenuRights() {
             vm.showNotificationOption = (vm.isNotificationAvailable && vm.testRun.channels) && vm.testRun.reviewed;
-            vm.showBuildNowOption = vm.isToolConnected('JENKINS');
             vm.showDeleteTestRunOption = true;
         }
 
@@ -209,135 +208,6 @@ const testRunCardController = function testRunCardController(
             });
         }
 
-        function startDebug() {
-            if (confirm('Start debugging?')) {
-                local.testRunInDebugMode = angular.copy(vm.testRun);
-                debugTestRun(local.testRunInDebugMode);
-            }
-        }
-
-        function debugTestRun(testRunForDebug) {
-            TestRunService.debugTestRun(testRunForDebug.id).then(function (rs) {
-                if (rs.success) {
-                    showDebugToast();
-                    let debugLog = '';
-                    let disconnectDebugTimeout;
-                    const parseLogsInterval = $interval(function() {
-                        TestRunService.getConsoleOutput(testRunForDebug.id, testRunForDebug.ciRunId, 200, 50).then(function (rs) {
-                            if (rs.success) {
-                                const map = rs.data;
-
-                                Object.keys(map).forEach(function(key) {
-                                    const value = map[key];
-
-                                    if (value.includes('Listening for transport dt_socket at address:')) {
-                                        if (debugLog === '') {
-                                            getDebugData(value);
-                                        }
-
-                                        $timeout.cancel(connectDebugTimeout);
-
-                                        disconnectDebugTimeout = $timeout(function() {
-                                            stopDebugMode();
-                                            $mdToast.hide();
-                                        }, 60 * 10 * 1000);
-
-                                        if (debugLog === '') {
-                                            debugLog = value;
-                                        }
-
-                                        if (debugLog !== value) {
-                                            $timeout.cancel(disconnectDebugTimeout);
-                                            $interval.cancel(parseLogsInterval);
-                                            $mdToast.hide();
-                                            messageService.success('Tests started in debug');
-                                        }
-                                    }
-                                });
-                            } else {
-                                stopDebugMode();
-                                messageService.error(rs.message);
-                            }
-                        });
-                    }, 10000);
-                    const connectDebugTimeout = $timeout(function() {
-                        messageService.error('Problems with starting debug mode occurred, disabling');
-                        stopDebugMode();
-                    }, 60 * 10 * 1000);
-
-                    local.stopConnectingDebug = function() {
-                        $interval.cancel(parseLogsInterval);
-                        $timeout.cancel(disconnectDebugTimeout);
-                        $timeout.cancel(connectDebugTimeout);
-                    };
-
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
-        }
-
-        function getDebugData(log){
-            if (log) {
-                const portLine = log.split('Enabling remote debug on ');
-                const debugValues = portLine[1].split(':');
-
-                local.debugHost = debugValues[0];
-                local.debugPort = debugValues[1].split('\n')[0];
-            }
-        }
-
-        function showDebugToast() {
-            $mdToast.show({
-                hideDelay: 1200000,
-                position: 'bottom right',
-                locals: {
-                    debugPort: local.debugPort,
-                    debugHost: local.debugHost,
-                    stopDebugMode: stopDebugMode
-                },
-                controller : 'DebugModeController',
-                controllerAs: '$ctrl',
-                bindToController: true,
-                template : require('../../components/toasts/debug-mode/debug-mode.html')
-            });
-        }
-
-        function stopDebugMode() {
-            local.stopConnectingDebug && local.stopConnectingDebug();
-            if (local.testRunInDebugMode) {
-                abortDebug(local.testRunInDebugMode);
-                local.testRunInDebugMode = null;
-                local.debugHost = null;
-                local.debugPort = null;
-                messageService.warning('Debug mode is disabled');
-            }
-        }
-
-        function abortDebug(debuggedTestRun) {
-            if (vm.isToolConnected('JENKINS')) {
-                TestRunService.abortDebug(debuggedTestRun.id, debuggedTestRun.ciRunId).then(function (rs) {
-                    if (rs.success) {
-                        const abortCause = {};
-
-                        abortCause.comment = 'Debug mode was disconnected';
-                        TestRunService.abortTestRun(debuggedTestRun.id, debuggedTestRun.ciRunId, abortCause).then(function(rs) {
-                            if (rs.success) {
-                                debuggedTestRun.status = 'ABORTED';
-                                messageService.success('Testrun ' + debuggedTestRun.testSuite.name + ' is aborted');
-                            } else {
-                                messageService.error(rs.message);
-                            }
-                        });
-                    } else {
-                        messageService.error(rs.message);
-                    }
-                });
-            } else {
-                messageService.error('Unable connect to jenkins');
-            }
-        }
-
         function showBuildNowDialog(event) {
             $mdDialog.show({
                 controller: 'BuildNowController',
@@ -427,6 +297,21 @@ const testRunCardController = function testRunCardController(
                     messageService.error(rs.message);
                 }
             });
+        }
+
+        function isButtonVisible(name) {
+            const defaultRight = vm.userHasAnyPermission(['TEST_RUNS_CI']) && vm.isToolConnected('JENKINS') && vm.testRun?.job?.name !== 'local';
+
+            switch(name) {
+                case 'buildNow':
+                    return defaultRight;
+                case 'abort':
+                    return defaultRight && vm.testRun.status === 'IN_PROGRESS';
+                case 'rebuild':
+                    return defaultRight && vm.testRun.status !== 'IN_PROGRESS';
+                default:
+                    return false;
+            }
         }
     };
 
