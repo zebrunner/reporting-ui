@@ -113,35 +113,76 @@
     &__status {
         &-icon {
             display: inline-block;
-            min-width: 44px;
-            border-radius: 2px;
+            position: relative;
+            min-width: 38px;
             height: 16px;
             text-align: center;
             text-transform: uppercase;
+            font-weight: 500;   
+            font-size: 12px;         
 
-            &._debug {
-                background-color: $blue-new;
-                color: #fff;
+            &:before,
+            &:after {
+                position: absolute;
+                display: block;
+                content: '';
+                top: 0;
+                height: 16px;
+                width: 10px;
+            }
+            
+            &:before {
+                left: -10px;
+                border-top-left-radius: 16px;
+                border-bottom-left-radius: 16px;
             }
 
-            &._warn {
+            &:after {
+                right: -10px;
+                border-top-right-radius: 16px;
+                border-bottom-right-radius: 16px;
+            }
+
+
+            &._debug,
+            &._debug:before,
+            &._debug:after {
+                background-color: rgba($blue-dark, 0.07);
+                color: $blue-dark;
+            }
+
+            &._warn,
+            &._warn:before,
+            &._warn:after {
                 background-color: $yellow-new;
-                color: #fff;
+                color: rgba($dark-new, 0.8);
             }
 
             &._error,
-            &._fatal {
+            &._fatal,
+            &._error:before,
+            &._error:after,
+            &._fatal:before,
+            &._fatal:after {
                 background-color: $red-new;
                 color: #fff;
             }
 
-            &._info {
-                background-color: $green-new;
-                color: #fff;
+            &._info,
+            &._info:before,
+            &._info:after {
+                background-color: rgba($green-new, 0.07);
+                color: $green-new;
             }
+
             &._trace,
-            &._status {
+            &._status,
+            &._trace:before,
+            &._trace:after,
+            &._status:before,
+            &._status:after {
                 background-color: rgba($dark-new, 0.07);
+                color: rgba($dark-new, 0.8);
             }
 
             &.button__text {
@@ -156,7 +197,7 @@
             border-radius: 2px;
             height: 16px;
             text-align: center;
-            text-transform: capitalize;
+            text-transform: uppercase;
 
             & + .selected-icon {
                 display: inline-block;
@@ -191,6 +232,10 @@
                 height: 100%;
                 overflow: auto;
                 padding-bottom: 10px !important;
+            
+                &._mobile {
+                    width: 100%;
+                }
             }
 
             &-col {
@@ -198,15 +243,46 @@
                 line-height: 16px;
                 word-wrap: break-word;
 
+                &._heading {
+                    text-transform: uppercase;
+                    line-height: 28px;
+                }
+
                 &._start,
                 &._visuals {
                     width: 80px;
                     text-align: center;
+                    position: relative;
+
+                    &-wrapper {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        max-height: 76px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
                 }
                 &._status {
                     width: 100px;
                     text-align: center;
+                    position: relative;
 
+                    &-wrapper {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        max-height: 76px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    
                     & ._button-icon {
                         margin-left: 2px;
                         transform: translateY(2px);
@@ -215,6 +291,7 @@
                 }
                 &._action {
                     width: auto;
+                    line-height: 28px;
 
                     a {
                         white-space: nowrap;
@@ -226,25 +303,31 @@
                     padding: 6px !important;
                 }
                 &._visuals .image-placeholder {
-                    position: relative;
-                    height: #{$line-height-base}em;
-
-                    .material-icons {
-                        position: absolute;
-                        left: 50%;
-                        top: 50%;
-                        transform: translate(-50%, -50%);
-                    }
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    max-height: 76px;
+                    top: 0;
+                    left: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
             }
 
             &-img {
                 box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
-                max-width: 66%;
-                max-height: 29px;
+                width: 32px;
+                height: 32px;
+                border-radius: 4px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                object-fit: cover;
+
+                &-wrapper._visuals {
+                    padding: 8px !important;
+                }
             }
 
             .md-button.md-icon-button {
@@ -252,20 +335,226 @@
             }
         }
 
+        &-mobile-table {
+            table-layout: fixed;
+
+            &-body {
+                position: relative;
+
+                &::after {
+                    position: absolute;
+                    display: block;
+                    content: '';
+                    left: 0;
+                    width: 100%;
+                    height: 1px;
+                    background-color: $custom-gray;
+                }
+            }
+
+            &-row {
+                &-inner {
+                    & td {
+                        padding: 12px 8px 12px 0;
+                    }
+
+                }
+            }
+
+            &-data {
+                &._start,
+                &._status,
+                &._action,
+                &._visuals {
+                    width: 100px;
+                    padding-left: 10px;
+                    font-size: 9px;
+                    text-transform: uppercase;
+                    opacity: 0.8;
+                }
+
+                & ._status-wrapper {
+                    & ._mobile {
+                        margin-left: 10px;
+                    }
+                }
+
+                &._status-data {
+                    position: relative;
+                }
+
+                &._action {
+                    position: relative;
+                    & .action-wrapper {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        max-height: 81px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-start;
+                        padding-left: 10px;
+                    }
+                }
+
+                &._action-data {
+                    & .log {
+                        &_message {
+                            display: inline-block;
+                            width: 100%;
+                            word-break: break-all;
+
+                            & .full {
+                                line-height: 28px;
+                            }
+                        }
+
+                        &_button {
+                            display: block;
+                        }
+                    }
+                }
+
+            }
+        }
+
         &-additional {
             position: relative;
             bottom: 0;
+            margin: 16px;
+
+            & .tab-additional__table {
+                width: 100%;
+
+                &._second-section,
+                &._third-section,
+                &._fourth-section {
+                    margin-top: 20px;
+                }
+
+                &-row {
+                    & ._border-bottom {
+                        border-bottom: 1px solid $gray-lighter;
+                    }
+                }
+
+                &-data {
+                    &._status,
+                    &._started,
+                    &._duration,
+                    &._test-owner,
+                    &._platform,
+                    &._tickets,
+                    &._artifacts {
+                        width: 150px;
+                        font-size: 14px;
+                        opacity: 0.8;
+                    }
+
+                    &._artifacts {
+                        vertical-align: top;
+                    }
+
+                    &._test-owner-data {
+                        text-transform: capitalize;
+                    }
+
+                    @media screen and (min-width: 992px) and (max-width: 1200px){
+                        &._status {
+                            width: 33%;
+                        }
+
+                        &._status-info {
+                            padding-right: 0;
+                        }
+
+                        &._issue {
+                            & .button {
+                                padding-right: 0;
+                            }
+                        }
+                    }
+
+                    @media screen and (max-width: 375px){
+                        &._status {
+                            width: 38%;
+                        }
+                    }
+
+                    &._started-data {
+                        padding: 0;
+                    }
+
+                    &._issue {
+                        width: 90px;
+                        padding-right: 0;
+                        & .button {
+                            border: 0;
+                            background-color: transparent;
+                            color: $brand-primary;
+                            & .data-icon svg path{
+                                fill: $brand-primary;
+                            }
+                            & .data-icon {
+                                width: 12px;
+                                height: 12px;
+                                min-width: 12px;
+                                min-height: 12px;
+                                margin-right: 6px;
+                                margin-left: 0;
+                                transform: translateY(-1px);
+                            }
+
+                            & span {
+                                font-size: 12px;
+                            }
+                        }
+                    }
+
+                    &._tickets-info {
+                        & .work-items {
+                            display: inline-block;
+                            & a,
+                            & span{
+                                margin-right: 20px;
+                            }
+                        }
+                    }
+
+                    &._artifacts-info {
+                        & .artifact-link {
+                            display: inline-block;
+                            margin-right: 25px;
+                            color: #000;
+                            text-decoration: underline;
+                            font-size: 12px;
+                        }
+                    }
+
+
+                    &._label {
+                        font-weight: 400;
+                    }
+
+                    & .data-icon {
+                        min-height: 18px;
+                        min-width: 18px;
+                        width: 18px;
+                        height: 18px;
+                        margin-right: 10px;
+                        margin-left: 6px;
+                    }
+                }
+            }
 
             table {
-                margin: 16px 16px;
-                padding-left: 33px;
-                -webkit-padding-start: 33px;
-                list-style: none;
 
                 td {
                 padding: 8px 8px 8px 0;
                 color: $coal;
-                font-size: 14.5px;
+                font-size: 12px;
 
                     span{
                         font-weight: 500;
@@ -286,7 +575,7 @@
                     padding-left: 22px;
 
                     .button-text {
-                        font-size: 14.5px;
+                        font-size: 12px;
                         line-height: 26px;
                         text-transform: capitalize;
                         vertical-align: top;
@@ -318,7 +607,7 @@
                     .button-icon {
                         color: $dark-coal-new;
                         font-size: 20px;
-                        transform: translateY(2px);
+                        transform: translateY(3px);
                     }
                 }
             }
@@ -523,54 +812,6 @@
                 &-wrapper {
                     margin-right: 0;
                     margin-left: 0;
-                }
-            }
-        }
-    }
-
-    @media screen and (max-width: 599px) {
-        &__tab {
-            &-table {
-                display: block;
-
-                thead,
-                tbody {
-                    display: block;
-                }
-
-                &-row {
-                    display: flex;
-                    flex-wrap: wrap;
-                    width: 100%;
-                }
-
-                &-col {
-                    display: block;
-
-                    &._start {
-                        flex: 0 0 80px;
-                    }
-                    &._visuals {
-                        flex: 1 1 80px;
-                        order: 2;
-                    }
-                    &._status {
-                        flex: 0 0 100px;
-                        order: 1;
-                    }
-                    &._action {
-                        flex: 1 1 100%;
-                        order: 4;
-                        max-width: 100%;
-
-                        thead & {
-                            display: none;
-                        }
-                    }
-                    &._menu {
-                        flex: 0 0 40px;
-                        order: 3;
-                    }
                 }
             }
         }
