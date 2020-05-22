@@ -9,7 +9,7 @@
         <zf-sub-header-title class="_flex">
             <span class="testrun-info__title-name">{{ test.name }}</span>
             <span class="testrun-info__title-name _mobile">{{ $ctrl.currentTitle }}</span>
-            <span class="recording-icon" ng-if="MODE.name == 'live'">
+            <span class="recording-icon" ng-if="MODE.name === 'live'">
                     <div class="red-point" ng-class="{'flash-point': true}"></div>
                 </span>
         </zf-sub-header-title>
@@ -43,20 +43,21 @@
                                                     <div ng-show="$ctrl.hasVideo" class="testrun-info__tab-video-wrapper">
                                                         <video preload="auto"
                                                             id="videoRecord"
-                                                            ng-if="MODE.name == 'record'"
+                                                            ng-if="MODE.name === 'record'"
                                                             controls>
                                                             <source ng-src="{{ drivers[selectedDriver].link }}" type="video/mp4">
                                                             Your browser does not support the video tag.
                                                         </video>
-                                                        <div ng-init="vncPained = true;" ng-if="MODE.name == 'live';"
+                                                        <div ng-init="vncPained = true;" ng-if="MODE.name === 'live';"
                                                             id="vnc">
                                                             <i ng-click="$ctrl.toggleVNCFullScreen()" class="material-icons video-control">fullscreen</i>
                                                         </div>
                                                     </div>
                                                     <div ng-show="!$ctrl.hasVideo" class="testrun-info__tab-video-wrapper _no-video">
                                                         <div class="no-video__icon-wrapper">
-                                                            <div class="material-icons icon">videocam_off</div>
-                                                            <span class="icon__text">No video attached</span>
+                                                            <md-icon md-svg-icon="outlined:videocam_off" class="material-icons icon"></md-icon>
+                                                            <div class="icon__text" ng-if="test.status === 'IN_PROGRESS'">No live session available</div>
+                                                            <div class="icon__text" ng-if="test.status !== 'IN_PROGRESS'">No video available {{ MODE.name === 'record' ? 'yet' : '' }}</div>
                                                         </div>
                                                         <div class="no-video__controls-wrapper">
                                                             <div class="controls _play">
