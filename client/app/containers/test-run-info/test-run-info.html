@@ -96,7 +96,7 @@
                                                                             </div>
                                                                             <md-menu-content class="tab-additional__menu-content">
                                                                                 <md-menu-item class="menu__item" ng-repeat="item in ['passed', 'failed']">
-                                                                                    <md-button ng-click="$ctrl.changeTestStatus(test, item)">
+                                                                                    <md-button ng-click="$ctrl.changeTestStatus(test, item)" ng-disabled="$ctrl.testRun.status.toLowerCase === 'in_progress'">
                                                                                         <span class="item-text {{item}}" md-menu-align-target>{{item}}</span>
                                                                                     </md-button>
                                                                                 </md-menu-item>
@@ -210,173 +210,98 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                        <div>
+                                                            <span ng-click="$ctrl.log($ctrl)">log</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="testrun-info__tab-table-wrapper col-md-8 col-sm-12" ng-class="{ '_mobile': $ctrl.isMobile, 'no-padding': !$ctrl.isMobile}">
-                                                <table data-table-loupe="currentLog.id" data-table-loupe-trigger="videoMode.mode == 'PLAYING'"
-                                                    class="table no-margin testrun-info__tab-table" ng-if="!$ctrl.isMobile">
-                                                    <thead>
-                                                        <tr class="testrun-info__tab-table-row _head">
-                                                            <th class="testrun-info__tab-table-col _heading _visuals">Visuals</th>
-                                                            <th class="testrun-info__tab-table-col _heading _start">Start</th>
-                                                            <th class="testrun-info__tab-table-col _heading _status">
-                                                                <md-menu md-offset="-10 47">
-                                                                    <div aria-label="Open demo menu" ng-click="$mdMenu.open($event); $ctrl.log($ctrl)" >
-                                                                        <span class="testrun-info__status-button-icon _{{$ctrl.selectedLevel}}">Status</span>
-                                                                        <span ng-if="$ctrl.selectedLevel === 'status'" class="material-icons _button-icon">filter_list</span>
-                                                                        <md-icon md-svg-icon="checkedListIcon" ng-if="$ctrl.selectedLevel !== 'status'" class="material-icons selected-icon"></md-icon>
-                                                                    </div>
-                                                                    <md-menu-content width="2" class="_status dropdown-content">
-                                                                        <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
-                                                                            <md-button ng-click="$ctrl.filterResults($index)" class="listitem__button">
-                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
-                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">All</span>
-                                                                            </md-button>
-                                                                        </md-menu-item>
-                                                                    </md-menu-content>
-                                                                </md-menu>
-                                                            </th>
-                                                            <th class="testrun-info__tab-table-col _heading _action">Action</th>
-                                                            <th  class="testrun-info__tab-table-col _heading _menu"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="logs">
-                                                        <tr ng-dblclick="getVideoState(log);"
-                                                            class="testrun-info__tab-table-row"
-                                                            ng-attr-id="log-{{ $index }}"
-                                                            ng-if="logs.length"
-                                                            ng-repeat="log in $ctrl.filteredLogs">
-                                                            <td class="testrun-info__tab-table-col _visuals testrun-info__tab-table-img-wrapper">
-                                                                <span ng-show="log.driver" style="border-radius: 8px"
-                                                                    class="label label-default">Driver {{
-                                                                    log.driver.index + 1 }}</span>
-                                                                <div ng-show="log.blobLog" class="log-wrapper image-placeholder">
-                                                                    <img ng-if="log.isImageExists"
-                                                                        class="testrun-info__tab-table-img"
-                                                                        ng-click="openImagesViewerModal($event, log.blobLog.image.path[0]);"
-                                                                        ng-src="{{log.blobLog.thumb.path || log.blobLog.image.path[0]}}"
-                                                                        title="log screen"
-                                                                        alt="log screen" />
-                                                                    <i ng-show="log.isImageExists === false;" class="material-icons">insert_photo</i>
-                                                                </div>
-                                                            </td>
-                                                            <td class="testrun-info__tab-table-col _start" ng-click="selectLogRow($event, $index);">
-                                                                <div class="testrun-info__tab-table-col _start-wrapper">
-                                                                    <span>{{log.timestamp | date: 'HH:mm:ss'}}</span>
-                                                                </div>
-                                                            </td>
-                                                            <td class="testrun-info__tab-table-col _status" ng-click="selectLogRow($event, $index);">
-                                                                <div class="testrun-info__tab-table-col _status-wrapper">
-                                                                    <span class="testrun-info__status-icon {{log.level ? '_' + (log.level | lowercase) : ''}}">{{log.level}}<md-tooltip ng-if="log.threadName" md-direction="right">{{log.threadName}}</md-tooltip></span>
-                                                                </div>
-                                                            </td>
-                                                            <td class="testrun-info__tab-table-col _action" ng-click="selectLogRow($event, $index);" ng-attr-id="log.timestamp">
-                                                                <div ng-if="log.showMore" class="log_message" name="logFullMessage">
-                                                                    <div class="full" ng-bind-html="$ctrl.getFullLogMessage(log)"></div>
-                                                                    <div><a href="#" ng-click="$ctrl.switchMoreLess($event, log)">Show less</a></div>
-                                                                </div>
-                                                                <div class="log_message" name="logMessage" ng-if="!log.showMore">{{log.message | cut:true:255:' ...'}} <a href="#" ng-if="log.message.length > 255" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
-                                                            </td>
-                                                            <td ng-click="selectLogRow($event, $index);" class="testrun-info__tab-table-col _menu settings-cell">
-                                                                <md-menu ng-if="selectedLogRow == $index">
-                                                                    <md-button name="logsSetting" aria-label="Logs settings"
-                                                                        class="md-icon-button setting-menu_button" data-ng-click="$mdMenu.open($event);">
-                                                                        <md-icon class="material-icons">more_vert</md-icon>
+                                            <div class="testrun-info__tab-table-wrapper col-md-8 col-sm-12 no-padding">
+                                                <div class="testrun-info__tab-table-row _head">
+                                                    <div class="testrun-info__tab-table-col _visuals">Visuals</div>
+                                                    <div class="testrun-info__tab-table-col _start">Start</div>
+                                                    <div class="testrun-info__tab-table-col _status">
+                                                        <md-menu md-offset="-20 40">
+                                                            <div aria-label="Open demo menu" ng-click="$mdMenu.open($event); $ctrl.log($ctrl)" >
+                                                                <span class="testrun-info__status-button-icon _{{$ctrl.selectedLevel}}">Status</span>
+                                                                <span ng-if="$ctrl.selectedLevel === 'status'" class="material-icons _button-icon">filter_list</span>
+                                                                <md-icon md-svg-icon="checkedListIcon" ng-if="$ctrl.selectedLevel !== 'status'" class="material-icons selected-icon"></md-icon>
+                                                            </div>
+                                                            <md-menu-content width="2" class="_status dropdown-content">
+                                                                <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
+                                                                    <md-button ng-click="$ctrl.filterResults($index)" class="listitem__button">
+                                                                        <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
+                                                                        <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">All</span>
                                                                     </md-button>
-                                                                    <md-menu-content width="2" class="fixed-md-menu-content">
-                                                                        <md-menu-item>
-                                                                            <md-button name="copyLine" ng-click="copyLogLine(log);">
-                                                                                Copy line
-                                                                            </md-button>
-                                                                        </md-menu-item>
-                                                                        <md-menu-item>
-                                                                            <md-button name="copyPermalink" ng-click="copyLogPermalink();">
-                                                                                Copy permalink
-                                                                            </md-button>
-                                                                        </md-menu-item>
-                                                                    </md-menu-content>
-                                                                </md-menu>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table ng-if="$ctrl.isMobile" class="testrun-info__tab-mobile-table">
-                                                    <tbody id="logs" 
-                                                        class="testrun-info__tab-mobile-table-body"
-                                                        ng-attr-id="log-{{ $index }}"
-                                                        ng-if="logs.length"
-                                                        ng-dblclick="getVideoState(log);"
-                                                        ng-click="selectLogRow($event, $index);"
-                                                        ng-repeat="log in $ctrl.filteredLogs">
-                                                        <tr class="testrun-info__tab-mobile-table-row">
-                                                            <tr class="testrun-info__tab-mobile-table-row-inner" ng-show="log.blobLog">
-                                                                <td class="testrun-info__tab-mobile-table-data _visuals">Visuals</td>
-                                                                <td colspan="2" class="testrun-info__tab-mobile-table-data _visuals-data">
-                                                                    <span ng-show="log.driver" style="border-radius: 8px"
-                                                                    class="label label-default">Driver {{
-                                                                    log.driver.index + 1 }}</span>
-                                                                <div ng-show="log.blobLog" class="log-wrapper" ng-class="{ 'image-placeholder': log.isImageExists === false }">
-                                                                    <img ng-if="log.isImageExists"
-                                                                        class="testrun-info__tab-table-img"
-                                                                        ng-click="openImagesViewerModal($event, log.blobLog.image.path[0]);"
-                                                                        ng-src="{{log.blobLog.thumb.path || log.blobLog.image.path[0]}}"
-                                                                        title="log screen"
-                                                                        alt="log screen" />
-                                                                    <i ng-show="log.isImageExists === false;" class="material-icons">insert_photo</i>
-                                                                </div>
-                                                                </td>
-                                                            <tr class="testrun-info__tab-mobile-table-row-inner">
-                                                                <td class="testrun-info__tab-mobile-table-data _start">Start</td>
-                                                                <td  class="testrun-info__tab-mobile-table-data _start-data">
-                                                                    <span>{{log.timestamp | date: 'HH:mm:ss'}}</span>
-                                                                </td>
-                                                                <td class="testrun-info__tab-table-col _menu settings-cell">
-                                                                    <md-menu ng-if="selectedLogRow == $index">
-                                                                        <md-button name="logsSetting" aria-label="Logs settings"
-                                                                            class="md-icon-button" data-ng-click="$mdMenu.open($event);">
-                                                                            <md-icon class="material-icons">more_vert</md-icon>
+                                                                </md-menu-item>
+                                                            </md-menu-content>
+                                                        </md-menu>
+                                                    </div>
+                                                    <div class="testrun-info__tab-table-col _action">Action</div>
+                                                    <div class="testrun-info__tab-table-col _menu"></div>
+                                                </div>
+                                                <div class="testrun-info__tab-table-row"
+                                                    ng-repeat="log in $ctrl.filteredLogs"
+                                                    ng-attr-id="log-{{ $index }}"
+                                                    ng-if="logs.length"
+                                                    ng-click="selectLogRow($event, $index);">
+                                                    <div class="testrun-info__tab-table-col _visuals">
+                                                        <div class="testrun-info__tab-table-col _title" ng-if="log.blobLog && $ctrl.isMobile">Visuals</div>
+                                                        <span ng-show="log.driver" style="border-radius: 8px" class="label label-default">Driver {{ log.driver.index + 1 }}</span>
+                                                        <div ng-show="log.blobLog" class="log-wrapper image-placeholder">
+                                                            <img ng-if="log.isImageExists"
+                                                                class="testrun-info__tab-table-img"
+                                                                ng-click="openImagesViewerModal($event, log.blobLog.image.path[0]);"
+                                                                ng-src="{{log.blobLog.thumb.path || log.blobLog.image.path[0]}}"
+                                                                title="log screen"
+                                                                alt="log screen" />
+                                                            <i ng-show="log.isImageExists === false;" class="material-icons">insert_photo</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="testrun-info__tab-table-col _start">
+                                                        <div class="testrun-info__tab-table-col _title" ng-show="$ctrl.isMobile">Start</div>
+                                                        <div class="testrun-info__tab-table-col _start-wrapper">
+                                                            <span>{{log.timestamp | date: 'HH:mm:ss'}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="testrun-info__tab-table-col _status">
+                                                        <div class="testrun-info__tab-table-col _title" ng-show="$ctrl.isMobile">Status</div>
+                                                        <div class="testrun-info__tab-table-col _status-wrapper">
+                                                            <span class="testrun-info__status-icon {{log.level ? '_' + (log.level | lowercase) : ''}}">{{log.level}}<md-tooltip ng-if="log.threadName" md-direction="right">{{log.threadName}}</md-tooltip></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="testrun-info__tab-table-col _action">
+                                                        <div class="testrun-info__tab-table-col _title" ng-show="$ctrl.isMobile">Action</div>
+                                                        <div ng-if="log.showMore" class="log_message" name="logFullMessage">
+                                                            <div class="full" ng-bind-html="$ctrl.getFullLogMessage(log)"></div>
+                                                            <div><a href="#" ng-click="$ctrl.switchMoreLess($event, log)">Show less</a></div>
+                                                        </div>
+                                                        <div class="log_message" name="logMessage" ng-if="!log.showMore && !$ctrl.isMobile">{{log.message | cut:true:255:' ...'}} <a href="#" ng-if="log.message.length > 255" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
+                                                        <div class="log_message" name="logMessage" ng-if="!log.showMore && $ctrl.isMobile">{{log.message | cut:true:55:' ...'}} <a href="#" ng-if="log.message.length > 55" class="log_button" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
+                                                    </div>
+                                                    <div class="testrun-info__tab-table-col _menu">
+                                                        <div class="testrun-info__tab-table-col _menu-wrapper">
+                                                            <md-menu ng-if="selectedLogRow == $index">
+                                                                <md-button name="logsSetting" aria-label="Logs settings"
+                                                                    class="md-icon-button setting-menu_button" data-ng-click="$mdMenu.open($event);">
+                                                                    <md-icon class="material-icons">more_vert</md-icon>
+                                                                </md-button>
+                                                                <md-menu-content width="2" class="fixed-md-menu-content">
+                                                                    <md-menu-item>
+                                                                        <md-button name="copyLine" ng-click="copyLogLine(log);">
+                                                                            Copy line
                                                                         </md-button>
-                                                                        <md-menu-content width="2" class="fixed-md-menu-content">
-                                                                            <md-menu-item>
-                                                                                <md-button name="copyLine" ng-click="copyLogLine(log);">
-                                                                                    Copy line
-                                                                                </md-button>
-                                                                            </md-menu-item>
-                                                                            <md-menu-item>
-                                                                                <md-button name="copyPermalink" ng-click="copyLogPermalink();">
-                                                                                    Copy permalink
-                                                                                </md-button>
-                                                                            </md-menu-item>
-                                                                        </md-menu-content>
-                                                                    </md-menu>
-                                                                </td>
-                                                            </tr>
-                                                            <tr class="testrun-info__tab-mobile-table-row-inner">
-                                                                <td class="testrun-info__tab-mobile-table-data _status">Status</td>
-                                                                <td colspan="2" class="testrun-info__tab-mobile-table-data _status-data">
-                                                                    <div class="testrun-info__tab-mobile-table-col _status-wrapper">
-                                                                        <span class="testrun-info__status-icon _mobile {{log.level ? '_' + (log.level | lowercase) : ''}}">{{log.level}}<md-tooltip ng-if="log.threadName" md-direction="right">{{log.threadName}}</md-tooltip></span>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr class="testrun-info__tab-mobile-table-row-inner">
-                                                                <td class="testrun-info__tab-mobile-table-data _action">
-                                                                    <div class="action-wrapper">
-                                                                        <span>Action</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td colspan="2" class="testrun-info__tab-mobile-table-data _action-data">
-                                                                    <div ng-if="log.showMore" class="log_message" name="logFullMessage">
-                                                                        <div class="full" ng-bind-html="$ctrl.getFullLogMessage(log)"></div>
-                                                                        <div><a href="#" ng-click="$ctrl.switchMoreLess($event, log)">Show less</a></div>
-                                                                    </div>
-                                                                    <div class="log_message" name="logMessage" ng-if="!log.showMore">{{log.message | cut:true:55:' ...'}} <a href="#" ng-if="log.message.length > 55" class="log_button" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
-                                                                </td>
-                                                            </tr>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                                    </md-menu-item>
+                                                                    <md-menu-item>
+                                                                        <md-button name="copyPermalink" ng-click="copyLogPermalink();">
+                                                                            Copy permalink
+                                                                        </md-button>
+                                                                    </md-menu-item>
+                                                                </md-menu-content>
+                                                            </md-menu>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

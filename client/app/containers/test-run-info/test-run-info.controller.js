@@ -2,6 +2,7 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 import IssuesModalController from '../../components/modals/issues/issues.controller';
+import IssuesModalTemplate from '../../components/modals/issues/issues.html';
 
 const testRunInfoController = function testRunInfoController(
     $scope,
@@ -504,7 +505,7 @@ const testRunInfoController = function testRunInfoController(
     $scope.selectedLogRow = -1;
 
     $scope.selectLogRow = function(ev, index) {
-        var hash = ev.currentTarget.parentNode.attributes.id?.value || ev.currentTarget.attributes.id.value;
+        var hash = ev.currentTarget.attributes.id.value;
         $location.hash(hash);
     };
 
@@ -930,9 +931,7 @@ const testRunInfoController = function testRunInfoController(
         toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
             .then((res) => {
                 testCaseManagementTools = res.data || [];
-                initJiraSettings();
-                initTestRailSettings();
-                initQTestSettings();
+                initToolSettings();
             });
     }
 
@@ -940,8 +939,10 @@ const testRunInfoController = function testRunInfoController(
         return Array.isArray(testCaseManagementTools) && testCaseManagementTools.find((tool) => tool.name === name);
     }
 
-    function initJiraSettings() {
+    function initToolSettings() {
         const jira = findToolByName('JIRA');
+        const testRail = findToolByName('TESTRAIL');
+        const qtest = findToolByName('QTEST');
 
         if (jira && jira.settings) {
             jiraSettings = UtilService.settingsAsMap(jira.settings);
@@ -950,26 +951,18 @@ const testRunInfoController = function testRunInfoController(
                 jiraSettings['JIRA_URL'] = jiraSettings['JIRA_URL'].replace(/\/$/, '');
             }
         }
-    }
-
-    function initTestRailSettings() {
-        const testRail = findToolByName('TESTRAIL');
-
+    
         if (testRail && testRail.settings) {
             testRailSettings = UtilService.settingsAsMap(testRail.settings);
-
+    
             if (testRailSettings['TESTRAIL_URL']) {
                 testRailSettings['TESTRAIL_URL'] = testRailSettings['TESTRAIL_URL'].replace(/\/$/, '');
             }
         }
-    }
-
-    function initQTestSettings() {
-        const qtest = findToolByName('QTEST');
-
+    
         if (qtest && qtest.settings) {
             qTestSettings = UtilService.settingsAsMap(qtest.settings);
-
+    
             if (qTestSettings['QTEST_URL']) {
                 qTestSettings['QTEST_URL'] = qTestSettings['QTEST_URL'].replace(/\/$/, '');
             }
@@ -1002,7 +995,7 @@ const testRunInfoController = function testRunInfoController(
         modalsService
             .openModal({
                 controller: IssuesModalController,
-                template: require('../../components/modals/issues/issues.html'),
+                template: IssuesModalTemplate,
                 parent: angular.element(document.body),
                 targetEvent: event,
                 controllerAs: '$ctrl',
@@ -1012,7 +1005,7 @@ const testRunInfoController = function testRunInfoController(
                     isNewTask: isNew.task,
                 }
             })
-            .catch(function (response) {
+            .catch((response) => {
                 if (response) {
                     $scope.test = angular.copy(response);
                 }
