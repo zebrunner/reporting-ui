@@ -79,25 +79,21 @@
                                             <md-menu-content width="2">
                                                 <md-menu-item ng-if="invite.url && invite.status === 'PENDING'">
                                                     <md-button data-ng-click="$ctrl.copyLink(invite);">
-                                                        <md-icon class="material-icons">link</md-icon>
                                                         Copy link
                                                     </md-button>
                                                 </md-menu-item>
                                                 <md-menu-item ng-if="invite.status != 'ACCEPTED'">
                                                     <md-button name="userEdit" data-ng-really-message="Do you really want to retry send the invitation?" data-ng-really-click="$ctrl.retryInvite(invite, $index);">
-                                                        <md-icon class="material-icons">loop</md-icon>
                                                         Resend
                                                     </md-button>
                                                 </md-menu-item>
                                                 <md-menu-item ng-if="invite.status != 'ACCEPTED'">
                                                     <md-button name="userEdit" data-ng-really-message="Do you really want to revoke the invitation?" data-ng-really-click="$ctrl.takeOff(invite, $index);">
-                                                        <md-icon class="material-icons">highlight_off</md-icon>
                                                         Revoke
                                                     </md-button>
                                                 </md-menu-item>
                                                 <md-menu-item ng-if="invite.status == 'ACCEPTED'">
                                                     <md-button name="userEdit" ng-click="$ctrl.searchUser(invite);">
-                                                        <md-icon class="material-icons">account_circle</md-icon>
                                                         Profile
                                                     </md-button>
                                                 </md-menu-item>
