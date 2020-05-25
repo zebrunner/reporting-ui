@@ -64,19 +64,16 @@
                                     <md-menu-content width="2">
                                         <md-menu-item data-ng-if="$ctrl.isToolConnected('EMAIL') && widget.data.dataset.length">
                                             <md-button name="sendEmail" data-ng-click="showEmailDialog($event, widget)">
-                                                <md-icon class="material-icons">send</md-icon>
                                                 Send by email
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS'])">
                                             <md-button name="editWidget" data-ng-click="showNeededWidgetModal($event, widget, false, dashboard)">
-                                                <md-icon class="material-icons">edit</md-icon>
                                                 Edit widget
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_WIDGETS']) && dashboard.editable">
                                             <md-button name="editWidget" data-ng-click="deleteDashboardWidget(widget)">
-                                                <md-icon class="material-icons">remove_circle_outline</md-icon>
                                                 Remove from dashboard
                                             </md-button>
                                         </md-menu-item>
