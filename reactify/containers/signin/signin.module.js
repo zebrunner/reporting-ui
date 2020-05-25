@@ -1,12 +1,10 @@
 import angular from 'angular';
 
 import { signinComponent } from './signin.component';
-import { CopyrightModule } from '../../shared/copyright';
-import { BackgroundModule } from './shared/background';
+import { AuthModule } from '../../shared/auth';
 
 export const SigninModule = angular.module('zebrunner.reporting.signin', [
-    CopyrightModule,
-    BackgroundModule,
+    AuthModule,
 ])
 
     .component({ signinComponent });

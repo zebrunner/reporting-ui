@@ -1,13 +1,17 @@
 import angular from 'angular';
 
-import { AuthService } from './auth.service';
-import { RequestService } from './request.service';
+import { MigrationAuthService } from './migration-auth.service';
+import { SafeDigestService } from '../../client/app/migration/services/safe-digest.service';
+import { ShackbarService } from './snackbar.service';
+import { UsersService } from './users.service';
 import { UtilService } from './util.service';
 
 export const ZebrunnerReportingServicesModule = angular.module('zebrunner.reporting.services', [])
 
-    .service({ AuthService })
-    .service({ RequestService })
+    .service({ ShackbarService })
+    .service({ MigrationAuthService })
+    .service('$safeDigest', SafeDigestService)
+    .service({ UsersService })
     .service({ UtilService })
 
     .name;

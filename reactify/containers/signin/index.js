@@ -1,4 +1,4 @@
-import { reactify } from '@zebrunner/core';
+import { reactify } from '@zebrunner/core/reactify';
 
 export { SigninModule } from './signin.module';
 

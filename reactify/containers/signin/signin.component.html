@@ -1,64 +1,46 @@
-<div class="page-wrapper page-signin">
-    <div class="wrapper">
-        <div class="main-body">
-            <div class="card bg-white">
-                <div class="card-content">
-                    <section class="logo-container">
-                        <div class="signin__logo"></div>
-                    </section>
-
-                    <form name="signin_form" class="md-form-login form-validation" data-ng-submit="$ctrl.signin($ctrl.credentials, signin_form)">
-                        <div class="callout callout-danger" ng-if="!$ctrl.credentials.valid">
-                            <p>Invalid credentials</p>
-                        </div>
-                        <fieldset>
-                            <md-input-container>
-                                <label class="placeholder-label">Username or email</label>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    id="username"
-                                    required
-                                    ng-model="$ctrl.credentials.usernameOrEmail"/>
-                                <div ng-messages="signin_form.username.$error" ng-if="signin_form.username.$dirty">
-                                    <div ng-message="required">
-                                        <span>Username or email required</span>
-                                    </div>
-                                </div>
-                            </md-input-container>
-                            <md-input-container>
-                                <label class="placeholder-label">Password</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    required
-                                    ng-model="$ctrl.credentials.password"/>
-                                <div ng-messages="signin_form.password.$error" ng-if="signin_form.password.$dirty">
-                                    <div ng-message="required">
-                                        <span>Password required</span>
-                                    </div>
-                                </div>
-                            </md-input-container>
-                        </fieldset>
-                        <div layout="row" class="button-container" layout-align="space-between">
-                            <span class="additional-action">Forgot password? <a class="additional-action__link" ui-sref="forgotPassword">Reset</a></span>
-                            <md-button type="submit"
-                                id="signin"
-                                class="md-raised"
-                                ng-disabled="signin_form.$invalid">Login</md-button>
-                        </div>
-                    </form>
-                    <copyright-component versions="$ctrl.versions"></copyright-component>
-                </div>
-
-                <div class="additional-background">
-                    <div class="version-container">
-                        <img class="logo" ng-if="$ctrl.application.tenantImage" ng-src="{{ $ctrl.application.tenantImage }}">
-                    </div>
-                    <background-component></background-component>
-                </div>
-            </div>
+<auth-component
+    versions="$ctrl.versions"
+    tenant-icon="$ctrl.application.tenantIcon">
+    <form name="signin_form" class="md-form-login form-validation" data-ng-submit="$ctrl.signin($ctrl.credentials, signin_form)">
+        <div class="callout callout-danger" ng-if="!$ctrl.credentials.valid">
+            <p>Invalid credentials</p>
         </div>
-    </div>
-</div>
+        <fieldset>
+            <md-input-container>
+                <label class="placeholder-label">Username or email</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    required
+                    ng-model="$ctrl.credentials.usernameOrEmail"/>
+                <div ng-messages="signin_form.username.$error" ng-if="signin_form.username.$dirty">
+                    <div ng-message="required">
+                        <span>Username or email required</span>
+                    </div>
+                </div>
+            </md-input-container>
+            <md-input-container>
+                <label class="placeholder-label">Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    required
+                    ng-model="$ctrl.credentials.password"/>
+                <div ng-messages="signin_form.password.$error" ng-if="signin_form.password.$dirty">
+                    <div ng-message="required">
+                        <span>Password required</span>
+                    </div>
+                </div>
+            </md-input-container>
+        </fieldset>
+        <div layout="row" class="button-container" layout-align="space-between">
+            <span class="additional-action">Forgot password? <a class="additional-action__link" ui-sref="forgotPassword">Reset</a></span>
+            <md-button type="submit"
+                id="signin"
+                class="md-raised"
+                ng-disabled="signin_form.$invalid">Login</md-button>
+        </div>
+    </form>
+</auth-component>

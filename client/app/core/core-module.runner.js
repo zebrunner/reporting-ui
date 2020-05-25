@@ -45,7 +45,7 @@ export function CoreModuleRunner(
             ]).then(() => {
                 $ngRedux.dispatch(setApplicationConfig({
                     api: $rootScope.version.service_url,
-                    tenantImage: $rootScope.companyLogo.value,
+                    tenantIcon: $rootScope.companyLogo.value,
                     versions: {
                         service: $rootScope.version.service,
                         ui: UI_VERSION,

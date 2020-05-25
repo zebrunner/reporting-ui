@@ -1,15 +1,17 @@
 {
     "name": "@zebrunner/reporting",
-    "version": "1.3.0",
-    "main": "dist/index.js",
+    "version": "1.4.0-dev.13",
+    "main": "./dist/index.js",
     "types": "./dist/types/index.d.ts",
     "scripts": {
         "init": "npm install",
         "start": "npm run dev",
         "dev": "webpack-dev-server -d --config ./webpack/webpack.dev.js",
-        "lib": "webpack --config ./webpack/webpack.lib.js",
+        "package:prepare": "shx rm -rf ./dist && tsc",
+        "package:build": "npm run package:prepare && webpack --config ./webpack/webpack.lib.js",
+        "package:serve": "npm run package:prepare && webpack --config ./webpack/webpack.lib.serve.js",
         "build": "webpack",
-        "prepare": "npm run lib && tsc"
+        "prepare": "npm run package:build && tsc"
     },
     "files": [
         "dist/**/*"
@@ -22,7 +24,7 @@
         "@babel/preset-env": "^7.8.3",
         "@babel/runtime": "^7.8.3",
         "@types/react": "^16.9.35",
-        "@zebrunner/core": "^1.4.0-dev.15",
+        "@zebrunner/core": "^1.4.0-dev.25",
         "angular": "^1.7.0",
         "babel-loader": "^8.0.6",
         "babel-plugin-angularjs-annotate": "^0.10.0",
@@ -32,6 +34,7 @@
         "favicons-webpack-plugin": "0.0.9",
         "file-loader": "^4.3.0",
         "fp-ts": "^2.6.1",
+        "generate-json-webpack-plugin": "^1.0.0",
         "history": "^4.10.1",
         "html-loader": "^0.5.5",
         "html-webpack-plugin": "^3.2.0",
@@ -46,11 +49,11 @@
         "postcss-safe-parser": "^4.0.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
-        "react-redux": "^7.2.0",
+        "react-router-dom": "^5.2.0",
         "react-scripts": "^3.4.1",
-        "redux": "^4.0.5",
         "redux-logger": "^3.0.6",
         "sass-loader": "^8.0.2",
+        "shx": "^0.3.2",
         "style-loader": "^1.1.3",
         "svgo": "1.3.0",
         "terser-webpack-plugin": "^2.3.2",
@@ -71,9 +74,11 @@
         "not IE 11"
     ],
     "peerDependencies": {
-        "@zebrunner/core": "^0",
+        "@zebrunner/core": "^1.4",
         "angular": "^1.7",
-        "react": "^16"
+        "react": "^16",
+        "react-dom": "^16",
+        "react-router-dom": "^5.2"
     },
     "dependencies": {
         "@uirouter/angularjs": "^1.0.24",
@@ -111,6 +116,9 @@
         "ng-file-upload": "^12.2.13",
         "ng-img-crop": "^0.2.0",
         "oclazyload": "^1.1.0",
+        "react-redux": "^7.2.0",
+        "redux": "^4.0.5",
+        "rxjs": "^6.5.5",
         "swiper": "^5.4.1",
         "textangular": "^1.5.16",
         "youtube-player": "^5.5.2"

@@ -1,21 +1,21 @@
 'use strict';
 
-import { isLeft } from 'fp-ts/lib/Either';
-import { getVersions, getApplicationConfig } from '@zebrunner/core/build/cjs/store/application/selectors';
+import { getVersions, getApplicationConfig, setTokens } from '@zebrunner/core/store';
+import { of, from } from 'rxjs';
+import { switchMap, tap, map, catchError } from 'rxjs/operators';
 
 export default (
     $ngRedux,
-    AuthService,
-    $rootScope,
+    MigrationAuthService,
     $state,
+    $scope,
+    $safeDigest,
 ) => {
     'ngInject';
     let unsubscribe;
 
     return {
-        credentials: {
-            valid: true,
-        },
+        credentials: null,
 
         signin,
 
@@ -28,7 +28,15 @@ export default (
             versions: getVersions(state),
             application: getApplicationConfig(state),
         });
-        $ngRedux.connect(mapStateToThis, {})(this);
+        unsubscribe = $ngRedux.connect(mapStateToThis, {})(this);
+
+        const params = $state.params || { user: null };
+
+        this.credentials = {
+            valid: true,
+            usernameOrEmail: params.user?.usernameOrEmail ?? '',
+            password: params.user?.password ?? '',
+        };
     }
 
     function $onDestroy() {
@@ -41,35 +49,29 @@ export default (
         form.$setPristine();
         form.$setUntouched();
 
-        return AuthService.login(credentials.usernameOrEmail, credentials.password)
-            .then(rs => {
-                if (isLeft(rs)) {
-                    this.credentials = {
-                        valid: false,
-                    };
-                    return;
+        return MigrationAuthService.login(credentials.usernameOrEmail, credentials.password).pipe(
+            tap(({ data }) => $ngRedux.dispatch(setTokens({
+                access: data.accessToken,
+                refresh: data.refreshToken,
+                kind: data.type,
+            }))),
+            map(({ data: auth, firstLogin }) => {
+                const payload = { auth, firstLogin };
+
+                if (!payload.firstLogin && $state.params?.location) {
+                    payload.location = $state.params.location
                 }
 
-                const { data: auth, firstLogin } = rs.right;
-                const payload = { auth };
+                return payload;
+            }),
+            switchMap(payload => from(MigrationAuthService.handleLogin(payload))),
+            catchError((e) => {
+                this.credentials = { valid: false };
 
-                if (firstLogin) {
-                    payload.firstLogin = firstLogin;
-                } else {
-                    if ($state.params.location) {
-                        payload.location = $state.params.location
-                    }
-
-                    // TODO: check. I don't know we use that or not
-                    if ($state.params.referrer) {
-                        payload.referrer = $state.params.referrer;
-                    }
-                    if ($state.params.referrerParams) {
-                        payload.referrerParams = $state.params.referrerParams;
-                    }
-                }
-
-                AuthService.handleLogin(payload);
-            });
+                console.error(e);
+                return of(true);
+            }),
+            tap($safeDigest.rxjs($scope)),
+        ).subscribe();
     };
 };

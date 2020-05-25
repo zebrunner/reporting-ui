@@ -1,8 +1,7 @@
-import { left, right } from 'fp-ts/lib/Either';
 import { getStore } from '@zebrunner/core/store';
-import { getApplicationConfig } from '@zebrunner/core/build/cjs/store/application/selectors';
+import { getApplicationConfig } from '@zebrunner/core/store';
 
-export const RequestService = ($httpMock) => {
+export const MigrationRequestService = ($httpMock) => {
     'ngInject'
     return {
         post,
@@ -24,8 +23,6 @@ export const RequestService = ($httpMock) => {
     }
 
     function post(url, data) {
-        return $httpMock.post(`${getUrl()}${url}`, data)
-            .then(right)
-            .catch(left);
+        return $httpMock.post(`${getUrl()}${url}`, data);
     }
 }
