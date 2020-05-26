@@ -1,6 +1,8 @@
 'use strict';
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
+import IssuesModalController from '../../components/modals/issues/issues.controller';
+import IssuesModalTemplate from '../../components/modals/issues/issues.html';
 
 const testRunInfoController = function testRunInfoController(
     $scope,
@@ -11,6 +13,7 @@ const testRunInfoController = function testRunInfoController(
     $location,
     $timeout,
     $q,
+    $mdMedia,
     elasticsearchService,
     UtilService,
     ArtifactService,
@@ -26,11 +29,17 @@ const testRunInfoController = function testRunInfoController(
     authService,
     messageService,
     logLevelService,
+    toolsService,
+    modalsService,
 ) {
     'ngInject';
 
     const mobileWidth = 480;
     const vncFullScreenClass = 'vnc-fullscreen-mode';
+    let testCaseManagementTools = [];
+    let jiraSettings = {};
+    let testRailSettings = {};
+    let qTestSettings = {};
     const vm = {
         testRun: null,
         configSnapshot: null,
@@ -47,8 +56,15 @@ const testRunInfoController = function testRunInfoController(
         changeTestStatus,
         toggleVNCFullScreen,
 
+        initToolsSettings,
+        setWorkItemIsNewStatus,
+        showDetailsDialog,
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
+        get jira() { return jiraSettings; },
+        get testRail() { return testRailSettings; },
+        get qTest() { return qTestSettings; },
+        get isMobile() { return $mdMedia('xs'); },
     };
 
     vm.$onInit = controllerInit;
@@ -286,7 +302,7 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function switchMoreLess(e, log) {
-        const rowElem = e.target.closest('.testrun-info__tab-table-col._action');
+        const rowElem = e.target.closest('.testrun-info__tab-table-col._action') || e.target.closest('.testrun-info__tab-mobile-table-data._action-data');
         const scrollableElem = rowElem.closest('.testrun-info__tab-table-wrapper');
 
         log.showMore = !log.showMore;
@@ -489,7 +505,7 @@ const testRunInfoController = function testRunInfoController(
     $scope.selectedLogRow = -1;
 
     $scope.selectLogRow = function(ev, index) {
-        var hash = ev.currentTarget.parentNode.attributes.id.value;
+        var hash = ev.currentTarget.attributes.id.value;
         $location.hash(hash);
     };
 
@@ -909,6 +925,77 @@ const testRunInfoController = function testRunInfoController(
         }
     }
 
+    /*************** Tools *********************/
+
+    function initToolsSettings() {
+        toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
+            .then((res) => {
+                testCaseManagementTools = res.data || [];
+                initToolSettings('JIRA', jiraSettings);
+                initToolSettings('TESTRAIL', testRailSettings);
+                initToolSettings('QTEST', qTestSettings);
+            });
+    }
+
+    function findToolByName(name) {
+        return Array.isArray(testCaseManagementTools) && testCaseManagementTools.find((tool) => tool.name === name);
+    }
+
+    function initToolSettings(name, toolSettings) {
+        const integration = findToolByName(name);
+
+        if (integration && integration.settings) {
+            toolSettings = UtilService.settingsAsMap(integration.settings);
+
+            if (toolSettings[`${name}_URL`]) {
+                toolSettings[`${name}_URL`] = toolSettings[`${name}_URL`].replace(/\/$/, '');
+            }
+        }
+    }
+
+    function setWorkItemIsNewStatus(workItems) {
+        const isNew = {
+            issue: true,
+            task: true
+        };
+
+        workItems.length && workItems.forEach(function (item) {
+            switch (item.type) {
+                case 'TASK':
+                    isNew.task = false;
+                    break;
+                case 'BUG':
+                    isNew.issue = false;
+                    break;
+            }
+        });
+
+        return isNew;
+    }
+
+    function showDetailsDialog(test, event) {
+        const isNew = setWorkItemIsNewStatus(test.workItems);
+
+        modalsService
+            .openModal({
+                controller: IssuesModalController,
+                template: IssuesModalTemplate,
+                parent: angular.element(document.body),
+                targetEvent: event,
+                controllerAs: '$ctrl',
+                locals: {
+                    test,
+                    isNewIssue: isNew.issue,
+                    isNewTask: isNew.task,
+                }
+            })
+            .catch((response) => {
+                if (response) {
+                    $scope.test = angular.copy(response);
+                }
+            });
+    }
+
     /**************** Initialization **************/
 
     function initLiveMode(test) {
@@ -934,6 +1021,7 @@ const testRunInfoController = function testRunInfoController(
             'testRunId': vm.testRun.id
         };
 
+        initToolsSettings();
         TestService.searchTests(params)
             .then(function (rs) {
                 if (rs.success) {
