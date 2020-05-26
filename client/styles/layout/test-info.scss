@@ -317,7 +317,7 @@
                 &._action {
                     flex: 1 1 auto;
                     justify-content: start;
-                    padding: 11px 0 11px 24px;
+                    padding: 0 0 0 24px;
                     width: auto;
                     
                     & .log_message {
@@ -723,6 +723,7 @@
                 bottom: 0;
                 height: auto;
                 overflow: auto;
+                margin-bottom: 46px; // space for help button
             }
             &-table-wrapper {
                 table {
