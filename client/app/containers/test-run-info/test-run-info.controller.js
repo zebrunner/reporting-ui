@@ -931,7 +931,9 @@ const testRunInfoController = function testRunInfoController(
         toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
             .then((res) => {
                 testCaseManagementTools = res.data || [];
-                initToolSettings();
+                initToolSettings('JIRA', jiraSettings);
+                initToolSettings('TESTRAIL', testRailSettings);
+                initToolSettings('QTEST', qTestSettings);
             });
     }
 
@@ -939,32 +941,14 @@ const testRunInfoController = function testRunInfoController(
         return Array.isArray(testCaseManagementTools) && testCaseManagementTools.find((tool) => tool.name === name);
     }
 
-    function initToolSettings() {
-        const jira = findToolByName('JIRA');
-        const testRail = findToolByName('TESTRAIL');
-        const qtest = findToolByName('QTEST');
+    function initToolSettings(name, toolSettings) {
+        const integration = findToolByName(name);
 
-        if (jira && jira.settings) {
-            jiraSettings = UtilService.settingsAsMap(jira.settings);
+        if (integration && integration.settings) {
+            toolSettings = UtilService.settingsAsMap(integration.settings);
 
-            if (jiraSettings['JIRA_URL']) {
-                jiraSettings['JIRA_URL'] = jiraSettings['JIRA_URL'].replace(/\/$/, '');
-            }
-        }
-    
-        if (testRail && testRail.settings) {
-            testRailSettings = UtilService.settingsAsMap(testRail.settings);
-    
-            if (testRailSettings['TESTRAIL_URL']) {
-                testRailSettings['TESTRAIL_URL'] = testRailSettings['TESTRAIL_URL'].replace(/\/$/, '');
-            }
-        }
-    
-        if (qtest && qtest.settings) {
-            qTestSettings = UtilService.settingsAsMap(qtest.settings);
-    
-            if (qTestSettings['QTEST_URL']) {
-                qTestSettings['QTEST_URL'] = qTestSettings['QTEST_URL'].replace(/\/$/, '');
+            if (toolSettings[`${name}_URL`]) {
+                toolSettings[`${name}_URL`] = toolSettings[`${name}_URL`].replace(/\/$/, '');
             }
         }
     }
@@ -1000,7 +984,7 @@ const testRunInfoController = function testRunInfoController(
                 targetEvent: event,
                 controllerAs: '$ctrl',
                 locals: {
-                    test: test,
+                    test,
                     isNewIssue: isNew.issue,
                     isNewTask: isNew.task,
                 }

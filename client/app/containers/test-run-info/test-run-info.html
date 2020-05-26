@@ -85,7 +85,7 @@
                                                             <tbody class="tab-additional__table-body">
                                                                 <tr class="tab-additional__table-row">
                                                                     <td class="tab-additional__table-data _status _border-bottom">
-                                                                        <md-icon md-svg-icon="flagIcon" class="data-icon"></md-icon>
+                                                                        <span class="material-icons data-icon">flag</span>
                                                                         <span class="tab-additional__table-data _label">Status</span>
                                                                     </td>
                                                                     <td class="tab-additional__table-data _status-info _border-bottom">
@@ -105,7 +105,7 @@
                                                                     </td>
                                                                     <td class="tab-additional__table-data _issue _border-bottom">
                                                                         <button class="button" ng-click="$ctrl.showDetailsDialog(test, $event)">
-                                                                            <md-icon md-svg-icon="bugIcon" class="data-icon"></md-icon>
+                                                                            <span class="material-icons data-icon">bug_report</span>
                                                                             <span>Link issue</span>
                                                                         </button>
                                                                     </td>
@@ -116,7 +116,7 @@
                                                             <tbody class="tab-additional__table-body">
                                                             <tr class="tab-additional__table-row">
                                                                 <td class="tab-additional__table-data _test-owner">
-                                                                    <md-icon md-svg-icon="personIcon" class="data-icon"></md-icon>
+                                                                    <span class="material-icons data-icon">person</span>
                                                                     <span class="tab-additional__table-data _label">Test owner</span>
                                                                 </td>
                                                                 <td class="tab-additional__table-data _test-owner-data">
@@ -125,7 +125,7 @@
                                                             </tr>
                                                             <tr class="tab-additional__table-row">
                                                                 <td class="tab-additional__table-data _started">
-                                                                    <md-icon md-svg-icon="clockIcon" class="data-icon"></md-icon>
+                                                                    <span class="material-icons data-icon">schedule</span>
                                                                     <span class="tab-additional__table-data _label">Started</span>
                                                                 </td>
                                                                 <td class="tab-additional__table-data _started-data">
@@ -134,7 +134,7 @@
                                                             </tr>
                                                             <tr ng-if="test.finishTime && test.startTime && (test.finishTime - test.startTime) > 0">
                                                                 <td class="tab-additional__table-data _duration">
-                                                                    <md-icon md-svg-icon="stopwatchIcon" class="data-icon"></md-icon>
+                                                                    <span class="material-icons data-icon">timer</span>
                                                                     <span class="tab-additional__table-data _label">Duration</span>
                                                                 </td>
                                                                 <td>
@@ -149,7 +149,7 @@
                                                             <tbody class="tab-additional__table-body">
                                                                 <tr class="tab-additional__table-row" ng-if="$ctrl.testRun.normalizedPlatformData.browser || $ctrl.testRun.normalizedPlatformData.browserVersion">
                                                                     <td class="tab-additional__table-data _platform">
-                                                                        <md-icon md-svg-icon="planetIcon" class="data-icon"></md-icon>
+                                                                        <span class="material-icons data-icon">language</span>
                                                                         <span class="tab-additional__table-data _label">Browser</span>
                                                                     </td>
                                                                     <td>
@@ -159,7 +159,7 @@
                                                                 </tr>
                                                                 <tr class="tab-additional__table-row" ng-if="$ctrl.testRun.normalizedPlatformData.platform || $ctrl.testRun.normalizedPlatformData.platformVersion">
                                                                     <td class="tab-additional__table-data _platform">
-                                                                        <md-icon md-svg-icon="layersIcon" class="data-icon"></md-icon>
+                                                                        <span class="material-icons data-icon">layers</span>
                                                                         <span class="tab-additional__table-data _label">Platform</span>
                                                                     </td>
                                                                     <td>
@@ -169,7 +169,7 @@
                                                                 </tr>
                                                                 <tr class="tab-additional__table-row" ng-if="test.testConfig.device">
                                                                     <td class="tab-additional__table-data _platform">
-                                                                        <md-icon md-svg-icon="deviceIcon" class="data-icon"></md-icon>
+                                                                        <span class="material-icons data-icon">phone_iphone</span>
                                                                         <span class="tab-additional__table-data _label">Device</span>
                                                                     </td>
                                                                     <td>
@@ -182,7 +182,7 @@
                                                             <tbody class="tab-additional__table-body">
                                                                 <tr class="tab-additional__table-row" ng-if="test.workItems.length">
                                                                     <td class="tab-additional__table-data _tickets">
-                                                                        <md-icon md-svg-icon="arrowIcon" class="data-icon"></md-icon>
+                                                                        <span class="material-icons data-icon">label_outline</span>
                                                                         <span class="tab-additional__table-data _label">Tickets</span>
                                                                     </td>
                                                                     <td class="tab-additional__table-data _tickets-info">
@@ -200,7 +200,7 @@
                                                                 </tr>
                                                                 <tr class="tab-additional__table-row" ng-if="test.artifacts.length">
                                                                     <td class="tab-additional__table-data _artifacts">
-                                                                        <md-icon md-svg-icon="linkIcon" class="data-icon"></md-icon>
+                                                                        <span class="material-icons data-icon">link</span>
                                                                         <span class="tab-additional__table-data _label">Test artifacts</span>
                                                                     </td>
                                                                     <td class="tab-additional__table-data _artifacts-info">
@@ -210,9 +210,6 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
-                                                        <div>
-                                                            <span ng-click="$ctrl.log($ctrl)">log</span>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
