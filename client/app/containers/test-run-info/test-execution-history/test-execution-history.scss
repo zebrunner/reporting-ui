@@ -17,10 +17,6 @@ test-execution-history {
             padding: 0 24px;
             &:hover {
                 .swiper-nav-btn {
-                    //&._disabled {
-                    //    opacity: 0.5;
-                    //    visibility: visible;
-                    //}
                     &:not(._disabled) {
                         opacity: 1;
                         visibility: visible;
@@ -32,8 +28,8 @@ test-execution-history {
 
         &-slide {
             width: 172px;
-            //border-bottom: 2px solid transparent; //TODO: use ::after
             position: relative;
+            transition: color .25s ease;
 
             &:hover,
             &._active {
@@ -50,6 +46,9 @@ test-execution-history {
                     margin: 0 auto;
                 }
             }
+            &:hover:not(._active) {
+                cursor: pointer;
+            }
 
             &__top-section {
                 padding: 4px 4px 4px 36px;
@@ -60,6 +59,7 @@ test-execution-history {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: block;
+                color: currentColor;
             }
 
             &__bottom-section {
@@ -90,18 +90,24 @@ test-execution-history {
             }
 
             &__icon {
+                color: currentColor;
                 position: absolute;
                 left: 0;
                 right: 0;
                 top: 16px;
                 width: 100%;
                 height: 40px;
+                pointer-events: none;
 
                 svg {
                     fill: none;
                 }
+                &:not(._bg) {
+                    svg {
+                        fill: currentColor;
 
-
+                    }
+                }
                 &._bg {
                     width: 200px;
                     height: 100%;
@@ -117,87 +123,39 @@ test-execution-history {
 
 
             &.failed {
-                color: $red-new;
-                .swiper-slide {
-                    &__top-section {
-                        color: $red-new;
-                    }
-                    &__icon:not(._bg) {
-                        svg {
-                            fill: $red-new;
-
-                        }
-                    }
+                color: #FDC1C2;
+                &._active,
+                &:hover {
+                    color: $red-new;
                 }
             }
             &.skipped {
-                color: $yellow-light-new;
-                .swiper-slide {
-                    //&__top-section {
-                    //    color: $yellow-light-new;
-                    //}
-                    &__icon:not(._bg) {
-                        svg {
-                            fill: $yellow-light-new;
-
-                        }
-                    }
+                color: #FFF4DF;
+                &._active,
+                &:hover {
+                    color: $yellow-light-new;
                 }
             }
             &.passed {
-                color: $green-light-new;
-                .swiper-slide {
-                    //&__top-section {
-                    //    color: $green-light-new;
-                    //}
-                    &__icon:not(._bg) {
-                        svg {
-                            fill: $green-light-new;
-
-                        }
-                    }
+                color: #AEE2C8;
+                &._active,
+                &:hover {
+                    color: $green-light-new;
                 }
             }
+            &.queued,
             &.aborted {
-                color: $gray-light-new;
-                .swiper-slide {
-                    //&__top-section {
-                    //    color: $gray-light-new;
-                    //}
-                    &__icon:not(._bg) {
-                        svg {
-                            fill: $gray-light-new;
-
-                        }
-                    }
-                }
-            }
-            &.queued {
-                color: $gray-light-new;
-                .swiper-slide {
-                    //&__top-section {
-                    //    color: $gray-light-new;
-                    //}
-                    &__icon:not(._bg) {
-                        svg {
-                            fill: $gray-light-new;
-
-                        }
-                    }
+                color: #DFE3E5;
+                &._active,
+                &:hover {
+                    color: $gray-light-new;
                 }
             }
             &.in-progress {
-                color: $blue-light-new;
-                .swiper-slide {
-                    //&__top-section {
-                    //    color: $blue-light-new;
-                    //}
-                    &__icon:not(._bg) {
-                        svg {
-                            fill: $blue-light-new;
-
-                        }
-                    }
+                color: #E3EEFF;
+                &._active,
+                &:hover {
+                    color: $blue-light-new;
                 }
             }
             .test-ticket {

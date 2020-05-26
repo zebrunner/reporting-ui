@@ -1,8 +1,8 @@
 <div class="test-execution-history">
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide {{ ::historyItem.status.toLowerCase() }}"
-                ng-click="$ctrl.onSlideClick(historyItem)"
+            <div class="swiper-slide {{ historyItem.status.toLowerCase() }}"
+                ng-attr-id="{{historyItem.testId}}"
                 ng-class="{ '_active': $ctrl.activeTestId === historyItem.testId }"
                 ng-repeat="historyItem in $ctrl.executionHistory track by historyItem.testId">
                 <md-icon md-svg-icon="lamba-bg"
@@ -13,7 +13,7 @@
                     am-time-ago="historyItem.startTime"
                     title="{{ historyItem.startTime | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
                 <div class="swiper-slide__bottom-section">
-                    <test-ticket class="swiper-slide__ticket" work-item="::historyItem.workItems[0]"></test-ticket>
+                    <test-ticket class="swiper-slide__ticket" work-item="historyItem.workItems[0]"></test-ticket>
                     <div class="swiper-slide__time-diff" ng-if="historyItem.timeDiff">
                         <md-icon class="swiper-slide__time-diff-icon material-icons">timer</md-icon>
                         <span class="swiper-slide__time-diff-text">{{ historyItem.timeDiff }}</span>

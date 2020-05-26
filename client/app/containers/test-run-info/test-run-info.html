@@ -28,7 +28,10 @@
             active-test-id="$ctrl.activeTestId"
             parent-test-id="$ctrl.parentTestId"
             execution-history="$ctrl.executionHistory"></test-execution-history>
-        <div class="testrun-info__section col-md-12 no-padding">
+        <div class="testrun-info__section col-md-12 no-padding"
+            blur-filter
+            blur-radius="1px"
+            blur-active="{{$ctrl.isControllerRefreshing}}">
             <div class="row no-margin" ng-cloak>
                 <section class="panel panel-default no-margin">
                     <div class="panel-body no-padding">

@@ -11,11 +11,18 @@ const testExecutionHistoryController = function testExecutionHistoryController(
 
     const swiperOptions = {
         freeMode: true,
-        longSwipesMs: 500,
         initialSlide: 0,
+        longSwipesMs: 500,
+        mousewheel: {
+            forceToAxis: true,
+        },
         observer: true,
         shortSwipes: false,
         slidesPerView: 'auto',
+
+        on: {
+            click: swiperClickHandler,
+        }
     };
     let _historyItems = [];
     const vm = {
@@ -46,17 +53,27 @@ const testExecutionHistoryController = function testExecutionHistoryController(
         }, 0);
     }
 
+    function swiperClickHandler(e) {
+        const slideElem = e.target.closest('.swiper-slide');
+
+        if (slideElem) {
+            const id = parseInt(slideElem.getAttribute('id'), 10);
+            const historyItem = vm.executionHistory.find(({ testId }) => testId === id);
+
+            if (historyItem) {
+                onSlideClick(historyItem);
+            }
+        }
+    }
+
     function onSlideClick(historyItem) {
         if (historyItem.testId === vm.activeTestId) { return; }
 
-        console.log(historyItem);
         vm.onTestSelect({ $historyItem: historyItem });
     }
 
     function initSwiper() {
         if (!vm.swiperContainer || typeof Swiper !== 'function') { return; }
-
-        console.log(UtilService.isTouchDevice());
 
         swiperOptions.initialSlide = vm.executionHistory.length ? vm.executionHistory.length - 1 : 0;
         swiperOptions.navigation = !UtilService.isTouchDevice() ? {
