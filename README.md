@@ -31,9 +31,10 @@ For production deployment execute:
 ```
 npm run build
 ```
-The following environment variables may be specified:
-* **UI_VERSION** - version of UI build
 
-### Startup variables
+### Container startup variables
 * **SERVER_URL** - hostname of API server
-* **BASE_PATH** - base path used to serve content
+
+### Container build variables
+* **BASE_PATH** - base path used to serve content. May be useful if you plan to run Reporting UI behind proxy
+* **UI_VERSION** - version of UI build
