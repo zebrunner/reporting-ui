@@ -1,4 +1,4 @@
 {
-    "API_URL": "__ZAFIRA_API_URL__",
-    "UI_VERSION": "__ZAFIRA_UI_VERSION__"
+    "API_URL": "__SERVER_URL__",
+    "UI_VERSION": "__UI_VERSION__"
 }
