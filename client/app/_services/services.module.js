@@ -12,6 +12,7 @@ import testsSessionsService from './tests-sessions/tests-sessions.service';
 import pageTitleService from './page-title/page-title.service';
 import observerService from './observer/observer.service';
 import logLevelService from './log-level.service';
+import testCaseService from './testcase.service';
 
 angular.module('app.services', [])
     .service({ appHealthService })
@@ -25,6 +26,7 @@ angular.module('app.services', [])
     .service({ progressbarService })
     .service({ jsonConfigsService })
     .service({ pageTitleService })
+    .service({ testCaseService })
     .service({ testsSessionsService });
 
 require('./auth.intercepter');
@@ -50,7 +52,6 @@ require('./setting.provider');
 require('./setting.service');
 require('./notification.service');
 require('./test.service');
-require('./testcase.service');
 require('./testrun.service');
 require('./testsruns.service');
 require('./integrations.service');
