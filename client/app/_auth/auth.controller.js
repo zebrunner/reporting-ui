@@ -5,10 +5,7 @@ const authController = function authController(
     $rootScope,
     $location,
     $state,
-    $templateCache,
-    $stateParams,
     authService,
-    UserService,
     UtilService,
     InvitationService,
     messageService,
@@ -43,8 +40,13 @@ const authController = function authController(
     $scope.forgotPasswordType = {};
     $scope.forgotPasswordEmailWasSent = false;
 
-    Object.defineProperty($scope, 'companyLogo', {
-       get: () => $rootScope.companyLogo,
+    Object.defineProperties($scope, {
+        companyLogo: {
+            get: () => $rootScope.companyLogo,
+        },
+        versions: {
+            get: () => $rootScope.version,
+        },
     });
 
     $scope.emailType = {};
@@ -101,10 +103,6 @@ const authController = function authController(
                 $scope.getForgotPasswordInfo(token);
             default:
                 break;
-        }
-        if ($stateParams.user) {
-            $scope.credentials.usernameOrEmail = $stateParams.user.email;
-            $scope.credentials.password = $stateParams.user.password;
         }
         authService.clearCredentials();
     })();

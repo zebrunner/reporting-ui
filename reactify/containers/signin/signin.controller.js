@@ -1,5 +1,3 @@
-'use strict';
-
 import { getVersions, getApplicationConfig, setTokens } from '@zebrunner/core/store';
 import { of, from } from 'rxjs';
 import { switchMap, tap, map, catchError } from 'rxjs/operators';
@@ -37,6 +35,8 @@ export default (
             usernameOrEmail: params.user?.usernameOrEmail ?? '',
             password: params.user?.password ?? '',
         };
+
+        MigrationAuthService.prepareAuthPage();
     }
 
     function $onDestroy() {
@@ -65,10 +65,8 @@ export default (
                 return payload;
             }),
             switchMap(payload => from(MigrationAuthService.handleLogin(payload))),
-            catchError((e) => {
+            catchError(() => {
                 this.credentials = { valid: false };
-
-                console.error(e);
                 return of(true);
             }),
             tap($safeDigest.rxjs($scope)),

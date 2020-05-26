@@ -1,9 +1,9 @@
 import angular from 'angular';
-import { authComponent } from './auth.component';
-import { CopyrightModule } from '../copyright/copyright.module';
+import { CopyrightModule } from './shared/copyright/copyright.module';
 import { BackgroundModule } from './shared/background/background.module';
+import { authComponent } from './auth.component';
 
-export const AuthModule = angular.module('zebrunner.components.auth', [
+export const AuthModule = angular.module('zebrunner.shared.auth', [
     CopyrightModule,
     BackgroundModule
 ])

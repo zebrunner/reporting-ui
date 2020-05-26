@@ -12,9 +12,14 @@ export const MigrationAuthService = (
     'ngInject';
 
     return {
+        prepareAuthPage,
         login,
         handleLogin,
     };
+
+    function prepareAuthPage() {
+        // TODO: clear state. Do I need that?
+    }
 
     function login(username, password) {
         return RequestService.post$(
