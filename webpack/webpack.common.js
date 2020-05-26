@@ -15,10 +15,10 @@ module.exports = (env) => {
     const isProd = env === 'production';
     const isDev = env === 'development';
     const __PRODUCTION__ = JSON.stringify(isProd);
-    const __SERVER_HOSTNAME__ = process.env.SERVER_HOSTNAME || 'http://localhost:8080/reporting-service';
+    const __SERVER_URL__ = process.env.SERVER_URL || 'http://localhost:8080/reporting-service';
     const __UI_VERSION__ = process.env.UI_VERSION || 'local';
     const packageName = JSON.stringify(process.env.npm_package_name) || 'Reporting UI';
-    const base = JSON.stringify('/');
+    const base = JSON.stringify(process.env.BASE_PATH || '/');
     const showProgress = isDev || process.env.SHOW_PROGRESS;
     const htmlWebpackConfig = Object.assign(
         {},
@@ -280,7 +280,7 @@ module.exports = (env) => {
                     from: '../config.json',
                     transform(data) {
                         const str = data.toString('utf8')
-                            .replace('__SERVER_HOSTNAME__', __SERVER_HOSTNAME__)
+                            .replace('__SERVER_URL__', __SERVER_URL__)
                             .replace('__UI_VERSION__', __UI_VERSION__);
 
                         return Buffer.from(str);
