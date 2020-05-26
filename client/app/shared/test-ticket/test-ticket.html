@@ -11,10 +11,6 @@
         title="{{::$ctrl.workItem.description}}">{{::$ctrl.workItem.jiraId}}</a>
 
     <!-- URL pattern for pseudo GitHub integration -->
-<!--    <a name="taskTicket"-->
-<!--        href="{{::$ctrl.jiraSettings['JIRA_URL'] + '/' + $ctrl.workItem.jiraId}}"-->
-<!--        target="_blank" ng-if="$ctrl.jiraSettings['JIRA_URL'] && !$ctrl.jiraSettings['JIRA_URL'].includes('atlassian') && !$ctrl.jiraSettings['JIRA_URL'].includes('jira') && $ctrl.workItem.type === 'TASK'"-->
-<!--        class="badge task-label-bg">{{::$ctrl.workItem.jiraId}}</a>-->
     <a name="{{ ::($ctrl.workItem.type === 'BUG' ? 'bugTicket' : 'taskTicket') }}"
         ng-href="{{::($ctrl.jiraSettings['JIRA_URL'] + '/' + $ctrl.workItem.jiraId) }}"
         href="#"

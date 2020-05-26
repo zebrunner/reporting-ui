@@ -11,7 +11,7 @@ const testTicketComponent = {
     bindings: {
         workItem: '<',
         jiraSettings: '<',
-    }
+    },
 };
 
 export default testTicketComponent;

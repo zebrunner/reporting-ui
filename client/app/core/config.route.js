@@ -510,7 +510,7 @@
                                 };
 
                                 return TestService.searchTests(params)
-                                    .then(function (rs) {
+                                    .then((rs) => {
                                         if (rs.success) {
                                             const testId = parseInt($stateParams.testId, 10);
 
@@ -543,7 +543,7 @@
                                 };
 
                                 return TestRunService.searchTestRuns(params)
-                                    .then(function(response) {
+                                    .then((response) => {
                                         if (response.success && response.data.results && response.data.results[0]) {
                                             return response.data.results[0];
                                         } else {

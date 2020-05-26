@@ -22,7 +22,7 @@ const testExecutionHistoryController = function testExecutionHistoryController(
 
         on: {
             click: swiperClickHandler,
-        }
+        },
     };
     let _historyItems = [];
     const vm = {
@@ -40,9 +40,9 @@ const testExecutionHistoryController = function testExecutionHistoryController(
         set executionHistory(data) {
             data = data || [];
 
+            this.timeMedian = median(data.map((item) => (item.elapsed || 0)));
+            data.forEach((item) => item.timeDiff = getTimeDiff(item.elapsed));
             _historyItems = data;
-            this.timeMedian = median(_historyItems.map((item) => (item.elapsed || 0)));
-            _historyItems.forEach((item) => item.timeDiff = getTimeDiff(item.elapsed));
         },
     };
 
@@ -85,24 +85,22 @@ const testExecutionHistoryController = function testExecutionHistoryController(
     }
 
     function getTimeDiff(time = 0) {
-        let out = '';
+        let timeDiffStr = '';
         let diff = Math.floor(vm.timeMedian && time ?  time * 100 / vm.timeMedian : 0) - 100;
 
         if (diff) {
             const sign = diff < 0 ? '-' : '+';
 
-            out = `${sign}${Math.abs(diff)}%`;
+            timeDiffStr = `${sign}${Math.abs(diff)}%`;
         }
 
-        return out;
+        return timeDiffStr;
     }
 
     function median(values){
         if (!values.length) { return 0; }
 
-        values.sort((a = 0, b = 0) => {
-            return a - b;
-        });
+        values.sort((a = 0, b = 0) => a - b);
 
         const half = Math.floor(values.length / 2);
 
