@@ -1,11 +1,16 @@
 @import "../global/var";
 
+$historySectionHeight: 67px;
+
 .testrun-info {
     background-color: #fff;
     &.page {
         &-wrapper {
             overflow: hidden;
         }
+    }
+    &__history {
+        height: $historySectionHeight;
     }
     &__title {
         margin: 0;
@@ -68,7 +73,7 @@
     }
 
     &__container {
-        height: 100%;
+        height: calc(100% - #{$historySectionHeight});
     }
 
     &__section {

@@ -1,0 +1,246 @@
+@import "~swiper/swiper.scss";
+
+@import "../../../../styles/global/var";
+@import "../../../../styles/ui/components/animation";
+
+test-execution-history {
+    display: block;
+}
+
+.test-execution-history {
+    height: 100%;
+
+    .swiper {
+        &-container {
+            width: 100%;
+            height: 100%;
+            padding: 0 24px;
+            &:hover {
+                .swiper-nav-btn {
+                    //&._disabled {
+                    //    opacity: 0.5;
+                    //    visibility: visible;
+                    //}
+                    &:not(._disabled) {
+                        opacity: 1;
+                        visibility: visible;
+                        pointer-events: auto;
+                    }
+                }
+            }
+        }
+
+        &-slide {
+            width: 172px;
+            //border-bottom: 2px solid transparent; //TODO: use ::after
+            position: relative;
+
+            &:hover,
+            &._active {
+                &::after {
+                    content: '';
+                    display: block;
+                    width: 164px;
+                    height: 2px;
+                    background-color: currentColor;
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                }
+            }
+
+            &__top-section {
+                padding: 4px 4px 4px 36px;
+                font-weight: 500;
+                font-size: 12px;
+                line-height: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+            }
+
+            &__bottom-section {
+                padding: 4px 4px 4px 28px;
+                position: absolute;
+                left: 0;
+                bottom: 12px;
+                width: 100%;
+                display: flex;
+            }
+
+            &__time-diff {
+                display: flex;
+                align-items: center;
+                &-icon {
+                    font-size: 16px;
+                    width: 16px;
+                    height: 16px;
+                    min-width: 16px;
+                    min-height: 16px;
+                    margin-right: 2px;
+                }
+                &-text {
+                    font-size: 12px;
+                    line-height: 14px;
+                    color: #6C757C;
+                }
+            }
+
+            &__icon {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 16px;
+                width: 100%;
+                height: 40px;
+
+                svg {
+                    fill: none;
+                }
+
+
+                &._bg {
+                    width: 200px;
+                    height: 100%;
+                    left: -5px;
+                    top: 0;
+
+                    svg {
+                        fill: #000;
+                        fill-opacity: .05;
+                    }
+                }
+            }
+
+
+            &.failed {
+                color: $red-new;
+                .swiper-slide {
+                    &__top-section {
+                        color: $red-new;
+                    }
+                    &__icon:not(._bg) {
+                        svg {
+                            fill: $red-new;
+
+                        }
+                    }
+                }
+            }
+            &.skipped {
+                color: $yellow-light-new;
+                .swiper-slide {
+                    //&__top-section {
+                    //    color: $yellow-light-new;
+                    //}
+                    &__icon:not(._bg) {
+                        svg {
+                            fill: $yellow-light-new;
+
+                        }
+                    }
+                }
+            }
+            &.passed {
+                color: $green-light-new;
+                .swiper-slide {
+                    //&__top-section {
+                    //    color: $green-light-new;
+                    //}
+                    &__icon:not(._bg) {
+                        svg {
+                            fill: $green-light-new;
+
+                        }
+                    }
+                }
+            }
+            &.aborted {
+                color: $gray-light-new;
+                .swiper-slide {
+                    //&__top-section {
+                    //    color: $gray-light-new;
+                    //}
+                    &__icon:not(._bg) {
+                        svg {
+                            fill: $gray-light-new;
+
+                        }
+                    }
+                }
+            }
+            &.queued {
+                color: $gray-light-new;
+                .swiper-slide {
+                    //&__top-section {
+                    //    color: $gray-light-new;
+                    //}
+                    &__icon:not(._bg) {
+                        svg {
+                            fill: $gray-light-new;
+
+                        }
+                    }
+                }
+            }
+            &.in-progress {
+                color: $blue-light-new;
+                .swiper-slide {
+                    //&__top-section {
+                    //    color: $blue-light-new;
+                    //}
+                    &__icon:not(._bg) {
+                        svg {
+                            fill: $blue-light-new;
+
+                        }
+                    }
+                }
+            }
+            .test-ticket {
+                .badge {
+                    font-weight: 500;
+                    background-color: #AEB8BE;
+                }
+            }
+        }
+
+        &-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #FFFFFF;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2), 0 3px 3px rgba(0, 0, 0, 0.12), 0 3px 4px rgba(0, 0, 0, 0.14);
+            border-radius: 4px;
+            z-index: 1;
+            width: 32px;
+            height: 32px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .25s ease-in-out, visibility .25s ease-in-out;
+
+            ._touch-device & {
+                display: none;
+            }
+            md-icon {
+                color: #1E4F9C;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            &._prev {
+                left: 8px;
+            }
+            &._next {
+                right: 8px;
+            }
+        }
+    }
+}

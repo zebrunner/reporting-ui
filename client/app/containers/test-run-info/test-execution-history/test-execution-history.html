@@ -1,0 +1,31 @@
+<div class="test-execution-history">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide {{ ::historyItem.status.toLowerCase() }}"
+                ng-click="$ctrl.onSlideClick(historyItem)"
+                ng-class="{ '_active': $ctrl.activeTestId === historyItem.testId }"
+                ng-repeat="historyItem in $ctrl.executionHistory track by historyItem.testId">
+                <md-icon md-svg-icon="lamba-bg"
+                    ng-if="$ctrl.parentTestId === historyItem.testId"
+                    class="swiper-slide__icon _bg material-icons"></md-icon>
+                <md-icon md-svg-icon="lamba" class="swiper-slide__icon material-icons"></md-icon>
+                <time class="swiper-slide__top-section"
+                    am-time-ago="historyItem.startTime"
+                    title="{{ historyItem.startTime | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>
+                <div class="swiper-slide__bottom-section">
+                    <test-ticket class="swiper-slide__ticket" work-item="::historyItem.workItems[0]"></test-ticket>
+                    <div class="swiper-slide__time-diff" ng-if="historyItem.timeDiff">
+                        <md-icon class="swiper-slide__time-diff-icon material-icons">timer</md-icon>
+                        <span class="swiper-slide__time-diff-text">{{ historyItem.timeDiff }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-nav-btn _prev swiper-button-prev">
+            <md-icon class="material-icons">chevron_left</md-icon>
+        </div>
+        <div class="swiper-nav-btn _next swiper-button-next">
+            <md-icon class="material-icons">chevron_right</md-icon>
+        </div>
+    </div>
+</div>

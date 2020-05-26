@@ -14,6 +14,7 @@ const testRunInfoController = function testRunInfoController(
     $timeout,
     $q,
     $mdMedia,
+    $window,
     elasticsearchService,
     UtilService,
     ArtifactService,
@@ -21,6 +22,7 @@ const testRunInfoController = function testRunInfoController(
     OFFSET,
     API_URL,
     $state,
+    testCaseService,
     TestRunsStorage,
     testsRunsService,
     TestService,
@@ -41,13 +43,18 @@ const testRunInfoController = function testRunInfoController(
     let testRailSettings = {};
     let qTestSettings = {};
     const vm = {
-        testRun: null,
+        activeTestId: null,
         configSnapshot: null,
+        executionHistory: [],
+        parentTestId: null,
+        test: null,
+        testRun: null,
         wsSubscription: null,
         logLevels: logLevelService.logLevels,
         filteredLogs: [],
         selectedLevel: logLevelService.initialLevel,
 
+        $onInit: controllerInit,
         switchMoreLess,
         getFullLogMessage,
         downloadImageArtifacts,
@@ -55,10 +62,11 @@ const testRunInfoController = function testRunInfoController(
         filterResults,
         changeTestStatus,
         toggleVNCFullScreen,
-
+        onHistoryElemClick,
         initToolsSettings,
         setWorkItemIsNewStatus,
         showDetailsDialog,
+
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
         get jira() { return jiraSettings; },
@@ -67,9 +75,6 @@ const testRunInfoController = function testRunInfoController(
         get isMobile() { return $mdMedia('xs'); },
     };
 
-    vm.$onInit = controllerInit;
-
-    $scope.test = {};
     $scope.drivers = [];
     let logSizeCount = 0;
     var driversQueue = [];
@@ -105,7 +110,7 @@ const testRunInfoController = function testRunInfoController(
         oldAgent: {
             prefix: 'logs-',
             searchCriteria: () => {
-                return [{ 'correlation-id': `${vm.testRun.ciRunId}_${$scope.test.ciTestId}` }];
+                return [{ 'correlation-id': `${vm.testRun.ciRunId}_${vm.test.ciTestId}` }];
             }
         },
         newAgent: {
@@ -113,7 +118,7 @@ const testRunInfoController = function testRunInfoController(
             searchCriteria: () => {
                 return [
                     {'testRunId': vm.testRun.id},
-                    {'testId': $scope.test.id},
+                    {'testId': vm.test.id},
                 ];
             }
         }
@@ -162,16 +167,16 @@ const testRunInfoController = function testRunInfoController(
 
         vm.selectedLevel = logLevelService.logLevels[index];
         vm.filteredLogs = logLevelService.filterLogs($scope.logs, vm.selectedLevel);
-    };
+    }
 
     function downloadImageArtifacts() {
-        ArtifactService.extractImageArtifacts([$scope.test]);
+        ArtifactService.extractImageArtifacts([vm.test]);
 
         ArtifactService.downloadArtifacts({
-            data: [$scope.test],
+            data: [vm.test],
             field: 'imageArtifacts',
         });
-    };
+    }
 
     function changeTestStatus(test, status) {
         if (test.status !== status.toUpperCase()) {
@@ -182,17 +187,17 @@ const testRunInfoController = function testRunInfoController(
                 .then(rs => {
                     if (rs.success) {
                         messageService.success(`Test was marked as ${status}`);
-                        $scope.test = rs.data;
+                        vm.test = rs.data;
                     } else {
                         console.error(rs.message);
                     }
                 });
         }
-    };
+    }
 
     function downloadAllArtifacts() {
         ArtifactService.downloadArtifacts({
-            data: [$scope.test],
+            data: [vm.test],
             field: 'artifactsToDownload',
         });
     }
@@ -216,7 +221,7 @@ const testRunInfoController = function testRunInfoController(
                 scrollEnable = false;
                 tryToGetLogsHistoryFromElasticsearch(logGetter)
                     .then(() => {
-                        // 10 attempts provide a 5-minute max interval
+                        // 10 attempts provide a 5-minutes max interval
                         const attemptsToLoadImages = 10;
                         let imagesLoadingAttempts = 0;
                         let delay = 5000;
@@ -247,25 +252,25 @@ const testRunInfoController = function testRunInfoController(
             default:
                 break;
         }
-    };
+    }
 
     function setMode(modeName) {
         if ($scope.MODE.name !== modeName) {
             $scope.drivers = [];
             $scope.MODE = MODES[modeName];
         }
-    };
+    }
 
     function getLogsFromElasticsearch(from, page, size) {
         return $q(resolve => {
-            elasticsearchService.search(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, from, page, size, $scope.test.startTime)
+            elasticsearchService.search(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, from, page, size, vm.test.startTime)
                 .then(rs => resolve(rs.map(r => r._source)));
         });
     }
 
     function tryToGetLogsHistoryFromElasticsearch(logGetter) {
         return $q(resolve => {
-            elasticsearchService.count(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, $scope.test.startTime)
+            elasticsearchService.count(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, vm.test.startTime)
                 .then(count => {
                     if (logGetter.accessFunc ? logGetter.accessFunc.call(this, count) : true) {
                         const size = logGetter.getSizeFunc.call(this, count);
@@ -274,7 +279,7 @@ const testRunInfoController = function testRunInfoController(
                     }
                 });
         });
-    };
+    }
 
     function tryToGetLogsLiveFromElasticsearch(logGetter, logIntervalName) {
         return $q(function (resolve, reject) {
@@ -282,20 +287,20 @@ const testRunInfoController = function testRunInfoController(
                 getLogsLiveFromElasticsearch(logGetter);
             });
         });
-    };
+    }
 
     function getLogsLiveFromElasticsearch(logGetter) {
         tryToGetLogsHistoryFromElasticsearch(logGetter).then(function (count) {
             MODES.live.logGetter.from = count;
         });
-    };
+    }
 
     var liveIntervals = {};
 
     function pseudoLiveDoAction(intervalName, intervalMillis, func) {
         func.call();
         liveIntervals[intervalName] = $interval(function() {func.call()}, intervalMillis);
-    };
+    }
 
     function pseudoLiveCloseAction(intervalName) {
         $interval.cancel(liveIntervals[intervalName]);
@@ -398,7 +403,7 @@ const testRunInfoController = function testRunInfoController(
 
     function reloadVideoOnError(videoElement) {
         var sourceElement = videoElement.getElementsByTagName('source')[0];
-        var attempt = new Date().getTime() - $scope.test.finishTime > 600000 ? 1 : 5;
+        var attempt = new Date().getTime() - vm.test.finishTime > 600000 ? 1 : 5;
 
         sourceElement.addEventListener('error', function(e) {
             if (attempt > 0) {
@@ -565,7 +570,7 @@ const testRunInfoController = function testRunInfoController(
                 provideVideo();
                 break;
             case 'record':
-                initRecords($scope.test);
+                initRecords(vm.test);
                 break;
             default:
                 break;
@@ -618,7 +623,7 @@ const testRunInfoController = function testRunInfoController(
         }, []);
 
         // extract artifacts from test
-        const artifactsToDownload = $scope.test.artifacts.reduce((formatted, artifact) => {
+        const artifactsToDownload = vm.test.artifacts.reduce((formatted, artifact) => {
             const name = artifact.name.toLowerCase();
 
             if (!name.includes('live') && !name.includes('video') && artifact.link) {
@@ -641,12 +646,12 @@ const testRunInfoController = function testRunInfoController(
             return formatted;
         }, []);
 
-        $scope.test.imageArtifacts = imageArtifacts;
-        $scope.test.artifactsToDownload = [...artifactsToDownload, ...imageArtifacts];
+        vm.test.imageArtifacts = imageArtifacts;
+        vm.test.artifactsToDownload = [...artifactsToDownload, ...imageArtifacts];
     }
 
     $scope.openImagesViewerModal = function (event, url) {
-        const activeArtifact = $scope.test.imageArtifacts.find(function (art) {
+        const activeArtifact = vm.test.imageArtifacts.find(function (art) {
             return art.link === url;
         });
 
@@ -662,7 +667,7 @@ const testRunInfoController = function testRunInfoController(
                 fullscreen: false,
                 escapeToClose: false,
                 locals: {
-                    test: $scope.test,
+                    test: vm.test,
                     activeArtifactId: activeArtifact.id,
                 }
             });
@@ -681,7 +686,7 @@ const testRunInfoController = function testRunInfoController(
                 vm.wsSubscription = $scope.testsWebsocket.subscribe("/topic/" + authService.tenant + ".testRuns." + testRun.id + ".tests", function (data) {
                     var test = $scope.getEventFromMessage(data.body).test;
 
-                    if ($scope.test && test.id === $scope.test.id) {
+                    if (vm.test && test.id === vm.test.id) {
 
                         if (test.status === 'IN_PROGRESS') {
                             addDrivers(getArtifactsByPartName(test, LIVE_DEMO_ARTIFACT_NAME));
@@ -696,7 +701,7 @@ const testRunInfoController = function testRunInfoController(
                                 postModeConstruct(test);
                             }
                         }
-                        $scope.test = angular.copy(test);
+                        vm.test = angular.copy(test);
                         $scope.$apply();
 
                     }
@@ -991,7 +996,7 @@ const testRunInfoController = function testRunInfoController(
             })
             .catch((response) => {
                 if (response) {
-                    $scope.test = angular.copy(response);
+                    vm.test = angular.copy(response);
                 }
             });
     }
@@ -1012,57 +1017,63 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function controllerInit() {
+        pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : vm.test.name);
         initTestsWebSocket(vm.testRun);
         vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
 
-        const params = {
-            'page': 1,
-            'pageSize': 100000,
-            'testRunId': vm.testRun.id
-        };
-
+        setTestParams();
         initToolsSettings();
-        TestService.searchTests(params)
-            .then(function (rs) {
-                if (rs.success) {
-                    const data = rs.data.results || [];
-                    vm.testRun.tests = {};
-                    TestService.tests = data;
-                    setTestParams();
-                    pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : $scope.test.name);
-                } else {
-                    console.error(rs.message);
+        initTestExecutionData();
+        bindEvents();
+    }
+
+    function initTestExecutionData() {
+        return testCaseService.getTestExecutionHistory(vm.test.id)
+            .then((response) => {
+                if (response.success) {
+                    vm.activeTestId = vm.test.id;
+                    vm.parentTestId = $stateParams.parentTestId ? parseInt($stateParams.parentTestId, 10) : vm.test.id;
+                    vm.executionHistory = (response.data || []).reverse();
+                    //TODO: remove next line
+                    // vm.executionHistory.forEach(item => (console.log(item) || (item.startTime = Date.now())));
                 }
-            })
-            .finally(() => {
-                bindEvents();
             });
     }
 
+    function onHistoryElemClick(historyItem) {
+        const stateParams = $state.params;
+
+        stateParams.parentTestId = vm.parentTestId;
+        stateParams.testId = historyItem.testId;
+        console.log(stateParams);
+
+        const newUrl = $state.href('tests.runInfo', stateParams, {absolute: true})
+        console.log(newUrl);
+        $window.history.pushState(null, null, newUrl);
+        //TODO: I'm here
+        // $state.go('tests.runInfo', stateParams);
+    }
+
     function setTestParams() {
-        const testId = parseInt($stateParams.testId, 10);
-
-        $scope.test = TestService.getTest(testId);
-
         // Agent to proceed is recognizing
-        agent = !!$scope.test.uuid ? AGENT_BUIlDER.newAgent : AGENT_BUIlDER.oldAgent;
+        agent = !!vm.test.uuid ? AGENT_BUIlDER.newAgent : AGENT_BUIlDER.oldAgent;
 
-        if ($scope.test) {
+        if (vm.test) {
             SEARCH_CRITERIA = agent.searchCriteria();
             ELASTICSEARCH_INDEX = buildIndex();
 
-            setMode($scope.test.status === 'IN_PROGRESS' ? 'live' : 'record');
-            $scope.MODE.initFunc.call(this, $scope.test);
+            setMode(vm.test.status === 'IN_PROGRESS' ? 'live' : 'record');
+            $scope.MODE.initFunc.call(this, vm.test);
         }
     }
 
     function buildIndex() {
-        let startTime = $filter('date')($scope.test.startTime, 'yyyy.MM.dd', UTC);
-        let finishTime = $scope.test.finishTime ? $filter('date')($scope.test.finishTime, 'yyyy.MM.dd', UTC)
+        let startTime = $filter('date')(vm.test.startTime, 'yyyy.MM.dd', UTC);
+        let finishTime = vm.test.finishTime ? $filter('date')(vm.test.finishTime, 'yyyy.MM.dd', UTC)
             : $filter('date')(new Date().getTime(), 'yyyy.MM.dd', UTC);
 
         const startIndex = agent.prefix + startTime;
-        const finishIndex = agent.prefix + finishTime
+        const finishIndex = agent.prefix + finishTime;
 
         return startIndex === finishIndex ? startIndex : startIndex + ',' + finishIndex;
     }

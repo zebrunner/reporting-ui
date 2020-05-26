@@ -4,8 +4,9 @@ import controller from './test-run-info.controller';
 const testRunInfoComponent = {
     template,
     controller,
-    constrollerAs: '$ctrl', 
+    controllerAs: '$ctrl',
     bindings: {
+        test: '<',
         testRun: '<',
         configSnapshot: '<',
     },
