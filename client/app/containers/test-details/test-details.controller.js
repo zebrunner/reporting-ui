@@ -111,6 +111,7 @@ const testDetailsController = function testDetailsController(
             },
         ],
         isNotificationAvailable: false,
+        searchQuery: '',
 
         get isMobile() { return $mdMedia('xs'); },
         get isTablet() { return !$mdMedia('gt-md'); },
@@ -140,6 +141,7 @@ const testDetailsController = function testDetailsController(
         onAllTestsSelect,
         onBackClick,
         onPageChange,
+        onSearch,
         onTestSelect,
         onTrackedTestRender,
         openImagesViewerModal,
@@ -272,6 +274,23 @@ const testDetailsController = function testDetailsController(
         vm.sortConfig.field = 'elapsed';
 
         onOrderByElapsed();
+    }
+
+    function onSearch() {
+        onFilterChange(true);
+    }
+
+    function filterDataBySearchCriteria(data = vm.activeTests) {
+        return data.filter((item) => {
+            console.log(item);
+            const searchRegExp = new RegExp(vm.searchQuery, 'ig');
+            const titleMtach = searchRegExp.test(item.name);
+            const ownerMtach = searchRegExp.test(item.owner);
+            const messageMtach = searchRegExp.test(item.message);
+            const deviceMtach = searchRegExp.test(item.testConfig?.device);
+
+            return titleMtach || ownerMtach || messageMtach || deviceMtach;
+        });
     }
 
     function filterByStatus(statuses = []) {
@@ -769,8 +788,7 @@ const testDetailsController = function testDetailsController(
     function getOrderedTests(data = vm.activeTests) {
         const { field, reverse } = vm.sortConfig;
 
-        vm.filteredTests = UtilService.sortArrayByField(data, field, reverse);
-        vm.activeTests = vm.filteredTests;
+        vm.activeTests = UtilService.sortArrayByField(data, field, reverse);
     }
 
     /**
@@ -795,7 +813,7 @@ const testDetailsController = function testDetailsController(
 
     function onFilterChange(shouldResetPagination) {
         const filters = [vm.filters.status, vm.filters.grouping].filter(Boolean);
-        const filteredData = vm.testRun.tests.filter((test) => {
+        let filteredData = vm.testRun.tests.filter((test) => {
             const skipQueued = !(vm.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED');
 
             return filters.every(filter => isFitsByFilter(test[filter.field], filter.values)) && skipQueued;
@@ -804,6 +822,9 @@ const testDetailsController = function testDetailsController(
         //reset tests selection
         clearTestsSelection();
         shouldResetPagination && resetPagination();
+        if (vm.searchQuery) {
+            filteredData = filterDataBySearchCriteria(filteredData);
+        }
         getOrderedTests(filteredData);
     }
 

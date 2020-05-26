@@ -40,6 +40,20 @@
                                     ng-false-value="false">
                                 </md-checkbox>
                             </div>
+                            <div class="test-details__search">
+                                <md-input-container class="test-details__search-input-label _with-icon _without-animation">
+                                    <label class="placeholder-label">Search items</label>
+                                    <input ng-model-options="{debounce: 700}"
+                                        type="text"
+                                        ng-model="$ctrl.searchQuery"
+                                        ng-change="$ctrl.onSearch()"
+                                        aria-label="Search items"
+                                        aria-describedby="basic-addon2">
+                                    <i class="material-icons">
+                                        search
+                                    </i>
+                                </md-input-container>
+                            </div>
                             <div class="test-run-group_wrapper _left">
                                 <div class="test-run-group_controls-buttons">
                                     <button id="plainToggle"
