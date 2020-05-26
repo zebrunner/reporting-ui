@@ -19,7 +19,7 @@ npm i
 
 For local development specify correct **SERVER_HOSTNAME** and execute:
 ```
-SERVER_HOSTNAME=https://localhost:8080/reporting-service
+SERVER_URL=https://localhost:8080/reporting-service
 
 npm start
 ```
@@ -35,4 +35,5 @@ The following environment variables may be specified:
 * **UI_VERSION** - version of UI build
 
 ### Startup variables
-* **SERVER_HOSTNAME** - hostname of API server
+* **SERVER_URL** - hostname of API server
+* **BASE_PATH** - base path used to serve content
