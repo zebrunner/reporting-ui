@@ -275,7 +275,7 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        font-size: 14px;
+                        font-size: 12px;
                         color: #000;
                     }
                 }
@@ -317,11 +317,11 @@
                 &._action {
                     flex: 1 1 auto;
                     justify-content: start;
-                    padding: 11px 0 11px 24px;
+                    padding: 0 0 0 24px;
                     width: auto;
                     
                     & .log_message {
-                        font-size: 14px;
+                        font-size: 12px;
                         line-height: 24px;
                         color: #000;
                         word-break: break-all;
@@ -480,7 +480,7 @@
                             margin-right: 25px;
                             color: #000;
                             text-decoration: underline;
-                            font-size: 12px;
+                            font-size: 14px;
                         }
                     }
 
@@ -501,9 +501,9 @@
             table {
 
                 td {
-                padding: 8px 8px 8px 0;
+                padding: 2px 8px 2px 0;
                 color: $coal;
-                font-size: 12px;
+                font-size: 14px;
 
                     span{
                         font-weight: 500;
@@ -524,7 +524,7 @@
                     padding-left: 22px;
 
                     .button-text {
-                        font-size: 12px;
+                        font-size: 14px;
                         line-height: 26px;
                         text-transform: capitalize;
                         vertical-align: top;
@@ -723,6 +723,7 @@
                 bottom: 0;
                 height: auto;
                 overflow: auto;
+                margin-bottom: 46px; // space for help button
             }
             &-table-wrapper {
                 table {
@@ -900,6 +901,19 @@
                         & ._menu-wrapper {
                             position: relative;
                         }
+                    }
+                }
+            }
+            &-additional {
+                table {
+                    td {
+                        padding: 0 8px 0 0;
+                    }
+                }
+
+                & .tab-additional__menu {
+                    .menu__button {
+                        padding-left: 20px;
                     }
                 }
             }
