@@ -242,7 +242,7 @@
             &-row {
                 min-height: 48px;
                 display: flex;
-                border-bottom: 1px solid #ccc;
+                border-bottom: 1px solid rgba($gray-new, 0.3);
                 overflow: hidden;
 
                 &._head {
