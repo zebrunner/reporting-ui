@@ -1,31 +1,31 @@
 <div class="test-ticket">
     <!-- URL pattern for Jira -->
-    <a name="{{ ::($ctrl.workItem.type === 'BUG' ? 'bugTicket' : 'taskTicket') }}"
-        ng-href="{{::($ctrl.jiraSettings['JIRA_URL'] + '/browse/' + $ctrl.workItem.jiraId) }}"
+    <a name="{{ ($ctrl.workItem.type === 'BUG' ? 'bugTicket' : 'taskTicket') }}"
+        ng-href="{{($ctrl.jiraSettings['JIRA_URL'] + '/browse/' + $ctrl.workItem.jiraId) }}"
         href="#"
         target="_blank"
         ng-if="$ctrl.jiraSettings['JIRA_URL'] && ($ctrl.jiraSettings['JIRA_URL'].includes('atlassian') || $ctrl.jiraSettings['JIRA_URL'].includes('jira'))"
         class="badge"
-        ng-class="::($ctrl.workItem.type === 'BUG' ? 'bug-label-bg' : 'task-label-bg')"
-        alt="{{::$ctrl.workItem.description}}"
-        title="{{::$ctrl.workItem.description}}">{{::$ctrl.workItem.jiraId}}</a>
+        ng-class="($ctrl.workItem.type === 'BUG' ? 'bug-label-bg' : 'task-label-bg')"
+        alt="{{$ctrl.workItem.description}}"
+        title="{{$ctrl.workItem.description}}">{{$ctrl.workItem.jiraId}}</a>
 
     <!-- URL pattern for pseudo GitHub integration -->
-    <a name="{{ ::($ctrl.workItem.type === 'BUG' ? 'bugTicket' : 'taskTicket') }}"
-        ng-href="{{::($ctrl.jiraSettings['JIRA_URL'] + '/' + $ctrl.workItem.jiraId) }}"
+    <a name="{{ ($ctrl.workItem.type === 'BUG' ? 'bugTicket' : 'taskTicket') }}"
+        ng-href="{{($ctrl.jiraSettings['JIRA_URL'] + '/' + $ctrl.workItem.jiraId) }}"
         href="#"
         target="_blank"
         ng-if="$ctrl.jiraSettings['JIRA_URL'] && !$ctrl.jiraSettings['JIRA_URL'].includes('atlassian') && !$ctrl.jiraSettings['JIRA_URL'].includes('jira')"
         class="badge"
-        ng-class="::($ctrl.workItem.type === 'BUG' ? 'bug-label-bg' : 'task-label-bg')"
-        alt="{{::$ctrl.workItem.description}}"
-        title="{{::$ctrl.workItem.description}}">{{::$ctrl.workItem.jiraId}}</a>
+        ng-class="($ctrl.workItem.type === 'BUG' ? 'bug-label-bg' : 'task-label-bg')"
+        alt="{{$ctrl.workItem.description}}"
+        title="{{$ctrl.workItem.description}}">{{$ctrl.workItem.jiraId}}</a>
 
     <!-- w/o URL -->
-    <span name="{{ ::($ctrl.workItem.type === 'BUG' ? 'bugTicket' : 'taskTicket') }}"
+    <span name="{{ ($ctrl.workItem.type === 'BUG' ? 'bugTicket' : 'taskTicket') }}"
         ng-if="!$ctrl.jiraSettings['JIRA_URL']"
         class="badge"
-        ng-class="::($ctrl.workItem.type === 'BUG' ? 'bug-label-bg' : 'task-label-bg')"
-        alt="{{::$ctrl.workItem.description}}"
-        title="{{::$ctrl.workItem.description}}">{{::$ctrl.workItem.jiraId}}</span>
+        ng-class="($ctrl.workItem.type === 'BUG' ? 'bug-label-bg' : 'task-label-bg')"
+        alt="{{$ctrl.workItem.description}}"
+        title="{{$ctrl.workItem.description}}">{{$ctrl.workItem.jiraId}}</span>
 </div>

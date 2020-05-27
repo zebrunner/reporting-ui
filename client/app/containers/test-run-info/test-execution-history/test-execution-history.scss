@@ -31,7 +31,6 @@ test-execution-history {
             position: relative;
             transition: color .25s ease;
 
-            &:hover,
             &._active {
                 &::after {
                     content: '';
@@ -151,7 +150,7 @@ test-execution-history {
                     color: $gray-light-new;
                 }
             }
-            &.in-progress {
+            &.in_progress {
                 color: #E3EEFF;
                 &._active,
                 &:hover {

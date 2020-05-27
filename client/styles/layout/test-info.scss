@@ -78,10 +78,7 @@ $historySectionHeight: 67px;
 
     &__section {
         height: 100%;
-
-        *[md-tabs-template]>div {
-            height: 100%;
-        }
+        border-top: 1px solid rgba(33, 33, 33, 0.08);
 
         > div,
         section,
@@ -99,20 +96,6 @@ $historySectionHeight: 67px;
             border: none;
             box-shadow: none;
         }
-
-        md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
-            overflow: hidden;
-            height: inherit;
-
-            md-tab-content-wrapper {
-                height: inherit;
-            }
-
-            md-tab-content {
-                height: inherit;
-                overflow: hidden !important;
-            }
-        }
     }
 
     &__status {
@@ -123,8 +106,8 @@ $historySectionHeight: 67px;
             height: 16px;
             text-align: center;
             text-transform: uppercase;
-            font-weight: 500;   
-            font-size: 12px;         
+            font-weight: 500;
+            font-size: 12px;
 
             &:before,
             &:after {
@@ -135,7 +118,7 @@ $historySectionHeight: 67px;
                 height: 16px;
                 width: 10px;
             }
-            
+
             &:before {
                 left: -10px;
                 border-top-left-radius: 16px;
@@ -238,7 +221,7 @@ $historySectionHeight: 67px;
                 height: 100%;
                 overflow: auto;
                 padding-bottom: 10px !important;
-            
+
                 &._mobile {
                     width: 100%;
                 }
@@ -311,7 +294,7 @@ $historySectionHeight: 67px;
                         justify-content: center;
                         align-items: center;
                     }
-                    
+
                     & ._button-icon {
                         margin-left: 2px;
                         transform: translateY(2px);
@@ -324,7 +307,7 @@ $historySectionHeight: 67px;
                     justify-content: start;
                     padding: 0 0 0 24px;
                     width: auto;
-                    
+
                     & .log_message {
                         font-size: 12px;
                         line-height: 24px;
@@ -747,7 +730,7 @@ $historySectionHeight: 67px;
 
     @media (max-width: 991px) {
         &__section {
-            .history-tab {
+            .panel-body {
                 overflow: auto;
             }
         }
@@ -834,7 +817,7 @@ $historySectionHeight: 67px;
                     &._start {
                         display: flex;
                         padding: 11px 0;
-                        
+
                         &-wrapper {
                             position: relative;
                             width: 100%;
@@ -875,7 +858,7 @@ $historySectionHeight: 67px;
                             justify-content: flex-start;
                             align-items: center;
                         }
-                        
+
                         & ._button-icon {
                             margin-left: 2px;
                             transform: translateY(2px);
@@ -888,7 +871,7 @@ $historySectionHeight: 67px;
                         align-items: flex-start;
                         padding: 11px 0;
                         width: auto;
-                        
+
                         & .log_message {
                             word-break: break-all;
                             padding-right: 16px;
@@ -937,9 +920,6 @@ $historySectionHeight: 67px;
         .main-container {
             position: relative;
             z-index: $zindex-fixed + 2; // +1 has zendesk button, so we need to add 2 to display video over it
-        }
-        md-tab-content.md-active {
-            transform: none;
         }
         .testrun-info__tab-video-wrapper {
             background: #000;

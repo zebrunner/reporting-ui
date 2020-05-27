@@ -24,26 +24,17 @@ const testExecutionHistoryController = function testExecutionHistoryController(
             click: swiperClickHandler,
         },
     };
-    let _historyItems = [];
     const vm = {
         activeTestId: null,
+        executionHistory: [],
         parentTestId: null,
         swiperContainer: null,
         timeMedian: 0,
 
         $onInit: controllerInit,
-        getTimeDiff,
         onSlideClick,
 
         get isMobile() { return $mdMedia('xs'); },
-        get executionHistory() { return _historyItems; },
-        set executionHistory(data) {
-            data = data || [];
-
-            this.timeMedian = median(data.map((item) => (item.elapsed || 0)));
-            data.forEach((item) => item.timeDiff = getTimeDiff(item.elapsed));
-            _historyItems = data;
-        },
     };
 
     function controllerInit() {
@@ -82,33 +73,6 @@ const testExecutionHistoryController = function testExecutionHistoryController(
             disabledClass: '_disabled',
         } : {};
         vm.swiper = new Swiper(vm.swiperContainer, swiperOptions);
-    }
-
-    function getTimeDiff(time = 0) {
-        let timeDiffStr = '';
-        let diff = Math.floor(vm.timeMedian && time ?  time * 100 / vm.timeMedian : 0) - 100;
-
-        if (diff) {
-            const sign = diff < 0 ? '-' : '+';
-
-            timeDiffStr = `${sign}${Math.abs(diff)}%`;
-        }
-
-        return timeDiffStr;
-    }
-
-    function median(values){
-        if (!values.length) { return 0; }
-
-        values.sort((a = 0, b = 0) => a - b);
-
-        const half = Math.floor(values.length / 2);
-
-        if (values.length % 2) {
-            return values[half];
-        }
-
-        return (values[half - 1] + values[half]) / 2.0;
     }
 
     return vm;

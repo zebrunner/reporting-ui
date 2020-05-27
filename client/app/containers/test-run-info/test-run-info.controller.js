@@ -58,6 +58,7 @@ const testRunInfoController = function testRunInfoController(
         filteredLogs: [],
         selectedLevel: logLevelService.initialLevel,
         isControllerRefreshing: false,
+        testsTimeMedian: null,
 
         $onInit: controllerInit,
         switchMoreLess,
@@ -191,6 +192,7 @@ const testRunInfoController = function testRunInfoController(
                     if (rs.success) {
                         messageService.success(`Test was marked as ${status}`);
                         vm.test = rs.data;
+                        updateExecutionHistoryItem(vm.test);
                     } else {
                         console.error(rs.message);
                     }
@@ -358,7 +360,7 @@ const testRunInfoController = function testRunInfoController(
         var videoElements = angular.element(e);
         reloadVideoOnError(videoElements[0]);
         if (videoElements && videoElements.length) {
-            videoElements[0].addEventListener("loadedmetadata", onMetadataLoaded, false);
+            videoElements[0].addEventListener('loadedmetadata', onMetadataLoaded, false);
             videoElements[0].addEventListener('loadeddata', onDataLoaded, false);
             videoElements[0].addEventListener('timeupdate', onTimeUpdate, false);
             videoElements[0].addEventListener('webkitfullscreenchange', onFullScreenChange, false);
@@ -698,8 +700,8 @@ const testRunInfoController = function testRunInfoController(
                         }
                         vm.test = angular.copy(test);
                         $scope.$apply();
-
                     }
+                    updateExecutionHistoryItem(test);
                 });
             }
         }, function () {
@@ -1062,7 +1064,10 @@ const testRunInfoController = function testRunInfoController(
             testCaseService.getTestExecutionHistory(vm.parentTestId)
                 .then((response) => {
                     if (response.success) {
-                        vm.executionHistory = (response.data || []).reverse();
+                        const sortedData = (response.data || [])
+                            .sort((a, b) => a.startTime - b.startTime);
+
+                        vm.executionHistory = addTimeDiffs(sortedData);
                     }
                 });
         }
@@ -1137,6 +1142,66 @@ const testRunInfoController = function testRunInfoController(
             });
 
         return $q.all([testRunRequest, testRequest]);
+    }
+
+    function updateExecutionHistoryItem(test) {
+        if (!test) { return; }
+
+        const updatingTestIndex = vm.executionHistory.findIndex(({ testId }) => testId === test.id);
+
+        if (updatingTestIndex !== -1) {
+            const status = test.status;
+            const workItems = (test.workItems || []).filter(({ type }) => type === 'BUG');
+            const elapsed = test.finishTime ? test.finishTime - test.startTime : null;
+            const testToUpdate = vm.executionHistory[updatingTestIndex];
+
+            $timeout(() => {
+                vm.executionHistory[updatingTestIndex] = {
+                    ...testToUpdate,
+                    status,
+                    elapsed,
+                    workItems,
+                };
+                vm.executionHistory = addTimeDiffs([...vm.executionHistory]);
+            }, 0);
+        }
+    }
+
+    function addTimeDiffs(data) {
+        vm.testsTimeMedian = median(data.map((item) => (item.elapsed || 0)));
+
+        return data.map((item) => {
+            item.timeDiff = getTimeDiff(item.elapsed);
+
+            return item;
+        });
+    }
+
+    function getTimeDiff(time = 0) {
+        let timeDiffStr = '';
+        let diff = Math.floor(vm.testsTimeMedian && time ?  time * 100 / vm.testsTimeMedian : 0) - 100;
+
+        if (diff) {
+            const sign = diff < 0 ? '-' : '+';
+
+            timeDiffStr = `${sign}${Math.abs(diff)}%`;
+        }
+
+        return timeDiffStr;
+    }
+
+    function median(values){
+        if (!values.length) { return 0; }
+
+        values.sort((a = 0, b = 0) => a - b);
+
+        const half = Math.floor(values.length / 2);
+
+        if (values.length % 2) {
+            return values[half];
+        }
+
+        return (values[half - 1] + values[half]) / 2.0;
     }
 
     function setTestParams() {
