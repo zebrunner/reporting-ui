@@ -11,6 +11,18 @@
         </md-toolbar>
 
         <md-dialog-content>
+            <md-input-container class="test-details__search _with-icon _without-animation">
+                <label class="placeholder-label">Search items</label>
+                <input ng-model-options="{debounce: 700}"
+                    type="text"
+                    ng-model="$ctrl.searchCriteria"
+                    ng-change="$ctrl.onSearch()"
+                    aria-label="Search items"
+                    aria-describedby="basic-addon2">
+                <i class="material-icons">
+                    search
+                </i>
+            </md-input-container>
             <status-buttons on-button-click="$ctrl.onStatusChange($statuses);" initial-selections="$ctrl.statusInitValues"></status-buttons>
         </md-dialog-content>
 

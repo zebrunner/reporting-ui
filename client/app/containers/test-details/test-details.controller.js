@@ -111,7 +111,7 @@ const testDetailsController = function testDetailsController(
             },
         ],
         isNotificationAvailable: false,
-        searchQuery: '',
+        searchCriteria: '',
 
         get isMobile() { return $mdMedia('xs'); },
         get isTablet() { return !$mdMedia('gt-md'); },
@@ -144,6 +144,7 @@ const testDetailsController = function testDetailsController(
         onSearch,
         onTestSelect,
         onTrackedTestRender,
+        onViewModeSelect,
         openImagesViewerModal,
         orderByElapsed,
         resetStatusFilterAndOrdering,
@@ -283,13 +284,13 @@ const testDetailsController = function testDetailsController(
     function filterDataBySearchCriteria(data = vm.activeTests) {
         return data.filter((item) => {
             console.log(item);
-            const searchRegExp = new RegExp(vm.searchQuery, 'ig');
-            const titleMtach = searchRegExp.test(item.name);
-            const ownerMtach = searchRegExp.test(item.owner);
-            const messageMtach = searchRegExp.test(item.message);
-            const deviceMtach = searchRegExp.test(item.testConfig?.device);
+            const searchRegExp = new RegExp(vm.searchCriteria, 'ig');
+            const titleMatch = searchRegExp.test(item.name);
+            const ownerMatch = searchRegExp.test(item.owner);
+            const messageMatch = searchRegExp.test(item.message);
+            const deviceMatch = searchRegExp.test(item.testConfig?.device);
 
-            return titleMtach || ownerMtach || messageMtach || deviceMtach;
+            return titleMatch || ownerMatch || messageMatch || deviceMatch;
         });
     }
 
@@ -298,6 +299,7 @@ const testDetailsController = function testDetailsController(
     }
 
     function resetStatusFilterAndOrdering() {
+        vm.searchCriteria = '';
         vm.filters.status = { ...defaultStatusFilter };
         vm.sortConfig.field = defaultSortField;
         vm.sortConfig.reverse = false;
@@ -306,19 +308,16 @@ const testDetailsController = function testDetailsController(
         return {
             filters: vm.filters,
             sortConfig: vm.sortConfig,
-        }
+        };
     }
 
     function changeViewMode(mode) {
-        if (vm.testsViewMode === mode) { return; }
-
         // Uncomment code line below if you need to reset previously selected group item on view mode change
         // if (vm.groupingFilters[vm.testsViewMode].selectedValue) { vm.groupingFilters[vm.testsViewMode].selectedValue = null; }
         // else save previous active values
         if (vm.filters.grouping && vm.filters.grouping.values) {
             vm.groupingFilters[vm.testsViewMode].cachedValues = vm.filters.grouping.values;
         }
-        vm.testsViewMode = mode;
         switch (mode) {
             case 'plain':
                 onPlainViewModeActivate();
@@ -326,6 +325,12 @@ const testDetailsController = function testDetailsController(
             default:
                 onFilteredViewModeActivate();
         }
+    }
+
+    function onViewModeSelect() {
+        $timeout(() => {
+            changeViewMode(vm.testsViewMode);
+        }, 0);
     }
 
     function toggleGroupingFilter(selectedValue) {
@@ -822,7 +827,7 @@ const testDetailsController = function testDetailsController(
         //reset tests selection
         clearTestsSelection();
         shouldResetPagination && resetPagination();
-        if (vm.searchQuery) {
+        if (vm.searchCriteria) {
             filteredData = filterDataBySearchCriteria(filteredData);
         }
         getOrderedTests(filteredData);

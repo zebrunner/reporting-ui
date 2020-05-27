@@ -40,12 +40,12 @@
                                     ng-false-value="false">
                                 </md-checkbox>
                             </div>
-                            <div class="test-details__search">
-                                <md-input-container class="test-details__search-input-label _with-icon _without-animation">
+                            <div class="test-run-group_wrapper _left">
+                                <md-input-container class="test-details__search _with-icon _without-animation">
                                     <label class="placeholder-label">Search items</label>
                                     <input ng-model-options="{debounce: 700}"
                                         type="text"
-                                        ng-model="$ctrl.searchQuery"
+                                        ng-model="$ctrl.searchCriteria"
                                         ng-change="$ctrl.onSearch()"
                                         aria-label="Search items"
                                         aria-describedby="basic-addon2">
@@ -53,41 +53,22 @@
                                         search
                                     </i>
                                 </md-input-container>
-                            </div>
-                            <div class="test-run-group_wrapper _left">
-                                <div class="test-run-group_controls-buttons">
-                                    <button id="plainToggle"
-                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'plain'}"
-                                        class="md-button md-raised md-ink-ripple"
-                                        type="button"
-                                        ng-click="$ctrl.changeViewMode('plain');">
-                                        Plain
-                                    </button>
-                                    <button id="classToggle"
-                                        ng-if="$ctrl.groupingFilters.class.data.length"
-                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'class'}"
-                                        class="md-button md-raised md-ink-ripple"
-                                        type="button"
-                                        ng-click="$ctrl.changeViewMode('class');">
-                                        Class
-                                    </button>
-                                    <button id="packageToggle"
-                                        ng-if="$ctrl.groupingFilters.package.data.length"
-                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'package'}"
-                                        class="md-button md-raised md-ink-ripple"
-                                        type="button"
-                                        ng-click="$ctrl.changeViewMode('package');">
-                                        Package
-                                    </button>
-                                    <button id="tagsToggle"
-                                        ng-if="$ctrl.groupingFilters.tags.data.length"
-                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'tags'}"
-                                        class="md-button md-raised md-ink-ripple"
-                                        type="button"
-                                        ng-click="$ctrl.changeViewMode('tags');">
-                                        Tags
-                                    </button>
-                                </div>
+                                <md-input-container class="test-details__select select-wrapper no-padding without-animation">
+                                    <md-select id="viewModeSelect"
+                                        ng-model="$ctrl.testsViewMode"
+                                        class="form-fields__select"
+                                        name="viewModeSelect"
+                                        ng-change="$ctrl.onViewModeSelect()">
+                                        <md-option value="plain"
+                                            md-ink-ripple="0">Plain</md-option>
+                                        <md-option ng-if="$ctrl.groupingFilters.class.data.length"
+                                            md-ink-ripple="0" value="class">Class</md-option>
+                                        <md-option ng-if="$ctrl.groupingFilters.package.data.length"
+                                            md-ink-ripple="0" value="package">Package</md-option>
+                                        <md-option ng-if="$ctrl.groupingFilters.tags.data.length"
+                                            md-ink-ripple="0" value="tags">Tags</md-option>
+                                    </md-select>
+                                </md-input-container>
                             </div>
                             <div class="test-run-group_wrapper _right">
                                 <status-buttons on-button-click="$ctrl.filterByStatus($statuses)"
@@ -99,7 +80,7 @@
                                 <div class="test-run-group_other-buttons">
                                     <md-button id="resetAllToggle"
                                         class="md-raised"
-                                        ng-disabled="!$ctrl.isStausFilteringActive && !$ctrl.isSortingActive"
+                                        ng-disabled="!$ctrl.isStausFilteringActive && !$ctrl.isSortingActive && !$ctrl.searchCriteria"
                                         type="button"
                                         ng-click="$ctrl.resetStatusFilterAndOrdering();">
                                         RESET

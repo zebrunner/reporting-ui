@@ -26,6 +26,17 @@
                         align-items: center;
                         &._left {
                             flex-grow: 1;
+                            .test-details {
+                                &__select {
+                                    max-width: 120px;
+                                }
+                                &__search {
+                                    max-width: 370px;
+                                }
+                            }
+                            md-input-container + md-input-container {
+                                margin-left: 16px;
+                            }
                             @media(max-width: $md-screen-phone) {
                                 overflow-x: scroll;
                                 display: none;
