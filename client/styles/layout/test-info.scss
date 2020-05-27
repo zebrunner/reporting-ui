@@ -728,7 +728,10 @@ $historySectionHeight: 67px;
                 bottom: 0;
                 height: auto;
                 overflow: auto;
-                margin-bottom: 46px; // space for help button
+
+                &-wrapper {
+                    padding-bottom: 60px; // space for help button
+                }
             }
             &-table-wrapper {
                 table {
