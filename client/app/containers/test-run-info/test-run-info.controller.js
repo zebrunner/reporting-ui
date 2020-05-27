@@ -358,7 +358,7 @@ const testRunInfoController = function testRunInfoController(
         var videoElements = angular.element(e);
         reloadVideoOnError(videoElements[0]);
         if (videoElements && videoElements.length) {
-            videoElements[0].addEventListener("loadedmetadata", onMetadataLoaded, false);
+            videoElements[0].addEventListener('loadedmetadata', onMetadataLoaded, false);
             videoElements[0].addEventListener('loadeddata', onDataLoaded, false);
             videoElements[0].addEventListener('timeupdate', onTimeUpdate, false);
             videoElements[0].addEventListener('webkitfullscreenchange', onFullScreenChange, false);
@@ -1062,7 +1062,8 @@ const testRunInfoController = function testRunInfoController(
             testCaseService.getTestExecutionHistory(vm.parentTestId)
                 .then((response) => {
                     if (response.success) {
-                        vm.executionHistory = (response.data || []).reverse();
+                        vm.executionHistory = (response.data || [])
+                            .sort((a, b) => a.startTime - b.startTime);
                     }
                 });
         }
