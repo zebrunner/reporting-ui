@@ -531,13 +531,43 @@ $historySectionHeight: 67px;
 
                         &._failed {
                             &::before {
-                                background-color: #eb4554;
+                                background-color: $red-new;
                             }
                         }
 
                         &._passed {
                             &::before {
                                 background-color: #43c480;
+                            }
+                        }
+
+                        &._in_progress {
+                            &::before {
+                                background-color: $blue-new;
+                            }
+                        }
+
+                        &._skipped {
+                            &::before {
+                                background-color: $yellow-light-new;
+                            }
+                        }
+
+                        &._queued {
+                            &::before {
+                                background-color: $blue-dark;
+                            }
+                        }
+
+                        &._aborted {
+                            &::before {
+                                background-color: rgba($gray-light-new, .5);
+                            }
+                        }
+
+                        &._unknown {
+                            &::before {
+                                background-color: #6C757C;
                             }
                         }
                     }
