@@ -2,11 +2,12 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <div class="swiper-slide {{ historyItem.status.toLowerCase() }}"
+                ng-click="$ctrl.onSlideClick(historyItem)"
                 ng-attr-id="{{historyItem.testId}}"
                 ng-class="{ '_active': $ctrl.activeTestId === historyItem.testId }"
                 ng-repeat="historyItem in $ctrl.executionHistory track by historyItem.testId">
                 <md-icon md-svg-icon="lamba-bg"
-                    ng-if="$ctrl.parentTestId === historyItem.testId"
+                    ng-if="$ctrl.activeTestId === historyItem.testId"
                     class="swiper-slide__icon _bg material-icons"></md-icon>
                 <md-icon md-svg-icon="lamba" class="swiper-slide__icon material-icons"></md-icon>
                 <time class="swiper-slide__top-section"

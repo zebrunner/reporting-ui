@@ -45,6 +45,8 @@ const testExecutionHistoryController = function testExecutionHistoryController(
     }
 
     function swiperClickHandler(e) {
+        if (!UtilService.isTouchDevice()) { return; }
+
         const slideElem = e.target.closest('.swiper-slide');
 
         if (slideElem) {
@@ -57,7 +59,8 @@ const testExecutionHistoryController = function testExecutionHistoryController(
         }
     }
 
-    function onSlideClick(historyItem) {
+    function onSlideClick(historyItem, isSwiperEvent) {
+        if (UtilService.isTouchDevice() && !isSwiperEvent) { return; }
         if (historyItem.testId === vm.activeTestId) { return; }
 
         vm.onTestSelect({ $historyItem: historyItem });
@@ -72,6 +75,7 @@ const testExecutionHistoryController = function testExecutionHistoryController(
             prevEl: '.swiper-nav-btn._prev',
             disabledClass: '_disabled',
         } : {};
+        swiperOptions.allowTouchMove = UtilService.isTouchDevice();
         vm.swiper = new Swiper(vm.swiperContainer, swiperOptions);
     }
 

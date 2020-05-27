@@ -31,20 +31,6 @@ test-execution-history {
             position: relative;
             transition: color .25s ease;
 
-            &._active {
-                &::after {
-                    content: '';
-                    display: block;
-                    width: 164px;
-                    height: 2px;
-                    background-color: currentColor;
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    margin: 0 auto;
-                }
-            }
             &:hover:not(._active) {
                 cursor: pointer;
             }

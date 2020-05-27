@@ -1178,16 +1178,13 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function getTimeDiff(time = 0) {
-        let timeDiffStr = '';
         let diff = Math.floor(vm.testsTimeMedian && time ?  time * 100 / vm.testsTimeMedian : 0) - 100;
 
-        if (diff) {
-            const sign = diff < 0 ? '-' : '+';
-
-            timeDiffStr = `${sign}${Math.abs(diff)}%`;
+        if (diff >= 100) { // display only diffs with >= +100%
+            return `+${Math.abs(diff)}%`;
         }
 
-        return timeDiffStr;
+        return '';
     }
 
     function median(values){
