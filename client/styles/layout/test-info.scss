@@ -526,9 +526,10 @@ $historySectionHeight: 67px;
                 .menu__button {
                     display: inline-block;
                     position: relative;
-                    padding-left: 22px;
+                    padding: 0 0 0 22px;
 
                     .button-text {
+                        position: relative;
                         font-size: 14px;
                         line-height: 26px;
                         text-transform: capitalize;
@@ -538,8 +539,8 @@ $historySectionHeight: 67px;
                             content: '';
                             display: block;
                             position: absolute;
-                            top: 6px;
-                            left: 0;
+                            top: 2px;
+                            left: -20px;
                             height: 12px;
                             width: 12px;
                             border-radius: 50%;
