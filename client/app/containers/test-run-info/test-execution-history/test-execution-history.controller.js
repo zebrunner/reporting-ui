@@ -45,8 +45,6 @@ const testExecutionHistoryController = function testExecutionHistoryController(
     }
 
     function swiperClickHandler(e) {
-        if (!UtilService.isTouchDevice()) { return; }
-
         const slideElem = e.target.closest('.swiper-slide');
 
         if (slideElem) {
@@ -54,7 +52,7 @@ const testExecutionHistoryController = function testExecutionHistoryController(
             const historyItem = vm.executionHistory.find(({ testId }) => testId === id);
 
             if (historyItem) {
-                onSlideClick(historyItem);
+                onSlideClick(historyItem, true);
             }
         }
     }
@@ -70,11 +68,17 @@ const testExecutionHistoryController = function testExecutionHistoryController(
         if (!vm.swiperContainer || typeof Swiper !== 'function') { return; }
 
         swiperOptions.initialSlide = vm.executionHistory.length ? vm.executionHistory.length - 1 : 0;
-        swiperOptions.navigation = !UtilService.isTouchDevice() ? {
-            nextEl: '.swiper-nav-btn._next',
-            prevEl: '.swiper-nav-btn._prev',
-            disabledClass: '_disabled',
-        } : {};
+        if (UtilService.isTouchDevice()) {
+            swiperOptions.on = {
+                click: swiperClickHandler,
+            };
+        } else {
+            swiperOptions.navigation = {
+                nextEl: '.swiper-nav-btn._next',
+                prevEl: '.swiper-nav-btn._prev',
+                disabledClass: '_disabled',
+            };
+        }
         swiperOptions.allowTouchMove = UtilService.isTouchDevice();
         vm.swiper = new Swiper(vm.swiperContainer, swiperOptions);
     }
