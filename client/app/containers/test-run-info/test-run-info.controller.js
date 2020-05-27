@@ -1158,11 +1158,9 @@ const testRunInfoController = function testRunInfoController(
             $timeout(() => {
                 vm.executionHistory[updatingTestIndex] = {
                     ...testToUpdate,
-                    ...{
-                        status,
-                        elapsed,
-                        workItems,
-                    }
+                    status,
+                    elapsed,
+                    workItems,
                 };
                 vm.executionHistory = addTimeDiffs([...vm.executionHistory]);
             }, 0);
