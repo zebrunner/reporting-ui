@@ -96,19 +96,19 @@
                                                             aria-label="Additional menu"
                                                             ng-click="$mdMenu.open($event)"
                                                             ng-disabled="$ctrl.test.status.toLowerCase() !== 'passed' && $ctrl.test.status.toLowerCase() !== 'failed'">
-                                                            <span class="button-text _{{$ctrl.test.status.split('_').join(' ').toLowerCase()}}">{{ $ctrl.test.status.split('_').join(' ').toLowerCase() }}</span>
-                                                            <span class="material-icons button-icon" ng-show="$ctrl.test.status.toLowerCase() === 'passed' || $ctrl.test.status.toLowerCase() === 'failed'">arrow_drop_down</span>
+                                                            <span class="button-text _{{$ctrl.test.status.toLowerCase()}}">{{ $ctrl.test.status.split('_').join(' ').toLowerCase() }}</span>
+                                                            <span class="material-icons button-icon">arrow_drop_down</span>
                                                         </md-button>
                                                         <md-menu-content class="tab-additional__menu-content">
                                                             <md-menu-item class="menu__item" ng-repeat="item in ['passed', 'failed']">
-                                                                <md-button ng-click="$ctrl.changeTestStatus($ctrl.test, item)" ng-disabled="$ctrl.testRun.status.toLowerCase() === 'in_progress'">
+                                                                <md-button ng-click="$ctrl.changeTestStatus($ctrl.test, item)">
                                                                     <span class="item-text {{item}}" md-menu-align-target>{{item}}</span>
                                                                 </md-button>
                                                             </md-menu-item>
                                                         </md-menu-content>
                                                     </md-menu>
                                                 </td>
-                                                <td class="tab-additional__table-data _issue _border-bottom" ng-if="$ctrl.test.status.toLowerCase() === 'failed'">
+                                                <td class="tab-additional__table-data _issue _border-bottom" ng-if="$ctrl.test.status.toLowerCase() === 'failed' && $ctrl.test.message">
                                                     <button class="button" ng-click="$ctrl.showDetailsDialog($ctrl.test, $event)">
                                                         <span class="material-icons data-icon">bug_report</span>
                                                         <span>Link issue</span>
