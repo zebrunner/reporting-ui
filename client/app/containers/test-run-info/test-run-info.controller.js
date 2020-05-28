@@ -949,7 +949,7 @@ const testRunInfoController = function testRunInfoController(
     function unbindEvents() {
         cancelIntervals();
         closeAll();
-        hashWatcherUnsubscriber && hashWatcherUnsubscriber();
+        hashWatcherUnsubscriber = hashWatcherUnsubscriber && hashWatcherUnsubscriber();
         vm.wsSubscription && vm.wsSubscription.unsubscribe();
         closeTestsWebsocket();
         if (typeof onTransStartSubscription === 'function') {
