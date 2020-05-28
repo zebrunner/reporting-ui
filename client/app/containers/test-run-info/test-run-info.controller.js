@@ -40,6 +40,7 @@ const testRunInfoController = function testRunInfoController(
     const mobileWidth = 480;
     const vncFullScreenClass = 'vnc-fullscreen-mode';
     let onTransStartSubscription = null;
+    let hashWatcherUnsubscriber = null;
     let testCaseManagementTools = [];
     let jiraSettings = {};
     let testRailSettings = {};
@@ -318,6 +319,8 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function switchMoreLess(e, log) {
+        e.preventDefault();
+        e.stopPropagation();
         const rowElem = e.target.closest('.testrun-info__tab-table-col._action') || e.target.closest('.testrun-info__tab-mobile-table-data._action-data');
         const scrollableElem = rowElem.closest('.testrun-info__tab-table-wrapper');
 
@@ -464,7 +467,7 @@ const testRunInfoController = function testRunInfoController(
     function addSubtitles(track, videoDuration) {
         if (track && !track.cues.length) {
             $scope.logs.forEach(function (log, index) {
-                var finishTime = index != $scope.logs.length - 1 ? $scope.logs[index + 1].videoTimestamp : videoDuration;
+                var finishTime = index !== $scope.logs.length - 1 ? $scope.logs[index + 1].videoTimestamp : videoDuration;
                 var vttCue = new VTTCue(log.videoTimestamp, finishTime, log.message);
                 vttCue.id = index;
                 track.addCue(vttCue);
@@ -486,7 +489,7 @@ const testRunInfoController = function testRunInfoController(
         $timeout(function () {
             videoElement.load();
         }, timeout);
-    };
+    }
 
     $scope.getVideoState = function (log) {
         $timeout(() => {
@@ -500,28 +503,34 @@ const testRunInfoController = function testRunInfoController(
         return test.artifacts ? test.artifacts.filter(function (artifact) {
             return artifact.name.toLowerCase().includes(partName) && !artifact.name.toLowerCase().includes(exclusion);
         }) : [];
-    };
+    }
 
     function addDrivers(artifacts) {
         artifacts.sort(compareByCreatedAt);
         artifacts.forEach(function (artifact) {
             addDriver(artifact);
         });
-    };
+    }
 
     function addDriver(liveDemoArtifact) {
-        if (liveDemoArtifact && $scope.drivers.indexOfField('name', liveDemoArtifact.name) == -1) {
+        if (liveDemoArtifact && $scope.drivers.indexOfField('name', liveDemoArtifact.name) === -1) {
             $scope.drivers.push(liveDemoArtifact);
             liveDemoArtifact.index = $scope.drivers.length - 1;
             driversQueue.push(liveDemoArtifact);
         }
-    };
+    }
 
     $scope.selectedLogRow = -1;
 
     $scope.selectLogRow = function(ev, index) {
-        var hash = ev.currentTarget.attributes.id.value;
-        $location.hash(hash);
+        const hash = ev.currentTarget.attributes.id.value;
+        const stateParams = $state.params;
+
+        stateParams['#'] = hash;
+
+        const newUrl = $state.href('tests.runInfo', stateParams, {absolute: true});
+
+        $window.history.pushState(null, null, newUrl);
     };
 
     $scope.copyLogLine = function(log) {
@@ -533,22 +542,27 @@ const testRunInfoController = function testRunInfoController(
         $location.$$absUrl.copyToClipboard();
     };
 
-    $scope.$watch(function () {
-        return $location.hash()
-    }, function (newVal, oldVal) {
-        var selectedLogRowClass = 'selected-log-row';
-        if (newVal && oldVal) {
-            if (newVal == oldVal) {
-                watchUntilPainted('#' + newVal, function () {
+    // TODO: bug: row isn't highlighted on page load (absent data)
+    function registerLocationHashWatcher() {
+        return $scope.$watch(() => {
+            return $location.hash();
+        }, (newVal, oldVal) => {
+            var selectedLogRowClass = 'selected-log-row';
+            if (newVal) {
+                if (newVal === oldVal) {
+                    watchUntilPainted('#' + newVal, function () {
+                        angular.element('#' + newVal).addClass(selectedLogRowClass);
+                    });
+                } else {
                     angular.element('#' + newVal).addClass(selectedLogRowClass);
-                });
-            } else {
-                angular.element('#' + newVal).addClass(selectedLogRowClass);
-                angular.element('#' + oldVal).removeClass(selectedLogRowClass);
+                    if (oldVal) {
+                        angular.element('#' + oldVal).removeClass(selectedLogRowClass);
+                    }
+                }
+                $scope.selectedLogRow = newVal.split('log-')[1];
             }
-            $scope.selectedLogRow = newVal.split('log-')[1];
-        }
-    });
+        });
+    }
 
     function toggleVNCFullScreen() {
         document.body.classList.toggle(vncFullScreenClass);
@@ -882,7 +896,7 @@ const testRunInfoController = function testRunInfoController(
     function bindEvents() {
         $scope.$on('$destroy', unbindEvents);
         TestService.subscribeOnLocationChangeStart();
-
+        hashWatcherUnsubscriber = registerLocationHashWatcher();
         onTransStartSubscription = $transitions.onStart({}, function (trans) {
             const toState = trans.to();
 
@@ -935,6 +949,7 @@ const testRunInfoController = function testRunInfoController(
     function unbindEvents() {
         cancelIntervals();
         closeAll();
+        hashWatcherUnsubscriber = hashWatcherUnsubscriber && hashWatcherUnsubscriber();
         vm.wsSubscription && vm.wsSubscription.unsubscribe();
         closeTestsWebsocket();
         if (typeof onTransStartSubscription === 'function') {
@@ -1090,6 +1105,7 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function onHistoryElemClick(historyItem) {
+        if (vm.isControllerRefreshing) { return; }
         vm.isControllerRefreshing = true;
         getPageData(historyItem.testRunId, historyItem.testId)
             .then(([testRun, test]) => {
