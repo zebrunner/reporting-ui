@@ -35,9 +35,12 @@
                                                     Edit
                                                 </md-button>
                                             </md-menu-item>
+                                            <md-divider></md-divider>
                                             <md-menu-item>
-                                                <md-button name="deleteGroup" ng-really-click="$ctrl.deleteGroup(group)"
-                                                           ng-really-message="Do you really want to delete this group?">
+                                                <md-button name="deleteGroup"
+                                                    class="_red"
+                                                    ng-really-click="$ctrl.deleteGroup(group)"
+                                                    ng-really-message="Do you really want to delete this group?">
                                                     Delete
                                                 </md-button>
                                             </md-menu-item>

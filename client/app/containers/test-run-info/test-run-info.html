@@ -60,7 +60,7 @@
                                     <div class="no-video__icon-wrapper">
                                         <md-icon md-svg-icon="outlined:videocam_off" class="material-icons icon"></md-icon>
                                         <div class="icon__text" ng-if="$ctrl.test.status === 'IN_PROGRESS'">No live session available</div>
-                                        <div class="icon__text" ng-if="$ctrl.test.status !== 'IN_PROGRESS'">No video available {{ MODE.name === 'record' ? 'yet' : '' }}</div>
+                                        <div class="icon__text" ng-if="$ctrl.test.status !== 'IN_PROGRESS'">No video available</div>
                                     </div>
                                     <div class="no-video__controls-wrapper">
                                         <div class="controls _play">
@@ -144,14 +144,15 @@
                                                     <span class="tab-additional__table-data _label">Duration</span>
                                                 </td>
                                                 <td>
-                                                                    <span>
-                                                                        {{($ctrl.test.finishTime - $ctrl.test.startTime) / 1000 | number: 0}} seconds
-                                                                    </span>
+                                                    <span>
+                                                        {{($ctrl.test.finishTime - $ctrl.test.startTime) / 1000 | number: 0}} seconds
+                                                    </span>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <table class="tab-additional__table _third-section">
+                                    <table class="tab-additional__table _third-section"
+                                        ng-if="$ctrl.testRun.normalizedPlatformData || $ctrl.test.testConfig.device">
                                         <tbody class="tab-additional__table-body">
                                             <tr class="tab-additional__table-row" ng-if="$ctrl.testRun.normalizedPlatformData.browser || $ctrl.testRun.normalizedPlatformData.browserVersion">
                                                 <td class="tab-additional__table-data _platform">
@@ -184,7 +185,8 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <table class="tab-additional__table _fourth-section">
+                                    <table class="tab-additional__table _fourth-section"
+                                        ng-if="$ctrl.test.workItems.length || $ctrl.test.artifacts.length">
                                         <tbody class="tab-additional__table-body">
                                             <tr class="tab-additional__table-row" ng-if="$ctrl.test.workItems.length">
                                                 <td class="tab-additional__table-data _tickets">
@@ -192,16 +194,10 @@
                                                     <span class="tab-additional__table-data _label">Tickets</span>
                                                 </td>
                                                 <td class="tab-additional__table-data _tickets-info">
-                                                    <div data-ng-repeat="issue in $ctrl.test.workItems" class="work-items">
-                                                        <!-- URL pattern for Jira -->
-                                                        <a name="taskTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</a>
-                                                        <a name="bugTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/browse/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && ($ctrl.jira['JIRA_URL'].includes('atlassian') || $ctrl.jira['JIRA_URL'].includes('jira')) && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</a>
-                                                        <!-- URL pattern for pseudo GitHub integration -->
-                                                        <a name="taskTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && !$ctrl.jira['JIRA_URL'].includes('atlassian') && !$ctrl.jira['JIRA_URL'].includes('jira') && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</a>
-                                                        <a name="bugTicket" href="{{::$ctrl.jira['JIRA_URL'] + '/' + issue.jiraId}}" target="_blank" ng-if="$ctrl.jira['JIRA_URL'] && !$ctrl.jira['JIRA_URL'].includes('atlassian') && !$ctrl.jira['JIRA_URL'].includes('jira') && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</a>
-                                                        <span name="taskTicket" ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{::issue.jiraId}}</span>
-                                                        <span name="bugTicket" ng-if="!$ctrl.jira['JIRA_URL'] && issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg" alt="{{::issue.description}}" title="{{::issue.description}}">{{::issue.jiraId}}</span>
-                                                    </div>
+                                                    <test-ticket class="work-items"
+                                                        data-ng-repeat="workItem in $ctrl.test.workItems"
+                                                        jira-settings="$ctrl.jira"
+                                                        work-item="workItem"></test-ticket>
                                                 </td>
                                             </tr>
                                             <tr class="tab-additional__table-row" ng-if="$ctrl.test.artifacts.length">

@@ -87,14 +87,19 @@
                                                         Resend
                                                     </md-button>
                                                 </md-menu-item>
-                                                <md-menu-item ng-if="invite.status != 'ACCEPTED'">
-                                                    <md-button name="userEdit" data-ng-really-message="Do you really want to revoke the invitation?" data-ng-really-click="$ctrl.takeOff(invite, $index);">
-                                                        Revoke
+                                                <md-menu-item ng-if="invite.status == 'ACCEPTED'">
+                                                    <md-button name="userEdit"
+                                                        ng-click="$ctrl.searchUser(invite);">
+                                                        Profile
                                                     </md-button>
                                                 </md-menu-item>
-                                                <md-menu-item ng-if="invite.status == 'ACCEPTED'">
-                                                    <md-button name="userEdit" ng-click="$ctrl.searchUser(invite);">
-                                                        Profile
+                                                <md-divider ng-if="invite.status !== 'ACCEPTED'"></md-divider>
+                                                <md-menu-item ng-if="invite.status !== 'ACCEPTED'">
+                                                    <md-button name="userEdit"
+                                                        class="_red"
+                                                        data-ng-really-message="Do you really want to revoke the invitation?"
+                                                        data-ng-really-click="$ctrl.takeOff(invite, $index);">
+                                                        Revoke
                                                     </md-button>
                                                 </md-menu-item>
                                             </md-menu-content>
