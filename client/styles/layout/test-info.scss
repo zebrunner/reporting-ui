@@ -413,6 +413,9 @@ $historySectionHeight: 67px;
                         &._issue {
                             & .button {
                                 padding-right: 0;
+                                & span.data-icon {
+                                    margin-right: 0;
+                                }
                             }
                         }
                     }
@@ -429,7 +432,7 @@ $historySectionHeight: 67px;
                     }
 
                     &._issue {
-                        width: 90px;
+                        width: 92px;
                         padding-right: 0;
                         & .button {
                             border: 0;
@@ -443,11 +446,12 @@ $historySectionHeight: 67px;
                                 font-size: 18px;
                                 margin-right: 6px;
                                 margin-left: 0;
-                                transform: translateY(4px);
+                                transform: translateY(0px);
                             }
 
                             & span {
-                                font-size: 12px;
+                                font-size: 14px;
+                                vertical-align: middle;
                             }
                         }
                     }
@@ -475,13 +479,14 @@ $historySectionHeight: 67px;
 
                     &._label {
                         font-weight: 400;
+                        vertical-align: text-bottom;
                     }
 
                     & .data-icon {
                         font-size: 18px;
                         margin-right: 10px;
                         margin-left: 6px;
-                        transform: translateY(4px);
+                        transform: translateY(2px);
                     }
                 }
             }
