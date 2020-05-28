@@ -59,6 +59,7 @@ const testRunInfoController = function testRunInfoController(
         selectedLevel: logLevelService.initialLevel,
         isControllerRefreshing: false,
         testsTimeMedian: null,
+        pageHash: null,
 
         $onInit: controllerInit,
         switchMoreLess,
@@ -207,25 +208,26 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
-    function postModeConstruct(test) {
+    function postModeConstruct(test, hash) {
+        if (vm.pageHash !== hash) { return; }
         var logGetter = MODES[$scope.MODE.name].logGetter;
         switch ($scope.MODE.name) {
             case 'live':
                 provideVideo();
                 $scope.logs = [];
-                tryToGetLogsLiveFromElasticsearch(logGetter, LIVE_LOGS_INTERVAL_NAME);
+                tryToGetLogsLiveFromElasticsearch(logGetter, LIVE_LOGS_INTERVAL_NAME, hash);
                 break;
             case 'record':
                 $scope.selectedDriver = 0;
                 initRecords(test);
                 closeAll();
-
                 $scope.logs = [];
                 logSizeCount = 0;
                 unrecognizedImages = {};
                 scrollEnable = false;
-                tryToGetLogsHistoryFromElasticsearch(logGetter)
+                tryToGetLogsHistoryFromElasticsearch(logGetter, hash)
                     .then(() => {
+                        if (vm.pageHash !== hash) { return; }
                         // 10 attempts provide a 5-minutes max interval
                         const attemptsToLoadImages = 10;
                         let imagesLoadingAttempts = 0;
@@ -233,13 +235,15 @@ const testRunInfoController = function testRunInfoController(
                         const maxDelay = 40000;
 
                         $timeout(() => {
+                            if (vm.pageHash !== hash) { return; }
                             logGetter.pageCount = null;
                             logGetter.from = $scope.logs.length + logSizeCount;
                             function update() {
                                 $timeout(function() {
+                                    if (vm.pageHash !== hash) { return; }
                                     if (Object.size(unrecognizedImages) > 0 && imagesLoadingAttempts < attemptsToLoadImages) {
                                         logGetter.from = $scope.logs.length + logSizeCount;
-                                        tryToGetLogsHistoryFromElasticsearch(logGetter);
+                                        tryToGetLogsHistoryFromElasticsearch(logGetter, hash);
                                         update();
                                         imagesLoadingAttempts += 1;
                                         // increase delay to next call up to maxDelay
@@ -247,8 +251,10 @@ const testRunInfoController = function testRunInfoController(
                                     }
                                 }, delay, false);
                             }
-                            tryToGetLogsHistoryFromElasticsearch(logGetter)
+
+                            tryToGetLogsHistoryFromElasticsearch(logGetter, hash)
                                 .then(() => {
+                                    if (vm.pageHash !== hash) { return; }
                                     update();
                                 });
                         }, delay);
@@ -273,31 +279,33 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
-    function tryToGetLogsHistoryFromElasticsearch(logGetter) {
+    function tryToGetLogsHistoryFromElasticsearch(logGetter, hash) {
         return $q(resolve => {
             elasticsearchService.count(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, vm.test.startTime)
                 .then(count => {
+                    if (vm.pageHash !== hash) { return; }
                     if (logGetter.accessFunc ? logGetter.accessFunc.call(this, count) : true) {
                         const size = logGetter.getSizeFunc.call(this, count);
 
-                        collectElasticsearchLogs(logGetter.from, logGetter.pageCount, size, count, resolve);
+                        collectElasticsearchLogs(logGetter.from, logGetter.pageCount, size, count, resolve, hash);
                     }
                 });
         });
     }
 
-    function tryToGetLogsLiveFromElasticsearch(logGetter, logIntervalName) {
+    function tryToGetLogsLiveFromElasticsearch(logGetter, logIntervalName, hash) {
         return $q(function (resolve, reject) {
             pseudoLiveDoAction(logIntervalName, 5000, function () {
-                getLogsLiveFromElasticsearch(logGetter);
+                getLogsLiveFromElasticsearch(logGetter, hash);
             });
         });
     }
 
-    function getLogsLiveFromElasticsearch(logGetter) {
-        tryToGetLogsHistoryFromElasticsearch(logGetter).then(function (count) {
-            MODES.live.logGetter.from = count;
-        });
+    function getLogsLiveFromElasticsearch(logGetter, hash) {
+        tryToGetLogsHistoryFromElasticsearch(logGetter, hash)
+            .then(function (count) {
+                MODES.live.logGetter.from = count;
+            });
     }
 
     function pseudoLiveDoAction(intervalName, intervalMillis, func) {
@@ -327,14 +335,16 @@ const testRunInfoController = function testRunInfoController(
         return log.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ *(\r?\n|\r)/g, '<br/>').replace(/\s/g, '&nbsp;');
     }
 
-    function collectElasticsearchLogs(from, page, size, count, resolveFunc) {
+    function collectElasticsearchLogs(from, page, size, count, resolveFunc, hash) {
+        if (vm.pageHash !== hash) { return; }
         getLogsFromElasticsearch(from, page, size)
             .then(hits => {
+                if (vm.pageHash !== hash) { return; }
                 hits.forEach(hit => followUpOnLogs(hit));
                 prepareArtifacts();
                 if (!from && from !== 0 && (page * size < count)) {
                     page++;
-                    collectElasticsearchLogs(from, page, size, count, resolveFunc);
+                    collectElasticsearchLogs(from, page, size, count, resolveFunc, hash);
                 } else {
                     $scope.elasticsearchDataLoaded = true;
                     resolveFunc.call(this, count);
@@ -695,7 +705,7 @@ const testRunInfoController = function testRunInfoController(
                             var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
                             if (videoArtifacts.length === driversCount) {
                                 addDrivers(videoArtifacts);
-                                postModeConstruct(test);
+                                postModeConstruct(test, vm.pageHash);
                             }
                         }
                         vm.test = angular.copy(test);
@@ -885,7 +895,8 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
-    function resetInitialValues() {
+    function resetInitialValues(testRun, test) {
+        vm.pageHash = Date.now();
         onTransStartSubscription = null;
         testCaseManagementTools = [];
         jiraSettings = {};
@@ -917,6 +928,8 @@ const testRunInfoController = function testRunInfoController(
 
         vm.wsSubscription = null;
         vm.filteredLogs = [];
+        vm.testRun = testRun;
+        vm.test = test;
     }
 
     function unbindEvents() {
@@ -1035,16 +1048,19 @@ const testRunInfoController = function testRunInfoController(
         var videoArtifacts = getArtifactsByPartName(test, LIVE_DEMO_ARTIFACT_NAME) || [];
         addDrivers(videoArtifacts);
         driversCount = $scope.drivers.length;
-        postModeConstruct(test);
+        postModeConstruct(test, vm.pageHash);
     }
 
     function initRecordMode(test) {
         var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
         addDrivers(videoArtifacts);
-        postModeConstruct(test);
+        postModeConstruct(test, vm.pageHash);
     }
 
     function controllerInit(skipHistoryUpdate) {
+        if (!vm.pageHash) {
+            vm.pageHash = Date.now();
+        }
         pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : vm.test.name);
         initTestsWebSocket(vm.testRun);
         vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
@@ -1076,10 +1092,10 @@ const testRunInfoController = function testRunInfoController(
     function onHistoryElemClick(historyItem) {
         vm.isControllerRefreshing = true;
         getPageData(historyItem.testRunId, historyItem.testId)
-            .then(() => {
+            .then(([testRun, test]) => {
                 pushNewState(historyItem);
                 unbindEvents();
-                resetInitialValues();
+                resetInitialValues(testRun, test);
                 controllerInit(true);
             })
             .catch((err) => {
@@ -1104,6 +1120,7 @@ const testRunInfoController = function testRunInfoController(
         } else {
             stateParams.parentTestId = vm.parentTestId;
         }
+        Reflect.deleteProperty(stateParams, '#');
 
         const newUrl = $state.href('tests.runInfo', stateParams, {absolute: true});
 
@@ -1122,9 +1139,7 @@ const testRunInfoController = function testRunInfoController(
                 if (rs.success) {
                     TestService.tests = rs.data.results || [];
 
-                    vm.test =  TestService.getTest(testId);
-
-                    return vm.test;
+                    return TestService.getTest(testId);
                 } else {
                     return $q.reject({message: `Can't fetch tests for test run with ID=${testRunId}` });
                 }
@@ -1133,9 +1148,7 @@ const testRunInfoController = function testRunInfoController(
         const testRunRequest = TestRunService.searchTestRuns({ id: testRunId })
             .then((response) => {
                 if (response.success && response.data.results && response.data.results[0]) {
-                    vm.testRun = response.data.results[0];
-
-                    return vm.testRun;
+                    return response.data.results[0];
                 } else {
                     return $q.reject({message: 'Can\'t get test run with ID=' + testRunId});
                 }
