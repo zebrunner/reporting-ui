@@ -59,7 +59,7 @@ const testRunInfoController = function testRunInfoController(
         selectedLevel: logLevelService.initialLevel,
         isControllerRefreshing: false,
         testsTimeMedian: null,
-        pageHash: null,
+        pageSessionId: null,
 
         $onInit: controllerInit,
         switchMoreLess,
@@ -208,14 +208,14 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
-    function postModeConstruct(test, hash) {
-        if (vm.pageHash !== hash) { return; }
+    function postModeConstruct(test, pageSessionId) {
+        if (vm.pageSessionId !== pageSessionId) { return; }
         var logGetter = MODES[$scope.MODE.name].logGetter;
         switch ($scope.MODE.name) {
             case 'live':
                 provideVideo();
                 $scope.logs = [];
-                tryToGetLogsLiveFromElasticsearch(logGetter, LIVE_LOGS_INTERVAL_NAME, hash);
+                tryToGetLogsLiveFromElasticsearch(logGetter, LIVE_LOGS_INTERVAL_NAME, pageSessionId);
                 break;
             case 'record':
                 $scope.selectedDriver = 0;
@@ -225,9 +225,9 @@ const testRunInfoController = function testRunInfoController(
                 logSizeCount = 0;
                 unrecognizedImages = {};
                 scrollEnable = false;
-                tryToGetLogsHistoryFromElasticsearch(logGetter, hash)
+                tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId)
                     .then(() => {
-                        if (vm.pageHash !== hash) { return; }
+                        if (vm.pageSessionId !== pageSessionId) { return; }
                         // 10 attempts provide a 5-minutes max interval
                         const attemptsToLoadImages = 10;
                         let imagesLoadingAttempts = 0;
@@ -235,15 +235,15 @@ const testRunInfoController = function testRunInfoController(
                         const maxDelay = 40000;
 
                         $timeout(() => {
-                            if (vm.pageHash !== hash) { return; }
+                            if (vm.pageSessionId !== pageSessionId) { return; }
                             logGetter.pageCount = null;
                             logGetter.from = $scope.logs.length + logSizeCount;
                             function update() {
                                 $timeout(function() {
-                                    if (vm.pageHash !== hash) { return; }
+                                    if (vm.pageSessionId !== pageSessionId) { return; }
                                     if (Object.size(unrecognizedImages) > 0 && imagesLoadingAttempts < attemptsToLoadImages) {
                                         logGetter.from = $scope.logs.length + logSizeCount;
-                                        tryToGetLogsHistoryFromElasticsearch(logGetter, hash);
+                                        tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId);
                                         update();
                                         imagesLoadingAttempts += 1;
                                         // increase delay to next call up to maxDelay
@@ -252,9 +252,9 @@ const testRunInfoController = function testRunInfoController(
                                 }, delay, false);
                             }
 
-                            tryToGetLogsHistoryFromElasticsearch(logGetter, hash)
+                            tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId)
                                 .then(() => {
-                                    if (vm.pageHash !== hash) { return; }
+                                    if (vm.pageSessionId !== pageSessionId) { return; }
                                     update();
                                 });
                         }, delay);
@@ -279,30 +279,30 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
-    function tryToGetLogsHistoryFromElasticsearch(logGetter, hash) {
+    function tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId) {
         return $q(resolve => {
             elasticsearchService.count(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, vm.test.startTime)
                 .then(count => {
-                    if (vm.pageHash !== hash) { return; }
+                    if (vm.pageSessionId !== pageSessionId) { return; }
                     if (logGetter.accessFunc ? logGetter.accessFunc.call(this, count) : true) {
                         const size = logGetter.getSizeFunc.call(this, count);
 
-                        collectElasticsearchLogs(logGetter.from, logGetter.pageCount, size, count, resolve, hash);
+                        collectElasticsearchLogs(logGetter.from, logGetter.pageCount, size, count, resolve, pageSessionId);
                     }
                 });
         });
     }
 
-    function tryToGetLogsLiveFromElasticsearch(logGetter, logIntervalName, hash) {
+    function tryToGetLogsLiveFromElasticsearch(logGetter, logIntervalName, pageSessionId) {
         return $q(function (resolve, reject) {
             pseudoLiveDoAction(logIntervalName, 5000, function () {
-                getLogsLiveFromElasticsearch(logGetter, hash);
+                getLogsLiveFromElasticsearch(logGetter, pageSessionId);
             });
         });
     }
 
-    function getLogsLiveFromElasticsearch(logGetter, hash) {
-        tryToGetLogsHistoryFromElasticsearch(logGetter, hash)
+    function getLogsLiveFromElasticsearch(logGetter, pageSessionId) {
+        tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId)
             .then(function (count) {
                 MODES.live.logGetter.from = count;
             });
@@ -335,16 +335,16 @@ const testRunInfoController = function testRunInfoController(
         return log.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ *(\r?\n|\r)/g, '<br/>').replace(/\s/g, '&nbsp;');
     }
 
-    function collectElasticsearchLogs(from, page, size, count, resolveFunc, hash) {
-        if (vm.pageHash !== hash) { return; }
+    function collectElasticsearchLogs(from, page, size, count, resolveFunc, pageSessionId) {
+        if (vm.pageSessionId !== pageSessionId) { return; }
         getLogsFromElasticsearch(from, page, size)
             .then(hits => {
-                if (vm.pageHash !== hash) { return; }
+                if (vm.pageSessionId !== pageSessionId) { return; }
                 hits.forEach(hit => followUpOnLogs(hit));
                 prepareArtifacts();
                 if (!from && from !== 0 && (page * size < count)) {
                     page++;
-                    collectElasticsearchLogs(from, page, size, count, resolveFunc, hash);
+                    collectElasticsearchLogs(from, page, size, count, resolveFunc, pageSessionId);
                 } else {
                     $scope.elasticsearchDataLoaded = true;
                     resolveFunc.call(this, count);
@@ -705,7 +705,7 @@ const testRunInfoController = function testRunInfoController(
                             var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
                             if (videoArtifacts.length === driversCount) {
                                 addDrivers(videoArtifacts);
-                                postModeConstruct(test, vm.pageHash);
+                                postModeConstruct(test, vm.pageSessionId);
                             }
                         }
                         vm.test = angular.copy(test);
@@ -896,7 +896,7 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function resetInitialValues(testRun, test) {
-        vm.pageHash = Date.now();
+        vm.pageSessionId = Date.now();
         onTransStartSubscription = null;
         testCaseManagementTools = [];
         jiraSettings = {};
@@ -1048,18 +1048,18 @@ const testRunInfoController = function testRunInfoController(
         var videoArtifacts = getArtifactsByPartName(test, LIVE_DEMO_ARTIFACT_NAME) || [];
         addDrivers(videoArtifacts);
         driversCount = $scope.drivers.length;
-        postModeConstruct(test, vm.pageHash);
+        postModeConstruct(test, vm.pageSessionId);
     }
 
     function initRecordMode(test) {
         var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
         addDrivers(videoArtifacts);
-        postModeConstruct(test, vm.pageHash);
+        postModeConstruct(test, vm.pageSessionId);
     }
 
     function controllerInit(skipHistoryUpdate) {
-        if (!vm.pageHash) {
-            vm.pageHash = Date.now();
+        if (!vm.pageSessionId) {
+            vm.pageSessionId = Date.now();
         }
         pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : vm.test.name);
         initTestsWebSocket(vm.testRun);
