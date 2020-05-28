@@ -20,6 +20,7 @@ export const UsersService = () => {
 
     function preferencesToUserData(preferences) {
         const defaultPreferences = { testsView: 'runs' };
+
         return preferences.reduce((res, preferency) =>
             preferencesConfig[preferency.name]
                 ? {

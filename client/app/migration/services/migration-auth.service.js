@@ -18,8 +18,10 @@ export const MigrationAuthService = (
     }
 
     function login(username, password) {
-        return from(MigrationRequestService.post('/api/auth/login', { username, password })
-            .then(res => ({ data: res.data, firstLogin: res.headers()['first-login'] })));
+        return from(
+            MigrationRequestService.post('/api/auth/login', { username, password })
+                .then(res => ({ data: res.data, firstLogin: res.headers()['first-login'] }))
+        );
     }
 
     function handleLogin(payload) {

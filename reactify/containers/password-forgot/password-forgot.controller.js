@@ -1,11 +1,10 @@
-'use strict';
-
 import { getVersions, getApplicationConfig } from '@zebrunner/core/store';
 
 export default (
     $ngRedux,
 ) => {
     'ngInject';
+
     let unsubscribe;
 
     return {
@@ -20,6 +19,7 @@ export default (
             versions: getVersions(state),
             application: getApplicationConfig(state),
         });
+
         unsubscribe = $ngRedux.connect(mapStateToThis, {})(this);
     }
 

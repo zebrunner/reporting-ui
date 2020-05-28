@@ -10,6 +10,7 @@ export default (
     $safeDigest,
 ) => {
     'ngInject';
+
     let unsubscribe;
 
     return {

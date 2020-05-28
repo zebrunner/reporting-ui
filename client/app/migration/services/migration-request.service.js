@@ -3,6 +3,7 @@ import { getApplicationConfig } from '@zebrunner/core/store';
 
 export const MigrationRequestService = ($httpMock) => {
     'ngInject'
+
     return {
         post,
         handleError,

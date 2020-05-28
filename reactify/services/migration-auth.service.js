@@ -30,11 +30,13 @@ export const MigrationAuthService = (
         ).pipe(
             map(({ response: data, xhr }) => {
                 let firstLogin;
+
                 try {
                     firstLogin = xhr.getResponseHeader('first-login');
                 } catch {
                     firstLogin = false;
                 }
+
                 return { data, firstLogin };
             }),
         );
@@ -67,6 +69,7 @@ export const MigrationAuthService = (
                 } else if (payload.location) {
                     return RouterService.go(payload.location);
                 }
+
                 return RouterService.go('/');
             }),
             catchError(({ message }) => {

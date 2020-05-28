@@ -10,6 +10,7 @@ export function CoreModuleRunner(
     $q,
     appHealthService,
     authService,
+    API_URL,
     UI_VERSION,
     SettingProvider,
     SettingsService,
@@ -44,15 +45,13 @@ export function CoreModuleRunner(
                 updateCompanyLogo(),
             ]).then(() => {
                 $ngRedux.dispatch(setApplicationConfig({
-                    api: $rootScope.version.service_url,
-                    tenantIcon: $rootScope.companyLogo.value,
-                    versions: {
-                        service: $rootScope.version.service,
-                        ui: UI_VERSION,
-                    },
-                    multitenant: authService.isMultitenant,
+                    api: API_URL,
+                    tenantIcon: $rootScope.companyLogo?.value,
+                    versions: {service: $rootScope.version?.service, ui: UI_VERSION},
+                    multitenant: authService?.isMultitenant,
                 }));
-            })
+            });
+
             if (authService.authData) {
                 UserService.initCurrentUser();
                 toolsService.getTools();
