@@ -34,6 +34,9 @@
                                     max-width: 370px;
                                 }
                             }
+                            md-input-container {
+                                margin: 0;
+                            }
                             md-input-container + md-input-container {
                                 margin-left: 16px;
                             }

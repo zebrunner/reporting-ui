@@ -2,8 +2,8 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 import IssuesModalController from '../../components/modals/issues/issues.controller';
-import testDetailsFilterController from './test-details-modal/filter-modal.controller';
-import testDetailsTemplate from './test-details-modal/filter-modal.html';
+import testsFilterModalController from './tests-filter-modal/tests-filter-modal.controller';
+import testsFilterModalTemplate from './tests-filter-modal/tests-filter-modal.html';
 import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
@@ -125,7 +125,8 @@ const testDetailsController = function testDetailsController(
         get jira() { return jiraSettings; },
         get testRail() { return testRailSettings; },
         get qTest() { return qTestSettings; },
-        get isStausFilteringActive() { return isStausFilteringActive(); },
+        get isMobileSearchActive() { return this.isMobile && this.searchCriteria; },
+        get isStatusFilteringActive() { return isStatusFilteringActive(); },
         get isSortingActive() { return isSortingActive(); },
         get currentTitle() { return pageTitleService.pageTitle; },
 
@@ -283,7 +284,6 @@ const testDetailsController = function testDetailsController(
 
     function filterDataBySearchCriteria(data = vm.activeTests) {
         return data.filter((item) => {
-            console.log(item);
             const searchRegExp = new RegExp(vm.searchCriteria, 'ig');
             const titleMatch = searchRegExp.test(item.name);
             const ownerMatch = searchRegExp.test(item.owner);
@@ -652,7 +652,7 @@ const testDetailsController = function testDetailsController(
         return vm.testRun.id === +event.testRunStatistics.testRunId;
     }
 
-    function isStausFilteringActive() {
+    function isStatusFilteringActive() {
         return vm.filters.status && vm.filters.status.values && vm.filters.status.values.length;
     }
 
@@ -690,10 +690,10 @@ const testDetailsController = function testDetailsController(
         if (vm.empty && vm.testRun.status !== 'IN_PROGRESS') {
             message = 'No tests';
         }
-        if (!vm.empty && !vm.activeTests.length && vm.isStausFilteringActive && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
+        if (!vm.empty && !vm.activeTests.length && vm.isStatusFilteringActive && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
             message = 'No tests matching selected filters';
         }
-        if (vm.testRun.status === 'IN_PROGRESS' && (vm.empty || (!vm.isStausFilteringActive && !vm.activeTests.length && vm.testRun.queued)) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
+        if (vm.testRun.status === 'IN_PROGRESS' && (vm.empty || (!vm.isStatusFilteringActive && !vm.activeTests.length && vm.testRun.queued)) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
             message = 'No tests yet';
         }
 
@@ -1010,8 +1010,8 @@ const testDetailsController = function testDetailsController(
 
     function showFilterDialog(event) {
         $mdDialog.show({
-            controller: testDetailsFilterController,
-            template: testDetailsTemplate,
+            controller: testsFilterModalController,
+            template: testsFilterModalTemplate,
             parent: angular.element(document.body),
             targetEvent: event,
             clickOutsideToClose: true,
@@ -1023,18 +1023,31 @@ const testDetailsController = function testDetailsController(
                     if (!vm.isMobile) {
                         $mdDialog.hide();
                     }
-                })
+                });
             },
             onRemoving: () => {
                 $(window).off('resize.filterDialog');
             },
             locals: {
                 statusInitValues: vm.filters.status.values,
+                searchCriteria: vm.searchCriteria,
                 defaultValues: {
                     status: defaultStatusFilter.values,
                 },
-                filterByStatus,
-                reset: resetStatusFilterAndOrdering,
+                filterByStatus: (filters, searchCriteria) => {
+                    if (vm.isMobile) {
+                        vm.searchCriteria = searchCriteria;
+                    }
+
+                    filterByStatus(filters);
+                },
+                reset: () => {
+                    if (vm.isMobile) {
+                        vm.searchCriteria = '';
+                    }
+
+                    resetStatusFilterAndOrdering();
+                },
             }
         });
     }

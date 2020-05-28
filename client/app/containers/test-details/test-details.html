@@ -80,7 +80,7 @@
                                 <div class="test-run-group_other-buttons">
                                     <md-button id="resetAllToggle"
                                         class="md-raised"
-                                        ng-disabled="!$ctrl.isStausFilteringActive && !$ctrl.isSortingActive && !$ctrl.searchCriteria"
+                                        ng-disabled="!$ctrl.isStatusFilteringActive && !$ctrl.isSortingActive && !$ctrl.searchCriteria"
                                         type="button"
                                         ng-click="$ctrl.resetStatusFilterAndOrdering();">
                                         RESET
@@ -130,7 +130,7 @@
             class="md-scale md-fab-bottom-right">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible" ng-click="$ctrl.showFilterDialog($event)">
-                    <div class="search-fab" ng-class="{'_list': !$ctrl.isStausFilteringActive, '_checked-list': $ctrl.isStausFilteringActive}" aria-hidden="true"></div>
+                    <div class="search-fab" ng-class="{'_list': !$ctrl.isStatusFilteringActive, '_checked-list': $ctrl.isStatusFilteringActive || $ctrl.isMobileSearchActive}" aria-hidden="true"></div>
                 </md-button>
             </md-fab-trigger>
         </md-fab-speed-dial>
