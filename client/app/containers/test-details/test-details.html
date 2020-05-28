@@ -339,18 +339,19 @@
                                                 </md-button>
                                                 <md-menu-content width="2" class="fixed-md-menu-content test-settings__menu-content">
                                                     <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'PASSED');" ng-if="test.status !== 'PASSED'">
-                                                        <md-button>
-                                                            <span>Mark as passed</span>
+                                                        <md-button class="_green">
+                                                            Mark as passed
                                                         </md-button>
                                                     </md-menu-item>
                                                     <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'FAILED');" ng-if="['PASSED', 'SKIPPED', 'ABORTED'].indexOf(test.status) !== -1">
-                                                        <md-button>
-                                                            <span>Mark as failed</span>
+                                                        <md-button class="_red">
+                                                            Mark as failed
                                                         </md-button>
                                                     </md-menu-item>
+                                                    <md-divider ng-if="test.status !== 'PASSED' && test.message"></md-divider>
                                                     <md-menu-item ng-click="$ctrl.showDetailsDialog(test, $event);" ng-if="test.status !== 'PASSED' && test.message">
                                                         <md-button name="testDetails" aria-label="Test details">
-                                                            <span>Link issue</span>
+                                                            Link issue
                                                         </md-button>
                                                     </md-menu-item>
                                                 </md-menu-content>

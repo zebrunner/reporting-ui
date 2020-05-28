@@ -518,9 +518,6 @@
                 .assignment {
                     transform: scale(-1, 1);
                 }
-                md-icon {
-                    margin-right: 16px;
-                }
                 .point-icon {
                     font-size: 14px;
                     min-height: 14px;
@@ -539,12 +536,6 @@
                 .assignment {
                     transform: scale(-1, 1);
                 }
-            }
-            span {
-                padding-left: 16px;
-                color: rgba(0,0,0,0.87);
-                font-weight: normal;
-                text-transform: none;
             }
         }
     }

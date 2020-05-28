@@ -1058,6 +1058,8 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function controllerInit(skipHistoryUpdate) {
+        //filter EVENT items
+        vm.test.workItems = (vm.test.workItems || []).filter(({ type }) => type !== 'EVENT');
         if (!vm.pageSessionId) {
             vm.pageSessionId = Date.now();
         }
