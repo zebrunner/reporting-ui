@@ -95,7 +95,7 @@
                                                         <md-button class="menu__button"
                                                             aria-label="Additional menu"
                                                             ng-click="$mdMenu.open($event)"
-                                                            ng-disabled="$ctrl.test.status.toLowerCase() !== 'passed' && $ctrl.test.status.toLowerCase() !== 'failed' && $ctrl.test.status.toLowerCase() !== 'aborted' && $ctrl.test.status.toLowerCase() !== 'skipped'">
+                                                            ng-disabled="$ctrl.test.status.toLowerCase() === 'in_progress' || $ctrl.test.status.toLowerCase() === 'queued' || $ctrl.test.status.toLowerCase() === 'unknown'">
                                                             <span class="button-text _{{$ctrl.test.status.toLowerCase()}}">{{ $ctrl.test.status.split('_').join(' ').toLowerCase() }}</span>
                                                             <span class="material-icons button-icon">arrow_drop_down</span>
                                                         </md-button>
