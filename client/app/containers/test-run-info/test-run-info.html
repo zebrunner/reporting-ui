@@ -96,7 +96,7 @@
                                                         <md-button class="menu__button"
                                                             aria-label="Additional menu"
                                                             ng-click="$mdMenu.open($event)"
-                                                            ng-disabled="$ctrl.test.status.toLowerCase() !== 'passed' && $ctrl.test.status.toLowerCase() !== 'failed' && $ctrl.test.status.toLowerCase() !== 'aborted'">
+                                                            ng-disabled="$ctrl.test.status.toLowerCase() === 'in_progress' || $ctrl.test.status.toLowerCase() === 'queued' || $ctrl.test.status.toLowerCase() === 'unknown'">
                                                             <span class="button-text _{{$ctrl.test.status.toLowerCase()}}">{{ $ctrl.test.status.split('_').join(' ').toLowerCase() }}</span>
                                                             <span class="material-icons button-icon">arrow_drop_down</span>
                                                         </md-button>
@@ -109,7 +109,7 @@
                                                         </md-menu-content>
                                                     </md-menu>
                                                 </td>
-                                                <td class="tab-additional__table-data _issue _border-bottom" ng-if="($ctrl.test.status.toLowerCase() === 'failed' || $ctrl.test.status.toLowerCase() === 'aborted') && $ctrl.test.message">
+                                                <td class="tab-additional__table-data _issue _border-bottom" ng-if="($ctrl.test.status.toLowerCase() === 'failed' || $ctrl.test.status.toLowerCase() === 'aborted' || $ctrl.test.status.toLowerCase() === 'skipped') && $ctrl.test.message">
                                                     <button class="button" ng-click="$ctrl.showDetailsDialog($ctrl.test, $event)">
                                                         <span class="material-icons data-icon">bug_report</span>
                                                         <span>Link issue</span>
