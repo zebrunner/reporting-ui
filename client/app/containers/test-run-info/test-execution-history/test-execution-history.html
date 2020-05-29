@@ -1,10 +1,10 @@
 <div class="test-execution-history">
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide {{ historyItem.status.toLowerCase() }}"
+            <div class="swiper-slide"
                 ng-click="$ctrl.onSlideClick(historyItem)"
                 ng-attr-id="{{historyItem.testId}}"
-                ng-class="{ '_active': $ctrl.activeTestId === historyItem.testId }"
+                ng-class="[$ctrl.activeTestId === historyItem.testId ? '_active' : '', historyItem.status.toLowerCase()]"
                 ng-repeat="historyItem in $ctrl.executionHistory track by historyItem.testId">
                 <md-icon md-svg-icon="lamba-bg"
                     ng-if="$ctrl.activeTestId === historyItem.testId"
