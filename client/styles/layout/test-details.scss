@@ -226,9 +226,11 @@
                     }
                     &__name {
                         margin-bottom: 0;
-                        font-weight: 500;
-                        position: relative;
-                        z-index: 2;
+                        span {
+                            font-weight: 500;
+                            position: relative;
+                            z-index: 2;
+                        }
                     }
                     &__wrapper {
                         display: flex;

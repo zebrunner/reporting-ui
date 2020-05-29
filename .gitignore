@@ -23,7 +23,6 @@ dist
 bower_components
 /pgdata
 /esdata
-/sources/zafira-ws/phantomjs*
 /sources/client_secret.json
 site
 package-lock.json
