@@ -1,0 +1,192 @@
+@import "~swiper/swiper.scss";
+
+@import "../../../../styles/global/var";
+@import "../../../../styles/ui/components/animation";
+
+test-execution-history {
+    display: block;
+}
+
+.test-execution-history {
+    height: 100%;
+
+    .swiper {
+        &-container {
+            width: 100%;
+            height: 100%;
+            padding: 0 24px;
+            &:hover {
+                .swiper-nav-btn {
+                    &:not(._disabled) {
+                        opacity: 1;
+                        visibility: visible;
+                        pointer-events: auto;
+                    }
+                }
+            }
+        }
+
+        &-slide {
+            width: 172px;
+            position: relative;
+            transition: color .25s ease;
+
+            &:hover:not(._active) {
+                cursor: pointer;
+            }
+
+            &__top-section {
+                padding: 4px 4px 4px 36px;
+                font-weight: 500;
+                font-size: 12px;
+                line-height: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+                color: currentColor;
+            }
+
+            &__bottom-section {
+                padding: 4px 4px 4px 28px;
+                position: absolute;
+                left: 0;
+                bottom: 12px;
+                width: 100%;
+                display: flex;
+            }
+
+            &__time-diff {
+                display: flex;
+                align-items: center;
+                &-icon {
+                    font-size: 16px;
+                    width: 16px;
+                    height: 16px;
+                    min-width: 16px;
+                    min-height: 16px;
+                    margin-right: 2px;
+                }
+                &-text {
+                    font-size: 12px;
+                    line-height: 14px;
+                    color: #6C757C;
+                }
+            }
+
+            &__icon {
+                color: currentColor;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 16px;
+                width: 100%;
+                height: 40px;
+                pointer-events: none;
+
+                svg {
+                    fill: none;
+                }
+                &:not(._bg) {
+                    svg {
+                        fill: currentColor;
+
+                    }
+                }
+                &._bg {
+                    width: 200px;
+                    height: 100%;
+                    left: -5px;
+                    top: 0;
+
+                    svg {
+                        fill: #000;
+                        fill-opacity: .05;
+                    }
+                }
+            }
+
+
+            &.failed {
+                color: #FDC1C2;
+                &._active,
+                &:hover {
+                    color: $red-new;
+                }
+            }
+            &.skipped {
+                color: #FFF4DF;
+                &._active,
+                &:hover {
+                    color: $yellow-light-new;
+                }
+            }
+            &.passed {
+                color: #AEE2C8;
+                &._active,
+                &:hover {
+                    color: $green-light-new;
+                }
+            }
+            &.queued,
+            &.aborted {
+                color: #DFE3E5;
+                &._active,
+                &:hover {
+                    color: $gray-light-new;
+                }
+            }
+            &.in_progress {
+                color: #E3EEFF;
+                &._active,
+                &:hover {
+                    color: $blue-light-new;
+                }
+            }
+            .test-ticket {
+                .badge {
+                    font-weight: 500;
+                    background-color: #AEB8BE;
+                }
+            }
+            &__ticket {
+                margin-right: 4px;
+            }
+        }
+
+        &-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #FFFFFF;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2), 0 3px 3px rgba(0, 0, 0, 0.12), 0 3px 4px rgba(0, 0, 0, 0.14);
+            border-radius: 4px;
+            z-index: 1;
+            width: 32px;
+            height: 32px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .25s ease-in-out, visibility .25s ease-in-out;
+
+            ._touch-device & {
+                display: none;
+            }
+            md-icon {
+                color: #1E4F9C;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            &._prev {
+                left: 8px;
+            }
+            &._next {
+                right: 8px;
+            }
+        }
+    }
+}

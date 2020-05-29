@@ -52,6 +52,15 @@ md-menu-item .md-button {
         padding-left: 16px;
         padding-right: 16px;
         max-height: unset;
+        color: rgba(0,0,0,0.87);
+        font-weight: normal;
+        text-transform: none;
+        &._green {
+            color: $green-new;
+        }
+        &._red {
+            color: $red-new;
+        }
     }
 }
 

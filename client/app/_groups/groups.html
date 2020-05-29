@@ -32,14 +32,15 @@
                                         <md-menu-content width="2">
                                             <md-menu-item>
                                                 <md-button name="editGroup" ng-click="$ctrl.showGroupDialog($event, group);">
-                                                    <md-icon class="material-icons">settings</md-icon>
                                                     Edit
                                                 </md-button>
                                             </md-menu-item>
+                                            <md-divider></md-divider>
                                             <md-menu-item>
-                                                <md-button name="deleteGroup" ng-really-click="$ctrl.deleteGroup(group)"
-                                                           ng-really-message="Do you really want to delete this group?">
-                                                    <md-icon class="material-icons">delete</md-icon>
+                                                <md-button name="deleteGroup"
+                                                    class="_red"
+                                                    ng-really-click="$ctrl.deleteGroup(group)"
+                                                    ng-really-message="Do you really want to delete this group?">
                                                     Delete
                                                 </md-button>
                                             </md-menu-item>

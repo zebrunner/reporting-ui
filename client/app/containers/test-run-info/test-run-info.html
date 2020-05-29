@@ -7,262 +7,301 @@
             </md-button>
         </zf-sub-header-button>
         <zf-sub-header-title class="_flex">
-            <span class="testrun-info__title-name">{{ test.name }}</span>
+            <span class="testrun-info__title-name">{{ $ctrl.test.name }}</span>
             <span class="testrun-info__title-name _mobile">{{ $ctrl.currentTitle }}</span>
-            <span class="recording-icon" ng-if="MODE.name == 'live'">
+            <span class="recording-icon" ng-if="MODE.name === 'live'">
                     <div class="red-point" ng-class="{'flash-point': true}"></div>
                 </span>
         </zf-sub-header-title>
         <zf-sub-header-button>
-            <button class="fixed-page-header__btn _launcher zf-primary-button"
+            <button class="fixed-page-header__btn _launcher zf-primary-button no-animate"
                 ng-click="$ctrl.downloadAllArtifacts();"
-                ng-if="test.artifactsToDownload.length">
+                ng-disabled="$ctrl.isControllerRefreshing"
+                ng-if="$ctrl.test.artifactsToDownload.length">
                     <md-icon aria-label="Download zip">archive</md-icon>
                 <span>Artifacts</span>
             </button>
         </zf-sub-header-button>
     </zf-sub-header>
     <div class="row no-margin testrun-info__container">
-        <div class="testrun-info__section col-md-12 no-padding">
+        <test-execution-history class="testrun-info__history"
+            on-test-select="$ctrl.onHistoryElemClick($historyItem)"
+            active-test-id="$ctrl.activeTestId"
+            parent-test-id="$ctrl.parentTestId"
+            execution-history="$ctrl.executionHistory"></test-execution-history>
+        <div class="testrun-info__section col-md-12 no-padding"
+            blur-filter
+            blur-radius="1px"
+            blur-active="{{$ctrl.isControllerRefreshing}}">
             <div class="row no-margin" ng-cloak>
                 <section class="panel panel-default no-margin">
                     <div class="panel-body no-padding">
-                        <md-tabs ng-init="selectedTab = 0;" class="testrun-info__tabs" md-selected="selectedTab"
-                            md-border-bottom md-autoselect>
-                            <md-tab class="testrun-info__tab" ng-disabled="false" label="Overview" ng-click="selectedTab = 0;">
-                                <div class="tab0">
-                                    <div class="tab-content">
-                                        <div class="history-tab">
-                                            <div class="testrun-info__tab-video-section col-md-4 col-sm-12 col-md-push-8 no-padding">
-                                                <md-chips ng-show="$ctrl.hasVideo">
-                                                    <md-chip ng-repeat="driver in drivers" ng-click="switchDriver($index);"
-                                                        ng-class="{'active': selectedDriver == $index}">Driver {{
-                                                        $index + 1 }}</md-chip>
-                                                </md-chips>
-                                                <div>
-                                                    <div ng-show="$ctrl.hasVideo" class="testrun-info__tab-video-wrapper">
-                                                        <video preload="auto"
-                                                            id="videoRecord"
-                                                            ng-if="MODE.name == 'record'"
-                                                            controls>
-                                                            <source ng-src="{{ drivers[selectedDriver].link }}" type="video/mp4">
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                        <div ng-init="vncPained = true;" ng-if="MODE.name == 'live';"
-                                                            id="vnc">
-                                                            <i ng-click="fullScreen();" class="material-icons video-control">fullscreen</i>
-                                                        </div>
-                                                    </div>
-                                                    <div ng-show="!$ctrl.hasVideo" class="testrun-info__tab-video-wrapper _no-video">
-                                                        <div class="no-video__icon-wrapper">
-                                                            <div class="material-icons icon">videocam_off</div>
-                                                            <span class="icon__text">No video attached</span>
-                                                        </div>
-                                                        <div class="no-video__controls-wrapper">
-                                                            <div class="controls _play">
-                                                                <span class="material-icons">arrow_right</span>
-                                                            </div>
-                                                            <div class="controls _time">
-                                                                <span>0:00</span>
-                                                            </div>
-                                                            <div class="controls _volume">
-                                                                <span class="material-icons">volume_up</span>
-                                                            </div>
-                                                            <div class="controls _fullscreen">
-                                                                <span class="material-icons">crop_free</span>
-                                                            </div>
-                                                            <div class="controls _options">
-                                                                <span class="material-icons">more_vert</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="no-video__controls-wrapper _progress-bar">
-                                                            <div class="progress-bar"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="testrun-info__tab-additional" ng-class="{'__no-video': !$ctrl.hasVideo}">
-                                                        <table>
-                                                            <tbody>
-                                                            <tr>
-                                                                <td>Status</td>
-                                                                <td>
-                                                                    <md-menu md-offset="30 20" class="tab-additional__menu">
-                                                                        <div class="menu__button" aria-label="Additional menu" ng-click="$mdMenu.open($event)">
-                                                                            <span class="button-text _{{test.status.split('_').join(' ').toLowerCase()}}">{{ test.status.split('_').join(' ').toLowerCase() }}</span>
-                                                                            <span class="material-icons button-icon">arrow_drop_down</span>
-                                                                        </div>
-                                                                        <md-menu-content class="tab-additional__menu-content">
-                                                                            <md-menu-item class="menu__item" ng-repeat="item in ['passed', 'failed']">
-                                                                                <md-button ng-click="$ctrl.changeTestStatus(test, item)">
-                                                                                    <span class="item-text {{item}}" md-menu-align-target>{{item}}</span>
-                                                                                </md-button>
-                                                                            </md-menu-item>
-                                                                        </md-menu-content>
-                                                                    </md-menu>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Started</td>
-                                                                <td>
-                                                                    <span>{{ test.startTime | date: 'HH:mm dd MMM yyyy'}}</span>
-                                                                    <span>(<time am-time-ago="test.startTime" title="{{ est.startTime | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time>)</span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr ng-if="test.finishTime && test.startTime && (test.finishTime - test.startTime) > 0">
-                                                                <td>Duration</td>
-                                                                <td>
-                                                        <span>
-                                                            {{(test.finishTime - test.startTime) / 1000 | number: 0}} seconds
-                                                        </span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr ng-if="$ctrl.testRun.normalizedPlatformData.browser || $ctrl.testRun.normalizedPlatformData.browserVersion">
-                                                                <td>Browser</td>
-                                                                <td>
-                                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.browser" class="platform-icon {{$ctrl.testRun.normalizedPlatformData.browser}}"></span>
-                                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.browserVersion">{{$ctrl.testRun.normalizedPlatformData.browserVersion}}</span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr ng-if="$ctrl.testRun.normalizedPlatformData.platform || $ctrl.testRun.normalizedPlatformData.platformVersion">
-                                                                <td>Platform</td>
-                                                                <td>
-                                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.platform" class="platform-icon {{$ctrl.testRun.normalizedPlatformData.platform}}"></span>
-                                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.platformVersion">{{$ctrl.testRun.normalizedPlatformData.platformVersion}}</span>
-                                                                </td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="testrun-info__tab-table-wrapper col-md-8 col-sm-12 no-padding">
-                                                <table data-table-loupe="currentLog.id" data-table-loupe-trigger="videoMode.mode == 'PLAYING'"
-                                                    class="table table-striped no-margin testrun-info__tab-table">
-                                                    <thead>
-                                                        <tr class="testrun-info__tab-table-row">
-                                                            <th class="testrun-info__tab-table-col _visuals">Visuals</th>
-                                                            <th class="testrun-info__tab-table-col _start">Start</th>
-                                                            <th class="testrun-info__tab-table-col _status">
-                                                                <md-menu md-offset="-16 38">
-                                                                    <div aria-label="Open demo menu" ng-click="$mdMenu.open($event); $ctrl.log($ctrl)" >
-                                                                        <span class="testrun-info__status-button-icon _{{$ctrl.selectedLevel}}">Status</span>
-                                                                        <span ng-if="$ctrl.selectedLevel === 'status'" class="material-icons _button-icon">filter_list</span>
-                                                                        <md-icon md-svg-icon="checkedListIcon" ng-if="$ctrl.selectedLevel !== 'status'" class="material-icons selected-icon"></md-icon>
-                                                                    </div>
-                                                                    <md-menu-content width="2" class="_status dropdown-content">
-                                                                        <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
-                                                                            <md-button ng-click="$ctrl.filterResults($index)" class="listitem__button">
-                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
-                                                                                <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">All</span>
-                                                                            </md-button>
-                                                                        </md-menu-item>
-                                                                    </md-menu-content>
-                                                                </md-menu>
-                                                            </th>
-                                                            <th class="testrun-info__tab-table-col _action">Action</th>
-                                                            <th  class="testrun-info__tab-table-col _menu"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="logs">
-                                                        <tr ng-dblclick="getVideoState(log);"
-                                                            class="testrun-info__tab-table-row"
-                                                            ng-attr-id="log-{{ $index }}"
-                                                            ng-if="logs.length"
-                                                            ng-repeat="log in $ctrl.filteredLogs">
-                                                            <td class="testrun-info__tab-table-col _visuals testrun-info__tab-table-img-wrapper">
-                                                                <span ng-show="log.driver" style="border-radius: 8px"
-                                                                    class="label label-default">Driver {{
-                                                                    log.driver.index + 1 }}</span>
-                                                                <div ng-show="log.blobLog" class="log-wrapper" ng-class="{ 'image-placeholder': log.isImageExists === false }">
-                                                                    <img ng-if="log.isImageExists"
-                                                                        class="testrun-info__tab-table-img"
-                                                                        ng-click="openImagesViewerModal($event, log.blobLog.image.path[0]);"
-                                                                        ng-src="{{log.blobLog.thumb.path || log.blobLog.image.path[0]}}"
-                                                                        title="log screen"
-                                                                        alt="log screen" />
-                                                                    <i ng-show="log.isImageExists === false;" class="material-icons">insert_photo</i>
-                                                                </div>
-                                                            </td>
-                                                            <td class="testrun-info__tab-table-col _start" ng-click="selectLogRow($event, $index);">{{log.timestamp | date: 'HH:mm:ss'}}</td>
-                                                            <td class="testrun-info__tab-table-col _status" ng-click="selectLogRow($event, $index);">
-                                                                <span class="testrun-info__status-icon {{log.level ? '_' + (log.level | lowercase) : ''}}">{{log.level}}<md-tooltip ng-if="log.threadName" md-direction="right">{{log.threadName}}</md-tooltip></span>
-                                                            </td>
-                                                            <td class="testrun-info__tab-table-col _action" ng-click="selectLogRow($event, $index);" ng-attr-id="log.timestamp">
-                                                                <div ng-if="log.showMore" class="log_message" name="logFullMessage">
-                                                                    <div class="full" ng-bind-html="$ctrl.getFullLogMessage(log)"></div>
-                                                                    <div><a href="#" ng-click="$ctrl.switchMoreLess($event, log)">Show less</a></div>
-                                                                </div>
-                                                                <div class="log_message" name="logMessage" ng-if="!log.showMore">{{log.message | cut:true:255:' ...'}} <a href="#" ng-if="log.message.length > 255" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
-                                                            </td>
-                                                            <td ng-click="selectLogRow($event, $index);" class="testrun-info__tab-table-col _menu settings-cell">
-                                                                <md-menu ng-if="selectedLogRow == $index">
-                                                                    <md-button name="logsSetting" aria-label="Logs settings"
-                                                                        class="md-icon-button" data-ng-click="$mdMenu.open($event);">
-                                                                        <md-icon class="material-icons">more_vert</md-icon>
-                                                                    </md-button>
-                                                                    <md-menu-content width="2" class="fixed-md-menu-content">
-                                                                        <md-menu-item>
-                                                                            <md-button name="copyLine" ng-click="copyLogLine(log);">
-                                                                                Copy line
-                                                                            </md-button>
-                                                                        </md-menu-item>
-                                                                        <md-menu-item>
-                                                                            <md-button name="copyPermalink" ng-click="copyLogPermalink();">
-                                                                                Copy permalink
-                                                                            </md-button>
-                                                                        </md-menu-item>
-                                                                    </md-menu-content>
-                                                                </md-menu>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                        <div class="testrun-info__tab-video-section col-md-4 col-sm-12 col-md-push-8 no-padding">
+                            <md-chips ng-show="$ctrl.hasVideo">
+                                <md-chip ng-repeat="driver in drivers" ng-click="switchDriver($index);"
+                                    ng-class="{'active': selectedDriver == $index}">Driver {{
+                                    $index + 1 }}</md-chip>
+                            </md-chips>
+                            <div class="testrun-info__tab-video-section-wrapper">
+                                <div ng-show="$ctrl.hasVideo" class="testrun-info__tab-video-wrapper">
+                                    <video preload="auto"
+                                        id="videoRecord"
+                                        ng-if="MODE.name === 'record'"
+                                        controls>
+                                        <source ng-src="{{ drivers[selectedDriver].link }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div ng-init="vncPained = true;" ng-if="MODE.name === 'live';"
+                                        id="vnc">
+                                        <i ng-click="$ctrl.toggleVNCFullScreen()" class="material-icons video-control">fullscreen</i>
+                                    </div>
+                                </div>
+                                <div ng-show="!$ctrl.hasVideo" class="testrun-info__tab-video-wrapper _no-video">
+                                    <div class="no-video__icon-wrapper">
+                                        <md-icon md-svg-icon="outlined:videocam_off" class="material-icons icon"></md-icon>
+                                        <div class="icon__text" ng-if="$ctrl.test.status === 'IN_PROGRESS'">No live session available</div>
+                                        <div class="icon__text" ng-if="$ctrl.test.status !== 'IN_PROGRESS'">No video available</div>
+                                    </div>
+                                    <div class="no-video__controls-wrapper">
+                                        <div class="controls _play">
+                                            <span class="material-icons">arrow_right</span>
+                                        </div>
+                                        <div class="controls _time">
+                                            <span>0:00</span>
+                                        </div>
+                                        <div class="controls _volume">
+                                            <span class="material-icons">volume_up</span>
+                                        </div>
+                                        <div class="controls _fullscreen">
+                                            <span class="material-icons">crop_free</span>
+                                        </div>
+                                        <div class="controls _options">
+                                            <span class="material-icons">more_vert</span>
                                         </div>
                                     </div>
+                                    <div class="no-video__controls-wrapper _progress-bar">
+                                        <div class="progress-bar"></div>
+                                    </div>
                                 </div>
-                            </md-tab>
-                            <!--<md-tab ng-disabled="false" label="Screenshots" ng-click="selectedTab = 1;">
-                                <div class="tab1">
-                                    <div class="tab-content">
-                                        <div>
-
+                                <div class="testrun-info__tab-additional" ng-class="{'__no-video': !$ctrl.hasVideo}">
+                                    <table class="tab-additional__table _first-section">
+                                        <tbody class="tab-additional__table-body">
+                                            <tr class="tab-additional__table-row">
+                                                <td class="tab-additional__table-data _status _border-bottom">
+                                                    <span class="material-icons data-icon">flag</span>
+                                                    <span class="tab-additional__table-data _label">Status</span>
+                                                </td>
+                                                <td class="tab-additional__table-data _status-info _border-bottom">
+                                                    <md-menu md-offset="30 20" class="tab-additional__menu">
+                                                        <md-button class="menu__button"
+                                                            aria-label="Additional menu"
+                                                            ng-click="$mdMenu.open($event)"
+                                                            ng-disabled="$ctrl.test.status.toLowerCase() === 'in_progress' || $ctrl.test.status.toLowerCase() === 'queued' || $ctrl.test.status.toLowerCase() === 'unknown'">
+                                                            <span class="button-text _{{$ctrl.test.status.toLowerCase()}}">{{ $ctrl.test.status.split('_').join(' ').toLowerCase() }}</span>
+                                                            <span class="material-icons button-icon">arrow_drop_down</span>
+                                                        </md-button>
+                                                        <md-menu-content class="tab-additional__menu-content">
+                                                            <md-menu-item class="menu__item" ng-repeat="item in ['passed', 'failed']">
+                                                                <md-button ng-click="$ctrl.changeTestStatus($ctrl.test, item)">
+                                                                    <span class="item-text {{item}}" md-menu-align-target>{{item}}</span>
+                                                                </md-button>
+                                                            </md-menu-item>
+                                                        </md-menu-content>
+                                                    </md-menu>
+                                                </td>
+                                                <td class="tab-additional__table-data _issue _border-bottom" ng-if="($ctrl.test.status.toLowerCase() === 'failed' || $ctrl.test.status.toLowerCase() === 'aborted' || $ctrl.test.status.toLowerCase() === 'skipped') && $ctrl.test.message">
+                                                    <button class="button" ng-click="$ctrl.showDetailsDialog($ctrl.test, $event)">
+                                                        <span class="material-icons data-icon">bug_report</span>
+                                                        <span>Link issue</span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="tab-additional__table _second-section">
+                                        <tbody class="tab-additional__table-body">
+                                            <tr class="tab-additional__table-row">
+                                                <td class="tab-additional__table-data _test-owner">
+                                                    <span class="material-icons data-icon">person</span>
+                                                    <span class="tab-additional__table-data _label">Test owner</span>
+                                                </td>
+                                                <td class="tab-additional__table-data _test-owner-data">
+                                                    <span>{{ $ctrl.test.owner }}</span>
+                                                </td>
+                                            </tr>
+                                            <tr class="tab-additional__table-row">
+                                                <td class="tab-additional__table-data _started">
+                                                    <span class="material-icons data-icon">schedule</span>
+                                                    <span class="tab-additional__table-data _label">Started</span>
+                                                </td>
+                                                <td class="tab-additional__table-data _started-data">
+                                                    <span>{{ $ctrl.test.startTime | date: 'HH:mm dd MMM yyyy'}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr ng-if="$ctrl.test.finishTime && $ctrl.test.startTime && ($ctrl.test.finishTime - $ctrl.test.startTime) > 0">
+                                                <td class="tab-additional__table-data _duration">
+                                                    <span class="material-icons data-icon">timer</span>
+                                                    <span class="tab-additional__table-data _label">Duration</span>
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        {{($ctrl.test.finishTime - $ctrl.test.startTime) / 1000 | number: 0}} seconds
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="tab-additional__table _third-section"
+                                        ng-if="$ctrl.testRun.normalizedPlatformData || $ctrl.test.testConfig.device">
+                                        <tbody class="tab-additional__table-body">
+                                            <tr class="tab-additional__table-row" ng-if="$ctrl.testRun.normalizedPlatformData.browser || $ctrl.testRun.normalizedPlatformData.browserVersion">
+                                                <td class="tab-additional__table-data _platform">
+                                                    <span class="material-icons data-icon">language</span>
+                                                    <span class="tab-additional__table-data _label">Browser</span>
+                                                </td>
+                                                <td>
+                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.browser" class="platform-icon {{$ctrl.testRun.normalizedPlatformData.browser}}"></span>
+                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.browserVersion">{{$ctrl.testRun.normalizedPlatformData.browserVersion}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr class="tab-additional__table-row" ng-if="$ctrl.testRun.normalizedPlatformData.platform || $ctrl.testRun.normalizedPlatformData.platformVersion">
+                                                <td class="tab-additional__table-data _platform">
+                                                    <span class="material-icons data-icon">layers</span>
+                                                    <span class="tab-additional__table-data _label">Platform</span>
+                                                </td>
+                                                <td>
+                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.platform" class="platform-icon {{$ctrl.testRun.normalizedPlatformData.platform}}"></span>
+                                                    <span ng-if="$ctrl.testRun.normalizedPlatformData.platformVersion">{{$ctrl.testRun.normalizedPlatformData.platformVersion}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr class="tab-additional__table-row" ng-if="$ctrl.test.testConfig.device">
+                                                <td class="tab-additional__table-data _platform">
+                                                    <span class="material-icons data-icon">phone_iphone</span>
+                                                    <span class="tab-additional__table-data _label">Device</span>
+                                                </td>
+                                                <td>
+                                                    <span>{{::$ctrl.test.testConfig.device}}</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="tab-additional__table _fourth-section"
+                                        ng-if="$ctrl.test.workItems.length || $ctrl.test.artifacts.length">
+                                        <tbody class="tab-additional__table-body">
+                                            <tr class="tab-additional__table-row" ng-if="$ctrl.test.workItems.length">
+                                                <td class="tab-additional__table-data _tickets">
+                                                    <span class="material-icons data-icon">label_outline</span>
+                                                    <span class="tab-additional__table-data _label">Tickets</span>
+                                                </td>
+                                                <td class="tab-additional__table-data _tickets-info">
+                                                    <test-ticket class="work-items"
+                                                        data-ng-repeat="workItem in $ctrl.test.workItems"
+                                                        jira-settings="$ctrl.jira"
+                                                        work-item="workItem"></test-ticket>
+                                                </td>
+                                            </tr>
+                                            <tr class="tab-additional__table-row" ng-if="$ctrl.test.artifacts.length">
+                                                <td class="tab-additional__table-data _artifacts">
+                                                    <span class="material-icons data-icon">link</span>
+                                                    <span class="tab-additional__table-data _label">Test artifacts</span>
+                                                </td>
+                                                <td class="tab-additional__table-data _artifacts-info">
+                                                    <!-- <a ng-repeat="artifact in $ctrl.test.artifacts" class="artifact-link" href="{{::artifact.link}}" target="_blank">{{::artifact.name.slice(0, -13)}}</a> -->
+                                                    <a ng-repeat="artifact in $ctrl.test.artifacts" class="artifact-link" href="{{::artifact.link}}" target="_blank">{{ ::artifact.name }}</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testrun-info__tab-table-wrapper col-md-8 col-sm-12 no-padding">
+                            <div class="testrun-info__tab-table-row _head">
+                                <div class="testrun-info__tab-table-col _visuals">Visuals</div>
+                                <div class="testrun-info__tab-table-col _start">Start</div>
+                                <div class="testrun-info__tab-table-col _status">
+                                    <md-menu md-offset="-20 40">
+                                        <div aria-label="Open demo menu" ng-click="$mdMenu.open($event); $ctrl.log($ctrl)" >
+                                            <span class="testrun-info__status-button-icon _{{$ctrl.selectedLevel}}">Status</span>
+                                            <span ng-if="$ctrl.selectedLevel === 'status'" class="material-icons _button-icon">filter_list</span>
+                                            <md-icon md-svg-icon="checkedListIcon" ng-if="$ctrl.selectedLevel !== 'status'" class="material-icons selected-icon"></md-icon>
                                         </div>
+                                        <md-menu-content width="2" class="_status dropdown-content">
+                                            <md-menu-item ng-repeat="item in $ctrl.logLevels" class="dropdown__list">
+                                                <md-button ng-click="$ctrl.filterResults($index)" class="listitem__button">
+                                                    <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item !== 'status'">{{item}}</span>
+                                                    <span class="testrun-info__status-icon _{{item}} button__text" ng-if="item === 'status'">All</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                </div>
+                                <div class="testrun-info__tab-table-col _action">Action</div>
+                                <div class="testrun-info__tab-table-col _menu"></div>
+                            </div>
+                            <div class="testrun-info__tab-table-row"
+                                ng-repeat="log in $ctrl.filteredLogs"
+                                ng-attr-id="log-{{ $index }}"
+                                ng-if="logs.length"
+                                ng-click="selectLogRow($event, $index);">
+                                <div class="testrun-info__tab-table-col _visuals">
+                                    <div class="testrun-info__tab-table-col _title" ng-if="log.blobLog && $ctrl.isMobile">Visuals</div>
+                                    <span ng-show="log.driver" style="border-radius: 8px" class="label label-default">Driver {{ log.driver.index + 1 }}</span>
+                                    <div ng-show="log.blobLog" class="log-wrapper image-placeholder">
+                                        <img ng-if="log.isImageExists"
+                                            class="testrun-info__tab-table-img"
+                                            ng-click="openImagesViewerModal($event, log.blobLog.image.path[0]);"
+                                            ng-src="{{log.blobLog.thumb.path || log.blobLog.image.path[0]}}"
+                                            title="log screen"
+                                            alt="log screen" />
+                                        <i ng-show="log.isImageExists === false;" class="material-icons">insert_photo</i>
                                     </div>
                                 </div>
-                            </md-tab>-->
-                            <!--<md-tab ng-disabled="false" label="Test details" ng-click="selectedTab = 2;">
-                                <div class="tab2">
-                                    <div class="test-info-tab">
-                                        <ul>
-                                            <li>
-                                                Status
-                                                <span style="text-transform: capitalize;">{{ test.status.split('_').join(' ').toLowerCase() }}</span>
-                                            </li>
-                                            <li>
-                                                Started
-                                                <span>{{ test.startTime | date: 'HH:mm Z dd MMM yyyy'}}</span>
-                                            </li>
-                                            <li ng-if="test.finishTime && test.startTime && (test.finishTime - test.startTime) > 0">
-                                                Duration
-                                                <span>
-                                                    {{(test.finishTime - test.startTime) / 1000 | number: 0}} seconds
-                                                </span>
-                                            </li>
-                                            <li>
-                                                Platform
-                                                <span>Mac OS</span>
-                                            </li>
-                                            <li>
-                                                Browser
-                                                <span data-ng-if="testRun.platform != ''" class="platform-icon {{testRun.platform | lowercase}}"/>
-                                                <span data-ng-if="testRun.platform == ''" class="platform-icon unknown"></span>
-                                                <span data-ng-if="testRun.browserVersion">{{ testRun.browserVersion }}</span>
-                                            </li>
-                                        </ul>
+                                <div class="testrun-info__tab-table-col _start">
+                                    <div class="testrun-info__tab-table-col _title" ng-show="$ctrl.isMobile">Start</div>
+                                    <div class="testrun-info__tab-table-col _start-wrapper">
+                                        <span>{{log.timestamp | date: 'HH:mm:ss'}}</span>
                                     </div>
                                 </div>
-                            </md-tab>-->
-                        </md-tabs>
+                                <div class="testrun-info__tab-table-col _status">
+                                    <div class="testrun-info__tab-table-col _title" ng-show="$ctrl.isMobile">Status</div>
+                                    <div class="testrun-info__tab-table-col _status-wrapper">
+                                        <span class="testrun-info__status-icon {{log.level ? '_' + (log.level | lowercase) : ''}}">{{log.level}}<md-tooltip ng-if="log.threadName" md-direction="right">{{log.threadName}}</md-tooltip></span>
+                                    </div>
+                                </div>
+                                <div class="testrun-info__tab-table-col _action">
+                                    <div class="testrun-info__tab-table-col _title" ng-show="$ctrl.isMobile">Action</div>
+                                    <div ng-if="log.showMore" class="log_message" name="logFullMessage">
+                                        <div class="full" ng-bind-html="$ctrl.getFullLogMessage(log)"></div>
+                                        <div><a href="#" ng-click="$ctrl.switchMoreLess($event, log)">Show less</a></div>
+                                    </div>
+                                    <div class="log_message" name="logMessage" ng-if="!log.showMore && !$ctrl.isMobile">{{log.message | cut:true:255:' ...'}} <a href="#" ng-if="log.message.length > 255" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
+                                    <div class="log_message" name="logMessage" ng-if="!log.showMore && $ctrl.isMobile">{{log.message | cut:true:55:' ...'}} <a href="#" ng-if="log.message.length > 55" class="log_button" ng-click="$ctrl.switchMoreLess($event, log)">Show more</a></div>
+                                </div>
+                                <div class="testrun-info__tab-table-col _menu">
+                                    <div class="testrun-info__tab-table-col _menu-wrapper">
+                                        <md-menu ng-if="selectedLogRow === $index">
+                                            <md-button name="logsSetting" aria-label="Logs settings"
+                                                class="md-icon-button setting-menu_button" data-ng-click="$mdMenu.open($event);">
+                                                <md-icon class="material-icons">more_vert</md-icon>
+                                            </md-button>
+                                            <md-menu-content width="2" class="fixed-md-menu-content">
+                                                <md-menu-item>
+                                                    <md-button name="copyLine" ng-click="copyLogLine(log);">
+                                                        Copy line
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item>
+                                                    <md-button name="copyPermalink" ng-click="copyLogPermalink();">
+                                                        Copy permalink
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>

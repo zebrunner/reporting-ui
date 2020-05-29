@@ -162,29 +162,24 @@
                             </md-button>
                         </md-menu-item>
                         <md-divider ng-if="$ctrl.isToolConnected('JENKINS')"></md-divider>
-                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.showBuildNowOption && $ctrl.isToolConnected('JENKINS')">
+                        <md-menu-item ng-if="$ctrl.isButtonVisible('buildNow')">
                             <md-button name="buildNow" data-ng-click="$ctrl.buildNow($event)">
                                 Build now
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.testRun.status === 'IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')">
+                        <md-menu-item ng-if="$ctrl.isButtonVisible('abort')">
                             <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.testRun.status !== 'IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')">
+                        <md-menu-item ng-if="$ctrl.isButtonVisible('rebuild')">
                             <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rerun
                             </md-button>
                         </md-menu-item>
-                        <!--<md-menu-item ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.testRun.status!='PASSED' && $ctrl.isToolConnected('JENKINS')">
-                            <md-button name="debug" ng-click="$ctrl.startDebug()">
-                                Debug
-                            </md-button>
-                        </md-menu-item>-->
                         <md-divider ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS'])"></md-divider>
                         <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS']) && $ctrl.showDeleteTestRunOption">
-                            <md-button name="delete" data-ng-click="$ctrl.onTestRunDelete()">
+                            <md-button name="delete" data-ng-click="$ctrl.onTestRunDelete()" class="_red">
                                 Delete
                             </md-button>
                         </md-menu-item>
@@ -271,29 +266,24 @@
                             </md-button>
                         </md-menu-item>
                         <md-divider ng-if="$ctrl.isToolConnected('JENKINS')"></md-divider>
-                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.showBuildNowOption && $ctrl.isToolConnected('JENKINS')">
+                        <md-menu-item ng-if="$ctrl.isButtonVisible('buildNow')">
                             <md-button name="buildNow" data-ng-click="$ctrl.buildNow($event)">
                                 Build now
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.testRun.status === 'IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')">
+                        <md-menu-item ng-if="$ctrl.isButtonVisible('abort')">
                             <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.testRun.status !== 'IN_PROGRESS' && $ctrl.isToolConnected('JENKINS')">
+                        <md-menu-item ng-if="$ctrl.isButtonVisible('rebuild')">
                             <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rerun
                             </md-button>
                         </md-menu-item>
-                        <!--<md-menu-item ng-if="$ctrl.userHasAnyPermission(['TEST_RUNS_CI']) && $ctrl.testRun.status!='PASSED' && $ctrl.isToolConnected('JENKINS')">
-                            <md-button name="debug" ng-click="$ctrl.startDebug()">
-                                Debug
-                            </md-button>
-                        </md-menu-item>-->
                         <md-divider ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS'])"></md-divider>
                         <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_TEST_RUNS']) && $ctrl.showDeleteTestRunOption">
-                            <md-button name="delete" data-ng-click="$ctrl.onTestRunDelete()">
+                            <md-button name="delete" data-ng-click="$ctrl.onTestRunDelete()" class="_red">
                                 Delete
                             </md-button>
                         </md-menu-item>

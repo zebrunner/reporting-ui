@@ -1,24 +1,20 @@
-(function () {
-    'use strict';
+'use strict';
 
-    angular
-        .module('app.services')
-        .factory('TestCaseService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', TestCaseService])
+const testCaseService = function testCaseService(
+    $httpMock,
+    API_URL,
+    UtilService,
+) {
+    'ngInject';
 
-    function TestCaseService($httpMock, $rootScope, UtilService, API_URL) {
-        var service = {};
+    return {
+        getTestExecutionHistory,
+    };
 
-        service.searchTestCases = searchTestCases;
-        service.getTestMetricsByTestCaseId = getTestMetricsByTestCaseId;
-
-        return service;
-
-        function searchTestCases(criteria) {
-            return $httpMock.post(API_URL + '/api/tests/cases/search', criteria).then(UtilService.handleSuccess, UtilService.handleError('Unable to search test cases'));
-        }
-
-        function getTestMetricsByTestCaseId(id) {
-            return $httpMock.get(API_URL + '/api/tests/cases/' + id + '/metrics/').then(UtilService.handleSuccess, UtilService.handleError('Unable to get test metrics'));
-        }
+    function getTestExecutionHistory(testId, limit = 10) {
+        return $httpMock.get(`${API_URL}/api/tests/${testId}/history?limit=${limit}`)
+            .then(UtilService.handleSuccess, UtilService.handleError('Unable to get test execution history'));
     }
-})();
+};
+
+export default testCaseService;

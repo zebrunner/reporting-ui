@@ -97,19 +97,16 @@
                                                     <md-menu-content width="2">
                                                         <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS'])">
                                                             <md-button name="userEdit" data-ng-click="$ctrl.showEditProfileDialog($event, user, $index)">
-                                                                <md-icon class="material-icons">settings</md-icon>
                                                                 <span>Edit</span>
                                                             </md-button>
                                                         </md-menu-item>
                                                         <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS']) && user.source == 'INTERNAL'">
                                                             <md-button name="userChangePassword" data-ng-click="$ctrl.showChangePasswordDialog($event, user, false)">
-                                                                <md-icon class="material-icons">lock_outline</md-icon>
                                                                 <span>Change password</span>
                                                             </md-button>
                                                         </md-menu-item>
                                                         <md-menu-item ng-if="$ctrl.currentUser.pefrDashboardId">
                                                             <md-button name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })" style="padding-top: 12px">
-                                                                <md-icon class="material-icons">timeline</md-icon>
                                                                 <span>Performance</span>
                                                             </md-button>
                                                         </md-menu-item>

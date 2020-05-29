@@ -488,7 +488,7 @@
                     }
                 })
                 .state('tests.runInfo', {
-                    url: '/runs/:testRunId/info/:testId',
+                    url: '/runs/:testRunId/info/:testId?parentTestId',
                     component: 'testRunInfoComponent',
                     data: {
                         requireLogin: true,
@@ -499,6 +499,41 @@
                         configSnapshot: null,
                     },
                     resolve: {
+                        test: ($stateParams, TestRunService, $q, TestService, $timeout, $state) => {
+                            'ngInject';
+
+                            if ($stateParams.testRunId) {
+                                const params = {
+                                    'page': 1,
+                                    'pageSize': 100000,
+                                    'testRunId': parseInt($stateParams.testRunId, 10),
+                                };
+
+                                return TestService.searchTests(params)
+                                    .then((rs) => {
+                                        if (rs.success) {
+                                            const testId = parseInt($stateParams.testId, 10);
+
+                                            TestService.tests = rs.data.results || [];
+
+                                            return TestService.getTest(testId);
+                                        } else {
+                                            return $q.reject({message: `Can't fetch tests for test run with ID=${$stateParams.testRunId}` });
+                                        }
+                                    })
+                                    .catch(() => {
+                                        // Timeout to avoid digest issues
+                                        $timeout(() => {
+                                            $state.go('tests.runs');
+                                        }, 0, false);
+                                    });
+                            } else {
+                                // Timeout to avoid digest issues
+                                $timeout(() => {
+                                    $state.go('tests.runs');
+                                }, 0, false);
+                            }
+                        },
                         testRun: ($stateParams, $q, $state, TestRunService, $timeout) => {
                             'ngInject';
 
@@ -508,7 +543,7 @@
                                 };
 
                                 return TestRunService.searchTestRuns(params)
-                                    .then(function(response) {
+                                    .then((response) => {
                                         if (response.success && response.data.results && response.data.results[0]) {
                                             return response.data.results[0];
                                         } else {
@@ -533,7 +568,7 @@
                             'ngInject';
 
                             return $q.resolve($stateParams.configSnapshot);
-                        }
+                        },
                     },
                     lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
