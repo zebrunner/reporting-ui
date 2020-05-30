@@ -23,6 +23,7 @@
         "@babel/plugin-transform-runtime": "^7.8.3",
         "@babel/preset-env": "^7.8.3",
         "@babel/runtime": "^7.8.3",
+        "@types/angular": "^1.7.0",
         "@types/react": "^16.9.35",
         "@zebrunner/core": "^1.4.0-rc.1",
         "angular": "^1.7.0",

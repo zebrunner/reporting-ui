@@ -1,17 +1,26 @@
 import { getVersions, getApplicationConfig } from '@zebrunner/core/store';
+import { of } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 export default (
     $ngRedux,
+    MigrationAuthService,
+    ShackbarService,
+    $safeDigest,
+    $scope,
 ) => {
     'ngInject';
 
     let unsubscribe;
 
     return {
-        credentials: null,
+        pendingSubmit: false,
+        emailWasSent: false,
+        email: '',
 
         $onInit,
         $onDestroy,
+        resetPassword,
     };
 
     function $onInit() {
@@ -27,5 +36,18 @@ export default (
         if (unsubscribe) {
             unsubscribe();
         }
+    }
+
+    function resetPassword() {
+        this.pendingSubmit = true;
+        MigrationAuthService.resetPassword(this.email).pipe(
+            tap(() => (this.emailWasSent = true)),
+            catchError(error => {
+                ShackbarService.error(error.message || 'Unable to restore password');
+                return of(true);
+            }),
+            tap(() => (this.pendingSubmit = false)),
+            tap($safeDigest.rxjs($scope)),
+        ).subscribe();
     }
 };

@@ -2,7 +2,7 @@ import angular from 'angular';
 
 import { MigrationAuthService } from './migration-auth.service';
 import { SafeDigestService } from '../../client/app/migration/services/safe-digest.service';
-import { ShackbarService } from './snackbar.service';
+import { ShackbarService } from '../../client/app/migration/services/snackbar.service';
 import { UsersService } from './users.service';
 import { UtilService } from './util.service';
 

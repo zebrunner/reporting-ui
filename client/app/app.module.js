@@ -11,7 +11,6 @@ import sessionSwitcherComponent from './shared/sessions-switcher/sessions-switch
 import testTicketComponent from './shared/test-ticket/test-ticket.component';
 import photoUpload from './shared/photo-upload/photo-upload.directive';
 import { ZebrunnerReportingMigrationModule } from './migration';
-import { SigninModule } from '../../reactify';
 
 const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular

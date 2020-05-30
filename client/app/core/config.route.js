@@ -211,7 +211,7 @@
                 })
                 .state('forgotPassword', {
                     url: '/password/forgot',
-                    component: 'forgotPasswordComponent',
+                    component: 'passwordForgotComponent',
                     data: {
                         title: 'Forgot password',
                         onlyGuests: true,
@@ -221,9 +221,9 @@
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
                         try {
-                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+                            const mod = await import(/* webpackChunkName: "passwordForgot" */ '../../../reactify/containers/password-forgot');
 
-                            return $ocLazyLoad.load(mod.authModule);
+                            return $ocLazyLoad.load(mod.PasswordForgotModule);
                         } catch (err) {
                             throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
                         }

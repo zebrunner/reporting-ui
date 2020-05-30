@@ -15,6 +15,8 @@ export const MigrationAuthService = (
         prepareAuthPage,
         login,
         handleLogin,
+
+        resetPassword,
     };
 
     function prepareAuthPage() {
@@ -76,6 +78,15 @@ export const MigrationAuthService = (
                 ShackbarService.error(message || 'Invalid credentials');
                 return of(true);
             }),
+        );
+    }
+
+    function resetPassword(email) {
+        return RequestService.post$(
+            '/api/auth/password/forgot',
+            { email },
+            {},
+            { withServer: true },
         );
     }
 }

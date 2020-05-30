@@ -11,6 +11,8 @@ export const MigrationAuthService = (
         prepareAuthPage,
         login,
         handleLogin,
+
+        resetPassword,
     };
 
     function prepareAuthPage() {
@@ -27,5 +29,9 @@ export const MigrationAuthService = (
     function handleLogin(payload) {
         $rootScope.$broadcast('event:auth-loginSuccess', payload);
         return of(true);
+    }
+
+    function resetPassword(email) {
+        return from(MigrationRequestService.post('/api/auth/password/forgot', { email }));
     }
 }

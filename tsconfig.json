@@ -1,29 +1,31 @@
 {
-  "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+    "compilerOptions": {
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "jsx": "react",
+        "sourceMap": true,
+        "removeComments": false,
+        "declaration": true,
+        "declarationMap": true,
+        "declarationDir": "./dist/types",
+        "emitDeclarationOnly": true,
+        "module": "esnext",
+        "importHelpers": true,
+        "noImplicitAny": false,
+        "target": "es2015"
+    },
+    "files": [
+        "reactify/index.ts",
     ],
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "jsx": "react",
-    "sourceMap": true,
-    "removeComments": false,
-    "declaration": true,
-    "declarationMap": true,
-    "declarationDir": "./dist/types",
-    "emitDeclarationOnly": true,
-    "module": "esnext",
-    "importHelpers": true,
-    "noImplicitAny": false,
-    "target": "es2015"
-  },
-  "files": ["reactify/index.ts"],
-  "exclude": ["node_modules", "build"]
+    "exclude": ["node_modules", "build"]
 }
