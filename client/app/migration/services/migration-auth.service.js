@@ -1,9 +1,12 @@
 import { from, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 export const MigrationAuthService = (
     $rootScope,
     MigrationRequestService,
     authService,
+    $location,
+    $state,
 ) => {
     'ngInject';
 
@@ -12,7 +15,12 @@ export const MigrationAuthService = (
         login,
         handleLogin,
 
+        forgotPassword,
+
         resetPassword,
+        preparePasswordResetPage,
+        handlePasswordReset,
+        getToken,
     };
 
     function prepareAuthPage() {
@@ -31,7 +39,36 @@ export const MigrationAuthService = (
         return of(true);
     }
 
-    function resetPassword(email) {
+    function forgotPassword(email) {
         return from(MigrationRequestService.post('/api/auth/password/forgot', { email }));
+    }
+
+    function resetPassword(model, token) {
+        return from(MigrationRequestService.put(
+            '/api/auth/password',
+            model,
+            { headers: { 'Access-Token': token } },
+        ));
+    }
+
+    function preparePasswordResetPage(token) {
+        if (!token) {
+            return $state.go('signin');
+        }
+
+        return from(MigrationRequestService.get(`/api/auth/password/forgot?token=${token}`)).pipe(
+            catchError(() => {
+                $state.go('signin');
+                return of(false);
+            }),
+        ).subscribe();
+    }
+
+    function handlePasswordReset() {
+        $state.go('signin');
+    }
+
+    function getToken() {
+        return $location.search()['token'];
     }
 }

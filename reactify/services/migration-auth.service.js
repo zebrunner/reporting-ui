@@ -16,7 +16,12 @@ export const MigrationAuthService = (
         login,
         handleLogin,
 
+        forgotPassword,
+
         resetPassword,
+        preparePasswordResetPage,
+        handlePasswordReset,
+        getToken,
     };
 
     function prepareAuthPage() {
@@ -81,12 +86,44 @@ export const MigrationAuthService = (
         );
     }
 
-    function resetPassword(email) {
+    function forgotPassword(email) {
         return RequestService.post$(
             '/api/auth/password/forgot',
             { email },
             {},
             { withServer: true },
         );
+    }
+
+    function resetPassword(model, token) {
+        return RequestService.put$(
+            '/api/auth/password',
+            model,
+            { 'Access-Token': token },
+            { withServer: true },
+        );
+    }
+
+    function preparePasswordResetPage(token) {
+        if (!token) {
+            return RouterService.go('/signin');
+        }
+
+        return RequestService.get$(
+            `/api/auth/password/forgot?token=${token}`,
+        ).pipe(
+            catchError(() => {
+                RouterService.go('/signin');
+                return of(false);
+            }),
+        ).subscribe();
+    }
+
+    function handlePasswordReset() {
+        RouterService.go('/signin');
+    }
+
+    function getToken() {
+        return RouterService.queryParams?.token;
     }
 }

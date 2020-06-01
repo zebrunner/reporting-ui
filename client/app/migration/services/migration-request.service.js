@@ -5,7 +5,11 @@ export const MigrationRequestService = ($httpMock) => {
     'ngInject'
 
     return {
-        post,
+        post: request('post'),
+        put: request('put'),
+        patch: request('patch'),
+        get: request('get'),
+        delete: request('delete'),
     };
 
     function getUrl() {
@@ -14,7 +18,7 @@ export const MigrationRequestService = ($httpMock) => {
         return getApplicationConfig(state).api;
     }
 
-    function post(url, data) {
-        return $httpMock.post(`${getUrl()}${url}`, data);
+    function request(method) {
+        return (url, ...params) => $httpMock[method](`${getUrl()}${url}`, ...params);
     }
 }

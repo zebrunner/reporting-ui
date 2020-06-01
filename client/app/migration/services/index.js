@@ -4,6 +4,7 @@ import { MigrationAuthService } from './migration-auth.service';
 import { MigrationRequestService } from './migration-request.service';
 import { SafeDigestService } from './safe-digest.service';
 import { ShackbarService } from './snackbar.service';
+import { ValidationsService } from './validations.service';
 
 export const ZebrunnerReportingMigrationServicesModule = angular.module('zebrunner.reporting.migration.services', [])
 
@@ -11,5 +12,6 @@ export const ZebrunnerReportingMigrationServicesModule = angular.module('zebrunn
     .service({ MigrationRequestService })
     .service('$safeDigest', SafeDigestService)
     .service({ ShackbarService })
+    .service({ ValidationsService })
 
     .name;

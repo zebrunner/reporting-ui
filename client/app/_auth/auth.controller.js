@@ -37,9 +37,6 @@ const authController = function authController(
 
     var token;
 
-    // TODO: we don't use that but there are code on reset password
-    $scope.forgotPasswordType = {};
-
     Object.defineProperties($scope, {
         companyLogo: {
             get: () => $rootScope.companyLogo,
@@ -48,26 +45,6 @@ const authController = function authController(
             get: () => $rootScope.version,
         },
     });
-
-    $scope.getForgotPasswordInfo = function (token) {
-        authService.getForgotPasswordInfo(token).then(function (rs) {
-            if(rs.success) {
-                $scope.forgotPasswordType.email = rs.data.email;
-            }
-        });
-    };
-
-    $scope.resetPassword = function (credentials) {
-        credentials.userId = 0;
-        authService.resetPassword(credentials, token).then(function (rs) {
-            if(rs.success) {
-                messageService.success('Your password was changed successfully');
-                $state.go('signin');
-            } else {
-                messageService.error(rs.message);
-            }
-        });
-    };
 
     $scope.goToState = function (state) {
         $state.go(state);
@@ -79,13 +56,6 @@ const authController = function authController(
                 token = $location.search()['token'];
                 $scope.getInvitation(token);
                 break;
-            case 'resetPassword':
-                token = $location.search()['token'];
-                if(! token) {
-                    $state.go('signin');
-                    return;
-                }
-                $scope.getForgotPasswordInfo(token);
         }
         authService.clearCredentials();
     })();

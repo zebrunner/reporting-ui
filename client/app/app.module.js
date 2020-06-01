@@ -315,23 +315,6 @@ const ngModule = angular
             }
         };
     })
-    .directive('identicalTo', function () {
-        return {
-            require: 'ngModel',
-            restrict: 'A',
-            scope: {
-                otherModelValue: "=identicalTo"
-            },
-            link: function(scope, element, attributes, ngModel) {
-                ngModel.$validators.identicalTo = function(modelValue) {
-                    return modelValue === scope.otherModelValue;
-                };
-                scope.$watch("otherModelValue", function() {
-                    ngModel.$validate();
-                });
-            }
-        };
-    })
     .directive('codeTextarea', ['$timeout', '$interval', '$rootScope', function ($timeout, $interval, $rootScope) {
         return {
             restrict: 'E',

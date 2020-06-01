@@ -8,19 +8,23 @@ export default (
     ShackbarService,
     $safeDigest,
     $scope,
+    ValidationsService,
 ) => {
     'ngInject';
 
     let unsubscribe;
 
     return {
-        pendingSubmit: false,
-        emailWasSent: false,
-        email: '',
+        model: {
+            password: '',
+            confirmPassword: '',
+        },
+        token: null,
+        validations: ValidationsService,
 
         $onInit,
         $onDestroy,
-        submitForgotPassword,
+        resetPassword,
     };
 
     function $onInit() {
@@ -30,6 +34,10 @@ export default (
         });
 
         unsubscribe = $ngRedux.connect(mapStateToThis, {})(this);
+
+        this.token = MigrationAuthService.getToken();
+
+        MigrationAuthService.preparePasswordResetPage(this.token);
     }
 
     function $onDestroy() {
@@ -38,15 +46,14 @@ export default (
         }
     }
 
-    function submitForgotPassword() {
-        this.pendingSubmit = true;
-        MigrationAuthService.forgotPassword(this.email).pipe(
-            tap(() => (this.emailWasSent = true)),
+    function resetPassword() {
+        MigrationAuthService.resetPassword({ ...this.model, userId: 0 }, this.token).pipe(
+            tap(() => ShackbarService.success('Your password was changed successfully')),
+            tap(payload => MigrationAuthService.handlePasswordReset(payload)),
             catchError(error => {
                 ShackbarService.error(error.message || 'Unable to restore password');
                 return of(true);
             }),
-            tap(() => (this.pendingSubmit = false)),
             tap($safeDigest.rxjs($scope)),
         ).subscribe();
     }

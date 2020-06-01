@@ -2,7 +2,6 @@
 
 const authService = function authService(
     $httpMock,
-    $state,
     UtilService,
     UserService,
     API_URL,
@@ -15,8 +14,6 @@ const authService = function authService(
         isMultitenant: false,
         serviceUrl: null,
         invite, // TODO: looks like unused, see invitationService
-        getForgotPasswordInfo,
-        resetPassword,
         getInvitation, // TODO: looks like unused, see invitationService
         signUp,
         setCredentials,
@@ -47,19 +44,6 @@ const authService = function authService(
     function invite(emails) {
         return $httpMock.post(API_URL + '/api/auth/invite', emails)
             .then(UtilService.handleSuccess, UtilService.handleError('Failed to invite users'));
-    }
-
-    function getForgotPasswordInfo(token) {
-        return $httpMock.get(API_URL + '/api/auth/password/forgot?token=' + token)
-            // TODO: move redirection action from service
-            .then(UtilService.handleSuccess, () => {
-                $state.go('signin');
-            });
-    }
-
-    function resetPassword(credentials, token) {
-        return $httpMock.put(API_URL + '/api/auth/password', credentials, {headers: {'Access-Token': token}})
-            .then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
     function getInvitation(token) {

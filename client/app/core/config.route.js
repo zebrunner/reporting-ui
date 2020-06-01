@@ -231,7 +231,7 @@
                 })
                 .state('resetPassword', {
                     url: '/password/reset?token',
-                    component: 'resetPasswordComponent',
+                    component: 'passwordResetComponent',
                     data: {
                         title: 'Reset password',
                         onlyGuests: true,
@@ -241,9 +241,9 @@
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
                         try {
-                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+                            const mod = await import(/* webpackChunkName: "passwordReset" */ '../../../reactify/containers/password-reset');
 
-                            return $ocLazyLoad.load(mod.authModule);
+                            return $ocLazyLoad.load(mod.PasswordResetModule);
                         } catch (err) {
                             throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
                         }
