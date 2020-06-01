@@ -312,9 +312,9 @@ const testDetailsController = function testDetailsController(
     }
 
     function changeViewMode(mode) {
-        // Uncomment code line below if you need to reset previously selected group item on view mode change
-        // if (vm.groupingFilters[vm.testsViewMode].selectedValue) { vm.groupingFilters[vm.testsViewMode].selectedValue = null; }
-        // else save previous active values
+        // resets previously selected group item on view mode change
+        if (vm.groupingFilters[vm.testsViewMode].selectedValue) { vm.groupingFilters[vm.testsViewMode].selectedValue = null; }
+        // save previous active values
         if (vm.filters.grouping && vm.filters.grouping.values) {
             vm.groupingFilters[vm.testsViewMode].cachedValues = vm.filters.grouping.values;
         }
