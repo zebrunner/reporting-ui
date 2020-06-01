@@ -34,6 +34,7 @@ const testRunInfoController = function testRunInfoController(
     logLevelService,
     toolsService,
     modalsService,
+    moment,
 ) {
     'ngInject';
 
@@ -46,6 +47,8 @@ const testRunInfoController = function testRunInfoController(
     let testRailSettings = {};
     let qTestSettings = {};
     let painterWatcher = null;
+    let wsSubscription = null;
+    let stompClient = null;
     const testsWebsocketName = 'tests';
     const vm = {
         activeTestId: null,
@@ -54,7 +57,6 @@ const testRunInfoController = function testRunInfoController(
         parentTestId: null,
         test: null,
         testRun: null,
-        wsSubscription: null,
         logLevels: logLevelService.logLevels,
         filteredLogs: [],
         selectedLevel: logLevelService.initialLevel,
@@ -94,26 +96,8 @@ const testRunInfoController = function testRunInfoController(
     let page = 1;
     let size = 5;
     const LIVE_DEMO_ARTIFACT_NAME = 'live video';
-    let SEARCH_CRITERIA = '';
     let ELASTICSEARCH_INDEX = '';
-    const AGENT_BUIlDER = {
-        oldAgent: {
-            prefix: 'logs-',
-            searchCriteria: () => {
-                return [{ 'correlation-id': `${vm.testRun.ciRunId}_${vm.test.ciTestId}` }];
-            }
-        },
-        newAgent: {
-            prefix: 'test-run-data-',
-            searchCriteria: () => {
-                return [
-                    {'testRunId': vm.testRun.id},
-                    {'testId': vm.test.id},
-                ];
-            }
-        }
-    };
-    let agent = AGENT_BUIlDER.oldAgent;
+    let agent = null;
     const MODES = {
         live: {
             name: 'live',
@@ -183,24 +167,6 @@ const testRunInfoController = function testRunInfoController(
             data: [vm.test],
             field: 'imageArtifacts',
         });
-    }
-
-    function changeTestStatus(test, status) {
-        if (test.status !== status.toUpperCase()) {
-            const copy = {...test};
-
-            copy.status = status.toUpperCase();
-            TestService.updateTest(copy)
-                .then(rs => {
-                    if (rs.success) {
-                        messageService.success(`Test was marked as ${status}`);
-                        vm.test = rs.data;
-                        updateExecutionHistoryItem(vm.test);
-                    } else {
-                        console.error(rs.message);
-                    }
-                });
-        }
     }
 
     function downloadAllArtifacts() {
@@ -275,15 +241,13 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function getLogsFromElasticsearch(from, page, size) {
-        return $q(resolve => {
-            elasticsearchService.search(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, from, page, size, vm.test.startTime)
-                .then(rs => resolve(rs.map(r => r._source)));
-        });
+        return elasticsearchService.search(agent.esIndex, agent.searchCriteria, from, page, size, vm.test.startTime)
+            .then((response) => response.map(item => item._source));
     }
 
     function tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId) {
         return $q(resolve => {
-            elasticsearchService.count(ELASTICSEARCH_INDEX, SEARCH_CRITERIA, vm.test.startTime)
+            elasticsearchService.count(agent.esIndex, agent.searchCriteria, vm.test.startTime)
                 .then(count => {
                     if (vm.pageSessionId !== pageSessionId) { return; }
                     if (logGetter.accessFunc ? logGetter.accessFunc.call(this, count) : true) {
@@ -698,41 +662,48 @@ const testRunInfoController = function testRunInfoController(
     };
 
     /**************** Websockets **************/
-
     function initTestsWebSocket(testRun) {
-        $scope.testsWebsocket = Stomp.over(new SockJS(API_URL + "/api/websockets"));
-        $scope.testsWebsocket.debug = null;
-        $scope.testsWebsocket.ws.close = function() {};
-        $scope.testsWebsocket.connect({ withCredentials: false }, function () {
-            if ($scope.testsWebsocket.connected) {
-                vm.wsSubscription = $scope.testsWebsocket.subscribe("/topic/" + authService.tenant + ".testRuns." + testRun.id + ".tests", function (data) {
-                    var test = $scope.getEventFromMessage(data.body).test;
+        const ws = new SockJS(`${API_URL}/api/websockets`);
 
-                    if (vm.test && test.id === vm.test.id) {
+        stompClient = Stomp.over(ws);
+        stompClient.debug = null;
+        stompClient.ws.close = () => {};
+        stompClient.connect({ withCredentials: false }, stompConnectHandler, stompErrorHandler);
 
-                        if (test.status === 'IN_PROGRESS') {
-                            addDrivers(getArtifactsByPartName(test, LIVE_DEMO_ARTIFACT_NAME));
-                            driversCount = $scope.drivers.length;
-                        } else {
-                            pseudoLiveCloseAction(LIVE_LOGS_INTERVAL_NAME);
-                            exitVNCFullScreen();
-                            setMode('record');
-                            var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
-                            if (videoArtifacts.length === driversCount) {
-                                addDrivers(videoArtifacts);
-                                postModeConstruct(test, vm.pageSessionId);
-                            }
-                        }
-                        vm.test = angular.copy(test);
-                        $scope.$apply();
-                    }
-                    updateExecutionHistoryItem(test);
-                });
-            }
-        }, function () {
-            UtilService.reconnectWebsocket(testsWebsocketName, initTestsWebSocket);
-        });
         UtilService.websocketConnected(testsWebsocketName);
+    }
+
+    function stompConnectHandler() {
+        if (stompClient.connected) {
+            wsSubscription = stompClient.subscribe(`/topic/${authService.tenant}.testRuns.${testRun.id}.tests`, testsWSHandler);
+        }
+    }
+
+    function stompErrorHandler() {
+        UtilService.reconnectWebsocket(testsWebsocketName, initTestsWebSocket);
+    }
+
+    function testsWSHandler(wsEvent) {
+        const test = getEventFromMessage(wsEvent.body).test;
+
+        if (vm.test && test.id === vm.test.id) {
+            if (test.status === 'IN_PROGRESS') {
+                addDrivers(getArtifactsByPartName(test, LIVE_DEMO_ARTIFACT_NAME));
+                driversCount = $scope.drivers.length;
+            } else {
+                pseudoLiveCloseAction(LIVE_LOGS_INTERVAL_NAME);
+                exitVNCFullScreen();
+                setMode('record');
+                var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
+                if (videoArtifacts.length === driversCount) {
+                    addDrivers(videoArtifacts);
+                    postModeConstruct(test, vm.pageSessionId);
+                }
+            }
+            vm.test = angular.copy(test);
+            $scope.$apply();
+        }
+        updateExecutionHistoryItem(test);
     }
 
     function followUpOnLogs(log) {
@@ -885,9 +856,17 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
-    $scope.getEventFromMessage = function (message) {
-        return JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
-    };
+    function getEventFromMessage(message) {
+        let parsedMessage;
+
+        try {
+           parsedMessage = JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+        } catch (err) {
+            // TODO: debug error log
+        }
+
+        return parsedMessage;
+    }
 
     $scope.onResize = function () {
         ArtifactService.resize(angular.element($scope.MODE.element)[0], rfb);
@@ -924,9 +903,8 @@ const testRunInfoController = function testRunInfoController(
         from = 0;
         page = 1;
         size = 5;
-        SEARCH_CRITERIA = '';
         ELASTICSEARCH_INDEX = '';
-        agent = AGENT_BUIlDER.oldAgent;
+        agent = null;
         scrollEnable = true;
         liveIntervals = {};
         track = undefined;
@@ -971,11 +949,11 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function closeTestsWebsocket() {
-        if ($scope.testsWebsocket && $scope.testsWebsocket.connected) {
+        if (stompClient && stompClient.connected) {
             $scope.$watch('testsWebsocket.hasClosePermission', function (newVal) {
                 if (newVal) {
                     $timeout(function () {
-                        $scope.testsWebsocket.disconnect();
+                        stompClient.disconnect();
                     });
                     UtilService.websocketConnected(testsWebsocketName);
                 }
@@ -1074,7 +1052,8 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function controllerInit(skipHistoryUpdate) {
-        //filter EVENT items
+        // filter EVENT items
+        // TODO: do we ever need in "EVENT" work items on the client?
         vm.test.workItems = (vm.test.workItems || []).filter(({ type }) => type !== 'EVENT');
         if (!vm.pageSessionId) {
             vm.pageSessionId = Date.now();
@@ -1083,6 +1062,8 @@ const testRunInfoController = function testRunInfoController(
         initTestsWebSocket(vm.testRun);
         vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
 
+        agent = getAgent();
+        agent.esIndex = getESIndex();
         setTestParams();
         initToolsSettings();
         initTestExecutionData(skipHistoryUpdate);
@@ -1233,31 +1214,68 @@ const testRunInfoController = function testRunInfoController(
         return (values[half - 1] + values[half]) / 2.0;
     }
 
+    function getAgent() {
+        // return new version of the agent if test has UUID
+        if (!!vm.test.uuid) {
+            return {
+                prefix: 'test-run-data-',
+                searchCriteria: [
+                    {'testRunId': vm.testRun.id},
+                    {'testId': vm.test.id},
+                ],
+            };
+        }
+
+        return {
+            prefix: 'logs-',
+            searchCriteria: [
+                { 'correlation-id': `${vm.testRun.ciRunId}_${vm.test.ciTestId}` },
+            ],
+        };
+    }
+
     function setTestParams() {
-        // Agent to proceed is recognizing
-        agent = !!vm.test.uuid ? AGENT_BUIlDER.newAgent : AGENT_BUIlDER.oldAgent;
-
         if (vm.test) {
-            SEARCH_CRITERIA = agent.searchCriteria();
-            ELASTICSEARCH_INDEX = buildIndex();
-
             setMode(vm.test.status === 'IN_PROGRESS' ? 'live' : 'record');
             $scope.MODE.initFunc.call(this, vm.test);
         }
     }
 
-    function buildIndex() {
-        let startTime = $filter('date')(vm.test.startTime, 'yyyy.MM.dd', 'UTC');
-        let finishTime = vm.test.finishTime ? $filter('date')(vm.test.finishTime, 'yyyy.MM.dd', 'UTC')
-            : $filter('date')(new Date().getTime(), 'yyyy.MM.dd', 'UTC');
-
-        const startIndex = agent.prefix + startTime;
-        const finishIndex = agent.prefix + finishTime;
+    function getESIndex() {
+        const startTime = moment.utc(vm.test.startTime).format('YYYY.MM.DD');
+        const finishTime = moment.utc(vm.test.finishTime).format('YYYY.MM.DD');
+        const startIndex = `${agent.prefix}${startTime}`;
+        const finishIndex = `${agent.prefix}${finishTime}`;
 
         return startIndex === finishIndex ? startIndex : startIndex + ',' + finishIndex;
     }
 
     return vm;
+
+
+    /* work with test data */
+
+    function changeTestStatus(test, status = '') {
+        status = status.toUpperCase();
+        if (!test || !status || test.status === status.toUpperCase()) { return; }
+
+        const testCopy = {...test};
+
+        testCopy.status = status.toUpperCase();
+
+        return TestService.updateTest(testCopy)
+            .then((response) => {
+                if (response.success) {
+                    messageService.success(`Test was marked as ${status}`);
+                    vm.test = response.data;
+                    updateExecutionHistoryItem(vm.test);
+                } else {
+                    const message = response.message ? response.message : 'Unable to change test status';
+
+                    messageService.error(message);
+                }
+            });
+    }
 };
 
 export default testRunInfoController;
