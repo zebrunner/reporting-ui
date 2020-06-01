@@ -690,7 +690,7 @@ const testDetailsController = function testDetailsController(
         if (vm.empty && vm.testRun.status !== 'IN_PROGRESS') {
             message = 'No tests';
         }
-        if (!vm.empty && !vm.activeTests.length && (vm.isStatusFilteringActive && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue) || vm.searchCriteria)) {
+        if (!vm.empty && !vm.activeTests.length && (vm.isStatusFilteringActive || vm.searchCriteria) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
             message = 'No tests matching selected criteria';
         }
         if (vm.testRun.status === 'IN_PROGRESS' && (vm.empty || (!vm.isStatusFilteringActive && !vm.activeTests.length && vm.testRun.queued)) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
