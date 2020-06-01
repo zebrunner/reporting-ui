@@ -312,9 +312,9 @@ const testDetailsController = function testDetailsController(
     }
 
     function changeViewMode(mode) {
-        // Uncomment code line below if you need to reset previously selected group item on view mode change
-        // if (vm.groupingFilters[vm.testsViewMode].selectedValue) { vm.groupingFilters[vm.testsViewMode].selectedValue = null; }
-        // else save previous active values
+        // resets previously selected group item on view mode change
+        if (vm.groupingFilters[vm.testsViewMode].selectedValue) { vm.groupingFilters[vm.testsViewMode].selectedValue = null; }
+        // save previous active values
         if (vm.filters.grouping && vm.filters.grouping.values) {
             vm.groupingFilters[vm.testsViewMode].cachedValues = vm.filters.grouping.values;
         }
@@ -690,8 +690,8 @@ const testDetailsController = function testDetailsController(
         if (vm.empty && vm.testRun.status !== 'IN_PROGRESS') {
             message = 'No tests';
         }
-        if (!vm.empty && !vm.activeTests.length && vm.isStatusFilteringActive && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
-            message = 'No tests matching selected filters';
+        if (!vm.empty && !vm.activeTests.length && (vm.isStatusFilteringActive && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue) || vm.searchCriteria)) {
+            message = 'No tests matching selected criteria';
         }
         if (vm.testRun.status === 'IN_PROGRESS' && (vm.empty || (!vm.isStatusFilteringActive && !vm.activeTests.length && vm.testRun.queued)) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
             message = 'No tests yet';
