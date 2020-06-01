@@ -547,7 +547,7 @@ const testDetailsController = function testDetailsController(
         }
     }
 
-     //TODO: add logic to handle case when we return from internal page and don't have configSnapshot: we can calculate page, firstIndex and lastIndex for default videMode
+     //TODO: add logic to handle case when we return from internal page and don't have configSnapshot: we can calculate page, firstIndex and lastIndex for default viewMode
     function initFirstLastIndexes() {
         firstIndex = 0;
         lastIndex = initialCountToDisplay;
@@ -565,6 +565,7 @@ const testDetailsController = function testDetailsController(
             testsViewMode: vm.testsViewMode,
             filters: vm.filters,
             sortConfig: vm.sortConfig,
+            searchCriteria: vm.searchCriteria,
             selectedValue: vm.groupingFilters[vm.testsViewMode].selectedValue,
         };
     }
