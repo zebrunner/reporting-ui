@@ -791,11 +791,15 @@ md-select-menu {
             color: $dark-new;
             &[selected] {
                 &,
+                &.md-focused,
                 &:hover,
                 &:focus {
                     background-color: rgba($dark-new, .07);
                     color: $dark-new;
                 }
+            }
+            &.md-focused:not([selected]) {
+                background-color: inherit;
             }
             &:hover {
                 background-color: rgba($dark-new, .07);
