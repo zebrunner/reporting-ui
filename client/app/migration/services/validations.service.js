@@ -1,5 +1,29 @@
 export const ValidationsService = () => {
+    const userNameMinLength = 3;
+    const userNameMaxLength = 50;
     const validations = {
+        username: [
+            {
+                name: 'minlength',
+                message: `Username must be between ${userNameMinLength} and ${userNameMaxLength} characters`,
+                value: 3,
+            },
+            {
+                name: 'maxlength',
+                message: `Username must be between ${userNameMinLength} and ${userNameMaxLength} characters`,
+                value: 50,
+            },
+            {
+                name: 'pattern',
+                message: 'Username must have only latin letters, numbers and special characters',
+                value: /^[A-Za-z0-9_-]+$/,
+                additional: '_-',
+            },
+            {
+                name: 'required',
+                message: 'Username required',
+            },
+        ],
         password: [
             {
                 name: 'minlength',
@@ -19,17 +43,17 @@ export const ValidationsService = () => {
             },
             {
                 name: 'required',
-                message: 'Password required'
-            }
+                message: 'Password required',
+            },
         ],
         confirmPassword: [
             {
                 name: 'minlength',
-                message: 'Password must be between 8 and 50 characters'
+                message: 'Password must be between 8 and 50 characters',
             },
             {
                 name: 'maxlength',
-                message: 'Password must be between 8 and 50 characters'
+                message: 'Password must be between 8 and 50 characters',
             },
             {
                 name: 'pattern',
@@ -37,12 +61,12 @@ export const ValidationsService = () => {
             },
             {
                 name: 'required',
-                message: 'Password required'
+                message: 'Password required',
             },
             {
                 name: 'identicalTo',
-                message: 'Password does not match'
-            }
+                message: 'Password does not match',
+            },
         ],
     };
 

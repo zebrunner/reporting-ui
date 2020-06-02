@@ -169,7 +169,7 @@
 
                             return $ocLazyLoad.load(mod.SigninModule);
                         } catch (err) {
-                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load signin module, ' + err);
                         }
                     },
                 })
@@ -185,11 +185,11 @@
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
                         try {
-                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+                            const mod = await import(/* webpackChunkName: "signup" */ '../../../reactify/containers/signup');
 
-                            return $ocLazyLoad.load(mod.authModule);
+                            return $ocLazyLoad.load(mod.SignupModule);
                         } catch (err) {
-                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load signup module, ' + err);
                         }
                     }
                 })
@@ -225,7 +225,7 @@
 
                             return $ocLazyLoad.load(mod.PasswordForgotModule);
                         } catch (err) {
-                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load passwordForgot module, ' + err);
                         }
                     }
                 })
@@ -245,7 +245,7 @@
 
                             return $ocLazyLoad.load(mod.PasswordResetModule);
                         } catch (err) {
-                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load passwordReset module, ' + err);
                         }
                     }
                 })

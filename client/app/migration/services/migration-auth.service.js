@@ -1,5 +1,5 @@
-import { from, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { from, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export const MigrationAuthService = (
     $rootScope,
@@ -20,6 +20,11 @@ export const MigrationAuthService = (
         resetPassword,
         preparePasswordResetPage,
         handlePasswordReset,
+
+        prepareSignupPage$,
+        signup$,
+        handleSignup,
+
         getToken,
     };
 
@@ -66,6 +71,34 @@ export const MigrationAuthService = (
 
     function handlePasswordReset() {
         $state.go('signin');
+    }
+
+    function prepareSignupPage$(token) {
+        if (!token) {
+            return $state.go('signin');
+        }
+
+        return from(MigrationRequestService.get(`/api/invitations/info?token=${token}`)).pipe(
+            map(({ data }) => data),
+            catchError(() => {
+                $state.go('signin');
+                return of(null);
+            }),
+        );
+    }
+
+    function signup$(model, token) {
+        return from(MigrationRequestService.post(
+            '/api/auth/signup',
+            model,
+            { headers: { 'Access-Token': token } },
+        ));
+    }
+
+    function handleSignup({ username: usernameOrEmail, password }) {
+        $state.go('signin', {
+            user: { usernameOrEmail, password },
+        });
     }
 
     function getToken() {

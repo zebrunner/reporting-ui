@@ -1,5 +1,5 @@
 import { setCurrentUser } from '@zebrunner/core/store';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 
 export const MigrationAuthService = (
@@ -21,6 +21,11 @@ export const MigrationAuthService = (
         resetPassword,
         preparePasswordResetPage,
         handlePasswordReset,
+
+        prepareSignupPage$,
+        signup$,
+        handleSignup,
+
         getToken,
     };
 
@@ -91,7 +96,7 @@ export const MigrationAuthService = (
             '/api/auth/password/forgot',
             { email },
             {},
-            { withServer: true },
+            { withAuth: false },
         );
     }
 
@@ -100,7 +105,7 @@ export const MigrationAuthService = (
             '/api/auth/password',
             model,
             { 'Access-Token': token },
-            { withServer: true },
+            { withAuth: false },
         );
     }
 
@@ -109,9 +114,7 @@ export const MigrationAuthService = (
             return RouterService.go('/signin');
         }
 
-        return RequestService.get$(
-            `/api/auth/password/forgot?token=${token}`,
-        ).pipe(
+        return RequestService.get$(`/api/auth/password/forgot?token=${token}`).pipe(
             catchError(() => {
                 RouterService.go('/signin');
                 return of(false);
@@ -121,6 +124,36 @@ export const MigrationAuthService = (
 
     function handlePasswordReset() {
         RouterService.go('/signin');
+    }
+
+    function prepareSignupPage$(token) {
+        if (!token) {
+            return RouterService.go('/signin');
+        }
+
+        return RequestService.get$(`/api/invitations/info?token=${token}`).pipe(
+            catchError(() => {
+                RouterService.go('/signin');
+                return of(null);
+            }),
+        );
+    }
+
+    function signup$(model, token) {
+        return RequestService.post$(
+            '/api/auth/signup',
+            model,
+            { 'Access-Token': token },
+            { withAuth: false },
+        ).pipe(
+            catchError(({ target }) => throwError({ status: target.status, data: target.response })),
+        );
+    }
+
+    function handleSignup({ username: usernameOrEmail, password }) {
+        RouterService.go('/signin', {
+            user: { usernameOrEmail, password },
+        });
     }
 
     function getToken() {

@@ -14,8 +14,6 @@ const authService = function authService(
         isMultitenant: false,
         serviceUrl: null,
         invite, // TODO: looks like unused, see invitationService
-        getInvitation, // TODO: looks like unused, see invitationService
-        signUp,
         setCredentials,
         clearCredentials,
         refreshToken,
@@ -44,16 +42,6 @@ const authService = function authService(
     function invite(emails) {
         return $httpMock.post(API_URL + '/api/auth/invite', emails)
             .then(UtilService.handleSuccess, UtilService.handleError('Failed to invite users'));
-    }
-
-    function getInvitation(token) {
-        return $httpMock.get(API_URL + '/api/auth/invite?token=' + token)
-            .then(UtilService.handleSuccess, UtilService.handleError('Failed to get user invitation'));
-    }
-
-    function signUp(user, token) {
-        return $httpMock.post(API_URL + '/api/auth/signup', user, {headers: {'Access-Token': token}})
-            .then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
     }
 
     function refreshToken(token) {
