@@ -2,8 +2,8 @@
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
 import IssuesModalController from '../../components/modals/issues/issues.controller';
-import testDetailsFilterController from './test-details-modal/filter-modal.controller';
-import testDetailsTemplate from './test-details-modal/filter-modal.html';
+import testsFilterModalController from './tests-filter-modal/tests-filter-modal.controller';
+import testsFilterModalTemplate from './tests-filter-modal/tests-filter-modal.html';
 import CiHelperController from '../../shared/ci-helper/ci-helper.controller';
 import CiHelperTemplate from '../../shared/ci-helper/ci-helper.html';
 
@@ -111,6 +111,7 @@ const testDetailsController = function testDetailsController(
             },
         ],
         isNotificationAvailable: false,
+        searchCriteria: '',
 
         get isMobile() { return $mdMedia('xs'); },
         get isTablet() { return !$mdMedia('gt-md'); },
@@ -124,7 +125,8 @@ const testDetailsController = function testDetailsController(
         get jira() { return jiraSettings; },
         get testRail() { return testRailSettings; },
         get qTest() { return qTestSettings; },
-        get isStausFilteringActive() { return isStausFilteringActive(); },
+        get isMobileSearchActive() { return this.isMobile && this.searchCriteria; },
+        get isStatusFilteringActive() { return isStatusFilteringActive(); },
         get isSortingActive() { return isSortingActive(); },
         get currentTitle() { return pageTitleService.pageTitle; },
 
@@ -140,8 +142,10 @@ const testDetailsController = function testDetailsController(
         onAllTestsSelect,
         onBackClick,
         onPageChange,
+        onSearch,
         onTestSelect,
         onTrackedTestRender,
+        onViewModeSelect,
         openImagesViewerModal,
         orderByElapsed,
         resetStatusFilterAndOrdering,
@@ -274,11 +278,28 @@ const testDetailsController = function testDetailsController(
         onOrderByElapsed();
     }
 
+    function onSearch() {
+        onFilterChange(true);
+    }
+
+    function filterDataBySearchCriteria(data = vm.activeTests) {
+        return data.filter((item) => {
+            const searchRegExp = new RegExp(vm.searchCriteria, 'ig');
+            const titleMatch = searchRegExp.test(item.name);
+            const ownerMatch = searchRegExp.test(item.owner);
+            const messageMatch = searchRegExp.test(item.message);
+            const deviceMatch = searchRegExp.test(item.testConfig?.device);
+
+            return titleMatch || ownerMatch || messageMatch || deviceMatch;
+        });
+    }
+
     function filterByStatus(statuses = []) {
         onStatusFilterChange({ ...defaultStatusFilter, values: statuses });
     }
 
     function resetStatusFilterAndOrdering() {
+        vm.searchCriteria = '';
         vm.filters.status = { ...defaultStatusFilter };
         vm.sortConfig.field = defaultSortField;
         vm.sortConfig.reverse = false;
@@ -287,19 +308,16 @@ const testDetailsController = function testDetailsController(
         return {
             filters: vm.filters,
             sortConfig: vm.sortConfig,
-        }
+        };
     }
 
     function changeViewMode(mode) {
-        if (vm.testsViewMode === mode) { return; }
-
-        // Uncomment code line below if you need to reset previously selected group item on view mode change
-        // if (vm.groupingFilters[vm.testsViewMode].selectedValue) { vm.groupingFilters[vm.testsViewMode].selectedValue = null; }
-        // else save previous active values
+        // resets previously selected group item on view mode change
+        if (vm.groupingFilters[vm.testsViewMode].selectedValue) { vm.groupingFilters[vm.testsViewMode].selectedValue = null; }
+        // save previous active values
         if (vm.filters.grouping && vm.filters.grouping.values) {
             vm.groupingFilters[vm.testsViewMode].cachedValues = vm.filters.grouping.values;
         }
-        vm.testsViewMode = mode;
         switch (mode) {
             case 'plain':
                 onPlainViewModeActivate();
@@ -307,6 +325,12 @@ const testDetailsController = function testDetailsController(
             default:
                 onFilteredViewModeActivate();
         }
+    }
+
+    function onViewModeSelect() {
+        $timeout(() => {
+            changeViewMode(vm.testsViewMode);
+        }, 0);
     }
 
     function toggleGroupingFilter(selectedValue) {
@@ -523,7 +547,7 @@ const testDetailsController = function testDetailsController(
         }
     }
 
-     //TODO: add logic to handle case when we return from internal page and don't have configSnapshot: we can calculate page, firstIndex and lastIndex for default videMode
+     //TODO: add logic to handle case when we return from internal page and don't have configSnapshot: we can calculate page, firstIndex and lastIndex for default viewMode
     function initFirstLastIndexes() {
         firstIndex = 0;
         lastIndex = initialCountToDisplay;
@@ -541,6 +565,7 @@ const testDetailsController = function testDetailsController(
             testsViewMode: vm.testsViewMode,
             filters: vm.filters,
             sortConfig: vm.sortConfig,
+            searchCriteria: vm.searchCriteria,
             selectedValue: vm.groupingFilters[vm.testsViewMode].selectedValue,
         };
     }
@@ -628,7 +653,7 @@ const testDetailsController = function testDetailsController(
         return vm.testRun.id === +event.testRunStatistics.testRunId;
     }
 
-    function isStausFilteringActive() {
+    function isStatusFilteringActive() {
         return vm.filters.status && vm.filters.status.values && vm.filters.status.values.length;
     }
 
@@ -666,10 +691,10 @@ const testDetailsController = function testDetailsController(
         if (vm.empty && vm.testRun.status !== 'IN_PROGRESS') {
             message = 'No tests';
         }
-        if (!vm.empty && !vm.activeTests.length && vm.isStausFilteringActive && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
-            message = 'No tests matching selected filters';
+        if (!vm.empty && !vm.activeTests.length && (vm.isStatusFilteringActive || vm.searchCriteria) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
+            message = 'No tests matching selected criteria';
         }
-        if (vm.testRun.status === 'IN_PROGRESS' && (vm.empty || (!vm.isStausFilteringActive && !vm.activeTests.length && vm.testRun.queued)) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
+        if (vm.testRun.status === 'IN_PROGRESS' && (vm.empty || (!vm.isStatusFilteringActive && !vm.activeTests.length && vm.testRun.queued)) && (vm.testsViewMode === 'plain' || groupName === vm.groupingFilters[vm.testsViewMode].selectedValue)) {
             message = 'No tests yet';
         }
 
@@ -769,8 +794,7 @@ const testDetailsController = function testDetailsController(
     function getOrderedTests(data = vm.activeTests) {
         const { field, reverse } = vm.sortConfig;
 
-        vm.filteredTests = UtilService.sortArrayByField(data, field, reverse);
-        vm.activeTests = vm.filteredTests;
+        vm.activeTests = UtilService.sortArrayByField(data, field, reverse);
     }
 
     /**
@@ -795,7 +819,7 @@ const testDetailsController = function testDetailsController(
 
     function onFilterChange(shouldResetPagination) {
         const filters = [vm.filters.status, vm.filters.grouping].filter(Boolean);
-        const filteredData = vm.testRun.tests.filter((test) => {
+        let filteredData = vm.testRun.tests.filter((test) => {
             const skipQueued = !(vm.testRun.status === 'IN_PROGRESS' && test.status === 'QUEUED');
 
             return filters.every(filter => isFitsByFilter(test[filter.field], filter.values)) && skipQueued;
@@ -804,6 +828,9 @@ const testDetailsController = function testDetailsController(
         //reset tests selection
         clearTestsSelection();
         shouldResetPagination && resetPagination();
+        if (vm.searchCriteria) {
+            filteredData = filterDataBySearchCriteria(filteredData);
+        }
         getOrderedTests(filteredData);
     }
 
@@ -984,8 +1011,8 @@ const testDetailsController = function testDetailsController(
 
     function showFilterDialog(event) {
         $mdDialog.show({
-            controller: testDetailsFilterController,
-            template: testDetailsTemplate,
+            controller: testsFilterModalController,
+            template: testsFilterModalTemplate,
             parent: angular.element(document.body),
             targetEvent: event,
             clickOutsideToClose: true,
@@ -997,18 +1024,31 @@ const testDetailsController = function testDetailsController(
                     if (!vm.isMobile) {
                         $mdDialog.hide();
                     }
-                })
+                });
             },
             onRemoving: () => {
                 $(window).off('resize.filterDialog');
             },
             locals: {
                 statusInitValues: vm.filters.status.values,
+                searchCriteria: vm.searchCriteria,
                 defaultValues: {
                     status: defaultStatusFilter.values,
                 },
-                filterByStatus,
-                reset: resetStatusFilterAndOrdering,
+                filterByStatus: (filters, searchCriteria) => {
+                    if (vm.isMobile) {
+                        vm.searchCriteria = searchCriteria;
+                    }
+
+                    filterByStatus(filters);
+                },
+                reset: () => {
+                    if (vm.isMobile) {
+                        vm.searchCriteria = '';
+                    }
+
+                    resetStatusFilterAndOrdering();
+                },
             }
         });
     }

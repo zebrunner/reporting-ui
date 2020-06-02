@@ -1,27 +1,32 @@
 'use strict';
 
 const testDetailsFilterController = function testDetailsFilterController(
-    reset,
+    $mdMedia,
     $mdDialog,
-    filterByStatus,
-    statusInitValues,
     defaultValues,
+    filterByStatus,
+    reset,
+    searchCriteria,
+    statusInitValues,
 ) {
     'ngInject';
 
-    let resentlySelectedStatuses = [];
+    let recentlySelectedStatuses = [];
     const vm = {
         cancel: $mdDialog.cancel,
         reset: resetFilters,
         onApply,
+        searchCriteria,
         statusInitValues,
         onStatusChange,
+
+        get isMobile() { return $mdMedia('xs'); },
     };
 
     return vm;
 
     function onApply(needClosing) {
-        filterByStatus(resentlySelectedStatuses);
+        filterByStatus(recentlySelectedStatuses, vm.searchCriteria);
         if (needClosing) {
             vm.cancel();
         }
@@ -31,11 +36,12 @@ const testDetailsFilterController = function testDetailsFilterController(
         // If you need to use parent's reset
         // reset();
         // otherwise just reset current dialog's values
+        vm.searchCriteria = '';
         vm.statusInitValues = defaultValues.status;
     }
 
     function onStatusChange($statuses) {
-        resentlySelectedStatuses = $statuses;
+        recentlySelectedStatuses = $statuses;
     }
 };
 

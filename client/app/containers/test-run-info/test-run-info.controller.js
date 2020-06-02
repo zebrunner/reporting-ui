@@ -1199,7 +1199,7 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function addTimeDiffs(data) {
-        vm.testsTimeMedian = median(data.map((item) => (item.elapsed || 0)));
+        vm.testsTimeMedian = median(data.filter((item) => item.status.toLowerCase() !== 'in_progress').map((item) => item.elapsed));
 
         return data.map((item) => {
             item.timeDiff = getTimeDiff(item.elapsed);

@@ -41,39 +41,34 @@
                                 </md-checkbox>
                             </div>
                             <div class="test-run-group_wrapper _left">
-                                <div class="test-run-group_controls-buttons">
-                                    <button id="plainToggle"
-                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'plain'}"
-                                        class="md-button md-raised md-ink-ripple"
-                                        type="button"
-                                        ng-click="$ctrl.changeViewMode('plain');">
-                                        Plain
-                                    </button>
-                                    <button id="classToggle"
-                                        ng-if="$ctrl.groupingFilters.class.data.length"
-                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'class'}"
-                                        class="md-button md-raised md-ink-ripple"
-                                        type="button"
-                                        ng-click="$ctrl.changeViewMode('class');">
-                                        Class
-                                    </button>
-                                    <button id="packageToggle"
-                                        ng-if="$ctrl.groupingFilters.package.data.length"
-                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'package'}"
-                                        class="md-button md-raised md-ink-ripple"
-                                        type="button"
-                                        ng-click="$ctrl.changeViewMode('package');">
-                                        Package
-                                    </button>
-                                    <button id="tagsToggle"
-                                        ng-if="$ctrl.groupingFilters.tags.data.length"
-                                        ng-class="{'md-primary': $ctrl.testsViewMode === 'tags'}"
-                                        class="md-button md-raised md-ink-ripple"
-                                        type="button"
-                                        ng-click="$ctrl.changeViewMode('tags');">
-                                        Tags
-                                    </button>
-                                </div>
+                                <md-input-container class="test-details__search _with-icon _without-animation">
+                                    <label class="placeholder-label">Search items</label>
+                                    <input ng-model-options="{debounce: 700}"
+                                        type="text"
+                                        ng-model="$ctrl.searchCriteria"
+                                        ng-change="$ctrl.onSearch()"
+                                        aria-label="Search items"
+                                        aria-describedby="basic-addon2">
+                                    <i class="material-icons">
+                                        search
+                                    </i>
+                                </md-input-container>
+                                <md-input-container class="test-details__select select-wrapper no-padding without-animation">
+                                    <md-select id="viewModeSelect"
+                                        ng-model="$ctrl.testsViewMode"
+                                        class="form-fields__select"
+                                        name="viewModeSelect"
+                                        ng-change="$ctrl.onViewModeSelect()">
+                                        <md-option value="plain"
+                                            md-ink-ripple="0">Plain</md-option>
+                                        <md-option ng-if="$ctrl.groupingFilters.class.data.length"
+                                            md-ink-ripple="0" value="class">Class</md-option>
+                                        <md-option ng-if="$ctrl.groupingFilters.package.data.length"
+                                            md-ink-ripple="0" value="package">Package</md-option>
+                                        <md-option ng-if="$ctrl.groupingFilters.tags.data.length"
+                                            md-ink-ripple="0" value="tags">Tags</md-option>
+                                    </md-select>
+                                </md-input-container>
                             </div>
                             <div class="test-run-group_wrapper _right">
                                 <status-buttons on-button-click="$ctrl.filterByStatus($statuses)"
@@ -85,7 +80,7 @@
                                 <div class="test-run-group_other-buttons">
                                     <md-button id="resetAllToggle"
                                         class="md-raised"
-                                        ng-disabled="!$ctrl.isStausFilteringActive && !$ctrl.isSortingActive"
+                                        ng-disabled="!$ctrl.isStatusFilteringActive && !$ctrl.isSortingActive && !$ctrl.searchCriteria"
                                         type="button"
                                         ng-click="$ctrl.resetStatusFilterAndOrdering();">
                                         RESET
@@ -135,7 +130,7 @@
             class="md-scale md-fab-bottom-right">
             <md-fab-trigger>
                 <md-button id="mainFab" aria-label="menu" class="md-fab md-primary" md-visible="tooltipVisible" ng-click="$ctrl.showFilterDialog($event)">
-                    <div class="search-fab" ng-class="{'_list': !$ctrl.isStausFilteringActive, '_checked-list': $ctrl.isStausFilteringActive}" aria-hidden="true"></div>
+                    <div class="search-fab" ng-class="{'_list': !$ctrl.isStatusFilteringActive, '_checked-list': $ctrl.isStatusFilteringActive || $ctrl.isMobileSearchActive}" aria-hidden="true"></div>
                 </md-button>
             </md-fab-trigger>
         </md-fab-speed-dial>
