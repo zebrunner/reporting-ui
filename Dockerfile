@@ -3,7 +3,7 @@ FROM node:12.16-alpine as build-stage
 ARG version=1.0-SNAPSHOT
 
 ENV UI_VERSION=${version} \
-    BASE_PATH=/app/integration/
+    BASE_PATH=/app-integration/
 
 WORKDIR /app
 
