@@ -1,3 +1,3 @@
 export * from './containers';
 
-export declare const ZebrunnerReportingModule: string;
+export declare const ReportingModule: string;

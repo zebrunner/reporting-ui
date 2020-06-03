@@ -1,5 +1,5 @@
 // It's dupo: client/app/_services/messages/message.service.js
-export const ShackbarService = function messageService($mdToast) {
+export const SnackbarService = function messageService($mdToast) {
     'ngInject';
 
     const mainCSSClass = 'message-toast';
@@ -28,7 +28,7 @@ export const ShackbarService = function messageService($mdToast) {
     function showToast(text, options = {}, localCSSClass = '') {
         const toast = $mdToast.simple().content(text);
 
-        toast._options = {...toast._options, ...defOptions, ...options};
+        toast._options = { ...toast._options, ...defOptions, ...options };
         toast._options.toastClass = [toast._options.toastClass, mainCSSClass, localCSSClass].join(' ');
 
         $mdToast.show(toast);

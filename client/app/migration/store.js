@@ -1,14 +1,14 @@
 import angular from 'angular';
 import ngReduxModule from 'ng-redux';
-import { createZebrunnerStore, getStore } from '@zebrunner/core/store';
+import { createStore, getStore } from '@zebrunner/core/store';
 
-export const ZebrunnerReportingMigrationStoreModule = angular.module('zebrunner.reporting.migration.store', [
+export const ReportingMigrationStoreModule = angular.module('zebrunner.reporting.migration.store', [
     ngReduxModule,
 ])
 
     .config(($ngReduxProvider) => {
         'ngInject';
-        createZebrunnerStore();
+        createStore();
         $ngReduxProvider.provideStore(getStore());
     })
 

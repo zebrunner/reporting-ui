@@ -6,7 +6,7 @@ export default (
     $ngRedux,
     ValidationsService,
     MigrationAuthService,
-    ShackbarService,
+    SnackbarService,
     $safeDigest,
     $scope,
 ) => {
@@ -66,7 +66,7 @@ export default (
                     formControl.$setValidity('serverError', false);
                     formControl.$error['serverError'] = message;
                 } else {
-                    ShackbarService.error('Failed to sign up.');
+                    SnackbarService.error('Failed to sign up.');
                 }
 
                 return of(true);

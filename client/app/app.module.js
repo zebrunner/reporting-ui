@@ -10,7 +10,7 @@ import { testRunCardModule } from './shared/test-run-card/test-run-card.module';
 import sessionSwitcherComponent from './shared/sessions-switcher/sessions-switcher.component';
 import testTicketComponent from './shared/test-ticket/test-ticket.component';
 import photoUpload from './shared/photo-upload/photo-upload.directive';
-import { ZebrunnerReportingMigrationModule } from './migration';
+import { ReportingMigrationModule } from './migration';
 
 const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular
@@ -34,7 +34,7 @@ const ngModule = angular
         'angular-jwt',
         'oc.lazyLoad',
         TutorialsModule,
-        ZebrunnerReportingMigrationModule,
+        ReportingMigrationModule,
     ])
     .component('sessionsSwitcher', sessionSwitcherComponent)
     .component('testTicket', testTicketComponent)

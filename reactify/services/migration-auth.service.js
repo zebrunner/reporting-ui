@@ -7,7 +7,7 @@ export const MigrationAuthService = (
     RouterService,
     UsersService,
     $ngRedux,
-    ShackbarService,
+    SnackbarService,
 ) => {
     'ngInject';
 
@@ -68,11 +68,11 @@ export const MigrationAuthService = (
             })),
             // TODO: $scope.main.skin = user.theme;
             tap(({ performanceDashboardId }) => !performanceDashboardId
-                && ShackbarService.error(`'User Performance' dashboard is unavailable!`)),
+                && SnackbarService.error(`'User Performance' dashboard is unavailable!`)),
             tap(({ personalDashboardId }) => !personalDashboardId
-                && ShackbarService.error(`'Personal' dashboard is unavailable!`)),
+                && SnackbarService.error(`'Personal' dashboard is unavailable!`)),
             tap(({ defaultDashboardId }) => !defaultDashboardId
-                && ShackbarService.warning('Default Dashboard is unavailable!')),
+                && SnackbarService.warning('Default Dashboard is unavailable!')),
             tap(user => $ngRedux.dispatch(setCurrentUser(user))),
             tap(() => {
                 if (payload.firstLogin) {
@@ -85,7 +85,7 @@ export const MigrationAuthService = (
                 return RouterService.go('/');
             }),
             catchError(({ message }) => {
-                ShackbarService.error(message || 'Invalid credentials');
+                SnackbarService.error(message || 'Invalid credentials');
                 return of(true);
             }),
         );

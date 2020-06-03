@@ -2,7 +2,7 @@ import angular from 'angular';
 import ngReduxModule from 'ng-redux';
 import { getStore } from '@zebrunner/core/store';
 
-import { ZebrunnerReportingServicesModule } from './services';
+import { ReportingServicesModule } from './services';
 import { SigninModule, PasswordForgotModule, PasswordResetModule, SignupModule } from './containers';
 
 import * as NgMaterial from 'angular-material';
@@ -11,7 +11,7 @@ import * as NgMessages from 'angular-messages';
 
 export * from './containers';
 
-export const ZebrunnerReportingModule = angular.module('zebrunner.reporting', [
+export const ReportingModule = angular.module('zebrunner.reporting', [
     NgMaterial,
     NgMessages,
     NgAnimate,
@@ -20,7 +20,7 @@ export const ZebrunnerReportingModule = angular.module('zebrunner.reporting', [
     SignupModule.name,
     PasswordForgotModule.name,
     PasswordResetModule.name,
-    ZebrunnerReportingServicesModule,
+    ReportingServicesModule,
 ])
 
     .config(($ngReduxProvider) => {

@@ -1,12 +1,12 @@
 import angular from 'angular';
 
-import { ZebrunnerReportingMigrationServicesModule } from './services';
-import { ZebrunnerReportingMigrationStoreModule } from './store';
-import { ZebrunnerReportingMigrationSharedModule } from './shared';
+import { ReportingMigrationServicesModule } from './services';
+import { ReportingMigrationStoreModule } from './store';
+import { ReportingMigrationSharedModule } from './shared';
 
-export const ZebrunnerReportingMigrationModule = angular.module('zebrunner.reporting.migration', [
-    ZebrunnerReportingMigrationServicesModule,
-    ZebrunnerReportingMigrationStoreModule,
-    ZebrunnerReportingMigrationSharedModule,
+export const ReportingMigrationModule = angular.module('zebrunner.reporting.migration', [
+    ReportingMigrationServicesModule,
+    ReportingMigrationStoreModule,
+    ReportingMigrationSharedModule,
 ])
     .name;

@@ -5,7 +5,7 @@ import { tap, catchError } from 'rxjs/operators';
 export default (
     $ngRedux,
     MigrationAuthService,
-    ShackbarService,
+    SnackbarService,
     $safeDigest,
     $scope,
     ValidationsService,
@@ -48,10 +48,10 @@ export default (
 
     function resetPassword() {
         MigrationAuthService.resetPassword({ ...this.model, userId: 0 }, this.token).pipe(
-            tap(() => ShackbarService.success('Your password was changed successfully')),
+            tap(() => SnackbarService.success('Your password was changed successfully')),
             tap(payload => MigrationAuthService.handlePasswordReset(payload)),
             catchError(error => {
-                ShackbarService.error(error.message || 'Unable to restore password');
+                SnackbarService.error(error.message || 'Unable to restore password');
                 return of(true);
             }),
             tap($safeDigest.rxjs($scope)),
