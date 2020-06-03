@@ -47,7 +47,7 @@ export default (
     }
 
     function resetPassword() {
-        MigrationAuthService.resetPassword({ ...this.model, userId: 0 }, this.token).pipe(
+        MigrationAuthService.resetPassword$({ ...this.model, userId: 0 }, this.token).pipe(
             tap(() => SnackbarService.success('Your password was changed successfully')),
             tap(payload => MigrationAuthService.handlePasswordReset(payload)),
             catchError(error => {

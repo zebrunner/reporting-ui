@@ -12,12 +12,12 @@ export const MigrationAuthService = (
 
     return {
         prepareAuthPage,
-        login,
-        handleLogin,
+        login$,
+        handleLogin$,
 
-        forgotPassword,
+        forgotPassword$,
 
-        resetPassword,
+        resetPassword$,
         preparePasswordResetPage,
         handlePasswordReset,
 
@@ -32,23 +32,23 @@ export const MigrationAuthService = (
         authService.clearCredentials();
     }
 
-    function login(username, password) {
+    function login$(username, password) {
         return from(
             MigrationRequestService.post('/api/auth/login', { username, password })
                 .then(res => ({ data: res.data, firstLogin: res.headers()['first-login'] }))
         );
     }
 
-    function handleLogin(payload) {
+    function handleLogin$(payload) {
         $rootScope.$broadcast('event:auth-loginSuccess', payload);
         return of(true);
     }
 
-    function forgotPassword(email) {
+    function forgotPassword$(email) {
         return from(MigrationRequestService.post('/api/auth/password/forgot', { email }));
     }
 
-    function resetPassword(model, token) {
+    function resetPassword$(model, token) {
         return from(MigrationRequestService.put(
             '/api/auth/password',
             model,

@@ -13,12 +13,12 @@ export const MigrationAuthService = (
 
     return {
         prepareAuthPage,
-        login,
-        handleLogin,
+        login$,
+        handleLogin$,
 
-        forgotPassword,
+        forgotPassword$,
 
-        resetPassword,
+        resetPassword$,
         preparePasswordResetPage,
         handlePasswordReset,
 
@@ -33,7 +33,7 @@ export const MigrationAuthService = (
         // TODO: clear state. Do I need that?
     }
 
-    function login(username, password) {
+    function login$(username, password) {
         return RequestService.post$(
             '/api/auth/login',
             { username, password },
@@ -54,7 +54,7 @@ export const MigrationAuthService = (
         );
     }
 
-    function handleLogin(payload) {
+    function handleLogin$(payload) {
         // TODO: check that
         // authService.setCredentials(payload.auth);
         // $scope.initSession();
@@ -91,7 +91,7 @@ export const MigrationAuthService = (
         );
     }
 
-    function forgotPassword(email) {
+    function forgotPassword$(email) {
         return RequestService.post$(
             '/api/auth/password/forgot',
             { email },
@@ -100,7 +100,7 @@ export const MigrationAuthService = (
         );
     }
 
-    function resetPassword(model, token) {
+    function resetPassword$(model, token) {
         return RequestService.put$(
             '/api/auth/password',
             model,

@@ -40,7 +40,7 @@ export default (
 
     function submitForgotPassword() {
         this.pendingSubmit = true;
-        MigrationAuthService.forgotPassword(this.email).pipe(
+        MigrationAuthService.forgotPassword$(this.email).pipe(
             tap(() => (this.emailWasSent = true)),
             catchError(error => {
                 SnackbarService.error(error.message || 'Unable to restore password');

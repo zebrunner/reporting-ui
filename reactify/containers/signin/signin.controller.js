@@ -50,7 +50,7 @@ export default (
         form.$setPristine();
         form.$setUntouched();
 
-        return MigrationAuthService.login(credentials.usernameOrEmail, credentials.password).pipe(
+        return MigrationAuthService.login$(credentials.usernameOrEmail, credentials.password).pipe(
             tap(({ data }) => $ngRedux.dispatch(setTokens({
                 access: data.accessToken,
                 refresh: data.refreshToken,
@@ -65,7 +65,7 @@ export default (
 
                 return payload;
             }),
-            switchMap(payload => from(MigrationAuthService.handleLogin(payload))),
+            switchMap(payload => from(MigrationAuthService.handleLogin$(payload))),
             catchError(() => {
                 this.credentials = { valid: false };
                 return of(true);
