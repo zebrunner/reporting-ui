@@ -109,7 +109,7 @@
                             ng-repeat="btn in $ctrl.batchButtons"
                             flex="none"
                             class="{{  btn.class }}"
-                            ng-class="{ '_completed': btn.completed, '_disabled': !$ctrl.userHasAnyPermission(['MODIFY_TESTS']) }"
+                            ng-class="{ '_completed': btn.completed }"
                             ng-click="btn.onClick($event,  btn)"
                             ng-disabled="!$ctrl.userHasAnyPermission(['MODIFY_TESTS'])">
                             <span class="btn-icon"></span>
