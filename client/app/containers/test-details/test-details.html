@@ -110,7 +110,8 @@
                             flex="none"
                             class="{{  btn.class }}"
                             ng-class="{ '_completed': btn.completed }"
-                            ng-click="btn.onClick($event,  btn)">
+                            ng-click="btn.onClick($event,  btn)"
+                            ng-disabled="!$ctrl.userHasAnyPermission(['MODIFY_TESTS'])">
                             <span class="btn-icon"></span>
                             <span class="btn-txt">{{ btn.completed ? btn.altText: btn.text }}</span>
                         </md-button>
@@ -328,22 +329,26 @@
                                     <td class="test-settings">
                                         <div class="align-middle align-right" ng-if="test.status !== 'QUEUED' && test.isInView">
                                             <md-menu class="pull-right test-settings__menu">
-                                                <md-button name="testRunSetting" aria-label="test run settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
+                                                <md-button name="testRunSetting"
+                                                    aria-label="test run settings"
+                                                    class="md-icon-button"
+                                                    ng-disabled="!$ctrl.userHasAnyPermission(['MODIFY_TESTS']) && (test.status === 'PASSED' && !test.message)"
+                                                    data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
                                                     <md-icon class="material-icons">more_vert</md-icon>
                                                     <md-tooltip md-direction="bottom">More options</md-tooltip>
                                                 </md-button>
                                                 <md-menu-content width="2" class="fixed-md-menu-content test-settings__menu-content">
-                                                    <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'PASSED');" ng-if="test.status !== 'PASSED'">
+                                                    <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'PASSED');" ng-if="test.status !== 'PASSED' && $ctrl.userHasAnyPermission(['MODIFY_TESTS'])">
                                                         <md-button class="_green">
                                                             Mark as passed
                                                         </md-button>
                                                     </md-menu-item>
-                                                    <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'FAILED');" ng-if="['PASSED', 'SKIPPED', 'ABORTED'].indexOf(test.status) !== -1">
+                                                    <md-menu-item ng-click="$ctrl.changeTestStatus(test, 'FAILED');" ng-if="['PASSED', 'SKIPPED', 'ABORTED'].indexOf(test.status) !== -1 && $ctrl.userHasAnyPermission(['MODIFY_TESTS'])">
                                                         <md-button class="_red">
                                                             Mark as failed
                                                         </md-button>
                                                     </md-menu-item>
-                                                    <md-divider ng-if="test.status !== 'PASSED' && test.message"></md-divider>
+                                                    <md-divider ng-if="test.status !== 'PASSED' && test.message && $ctrl.userHasAnyPermission(['MODIFY_TESTS'])"></md-divider>
                                                     <md-menu-item ng-click="$ctrl.showDetailsDialog(test, $event);" ng-if="test.status !== 'PASSED' && test.message">
                                                         <md-button name="testDetails" aria-label="Test details">
                                                             Link issue
