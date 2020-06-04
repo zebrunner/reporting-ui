@@ -686,11 +686,16 @@
                                     }
                                 }
                             }
-                            &._disabled {
+                        }
+
+                        &:disabled {
+                            opacity: 0.5;
+
+                            &:hover {
                                 color: inherit;
                                 border-color: #e9e9e9;
                                 background-color: inherit;
-
+    
                                 &._green-icon {
                                     .btn-icon{
                                         background-color: $green-new;
@@ -704,10 +709,6 @@
                                     }
                                 }
                             }
-                        }
-
-                        &._disabled {
-                            opacity: 0.5;
                         }
                     }
                 }
