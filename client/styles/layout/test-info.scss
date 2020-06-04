@@ -384,9 +384,9 @@ $historySectionHeight: 68px;
                     &._platform,
                     &._tickets,
                     &._artifacts {
+                        color: #6C757C;
                         width: 150px;
                         font-size: 14px;
-                        opacity: 0.8;
                     }
 
                     &._artifacts {
@@ -395,6 +395,10 @@ $historySectionHeight: 68px;
 
                     &._test-owner-data {
                         text-transform: capitalize;
+
+                        &-content {
+                            word-break: break-all;
+                        }
                     }
 
                     &._status-info {
@@ -488,6 +492,12 @@ $historySectionHeight: 68px;
                         margin-left: 6px;
                         transform: translateY(2px);
                     }
+
+                    &._device {
+                        &-content {
+                            word-break: break-all;
+                        }
+                    }
                 }
             }
 
@@ -495,11 +505,11 @@ $historySectionHeight: 68px;
 
                 td {
                 padding: 2px 8px 2px 0;
-                color: $coal;
+                color: $gray-base;
                 font-size: 14px;
 
                     span{
-                        font-weight: 500;
+                        font-weight: 400;
                     }
                 }
             }
