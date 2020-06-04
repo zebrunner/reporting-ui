@@ -395,10 +395,6 @@ $historySectionHeight: 68px;
 
                     &._test-owner-data {
                         text-transform: capitalize;
-
-                        &-content {
-                            word-break: break-all;
-                        }
                     }
 
                     &._status-info {
@@ -480,7 +476,6 @@ $historySectionHeight: 68px;
                         }
                     }
 
-
                     &._label {
                         font-weight: 400;
                         vertical-align: text-bottom;
@@ -492,17 +487,14 @@ $historySectionHeight: 68px;
                         margin-left: 6px;
                         transform: translateY(2px);
                     }
+                }
 
-                    &._device {
-                        &-content {
-                            word-break: break-all;
-                        }
-                    }
+                &-content {
+                    word-break: break-all;
                 }
             }
 
             table {
-
                 td {
                 padding: 2px 8px 2px 0;
                 color: $gray-base;
