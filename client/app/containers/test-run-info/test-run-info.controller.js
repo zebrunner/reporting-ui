@@ -74,6 +74,7 @@ const testRunInfoController = function testRunInfoController(
         initToolsSettings,
         setWorkItemIsNewStatus,
         showDetailsDialog,
+        userHasAnyPermission: authService.userHasAnyPermission,
 
         get hasVideo() { return hasVideo(); },
         get currentTitle() { return pageTitleService.pageTitle; },
