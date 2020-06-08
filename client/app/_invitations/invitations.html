@@ -1,4 +1,4 @@
-<div class="page-wrapper">
+<div class="page-wrapper _overflow-hidden">
     <zf-sub-header>
         <zf-sub-header-title>
             {{ $ctrl.currentTitle }}
@@ -32,89 +32,85 @@
             <div ng-cloak>
                 <article class="article">
                     <md-card class="no-margin-h">
-                        <md-table-container>
-                            <table class="table-hover" md-table zafira-background-theme="table">
-                                <thead md-head style="position: parent;">
-                                <tr md-row>
-                                    <th md-column>
-                                        Email
-                                    </th>
-                                    <th md-column>
-                                        Group
-                                    </th>
-                                    <th md-column>
-                                        Date
-                                    </th>
-                                    <th md-column>
-                                        Sent by
-                                    </th>
-                                    <th md-column>
-                                        Status
-                                    </th>
-                                    <th md-column></th>
-                                </tr>
-                                </thead>
-                                <tbody md-body>
-                                <tr md-row ng-repeat="invite in $ctrl.sr.results">
-                                    <td data-title="Email" md-cell>
-                                        <b>{{ invite.email }}</b>
-                                    </td>
-                                    <td data-title="Group" md-cell>
-                                        {{ $ctrl.groups[$ctrl.groups.indexOfField('id', invite.groupId)].name }}
-                                    </td>
-                                    <td data-title="Date" md-cell>
-                                        {{ invite.createdAt | date:'dd MMM, yyyy' }}
-                                    </td>
-                                    <td data-title="Sent by" md-cell>
-                                        {{ invite.createdBy.username }}
-                                    </td>
-                                    <td data-title="Status" md-cell>
-                                        <span ng-class="{'text-success': invite.status == 'ACCEPTED', 'text-info': invite.status == 'PENDING'}" class="label">{{ invite.status }}</span>
-                                    </td>
-                                    <td md-cell>
-                                        <md-menu ng-if="$ctrl.userHasAnyPermission(['MODIFY_INVITATIONS'])" class="pull-right">
-                                            <md-button name="userMenu" aria-label="User settings" class="md-icon-button" data-ng-click="$mdMenu.open($event);">
-                                                <md-icon class="material-icons">more_vert</md-icon>
-                                            </md-button>
-                                            <md-menu-content width="2">
-                                                <md-menu-item ng-if="invite.url && invite.status === 'PENDING'">
-                                                    <md-button data-ng-click="$ctrl.copyLink(invite);">
-                                                        Copy link
-                                                    </md-button>
-                                                </md-menu-item>
-                                                <md-menu-item ng-if="invite.status != 'ACCEPTED'">
-                                                    <md-button name="userEdit" data-ng-really-message="Do you really want to retry send the invitation?" data-ng-really-click="$ctrl.retryInvite(invite, $index);">
-                                                        Resend
-                                                    </md-button>
-                                                </md-menu-item>
-                                                <md-menu-item ng-if="invite.status == 'ACCEPTED'">
-                                                    <md-button name="userEdit"
-                                                        ng-click="$ctrl.searchUser(invite);">
-                                                        Profile
-                                                    </md-button>
-                                                </md-menu-item>
-                                                <md-divider ng-if="invite.status !== 'ACCEPTED'"></md-divider>
-                                                <md-menu-item ng-if="invite.status !== 'ACCEPTED'">
-                                                    <md-button name="userEdit"
-                                                        class="_red"
-                                                        data-ng-really-message="Do you really want to revoke the invitation?"
-                                                        data-ng-really-click="$ctrl.takeOff(invite, $index);">
-                                                        Revoke
-                                                    </md-button>
-                                                </md-menu-item>
-                                            </md-menu-content>
-                                        </md-menu>
-                                    </td>
-                                </tr>
-                                <tr md-row data-ng-if="$ctrl.sr.results.length == 0">
-                                    <td id="noData" md-cell colspan="8" class="text-center">No invitations</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </md-table-container>
-                        <md-table-pagination id="pagination" zafira-background-theme="pagination" ng-if="$ctrl.sr.results.length"
-                                             md-limit="$ctrl.sc.pageSize" md-limit-options=false md-page="$ctrl.sc.page" md-total="{{$ctrl.sr.totalResults}}"
-                                             md-page-select=false md-boundary-links=true md-on-paginate="$ctrl.search"></md-table-pagination>
+                        <div class="invitations-table invitations-table__header">
+                            <div class="invitations-table__row">
+                                <div class="invitations-table__col">ID</div>
+                                <div class="invitations-table__col _size-m">Email</div>
+                                <div class="invitations-table__col">Group</div>
+                                <div class="invitations-table__col">Source</div>
+                                <div class="invitations-table__col">Registration/ last activity</div>
+                                <div class="invitations-table__col _centered">Status</div>
+                                <div class="invitations-table__col"></div>
+                            </div>
+                        </div>
+                        <div class="invitations-table">
+                            <div class="invitations-table__row" ng-repeat="invite in $ctrl.sr.results">
+                                <div class="invitations-table__col" data-title="{{invite.username}}">
+                                    <profile-photo name="userPhoto" squared="15" ng-model="invite.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
+                                </div>
+                                <div class="invitations-table__col _size-m" data-title="Email" name="userEmail">
+                                    <span class="invitations-table__content">{{invite.email}}</span>
+                                </div>
+                                <div class="invitations-table__col" data-title="Group">
+                                    <span class="invitations-table__content">{{ $ctrl.groups[$ctrl.groups.indexOfField('id', invite.groupId)].name }}</span>
+                                </div>
+                                <div class="invitations-table__col" data-title="Source">
+                                    <span class="source-label label black_font">{{::invite.source.toLowerCase()}}</span>
+                                </div>
+                                <div data-title="Date" class="invitations-table__col">
+                                    <div class="users-table__content-wrapper">
+                                        <span class="invitations-table__content">{{ invite.createdAt | date }}</span>
+                                        <span class="users-table__content-additional">sent by {{ invite.createdBy.username }}</span>
+                                    </div>
+                                    
+                                </div>
+                                <div class="invitations-table__col _centered" data-title="Status">
+                                    <span class="status-label _size-s" ng-class="{'text-success': invite.status == 'ACCEPTED', 'text-info': invite.status == 'PENDING'}">{{ invite.status.toLowerCase() }}</span>
+                                </div>
+                                <div class="invitations-table__col">
+                                    <md-menu ng-if="$ctrl.userHasAnyPermission(['MODIFY_INVITATIONS'])" class="pull-right">
+                                        <md-button name="userMenu" aria-label="User settings" class="md-icon-button" data-ng-click="$mdMenu.open($event);">
+                                            <md-icon class="material-icons">more_vert</md-icon>
+                                        </md-button>
+                                        <md-menu-content width="2">
+                                            <md-menu-item ng-if="invite.url && invite.status === 'PENDING'">
+                                                <md-button data-ng-click="$ctrl.copyLink(invite);">
+                                                    Copy link
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="invite.status != 'ACCEPTED'">
+                                                <md-button name="userEdit" data-ng-really-message="Do you really want to retry send the invitation?" data-ng-really-click="$ctrl.retryInvite(invite, $index);">
+                                                    Resend
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="invite.status != 'ACCEPTED'">
+                                                <md-button name="userEdit" data-ng-really-message="Do you really want to revoke the invitation?" data-ng-really-click="$ctrl.takeOff(invite, $index);">
+                                                    Revoke
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="invite.status == 'ACCEPTED'">
+                                                <md-button name="userEdit" ng-click="$ctrl.searchUser(invite);">
+                                                    Profile
+                                                </md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                </div>
+                            </div>
+                            <div class="invitations-table__row _centered" ng-if="$ctrl.sr.results.length == 0">
+                                <span id="noData" class="invitations-table__message">No invitations</span>
+                            </div>
+                        </div>
+                        <md-table-pagination id="pagination"
+                            zafira-background-theme="pagination"
+                            ng-if="$ctrl.sr.results.length"
+                            md-limit="$ctrl.sc.pageSize"
+                            md-limit-options=false
+                            md-page="$ctrl.sc.page"
+                            md-total="{{$ctrl.sr.totalResults}}"
+                            md-page-select=false
+                            md-boundary-links=true
+                            md-on-paginate="$ctrl.search"></md-table-pagination>
                     </md-card>
                 </article>
             </div>

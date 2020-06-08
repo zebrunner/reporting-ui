@@ -1,4 +1,4 @@
-<div class="page-wrapper">
+<div class="page-wrapper _overflow-hidden">
     <zf-sub-header>
         <zf-sub-header-title>
             {{ $ctrl.currentTitle }}
@@ -42,88 +42,109 @@
             <div ng-cloak>
                 <article class="article">
                     <md-card class="no-margin-h">
-                        <div>
-                            <md-table-container>
-                                <table class="table-hover users-table" md-table zafira-background-theme="table">
-                                    <thead md-head style="position: parent;">
-                                        <tr md-row>
-                                            <th md-column>ID</th>
-                                            <th md-column>Username</th>
-                                            <th md-column>Email</th>
-                                            <th md-column>First/Last name</th>
-                                            <th md-column>Status</th>
-                                            <th md-column>Source</th>
-                                            <th md-column class="no-padding">Registration date</th>
-                                            <th md-column></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody md-body name="usersTable">
-                                        <tr md-row ng-repeat="user in $ctrl.sr.results">
-                                            <td data-title="ID" md-cell>
-                                                <profile-photo name="userPhoto" squared="15" ng-model="user.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
-                                                <span class="mobile-only">{{::user.id}}</span>
-                                            </td>
-                                            <td data-title="Username" md-cell>
-                                                <b name="userUsername">{{user.username}}</b>
-                                            </td>
-                                            <td data-title="Email" name="userEmail" md-cell>
-                                                <span class="users-table__row _email-content">{{user.email}}</span>
-                                            </td>
-                                            <td class="users-table__row _name" data-title="First/Last name" name="userFirstLastName" md-cell>
-                                                <div class="users-table__row _name-wrapper">
-                                                    <span class="users-table__row _name-content">{{user.firstName}}</span>
-                                                    <span class="users-table__row _name-content">{{user.lastName}}</span>
-                                                </div>
-                                            </td>
-                                            <td data-title="Status" md-cell>
-                                                <span name="status" ng-class="{'text-success': user.status == 'ACTIVE', 'text-error': user.status == 'INACTIVE'}" class="label">{{ user.status}}</span>
-                                            </td>
-                                            <td data-title="Source" md-cell>
-                                                <span name="status" class="label black_font">{{::user.source}}</span>
-                                            </td>
-                                            <td data-title="Registration date" md-cell style="padding-right: 0;">
-                                                <div>
-                                                    <span name="userCreated">{{::user.createdAt | date}}</span>
-                                                    <span class="time" data-ng-if="user.lastLogin">last login <time name="lastLogin" am-time-ago="user.lastLogin" title="{{ user.lastLogin | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time></span>
-                                                    <span class="time" data-ng-if="!user.lastLogin">never logged in</span>
-                                                </div>
-                                            </td>
-                                            <td md-cell>
-                                                <md-menu class="pull-right">
-                                                    <md-button name="userMenu" aria-label="User settings" class="md-icon-button"
-                                                               data-ng-click="$mdMenu.open($event);">
-                                                        <md-icon class="material-icons">more_vert</md-icon>
-                                                    </md-button>
-                                                    <md-menu-content width="2">
-                                                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS'])">
-                                                            <md-button name="userEdit" data-ng-click="$ctrl.showEditProfileDialog($event, user, $index)">
-                                                                <span>Edit</span>
-                                                            </md-button>
-                                                        </md-menu-item>
-                                                        <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS']) && user.source == 'INTERNAL'">
-                                                            <md-button name="userChangePassword" data-ng-click="$ctrl.showChangePasswordDialog($event, user, false)">
-                                                                <span>Change password</span>
-                                                            </md-button>
-                                                        </md-menu-item>
-                                                        <md-menu-item ng-if="$ctrl.currentUser.pefrDashboardId">
-                                                            <md-button name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })" style="padding-top: 12px">
-                                                                <span>Performance</span>
-                                                            </md-button>
-                                                        </md-menu-item>
-                                                    </md-menu-content>
-                                                </md-menu>
-                                            </td>
-                                        </tr>
-                                        <tr md-row data-ng-if="$ctrl.sr.results.length == 0">
-                                            <td id="noData" md-cell colspan="8" class="text-center">No users</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </md-table-container>
-                            <md-table-pagination id="pagination" zafira-background-theme="pagination" ng-if="$ctrl.sr.results.length != 0"
-                                                 md-limit="$ctrl.sc.pageSize" md-limit-options=false md-page="$ctrl.sc.page" md-total="{{$ctrl.sr.totalResults}}"
-                                                 md-page-select=false md-boundary-links=true md-on-paginate="$ctrl.search"></md-table-pagination>
+                        <div class="users-table users-table__header">
+                            <div class="users-table__row">
+                                <div class="users-table__col">ID</div>
+                                <div class="users-table__col">Username</div>
+                                <div class="users-table__col">Email</div>
+                                <div class="users-table__col">Full name</div>
+                                <div class="users-table__col">Group</div>
+                                <div class="users-table__col">Source</div>
+                                <div class="users-table__col _min-size">Registration/ last activity</div>
+                                <div class="users-table__col _centered _size-s">
+                                    <md-menu md-offset="-15 45" class="status-menu">
+                                        <button aria-label="Open menu"
+                                            class="status-menu__button"
+                                            ng-class="{'_active': $ctrl.sc.status && !$ctrl.filterByStatusInAction, '_disabled': $ctrl.filterByStatusInAction}"
+                                            ng-click="$mdMenu.open($event)"
+                                            ng-disable="$ctrl.filterByStatusInAction">
+                                            <span class="status-menu__button-text">
+                                                Status
+                                                <md-icon class="material-icons status-menu__button-icon">unfold_more</md-icon>
+                                            </span>
+                                        </button>
+                                        <md-menu-content width="2" class="status-menu__dropdown-wrapper">
+                                            <md-menu-item ng-repeat="item in $ctrl.allUserStatuses" class="status-menu__dropdown-list">
+                                                <md-button ng-click="$ctrl.changeSelectedStatus(item)" class="status-menu__dropdown-button">
+                                                    <span class="status-icon {{item}} status-menu__dropdown-text">{{item || 'reset'}}</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                </div>
+                                <div class="users-table__col"></div>
+                            </div>
                         </div>
+                        <div class="users-table">
+                            <div class="users-table__row" ng-repeat="user in $ctrl.sr.results">
+                                <div class="users-table__col" data-title="{{user.username}}">
+                                    <profile-photo name="userPhoto" squared="15" ng-model="user.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
+                                </div>
+                                <div class="users-table__col" ng-if="!$ctrl.isTabletSm" data-title="Username">
+                                    <span name="userUsername" class="users-table__content">{{user.username}}</span>
+                                </div>
+                                <div class="users-table__col" data-title="Email" name="userEmail">
+                                    <span class="users-table__content">{{user.email}}</span>
+                                </div>
+                                <div class="users-table__col" data-title="Full name" name="userFirstLastName">
+                                    <span class="users-table__content">{{user.firstName}} {{user.lastName}}</span>
+                                </div>
+                                <div class="users-table__col" data-title="Group">
+                                    <span class="users-table__content">{{::user.groups[0].name}}</span>
+                                </div>
+                                <div class="users-table__col" data-title="Source">
+                                    <span class="source-label label black_font">{{::user.source.toLowerCase()}}</span>
+                                </div>
+                                <div class="users-table__col _min-size" data-title="Registration/ last activity" style="padding-right: 0;">
+                                    <div class="users-table__content-wrapper">
+                                        <div class="users-table__content-date _block" name="userCreated">{{::user.createdAt | date}}</div>
+                                        <span class="users-table__content-additional" data-ng-if="user.lastLogin">last login <time name="lastLogin" am-time-ago="user.lastLogin" title="{{ user.lastLogin | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time></span>
+                                        <span class="users-table__content-additional" data-ng-if="!user.lastLogin">never logged in</span>
+                                    </div>
+                                </div>
+                                <div class="users-table__col _size-s _centered" data-title="Status">
+                                    <span name="status" class="status-label" ng-class="{'text-success': user.status == 'ACTIVE', 'text-error': user.status == 'INACTIVE'}" class="label">{{ user.status.toLowerCase()}}</span>
+                                </div>
+                                <div class="users-table__col">
+                                    <md-menu class="pull-right">
+                                        <md-button name="userMenu" aria-label="User settings" class="md-icon-button _menu-button"
+                                                    data-ng-click="$mdMenu.open($event);">
+                                            <md-icon class="material-icons">more_vert</md-icon>
+                                        </md-button>
+                                        <md-menu-content width="2">
+                                            <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS'])">
+                                                <md-button name="userEdit" data-ng-click="$ctrl.showEditProfileDialog($event, user, $index)">
+                                                    <span>Edit</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS']) && user.source == 'INTERNAL'">
+                                                <md-button name="userChangePassword" data-ng-click="$ctrl.showChangePasswordDialog($event, user, false)">
+                                                    <span>Change password</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="$ctrl.currentUser.pefrDashboardId">
+                                                <md-button name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })" style="padding-top: 12px">
+                                                    <span>Performance</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                </div>
+                            </div>
+                            <div class="users-table__row _centered" ng-if="$ctrl.sr.results.length == 0">
+                                <span id="noData" class="users-table__message">No users</span>
+                            </div>
+                        </div>
+                        <md-table-pagination id="pagination"
+                            zafira-background-theme="pagination"
+                            ng-if="$ctrl.sr.results.length != 0"
+                            md-limit="$ctrl.sc.pageSize"
+                            md-limit-options=false
+                            md-page="$ctrl.sc.page"
+                            md-total="{{$ctrl.sr.totalResults}}"
+                            md-page-select=false
+                            md-boundary-links=true
+                            md-on-paginate="$ctrl.search"></md-table-pagination>
                     </md-card>
                 </article>
             </div>

@@ -221,7 +221,7 @@
                                 <div class="testrun-info__tab-table-col _start">Start</div>
                                 <div class="testrun-info__tab-table-col _status">
                                     <md-menu md-offset="-20 40">
-                                        <div aria-label="Open demo menu" ng-click="$mdMenu.open($event); $ctrl.log($ctrl)" >
+                                        <div aria-label="Open demo menu" ng-click="$mdMenu.open($event)" >
                                             <span class="testrun-info__status-button-icon _{{$ctrl.selectedLevel}}">Status</span>
                                             <span ng-if="$ctrl.selectedLevel === 'status'" class="material-icons _button-icon">filter_list</span>
                                             <md-icon md-svg-icon="checkedListIcon" ng-if="$ctrl.selectedLevel !== 'status'" class="material-icons selected-icon"></md-icon>
