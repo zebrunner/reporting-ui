@@ -8,6 +8,7 @@ const UsersController = function UserViewController(
     $location,
     $state,
     $mdDialog,
+    $mdMedia,
     authService,
     UserService,
     messageService,
@@ -21,6 +22,7 @@ const UsersController = function UserViewController(
         page: 1,
         pageSize: 20,
         query: null,
+        status: null,
         selectedRange: {
             selectedTemplate: null,
             selectedTemplateName: null,
@@ -47,6 +49,9 @@ const UsersController = function UserViewController(
         showInviteUsersDialog,
         userHasAnyPermission: authService.userHasAnyPermission,
         usersSearchCriteria: {},
+        allUserStatuses: ['active', 'inactive', null],
+        filterByStatusInAction: false,
+        changeSelectedStatus,
         searchValue: {
             selectedRange: {
                 showTemplate: null
@@ -54,11 +59,25 @@ const UsersController = function UserViewController(
         },
         get currentTitle() { return pageTitleService.pageTitle; },
         get currentUser() { return UserService.currentUser; },
+        get isTabletSm() { return !$mdMedia('gt-sm'); },
     };
 
     vm.$onInit = initController;
 
     return vm;
+
+    function changeSelectedStatus(status) {
+        if (vm.sc?.status?.toLowerCase() === status || (!vm.sc.status && !status)) { return; }
+
+        vm.filterByStatusInAction = true;
+        if (!status) {
+            vm.sc.status = null;
+        } else {
+            vm.sc.status = status.toUpperCase();
+        }
+
+        search(1);
+    }
 
     function onSearchChange(fields) {
         vm.searchActive = false;
@@ -104,6 +123,7 @@ const UsersController = function UserViewController(
             else {
                 messageService.error(rs.message);
             }
+            vm.filterByStatusInAction = false;
         });
         vm.isFiltered = true;
     };
@@ -182,42 +202,11 @@ const UsersController = function UserViewController(
         });
     }
 
-    $scope.users = [];
-    $scope.order = 'username';
-
-    $scope.sc = angular.copy(DEFAULT_SC);
-
-    $scope.tabs[$scope.tabs.indexOfField('name', 'Users')].countFunc = function () {
-        return $scope.source && $scope.source.totalResults ? $scope.source.totalResults : 0;
-    };
-
     function isEqualDate() {
         if (vm.searchValue.selectedRange.dateStart && vm.searchValue.selectedRange.dateEnd) {
             return vm.searchValue.selectedRange.dateStart.getTime() === vm.searchValue.selectedRange.dateEnd.getTime();
         }
     }
-
-    $scope.isDateChosen = true;
-    $scope.isDateBetween = false;
-
-    $scope.changePeriod = function () {
-        switch(vm.searchValue.period) {
-            case 'between':
-                $scope.isDateChosen = true;
-                $scope.isDateBetween = true;
-                break;
-            case 'before':
-            case 'after':
-            case '':
-                $scope.isDateChosen = true;
-                $scope.isDateBetween = false;
-                break;
-            default:
-                $scope.isDateChosen = true;
-                $scope.isDateBetween = false;
-                break;
-        }
-    };
 
     function showChangePasswordDialog($event, user) {
         $mdDialog.show({
