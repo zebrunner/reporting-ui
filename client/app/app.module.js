@@ -1305,6 +1305,7 @@ angular.injector(['ng'])
         // TODO: add error handler if incorrect data provided or missed
         ngModule
             .constant('API_URL', response.data['API_URL'] || '')
+            .constant('iam_API_URL', response.data['API_URL'].slice(0, -18))
             .constant('UI_VERSION', response.data['UI_VERSION'] || '');
 
         //manually bootstrap application after we have gotten our config data
