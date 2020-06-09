@@ -138,7 +138,7 @@
                         </div>
                         <md-table-pagination id="pagination"
                             zafira-background-theme="pagination"
-                            ng-if="$ctrl.sr.results.length !== 0"
+                            ng-if="!$ctrl.sr.results.length"
                             md-limit="$ctrl.sc.pageSize"
                             md-limit-options=false
                             md-page="$ctrl.sc.page"
