@@ -84,7 +84,17 @@
                                         &-icon {
                                             color: $gray-base;
                                             font-size: 18px;
-                                            transform: translateY(2px);
+                                            transform: translateY(0px);
+
+                                            &._active {
+                                                height: 18px;
+                                                width: 18px;
+                                                min-height: 18px;
+                                                min-width: 18px;
+                                                margin: 0 3px;
+                                                transform: translateY(-3px);
+                                                color: $brand-primary;
+                                            }
                                         }
                                     }
                                 }
@@ -102,7 +112,8 @@
                         justify-content: center;
                     }
 
-                    &:first-child {
+                    &:first-child,
+                    &._no-top-border {
                         border-top: 0;
                     }
 
@@ -266,7 +277,7 @@
             border-radius: 10px;
             color: $gray-darker;
             background-color: $gray-lighter;
-            padding: 2px 14px;
+            padding: 2px 24px;
 
             &.active {
                 color: $brand-success;
@@ -281,6 +292,21 @@
             }
         }
     }
+}
+
+.user-menu {
+    &__list { 
+        &-button.md-button {
+            position: relative;
+            & span {
+                display: inline-block;
+                position: absolute;
+                top: 16px;
+                left: 16px;
+            }
+        }
+    }
+
 }
 
 @media screen and (max-width: $screen-lg-min) {
@@ -416,6 +442,10 @@
                             height: 48px;
                             background-color: #F7F7F7;
                         }
+                    }
+
+                    &__content {
+                        padding-right: 25px;
                     }
                 }
             }

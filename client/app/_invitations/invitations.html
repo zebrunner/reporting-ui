@@ -97,13 +97,13 @@
                                     </md-menu>
                                 </div>
                             </div>
-                            <div class="invitations-table__row _centered" ng-if="$ctrl.sr.results.length == 0">
+                            <div class="invitations-table__row _centered _no-top-border" ng-if="$ctrl.sr.results.length == 0">
                                 <span id="noData" class="invitations-table__message">No invitations</span>
                             </div>
                         </div>
                         <md-table-pagination id="pagination"
                             zafira-background-theme="pagination"
-                            ng-if="$ctrl.sr.results.length"
+                            ng-if="$ctrl.sr.results.length !== 0"
                             md-limit="$ctrl.sc.pageSize"
                             md-limit-options=false
                             md-page="$ctrl.sc.page"
