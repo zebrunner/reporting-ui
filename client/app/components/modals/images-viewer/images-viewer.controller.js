@@ -1,7 +1,16 @@
 'use strict';
 
-const ImagesViewerController = function ImagesViewerController($scope, $mdDialog, $q, ArtifactService, $timeout,
-                                    activeArtifactId, TestRunService, test, messageService) {
+const ImagesViewerController = function ImagesViewerController(
+    $scope,
+    $mdDialog,
+    $q,
+    ArtifactService,
+    $timeout,
+    activeArtifactId,
+    TestRunService,
+    test,
+    fullScreenService,
+) {
     'ngInject';
 
     const local = {
@@ -126,23 +135,10 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
     function switchFullscreenMode(forceQuit) {
         if (vm.mainSizesLoading) { return; }
 
-        if (!document.fullscreenElement &&    // alternative standard method
-            !document.mozFullScreenElement && !document.webkitFullscreenElement && !forceQuit) {  // current working methods
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) {
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-            }
+        if (!fullScreenService.isFullscreenActive() && !forceQuit) {  // current working methods
+            fullScreenService.requestFullscreen(document.documentElement);
         } else {
-            if (document.cancelFullScreen) {
-                document.cancelFullScreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitCancelFullScreen) {
-                document.webkitCancelFullScreen();
-            }
+            fullScreenService.exitFullscreen();
         }
     }
 
@@ -255,7 +251,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         $timeout(() => {
             initSizes();
             $imgContainer.append(artifact.imageElem);
-            
+
             if (!vm.newActiveElem) {
                 vm.setActiveArtifact(vm.activeArtifactId, true);
             }
@@ -271,7 +267,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
             vm.activeArtifactId = artifact.id;
         }
         $imgContainer.append(icon);
-        
+
         if (!vm.newActiveElem) {
             vm.setActiveArtifact(vm.activeArtifactId, true);
         }
@@ -299,7 +295,7 @@ const ImagesViewerController = function ImagesViewerController($scope, $mdDialog
         };
 
         image.src = imageUrl;
-        
+
         return defer.promise;
     }
 

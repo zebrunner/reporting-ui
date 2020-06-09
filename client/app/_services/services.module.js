@@ -13,6 +13,7 @@ import pageTitleService from './page-title/page-title.service';
 import observerService from './observer/observer.service';
 import logLevelService from './log-level.service';
 import testCaseService from './testcase.service';
+import fullScreenService from './full-screen/full-screen.service';
 
 angular.module('app.services', [])
     .service({ appHealthService })
@@ -20,6 +21,7 @@ angular.module('app.services', [])
     .service({ ArtifactService})
     .service({ toolsService })
     .service({ logLevelService })
+    .service({ fullScreenService })
     .service({ messageService })
     .service({ mainMenuService })
     .service({ observerService })

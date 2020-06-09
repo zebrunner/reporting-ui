@@ -206,7 +206,7 @@
         // ************** Websockets **************
 
         function reconnectWebsocket(name, func) {
-            if(! $rootScope.disconnectedWebsockets) {
+            if(!$rootScope.disconnectedWebsockets) {
                 $rootScope.disconnectedWebsockets = {
                     websockets: {},
                     toastOpened: false

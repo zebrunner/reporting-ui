@@ -268,7 +268,7 @@ const testDetailsController = function testDetailsController(
     }
 
     /**
-     * Hadler to order tests by 'elapsed' field
+     * Handler to order tests by 'elapsed' field
      * Each next run changes reverses ordering
      */
     function orderByElapsed() {

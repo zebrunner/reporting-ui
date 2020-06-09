@@ -3,14 +3,11 @@
 import testRunInfoComponent from './test-run-info.component';
 import elasticsearchService from './elasticsearch.service';
 import { testExecutionHistoryModule } from './test-execution-history/test-execution-history.module';
-import videocam_off_outlined from '../../../assets/images/videocam_off_outlined.svg';
+import { testVideoSliderModule } from './test-video-slider/test-video-slider.module';
 
-export const testRunInfoModule = angular.module('app.testRunInfo', [testExecutionHistoryModule])
+export const testRunInfoModule = angular.module('app.testRunInfo', [
+    testExecutionHistoryModule,
+    testVideoSliderModule,
+])
     .factory({ elasticsearchService })
-    .component({ testRunInfoComponent })
-    .config(($mdIconProvider) => {
-        'ngInject';
-
-        $mdIconProvider
-            .icon('outlined:videocam_off', videocam_off_outlined);
-    });
+    .component({ testRunInfoComponent });
