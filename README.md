@@ -38,3 +38,21 @@ npm run build
 ### Container build variables
 * **BASE_PATH** - base path used to serve content. May be useful if you plan to run Reporting UI behind proxy
 * **UI_VERSION** - version of UI build
+
+# Zebrunner Reporting UI as a package
+Reporting module is available as an [npm package](https://www.npmjs.com/package/@zebrunner/reporting).
+
+```
+npm install @zebrunner/reporting
+```
+
+## Available scripts
+
+### `npm run package:prepare`
+It cleans all builded folders and create typing for the package.
+
+### `npm run package:build`
+This script runs `package:clean` and build the project as a library.
+
+### `npm run package:serve`
+This script runs `package:clean` and build the package in the `development` mode watchers on updates.
