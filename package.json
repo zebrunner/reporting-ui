@@ -10,6 +10,7 @@
         "package:prepare": "shx rm -rf ./dist && tsc",
         "package:build": "npm run package:prepare && webpack --config ./webpack/webpack.lib.js",
         "package:serve": "npm run package:prepare && webpack --config ./webpack/webpack.lib.serve.js",
+        "package:link": "npm link react react-router-dom angular react-redux @zebrunner/core && npm link",
         "build": "webpack",
         "prepare": "npm run package:build && tsc"
     },
