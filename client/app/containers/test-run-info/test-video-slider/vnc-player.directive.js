@@ -4,6 +4,7 @@ const vncPlayerDirective = function vncPlayer(
     $document,
     $timeout,
     ArtifactService,
+    fullScreenService,
 ) {
     'ngInject';
 
@@ -66,10 +67,12 @@ const vncPlayerDirective = function vncPlayer(
             }
 
             function onDisconnect() {
-                // TODO: exit full screen
                 window.removeEventListener('resize', resizeEventHandler);
                 document.removeEventListener('mozfullscreenchange webkitfullscreenchange fullscreenchange', fullscreenModeChangeHandler);
                 $scope.driver.isLoading = false;
+                if (fullScreenService.isFullscreenActive()) {
+                    fullScreenService.exitFullscreen();
+                }
             }
 
             function autoScale() {

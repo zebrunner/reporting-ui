@@ -22,7 +22,7 @@ const fullScreenService = function fullScreenService(
             return requestFullscreen.call(element);
         }
 
-        return $q.reject();
+        return $q.resolve();
     }
 
     function exitFullscreen() {
@@ -36,7 +36,7 @@ const fullScreenService = function fullScreenService(
             exitFullscreen.call(document);
         }
 
-        return $q.reject();
+        return $q.resolve();
     }
 
     function isFullscreenEnabled() {
