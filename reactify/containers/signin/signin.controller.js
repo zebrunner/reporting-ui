@@ -46,10 +46,7 @@ export default (
         }
     }
 
-    function signin(credentials, form) {
-        form.$setPristine();
-        form.$setUntouched();
-
+    function signin(credentials) {
         return MigrationAuthService.login$(credentials.usernameOrEmail, credentials.password).pipe(
             tap(({ data }) => $ngRedux.dispatch(setTokens({
                 access: data.accessToken,

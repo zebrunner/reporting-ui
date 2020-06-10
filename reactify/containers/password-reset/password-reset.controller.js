@@ -47,11 +47,12 @@ export default (
     }
 
     function resetPassword() {
+        // We need userId because b/e requires that. Should be removed in the future realisations
         MigrationAuthService.resetPassword$({ ...this.model, userId: 0 }, this.token).pipe(
             tap(() => SnackbarService.success('Your password was changed successfully')),
             tap(payload => MigrationAuthService.handlePasswordReset(payload)),
             catchError(error => {
-                SnackbarService.error(error.message || 'Unable to restore password');
+                SnackbarService.error(error.message || 'Unable to reset password');
                 return of(true);
             }),
             tap($safeDigest.rxjs($scope)),

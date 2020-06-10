@@ -68,11 +68,11 @@ export const MigrationAuthService = (
             })),
             // TODO: $scope.main.skin = user.theme;
             tap(({ performanceDashboardId }) => !performanceDashboardId
-                && SnackbarService.error(`'User Performance' dashboard is unavailable!`)),
+                ?? SnackbarService.error(`'User Performance' dashboard is unavailable!`)),
             tap(({ personalDashboardId }) => !personalDashboardId
-                && SnackbarService.error(`'Personal' dashboard is unavailable!`)),
+                ?? SnackbarService.error(`'Personal' dashboard is unavailable!`)),
             tap(({ defaultDashboardId }) => !defaultDashboardId
-                && SnackbarService.warning('Default Dashboard is unavailable!')),
+                ?? SnackbarService.warning('Default Dashboard is unavailable!')),
             tap(user => $ngRedux.dispatch(setCurrentUser(user))),
             tap(() => {
                 if (payload.firstLogin) {

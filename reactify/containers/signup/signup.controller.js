@@ -38,7 +38,6 @@ export default (
         });
         unsubscribe = $ngRedux.connect(mapStateToThis, {})(this);
 
-
         this.token = MigrationAuthService.getToken();
 
         MigrationAuthService.prepareSignupPage$(this.token).pipe(

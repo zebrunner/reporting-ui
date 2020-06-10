@@ -1,7 +1,7 @@
 <auth-component
     versions="$ctrl.versions"
     tenant-icon="$ctrl.application.tenantIcon">
-    <form name="signin_form" class="md-form-login form-validation" data-ng-submit="$ctrl.signin($ctrl.credentials, signin_form)">
+    <form name="signin_form" class="md-form-login form-validation" data-ng-submit="$ctrl.signin($ctrl.credentials)">
         <div class="callout callout-danger" ng-if="!$ctrl.credentials.valid">
             <p>Invalid credentials</p>
         </div>

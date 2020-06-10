@@ -12,13 +12,13 @@ export const MigrationRequestService = ($httpMock) => {
         delete: request('delete'),
     };
 
-    function getUrl() {
+    function getApiUrl() {
         const state = getStore().getState();
 
         return getApplicationConfig(state).api;
     }
 
     function request(method) {
-        return (url, ...params) => $httpMock[method](`${getUrl()}${url}`, ...params);
+        return (url, ...params) => $httpMock[method](`${getApiUrl()}${url}`, ...params);
     }
 }

@@ -44,6 +44,9 @@ export function CoreModuleRunner(
                 getVersion(),
                 updateCompanyLogo(),
             ]).then(() => {
+                // TODO: replace API with API from the server's response.
+                // Right now we use api.qaprosoft.farm and b/e always needs to get tenant
+                // The API from server's response prevents that action and knows about tenant
                 $ngRedux.dispatch(setApplicationConfig({
                     api: API_URL,
                     tenantIcon: $rootScope.companyLogo?.value,
