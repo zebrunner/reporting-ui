@@ -26,7 +26,7 @@
         "@babel/runtime": "^7.8.3",
         "@types/angular": "^1.7.0",
         "@types/react": "^16.9.35",
-        "@zebrunner/core": "^1.5.0@rc",
+        "@zebrunner/core": "^1.5.0-rc.2",
         "angular": "^1.8.0",
         "babel-loader": "^8.0.6",
         "babel-plugin-angularjs-annotate": "^0.10.0",
