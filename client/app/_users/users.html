@@ -132,13 +132,13 @@
                                     </md-menu>
                                 </div>
                             </div>
-                            <div class="users-table__row _centered _no-top-border" ng-if="$ctrl.sr.results.length == 0">
+                            <div class="users-table__row _centered" ng-if="$ctrl.sr.results.length == 0">
                                 <span id="noData" class="users-table__message">No users</span>
                             </div>
                         </div>
                         <md-table-pagination id="pagination"
                             zafira-background-theme="pagination"
-                            ng-if="!$ctrl.sr.results.length"
+                            ng-if="!$ctrl.isUsersEmpty()"
                             md-limit="$ctrl.sc.pageSize"
                             md-limit-options=false
                             md-page="$ctrl.sc.page"

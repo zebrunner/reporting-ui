@@ -26,16 +26,11 @@ export const CoreModule = angular
     /**
      * Make UI Router wait for health checking and loading initial data
      */
-    .config(function($urlRouterProvider) {
+    .config(function($urlRouterProvider, $mdIconProvider) {
         'ngInject';
 
         $urlRouterProvider.deferIntercept();
-    })
-    .config(($mdIconProvider) => {
-        'ngInject';
-
-        $mdIconProvider
-            .icon('checkedListIcon', checkedListIcon)
+        $mdIconProvider.icon('checkedListIcon', checkedListIcon);
     })
     .run(CoreModuleRunner)
     .component({ fullscreenLoader })

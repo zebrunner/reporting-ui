@@ -52,6 +52,7 @@ const UsersController = function UserViewController(
         allUserStatuses: ['active', 'inactive', null],
         filterByStatusInAction: false,
         changeSelectedStatus,
+        isUsersEmpty,
         searchValue: {
             selectedRange: {
                 showTemplate: null
@@ -65,6 +66,10 @@ const UsersController = function UserViewController(
     vm.$onInit = initController;
 
     return vm;
+
+    function isUsersEmpty() {
+        return vm.sr.results && !vm.sr.results.length;
+    }
 
     function changeSelectedStatus(status) {
         if (vm.sc?.status?.toLowerCase() === status || (!vm.sc.status && !status)) { return; }
