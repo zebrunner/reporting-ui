@@ -77,7 +77,7 @@
                             </div>
                         </div>
                         <div class="users-table">
-                            <div class="users-table__row" ng-repeat="user in $ctrl.sr.results">
+                            <div class="users-table__row" ng-repeat="user in $ctrl.sr">
                                 <div class="users-table__col" data-title="{{user.username}}">
                                     <profile-photo name="userPhoto" squared="15" ng-model="user.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
                                 </div>
@@ -132,17 +132,17 @@
                                     </md-menu>
                                 </div>
                             </div>
-                            <div class="users-table__row _centered" ng-if="$ctrl.sr.results.length == 0">
+                            <div class="users-table__row _centered" ng-if="$ctrl.isUsersEmpty()">
                                 <span id="noData" class="users-table__message">No users</span>
                             </div>
                         </div>
                         <md-table-pagination id="pagination"
                             zafira-background-theme="pagination"
-                            ng-if="!$ctrl.isUsersEmpty()"
+                            ng-if="$ctrl.sr.length && $ctrl.totalResults > $ctrl.sr.length"
                             md-limit="$ctrl.sc.pageSize"
                             md-limit-options=false
                             md-page="$ctrl.sc.page"
-                            md-total="{{$ctrl.sr.totalResults}}"
+                            md-total="{{$ctrl.totalResults}}"
                             md-page-select=false
                             md-boundary-links=true
                             md-on-paginate="$ctrl.search"></md-table-pagination>
