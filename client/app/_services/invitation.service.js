@@ -10,7 +10,6 @@
         const service = {
             invite,
             retryInvite,
-            getInvitation,
             getAllInvitations,
             search,
             deleteInvitation,
@@ -30,10 +29,6 @@
 
         function retryInvite(invitation) {
             return $httpMock.post(API_URL + '/api/invitations/retry', invitation).then(UtilService.handleSuccess, UtilService.handleError('Failed to retry user invitation'));
-        }
-
-        function getInvitation(token) {
-            return $httpMock.get(API_URL + '/api/invitations/info?token=' + token).then(UtilService.handleSuccess, UtilService.handleError('Failed to get user invitation'));
         }
 
         function getAllInvitations() {

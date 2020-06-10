@@ -1,5 +1,7 @@
 'use-strict';
 
+import { setApplicationConfig } from '@zebrunner/core/store';
+
 export function CoreModuleRunner(
     $rootScope,
     $urlRouter,
@@ -8,12 +10,14 @@ export function CoreModuleRunner(
     $q,
     appHealthService,
     authService,
+    API_URL,
     UI_VERSION,
     SettingProvider,
     SettingsService,
     ConfigService,
     UserService,
     toolsService,
+    $ngRedux,
 ) {
     'ngInject';
 
@@ -36,8 +40,21 @@ export function CoreModuleRunner(
         .then(() => {
             appHealthService.changeHealthyStatus(true);
 
-            getVersion();
-            updateCompanyLogo();
+            Promise.allSettled([
+                getVersion(),
+                updateCompanyLogo(),
+            ]).then(() => {
+                // TODO: replace API with API from the server's response.
+                // Right now we use api.qaprosoft.farm and b/e always needs to get tenant
+                // The API from server's response prevents that action and knows about tenant
+                $ngRedux.dispatch(setApplicationConfig({
+                    api: API_URL,
+                    tenantIcon: $rootScope.companyLogo?.value,
+                    versions: {service: $rootScope.version?.service, ui: UI_VERSION},
+                    multitenant: authService?.isMultitenant,
+                }));
+            });
+
             if (authService.authData) {
                 UserService.initCurrentUser();
                 toolsService.getTools();

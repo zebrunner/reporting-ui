@@ -165,13 +165,13 @@
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
                         try {
-                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+                            const mod = await import(/* webpackChunkName: "signin" */ '../../../reactify/containers/signin');
 
-                            return $ocLazyLoad.load(mod.authModule);
+                            return $ocLazyLoad.load(mod.SigninModule);
                         } catch (err) {
-                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load signin module, ' + err);
                         }
-                    }
+                    },
                 })
                 .state('signup', {
                     url: '/signup?token',
@@ -185,11 +185,11 @@
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
                         try {
-                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+                            const mod = await import(/* webpackChunkName: "signup" */ '../../../reactify/containers/signup');
 
-                            return $ocLazyLoad.load(mod.authModule);
+                            return $ocLazyLoad.load(mod.SignupModule);
                         } catch (err) {
-                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load signup module, ' + err);
                         }
                     }
                 })
@@ -211,7 +211,7 @@
                 })
                 .state('forgotPassword', {
                     url: '/password/forgot',
-                    component: 'forgotPasswordComponent',
+                    component: 'passwordForgotComponent',
                     data: {
                         title: 'Forgot password',
                         onlyGuests: true,
@@ -221,17 +221,17 @@
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
                         try {
-                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+                            const mod = await import(/* webpackChunkName: "passwordForgot" */ '../../../reactify/containers/password-forgot');
 
-                            return $ocLazyLoad.load(mod.authModule);
+                            return $ocLazyLoad.load(mod.PasswordForgotModule);
                         } catch (err) {
-                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load passwordForgot module, ' + err);
                         }
                     }
                 })
                 .state('resetPassword', {
                     url: '/password/reset?token',
-                    component: 'resetPasswordComponent',
+                    component: 'passwordResetComponent',
                     data: {
                         title: 'Reset password',
                         onlyGuests: true,
@@ -241,11 +241,11 @@
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
 
                         try {
-                            const mod = await import(/* webpackChunkName: "auth" */ '../_auth/auth.module.js');
+                            const mod = await import(/* webpackChunkName: "passwordReset" */ '../../../reactify/containers/password-reset');
 
-                            return $ocLazyLoad.load(mod.authModule);
+                            return $ocLazyLoad.load(mod.PasswordResetModule);
                         } catch (err) {
-                            throw new Error('ChunkLoadError: Can\'t load auth module, ' + err);
+                            throw new Error('ChunkLoadError: Can\'t load passwordReset module, ' + err);
                         }
                     }
                 })

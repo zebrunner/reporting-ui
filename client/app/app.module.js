@@ -10,6 +10,7 @@ import { testRunCardModule } from './shared/test-run-card/test-run-card.module';
 import sessionSwitcherComponent from './shared/sessions-switcher/sessions-switcher.component';
 import testTicketComponent from './shared/test-ticket/test-ticket.component';
 import photoUpload from './shared/photo-upload/photo-upload.directive';
+import { ReportingMigrationModule } from './migration';
 
 const isProd = __PRODUCTION__; // __PRODUCTION__ variable will be replaced by webpack
 const ngModule = angular
@@ -33,6 +34,7 @@ const ngModule = angular
         'angular-jwt',
         'oc.lazyLoad',
         TutorialsModule,
+        ReportingMigrationModule,
     ])
     .component('sessionsSwitcher', sessionSwitcherComponent)
     .component('testTicket', testTicketComponent)
@@ -310,23 +312,6 @@ const ngModule = angular
                     post: function postLink(scope, iElement, iAttrs, controller) {
                     }
                 }
-            }
-        };
-    })
-    .directive('identicalTo', function () {
-        return {
-            require: 'ngModel',
-            restrict: 'A',
-            scope: {
-                otherModelValue: "=identicalTo"
-            },
-            link: function(scope, element, attributes, ngModel) {
-                ngModel.$validators.identicalTo = function(modelValue) {
-                    return modelValue === scope.otherModelValue;
-                };
-                scope.$watch("otherModelValue", function() {
-                    ngModel.$validate();
-                });
             }
         };
     })

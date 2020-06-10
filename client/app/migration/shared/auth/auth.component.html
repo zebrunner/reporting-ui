@@ -1,0 +1,24 @@
+<div class="page-wrapper page-signin auth">
+    <div class="wrapper">
+        <div class="main-body">
+            <div class="card bg-white">
+                <div class="card-content">
+                    <section class="logo-container">
+                        <div class="auth__logo"></div>
+                    </section>
+
+                    <ng-transclude></ng-transclude>
+
+                    <copyright-component versions="$ctrl.versions"></copyright-component>
+                </div>
+
+                <div class="additional-background">
+                    <div class="version-container">
+                        <img class="logo" ng-if="$ctrl.tenantIcon" ng-src="{{ $ctrl.tenantIcon }}">
+                    </div>
+                    <background-component></background-component>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
