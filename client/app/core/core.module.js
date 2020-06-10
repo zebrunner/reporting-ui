@@ -6,6 +6,7 @@ import {CoreModuleRunner} from './core-module.runner';
 import isOwner from '../shared/is-owner/is-owner.directive';
 import infiniteScroll from '../shared/infinite-scroll/infinite-scroll.directive';
 import blurFilter from '../shared/blur-filter/blur-filter.directive';
+import checkedListIcon from '../../assets/images/check_list.svg';
 
 export const CoreModule = angular
     .module('appCore', [
@@ -25,10 +26,11 @@ export const CoreModule = angular
     /**
      * Make UI Router wait for health checking and loading initial data
      */
-    .config(function($urlRouterProvider) {
+    .config(function($urlRouterProvider, $mdIconProvider) {
         'ngInject';
 
         $urlRouterProvider.deferIntercept();
+        $mdIconProvider.icon('checkedListIcon', checkedListIcon);
     })
     .run(CoreModuleRunner)
     .component({ fullscreenLoader })

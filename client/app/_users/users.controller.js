@@ -38,6 +38,7 @@ const UsersController = function UserViewController(
         searchActive: false,
         isFiltered: false,
         activeTab: null,
+        totalResults: 0,
         sc: angular.copy(DEFAULT_SC),
         onSearchChange: onSearchChange,
         search: search,
@@ -52,6 +53,7 @@ const UsersController = function UserViewController(
         allUserStatuses: ['active', 'inactive', null],
         filterByStatusInAction: false,
         changeSelectedStatus,
+        isUsersEmpty,
         searchValue: {
             selectedRange: {
                 showTemplate: null
@@ -65,6 +67,10 @@ const UsersController = function UserViewController(
     vm.$onInit = initController;
 
     return vm;
+
+    function isUsersEmpty() {
+        return vm.sr && !vm.sr.length;
+    }
 
     function changeSelectedStatus(status) {
         if (vm.sc?.status?.toLowerCase() === status || (!vm.sc.status && !status)) { return; }
@@ -118,7 +124,8 @@ const UsersController = function UserViewController(
 
         UserService.searchUsers(vm.sc).then(function (rs) {
             if (rs.success) {
-                vm.sr = rs.data;
+                vm.sr = rs.data?.results || [];
+                vm.totalResults = rs.data?.totalResults || 0;
             }
             else {
                 messageService.error(rs.message);
@@ -175,12 +182,12 @@ const UsersController = function UserViewController(
         })
             .then(function (data) {
                 if (data) {
-                    let index = vm.sr.results.findIndex(({id}) => data.id === id);
+                    let index = vm.sr.findIndex(({id}) => data.id === id);
 
                     if (index !== -1) {
-                        vm.sr.results[index] = {...vm.sr.results[index], ...data};
+                        vm.sr[index] = {...vm.sr[index], ...data};
                     } else {
-                        vm.sr.results.push(data);
+                        vm.sr.push(data);
                     }
                 }
             }, function () {
@@ -306,18 +313,18 @@ const UsersController = function UserViewController(
         })
             .then(function (answer) {
                 if (answer) {
-                    let active = vm.sr.results.find(function(res) {
+                    let active = vm.sr.find(function(res) {
                         return res.id === answer.id;
                     })
-                    let actIndex = vm.sr.results.indexOf(active);
+                    let actIndex = vm.sr.indexOf(active);
 
                     if(actIndex > -1) {
-                        vm.sr.results[actIndex] = {...vm.sr.results[actIndex], ...answer};
+                        vm.sr[actIndex] = {...vm.sr[actIndex], ...answer};
                     }
                 }
             }, function (status) {
                 if (status) {
-                    vm.sr.results[index].status = status;
+                    vm.sr[index].status = status;
                 }
             });
     }

@@ -84,7 +84,15 @@
                                         &-icon {
                                             color: $gray-base;
                                             font-size: 18px;
-                                            transform: translateY(2px);
+
+                                            &._active {
+                                                height: 18px;
+                                                width: 18px;
+                                                min-height: 18px;
+                                                min-width: 18px;
+                                                margin: 0 3px 6px;
+                                                color: $brand-primary;
+                                            }
                                         }
                                     }
                                 }
@@ -144,7 +152,7 @@
 
                         & .material-icons {
                             font-size: 24px;
-                            transform: translate(-2px, -2px);
+                            margin: 0px 0px 4px 4px;
                         }
                     }
 
@@ -266,7 +274,7 @@
             border-radius: 10px;
             color: $gray-darker;
             background-color: $gray-lighter;
-            padding: 2px 14px;
+            padding: 2px 24px;
 
             &.active {
                 color: $brand-success;
@@ -279,6 +287,16 @@
                 padding: 2px 8px;
                 background-color: $pink-bg-light-new;
             }
+        }
+    }
+}
+
+.user-menu {
+    &__list { 
+        &-button.md-button {
+            padding-top: 11px;
+            display: flex;
+            align-items: center;
         }
     }
 }
@@ -416,6 +434,10 @@
                             height: 48px;
                             background-color: #F7F7F7;
                         }
+                    }
+
+                    &__content {
+                        padding-right: 25px;
                     }
                 }
             }

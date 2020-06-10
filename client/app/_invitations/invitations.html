@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="invitations-table">
-                            <div class="invitations-table__row" ng-repeat="invite in $ctrl.sr.results">
+                            <div class="invitations-table__row" ng-repeat="invite in $ctrl.sr">
                                 <div class="invitations-table__col" data-title="{{invite.username}}">
                                     <profile-photo name="userPhoto" squared="15" ng-model="invite.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
                                 </div>
@@ -97,17 +97,17 @@
                                     </md-menu>
                                 </div>
                             </div>
-                            <div class="invitations-table__row _centered" ng-if="$ctrl.sr.results.length == 0">
+                            <div class="invitations-table__row _centered" ng-if="$ctrl.isInvitationsEmpty()">
                                 <span id="noData" class="invitations-table__message">No invitations</span>
                             </div>
                         </div>
                         <md-table-pagination id="pagination"
                             zafira-background-theme="pagination"
-                            ng-if="$ctrl.sr.results.length"
+                            ng-if="$ctrl.sr.length && $ctrl.totalResults > $ctrl.sc.pageSize"
                             md-limit="$ctrl.sc.pageSize"
                             md-limit-options=false
                             md-page="$ctrl.sc.page"
-                            md-total="{{$ctrl.sr.totalResults}}"
+                            md-total="{{$ctrl.totalResults}}"
                             md-page-select=false
                             md-boundary-links=true
                             md-on-paginate="$ctrl.search"></md-table-pagination>

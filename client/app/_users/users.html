@@ -60,13 +60,14 @@
                                             ng-disable="$ctrl.filterByStatusInAction">
                                             <span class="status-menu__button-text">
                                                 Status
-                                                <md-icon class="material-icons status-menu__button-icon">unfold_more</md-icon>
+                                                <md-icon class="material-icons status-menu__button-icon" ng-if="!$ctrl.sc.status">filter_list</md-icon>
+                                                <md-icon md-svg-icon="checkedListIcon" ng-if="$ctrl.sc.status" class="material-icons status-menu__button-icon _active"></md-icon>
                                             </span>
                                         </button>
                                         <md-menu-content width="2" class="status-menu__dropdown-wrapper">
                                             <md-menu-item ng-repeat="item in $ctrl.allUserStatuses" class="status-menu__dropdown-list">
                                                 <md-button ng-click="$ctrl.changeSelectedStatus(item)" class="status-menu__dropdown-button">
-                                                    <span class="status-icon {{item}} status-menu__dropdown-text">{{item || 'reset'}}</span>
+                                                    <span class="status-icon {{item}} status-menu__dropdown-text">{{item || 'all'}}</span>
                                                 </md-button>
                                             </md-menu-item>
                                         </md-menu-content>
@@ -76,7 +77,7 @@
                             </div>
                         </div>
                         <div class="users-table">
-                            <div class="users-table__row" ng-repeat="user in $ctrl.sr.results">
+                            <div class="users-table__row" ng-repeat="user in $ctrl.sr">
                                 <div class="users-table__col" data-title="{{user.username}}">
                                     <profile-photo name="userPhoto" squared="15" ng-model="user.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
                                 </div>
@@ -106,12 +107,12 @@
                                     <span name="status" class="status-label" ng-class="{'text-success': user.status == 'ACTIVE', 'text-error': user.status == 'INACTIVE'}" class="label">{{ user.status.toLowerCase()}}</span>
                                 </div>
                                 <div class="users-table__col">
-                                    <md-menu class="pull-right">
+                                    <md-menu class="user-menu pull-right">
                                         <md-button name="userMenu" aria-label="User settings" class="md-icon-button _menu-button"
                                                     data-ng-click="$mdMenu.open($event);">
                                             <md-icon class="material-icons">more_vert</md-icon>
                                         </md-button>
-                                        <md-menu-content width="2">
+                                        <md-menu-content class="user-menu__list" width="2">
                                             <md-menu-item ng-if="$ctrl.userHasAnyPermission(['MODIFY_USERS'])">
                                                 <md-button name="userEdit" data-ng-click="$ctrl.showEditProfileDialog($event, user, $index)">
                                                     <span>Edit</span>
@@ -123,7 +124,7 @@
                                                 </md-button>
                                             </md-menu-item>
                                             <md-menu-item ng-if="$ctrl.currentUser.pefrDashboardId">
-                                                <md-button name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })" style="padding-top: 12px">
+                                                <md-button class="user-menu__list-button" name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })">
                                                     <span>Performance</span>
                                                 </md-button>
                                             </md-menu-item>
@@ -131,17 +132,17 @@
                                     </md-menu>
                                 </div>
                             </div>
-                            <div class="users-table__row _centered" ng-if="$ctrl.sr.results.length == 0">
+                            <div class="users-table__row _centered" ng-if="$ctrl.isUsersEmpty()">
                                 <span id="noData" class="users-table__message">No users</span>
                             </div>
                         </div>
                         <md-table-pagination id="pagination"
                             zafira-background-theme="pagination"
-                            ng-if="$ctrl.sr.results.length != 0"
+                            ng-if="$ctrl.sr.length && $ctrl.totalResults > $ctrl.sc.pageSize"
                             md-limit="$ctrl.sc.pageSize"
                             md-limit-options=false
                             md-page="$ctrl.sc.page"
-                            md-total="{{$ctrl.sr.totalResults}}"
+                            md-total="{{$ctrl.totalResults}}"
                             md-page-select=false
                             md-boundary-links=true
                             md-on-paginate="$ctrl.search"></md-table-pagination>

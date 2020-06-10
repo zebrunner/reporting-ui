@@ -31,11 +31,13 @@ const InvitationsController = function InvitationsController(
         searchUser: searchUser,
         isFiltered: false,
         sc: angular.copy(DEFAULT_SC),
-        sr: {},
+        sr: [],
+        totalResults: 0,
         search: search,
         reset: reset,
         copyLink: copyLink,
         userHasAnyPermission: authService.userHasAnyPermission,
+        isInvitationsEmpty,
 
         get currentTitle() { return pageTitleService.pageTitle; },
         get groups() {return GroupService.groups;},
@@ -44,6 +46,10 @@ const InvitationsController = function InvitationsController(
     vm.$onInit = initController;
 
     return vm;
+
+    function isInvitationsEmpty() {
+        return vm.sr && !vm.sr.length;
+    }
 
     function showInviteUsersDialog(event) {
         $mdDialog.show({
@@ -62,7 +68,7 @@ const InvitationsController = function InvitationsController(
             }, function (invitations) {
                 if (invitations) {
                     invitations.forEach(function (invite) {
-                        vm.sr.results.push(invite);
+                        vm.sr.push(invite);
                     });
                 }
             });
@@ -76,7 +82,7 @@ const InvitationsController = function InvitationsController(
     function takeOff(invite, index) {
         InvitationService.deleteInvitation(invite.id).then(function (rs) {
             if (rs.success) {
-                vm.sr.results.splice(index, 1);
+                vm.sr.splice(index, 1);
                 messageService.success('Invitation was taken off successfully.');
             } else {
                 messageService.error(rs.message);
@@ -87,7 +93,7 @@ const InvitationsController = function InvitationsController(
     function retryInvite(invite, index) {
         InvitationService.retryInvite(invite).then(function (rs) {
             if (rs.success) {
-                vm.sr.results.splice(index, 1, rs.data);
+                vm.sr.splice(index, 1, rs.data);
                 messageService.success('Invitation was sent successfully.');
             } else {
                 messageService.error(rs.message);
@@ -119,7 +125,8 @@ const InvitationsController = function InvitationsController(
         }
         InvitationService.search(vm.sc).then(function (rs) {
             if (rs.success) {
-                vm.sr = rs.data;
+                vm.sr = rs.data.results || [];
+                vm.totalResults = rs.data.totalResults || 0;
             } else {
                 messageService.error(rs.message);
             }
