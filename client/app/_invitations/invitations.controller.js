@@ -37,7 +37,7 @@ const InvitationsController = function InvitationsController(
         reset: reset,
         copyLink: copyLink,
         userHasAnyPermission: authService.userHasAnyPermission,
-        isInvitationsEmpty: isInvitationsEmpty,
+        isInvitationsEmpty,
 
         get currentTitle() { return pageTitleService.pageTitle; },
         get groups() {return GroupService.groups;},
@@ -48,7 +48,7 @@ const InvitationsController = function InvitationsController(
     return vm;
 
     function isInvitationsEmpty() {
-        return vm.sr && !vm.sr?.length;
+        return vm.sr && !vm.sr.length;
     }
 
     function showInviteUsersDialog(event) {

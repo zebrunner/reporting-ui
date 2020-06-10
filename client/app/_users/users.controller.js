@@ -69,7 +69,7 @@ const UsersController = function UserViewController(
     return vm;
 
     function isUsersEmpty() {
-        return vm.sr && !vm.sr?.length;
+        return vm.sr && !vm.sr.length;
     }
 
     function changeSelectedStatus(status) {
