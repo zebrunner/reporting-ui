@@ -128,7 +128,8 @@ export const MigrationAuthService = (
 
     function prepareSignupPage$(token) {
         if (!token) {
-            return RouterService.go('/signin');
+            RouterService.go('/signin');
+            return of(null);
         }
 
         return RequestService.get$(`/api/invitations/info?token=${token}`).pipe(

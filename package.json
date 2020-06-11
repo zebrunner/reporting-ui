@@ -10,7 +10,8 @@
         "package:prepare": "shx rm -rf ./dist && tsc",
         "package:build": "npm run package:prepare && webpack --config ./webpack/webpack.lib.js",
         "package:serve": "npm run package:prepare && webpack --config ./webpack/webpack.lib.serve.js",
-        "package:link": "npm link react react-router-dom angular react-redux @zebrunner/core && npm link",
+        "package:link": "npm link && npm link react react-router-dom angular @zebrunner/core && npm run package:build",
+        "package:link:remove": "cd node_modules && unlink react && unlink angular && unlink react-router-dom && cd @zebrunner && unlink core && cd ../.. && npm unlink && npm i",
         "build": "webpack",
         "prepare": "npm run package:build && tsc"
     },
@@ -27,7 +28,7 @@
         "@types/angular": "^1.7.0",
         "@types/react": "^16.9.35",
         "@zebrunner/core": "^1.5.0-rc.2",
-        "angular": "^1.8.0",
+        "angular": "^1.7.9",
         "babel-loader": "^8.0.6",
         "babel-plugin-angularjs-annotate": "^0.10.0",
         "clean-webpack-plugin": "^3.0.0",
