@@ -669,7 +669,7 @@
                         &:active,
                         &.md-focused,
                         &:focus {
-                            &:not(._completed) {
+                            &:not(._completed):not([disabled]) {
                                 color: darken($dark-coal-light-new, 15%);
                                 border-color: darken(#e9e9e9, 15%);
                                 background-color: #edeff0;
@@ -686,6 +686,10 @@
                                     }
                                 }
                             }
+                        }
+
+                        &:disabled {
+                            opacity: 0.5;
                         }
                     }
                 }

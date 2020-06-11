@@ -384,9 +384,9 @@ $historySectionHeight: 68px;
                     &._platform,
                     &._tickets,
                     &._artifacts {
+                        color: #6C757C;
                         width: 150px;
                         font-size: 14px;
-                        opacity: 0.8;
                     }
 
                     &._artifacts {
@@ -460,7 +460,7 @@ $historySectionHeight: 68px;
                         & .work-items {
                             display: inline-block;
                             & a,
-                            & span{
+                            & span {
                                 margin-right: 20px;
                             }
                         }
@@ -476,7 +476,6 @@ $historySectionHeight: 68px;
                         }
                     }
 
-
                     &._label {
                         font-weight: 400;
                         vertical-align: text-bottom;
@@ -489,17 +488,20 @@ $historySectionHeight: 68px;
                         transform: translateY(2px);
                     }
                 }
+
+                &-content {
+                    word-break: break-all;
+                }
             }
 
             table {
-
                 td {
                 padding: 2px 8px 2px 0;
-                color: $coal;
+                color: $gray-base;
                 font-size: 14px;
 
-                    span{
-                        font-weight: 500;
+                    span {
+                        font-weight: 400;
                     }
                 }
             }

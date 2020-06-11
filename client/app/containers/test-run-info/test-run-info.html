@@ -96,7 +96,7 @@
                                                         <md-button class="menu__button"
                                                             aria-label="Additional menu"
                                                             ng-click="$mdMenu.open($event)"
-                                                            ng-disabled="$ctrl.test.status.toLowerCase() === 'in_progress' || $ctrl.test.status.toLowerCase() === 'queued' || $ctrl.test.status.toLowerCase() === 'unknown'">
+                                                            ng-disabled="$ctrl.test.status.toLowerCase() === 'in_progress' || $ctrl.test.status.toLowerCase() === 'queued' || $ctrl.test.status.toLowerCase() === 'unknown' || !$ctrl.userHasAnyPermission(['MODIFY_TESTS'])">
                                                             <span class="button-text _{{$ctrl.test.status.toLowerCase()}}">{{ $ctrl.test.status.split('_').join(' ').toLowerCase() }}</span>
                                                             <span class="material-icons button-icon">arrow_drop_down</span>
                                                         </md-button>
@@ -126,7 +126,7 @@
                                                     <span class="tab-additional__table-data _label">Test owner</span>
                                                 </td>
                                                 <td class="tab-additional__table-data _test-owner-data">
-                                                    <span>{{ $ctrl.test.owner }}</span>
+                                                    <span class="tab-additional__table-content">{{ $ctrl.test.owner }}</span>
                                                 </td>
                                             </tr>
                                             <tr class="tab-additional__table-row">
@@ -179,8 +179,8 @@
                                                     <span class="material-icons data-icon">phone_iphone</span>
                                                     <span class="tab-additional__table-data _label">Device</span>
                                                 </td>
-                                                <td>
-                                                    <span>{{::$ctrl.test.testConfig.device}}</span>
+                                                <td class="tab-additional__table-data _device">
+                                                    <span class="tab-additional__table-content">{{::$ctrl.test.testConfig.device}}</span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -221,7 +221,7 @@
                                 <div class="testrun-info__tab-table-col _start">Start</div>
                                 <div class="testrun-info__tab-table-col _status">
                                     <md-menu md-offset="-20 40">
-                                        <div aria-label="Open demo menu" ng-click="$mdMenu.open($event); $ctrl.log($ctrl)" >
+                                        <div aria-label="Open demo menu" ng-click="$mdMenu.open($event)" >
                                             <span class="testrun-info__status-button-icon _{{$ctrl.selectedLevel}}">Status</span>
                                             <span ng-if="$ctrl.selectedLevel === 'status'" class="material-icons _button-icon">filter_list</span>
                                             <md-icon md-svg-icon="checkedListIcon" ng-if="$ctrl.selectedLevel !== 'status'" class="material-icons selected-icon"></md-icon>
