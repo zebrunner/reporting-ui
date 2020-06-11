@@ -103,7 +103,7 @@
                         </div>
                         <md-table-pagination id="pagination"
                             zafira-background-theme="pagination"
-                            ng-if="$ctrl.sr.length && $ctrl.totalResults > $ctrl.sc.pageSize"
+                            ng-if="!$ctrl.isInvitationsEmpty()"
                             md-limit="$ctrl.sc.pageSize"
                             md-limit-options=false
                             md-page="$ctrl.sc.page"
