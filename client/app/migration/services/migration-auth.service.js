@@ -75,7 +75,8 @@ export const MigrationAuthService = (
 
     function prepareSignupPage$(token) {
         if (!token) {
-            return $state.go('signin');
+            $state.go('signin');
+            return of(null);
         }
 
         return from(MigrationRequestService.get(`/api/invitations/info?token=${token}`)).pipe(

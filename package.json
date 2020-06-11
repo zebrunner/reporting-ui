@@ -1,6 +1,6 @@
 {
     "name": "@zebrunner/reporting",
-    "version": "1.4.0-rc.1",
+    "version": "1.5.0",
     "main": "./dist/index.js",
     "types": "./dist/types/index.d.ts",
     "scripts": {
@@ -10,7 +10,8 @@
         "package:prepare": "shx rm -rf ./dist && tsc",
         "package:build": "npm run package:prepare && webpack --config ./webpack/webpack.lib.js",
         "package:serve": "npm run package:prepare && webpack --config ./webpack/webpack.lib.serve.js",
-        "package:link": "npm link react react-router-dom angular react-redux @zebrunner/core && npm link",
+        "package:link": "npm link && npm link react react-router-dom angular @zebrunner/core && npm run package:build",
+        "package:link:remove": "cd node_modules && unlink react && unlink angular && unlink react-router-dom && cd @zebrunner && unlink core && cd ../.. && npm unlink && npm i",
         "build": "webpack",
         "prepare": "npm run package:build && tsc"
     },
@@ -26,8 +27,8 @@
         "@babel/runtime": "^7.8.3",
         "@types/angular": "^1.7.0",
         "@types/react": "^16.9.35",
-        "@zebrunner/core": "^1.4.0-rc.1",
-        "angular": "^1.7.0",
+        "@zebrunner/core": "^1.5.0",
+        "angular": "^1.7.9",
         "babel-loader": "^8.0.6",
         "babel-plugin-angularjs-annotate": "^0.10.0",
         "clean-webpack-plugin": "^3.0.0",
@@ -51,6 +52,7 @@
         "postcss-safe-parser": "^4.0.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
+        "react-redux": "^7.2.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "^3.4.1",
         "redux-logger": "^3.0.6",
@@ -76,7 +78,7 @@
         "not IE 11"
     ],
     "peerDependencies": {
-        "@zebrunner/core": "^1.4",
+        "@zebrunner/core": "^1.5",
         "angular": "^1.7",
         "react": "^16",
         "react-dom": "^16",
@@ -118,7 +120,6 @@
         "ng-file-upload": "^12.2.13",
         "ng-img-crop": "^0.2.0",
         "oclazyload": "^1.1.0",
-        "react-redux": "^7.2.0",
         "redux": "^4.0.5",
         "rxjs": "^6.5.5",
         "swiper": "^5.4.1",
