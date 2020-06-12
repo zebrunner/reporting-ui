@@ -756,11 +756,16 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function collectScreenshotsForNewAgent(log) {
-        const logToAttache = $scope.logs.find((l, index) => {
+        let logToAttache = $scope.logs.find((l, index) => {
             const logIsBefore = l.timestamp <= log.timestamp;
             const nextLogIsAfter = !$scope.logs[index + 1] || ($scope.logs[index + 1].timestamp > log.timestamp);
             return logIsBefore && nextLogIsAfter;
         });
+
+        if (!logToAttache && !$scope.logs.length) {
+            $scope.logs.push(log);
+            logToAttache = log;
+        }
 
         let imageKey = log.message;
         let thumbnainKey = log.message.substring(0, log.message.indexOf(screenshotExtension)) + '_thumbnail' + screenshotExtension;
