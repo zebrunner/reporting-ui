@@ -88,6 +88,7 @@
         "ng-file-upload": "^12.2.13",
         "ng-img-crop": "^0.2.0",
         "oclazyload": "^1.1.0",
+        "rxjs": "^6.5.5",
         "swiper": "^5.4.1",
         "textangular": "^1.5.16",
         "uuid": "^8.1.0",

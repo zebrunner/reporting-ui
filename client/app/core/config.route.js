@@ -569,6 +569,11 @@
 
                             return $q.resolve($stateParams.configSnapshot);
                         },
+                        prepareESService: (elasticsearchService) => {
+                            'ngInject';
+
+                            return elasticsearchService.initService();
+                        },
                     },
                     lazyLoad: async ($transition$) => {
                         const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');

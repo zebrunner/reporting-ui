@@ -1,33 +1,55 @@
 'use strict';
 
+// fixed:
+// vnc resize listeners removing
+// logs adding if filter is enabled (previously was ignored)
+// images viewer thumbnails displaying bug: added min-width
+// realized incorrect ordering by @timestamp, but simple timestamp is more accurate
+
+// features
+// added video slider
+// screen logs as a separate log
+// removed video + logs highlighting sync
+
+// TODO: [+] pageSessionID - get rid of its ugly using and make requests canceling
+// TODO: [-] get rid of unused DI
+// TODO: [+] import images-viewer template by the same way as controller
+// TODO: [+] make importable agents
+// TODO: [+] add http requests cancelling
+// TODO: [+] clarify "driversQueue" meaning
+// TODO: [-] check template for "$ctrl" uses and redundant code
+// TODO: [-] add page scroll to the log from page's hash (anchor link)
+
+import { Subject, from as rxFrom, timer, defer } from 'rxjs';
+import { switchMap, takeUntil, tap, take, repeat, map } from 'rxjs/operators';
+import { v4 as uuidv4 } from 'uuid';
+
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
+import ImagesViewerTemplate from '../../components/modals/images-viewer/images-viewer.html';
 import IssuesModalController from '../../components/modals/issues/issues.controller';
 import IssuesModalTemplate from '../../components/modals/issues/issues.html';
 
 const testRunInfoController = function testRunInfoController(
-    $scope,
-    $mdDialog,
-    $interval,
-    $filter,
-    $anchorScroll,
     $location,
-    $timeout,
-    $q,
+    $mdDialog,
     $mdMedia,
+    $q,
+    $scope,
+    $state,
+    $stateParams,
+    $timeout,
+    $transitions,
     $window,
+    carinaLogsAgent,
+    defaultLogsAgent,
     elasticsearchService,
     UtilService,
     ArtifactService,
-    $stateParams,
-    OFFSET,
     API_URL,
-    $state,
-    testCaseService,
-    TestRunsStorage,
+    TestExecutionHistoryService,
     TestRunService,
     testsRunsService,
     TestService,
-    $transitions,
     pageTitleService,
     authService,
     messageService,
@@ -38,47 +60,56 @@ const testRunInfoController = function testRunInfoController(
 ) {
     'ngInject';
 
-    const mobileWidth = 480;
-    const vncFullScreenClass = 'vnc-fullscreen-mode';
+    const mobileWidth = 480; // TODO: get rid of it if possible
     let onTransStartSubscription = null;
-    let hashWatcherUnsubscriber = null;
     let testCaseManagementTools = [];
     let jiraSettings = {};
     let testRailSettings = {};
     let qTestSettings = {};
-    let painterWatcher = null;
     let wsSubscription = null;
     let stompClient = null;
+    let logsRequestsCanceler = $q.defer();
     const testsWebsocketName = 'tests';
+    const destroy$ = new Subject();
     const vm = {
+        activeDriverIndex: 0,
+        activeMode: null,
         activeTestId: null,
         configSnapshot: null,
+        drivers: [],
         executionHistory: [],
+        logs: [],
         parentTestId: null,
         test: null,
         testRun: null,
         logLevels: logLevelService.logLevels,
         filteredLogs: [],
         selectedLevel: logLevelService.initialLevel,
+        selectedLogRow: -1,
         isControllerRefreshing: false,
         testsTimeMedian: null,
-        pageSessionId: null,
 
         $onInit: controllerInit,
-        switchMoreLess,
-        getFullLogMessage,
-        downloadImageArtifacts,
-        downloadAllArtifacts,
-        filterResults,
+        $onDestroy: unbindEvents,
         changeTestStatus,
-        toggleVNCFullScreen,
-        onHistoryElemClick,
+        copyLogLine,
+        copyLogPermalink,
+        downloadAllArtifacts,
+        downloadImageArtifacts,
+        filterResults,
+        getFullLogMessage,
+        goToTestRuns,
         initToolsSettings,
+        onDriverChange,
+        onHistoryElemClick,
+        openImagesViewerModal,
+        selectLogRow,
         setWorkItemIsNewStatus,
         showDetailsDialog,
+        switchMoreLess,
         userHasAnyPermission: authService.userHasAnyPermission,
 
-        get hasVideo() { return hasVideo(); },
+        get selectedDriver() { return this.drivers[this.activeDriverIndex]; },
         get currentTitle() { return pageTitleService.pageTitle; },
         get jira() { return jiraSettings; },
         get testRail() { return testRailSettings; },
@@ -86,70 +117,37 @@ const testRunInfoController = function testRunInfoController(
         get isMobile() { return $mdMedia('xs'); },
     };
 
-    let logSizeCount = 0;
-    let driversQueue = [];
-    let driversCount = 0;
-    let unrecognizedImages = {};
-    const screenshotExtension = '.png';
-    let rfb = null;
-    let from = 0;
-    let page = 1;
-    let size = 5;
-    const LIVE_DEMO_ARTIFACT_NAME = 'live video';
-    let ELASTICSEARCH_INDEX = '';
+
     let agent = null;
     const MODES = {
         live: {
             name: 'live',
-            element: '.testrun-info__tab-video-wrapper',
             initFunc: initLiveMode,
             logGetter: {
                 from: 0,
-                pageCount: null,
-                getSizeFunc: function (count) {
-                    return count - MODES.live.logGetter.from;
-                },
-                accessFunc: function (count) {
-                    return count > MODES.live.logGetter.from;
-                }
             }
 
         },
         record: {
             name: 'record',
-            element: 'video',
             initFunc: initRecordMode,
             logGetter: {
-                from: null,
-                pageCount: page,
-                getSizeFunc: function (count) {
-                    return count;
-                },
-                accessFunc: null
+                from: 0,
             }
         }
     };
-    const LIVE_LOGS_INTERVAL_NAME = 'liveLogsFromElasticsearch';
-    let scrollEnable = true;
-    let liveIntervals = {};
-    let track = null;
 
-    $scope.elasticsearchDataLoaded = false;
-    $scope.selectedDriver = 0;
-    $scope.OFFSET = OFFSET;
-    $scope.MODE = {};
-    $scope.tab = { title: 'History', content: "Tabs will become paginated if there isn't enough room for them." };
-    $scope.TestRunsStorage = TestRunsStorage;
-    $scope.logs = [];
-    $scope.drivers = [];
-    $scope.videoMode = { mode: 'UNKNOWN' };
+    return vm;
 
-    $scope.goToTestRuns = function () {
+    /* Controller methods and helpers */
+    function goToTestRuns() {
+        const parentTest = vm.executionHistory.find(({ testId }) => testId === vm.parentTestId);
+
         $state.go('tests.runDetails', {
-            testRunId: vm.testRun.id,
+            testRunId: parentTest.testRunId,
             configSnapshot: vm.configSnapshot,
         });
-    };
+    }
 
     function filterResults(index) {
         if (vm.selectedLevel === logLevelService.logLevels[index]) {
@@ -157,7 +155,7 @@ const testRunInfoController = function testRunInfoController(
         }
 
         vm.selectedLevel = logLevelService.logLevels[index];
-        vm.filteredLogs = logLevelService.filterLogs($scope.logs, vm.selectedLevel);
+        vm.filteredLogs = logLevelService.filterLogs(vm.logs, vm.selectedLevel);
     }
 
     function downloadImageArtifacts() {
@@ -176,118 +174,99 @@ const testRunInfoController = function testRunInfoController(
         });
     }
 
-    function postModeConstruct(test, pageSessionId) {
-        if (vm.pageSessionId !== pageSessionId) { return; }
-        var logGetter = MODES[$scope.MODE.name].logGetter;
-        switch ($scope.MODE.name) {
-            case 'live':
-                provideVideo();
-                $scope.logs = [];
-                tryToGetLogsLiveFromElasticsearch(logGetter, LIVE_LOGS_INTERVAL_NAME, pageSessionId);
-                break;
-            case 'record':
-                $scope.selectedDriver = 0;
-                initRecords(test);
-                closeAll();
-                $scope.logs = [];
-                logSizeCount = 0;
-                unrecognizedImages = {};
-                scrollEnable = false;
-                tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId)
-                    .then(() => {
-                        if (vm.pageSessionId !== pageSessionId) { return; }
-                        // 10 attempts provide a 5-minutes max interval
-                        const attemptsToLoadImages = 10;
-                        let imagesLoadingAttempts = 0;
-                        let delay = 5000;
-                        const maxDelay = 40000;
+    function changeTestStatus(test, status = '') {
+        status = status.toUpperCase();
+        if (!test || !status || test.status === status.toUpperCase()) { return; }
 
-                        $timeout(() => {
-                            if (vm.pageSessionId !== pageSessionId) { return; }
-                            logGetter.pageCount = null;
-                            logGetter.from = $scope.logs.length + logSizeCount;
-                            function update() {
-                                $timeout(function() {
-                                    if (vm.pageSessionId !== pageSessionId) { return; }
-                                    if (Object.size(unrecognizedImages) > 0 && imagesLoadingAttempts < attemptsToLoadImages) {
-                                        logGetter.from = $scope.logs.length + logSizeCount;
-                                        tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId);
-                                        update();
-                                        imagesLoadingAttempts += 1;
-                                        // increase delay to next call up to maxDelay
-                                        delay = delay < maxDelay ? delay + delay : maxDelay;
-                                    }
-                                }, delay, false);
-                            }
+        const testCopy = {...test};
 
-                            tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId)
-                                .then(() => {
-                                    if (vm.pageSessionId !== pageSessionId) { return; }
-                                    update();
-                                });
-                        }, delay);
-                });
-                break;
-            default:
-                break;
-        }
+        testCopy.status = status.toUpperCase();
+
+        return TestService.updateTest(testCopy)
+            .then((response) => {
+                if (response.success) {
+                    messageService.success(`Test was marked as ${status}`);
+                    vm.test = response.data;
+                    updateExecutionHistoryItem(vm.test);
+                } else {
+                    const message = response.message ? response.message : 'Unable to change test status';
+
+                    messageService.error(message);
+                }
+            });
+    }
+
+    // TODO: Refactoring
+    function postModeConstruct(test) {
+        $timeout(() => {
+            switch (vm.activeMode.name) {
+                case 'live':
+                    getLiveESLogs$()
+                        .pipe(
+                            takeUntil(destroy$),
+                        )
+                        .subscribe(
+                            (res) => console.log('getLiveESLogs$ next:::', res),
+                            (res) => console.log('getLiveESLogs$ error:::', res),
+                            (res) => console.log('getLiveESLogs$ copmplete:::', res),
+                        );
+                    break;
+                case 'record':
+                    initRecords(test);
+
+                    fiveMinsLogsFetcher$()
+                        .pipe(
+                            takeUntil(destroy$),
+                        )
+                        .subscribe(
+                            (res) => console.log('fiveMinsLogsFetcher$ next:::', res),
+                            (res) => console.log('fiveMinsLogsFetcher$ error:::', res),
+                            (res) => console.log('fiveMinsLogsFetcher$ copmplete:::', res),
+                        );
+                    break;
+                default:
+                    break;
+            }
+        }, 0);
     }
 
     function setMode(modeName) {
-        if ($scope.MODE.name !== modeName) {
-            $scope.drivers = [];
-            $scope.MODE = MODES[modeName];
+        if (vm.activeMode && vm.activeMode.name === modeName) { return; }
+
+        vm.drivers = [];
+        vm.activeMode = MODES[modeName];
+    }
+
+    // TODO: refactoring
+    function openImagesViewerModal(event, url) {
+        const activeArtifact = vm.test.imageArtifacts.find(function (art) {
+            return art.link === url;
+        });
+
+        if (activeArtifact) {
+            $mdDialog.show({
+                controller: ImagesViewerController,
+                template: ImagesViewerTemplate,
+                controllerAs: '$ctrl',
+                bindToController: true,
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                fullscreen: false,
+                escapeToClose: false,
+                locals: {
+                    test: vm.test,
+                    activeArtifactId: activeArtifact.id,
+                }
+            });
         }
     }
-
-    function getLogsFromElasticsearch(from, page, size) {
-        return elasticsearchService.search(agent.esIndex, agent.searchCriteria, from, page, size, vm.test.startTime)
-            .then((response) => response.map(item => item._source));
-    }
-
-    function tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId) {
-        return $q(resolve => {
-            elasticsearchService.count(agent.esIndex, agent.searchCriteria, vm.test.startTime)
-                .then(count => {
-                    if (vm.pageSessionId !== pageSessionId) { return; }
-                    if (logGetter.accessFunc ? logGetter.accessFunc.call(this, count) : true) {
-                        const size = logGetter.getSizeFunc.call(this, count);
-
-                        collectElasticsearchLogs(logGetter.from, logGetter.pageCount, size, count, resolve, pageSessionId);
-                    }
-                });
-        });
-    }
-
-    function tryToGetLogsLiveFromElasticsearch(logGetter, logIntervalName, pageSessionId) {
-        return $q(function (resolve, reject) {
-            pseudoLiveDoAction(logIntervalName, 5000, function () {
-                getLogsLiveFromElasticsearch(logGetter, pageSessionId);
-            });
-        });
-    }
-
-    function getLogsLiveFromElasticsearch(logGetter, pageSessionId) {
-        tryToGetLogsHistoryFromElasticsearch(logGetter, pageSessionId)
-            .then(function (count) {
-                MODES.live.logGetter.from = count;
-            });
-    }
-
-    function pseudoLiveDoAction(intervalName, intervalMillis, func) {
-        func.call();
-        liveIntervals[intervalName] = $interval(function() {func.call()}, intervalMillis);
-    }
-
-    function pseudoLiveCloseAction(intervalName) {
-        $interval.cancel(liveIntervals[intervalName]);
-    }
-
+    // TODO: ? move to the directive
     function switchMoreLess(e, log) {
         e.preventDefault();
         e.stopPropagation();
         const rowElem = e.target.closest('.testrun-info__tab-table-col._action') || e.target.closest('.testrun-info__tab-mobile-table-data._action-data');
-        const scrollableElem = rowElem.closest('.testrun-info__tab-table-wrapper');
+        const scrollableElem = rowElem.closest('.testrun-info__tab-table-wrapper'); // TODO: mobile layout has another scrollable element
 
         log.showMore = !log.showMore;
         if (!log.showMore) {
@@ -303,307 +282,30 @@ const testRunInfoController = function testRunInfoController(
         return log.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ *(\r?\n|\r)/g, '<br/>').replace(/\s/g, '&nbsp;');
     }
 
-    function collectElasticsearchLogs(from, page, size, count, resolveFunc, pageSessionId) {
-        if (vm.pageSessionId !== pageSessionId) { return; }
-        getLogsFromElasticsearch(from, page, size)
-            .then(hits => {
-                if (vm.pageSessionId !== pageSessionId) { return; }
-                hits.forEach(hit => followUpOnLogs(hit));
-                prepareArtifacts();
-                if (!from && from !== 0 && (page * size < count)) {
-                    page++;
-                    collectElasticsearchLogs(from, page, size, count, resolveFunc, pageSessionId);
-                } else {
-                    $scope.elasticsearchDataLoaded = true;
-                    resolveFunc.call(this, count);
-                    if (scrollEnable && $location.hash()) {
-                        $anchorScroll();
-                    }
-                }
-            });
-    }
-
-    function initRecords(test) {
-        var videoArtifacts = getArtifactsByPartName(test, 'video', 'live');
-        if (videoArtifacts && videoArtifacts.length) {
-            $scope.drivers = $scope.drivers.concat(videoArtifacts.filter(function (value) {
-                return $scope.drivers.indexOfField('name', value.name) == -1;
-            }));
-            var link = $scope.drivers && $scope.drivers.length ? $scope.drivers[0].link : '';
-            watchUntilPainted('#videoRecord:has(source[src = \'' + link + '\'])', reloadVideo);
-        }
-    }
-
-    function reloadVideo(e) {
-        var videoElements = angular.element(e);
-        reloadVideoOnError(videoElements[0]);
-        if (videoElements && videoElements.length) {
-            videoElements[0].addEventListener('loadedmetadata', onMetadataLoaded, false);
-            videoElements[0].addEventListener('loadeddata', onDataLoaded, false);
-            videoElements[0].addEventListener('timeupdate', onTimeUpdate, false);
-            videoElements[0].addEventListener('webkitfullscreenchange', onFullScreenChange, false);
-            videoElements[0].addEventListener('mozfullscreenchange', onFullScreenChange, false);
-            videoElements[0].addEventListener('fullscreenchange', onFullScreenChange, false);
-            videoElements[0].addEventListener('playing', function() {
-                $scope.$apply(function () {
-                    $scope.videoMode.mode = "PLAYING";
-                });
-            }, false);
-            videoElements[0].addEventListener('play', function() {
-                $scope.$apply(function () {
-                    $scope.videoMode.mode = "PLAYING";
-                });
-            }, false);
-            videoElements[0].addEventListener('pause', function() {
-                $scope.$apply(function () {
-                    $scope.videoMode.mode = "PAUSE";
-                });
-            }, false);
-            videoElements[0].addEventListener('loadstart', function() {
-            }, false);
-        }
-        loadVideo(videoElements[0], 200);
-    };
-
-    function hasVideo() {
-        const currentDriver = $scope.drivers[$scope.selectedDriver];
-
-        return currentDriver && currentDriver.link;
-    }
-
-    function isVideo(link) {
-        return link && link.split('.').pop() === 'mp4';
-    }
-
-    function isVNC(link) {
-        return link && link.includes('/vnc/');
-    }
-
-    function reloadVideoOnError(videoElement) {
-        var sourceElement = videoElement.getElementsByTagName('source')[0];
-        var attempt = new Date().getTime() - vm.test.finishTime > 600000 ? 1 : 5;
-
-        sourceElement.addEventListener('error', function(e) {
-            if (attempt > 0) {
-                loadVideo(videoElement, 5000);
-            }
-            attempt--;
-        }, false);
-    }
-
-    function onMetadataLoaded(ev) {
-        track = this.addTextTrack("captions", "English", "en");
-        track.mode = 'hidden';
-    };
-
-    function onTimeUpdate(ev) {
-        var activeTrack = track && track.activeCues && track.activeCues.length ? track.activeCues[0] : null;
-        $scope.currentTime = ev.target.currentTime;
-        if (activeTrack) {
-            $scope.$apply(function () {
-                $scope.currentLog = { id: activeTrack.id, message: activeTrack.text };
-            });
-        }
-    };
-
-    function onDataLoaded(ev) {
-        $scope.$apply(function () {
-            $scope.videoMode.mode = "LOADED";
-        });
-        var videoElement = ev.target;
-        var elasticsearchDataWatcher = $scope.$watch('elasticsearchDataLoaded', function (isLoaded) {
-            if (isLoaded) {
-                var videoDuration = videoElement.duration;
-                var errorTime = getLogsStartErrorTime(videoDuration, $scope.logs);
-                $scope.logs.forEach(function (log, index) {
-                    var currentLogTime = log.timestamp - $scope.logs[0].timestamp + errorTime;
-                    log.videoTimestamp = currentLogTime / 1000;
-                });
-                addSubtitles(track, videoDuration);
-                elasticsearchDataWatcher();
-            }
-        });
-    };
-
-    function onFullScreenChange(ev) {
-        track.mode = track.mode === 'showing' ? 'hidden' : 'showing';
-    }
-
-    function addSubtitles(track, videoDuration) {
-        if (track && !track.cues.length) {
-            $scope.logs.forEach(function (log, index) {
-                var finishTime = index !== $scope.logs.length - 1 ? $scope.logs[index + 1].videoTimestamp : videoDuration;
-                var vttCue = new VTTCue(log.videoTimestamp, finishTime, log.message);
-                vttCue.id = index;
-                track.addCue(vttCue);
-            });
-        }
-    }
-
-    function getLogsStartErrorTime(duration, logs) {
-        let logsDuration = 0;
-
-        if (logs.length) {
-            logsDuration = logs[logs.length - 1].timestamp - logs[0].timestamp;
-        }
-
-        return duration * 1000 - logsDuration;
-    }
-
-    function loadVideo(videoElement, timeout) {
-        $timeout(function () {
-            videoElement.load();
-        }, timeout);
-    }
-
-    $scope.getVideoState = function (log) {
-        $timeout(() => {
-            const videoElement = angular.element('#videoRecord')[0];
-
-            videoElement && log.videoTimestamp && (videoElement.currentTime = log.videoTimestamp);
-        }, 0);
-    };
-
-    function getArtifactsByPartName(test, partName, exclusion) {
-        return test.artifacts ? test.artifacts.filter(function (artifact) {
-            return artifact.name.toLowerCase().includes(partName) && !artifact.name.toLowerCase().includes(exclusion);
-        }) : [];
-    }
-
-    function addDrivers(artifacts) {
-        artifacts.sort(compareByCreatedAt);
-        artifacts.forEach(function (artifact) {
-            addDriver(artifact);
-        });
-    }
-
-    function addDriver(liveDemoArtifact) {
-        if (liveDemoArtifact && $scope.drivers.indexOfField('name', liveDemoArtifact.name) === -1) {
-            $scope.drivers.push(liveDemoArtifact);
-            liveDemoArtifact.index = $scope.drivers.length - 1;
-            driversQueue.push(liveDemoArtifact);
-        }
-    }
-
-    $scope.selectedLogRow = -1;
-
-    $scope.selectLogRow = function(ev, index) {
-        const hash = ev.currentTarget.attributes.id.value;
-        const stateParams = $state.params;
-
-        stateParams['#'] = hash;
-
-        const newUrl = $state.href('tests.runInfo', stateParams, {absolute: true});
-
-        $window.history.pushState(null, null, newUrl);
-    };
-
-    $scope.copyLogLine = function(log) {
-        var message = $filter('date')(new Date(log.timestamp), 'HH:mm:ss') + ' [' + log.threadName + '] ' + '[' + log.level + '] ' + log.message;
-        message.copyToClipboard();
-    };
-
-    $scope.copyLogPermalink = function() {
-        $location.$$absUrl.copyToClipboard();
-    };
-
-    // TODO: bug: row isn't highlighted on page load (absent data)
-    function registerLocationHashWatcher() {
-        return $scope.$watch(() => {
-            return $location.hash();
-        }, (newVal, oldVal) => {
-            var selectedLogRowClass = 'selected-log-row';
-            if (newVal) {
-                if (newVal === oldVal) {
-                    watchUntilPainted('#' + newVal, function () {
-                        angular.element('#' + newVal).addClass(selectedLogRowClass);
-                    });
-                } else {
-                    angular.element('#' + newVal).addClass(selectedLogRowClass);
-                    if (oldVal) {
-                        angular.element('#' + oldVal).removeClass(selectedLogRowClass);
-                    }
-                }
-                $scope.selectedLogRow = newVal.split('log-')[1];
-            }
-        });
-    }
-
-    function toggleVNCFullScreen() {
-        document.body.classList.toggle(vncFullScreenClass);
-        $timeout(() => {
-            ArtifactService.resize(angular.element($scope.MODE.element)[0], rfb);
-        }, 0);
-    }
-
-    function exitVNCFullScreen() {
-        if (document.body.classList.contains(vncFullScreenClass)) {
-            document.body.classList.remove(vncFullScreenClass);
-            $timeout(() => {
-                ArtifactService.resize(angular.element($scope.MODE.element)[0], rfb);
-            }, 0);
-        }
-    }
-
-    $scope.switchDriver = function (index) {
-        if ($scope.selectedDriver !== index) {
-            $scope.selectedDriver = index;
-            postDriverChanged();
-        }
-    };
-
-    function postDriverChanged() {
-        switch ($scope.MODE.name) {
-            case 'live':
-                closeRfbConnection();
-                provideVideo();
-                break;
-            case 'record':
-                initRecords(vm.test);
-                break;
-            default:
-                break;
-        }
-    }
-
-    function watchUntilPainted(elementLocator, func) {
-        painterWatcher = $scope.$watch(function() { return angular.element(elementLocator).is(':visible') }, function(newVal) {
-            if (newVal) {
-                func.call(this, elementLocator);
-                painterWatcher();
-            }
-        });
-    }
-
-    function compareByCreatedAt(a, b) {
-        if (a.createdAt < b.createdAt)
-            return -1;
-        if (a.createdAt > b.createdAt)
-            return 1;
-        return 0;
-    }
-
+    // TODO: complete refactoring
     function prepareArtifacts() {
         // extract image artifacts from logs
-        const imageArtifacts = $scope.logs.reduce((formatted, artifact) => {
-            if (artifact.isImageExists && artifact.blobLog.image && artifact.blobLog.image.path) {
-                artifact.blobLog.image.path.forEach(path => {
-                    if (path) {
-                        const url = new URL(path);
-                        let newArtifact = {
-                            id: path,
-                            name: artifact.blobLog.image.threadName,
-                            link: path,
-                            extension: url.pathname.split('/').pop().split('.').pop(),
-                        };
+        const imageArtifacts = vm.logs.reduce((formatted, artifact) => {
+            const path = artifact.urls?.image?.path ?? '';
 
-                        if (artifact.blobLog.thumb && artifact.blobLog.thumb.path) {
-                            newArtifact.thumb = artifact.blobLog.thumb.path;
-                        }
+            if (path) {
+                try {
+                    const url = new URL(path);
+                    let newArtifact = {
+                        id: path,
+                        name: artifact.urls?.image?.name,
+                        link: path,
+                        extension: url.pathname.split('/').pop().split('.').pop(),
+                    };
 
-                        formatted.push(newArtifact);
+                    if (artifact.urls?.thumb?.path) {
+                        newArtifact.thumb = artifact.urls.thumb.path;
                     }
-                });
+
+                    formatted.push(newArtifact);
+                } catch (error) {
+                    console.warn(`Broken screenshot url: "${path}"`);
+                }
             }
 
             return formatted;
@@ -615,18 +317,16 @@ const testRunInfoController = function testRunInfoController(
 
             if (!name.includes('live') && !name.includes('video') && artifact.link) {
                 const links = artifact.link.split(' ');
-                let url = null;
 
                 try {
-                    url = new URL(links[0]);
+                    const url = new URL(links[0]);
+
+                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
                 } catch (error) {
                     artifact.hasBrokenLink = true;
                     console.warn(`Artifact "${name}" has invalid link.`);
                 }
 
-                if (url instanceof URL) {
-                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
-                }
                 formatted.push(artifact);
             }
 
@@ -637,246 +337,47 @@ const testRunInfoController = function testRunInfoController(
         vm.test.artifactsToDownload = [...artifactsToDownload, ...imageArtifacts];
     }
 
-    $scope.openImagesViewerModal = function (event, url) {
-        const activeArtifact = vm.test.imageArtifacts.find(function (art) {
-            return art.link === url;
-        });
+    function selectLogRow(ev, index) {
+        const hash = ev.currentTarget.attributes.id.value;
+        const stateParams = $state.params;
 
-        if (activeArtifact) {
-            $mdDialog.show({
-                controller: ImagesViewerController,
-                template: require('../../components/modals/images-viewer/images-viewer.html'),
-                controllerAs: '$ctrl',
-                bindToController: true,
-                parent: angular.element(document.body),
-                targetEvent: event,
-                clickOutsideToClose: true,
-                fullscreen: false,
-                escapeToClose: false,
-                locals: {
-                    test: vm.test,
-                    activeArtifactId: activeArtifact.id,
-                }
-            });
-        }
-    };
+        stateParams['#'] = hash;
 
-    /**************** Websockets **************/
-    function initTestsWebSocket(testRun) {
-        const ws = new SockJS(`${API_URL}/api/websockets`);
+        const newUrl = $state.href('tests.runInfo', stateParams, {absolute: true});
 
-        stompClient = Stomp.over(ws);
-        stompClient.debug = null;
-        stompClient.ws.close = () => {};
-        stompClient.connect({ withCredentials: false }, stompConnectHandler, stompErrorHandler);
-
-        UtilService.websocketConnected(testsWebsocketName);
+        vm.selectedLogRow = index;
+        // we don't want reload page
+        $window.history.pushState(null, null, newUrl);
     }
 
-    function stompConnectHandler() {
-        if (stompClient.connected) {
-            wsSubscription = stompClient.subscribe(`/topic/${authService.tenant}.testRuns.${testRun.id}.tests`, testsWSHandler);
-        }
+    // TODO: [+] refactoring
+    function copyLogLine(log) {
+        const formattedTime = moment(log.timestamp).format('HH:mm:ss');
+        const message = `${formattedTime} [${log.threadName}] [${log.level}] ${log.message}`;
+
+        message.copyToClipboard();
     }
 
-    function stompErrorHandler() {
-        UtilService.reconnectWebsocket(testsWebsocketName, initTestsWebSocket);
+    // TODO: [+] refactoring
+    function copyLogPermalink() {
+        $location.absUrl().copyToClipboard();
     }
 
-    function testsWSHandler(wsEvent) {
-        const test = getEventFromMessage(wsEvent.body).test;
+    // TODO: [+] refactoring
+    function initSelectedLog() {
+        const hash = $location.hash();
 
-        if (vm.test && test.id === vm.test.id) {
-            if (test.status === 'IN_PROGRESS') {
-                addDrivers(getArtifactsByPartName(test, LIVE_DEMO_ARTIFACT_NAME));
-                driversCount = $scope.drivers.length;
-            } else {
-                pseudoLiveCloseAction(LIVE_LOGS_INTERVAL_NAME);
-                exitVNCFullScreen();
-                setMode('record');
-                var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
-                if (videoArtifacts.length === driversCount) {
-                    addDrivers(videoArtifacts);
-                    postModeConstruct(test, vm.pageSessionId);
-                }
-            }
-            vm.test = angular.copy(test);
-            $scope.$apply();
-        }
-        updateExecutionHistoryItem(test);
-    }
+        if (hash) {
+            const logIndex = parseInt(hash.replace('log-', ''), 10);
 
-    function followUpOnLogs(log) {
-        if ($scope.MODE.name === 'live' && driversQueue.length) {
-            log.driver = driversQueue.pop();
-            driversQueue = [];
-        }
-        collectLogs(log);
-    }
-
-    function collectLogs(log) {
-        if (log.level === 'META_INFO') {
-            collectScreenshots(log);
-        } else if (log.kind === 'screenshot') {
-            collectScreenshotsForNewAgent(log);
-        } else {
-            $scope.logs.push(log);
-        }
-        vm.filteredLogs = $scope.logs;
-        $scope.$applyAsync();
-    }
-
-    function collectScreenshotsForNewAgent(log) {
-        const logToAttache = $scope.logs.find((l, index) => {
-            const logIsBefore = l.timestamp <= log.timestamp;
-            const nextLogIsAfter = !$scope.logs[index + 1] || ($scope.logs[index + 1].timestamp > log.timestamp);
-            return logIsBefore && nextLogIsAfter;
-        });
-
-        let imageKey = log.message;
-        let thumbnainKey = log.message.substring(0, log.message.indexOf(screenshotExtension)) + '_thumbnail' + screenshotExtension;
-
-        imageKey = removeTenantPrefix(imageKey);
-        thumbnainKey = removeTenantPrefix(thumbnainKey);
-
-        const imageUrl = authService.serviceUrl + '/' + imageKey;
-        const thumbnailUrl = authService.serviceUrl + '/' + thumbnainKey;
-
-        logToAttache.blobLog = {
-            thumb : { path : [thumbnailUrl] },
-            image : { path : [imageUrl] }
-        };
-        logToAttache.thumb = {
-            path: thumbnainKey
-        };
-        logToAttache.image = {
-            path: log.message
-        };
-        logToAttache.isImageExists = true;
-        logSizeCount++;
-    }
-
-    function removeTenantPrefix(key) {
-        const tenantSubPath = authService.tenant + '/';
-        if (key.startsWith(tenantSubPath)) {
-            return key.substring(tenantSubPath.length);
-        }
-        return key;
-    }
-
-    function collectScreenshots(log) {
-        var correlationId = getMetaLogCorrelationId(log);
-        var isThumbnail = isThumb(log);
-        var existsUnrecognizedImage = getUnrecognizedImageExists(isThumbnail, correlationId);
-        logSizeCount++;
-        if (existsUnrecognizedImage) {
-            catchScreenshot(log, existsUnrecognizedImage, correlationId, isThumbnail);
-        } else {
-            preScreenshot(log, correlationId, isThumbnail);
-        }
-    }
-
-    function preScreenshot(log, correlationId, isThumbnail) {
-        var index = $scope.logs.length - 1;
-        var appenToLog = $scope.logs[index];
-        appenToLog.blobLog = appenToLog.blobLog || {};
-        if (isThumbnail) {
-            appenToLog.blobLog.thumb = log;
-        } else {
-            appenToLog.blobLog.image = log;
-        }
-        appenToLog.isImageExists = false;
-        unrecognizedImages[correlationId] = unrecognizedImages[correlationId] || {};
-        if (isThumbnail) {
-            unrecognizedImages[correlationId].thumb = { 'log': appenToLog, 'index': index };
-        } else {
-            unrecognizedImages[correlationId].image = { 'log': appenToLog, 'index': index };
-        }
-    }
-
-    function catchScreenshot(log, preScreenshot, correlationId, isThumbnail) {
-        var path;
-        if (isThumbnail) {
-            path = getMetaLogThumbAmazonPath(log);
-            preScreenshot.log.blobLog.thumb.path = path;
-            if (!unrecognizedImages[correlationId].image) {
-                delete unrecognizedImages[correlationId];
-            } else {
-                delete unrecognizedImages[correlationId].thumb;
-            }
-        } else {
-            path = getMetaLogAmazonPath(log);
-            preScreenshot.log.blobLog.image.path = preScreenshot.log.blobLog.image.path || [];
-            preScreenshot.log.blobLog.image.path.push(path);
-            preScreenshot.log.isImageExists = true;
-            if (!unrecognizedImages[correlationId].thumb) {
-                delete unrecognizedImages[correlationId];
-            } else {
-                delete unrecognizedImages[correlationId].image;
+            if (!isNaN(logIndex)) {
+                vm.selectedLogRow = logIndex;
             }
         }
     }
 
-    function getUnrecognizedImageExists(isThumbnail, correlationId) {
-        if (!unrecognizedImages[correlationId]) {
-            return false;
-        }
-        return isThumbnail ? unrecognizedImages[correlationId].thumb : unrecognizedImages[correlationId].image;
-    }
-
-    function getMetaLogCorrelationId(log) {
-        return getMetaLogHeader(log, 'AMAZON_PATH_CORRELATION_ID');
-    }
-
-    function getMetaLogAmazonPath(log) {
-        return getMetaLogHeader(log, 'AMAZON_PATH');
-    }
-
-    function getMetaLogThumbAmazonPath(log) {
-        return getMetaLogHeader(log, 'THUMB_AMAZON_PATH');
-    }
-
-    function getMetaLogHeader(log, headerName) {
-        return log.headers[headerName];
-    }
-
-    function isThumb(log) {
-        return getMetaLogThumbAmazonPath(log) !== undefined;
-    }
-
-    function provideVideo() {
-        var driversWatcher = $scope.$watchCollection('drivers', function (newVal) {
-            if (newVal && newVal.length) {
-                var wsUrl = $scope.drivers[$scope.selectedDriver].link;
-                watchUntilPainted('#vnc', function (e) {
-                    rfb = ArtifactService.connectVnc(angular.element($scope.MODE.element)[0], 'offsetHeight', 'offsetWidth', wsUrl);
-                });
-                driversWatcher();
-            }
-        });
-    }
-
-    function getEventFromMessage(message) {
-        let parsedMessage;
-
-        try {
-           parsedMessage = JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
-        } catch (err) {
-            // TODO: debug error log
-        }
-
-        return parsedMessage;
-    }
-
-    $scope.onResize = function () {
-        ArtifactService.resize(angular.element($scope.MODE.element)[0], rfb);
-    };
-
-    /**************** On destroy **************/
     function bindEvents() {
-        $scope.$on('$destroy', unbindEvents);
         TestService.subscribeOnLocationChangeStart();
-        hashWatcherUnsubscriber = registerLocationHashWatcher();
         onTransStartSubscription = $transitions.onStart({}, function (trans) {
             const toState = trans.to();
 
@@ -890,82 +391,36 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function resetInitialValues(testRun, test) {
-        vm.pageSessionId = Date.now();
         onTransStartSubscription = null;
         testCaseManagementTools = [];
         jiraSettings = {};
         testRailSettings = {};
         qTestSettings = {};
-        logSizeCount = 0;
-        driversQueue = [];
-        driversCount = 0;
-        unrecognizedImages = {};
-        from = 0;
-        page = 1;
-        size = 5;
-        ELASTICSEARCH_INDEX = '';
         agent = null;
-        scrollEnable = true;
-        liveIntervals = {};
-        track = undefined;
-        painterWatcher = undefined;
-        rfb = undefined;
 
-        $scope.selectedLogRow = -1;
-        $scope.videoMode = { mode: 'UNKNOWN' };
-        $scope.drivers = [];
-        $scope.elasticsearchDataLoaded = false;
-        $scope.selectedDriver = 0;
-        $scope.MODE = {};
-        $scope.logs = [];
+        // TODO: at least we can clone original obj for working one
+        MODES.live.logGetter.from = 0;
+        MODES.record.logGetter.from = 0;
 
-        vm.wsSubscription = null;
+        vm.selectedLogRow = -1;
+        vm.logs = [];
+        vm.activeDriverIndex = 0;
+        vm.activeMode = {};
+        vm.drivers = [];
         vm.filteredLogs = [];
         vm.testRun = testRun;
         vm.test = test;
     }
 
     function unbindEvents() {
-        cancelIntervals();
-        closeAll();
-        hashWatcherUnsubscriber = hashWatcherUnsubscriber && hashWatcherUnsubscriber();
-        vm.wsSubscription && vm.wsSubscription.unsubscribe();
+        logsRequestsCanceler.resolve();
+        destroy$.next();
+        wsSubscription = wsSubscription && wsSubscription.unsubscribe();
         closeTestsWebsocket();
         if (typeof onTransStartSubscription === 'function') {
             onTransStartSubscription();
         }
     }
-
-    function cancelIntervals() {
-        Object.keys(liveIntervals).forEach(name => {
-            pseudoLiveCloseAction(name);
-        });
-    }
-
-    function closeRfbConnection() {
-        if (rfb && rfb._rfb_connection_state === 'connected') {
-            rfb.disconnect();
-        }
-    }
-
-    function closeTestsWebsocket() {
-        if (stompClient && stompClient.connected) {
-            $scope.$watch('testsWebsocket.hasClosePermission', function (newVal) {
-                if (newVal) {
-                    $timeout(function () {
-                        stompClient.disconnect();
-                    });
-                    UtilService.websocketConnected(testsWebsocketName);
-                }
-            });
-        }
-    }
-
-    function closeAll() {
-        closeRfbConnection();
-    }
-
-    /*************** Tools *********************/
 
     function initToolsSettings() {
         toolsService.fetchIntegrationOfTypeByName('TEST_CASE_MANAGEMENT')
@@ -1036,53 +491,186 @@ const testRunInfoController = function testRunInfoController(
             });
     }
 
-    /**************** Initialization **************/
-
     function initLiveMode(test) {
-        var videoArtifacts = getArtifactsByPartName(test, LIVE_DEMO_ARTIFACT_NAME) || [];
-        addDrivers(videoArtifacts);
-        driversCount = $scope.drivers.length;
-        postModeConstruct(test, vm.pageSessionId);
+        addDrivers(getLiveVideoArtifacts(test.artifacts));
+        postModeConstruct(test);
     }
 
     function initRecordMode(test) {
-        var videoArtifacts = getArtifactsByPartName(test, 'video', 'live') || [];
-        addDrivers(videoArtifacts);
-        postModeConstruct(test, vm.pageSessionId);
+        addDrivers(getVideoArtifacts(test.artifacts));
+        postModeConstruct(test);
     }
 
     function controllerInit(skipHistoryUpdate) {
+        // TODO: whi we get errors? Resolve doesn't work? We have redirect, but can see errors from controller
+        if (!vm.testRun || !vm.test) { return; }
         // filter EVENT items
-        // TODO: do we ever need in "EVENT" work items on the client?
+        // TODO: do we ever need in "EVENT" work items on the client? (opened ZEB-1416)
         vm.test.workItems = (vm.test.workItems || []).filter(({ type }) => type !== 'EVENT');
-        if (!vm.pageSessionId) {
-            vm.pageSessionId = Date.now();
-        }
+
         pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : vm.test.name);
-        initTestsWebSocket(vm.testRun);
+        initSelectedLog();
+
+        initTestsWebSocket();
         vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
 
         agent = getAgent();
-        agent.esIndex = getESIndex();
         setTestParams();
         initToolsSettings();
         initTestExecutionData(skipHistoryUpdate);
         bindEvents();
     }
+    /* END Controller methods and helpers */
 
-    //TODO: update tests data on WebSocket messages
+    /* Work with drivers */
+    function onDriverChange({ activeDriverIndex }) {
+        vm.activeDriverIndex = activeDriverIndex;
+        //TODO: check if correct?
+        postDriverChanged();
+    }
+
+    // TODO: do we need?
+    function postDriverChanged() {
+        if (vm.activeMode.name === 'record') {
+            initRecords(vm.test);
+        }
+    }
+
+    // TODO: refactoring
+    // TODO: define active driver
+    function initRecords(test) {
+        var videoArtifacts = getVideoArtifacts(test.artifacts);
+        if (videoArtifacts && videoArtifacts.length) {
+            // TODO: use addDrivers() instead if possible
+            // TODO: what this?
+            vm.drivers = vm.drivers.concat(videoArtifacts.filter(function (value) {
+                return vm.drivers.indexOfField('name', value.name) == -1;
+            }));
+        }
+    }
+
+    // TODO: change filtering after https://solvd.atlassian.net/browse/ZEB-1417 is solved
+    function getVideoArtifacts(artifacts = []) {
+        return artifacts.filter((artifact) => isVideoArtifact(artifact));
+    }
+
+    // TODO: change filtering after https://solvd.atlassian.net/browse/ZEB-1417 is solved
+    function getLiveVideoArtifacts(artifacts = []) {
+        return artifacts.filter((artifact) => isLiveVideoArtifact(artifact));
+    }
+
+    function isVideoArtifact(artifact) {
+        return artifact.name.toLowerCase().includes('video') && !artifact.name.toLowerCase().includes('live');
+    }
+
+    function isLiveVideoArtifact(artifact) {
+        return artifact.name.toLowerCase().includes('video') && artifact.name.toLowerCase().includes('live');
+    }
+
+    function addDrivers(artifacts) {
+        artifacts
+            .sort((a, b) => a.createdAt - b.createdAt)
+            .forEach((artifact) => addDriver(artifact));
+    }
+
+    function addDriver(artifact) {
+        if (!vm.drivers.find(({ name }) => artifact.name === name)) {
+            // TODO: use system types: https://solvd.atlassian.net/browse/ZEB-1417
+            artifact.type = isVideoArtifact(artifact) ? 'video' : 'vnc';
+            vm.drivers.push(artifact);
+        }
+    }
+    /* END Work with drivers */
+
+    /* Work with WebSocket */
+    function initTestsWebSocket() {
+        const ws = new SockJS(`${API_URL}/api/websockets`);
+
+        stompClient = Stomp.over(ws);
+        stompClient.debug = null;
+        stompClient.ws.close = () => {};
+        stompClient.connect({ withCredentials: false }, stompConnectHandler, stompErrorHandler);
+
+        UtilService.websocketConnected(testsWebsocketName);
+    }
+
+    function stompConnectHandler() {
+        if (stompClient.connected) {
+            const destination = `/topic/${authService.tenant}.testRuns.${vm.testRun.id}.tests`;
+
+            wsSubscription = stompClient.subscribe(destination, onTestsWSMessage);
+        }
+    }
+
+    function stompErrorHandler() {
+        UtilService.reconnectWebsocket(testsWebsocketName, initTestsWebSocket);
+    }
+
+    // TODO: [-] Refactoring
+    function onTestsWSMessage(wsEvent) {
+        if (!wsEvent.body) { return; }
+
+        const test = getEventFromMessage(wsEvent.body).test;
+
+        if (test && vm.test && test.id === vm.test.id) {
+            if (test.status === 'IN_PROGRESS') {
+                addDrivers(getLiveVideoArtifacts(test.artifacts));
+            } else {
+                // TODO: stop logs getting
+                setMode('record'); // TODO: define intermediate mode between live and record
+                var videoArtifacts = getVideoArtifacts(test.artifacts);
+                if (videoArtifacts.length === vm.drivers.length) {
+                    addDrivers(videoArtifacts);
+                    postModeConstruct(test);
+                }
+            }
+            // TODO: do we need merge?
+            vm.test = test;
+
+            $scope.$apply();
+        }
+        updateExecutionHistoryItem(test);
+    }
+
+    function getEventFromMessage(message) {
+        let parsedMessage = {};
+
+        try {
+            parsedMessage = JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+        } catch (err) {
+            // TODO: debug error log
+        }
+
+        return parsedMessage;
+    }
+
+    function closeTestsWebsocket() {
+        if (stompClient && stompClient.connected) {
+            stompClient.disconnect();
+            UtilService.websocketConnected(testsWebsocketName);
+        }
+    }
+    /* END Work with WebSocket */
+
+    /* Work with screenshots */
+    function presentsUncompletedScreenshotLogs() {
+        return vm.logs.some(({ urls }) => urls && !(urls.image && urls.thumb));
+    }
+    /* END work with screenshots */
+
+    /* Work with execution history */
     function initTestExecutionData(skipHistoryUpdate) {
         vm.activeTestId = vm.test.id;
         vm.parentTestId = $stateParams.parentTestId ? parseInt($stateParams.parentTestId, 10) : vm.activeTestId;
 
         if (!skipHistoryUpdate) {
-            testCaseService.getTestExecutionHistory(vm.parentTestId)
+            TestExecutionHistoryService.getTestExecutionHistory(vm.parentTestId)
                 .then((response) => {
                     if (response.success) {
                         const sortedData = (response.data || [])
                             .sort((a, b) => a.startTime - b.startTime);
 
-                        vm.executionHistory = addTimeDiffs(sortedData);
+                        vm.executionHistory = TestExecutionHistoryService.addTimeDiffs(sortedData);
                     }
                 });
         }
@@ -1095,8 +683,11 @@ const testRunInfoController = function testRunInfoController(
             .then(([testRun, test]) => {
                 pushNewState(historyItem);
                 unbindEvents();
+                logsRequestsCanceler = $q.defer();
                 resetInitialValues(testRun, test);
-                controllerInit(true);
+                $timeout(() => {
+                    controllerInit(true);
+                });
             })
             .catch((err) => {
                 if (err.message) {
@@ -1175,107 +766,165 @@ const testRunInfoController = function testRunInfoController(
                     elapsed,
                     workItems,
                 };
-                vm.executionHistory = addTimeDiffs([...vm.executionHistory]);
+                vm.executionHistory = TestExecutionHistoryService.addTimeDiffs(vm.executionHistory);
             }, 0);
         }
     }
-
-    function addTimeDiffs(data) {
-        vm.testsTimeMedian = median(data.filter((item) => item.status.toLowerCase() !== 'in_progress').map((item) => item.elapsed));
-
-        return data.map((item) => {
-            item.timeDiff = getTimeDiff(item.elapsed);
-
-            return item;
-        });
-    }
-
-    function getTimeDiff(time = 0) {
-        let diff = Math.floor(vm.testsTimeMedian && time ?  time * 100 / vm.testsTimeMedian : 0) - 100;
-
-        if (diff >= 100) { // display only diffs with >= +100%
-            return `+${Math.abs(diff)}%`;
-        }
-
-        return '';
-    }
-
-    function median(values){
-        if (!values.length) { return 0; }
-
-        values.sort((a = 0, b = 0) => a - b);
-
-        const half = Math.floor(values.length / 2);
-
-        if (values.length % 2) {
-            return values[half];
-        }
-
-        return (values[half - 1] + values[half]) / 2.0;
-    }
+    /* END Work with execution history */
 
     function getAgent() {
-        // return new version of the agent if test has UUID
-        if (!!vm.test.uuid) {
-            return {
-                prefix: 'test-run-data-',
-                searchCriteria: [
-                    {'testRunId': vm.testRun.id},
-                    {'testId': vm.test.id},
-                ],
-            };
+        let agent = null;
+
+        // return default (new) version of the agent if test has an UUID
+        if (vm.test.hasOwnProperty('uuid')) {
+            agent = defaultLogsAgent;
+            agent.initSearchCriteria(vm.testRun.id, vm.test.id);
+            agent.initESIndex(vm.test.startTime, vm.test.finishTime);
+        } else {
+            agent = carinaLogsAgent;
+            agent.initSearchCriteria(vm.testRun.ciRunId, vm.test.ciTestId);
+            agent.initESIndex(vm.test.startTime, vm.test.finishTime);
         }
 
-        return {
-            prefix: 'logs-',
-            searchCriteria: [
-                { 'correlation-id': `${vm.testRun.ciRunId}_${vm.test.ciTestId}` },
-            ],
-        };
+        console.log(agent);
+
+        return agent;
     }
 
+    // TODO
     function setTestParams() {
         if (vm.test) {
             setMode(vm.test.status === 'IN_PROGRESS' ? 'live' : 'record');
-            $scope.MODE.initFunc.call(this, vm.test);
+            vm.activeMode.initFunc.call(this, vm.test);
         }
     }
 
-    function getESIndex() {
-        const startTime = moment.utc(vm.test.startTime).format('YYYY.MM.DD');
-        const finishTime = moment.utc(vm.test.finishTime).format('YYYY.MM.DD');
-        const startIndex = `${agent.prefix}${startTime}`;
-        const finishIndex = `${agent.prefix}${finishTime}`;
-
-        return startIndex === finishIndex ? startIndex : startIndex + ',' + finishIndex;
+    /* Work with logs */
+    function handleESLogs(logs) {
+        logs.forEach(handleESLog);
+        prepareArtifacts();
     }
 
-    return vm;
+    function handleESLog(log) {
+        if (log.level === 'META_INFO' || log.kind === 'screenshot') {
+            const newLog = agent.handleScreenshotLog(log, vm.logs);
 
-
-    /* work with test data */
-
-    function changeTestStatus(test, status = '') {
-        status = status.toUpperCase();
-        if (!test || !status || test.status === status.toUpperCase()) { return; }
-
-        const testCopy = {...test};
-
-        testCopy.status = status.toUpperCase();
-
-        return TestService.updateTest(testCopy)
-            .then((response) => {
-                if (response.success) {
-                    messageService.success(`Test was marked as ${status}`);
-                    vm.test = response.data;
-                    updateExecutionHistoryItem(vm.test);
-                } else {
-                    const message = response.message ? response.message : 'Unable to change test status';
-
-                    messageService.error(message);
-                }
-            });
+            if (newLog) {
+                addNewLog(newLog);
+            }
+        } else {
+            addNewLog(log);
+        }
     }
+
+    function addNewLog(log) {
+        log.uuidInternal = uuidv4();
+
+        vm.logs = [ ...vm.logs, log ];
+        if (!logLevelService.logShouldBeFiltered(log, vm.selectedLevel)) {
+            vm.filteredLogs = [ ...vm.filteredLogs, log ];
+        }
+
+        $scope.$applyAsync();
+    }
+
+    function getLiveESLogs$() {
+        vm.logs = [];
+
+        return getCount$()
+            .pipe(
+                switchMap((count) => fetchLiveESLogs$(count)),
+            );
+    }
+
+    function fetchLiveESLogs$(count) {
+        const from = vm.activeMode.logGetter.from;
+        const size = count - vm.activeMode.logGetter.from;
+
+        vm.activeMode.logGetter.from = count
+
+        return getESLogs$(from, size)
+            .pipe(
+                tap((logs) => {console.log('handle LIVE logs', logs);}),
+                tap((logs) => handleESLogs(logs)),
+                switchMap(() => reFetchLiveESLogs$(count)),
+            );
+    }
+
+    function reFetchLiveESLogs$(count) {
+        return timer(5000)
+            .pipe(
+                switchMap(() => getCount$()),
+                switchMap(newCount => count !== newCount ? fetchLiveESLogs$(newCount) : reFetchLiveESLogs$(count)),
+            );
+    }
+
+    function fiveMinsLogsFetcher$() {
+        let imagesLoadingAttempts = 0;
+        const attemptsToLoadImages = 10;
+        let delay = 0;
+        const delayInterval = 5000;
+        const maxDelay = 40000;
+        const timerDestroy$ = new Subject();
+
+        vm.logs = [];
+
+        return defer(() => timer(delay))
+            .pipe(
+                take(1),
+                tap(() => console.log('hm.....')),
+                tap(() => imagesLoadingAttempts++),
+                switchMap(() => getPastESLogs$()),
+                tap(() => delay = delay < maxDelay ? delay + delayInterval : maxDelay),
+                repeat(),
+                takeUntil(timerDestroy$),
+                tap(() => {
+                    if (!presentsUncompletedScreenshotLogs() || imagesLoadingAttempts >= attemptsToLoadImages) {
+                        timerDestroy$.next();
+                    }
+                }),
+            );
+    }
+
+    function getPastESLogs$() {
+        return getCount$()
+            .pipe(
+                tap((count) => console.log('+++++++++++', count)),
+                switchMap((count) => fetchPastESLogs$(count)),
+            );
+    }
+
+    function fetchPastESLogs$(count) {
+        let from = vm.activeMode.logGetter.from;
+        const size = count - vm.activeMode.logGetter.from;
+
+        vm.activeMode.logGetter.from = count
+
+        return getESLogs$(from, size)
+            .pipe(
+                tap((logs) => {console.log('handle PAST logs', logs);}),
+                tap((logs) => handleESLogs(logs)),
+            );
+    }
+
+    function getESLogs$(from, size) {
+        return rxFrom(getLogsFromElasticsearch(from, size));
+    }
+
+    function getCount$() {
+        return rxFrom(elasticsearchService.fetchCount(agent.esIndex, agent.searchCriteria, logsRequestsCanceler.promise))
+            .pipe(
+                map((response) => response.count),
+            );
+    }
+
+    function getLogsFromElasticsearch(from, size) {
+        console.log(11111, from, size);
+        return elasticsearchService.fetchSearch(agent.esIndex, agent.searchCriteria, from, size, logsRequestsCanceler.promise)
+            .then((response) => response?.hits?.hits ?? [])
+            .then((hits) => hits.map(hit => hit._source));
+    }
+    /* END Work with logs */
 };
 
 export default testRunInfoController;

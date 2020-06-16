@@ -1,5 +1,5 @@
 @import
-    "../global/var",   
+    "../global/var",
     "../global/var-extra";
 
 .images-viewer {
@@ -81,6 +81,7 @@
             margin: 5px 5px 0;
             color: white;
             width: 90px;
+            min-width: 90px;
             height: 110px;
             padding: 3px;
             border: 1px solid transparent;

@@ -12,7 +12,6 @@ import testsSessionsService from './tests-sessions/tests-sessions.service';
 import pageTitleService from './page-title/page-title.service';
 import observerService from './observer/observer.service';
 import logLevelService from './log-level.service';
-import testCaseService from './testcase.service';
 import fullScreenService from './full-screen/full-screen.service';
 
 angular.module('app.services', [])
@@ -28,7 +27,6 @@ angular.module('app.services', [])
     .service({ progressbarService })
     .service({ jsonConfigsService })
     .service({ pageTitleService })
-    .service({ testCaseService })
     .service({ testsSessionsService });
 
 require('./auth.intercepter');
