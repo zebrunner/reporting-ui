@@ -5,7 +5,7 @@
         .module('app.services')
         .service('UserService', UserService);
 
-    function UserService($httpMock, UtilService, API_URL, $q, messageService) {
+    function UserService($httpMock, UtilService, API_URL, iam_API_URL, $q, messageService) {
         'ngInject';
 
         let _currentUser = null;
@@ -79,12 +79,12 @@
             return $httpMock.post(API_URL + '/api/users', user).then(UtilService.handleSuccess, UtilService.handleError('Failed to create user'));
         }
 
-        function addUserToGroup(user, id){
-            return $httpMock.put(API_URL + '/api/users/group/' + id, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to add user to group'));
+        function addUserToGroup(user, groupId){
+            return $httpMock.put(`${iam_API_URL}/api/iam/v1/users/${user.id}/groups/${groupId}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to add user to group'));
         }
 
         function deleteUserFromGroup(idUser, idGroup){
-            return $httpMock.delete(API_URL + '/api/users/' + idUser + '/group/' + idGroup).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete user from group'));
+            return $httpMock.delete(`${iam_API_URL}/api/iam/v1/users/${idUser}/groups/${idGroup}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete user from group'));
         }
 
         function getDefaultPreferences() {
