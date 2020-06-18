@@ -4,6 +4,7 @@ import Swiper from 'swiper';
 
 const testExecutionHistoryController = function testExecutionHistoryController(
     $mdMedia,
+    $scope,
     $timeout,
     UtilService,
 ) {
@@ -24,6 +25,7 @@ const testExecutionHistoryController = function testExecutionHistoryController(
             click: swiperClickHandler,
         },
     };
+    let dataWatchUnsubscriber;
     const vm = {
         activeTestId: null,
         executionHistory: [],
@@ -32,6 +34,7 @@ const testExecutionHistoryController = function testExecutionHistoryController(
         timeMedian: 0,
 
         $onInit: controllerInit,
+        $onDestroy() { dataWatchUnsubscriber && dataWatchUnsubscriber(); },
         onSlideClick,
 
         get isMobile() { return $mdMedia('xs'); },
@@ -40,7 +43,17 @@ const testExecutionHistoryController = function testExecutionHistoryController(
     function controllerInit() {
         $timeout(() => {
             vm.swiperContainer = document.querySelector('.swiper-container');
-            initSwiper();
+            dataWatchUnsubscriber = $scope.$watch(
+                () => vm.executionHistory,
+                (newValue) => {
+                    if (newValue?.length) {
+                        if (!vm.swiper) {
+                            initSwiper();
+                        }
+                        dataWatchUnsubscriber();
+                    }
+                },
+            );
         }, 0);
     }
 
