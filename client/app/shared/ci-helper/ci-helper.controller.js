@@ -936,13 +936,37 @@ const CiHelperController = function CiHelperController(
 
     $scope.clientId = '';
 
+    function getGithubAuthLink(redirectURI) {
+        //TODO: dynamic base
+        const urlBase = 'https://github.com';
+        const url = new URL('/login/oauth/authorize', urlBase);
+        const params = {
+            client_id: $scope.clientId,
+            scope: 'repo user read:org',
+            redirect_uri: redirectURI,
+        }
+
+        url.search = `?${getEncodedParams(params)}`;
+
+        return url.href;
+    }
+
+    function getEncodedParams(params) {
+        return Object.entries(params).map(kv => kv.map(encodeURIComponent).join("=")).join("&");
+    }
+
     $scope.connectToGitHub = function () {
         return $q(function (resolve, reject) {
             if ($scope.clientId) {
                 var host = $window.location.host;
+                // TODO: we have tenant in the auth service
                 var tenant = host.split('\.')[0];
                 const servletPath = $window.location.pathname.split('/tests/runs')[0];
+                // TODO: serviceUrl?
                 var redirectURI = isMultitenant ? `${$window.location.protocol}//${host.replace(tenant, 'api')}/github/callback/${tenant}` : `${$window.location.protocol}//${host}${servletPath}/scm/callback`;
+
+                console.log(getGithubAuthLink(redirectURI));
+
                 var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
