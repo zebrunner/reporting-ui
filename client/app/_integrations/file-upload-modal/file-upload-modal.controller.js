@@ -8,7 +8,8 @@ const fileUploadModalController = ($scope, $mdDialog, toolName, settingName, Uti
             .then(function (rs) {
                 if (rs.success) {
                     messageService.success('File was uploaded');
-                    closeModal(rs.data);
+                    const url = `${window.location.origin}/${rs.data}`;
+                    closeModal(url);
                 } else {
                     messageService.error(rs.message);
                 }

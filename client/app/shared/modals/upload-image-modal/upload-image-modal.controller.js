@@ -5,7 +5,7 @@ const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilS
     'ngInject';
 
     const local = {
-        FILE_TYPES: fileTypes || 'COMMON',
+        FILE_TYPES: fileTypes || 'ORG_ASSET',
     };
 
     const vm = {
@@ -19,7 +19,8 @@ const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilS
             if (rs.success) {
                 messageService.success('Image was uploaded');
                 if (urlHandler) {
-                    urlHandler(rs.data.url).then((result) => {
+                    const url = `${window.location.origin}/${rs.data.key}`;
+                    urlHandler(url).then((result) => {
                         result && $mdDialog.hide();
                     });
                 }
