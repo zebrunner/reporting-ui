@@ -13,6 +13,7 @@ const CiHelperController = function CiHelperController(
     $window,
     $mdDialog,
     $mdMedia,
+    $state,
     $timeout,
     $interval,
     LauncherService,
@@ -54,6 +55,7 @@ const CiHelperController = function CiHelperController(
         },
         appFormats: '.app, .ipa, .apk, .apks',
         appMaxSize: '100MB',
+        githubConfig: {},
         launchers: [],
         platforms: [],
         platformModel: {},
@@ -325,7 +327,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.addRepo = function () {
         $scope.repo = {};
-        if ($scope.clientId) {
+        if (vm.githubConfig.clientId) {
             $scope.connectToGitHub()
                 .then(() => {
                     clearPrevLauncherElement();
@@ -911,44 +913,43 @@ const CiHelperController = function CiHelperController(
 
     $scope.scmAccount = {};
 
-    function getClientId() {
-        return $q(function (resolve, reject) {
-            ScmService.getClientId().then(function (rs) {
-                if (rs.success) {
-                    resolve(rs.data);
-                }
+    function getGithubConfig() {
+        return ScmService.getGithubConfig()
+            .then((rs) => {
+                return rs.data || {};
             });
-        });
     }
 
     function getTenantInfo() {
-        return $q(function (resolve, reject) {
-            authService.getTenant().then(function (rs) {
-                if (rs.success) {
-                    resolve(rs.data);
-                } else {
-                    reject();
+        return authService.getTenant()
+            .then((rs) => {
+                if (!rs.success) {
                     messageService.error(rs.message);
                 }
+
+                return rs.data || {};
             });
-        });
     }
 
-    $scope.clientId = '';
-
     function getGithubAuthLink(redirectURI) {
-        //TODO: dynamic base
-        const urlBase = 'https://github.com';
-        const url = new URL('/login/oauth/authorize', urlBase);
-        const params = {
-            client_id: $scope.clientId,
-            scope: 'repo user read:org',
-            redirect_uri: redirectURI,
+        try {
+            const baseHost = (vm.githubConfig.host.includes('http')
+                ? vm.githubConfig.host
+                : `https://${vm.githubConfig.host}`);
+            const url = new URL('/login/oauth/authorize', baseHost);
+            const params = {
+                client_id: vm.githubConfig.clientId,
+                scope: 'repo user read:org',
+                redirect_uri: redirectURI,
+            }
+
+            url.search = `?${getEncodedParams(params)}`;
+
+            return url.href;
+        } catch (e) {
+            messageService.error('Unable to generate Github Auth link: invalid Github host is provided');
         }
 
-        url.search = `?${getEncodedParams(params)}`;
-
-        return url.href;
     }
 
     function getEncodedParams(params) {
@@ -957,22 +958,22 @@ const CiHelperController = function CiHelperController(
 
     $scope.connectToGitHub = function () {
         return $q(function (resolve, reject) {
-            if ($scope.clientId) {
-                var host = $window.location.host;
-                // TODO: we have tenant in the auth service
-                var tenant = host.split('\.')[0];
-                const servletPath = $window.location.pathname.split('/tests/runs')[0];
-                // TODO: serviceUrl?
-                var redirectURI = isMultitenant ? `${$window.location.protocol}//${host.replace(tenant, 'api')}/github/callback/${tenant}` : `${$window.location.protocol}//${host}${servletPath}/scm/callback`;
+            if (vm.githubConfig.clientId) {
+                const host = $window.location.host;
+                const redirectURI = isMultitenant
+                    ? `${$window.location.protocol}//${host.replace(authService.tenant, 'api')}/github/callback/${authService.tenant}`
+                    : $state.href('scmCallback');
+                let authUrl = getGithubAuthLink(redirectURI);
 
-                console.log(getGithubAuthLink(redirectURI));
+                if (!authUrl) {
+                    return;
+                }
 
-                var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
                 var height = 650;
                 var width = 450;
                 var location = getCenterWindowLocation(height, width);
                 var gitHubPopUpProperties = 'toolbar=0,scrollbars=1,status=1,resizable=1,location=1,menuBar=0,width=' + width + ', height=' + height + ', top=' + location.top + ', left=' + location.left;
-                gitHubPopUp = $window.open(url, 'GithubAuth', gitHubPopUpProperties);
+                gitHubPopUp = $window.open(authUrl, 'GithubAuth', gitHubPopUpProperties);
 
                 var localStorageWatcher = $interval(function () {
                     var code = localStorage.getItem('code');
@@ -1207,9 +1208,10 @@ const CiHelperController = function CiHelperController(
         getTenantInfo()
             .then((tenant) => {
                 isMultitenant = tenant.multitenant;
-                return getClientId();
-            })
-            .then(clientId => $scope.clientId = clientId);
+            });
+        getGithubConfig()
+            .then(githubConfig => vm.githubConfig = githubConfig);
+
         const scmAccountsPromise = ScmService.getAllScmAccounts()
             .then(function (rs) {
                 if (rs.success) {
@@ -1227,7 +1229,7 @@ const CiHelperController = function CiHelperController(
         $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise])
             .then(data => {
                 $scope.scmAccounts.forEach(scmAccount => {
-                    scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType.id === scmAccount.id);
+                    scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType && scmAccountType.id === scmAccount.id);
                 });
             })
             .finally(() => {
