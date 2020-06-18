@@ -244,7 +244,7 @@ const AppSidebarController = function (
 
                     return $q.reject(false);
                 },
-                fileTypes: 'COMMON',
+                fileTypes: 'ORG_ASSET',
             }
         });
     }

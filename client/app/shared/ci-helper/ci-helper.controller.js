@@ -1842,19 +1842,17 @@ const CiHelperController = function CiHelperController(
             messageService.error(`Use ${vm.appFormats} files ${vm.appMaxSize} max`);
         } else if ($file) {
             vm.platformModel[control.key].file = $file;
+            const type = 'APP_PACKAGE';
             $file.isUploading = true;
             $file.upload = Upload
                 .upload({
-                    url: `${API_URL}/api/upload?file=`,
-                    headers: {
-                        'FileType': 'APP',
-                    },
+                    url: `${API_URL}/v1/assets?type=${type}&file=`,
                     file: $file,
                 })
                 .success(response => {
                     $timeout(() => {
                         $file.result = response;
-                        vm.platformModel[control.key].value = $file.result.url;
+                        vm.platformModel[control.key].value = `${window.location.origin}/${$file.result.key}`;
                     }, 0);
                 })
                 .progress(evt => {

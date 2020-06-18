@@ -250,7 +250,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
 
                     return $q.reject(false);
                 },
-                fileTypes: 'USERS',
+                fileTypes: 'USER_ASSET',
             }
         });
     }

@@ -12,8 +12,8 @@
 
         return service;
 
-        function upload(multipartFile, fileType) {
-            return $httpMock.post(API_URL + '/api/upload?file=', multipartFile, {headers: {'FileType': fileType, 'Content-Type': undefined}, transformRequest : angular.identity}).then(UtilService.handleSuccess, UtilService.handleError('Unable to upload photo'));
+        function upload(multipartFile, type) {
+            return $httpMock.post(API_URL + `/v1/assets?type=${type}&file=`, multipartFile, {headers: {'Content-Type': undefined}, transformRequest : angular.identity}).then(UtilService.handleSuccess, UtilService.handleError('Unable to upload photo'));
         }
     }
 })();
