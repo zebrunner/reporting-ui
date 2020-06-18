@@ -1,6 +1,11 @@
 'use strict';
 
-import Swiper from 'swiper';
+// import Swiper from 'swiper';
+// Import Swiper and modules
+import { Swiper, Navigation } from 'swiper/js/swiper.esm.js';
+
+// Install modules
+Swiper.use([Navigation]);
 
 const videoSwiperDirective = function videoSwiper(
     $timeout,

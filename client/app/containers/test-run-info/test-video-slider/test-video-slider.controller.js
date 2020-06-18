@@ -15,12 +15,15 @@ const testVideoSliderController = function testVideoSliderController(
                 forceToAxis: true,
             },
             observer: true,
+            observeParents: true,
+            observeSlideChildren: true,
             shortSwipes: false,
             slidesPerView: 1,
             navigation: {
                 nextEl: '.test-video-slider__nav-btn._next',
                 prevEl: '.test-video-slider__nav-btn._prev',
                 disabledClass: '_disabled',
+                hiddenClass: '_hidden',
             },
         },
 

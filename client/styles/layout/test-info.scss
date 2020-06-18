@@ -24,15 +24,6 @@ $historySectionHeight: 68px;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
-            &._mobile {
-                display: none;
-            }
-            @media screen and (max-width: $screen-phone) {
-                display: none;
-                &._mobile {
-                    display: inline-block;
-                }
-            }
 
             + .recording-icon {
                 margin-left: 5px;
@@ -238,6 +229,13 @@ $historySectionHeight: 68px;
                     font-weight: 500;
                     background-color: rgba($gray-base, 0.03);
                 }
+            }
+
+            &-row._empty &-col {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
             }
 
             &-col {
@@ -503,12 +501,6 @@ $historySectionHeight: 68px;
                     span {
                         font-weight: 400;
                     }
-                }
-            }
-
-            &.__no-video {
-                table {
-                    margin-top: 5px;
                 }
             }
 
@@ -955,6 +947,9 @@ $historySectionHeight: 68px;
 
     & .listitem__button {
         text-align: center;
+        &._active {
+            background-color: rgba(1, 22, 39, 0.07);
+        }
     }
 }
 

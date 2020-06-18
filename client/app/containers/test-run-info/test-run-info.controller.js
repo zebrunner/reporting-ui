@@ -1,27 +1,7 @@
 'use strict';
 
-// fixed:
-// vnc resize listeners removing
-// logs adding if filter is enabled (previously was ignored)
-// images viewer thumbnails displaying bug: added min-width
-// realized incorrect ordering by @timestamp, but simple timestamp is more accurate
-
-// features
-// added video slider
-// screen logs as a separate log
-// removed video + logs highlighting sync
-
-// TODO: [+] pageSessionID - get rid of its ugly using and make requests canceling
-// TODO: [-] get rid of unused DI
-// TODO: [+] import images-viewer template by the same way as controller
-// TODO: [+] make importable agents
-// TODO: [+] add http requests cancelling
-// TODO: [+] clarify "driversQueue" meaning
-// TODO: [-] check template for "$ctrl" uses and redundant code
-// TODO: [-] add page scroll to the log from page's hash (anchor link)
-
-import { Subject, from as rxFrom, timer, defer } from 'rxjs';
-import { switchMap, takeUntil, tap, take, repeat, map } from 'rxjs/operators';
+import { Subject, from as rxFrom, timer, defer, of } from 'rxjs';
+import { switchMap, takeUntil, tap, take, repeat, map, catchError } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
@@ -60,17 +40,14 @@ const testRunInfoController = function testRunInfoController(
 ) {
     'ngInject';
 
-    const mobileWidth = 480; // TODO: get rid of it if possible
     let onTransStartSubscription = null;
     let testCaseManagementTools = [];
     let jiraSettings = {};
-    let testRailSettings = {};
-    let qTestSettings = {};
     let wsSubscription = null;
     let stompClient = null;
     let logsRequestsCanceler = $q.defer();
     const testsWebsocketName = 'tests';
-    const destroy$ = new Subject();
+    const logsGettingDestroy$ = new Subject();
     const vm = {
         activeDriverIndex: 0,
         activeMode: null,
@@ -87,33 +64,28 @@ const testRunInfoController = function testRunInfoController(
         selectedLevel: logLevelService.initialLevel,
         selectedLogRow: -1,
         isControllerRefreshing: false,
-        testsTimeMedian: null,
+        isLogsLoading: true,
 
         $onInit: controllerInit,
-        $onDestroy: unbindEvents,
+        $onDestroy,
         changeTestStatus,
         copyLogLine,
         copyLogPermalink,
         downloadAllArtifacts,
-        downloadImageArtifacts,
         filterResults,
         getFullLogMessage,
         goToTestRuns,
-        initToolsSettings,
+        isLiveVideoArtifact,
         onDriverChange,
         onHistoryElemClick,
         openImagesViewerModal,
         selectLogRow,
-        setWorkItemIsNewStatus,
         showDetailsDialog,
         switchMoreLess,
         userHasAnyPermission: authService.userHasAnyPermission,
 
-        get selectedDriver() { return this.drivers[this.activeDriverIndex]; },
         get currentTitle() { return pageTitleService.pageTitle; },
         get jira() { return jiraSettings; },
-        get testRail() { return testRailSettings; },
-        get qTest() { return qTestSettings; },
         get isMobile() { return $mdMedia('xs'); },
     };
 
@@ -123,17 +95,12 @@ const testRunInfoController = function testRunInfoController(
         live: {
             name: 'live',
             initFunc: initLiveMode,
-            logGetter: {
-                from: 0,
-            }
-
+            from: 0,
         },
         record: {
             name: 'record',
             initFunc: initRecordMode,
-            logGetter: {
-                from: 0,
-            }
+            from: 0,
         }
     };
 
@@ -144,7 +111,7 @@ const testRunInfoController = function testRunInfoController(
         const parentTest = vm.executionHistory.find(({ testId }) => testId === vm.parentTestId);
 
         $state.go('tests.runDetails', {
-            testRunId: parentTest.testRunId,
+            testRunId: parentTest ? parentTest.testRunId : $stateParams.testRunId,
             configSnapshot: vm.configSnapshot,
         });
     }
@@ -156,15 +123,6 @@ const testRunInfoController = function testRunInfoController(
 
         vm.selectedLevel = logLevelService.logLevels[index];
         vm.filteredLogs = logLevelService.filterLogs(vm.logs, vm.selectedLevel);
-    }
-
-    function downloadImageArtifacts() {
-        ArtifactService.extractImageArtifacts([vm.test]);
-
-        ArtifactService.downloadArtifacts({
-            data: [vm.test],
-            field: 'imageArtifacts',
-        });
     }
 
     function downloadAllArtifacts() {
@@ -196,52 +154,38 @@ const testRunInfoController = function testRunInfoController(
             });
     }
 
-    // TODO: Refactoring
-    function postModeConstruct(test) {
-        $timeout(() => {
-            switch (vm.activeMode.name) {
-                case 'live':
-                    getLiveESLogs$()
-                        .pipe(
-                            takeUntil(destroy$),
-                        )
-                        .subscribe(
-                            (res) => console.log('getLiveESLogs$ next:::', res),
-                            (res) => console.log('getLiveESLogs$ error:::', res),
-                            (res) => console.log('getLiveESLogs$ copmplete:::', res),
-                        );
-                    break;
-                case 'record':
-                    initRecords(test);
+    function getAgent() {
+        let agent = null;
 
-                    fiveMinsLogsFetcher$()
-                        .pipe(
-                            takeUntil(destroy$),
-                        )
-                        .subscribe(
-                            (res) => console.log('fiveMinsLogsFetcher$ next:::', res),
-                            (res) => console.log('fiveMinsLogsFetcher$ error:::', res),
-                            (res) => console.log('fiveMinsLogsFetcher$ copmplete:::', res),
-                        );
-                    break;
-                default:
-                    break;
-            }
-        }, 0);
+        // return default (new) version of the agent if test has an UUID
+        if (vm.test.hasOwnProperty('uuid')) {
+            agent = defaultLogsAgent;
+            agent.initSearchCriteria(vm.testRun.id, vm.test.id);
+            agent.initESIndex(vm.test.startTime, vm.test.finishTime);
+        } else {
+            agent = carinaLogsAgent;
+            agent.initSearchCriteria(vm.testRun.ciRunId, vm.test.ciTestId);
+            agent.initESIndex(vm.test.startTime, vm.test.finishTime);
+        }
+
+        return agent;
+    }
+
+    function setTestParams() {
+        if (vm.test) {
+            setMode(vm.test.status === 'IN_PROGRESS' ? 'live' : 'record');
+            vm.activeMode.initFunc();
+        }
     }
 
     function setMode(modeName) {
-        if (vm.activeMode && vm.activeMode.name === modeName) { return; }
+        if (vm.activeMode?.name === modeName) { return; }
 
-        vm.drivers = [];
-        vm.activeMode = MODES[modeName];
+        vm.activeMode = { ...MODES[modeName] };
     }
 
-    // TODO: refactoring
     function openImagesViewerModal(event, url) {
-        const activeArtifact = vm.test.imageArtifacts.find(function (art) {
-            return art.link === url;
-        });
+        const activeArtifact = vm.test.imageArtifacts.find(({ link }) => link === url);
 
         if (activeArtifact) {
             $mdDialog.show({
@@ -261,28 +205,31 @@ const testRunInfoController = function testRunInfoController(
             });
         }
     }
-    // TODO: ? move to the directive
+
     function switchMoreLess(e, log) {
         e.preventDefault();
         e.stopPropagation();
-        const rowElem = e.target.closest('.testrun-info__tab-table-col._action') || e.target.closest('.testrun-info__tab-mobile-table-data._action-data');
-        const scrollableElem = rowElem.closest('.testrun-info__tab-table-wrapper'); // TODO: mobile layout has another scrollable element
+        const rowElem = e.target.closest('.testrun-info__tab-table-col._action')
+            || e.target.closest('.testrun-info__tab-mobile-table-data._action-data');
 
         log.showMore = !log.showMore;
         if (!log.showMore) {
-            $timeout(function () {
-                if (scrollableElem.scrollTop > rowElem.offsetTop) {
-                    scrollableElem.scrollTop = rowElem.offsetTop;
-                }
-            }, 0);
+            if (rowElem.scrollIntoView) {
+                $timeout(() => {
+                    rowElem.scrollIntoView(true);
+                }, 0, false);
+            }
         }
     }
 
     function getFullLogMessage(log) {
-        return log.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ *(\r?\n|\r)/g, '<br/>').replace(/\s/g, '&nbsp;');
+        return log.message
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/ *(\r?\n|\r)/g, '<br/>')
+            .replace(/\s/g, '&nbsp;');
     }
 
-    // TODO: complete refactoring
     function prepareArtifacts() {
         // extract image artifacts from logs
         const imageArtifacts = vm.logs.reduce((formatted, artifact) => {
@@ -320,8 +267,11 @@ const testRunInfoController = function testRunInfoController(
 
                 try {
                     const url = new URL(links[0]);
+                    const extensionMatch = url.pathname.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
 
-                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
+                    if (extensionMatch) {
+                        artifact.extension = extensionMatch[1];
+                    }
                 } catch (error) {
                     artifact.hasBrokenLink = true;
                     console.warn(`Artifact "${name}" has invalid link.`);
@@ -350,7 +300,6 @@ const testRunInfoController = function testRunInfoController(
         $window.history.pushState(null, null, newUrl);
     }
 
-    // TODO: [+] refactoring
     function copyLogLine(log) {
         const formattedTime = moment(log.timestamp).format('HH:mm:ss');
         const message = `${formattedTime} [${log.threadName}] [${log.level}] ${log.message}`;
@@ -358,12 +307,10 @@ const testRunInfoController = function testRunInfoController(
         message.copyToClipboard();
     }
 
-    // TODO: [+] refactoring
     function copyLogPermalink() {
         $location.absUrl().copyToClipboard();
     }
 
-    // TODO: [+] refactoring
     function initSelectedLog() {
         const hash = $location.hash();
 
@@ -376,6 +323,7 @@ const testRunInfoController = function testRunInfoController(
         }
     }
 
+    // TODO: refactor this magic :)
     function bindEvents() {
         TestService.subscribeOnLocationChangeStart();
         onTransStartSubscription = $transitions.onStart({}, function (trans) {
@@ -394,14 +342,9 @@ const testRunInfoController = function testRunInfoController(
         onTransStartSubscription = null;
         testCaseManagementTools = [];
         jiraSettings = {};
-        testRailSettings = {};
-        qTestSettings = {};
         agent = null;
 
-        // TODO: at least we can clone original obj for working one
-        MODES.live.logGetter.from = 0;
-        MODES.record.logGetter.from = 0;
-
+        vm.isLogsLoading = true;
         vm.selectedLogRow = -1;
         vm.logs = [];
         vm.activeDriverIndex = 0;
@@ -413,8 +356,8 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function unbindEvents() {
+        logsGettingDestroy$.next();
         logsRequestsCanceler.resolve();
-        destroy$.next();
         wsSubscription = wsSubscription && wsSubscription.unsubscribe();
         closeTestsWebsocket();
         if (typeof onTransStartSubscription === 'function') {
@@ -427,8 +370,6 @@ const testRunInfoController = function testRunInfoController(
             .then((res) => {
                 testCaseManagementTools = res.data || [];
                 initToolSettings('JIRA', jiraSettings);
-                initToolSettings('TESTRAIL', testRailSettings);
-                initToolSettings('QTEST', qTestSettings);
             });
     }
 
@@ -439,7 +380,7 @@ const testRunInfoController = function testRunInfoController(
     function initToolSettings(name, toolSettings) {
         const integration = findToolByName(name);
 
-        if (integration && integration.settings) {
+        if (integration?.settings) {
             toolSettings = UtilService.settingsAsMap(integration.settings);
 
             if (toolSettings[`${name}_URL`]) {
@@ -491,24 +432,36 @@ const testRunInfoController = function testRunInfoController(
             });
     }
 
-    function initLiveMode(test) {
-        addDrivers(getLiveVideoArtifacts(test.artifacts));
-        postModeConstruct(test);
+    function initLiveMode() {
+        addDrivers(getLiveVideoArtifacts(vm.test.artifacts, true));
+        getLiveESLogs$()
+            .pipe(
+                takeUntil(logsGettingDestroy$),
+            )
+            .subscribe({
+                complete() { vm.isLogsLoading = false; }
+            });
     }
 
-    function initRecordMode(test) {
-        addDrivers(getVideoArtifacts(test.artifacts));
-        postModeConstruct(test);
+    function initRecordMode() {
+        addDrivers(getVideoArtifacts(vm.test.artifacts, true));
+        fiveMinsLogsFetcher$()
+            .pipe(
+                takeUntil(logsGettingDestroy$),
+            )
+            .subscribe({
+                complete() { vm.isLogsLoading = false; }
+            });
     }
 
     function controllerInit(skipHistoryUpdate) {
-        // TODO: whi we get errors? Resolve doesn't work? We have redirect, but can see errors from controller
         if (!vm.testRun || !vm.test) { return; }
+
         // filter EVENT items
         // TODO: do we ever need in "EVENT" work items on the client? (opened ZEB-1416)
         vm.test.workItems = (vm.test.workItems || []).filter(({ type }) => type !== 'EVENT');
 
-        pageTitleService.setTitle(window.innerWidth <= mobileWidth ? 'Test details' : vm.test.name);
+        pageTitleService.setTitle($mdMedia('max-width: 480px') ? 'Test details' : vm.test.name);
         initSelectedLog();
 
         initTestsWebSocket();
@@ -520,33 +473,16 @@ const testRunInfoController = function testRunInfoController(
         initTestExecutionData(skipHistoryUpdate);
         bindEvents();
     }
+
+    function $onDestroy() {
+        unbindEvents();
+    }
+
     /* END Controller methods and helpers */
 
     /* Work with drivers */
     function onDriverChange({ activeDriverIndex }) {
         vm.activeDriverIndex = activeDriverIndex;
-        //TODO: check if correct?
-        postDriverChanged();
-    }
-
-    // TODO: do we need?
-    function postDriverChanged() {
-        if (vm.activeMode.name === 'record') {
-            initRecords(vm.test);
-        }
-    }
-
-    // TODO: refactoring
-    // TODO: define active driver
-    function initRecords(test) {
-        var videoArtifacts = getVideoArtifacts(test.artifacts);
-        if (videoArtifacts && videoArtifacts.length) {
-            // TODO: use addDrivers() instead if possible
-            // TODO: what this?
-            vm.drivers = vm.drivers.concat(videoArtifacts.filter(function (value) {
-                return vm.drivers.indexOfField('name', value.name) == -1;
-            }));
-        }
     }
 
     // TODO: change filtering after https://solvd.atlassian.net/browse/ZEB-1417 is solved
@@ -567,18 +503,23 @@ const testRunInfoController = function testRunInfoController(
         return artifact.name.toLowerCase().includes('video') && artifact.name.toLowerCase().includes('live');
     }
 
-    function addDrivers(artifacts) {
-        artifacts
-            .sort((a, b) => a.createdAt - b.createdAt)
-            .forEach((artifact) => addDriver(artifact));
+    function addDrivers(artifacts, resetDrivers) {
+        if (resetDrivers) {
+            vm.drivers = [];
+        }
+
+        const artifactsToAdd = artifacts
+            .filter((artifact) => !vm.drivers.find(({ id }) => id === artifact.id));
+
+        if (artifactsToAdd) {
+            artifactsToAdd.forEach((artifact) => artifact.type = isVideoArtifact(artifact) ? 'video' : 'vnc');
+            vm.drivers = [...vm.drivers, ...artifactsToAdd]
+                .sort((a, b) => a.createdAt - b.createdAt);
+        }
     }
 
-    function addDriver(artifact) {
-        if (!vm.drivers.find(({ name }) => artifact.name === name)) {
-            // TODO: use system types: https://solvd.atlassian.net/browse/ZEB-1417
-            artifact.type = isVideoArtifact(artifact) ? 'video' : 'vnc';
-            vm.drivers.push(artifact);
-        }
+    function getFilteredArtifacts() {
+        return vm.test.artifacts.filter()
     }
     /* END Work with drivers */
 
@@ -606,7 +547,6 @@ const testRunInfoController = function testRunInfoController(
         UtilService.reconnectWebsocket(testsWebsocketName, initTestsWebSocket);
     }
 
-    // TODO: [-] Refactoring
     function onTestsWSMessage(wsEvent) {
         if (!wsEvent.body) { return; }
 
@@ -616,15 +556,15 @@ const testRunInfoController = function testRunInfoController(
             if (test.status === 'IN_PROGRESS') {
                 addDrivers(getLiveVideoArtifacts(test.artifacts));
             } else {
-                // TODO: stop logs getting
-                setMode('record'); // TODO: define intermediate mode between live and record
-                var videoArtifacts = getVideoArtifacts(test.artifacts);
-                if (videoArtifacts.length === vm.drivers.length) {
-                    addDrivers(videoArtifacts);
-                    postModeConstruct(test);
+                const isChangingStatus = vm.test.status === 'IN_PROGRESS';
+
+                if (isChangingStatus) {
+                    // keep logs getting work for 30secs delay
+                    $timeout(() => logsGettingDestroy$.next(), 30000);
                 }
+
+                addDrivers(getVideoArtifacts(test.artifacts, isChangingStatus));
             }
-            // TODO: do we need merge?
             vm.test = test;
 
             $scope.$apply();
@@ -638,7 +578,7 @@ const testRunInfoController = function testRunInfoController(
         try {
             parsedMessage = JSON.parse(message.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
         } catch (err) {
-            // TODO: debug error log
+            // TODO: ?log error
         }
 
         return parsedMessage;
@@ -668,7 +608,14 @@ const testRunInfoController = function testRunInfoController(
                 .then((response) => {
                     if (response.success) {
                         const sortedData = (response.data || [])
-                            .sort((a, b) => a.startTime - b.startTime);
+                            .sort((a, b) => {
+                                // handles cases when tests started at the same time. Sort them by ID
+                                if (a.startTime === b.startTime) {
+                                    return a.id - b.id;
+                                }
+
+                                return a.startTime - b.startTime;
+                            });
 
                         vm.executionHistory = TestExecutionHistoryService.addTimeDiffs(sortedData);
                     }
@@ -772,33 +719,6 @@ const testRunInfoController = function testRunInfoController(
     }
     /* END Work with execution history */
 
-    function getAgent() {
-        let agent = null;
-
-        // return default (new) version of the agent if test has an UUID
-        if (vm.test.hasOwnProperty('uuid')) {
-            agent = defaultLogsAgent;
-            agent.initSearchCriteria(vm.testRun.id, vm.test.id);
-            agent.initESIndex(vm.test.startTime, vm.test.finishTime);
-        } else {
-            agent = carinaLogsAgent;
-            agent.initSearchCriteria(vm.testRun.ciRunId, vm.test.ciTestId);
-            agent.initESIndex(vm.test.startTime, vm.test.finishTime);
-        }
-
-        console.log(agent);
-
-        return agent;
-    }
-
-    // TODO
-    function setTestParams() {
-        if (vm.test) {
-            setMode(vm.test.status === 'IN_PROGRESS' ? 'live' : 'record');
-            vm.activeMode.initFunc.call(this, vm.test);
-        }
-    }
-
     /* Work with logs */
     function handleESLogs(logs) {
         logs.forEach(handleESLog);
@@ -838,14 +758,13 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function fetchLiveESLogs$(count) {
-        const from = vm.activeMode.logGetter.from;
-        const size = count - vm.activeMode.logGetter.from;
+        const from = vm.activeMode.from;
+        const size = count - vm.activeMode.from;
 
-        vm.activeMode.logGetter.from = count
+        vm.activeMode.from = count
 
         return getESLogs$(from, size)
             .pipe(
-                tap((logs) => {console.log('handle LIVE logs', logs);}),
                 tap((logs) => handleESLogs(logs)),
                 switchMap(() => reFetchLiveESLogs$(count)),
             );
@@ -872,7 +791,6 @@ const testRunInfoController = function testRunInfoController(
         return defer(() => timer(delay))
             .pipe(
                 take(1),
-                tap(() => console.log('hm.....')),
                 tap(() => imagesLoadingAttempts++),
                 switchMap(() => getPastESLogs$()),
                 tap(() => delay = delay < maxDelay ? delay + delayInterval : maxDelay),
@@ -883,26 +801,31 @@ const testRunInfoController = function testRunInfoController(
                         timerDestroy$.next();
                     }
                 }),
+                catchError(logsErrorHandler$),
             );
+    }
+
+    function logsErrorHandler$(error) {
+        messageService.error(error.message || 'Unable to fetch logs');
+
+        return of(true);
     }
 
     function getPastESLogs$() {
         return getCount$()
             .pipe(
-                tap((count) => console.log('+++++++++++', count)),
                 switchMap((count) => fetchPastESLogs$(count)),
             );
     }
 
     function fetchPastESLogs$(count) {
-        let from = vm.activeMode.logGetter.from;
-        const size = count - vm.activeMode.logGetter.from;
+        let from = vm.activeMode.from;
+        const size = count - vm.activeMode.from;
 
-        vm.activeMode.logGetter.from = count
+        vm.activeMode.from = count
 
         return getESLogs$(from, size)
             .pipe(
-                tap((logs) => {console.log('handle PAST logs', logs);}),
                 tap((logs) => handleESLogs(logs)),
             );
     }
@@ -912,14 +835,17 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function getCount$() {
-        return rxFrom(elasticsearchService.fetchCount(agent.esIndex, agent.searchCriteria, logsRequestsCanceler.promise))
+        return rxFrom(getCountFromElasticSearch())
             .pipe(
                 map((response) => response.count),
             );
     }
 
+    function getCountFromElasticSearch() {
+        return elasticsearchService.fetchCount(agent.esIndex, agent.searchCriteria, logsRequestsCanceler.promise);
+    }
+
     function getLogsFromElasticsearch(from, size) {
-        console.log(11111, from, size);
         return elasticsearchService.fetchSearch(agent.esIndex, agent.searchCriteria, from, size, logsRequestsCanceler.promise)
             .then((response) => response?.hits?.hits ?? [])
             .then((hits) => hits.map(hit => hit._source));
