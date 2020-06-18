@@ -56,7 +56,7 @@
                                               md-on-add="$ctrl.addUserToGroup($chip, group)"
                                               md-on-remove="$ctrl.deleteUserFromGroup($chip, group)">
                                         <md-chip-template name="chip">
-                                            <profile-photo ng-model="$chip.photoURL" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
+                                            <profile-photo ng-model="$chip.photoUrl" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
                                             {{$chip.username}}
                                         </md-chip-template>
                                         <md-autocomplete md-search-text="searchText" md-items="user in $ctrl.querySearch(searchText, group)"

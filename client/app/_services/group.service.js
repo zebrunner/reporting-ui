@@ -33,7 +33,7 @@
         }
 
         function getAllGroups(){
-            return $httpMock.get(iam_API_URL + '/api/iam/v1/groups').then(UtilService.handleSuccess, UtilService.handleError('Failed to get groups'));
+            return $httpMock.get(`${iam_API_URL}/api/iam/v1/groups`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get groups'));
         }
 
         function updateGroup(group, id){

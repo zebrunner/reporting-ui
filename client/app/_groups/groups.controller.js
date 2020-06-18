@@ -20,6 +20,8 @@ const GroupsController = function GroupsController(
         deleteUserFromGroup: deleteUserFromGroup,
         userHasAnyPermission: authService.userHasAnyPermission,
         usersSearchCriteria: {},
+        findGroupIndex,
+        refactorPermissionsData,
         count: 0,
         get groups() { return GroupService.groups; },
         get currentTitle() { return pageTitleService.pageTitle; },
@@ -45,7 +47,7 @@ const GroupsController = function GroupsController(
             .then(function () {
             }, function (group) {
                 if (group) {
-                    var index = vm.groups.indexOfField('id', group.id);
+                    const index = findGroupIndex(group.id);
                     if (index >= 0) {
                         vm.groups.splice(index, 1, group);
                     } else {
@@ -54,6 +56,14 @@ const GroupsController = function GroupsController(
                 }
             });
     };
+
+    function findGroupIndex(groupId) {
+        return vm.groups.findIndex((item) => item.id === groupId);
+    }
+
+    function refactorPermissionsData(permissions) {
+        return permissions.filter((permission) => permission.value).map((permission) => permission.name);
+    }
 
     function deleteGroup(group) {
         GroupService.deleteGroup(group.id).then(function (rs) {
@@ -75,7 +85,7 @@ const GroupsController = function GroupsController(
     function addUserToGroup(user, group) {
         UserService.addUserToGroup(user, group.id).then(function (rs) {
             if (rs.success) {
-                messageService.success('User "' + user.username + '" was added to group "' + group.name + '"');
+                messageService.success(`User "${user.username}" was added to group "${group.name}"`);
             }
             else {
                 messageService.error(rs.message);
@@ -86,7 +96,7 @@ const GroupsController = function GroupsController(
     function deleteUserFromGroup(user, group) {
         UserService.deleteUserFromGroup(user.id, group.id).then(function (rs) {
             if (rs.success) {
-                messageService.success('User "' + user.username + '" was deleted from group "' + group.name + '"');
+                messageService.success(`User "${user.username}" was deleted from group "${group.name}"`);
             }
             else {
                 messageService.error(rs.message);
@@ -131,22 +141,11 @@ const GroupsController = function GroupsController(
         $scope.group.users = $scope.group.users || [];
         $scope.showGroups = false;
 
-        $scope.getGroupsCount = function () {
-            GroupService.getGroupsCount().then(function (rs) {
-                if (rs.success) {
-                    $scope.count = rs.data;
-                }
-                else {
-                    messageService.error(rs.message);
-                }
-            });
-        };
-
         $scope.getAllPermissions = function () {
             PermissionService.getAllPermissions().then(function (rs) {
                 if (rs.success) {
                     $scope.permissions = rs.data;
-                    $scope.createPermissionArr(rs.data);
+                    $scope.createPermissionArray(rs.data);
                 }
                 else {
                     messageService.error(rs.message);
@@ -155,12 +154,11 @@ const GroupsController = function GroupsController(
         };
 
         $scope.createGroup = function (group) {
-            group.permissions = $scope.allAvaliablePermissions.filter((permission) => permission.value).map((permission) => permission.name);
+            group.permissions = refactorPermissionsData($scope.allAvaliablePermissions);
 
             GroupService.createGroup(group).then(function (rs) {
                 if (rs.success) {
-                    const index = vm.groups.indexOfField('id', group.id);
-                    const newGroup = {...vm.groups[index], ...rs.data};
+                    const newGroup = {...vm.groups[findGroupIndex(group.id)], ...rs.data};
 
                     $scope.cancel(newGroup);
                     messageService.success('Group "' + group.name + '" was created');
@@ -183,11 +181,11 @@ const GroupsController = function GroupsController(
         };
 
         $scope.updateGroup = function (group) {
-            group.permissions = $scope.allAvaliablePermissions.filter((permission) => permission.value).map((permission) => permission.name);
+            group.permissions = refactorPermissionsData($scope.allAvaliablePermissions);
 
             GroupService.updateGroup(group, group.id).then(function (rs) {
                 if (rs.success) {
-                    $scope.cancel({...vm.groups[vm.groups.indexOfField('id', group.id)], ...rs.data});
+                    $scope.cancel({...vm.groups[findGroupIndex(group.id)], ...rs.data});
                     messageService.success('Group updated');
                 }
                 else {
@@ -196,14 +194,14 @@ const GroupsController = function GroupsController(
             });
         };
 
-        $scope.createPermissionArr = function(permissions) {
-            permissions.forEach((item) => {
-                const permissionObj = {};
-
-                permissionObj.name = item;
-                permissionObj.value = !!$scope.group?.permissions?.find((permission) => permission === item) || false;
-                $scope.allAvaliablePermissions.push(permissionObj);
-            });
+        $scope.createPermissionArray = function(permissions) {
+            $scope.allAvaliablePermissions = permissions.reduce((acc, item) => {
+                acc.push({
+                    name: item,
+                    value: !!$scope.group?.permissions?.find((permission) => permission === item) || false,
+                });
+                return acc;
+            }, []);
         };
 
         $scope.hide = function () {
