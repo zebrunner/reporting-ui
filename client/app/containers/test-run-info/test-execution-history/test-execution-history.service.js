@@ -39,7 +39,7 @@ const TestExecutionHistoryService = function TestExecutionHistoryService(
         return '';
     }
 
-    function median(values){
+    function median(values) {
         if (!values.length) { return 0; }
 
         const half = Math.floor(values.length / 2);

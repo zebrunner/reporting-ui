@@ -399,7 +399,7 @@ $historySectionHeight: 68px;
                         padding: 8px 0;
                     }
 
-                    @media screen and (min-width: 992px) and (max-width: 1200px){
+                    @media screen and (min-width: 992px) and (max-width: 1200px) {
                         &._status {
                             width: 33%;
                         }
@@ -418,7 +418,7 @@ $historySectionHeight: 68px;
                         }
                     }
 
-                    @media screen and (max-width: 375px){
+                    @media screen and (max-width: 375px) {
                         &._status {
                             width: 34%;
                             padding-right: 4px;

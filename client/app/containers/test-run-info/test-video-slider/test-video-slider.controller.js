@@ -41,11 +41,9 @@ const testVideoSliderController = function testVideoSliderController(
                 $drivers: {
                     prevDriverIndex: e.previousIndex,
                     activeDriverIndex: e.activeIndex,
-                }
+                },
             });
         }, 300); // 300 - is slider's default transition duration
-
-
     }
 
     // if there is a video, pause it

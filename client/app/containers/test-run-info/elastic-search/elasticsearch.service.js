@@ -17,7 +17,7 @@ const elasticsearchService = function elasticsearchService(
     };
 
     function buildMustClause(termsArray) {
-        return termsArray.map((searchField) => ({ 'term': searchField }));
+        return termsArray.map((searchField) => ({ term: searchField }));
     }
 
     function initService() {
@@ -72,11 +72,11 @@ const elasticsearchService = function elasticsearchService(
             query: {
                 bool: {
                     must: buildMustClause(searchFields),
-                }
-            }
+                },
+            },
         };
         const settings = {
-            headers: { Authorization:  esSettings.authBasic},
+            headers: { Authorization:  esSettings.authBasic },
             timeout: canceler,
         };
 
@@ -89,10 +89,10 @@ const elasticsearchService = function elasticsearchService(
             query: {
                 bool: {
                     must: buildMustClause(searchFields),
-                }
+                },
             },
             sort: [{
-                'timestamp': {
+                timestamp: {
                     order: 'asc',
                 },
             }],
@@ -100,7 +100,7 @@ const elasticsearchService = function elasticsearchService(
             from,
         };
         const settings = {
-            headers: { Authorization:  esSettings.authBasic},
+            headers: { Authorization:  esSettings.authBasic },
             timeout: canceler,
         };
 

@@ -101,7 +101,7 @@ const testRunInfoController = function testRunInfoController(
             name: 'record',
             initFunc: initRecordMode,
             from: 0,
-        }
+        },
     };
 
     return vm;
@@ -136,7 +136,7 @@ const testRunInfoController = function testRunInfoController(
         status = status.toUpperCase();
         if (!test || !status || test.status === status.toUpperCase()) { return; }
 
-        const testCopy = {...test};
+        const testCopy = { ...test };
 
         testCopy.status = status.toUpperCase();
 
@@ -201,7 +201,7 @@ const testRunInfoController = function testRunInfoController(
                 locals: {
                     test: vm.test,
                     activeArtifactId: activeArtifact.id,
-                }
+                },
             });
         }
     }
@@ -439,7 +439,7 @@ const testRunInfoController = function testRunInfoController(
                 takeUntil(logsGettingDestroy$),
             )
             .subscribe({
-                complete() { vm.isLogsLoading = false; }
+                complete() { vm.isLogsLoading = false; },
             });
     }
 
@@ -450,7 +450,7 @@ const testRunInfoController = function testRunInfoController(
                 takeUntil(logsGettingDestroy$),
             )
             .subscribe({
-                complete() { vm.isLogsLoading = false; }
+                complete() { vm.isLogsLoading = false; },
             });
     }
 

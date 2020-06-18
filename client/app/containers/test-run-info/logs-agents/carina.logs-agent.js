@@ -48,7 +48,7 @@ const carinaLogsAgent = function carinaLogsAgent(
 
     function initSearchCriteria(ciRunId, ciTestId) {
         this.searchCriteria = [
-            {'correlation-id': `${ciRunId}_${ciTestId}`},
+            { 'correlation-id': `${ciRunId}_${ciTestId}` },
         ];
     }
 
