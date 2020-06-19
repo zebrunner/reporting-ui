@@ -27,7 +27,7 @@
         };
 
         function getGithubConfig() {
-            return $http.get(API_URL + '/api/scm/github/client')
+            return $http.get(API_URL + '/api/scm/github/config')
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to get Github config'));
         }
 
