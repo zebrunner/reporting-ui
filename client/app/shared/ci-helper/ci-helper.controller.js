@@ -949,7 +949,6 @@ const CiHelperController = function CiHelperController(
         } catch (e) {
             messageService.error('Unable to generate Github Auth link: invalid Github host is provided');
         }
-
     }
 
     function getEncodedParams(params) {
