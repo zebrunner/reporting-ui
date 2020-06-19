@@ -130,7 +130,7 @@
                         </zf-radio-button-body>
                     </zf-radio-button>
                     <div class="ci-runner-container_content_actions">
-                        <md-button ng-really-click="deleteRepository($ctrl.activeLauncher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
+                        <md-button ng-really-click="deleteRepository($ctrl.activeLauncher.scmAccountDTO.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
                             DELETE REPO
                         </md-button>
                         <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
@@ -189,7 +189,7 @@
                         </md-input-container>
                     </div>
                     <div class="ci-runner-container_content_actions">
-                        <md-button ng-really-click="deleteRepository($ctrl.activeLauncher.scmAccountType.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
+                        <md-button ng-really-click="deleteRepository($ctrl.activeLauncher.scmAccountDTO.id);" ng-really-message="Do you really want to delete repository?" class="md-warn" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">
                             DELETE REPO
                         </md-button>
                         <md-button ng-click="$ctrl.cancelFolderManaging();" ng-if="scmAccount.id && !$ctrl.activeLauncher.id">

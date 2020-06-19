@@ -76,11 +76,13 @@
         }
 
         function scanRepository(launcherScanner, automationServerId) {
-            return $http.post(`${API_URL}/api/launchers/scanner?automationServerId=${automationServerId}`, launcherScanner).then(UtilService.handleSuccess, UtilService.handleError('Unable to scan repository'));
+            return $http.post(`${API_URL}/api/launchers/scanner?automationServerId=${automationServerId}`, launcherScanner)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to scan repository'));
         }
 
         function getBuildNumber(queueItemUrl) {
-            return $http.get(API_URL + '/api/launchers/build/number?queueItemUrl=' + queueItemUrl).then(UtilService.handleSuccess, UtilService.handleError('Unable to get build number'));
+            return $http.get(`${API_URL}/api/launchers/build/number?queueItemUrl=${queueItemUrl}`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get build number'));
         }
 
         function abortScanRepository(buildNumber, scmAccountId, rescan) {

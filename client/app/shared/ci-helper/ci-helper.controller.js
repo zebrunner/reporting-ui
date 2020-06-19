@@ -51,7 +51,7 @@ const CiHelperController = function CiHelperController(
     const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
     const vm = {
         activeLauncher: {
-            scmAccountType: {},
+            scmAccountDTO: {},
         },
         appFormats: '.app, .ipa, .apk, .apks',
         appMaxSize: '100MB',
@@ -358,7 +358,7 @@ const CiHelperController = function CiHelperController(
         resetLauncher();
         highlightFolder(scmAccount);
         vm.cardNumber = 2;
-        vm.activeLauncher.scmAccountType = scmAccount;
+        vm.activeLauncher.scmAccountDTO = scmAccount;
     };
 
     function getCurrentServerId(scmAccount) {
@@ -443,7 +443,7 @@ const CiHelperController = function CiHelperController(
      */
     function resetLauncher() {
         vm.activeLauncher = {
-            scmAccountType: {},
+            scmAccountDTO: {},
         };
     }
 
@@ -599,7 +599,7 @@ const CiHelperController = function CiHelperController(
             if (rs.success) {
                 const l = rs.data;
                 vm.launchers.splice(index, 1, l);
-                const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
+                const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountDTO.id);
                 if (indexScmAccount !== -1) {
                     const scmAccount = $scope.scmAccounts[indexScmAccount];
                     const scmAccountLauncherIndex = scmAccount.launchers.indexOfField('id', l.id);
@@ -643,7 +643,7 @@ const CiHelperController = function CiHelperController(
                     cancelFolderManaging();
 
                     const l = vm.launchers[index];
-                    const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
+                    const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountDTO.id);
                     if (indexScmAccount !== -1) {
                         const scmAccount = $scope.scmAccounts[indexScmAccount];
                         const scmAccountLauncherIndex = scmAccount.launchers.indexOfField('id', id);
@@ -729,6 +729,7 @@ const CiHelperController = function CiHelperController(
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !!rescan;
+            console.log(launcherScan, $scope.currentServerId);
             LauncherService.scanRepository(launcherScan, $scope.currentServerId)
                 .then(function (rs) {
                     if (rs.success) {
@@ -859,7 +860,7 @@ const CiHelperController = function CiHelperController(
         if (!launcher.name) {
             messages.push('name');
         }
-        if (!launcher.scmAccountType || !launcher.scmAccountType.id) {
+        if (!launcher.scmAccountDTO || !launcher.scmAccountDTO.id) {
             messages.push('repository');
         }
         if (messages.length) {
@@ -1031,7 +1032,7 @@ const CiHelperController = function CiHelperController(
             if (rs.success) {
                 $scope.scmAccounts.push(rs.data);
                 $scope.scmAccount = rs.data;
-                vm.activeLauncher.scmAccountType = rs.data;
+                vm.activeLauncher.scmAccountDTO = rs.data;
                 vm.organizations = [];
                 vm.repositories = [];
                 vm.cardNumber = 0;
@@ -1112,7 +1113,7 @@ const CiHelperController = function CiHelperController(
 
     function appendLauncher(launcher) {
         vm.launchers.push(launcher);
-        const scmAccountIndex = $scope.scmAccounts.indexOfField('id', launcher.scmAccountType.id);
+        const scmAccountIndex = $scope.scmAccounts.indexOfField('id', launcher.scmAccountDTO.id);
         const scmAccount = $scope.scmAccounts[scmAccountIndex];
         scmAccount.launchers = scmAccount.launchers || [];
         scmAccount.launchers.push(launcher);
@@ -1153,7 +1154,7 @@ const CiHelperController = function CiHelperController(
                 //add new scanned launchers
                 vm.launchers = [...vm.launchers, ...event.launchers];
                 //update current scm account
-                $scope.scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType.id === $scope.scmAccount.id);
+                $scope.scmAccount.launchers = vm.launchers.filter(({ scmAccountDTO }) => scmAccountDTO && scmAccountDTO.id === $scope.scmAccount.id);
             } else {
                 vm.launcherPreferences = {};
                 messageService.error('Unable to scan repository');
@@ -1195,6 +1196,7 @@ const CiHelperController = function CiHelperController(
         resetLauncher(); //TODO: why do we need this?
         const launchersPromise = getAllLaunchers()
             .then(launchers => {
+                console.log(launchers);
                 return vm.launchers = launchers;
             });
         toolsService.fetchIntegrationOfTypeByName('AUTOMATION_SERVER')
@@ -1228,7 +1230,7 @@ const CiHelperController = function CiHelperController(
         $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise])
             .then(data => {
                 $scope.scmAccounts.forEach(scmAccount => {
-                    scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType && scmAccountType.id === scmAccount.id);
+                    scmAccount.launchers = vm.launchers.filter(({ scmAccountDTO }) => scmAccountDTO && scmAccountDTO.id === scmAccount.id);
                 });
             })
             .finally(() => {
