@@ -559,7 +559,7 @@ const testRunInfoController = function testRunInfoController(
                     $timeout(() => logsGettingDestroy$.next(), 30000);
                 }
 
-                addDrivers(getVideoArtifacts(test.artifacts, isChangingStatus));
+                addDrivers(getVideoArtifacts(test.artifacts), isChangingStatus);
             }
             vm.test = test;
 

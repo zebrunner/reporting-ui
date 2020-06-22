@@ -227,7 +227,10 @@ $historySectionHeight: 68px;
                 &._head {
                     text-transform: uppercase;
                     font-weight: 500;
-                    background-color: rgba($gray-base, 0.03);
+                    background-color: #f7f7f7;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
                 }
             }
 

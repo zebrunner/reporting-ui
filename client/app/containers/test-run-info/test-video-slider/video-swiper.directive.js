@@ -18,6 +18,7 @@ const videoSwiperDirective = function videoSwiper(
             swiperOptions: '<',
             onSliderChange: '&',
             activeSlideIndex: '<',
+            slidesData: '<',
         },
         link: ($scope, $element) => {
             const swiperContainer = $element[0];
@@ -27,15 +28,34 @@ const videoSwiperDirective = function videoSwiper(
                 initSwiper();
             }, 0);
             $scope.$on('$destroy', () => {
-                if (swiperInstance) {
-                    swiperInstance.destroy();
-                }
+                destroySwiper();
             });
             $scope.$watch('activeSlideIndex', (newValue) => {
                 if (swiperInstance && swiperInstance.activeIndex !== newValue) {
                     swiperInstance.slideTo(newValue);
                 }
             });
+            $scope.$watch('slidesData', (newValue, oldValue) => {
+                if (newValue) {
+                    if (newValue.length > 1) {
+                        if (!swiperInstance) {
+                            initSwiper();
+                        } else {
+                            swiperInstance.update();
+                        }
+                    } else {
+                        destroySwiper();
+                    }
+                } else {
+                    destroySwiper();
+                }
+            });
+
+            function destroySwiper() {
+                if (swiperInstance) {
+                    swiperInstance.destroy();
+                }
+            }
 
             function initSwiper() {
                 if (typeof Swiper !== 'function') { return; }
