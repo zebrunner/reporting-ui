@@ -40,11 +40,19 @@ export default (
 
         this.token = MigrationAuthService.getToken();
 
-        MigrationAuthService.prepareSignupPage$(this.token).pipe(
-            filter(model => !!model),
-            tap(({ email, source }) => (this.model = { ...this.model, email, source })),
-            tap($safeDigest.rxjs($scope)),
-        ).subscribe();
+        // Wait until we have application config
+        const unsubscribeAppConfig = $ngRedux.subscribe(() => {
+            const hasApplicationConfig = !!getApplicationConfig($ngRedux.getState());
+
+            if (hasApplicationConfig) {
+                MigrationAuthService.prepareSignupPage$(this.token).pipe(
+                    filter(model => !!model),
+                    tap(({ email, source }) => (this.model = { ...this.model, email, source })),
+                    tap($safeDigest.rxjs($scope)),
+                ).subscribe();
+                unsubscribeAppConfig();
+            }
+        });
     }
 
     function $onDestroy() {

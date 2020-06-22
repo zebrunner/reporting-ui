@@ -1,17 +1,21 @@
 export const ValidationsService = () => {
     const userNameMinLength = 3;
     const userNameMaxLength = 50;
+
+    const passwordMinLength = 8;
+    const passwordMaxLength = 50;
+
     const validations = {
         username: [
             {
                 name: 'minlength',
                 message: `Username must be between ${userNameMinLength} and ${userNameMaxLength} characters`,
-                value: 3,
+                value: userNameMinLength,
             },
             {
                 name: 'maxlength',
                 message: `Username must be between ${userNameMinLength} and ${userNameMaxLength} characters`,
-                value: 50,
+                value: userNameMaxLength,
             },
             {
                 name: 'pattern',
@@ -27,13 +31,13 @@ export const ValidationsService = () => {
         password: [
             {
                 name: 'minlength',
-                message: 'Password must be between 8 and 50 characters',
-                value: 8,
+                message: `Password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
+                value: passwordMinLength,
             },
             {
                 name: 'maxlength',
-                message: 'Password must be between 8 and 50 characters',
-                value: 50,
+                message: `Password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
+                value: passwordMaxLength,
             },
             {
                 name: 'pattern',
@@ -49,15 +53,13 @@ export const ValidationsService = () => {
         confirmPassword: [
             {
                 name: 'minlength',
-                message: 'Password must be between 8 and 50 characters',
+                message: `Password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
+                value: passwordMinLength,
             },
             {
                 name: 'maxlength',
-                message: 'Password must be between 8 and 50 characters',
-            },
-            {
-                name: 'pattern',
-                message: 'Password does not match',
+                message: `Password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
+                value: passwordMaxLength,
             },
             {
                 name: 'required',

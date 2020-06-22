@@ -151,7 +151,7 @@ export const MigrationAuthService = (
         );
     }
 
-    function handleSignup({ username: usernameOrEmail, password }) {
+    function handleSignup({ email: usernameOrEmail, password }) {
         RouterService.go('/signin', {
             user: { usernameOrEmail, password },
         });

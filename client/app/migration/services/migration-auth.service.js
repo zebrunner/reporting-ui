@@ -96,7 +96,7 @@ export const MigrationAuthService = (
         ));
     }
 
-    function handleSignup({ username: usernameOrEmail, password }) {
+    function handleSignup({ email: usernameOrEmail, password }) {
         $state.go('signin', {
             user: { usernameOrEmail, password },
         });
