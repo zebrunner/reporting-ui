@@ -55,7 +55,7 @@
                     <md-tooltip md-direction="top">Abort</md-tooltip>
                     <span class="fa fa-ban" aria-hidden="true"></span>
                 </md-button>
-                <md-button id="sendTestRunsAsEmail" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-click="$ctrl.batchEmail($event)" data-ng-if="$ctrl.isToolConnected('EMAIL')">
+                <md-button id="sendTestRunsAsEmail" aria-label="menu" class="md-fab md-raised md-fab-sm" ng-click="$ctrl.batchEmail($event)">
                     <md-tooltip md-direction="top">Send as email</md-tooltip>
                     <span class="fa fa-envelope-o" aria-hidden="true"></span>
                 </md-button>
@@ -106,7 +106,6 @@
                             <span class="zb-slim-btn__txt">Delete</span>
                         </md-button>
                         <md-button id="bulkSendTestRunsAsEmail"
-                            ng-if="$ctrl.isToolConnected('EMAIL')"
                             aria-label="menu"
                             class="zb-slim-btn _left-icon"
                             ng-click="$ctrl.batchEmail($event)">

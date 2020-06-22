@@ -146,7 +146,7 @@
                                 Mark as reviewed
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('EMAIL')">
+                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS'">
                             <md-button name="sendAsEmail" data-ng-click="$ctrl.sendAsEmail($event)">
                                 Send as email
                             </md-button>
@@ -250,7 +250,7 @@
                                 Mark as reviewed
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS' && $ctrl.isToolConnected('EMAIL')">
+                        <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS'">
                             <md-button name="sendAsEmail" data-ng-click="$ctrl.sendAsEmail($event)">
                                 Send as email
                             </md-button>
