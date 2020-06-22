@@ -607,7 +607,7 @@ const testRunInfoController = function testRunInfoController(
                             .sort((a, b) => {
                                 // handles cases when tests started at the same time. Sort them by ID
                                 if (a.startTime === b.startTime) {
-                                    return a.id - b.id;
+                                    return a.testId - b.testId;
                                 }
 
                                 return a.startTime - b.startTime;
