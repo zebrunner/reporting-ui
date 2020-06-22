@@ -364,7 +364,6 @@ const testDetailsController = function testDetailsController(
                         test.status = status;
                         message = 'Test was marked as ' + test.status;
                         messageService.success(message);
-                        addTestEvent(message, test);
                     } else {
                         console.error(rs.message);
                     }
@@ -403,32 +402,11 @@ const testDetailsController = function testDetailsController(
                         vm.bulkChangeInProgress = false;
                     }, 1000);
 
-                    const message = 'Test was marked as ' + btn.action;
-
                     messageService.success('Tests were marked as ' + btn.action);
-                    bulkCreateWorkItems(message, selectedTests);
                     clearTestsSelection();
                 } else {
                     messageService.error(res.message);
                     vm.bulkChangeInProgress = false;
-                }
-            });
-    }
-
-    function bulkCreateWorkItems(message, tests) {
-        const params = tests.map(test => {
-            const testEvent = createWorkItem('EVENT', test, message);
-
-            return {
-                testId: test.id,
-                workItems: [testEvent],
-            };
-        });
-
-        TestService.createTestsWorkItems(vm.testRun.id, params)
-            .then(rs => {
-                if (!rs.success) {
-                    messageService.error('Failed to add tests events');
                 }
             });
     }
@@ -605,17 +583,6 @@ const testDetailsController = function testDetailsController(
 
         firstIndex = newFirstIndex;
         lastIndex = newLastIndex;
-    }
-
-    function addTestEvent(message, test) {
-        const testEvent = createWorkItem('EVENT', test, message);
-
-        TestService.createTestWorkItem(test.id, testEvent)
-            .then(rs => {
-                if (!rs.success) {
-                    messageService.error('Failed to add event test "' + test.id);
-                }
-            });
     }
 
     function initJobMetadata() {

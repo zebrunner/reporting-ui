@@ -59,7 +59,6 @@
                 if(rs.success) {
                     $scope.changeStatusIsVisible = false;
                     message = 'Test was marked as ' + test.status;
-                    addTestEvent(message);
                     messageService.success(message);
                 }
                 else {
@@ -162,7 +161,6 @@
                     } else {
                         message = generateActionResultMessage(workItemType, jiraId, "update", true);
                     }
-                    addTestEvent(message);
                     $scope.newIssue.id = rs.data.id;
                     updateWorkItemList(rs.data);
                     initAttachedWorkItems();
@@ -196,7 +194,6 @@
                     } else {
                         message = generateActionResultMessage(workItemType, jiraId, "update", true);
                     }
-                    addTestEvent(message);
                     $scope.newTask.id = rs.data.id;
                     updateWorkItemList(rs.data);
                     initAttachedWorkItems();
@@ -221,7 +218,6 @@
                 var message;
                 if(rs.success) {
                     message = generateActionResultMessage(workItem.type, workItem.jiraId, "unassign" + "e", true);
-                    addTestEvent(message);
                     deleteWorkItemFromTestWorkItems(workItem);
                     initAttachedWorkItems();
                     initNewIssue();
@@ -240,7 +236,6 @@
                 var message;
                 if(rs.success) {
                     message = generateActionResultMessage(workItem.type, workItem.jiraId, "unassign" + "e", true);
-                    addTestEvent(message);
                     deleteWorkItemFromTestWorkItems(workItem);
                     initAttachedWorkItems();
                     initNewTask();
@@ -563,27 +558,12 @@
                 if(rs.success) {
                     $scope.testComments.push(rs.data);
                     eventMessage = generateActionResultMessage(testComment.type, '', 'create', true);
-                    addTestEvent(eventMessage);
                     messageService.success(eventMessage);
                 } else {
                     eventMessage = generateActionResultMessage(testComment.type, '', 'create', false);
                     messageService.error('Failed to create comment for test "' + test.id);
                 }
                 $scope.testCommentText = '';
-            })
-        };
-
-        var addTestEvent = function (message){
-            var testEvent = {};
-            testEvent.description = message;
-            testEvent.jiraId = Math.floor(Math.random() * 90000) + 10000;
-            testEvent.testCaseId = test.testCaseId;
-            testEvent.type = 'EVENT';
-            TestService.createTestWorkItem(test.id, testEvent).then(function(rs){
-                if(rs.success) {
-                } else {
-                    messageService.error('Failed to add event test "' + test.id);
-                }
             })
         };
 

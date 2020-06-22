@@ -457,10 +457,6 @@ const testRunInfoController = function testRunInfoController(
     function controllerInit(skipHistoryUpdate) {
         if (!vm.testRun || !vm.test) { return; }
 
-        // filter EVENT items
-        // TODO: do we ever need in "EVENT" work items on the client? (opened ZEB-1416)
-        vm.test.workItems = (vm.test.workItems || []).filter(({ type }) => type !== 'EVENT');
-
         pageTitleService.setTitle($mdMedia('max-width: 480px') ? 'Test details' : vm.test.name);
         initSelectedLog();
 

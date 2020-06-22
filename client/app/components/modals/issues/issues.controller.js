@@ -105,7 +105,6 @@ const IssuesModalController = function IssuesModalController(
                             break;
                     }
                     message = generateActionResultMessage(workItemType, jiraId, messageWord, true);
-                    addTestEvent(message);
                     vm.newIssue = angular.copy(rs.data);
                     updateWorkItemList(rs.data);
                     vm.initIssueSearch(false);
@@ -134,7 +133,6 @@ const IssuesModalController = function IssuesModalController(
 
                 if (rs.success) {
                     message = generateActionResultMessage(workItem.type, workItem.jiraId, "unlinked", true);
-                    addTestEvent(message);
                     deleteWorkItemFromTestWorkItems(workItem);
                     initAttachedWorkItems();
                     initNewIssue();
@@ -304,25 +302,7 @@ const IssuesModalController = function IssuesModalController(
         }, 500);
     }
 
-
-    /* Sends request to Jira for issue additional info after opening modal */
-
-    function addTestEvent(message) {
-        var testEvent = {};
-        testEvent.description = message;
-        testEvent.jiraId = Math.floor(Math.random() * 90000) + 10000;
-        testEvent.testCaseId = test.testCaseId;
-        testEvent.type = 'EVENT';
-        TestService.createTestWorkItem(test.id, testEvent)
-            .then(function(rs) {
-                if (!rs.success) {
-                    messageService.error('Failed to add event test ' + test.id);
-                }
-            });
-    }
-
     /* Generates result message for action comment (needed to be stored into DB and added in UI alert) */
-
     function generateActionResultMessage(item, id, action, success) {
         if (success) {
             return 'Issue ' + id + ' was ' + action;
