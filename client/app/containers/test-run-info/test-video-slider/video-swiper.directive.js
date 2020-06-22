@@ -24,9 +24,6 @@ const videoSwiperDirective = function videoSwiper(
             const swiperContainer = $element[0];
             let swiperInstance;
 
-            $timeout(() => {
-                initSwiper();
-            }, 0);
             $scope.$on('$destroy', () => {
                 destroySwiper();
             });
