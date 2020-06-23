@@ -3,7 +3,7 @@
         <zf-sub-header-title>{{dashboard.title}}</zf-sub-header-title>
         <zf-sub-header-options ng-if="!isPageLoading">
             <div class="hide-phone">
-                <md-button class="md-icon-button" data-ng-if="MODE !== 'WIDGET_PLACEMENT' && $ctrl.isToolConnected('EMAIL') && dashboard.widgets.length" ng-click="showEmailDialog($event, dashboard);">
+                <md-button class="md-icon-button" data-ng-if="MODE !== 'WIDGET_PLACEMENT' && dashboard.widgets.length" ng-click="showEmailDialog($event, dashboard);">
                     <i class="material-icons">
                         send
                     </i>
@@ -62,7 +62,7 @@
                                         <md-icon class="material-icons">more_vert</md-icon>
                                     </md-button>
                                     <md-menu-content width="2">
-                                        <md-menu-item data-ng-if="$ctrl.isToolConnected('EMAIL') && widget.data.dataset.length">
+                                        <md-menu-item data-ng-if="widget.data.dataset.length">
                                             <md-button name="sendEmail" data-ng-click="showEmailDialog($event, widget)">
                                                 Send by email
                                             </md-button>
@@ -79,7 +79,7 @@
                                         </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
-                           <!-- <i class="material-icons widget-icon" data-ng-if="$ctrl.isToolConnected('EMAIL')" data-ng-click="showEmailDialog($event, widget.id)">
+                           <!-- <i class="material-icons widget-icon" data-ng-click="showEmailDialog($event, widget.id)">
                                 send
                                 <md-tooltip md-direction="top">Send by email</md-tooltip>
                             </i>
