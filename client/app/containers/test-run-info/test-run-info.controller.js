@@ -628,6 +628,7 @@ const testRunInfoController = function testRunInfoController(
                 unbindEvents();
                 logsRequestsCanceler = $q.defer();
                 resetInitialValues(testRun, test);
+                updateExecutionHistoryItem(test);
                 $timeout(() => {
                     controllerInit(true);
                 });

@@ -14,6 +14,8 @@ const testVideoSliderController = function testVideoSliderController(
             mousewheel: {
                 forceToAxis: true,
             },
+            observer: true,
+            observeSlideChildren: true,
             shortSwipes: false,
             slidesPerView: 1,
             navigation: {

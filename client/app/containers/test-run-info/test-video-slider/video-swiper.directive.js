@@ -35,11 +35,13 @@ const videoSwiperDirective = function videoSwiper(
             $scope.$watch('slidesData', (newValue, oldValue) => {
                 if (newValue) {
                     if (newValue.length > 1) {
-                        if (!swiperInstance) {
-                            initSwiper();
-                        } else {
-                            swiperInstance.update();
-                        }
+                        $timeout(() => {
+                            if (!swiperInstance) {
+                                initSwiper();
+                            } else {
+                                swiperInstance.update();
+                            }
+                        }, 0, false);
                     } else {
                         destroySwiper();
                     }
