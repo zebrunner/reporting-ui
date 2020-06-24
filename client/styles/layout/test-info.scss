@@ -54,12 +54,6 @@ $historySectionHeight: 68px;
             text-align: center;
             align-items: center;
             justify-content: center;
-            &-name {
-                display: none;
-                &._mobile {
-                    display: inline-block;
-                }
-            }
         }
     }
 

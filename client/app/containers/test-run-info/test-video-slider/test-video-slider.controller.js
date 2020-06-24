@@ -15,6 +15,7 @@ const testVideoSliderController = function testVideoSliderController(
                 forceToAxis: true,
             },
             observer: true,
+            observeParents: true,
             observeSlideChildren: true,
             shortSwipes: false,
             slidesPerView: 1,
