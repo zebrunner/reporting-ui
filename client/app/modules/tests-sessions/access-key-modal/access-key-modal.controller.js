@@ -200,9 +200,7 @@ const AccessKeyModalController = function AccessKeyModalController(
                     url.password = vm.accessSettings.ZEBRUNNER_PASSWORD;
                 }
 
-                vm.accessUrl = url.href;
-
-                return true;
+                return vm.accessUrl = url.href;
             } catch (error) {
                 messageService.error('Unable to init Access URL');
             }
@@ -462,11 +460,8 @@ const AccessKeyModalController = function AccessKeyModalController(
                     return acc;
                 }, {});
 
-                if (vm.accessSettings.ZEBRUNNER_USER) {
-                    data.username = vm.accessSettings.ZEBRUNNER_USER;
-                }
-                if (vm.accessSettings.ZEBRUNNER_PASSWORD) {
-                    data.password = vm.accessSettings.ZEBRUNNER_PASSWORD;
+                if (vm.accessURL) {
+                    data.accessURL = vm.accessURL;
                 }
 
                 vm.aceModel = replacePlaceholders(codeSnippet, data);
