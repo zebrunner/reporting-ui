@@ -1,10 +1,13 @@
 @import "../global/var";
 // Dialog
-md-backdrop.md-dialog-backdrop{
+md-backdrop.md-dialog-backdrop {
     z-index: $zindex-modal-background;
 }
 .md-dialog-container {
     z-index: $zindex-modal-background + 1; // higher than the backdrop
+}
+.md-dialog-is-showing md-backdrop.md-select-backdrop {
+    z-index: $zindex-modal-background + 2; // higher than the container
 }
 
 .ui-md-radio-group-inline {
