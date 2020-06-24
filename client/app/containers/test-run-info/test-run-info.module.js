@@ -1,16 +1,17 @@
 'use strict';
 
 import testRunInfoComponent from './test-run-info.component';
-import elasticsearchService from './elasticsearch.service';
+import elasticsearchService from './elastic-search/elasticsearch.service';
 import { testExecutionHistoryModule } from './test-execution-history/test-execution-history.module';
-import videocam_off_outlined from '../../../assets/images/videocam_off_outlined.svg';
+import { testVideoSliderModule } from './test-video-slider/test-video-slider.module';
+import carinaLogsAgent from './logs-agents/carina.logs-agent';
+import defaultLogsAgent from './logs-agents/default.logs-agent';
 
-export const testRunInfoModule = angular.module('app.testRunInfo', [testExecutionHistoryModule])
+export const testRunInfoModule = angular.module('app.testRunInfo', [
+    testExecutionHistoryModule,
+    testVideoSliderModule,
+])
+    .factory({ carinaLogsAgent })
+    .factory({ defaultLogsAgent })
     .factory({ elasticsearchService })
-    .component({ testRunInfoComponent })
-    .config(($mdIconProvider) => {
-        'ngInject';
-
-        $mdIconProvider
-            .icon('outlined:videocam_off', videocam_off_outlined);
-    });
+    .component({ testRunInfoComponent });

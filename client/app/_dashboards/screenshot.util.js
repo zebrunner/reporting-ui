@@ -17,7 +17,7 @@ const ScreenshotService = function ScreenshotService(
 
                     return formData;
                 });
-        }
+        },
     };
 
     function crop(elemSelector) {

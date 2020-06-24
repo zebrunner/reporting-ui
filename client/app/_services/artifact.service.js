@@ -1,45 +1,37 @@
 'use strict';
 
-import RFB from 'vendors/novnc';
+import RFB from '@novnc/novnc';
 
 const JSZip = require('jszip');
 const ArtifactService = function ArtifactService($window, $q, UtilService, toolsService, messageService, DownloadService) {
     'ngInject';
 
-    const service = {
+    return {
         connectVnc,
-        resize,
         provideLogs,
         downloadArtifacts,
         extractImageArtifacts,
     };
-    let display;
-    let ratio;
-    let container;
-    let containerHeightProperty = 'offsetHeight';
-    let containerWidthProperty = 'offsetWidth';
 
-    return service;
+    function connectVnc(containerElement, wsURL) {
+        const playerElem = containerElement.querySelector('.vnc-player');
 
-    function connectVnc(containerElement, heightProperty, widthProperty, wsURL, disconnectFunc) {
-        container = containerElement;
-        containerHeightProperty = heightProperty;
-        containerWidthProperty = widthProperty;
-        var rfb = new RFB(angular.element('#vnc')[0], wsURL, { shared: true, credentials: { password: 'selenoid' } });
+        if (playerElem) {
+            const params = {
+                shared: true,
+                credentials: {
+                    password: 'selenoid',
+                },
+            };
+            const rfb = new RFB(playerElem, wsURL, params);
 
-        //rfb._viewOnly = true;
-        rfb.addEventListener("connect",  connected);
-        rfb.addEventListener("disconnect",  disconnectFunc ? disconnectFunc : disconnected);
-        rfb.scaleViewport = true;
-        rfb.resizeSession = true;
-        display = rfb._display;
-        display._scale = 1;
-        angular.element($window).bind('resize', function(){
-            autoscale(display, ratio, container);
-        });
+            rfb.scaleViewport = true;
+            rfb.resizeSession = true;
+            rfb._display._scale = 1;
 
-        return rfb;
-    };
+            return rfb;
+        }
+    }
 
     function provideLogs(rabbitmq, testRun, test, logsContainer, needReconnect, func) {
         return $q(function (resolve, reject) {
@@ -76,11 +68,11 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
         tests.forEach(test => {
             const imageArtifacts = test.artifacts.reduce((collected, artifact) => {
                 const name = artifact.name.toLowerCase();
-    
+
                 if (!name.includes('live') && !name.includes('video')) {
                     const links = artifact.link.split(' ');
                     const url = new URL(links[0]);
-    
+
                     artifact.extension = url.pathname.split('/').pop().split('.').pop();
                     if (artifact.extension === 'png') {
                         if (links[1]) {
@@ -90,7 +82,7 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
                         collected.push(artifact);
                     }
                 }
-    
+
                 return collected;
             }, []);
 
@@ -126,7 +118,7 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
                             if (response.success) {
                                 return response.res.data;
                             }
-        
+
                             //broken artifact will be an empty file
                             return '';
                         });
@@ -146,10 +138,6 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
             });
     }
 
-    function getUrlExtension(url) {
-        return url.split(/\#|\?/)[0].split('.').pop().trim();
-    };
-
     function normilizeName(str) {
         const maxLength = 256;
 
@@ -163,45 +151,11 @@ const ArtifactService = function ArtifactService($window, $q, UtilService, tools
     function getUrlFilename(url) {
         const urlSlices = url.split(/\#|\?/)[0].split('/');
         return urlSlices[urlSlices.length - 1].split('.')[0].trim();
-    };
+    }
 
     function scrollLogsOnBottom(logsContainer) {
         logsContainer.scrollTop = logsContainer.scrollHeight;
-    };
-
-    function connected(e) {
-        var canvas = document.getElementsByTagName("canvas")[0];
-        ratio = canvas.width / canvas.height;
-        autoscale(display, ratio, container);
-
-    };
-
-    function disconnected(e) {
-    };
-
-    function autoscale(display, ratio, window) {
-        var size = calculateSize(window, ratio);
-        display.autoscale(size.width, size.height, false);
-    };
-
-    function calculateSize(window, ratio) {
-        var height;
-        var width;
-        if(ratio > 1) {
-            width = window[containerWidthProperty];
-            height = width / ratio;
-        } else {
-            height = window[containerHeightProperty];
-            width = height * ratio;
-        }
-        return {height: height, width: width};
-    };
-
-    function resize(element, rfb) {
-        container = element;
-        display = rfb._display;
-        connected();
-    };
+    }
 };
 
 export default ArtifactService;

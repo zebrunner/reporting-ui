@@ -1,0 +1,48 @@
+<div class="test-video-slider" ng-switch="$ctrl.drivers.length">
+    <div class="test-video-slider__section _no-drivers" ng-switch-when="0">
+        <no-video-placeholder is-vnc="$ctrl.testStatus === 'IN_PROGRESS'"></no-video-placeholder>
+    </div>
+    <div class="test-video-slider__container swiper-container"
+        video-swiper
+        slides-data="$ctrl.drivers"
+        swiper-options="$ctrl.swiperOptions"
+        on-slider-change="$ctrl.onSliderChange($indexes)"
+        active-slide-index="$ctrl.activeSlideIndex"
+        ng-switch-default>
+        <div class="test-video-slider__wrapper swiper-wrapper">
+            <div class="test-video-slider__slide swiper-slide"
+                id="driver-{{driver.id}}"
+                ng-switch="driver.type"
+                ng-repeat="driver in $ctrl.drivers track by driver.id">
+                <div ng-switch-when="vnc"
+                    ng-switch="driver.link"
+                    is-active="$ctrl.activeSlideIndex === $index"
+                    vnc-player="driver"
+                    class="test-video-slider__section _vnc">
+                    <no-video-placeholder ng-switch-when="" is-vnc="true"></no-video-placeholder>
+                    <div ng-switch-default class="vnc-player">
+                        <div class="vnc-loader" ng-if="driver.isLoading"></div>
+                        <i ng-click="$ctrl.toggleVNCFullScreen($event)" class="material-icons video-control">fullscreen</i>
+                    </div>
+                </div>
+                <div ng-switch-when="video"
+                    ng-switch="driver.link"
+                    class="test-video-slider__section _video">
+                    <no-video-placeholder ng-switch-when=""></no-video-placeholder>
+                    <video ng-switch-default
+                        preload="auto"
+                        controls>
+                        <source ng-src="{{ driver.link }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+        <div class="test-video-slider__nav-btn _prev _disabled">
+            <md-icon class="material-icons">chevron_left</md-icon>
+        </div>
+        <div class="test-video-slider__nav-btn _next _disabled">
+            <md-icon class="material-icons">chevron_right</md-icon>
+        </div>
+    </div>
+</div>

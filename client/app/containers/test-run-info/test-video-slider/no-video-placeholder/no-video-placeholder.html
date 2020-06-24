@@ -1,0 +1,30 @@
+<div class="no-video-placeholder">
+    <div class="no-video-placeholder__info">
+        <md-icon md-svg-icon="outlined:videocam_off"
+            class="no-video-placeholder__info-icon material-icons"></md-icon>
+        <div class="no-video-placeholder__info-text"
+            ng-if="$ctrl.isVnc">No live session available</div>
+        <div class="no-video-placeholder__info-text"
+            ng-if="!$ctrl.isVnc">No video available</div>
+    </div>
+    <div class="no-video-placeholder__controls">
+        <div class="no-video-placeholder__control _play">
+            <span class="material-icons">arrow_right</span>
+        </div>
+        <div class="no-video-placeholder__control _time">
+            <span>0:00</span>
+        </div>
+        <div class="no-video-placeholder__control _volume">
+            <span class="material-icons">volume_up</span>
+        </div>
+        <div class="no-video-placeholder__control _fullscreen">
+            <span class="material-icons">crop_free</span>
+        </div>
+        <div class="no-video-placeholder__control _options">
+            <span class="material-icons">more_vert</span>
+        </div>
+    </div>
+    <div class="no-video-placeholder__progress">
+        <div class="no-video-placeholder__progress-bar progress-bar"></div>
+    </div>
+</div>
