@@ -13,6 +13,7 @@ const CiHelperController = function CiHelperController(
     $window,
     $mdDialog,
     $mdMedia,
+    $state,
     $timeout,
     $interval,
     LauncherService,
@@ -50,10 +51,11 @@ const CiHelperController = function CiHelperController(
     const providersConfigURL = 'https://zebrunner.s3-us-west-1.amazonaws.com/common/moon/providers.json';
     const vm = {
         activeLauncher: {
-            scmAccountType: {},
+            scmAccountDTO: {},
         },
         appFormats: '.app, .ipa, .apk, .apks',
         appMaxSize: '100MB',
+        githubConfig: {},
         launchers: [],
         platforms: [],
         platformModel: {},
@@ -325,7 +327,7 @@ const CiHelperController = function CiHelperController(
 
     $scope.addRepo = function () {
         $scope.repo = {};
-        if ($scope.clientId) {
+        if (vm.githubConfig.clientId) {
             $scope.connectToGitHub()
                 .then(() => {
                     clearPrevLauncherElement();
@@ -356,7 +358,7 @@ const CiHelperController = function CiHelperController(
         resetLauncher();
         highlightFolder(scmAccount);
         vm.cardNumber = 2;
-        vm.activeLauncher.scmAccountType = scmAccount;
+        vm.activeLauncher.scmAccountDTO = scmAccount;
     };
 
     function getCurrentServerId(scmAccount) {
@@ -441,7 +443,7 @@ const CiHelperController = function CiHelperController(
      */
     function resetLauncher() {
         vm.activeLauncher = {
-            scmAccountType: {},
+            scmAccountDTO: {},
         };
     }
 
@@ -597,7 +599,7 @@ const CiHelperController = function CiHelperController(
             if (rs.success) {
                 const l = rs.data;
                 vm.launchers.splice(index, 1, l);
-                const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
+                const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountDTO.id);
                 if (indexScmAccount !== -1) {
                     const scmAccount = $scope.scmAccounts[indexScmAccount];
                     const scmAccountLauncherIndex = scmAccount.launchers.indexOfField('id', l.id);
@@ -641,7 +643,7 @@ const CiHelperController = function CiHelperController(
                     cancelFolderManaging();
 
                     const l = vm.launchers[index];
-                    const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountType.id);
+                    const indexScmAccount = $scope.scmAccounts.indexOfField('id', l.scmAccountDTO.id);
                     if (indexScmAccount !== -1) {
                         const scmAccount = $scope.scmAccounts[indexScmAccount];
                         const scmAccountLauncherIndex = scmAccount.launchers.indexOfField('id', id);
@@ -727,6 +729,7 @@ const CiHelperController = function CiHelperController(
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !!rescan;
+            console.log(launcherScan, $scope.currentServerId);
             LauncherService.scanRepository(launcherScan, $scope.currentServerId)
                 .then(function (rs) {
                     if (rs.success) {
@@ -857,7 +860,7 @@ const CiHelperController = function CiHelperController(
         if (!launcher.name) {
             messages.push('name');
         }
-        if (!launcher.scmAccountType || !launcher.scmAccountType.id) {
+        if (!launcher.scmAccountDTO || !launcher.scmAccountDTO.id) {
             messages.push('repository');
         }
         if (messages.length) {
@@ -911,44 +914,66 @@ const CiHelperController = function CiHelperController(
 
     $scope.scmAccount = {};
 
-    function getClientId() {
-        return $q(function (resolve, reject) {
-            ScmService.getClientId().then(function (rs) {
-                if (rs.success) {
-                    resolve(rs.data);
-                }
+    function getGithubConfig() {
+        return ScmService.getGithubConfig()
+            .then((rs) => {
+                return rs.data || {};
             });
-        });
     }
 
     function getTenantInfo() {
-        return $q(function (resolve, reject) {
-            authService.getTenant().then(function (rs) {
-                if (rs.success) {
-                    resolve(rs.data);
-                } else {
-                    reject();
+        return authService.getTenant()
+            .then((rs) => {
+                if (!rs.success) {
                     messageService.error(rs.message);
                 }
+
+                return rs.data || {};
             });
-        });
     }
 
-    $scope.clientId = '';
+    function getGithubAuthLink(redirectURI) {
+        try {
+            const baseHost = (vm.githubConfig.host.includes('http')
+                ? vm.githubConfig.host
+                : `https://${vm.githubConfig.host}`);
+            const url = new URL('/login/oauth/authorize', baseHost);
+            const params = {
+                client_id: vm.githubConfig.clientId,
+                scope: 'repo user read:org',
+                redirect_uri: redirectURI,
+            }
+
+            url.search = `?${getEncodedParams(params)}`;
+
+            return url.href;
+        } catch (e) {
+            messageService.error('Unable to generate Github Auth link: invalid Github host is provided');
+        }
+    }
+
+    function getEncodedParams(params) {
+        return Object.entries(params).map(kv => kv.map(encodeURIComponent).join("=")).join("&");
+    }
 
     $scope.connectToGitHub = function () {
         return $q(function (resolve, reject) {
-            if ($scope.clientId) {
-                var host = $window.location.host;
-                var tenant = host.split('\.')[0];
-                const servletPath = $window.location.pathname.split('/tests/runs')[0];
-                var redirectURI = isMultitenant ? `${$window.location.protocol}//${host.replace(tenant, 'api')}/github/callback/${tenant}` : `${$window.location.protocol}//${host}${servletPath}/scm/callback`;
-                var url = 'https://github.com/login/oauth/authorize?client_id=' + $scope.clientId + '&scope=user%20repo%20readAorg&redirect_uri=' + redirectURI;
+            if (vm.githubConfig.clientId) {
+                const host = $window.location.host;
+                const redirectURI = isMultitenant
+                    ? `${$window.location.protocol}//${host.replace(authService.tenant, 'api')}/github/callback/${authService.tenant}`
+                    : $state.href('scmCallback');
+                let authUrl = getGithubAuthLink(redirectURI);
+
+                if (!authUrl) {
+                    return;
+                }
+
                 var height = 650;
                 var width = 450;
                 var location = getCenterWindowLocation(height, width);
                 var gitHubPopUpProperties = 'toolbar=0,scrollbars=1,status=1,resizable=1,location=1,menuBar=0,width=' + width + ', height=' + height + ', top=' + location.top + ', left=' + location.left;
-                gitHubPopUp = $window.open(url, 'GithubAuth', gitHubPopUpProperties);
+                gitHubPopUp = $window.open(authUrl, 'GithubAuth', gitHubPopUpProperties);
 
                 var localStorageWatcher = $interval(function () {
                     var code = localStorage.getItem('code');
@@ -1007,7 +1032,7 @@ const CiHelperController = function CiHelperController(
             if (rs.success) {
                 $scope.scmAccounts.push(rs.data);
                 $scope.scmAccount = rs.data;
-                vm.activeLauncher.scmAccountType = rs.data;
+                vm.activeLauncher.scmAccountDTO = rs.data;
                 vm.organizations = [];
                 vm.repositories = [];
                 vm.cardNumber = 0;
@@ -1088,7 +1113,7 @@ const CiHelperController = function CiHelperController(
 
     function appendLauncher(launcher) {
         vm.launchers.push(launcher);
-        const scmAccountIndex = $scope.scmAccounts.indexOfField('id', launcher.scmAccountType.id);
+        const scmAccountIndex = $scope.scmAccounts.indexOfField('id', launcher.scmAccountDTO.id);
         const scmAccount = $scope.scmAccounts[scmAccountIndex];
         scmAccount.launchers = scmAccount.launchers || [];
         scmAccount.launchers.push(launcher);
@@ -1129,7 +1154,7 @@ const CiHelperController = function CiHelperController(
                 //add new scanned launchers
                 vm.launchers = [...vm.launchers, ...event.launchers];
                 //update current scm account
-                $scope.scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType.id === $scope.scmAccount.id);
+                $scope.scmAccount.launchers = vm.launchers.filter(({ scmAccountDTO }) => scmAccountDTO && scmAccountDTO.id === $scope.scmAccount.id);
             } else {
                 vm.launcherPreferences = {};
                 messageService.error('Unable to scan repository');
@@ -1171,6 +1196,7 @@ const CiHelperController = function CiHelperController(
         resetLauncher(); //TODO: why do we need this?
         const launchersPromise = getAllLaunchers()
             .then(launchers => {
+                console.log(launchers);
                 return vm.launchers = launchers;
             });
         toolsService.fetchIntegrationOfTypeByName('AUTOMATION_SERVER')
@@ -1183,9 +1209,10 @@ const CiHelperController = function CiHelperController(
         getTenantInfo()
             .then((tenant) => {
                 isMultitenant = tenant.multitenant;
-                return getClientId();
-            })
-            .then(clientId => $scope.clientId = clientId);
+            });
+        getGithubConfig()
+            .then(githubConfig => vm.githubConfig = githubConfig);
+
         const scmAccountsPromise = ScmService.getAllScmAccounts()
             .then(function (rs) {
                 if (rs.success) {
@@ -1203,7 +1230,7 @@ const CiHelperController = function CiHelperController(
         $q.all([launchersPromise, scmAccountsPromise, providersConfigPromise])
             .then(data => {
                 $scope.scmAccounts.forEach(scmAccount => {
-                    scmAccount.launchers = vm.launchers.filter(({ scmAccountType }) => scmAccountType.id === scmAccount.id);
+                    scmAccount.launchers = vm.launchers.filter(({ scmAccountDTO }) => scmAccountDTO && scmAccountDTO.id === scmAccount.id);
                 });
             })
             .finally(() => {
