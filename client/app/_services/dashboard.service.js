@@ -126,7 +126,7 @@
             multipart.append('email', new Blob([JSON.stringify(email)], {
                 type: "application/json"
             }));
-            return $httpMock.post(API_URL + '/api/upload/email?file=', multipart, {headers: {'Content-Type': undefined}, transformRequest : angular.identity}).then(UtilService.handleSuccess, UtilService.handleError('Unable to send dashboard by email'));
+            return $httpMock.post(API_URL + '/api/dashboards/email?file=', multipart, {headers: {'Content-Type': undefined}, transformRequest : angular.identity}).then(UtilService.handleSuccess, UtilService.handleError('Unable to send dashboard by email'));
         }
 
         function GetWidgets() {

@@ -345,7 +345,7 @@
                 })
                 // For github redirection
                 // TODO: Should be only for guests?
-                .state('scm/callback', {
+                .state('scmCallback', {
                     url: '/scm/callback?code',
                     component: 'scmComponent',
                     lazyLoad: async ($transition$) => {
@@ -568,6 +568,11 @@
                             'ngInject';
 
                             return $q.resolve($stateParams.configSnapshot);
+                        },
+                        prepareESService: (elasticsearchService) => {
+                            'ngInject';
+
+                            return elasticsearchService.initService();
                         },
                     },
                     lazyLoad: async ($transition$) => {
