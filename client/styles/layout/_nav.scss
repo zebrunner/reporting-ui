@@ -66,6 +66,7 @@
             text-align: left;
             //font-weight: bold;
             transition: all $nav-transition_duration ease-in-out;
+            transform: rotateZ(0);
             &.li-small {
                 font-size: 12px;
                 font-weight: normal;
