@@ -962,7 +962,7 @@ const CiHelperController = function CiHelperController(
                 const host = $window.location.host;
                 const redirectURI = isMultitenant
                     ? `${$window.location.protocol}//${host.replace(authService.tenant, 'api')}/github/callback/${authService.tenant}`
-                    : $state.href('scmCallback');
+                    : $state.href('scmCallback', {}, { absolute: true });
                 let authUrl = getGithubAuthLink(redirectURI);
 
                 if (!authUrl) {
