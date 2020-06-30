@@ -21,7 +21,7 @@ const GroupsController = function GroupsController(
         userHasAnyPermission: authService.userHasAnyPermission,
         usersSearchCriteria: {},
         findGroupIndex,
-        refactorPermissionsData,
+        getPermissionsNames,
         count: 0,
         get groups() { return GroupService.groups; },
         get currentTitle() { return pageTitleService.pageTitle; },
@@ -61,7 +61,7 @@ const GroupsController = function GroupsController(
         return vm.groups.findIndex((item) => item.id === groupId);
     }
 
-    function refactorPermissionsData(permissions) {
+    function getPermissionsNames(permissions) {
         return permissions.filter((permission) => permission.value).map((permission) => permission.name);
     }
 
@@ -154,7 +154,7 @@ const GroupsController = function GroupsController(
         };
 
         $scope.createGroup = function (group) {
-            group.permissions = refactorPermissionsData($scope.allAvaliablePermissions);
+            group.permissions = getPermissionsNames($scope.allAvaliablePermissions);
 
             GroupService.createGroup(group).then(function (rs) {
                 if (rs.success) {
@@ -181,7 +181,7 @@ const GroupsController = function GroupsController(
         };
 
         $scope.updateGroup = function (group) {
-            group.permissions = refactorPermissionsData($scope.allAvaliablePermissions);
+            group.permissions = getPermissionsNames($scope.allAvaliablePermissions);
 
             GroupService.updateGroup(group, group.id).then(function (rs) {
                 if (rs.success) {
@@ -198,7 +198,7 @@ const GroupsController = function GroupsController(
             $scope.allAvaliablePermissions = permissions.reduce((acc, item) => {
                 acc.push({
                     name: item,
-                    value: !!$scope.group?.permissions?.find((permission) => permission === item) || false,
+                    value: !!$scope.group?.permissions?.find((permission) => permission === item),
                 });
                 return acc;
             }, []);
