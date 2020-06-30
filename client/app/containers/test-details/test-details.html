@@ -200,7 +200,15 @@
                                     load-on-scroll="test"
                                     load-on-scroll-handler="$ctrl.onTrackedTestRender($data)"
                                     ng-repeat="test in $ctrl.testsToDisplay track by test.id"
-                                    ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED', 'active-highlight': test.id === $ctrl.testId}"
+                                    ng-class="{
+                                        '_selected' : test.selected,
+                                        'info {{::main.theme}}' : test.status === 'IN_PROGRESS',
+                                        'success {{::main.theme}}' : test.status === 'PASSED',
+                                        'danger {{::main.theme}}' : test.status === 'FAILED',
+                                        'warning {{::main.theme}}' : test.status === 'SKIPPED',
+                                        'aborted-test-bg' : test.status === 'ABORTED',
+                                        'active-highlight': test.id === $ctrl.testId
+                                    }"
                                     data-source-id="{{test.id}}"
                                     ng-init="$last && $ctrl.testId && $ctrl.highlightTest()">
                                     <td class="test-details__table-col test-selection">
