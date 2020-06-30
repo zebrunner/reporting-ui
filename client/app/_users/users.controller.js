@@ -225,7 +225,6 @@ const UsersController = function UserViewController(
                 $scope.user = user;
                 $scope.changePassword = {};
                 $scope.updateUserPassword = function (changePassword) {
-                    console.log('change password', changePassword);
                     UserService.updateUserPassword(user.id, changePassword)
                         .then(function (rs) {
                             if (rs.success) {
