@@ -60,7 +60,7 @@
                     const authData = authService.authData;
                     // add authorization header to API requests
                     if (request.url.includes(API_URL) && authData) {
-                        request.headers['Authorization'] = `${authData.type} ${authData.accessToken}`;
+                        request.headers['Authorization'] = `${authData.authTokenType} ${authData.authToken}`;
                     }
 
                     return request;
@@ -77,7 +77,7 @@
                             case 401:
                                 const payload = { location };
                                 // handle 401 on refreshing expired token
-                                if (rejection.config.url.includes('/api/auth/refresh')) {
+                                if (rejection.config.url.includes('/api/iam/v1/auth/refresh')) {
                                     $rootScope.$broadcast('event:auth-tokenHasExpired', location);
 
                                     return $q.reject(rejection);

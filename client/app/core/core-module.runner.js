@@ -39,7 +39,7 @@ export function CoreModuleRunner(
             getVersion();
             updateCompanyLogo();
             if (authService.authData) {
-                UserService.initCurrentUser();
+                UserService.initCurrentUser(false, authService.authData.userId);
                 toolsService.getTools();
             }
         })

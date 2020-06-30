@@ -2,6 +2,7 @@
 
 import inviteUserModalTpl from '../shared/modals/invitation-modal/invitation-modal.html';
 import inviteUserModalCtrl from '../shared/modals/invitation-modal/invitation-modal.controller';
+import { isArray } from 'angular';
 
 const UsersController = function UserViewController(
     $scope,
@@ -222,9 +223,10 @@ const UsersController = function UserViewController(
 
                 $scope.UtilService = UtilService;
                 $scope.user = user;
-                $scope.changePassword = { 'userId': user.id };
+                $scope.changePassword = {};
                 $scope.updateUserPassword = function (changePassword) {
-                    UserService.updateUserPassword(changePassword)
+                    console.log('change password', changePassword);
+                    UserService.updateUserPassword(user.id, changePassword)
                         .then(function (rs) {
                             if (rs.success) {
                                 $scope.changePassword = {};
@@ -267,30 +269,32 @@ const UsersController = function UserViewController(
 
                 $scope.UtilService = UtilService;
                 $scope.user = angular.copy(user);
+                $scope.previousUserData = angular.copy(user);
                 $scope.updateStatus = function (user, status) {
                     user.status = status;
-                    UserService.updateStatus(user).then(function (rs) {
-                        if (rs.success) {
-                            $scope.cancel(rs.data.status);
-                        } else {
-                            messageService.error(rs.message);
-                        }
-                    });
+                    $scope.updateUser();
                 };
                 $scope.updateUser = function updateUserProfile() {
-                    const { username, firstName, lastName, email } = $scope.user;
+                    const changedUserValues = [];
 
-                    UserService.updateUserProfile($scope.user.id, { username, firstName, lastName, email })
+                    for (const key in $scope.user) {
+                        if ($scope.user[key] !== $scope.previousUserData[key] && !angular.isObject($scope.user[key]) && !isArray($scope.user[key])) {
+                            changedUserValues.push({op: 'replace', path: `/${key}`, value: $scope.user[key]})
+                        }
+                    }
+
+                    UserService.updateUserProfile($scope.user.id, changedUserValues)
                         .then(rs => {
                             if (rs.success) {
-                                $scope.user = { ...$scope.user, ...rs.data };
+                                $scope.previousUserData = {};
 
                                 if (UserService.currentUser.id === $scope.user.id) {
-                                    UserService.currentUser.firstName = firstName;
-                                    UserService.currentUser.lastName = lastName;
-                                    UserService.currentUser.email = email;
+                                    UserService.currentUser.firstName = $scope.user.firstName;
+                                    UserService.currentUser.lastName = $scope.user.lastName;
+                                    UserService.currentUser.email = $scope.user.email;
+                                    UserService.currentUser.status = $scope.user.status;
                                 }
-                                $scope.hide(rs.data);
+                                $scope.hide($scope.user);
                                 messageService.success('Profile changed');
                             } else {
                                 messageService.error(rs.message);

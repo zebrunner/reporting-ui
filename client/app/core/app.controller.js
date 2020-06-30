@@ -61,7 +61,7 @@ const appCtrl = function appCtrl(
     $rootScope.$on('event:auth-loginSuccess', function(ev, payload){
         authService.setCredentials(payload.auth);
         $scope.initSession();
-        UserService.initCurrentUser(true)
+        UserService.initCurrentUser(true, authService.authData.userId)
             .then((user) => {
                 $scope.main.skin = user.theme;
 

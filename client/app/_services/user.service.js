@@ -5,13 +5,15 @@
         .module('app.services')
         .service('UserService', UserService);
 
-    function UserService($httpMock, UtilService, API_URL, iam_API_URL, $q, messageService) {
+    function UserService($httpMock, UtilService, API_URL, iam_API_URL, $q, messageService, $httpParamSerializer) {
         'ngInject';
 
         let _currentUser = null;
         let _userFullDataFetchPromise = null;
         const service = {
-            getUserProfile,
+            getUserProfileByName,
+            getUserProfileById,
+            getUserPreferences,
             fetchFullUserData,
             updateStatus,
             searchUsers,
@@ -40,8 +42,18 @@
 
         return service;
 
-        function getUserProfile() {
-        	return $httpMock.get(API_URL + '/api/users/profile').then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
+        function getUserProfileByName(name) {
+            return $httpMock.get(`${iam_API_URL}/api/iam/v1/users?username=${name}`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
+        }
+
+        function getUserProfileById(id) {
+        	return $httpMock.get(`${iam_API_URL}/api/iam/v1/users/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
+        }
+
+        function getUserPreferences(id) {
+            return $httpMock.get(`${API_URL}/api/users/${id}/preferences/extended`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get user preferences')); 
         }
 
         function fetchFullUserData() {
@@ -49,11 +61,13 @@
         }
 
         function updateStatus(user) {
-            return $httpMock.put(API_URL + '/api/users/status', user).then(UtilService.handleSuccess, UtilService.handleError('Unable to change user status'));
+            return $httpMock.patch(`${iam_API_URL}/api/iam/v1/users/status`, user).then(UtilService.handleSuccess, UtilService.handleError('Unable to change user status'));
         }
 
-        function searchUsers(criteria) {
-        	return $httpMock.post(API_URL + '/api/users/search', criteria).then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
+        function searchUsers(sc) {
+            const path = $httpParamSerializer({query: sc.query, status: sc.status, page: sc.page, pageSize: sc.pageSize, orderBy: sc.orderBy, sortOrder: sc.sortOrder});
+
+            return $httpMock.get(`${iam_API_URL}/api/iam/v1/users?${path}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
         }
 
         function searchUsersWithQuery(searchCriteria, criteria) {
@@ -67,16 +81,21 @@
          * @returns {Promise<T | {success: boolean, message: string, error: *}>}
          */
         function updateUserProfile(userId, profileData) {
-            return $httpMock.put(`${API_URL}/api/users/${userId}`, profileData)
+            const authData = JSON.parse(localStorage.getItem('auth'));
+
+            return $httpMock.patch(`${iam_API_URL}/api/iam/v1/users/${userId}`, profileData, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to update user profile'));
         }
 
-        function updateUserPassword(password) {
-        	return $httpMock.put(API_URL + '/api/users/password', password).then(UtilService.handleSuccess, UtilService.handleError('Unable to update user password'));
+        function updateUserPassword(id, password) {
+            const authData = JSON.parse(localStorage.getItem('auth'));
+
+            return $httpMock.post(`${iam_API_URL}/api/iam/v1/users/${id}/password`, password, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update user password'));
         }
 
         function createUser(user){
-            return $httpMock.post(API_URL + '/api/users', user).then(UtilService.handleSuccess, UtilService.handleError('Failed to create user'));
+            return $httpMock.post(`${iam_API_URL}/api/iam/v1/users`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to create user'));
         }
 
         function addUserToGroup(user, groupId){
@@ -106,7 +125,10 @@
             return $httpMock.put(API_URL + '/api/users/preferences/default').then(UtilService.handleSuccess, UtilService.handleError('Unable to reset user preferences to default'));
         }
 
-        function initCurrentUser(force) {
+        function initCurrentUser(force, userId) {
+            const getUserProfile = getUserProfileById(userId).then((rs) => rs);
+            const getUserPref = getUserPreferences(userId).then((rs) => rs);
+
             if (service.currentUser && !force) {
                 return $q.resolve(service.currentUser);
             }
@@ -115,38 +137,34 @@
                 return _userFullDataFetchPromise;
             }
 
-            _userFullDataFetchPromise = fetchFullUserData()
-                .then(function(rs) {
-                    _userFullDataFetchPromise = null;
-                    if (rs.success) {
-                        service.currentUser = rs.data['user'];
-                        service.currentUser.isAdmin = service.currentUser.roles.indexOf('ROLE_ADMIN') >= 0;
-                        // Set fallback value if 'DEFAULT_TEST_VIEW' is apsent
-                        service.currentUser.testsView = 'runs';
-                        setDefaultPreferences(service.currentUser.preferences);
+            _userFullDataFetchPromise = $q.all([getUserProfile, getUserPref]).then((results) => {
+                _userFullDataFetchPromise = null;
+                const userData = results.reduce((acc, value) => ({...acc, ...value.data}), {});
+                const authData = JSON.parse(localStorage.getItem('auth'));
+                service.currentUser = userData;
+                service.currentUser.permissions = authData.permissionsSuperset;
 
-                        service.currentUser.pefrDashboardId = rs.data['performanceDashboardId'];
-                        if (!service.currentUser.pefrDashboardId) {
-                            messageService.error('\'User Performance\' dashboard is unavailable!');
-                        }
+                setDefaultPreferences(service.currentUser.preferences);
 
-                        service.currentUser.personalDashboardId = rs.data['personalDashboardId'];
-                        if (!service.currentUser.personalDashboardId) {
-                            messageService.error('\'Personal\' dashboard is unavailable!');
-                        }
+                service.currentUser.pefrDashboardId = userData['performanceDashboardId'];
+                if (!service.currentUser.pefrDashboardId) {
+                    messageService.error('\'User Performance\' dashboard is unavailable!');
+                }
 
-                        service.currentUser.stabilityDashboardId = rs.data['stabilityDashboardId'];
+                service.currentUser.personalDashboardId = userData['personalDashboardId'];
+                if (!service.currentUser.personalDashboardId) {
+                    messageService.error('\'Personal\' dashboard is unavailable!');
+                }
 
-                        service.currentUser.defaultDashboardId = rs.data['defaultDashboardId'];
-                        if (!service.currentUser.defaultDashboardId) {
-                            messageService.warning('Default Dashboard is unavailable!');
-                        }
+                service.currentUser.stabilityDashboardId = userData['stabilityDashboardId'];
 
-                        return service.currentUser;
-                    } else {
-                        return $q.reject(rs);
-                    }
-                });
+                service.currentUser.defaultDashboardId = userData['defaultDashboardId'];
+                if (!service.currentUser.defaultDashboardId) {
+                    messageService.warning('Default Dashboard is unavailable!');
+                }
+
+                return service.currentUser;
+            }).catch((results) => $q.reject(results));
 
             return _userFullDataFetchPromise;
         }

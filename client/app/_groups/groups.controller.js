@@ -107,7 +107,7 @@ const GroupsController = function GroupsController(
     function querySearch(criteria, group) {
         vm.usersSearchCriteria.query = criteria;
 
-        return UserService.searchUsersWithQuery(vm.usersSearchCriteria, criteria)
+        return UserService.searchUsers(vm.usersSearchCriteria, criteria)
             .then(function (rs) {
                 if (rs.success) {
                     return UtilService.filterUsersForSend(rs.data.results, group.users);

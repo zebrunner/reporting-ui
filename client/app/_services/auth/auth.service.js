@@ -7,6 +7,7 @@ const authService = function authService(
     UtilService,
     UserService,
     API_URL,
+    iam_API_URL,
     jwtHelper,
 ) {
     'ngInject';
@@ -43,7 +44,7 @@ const authService = function authService(
     };
 
     function login(username, password) {
-        return $httpMock.post(API_URL + '/api/auth/login', { username, password })
+        return $httpMock.post(`${iam_API_URL}/api/iam/v1/auth/login`, { username, password })
             .then((res) => {
                 const headers = res.headers();
 
@@ -52,7 +53,7 @@ const authService = function authService(
     }
 
     function getTenant() {
-        return $httpMock.get(API_URL + '/api/auth/tenant')
+        return $httpMock.get(`${API_URL}/api/auth/tenant`)
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to get tenant info'));
     }
 
@@ -62,12 +63,12 @@ const authService = function authService(
     }
 
     function forgotPassword(forgotPassword) {
-        return $httpMock.post(API_URL + '/api/auth/password/forgot', forgotPassword)
+        return $httpMock.post(`${iam_API_URL}/api/iam/v1/users/password-resets`, forgotPassword)
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
     function getForgotPasswordInfo(token) {
-        return $httpMock.get(API_URL + '/api/auth/password/forgot?token=' + token)
+        return $httpMock.get(`${iam_API_URL}/api/iam/v1/users/password-resets?token=${token}`)
             // TODO: move redirection action from service
             .then(UtilService.handleSuccess, () => {
                 $state.go('signin');
@@ -75,7 +76,9 @@ const authService = function authService(
     }
 
     function resetPassword(credentials, token) {
-        return $httpMock.put(API_URL + '/api/auth/password', credentials, {headers: {'Access-Token': token}})
+        const data = { resetToken: token, newPassword: credentials.password };
+
+        return $httpMock.delete(`${iam_API_URL}/api/iam/v1/users/password-resets`, {data: data, headers: {'Content-Type': 'application/json'}})
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
@@ -85,17 +88,17 @@ const authService = function authService(
     }
 
     function signUp(user, token) {
-        return $httpMock.post(API_URL + '/api/auth/signup', user, {headers: {'Access-Token': token}})
+        return $httpMock.post(`${iam_API_URL}/api/iam/v1/users?invitation-token=${token}`, user)
             .then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
     }
 
     function refreshToken(token) {
-        return $httpMock.post(API_URL + '/api/auth/refresh', { 'refreshToken': token }, { skipAuthorization: true })
+        return $httpMock.post(`${iam_API_URL}/api/iam/v1/auth/refresh`, { 'refreshToken': token }, { skipAuthorization: true })
             .then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
     }
 
     function generateAccessToken() {
-        return $httpMock.get(API_URL + '/api/auth/access')
+        return $httpMock.get(`${iam_API_URL}/api/iam/v1/auth/access`, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to generate token'));
     }
 
@@ -135,7 +138,7 @@ const authService = function authService(
     function userHasAnyPermission(permissions) {
         if (!service.isLoggedIn) { return; }
 
-        return (UserService.currentUser.permissions || []).some(({ name }) => permissions.includes(name));
+        return (UserService.currentUser.permissions || []).some((name) => permissions.includes(name));
     }
 
     return service;

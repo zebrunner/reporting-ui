@@ -3,15 +3,13 @@
 
     angular
         .module('app.services')
-        .factory('InvitationService', ['$httpMock', '$rootScope', '$state', '$httpParamSerializer', 'UtilService', 'UserService', 'API_URL', InvitationService])
+        .factory('InvitationService', ['$httpMock', '$rootScope', '$state', '$httpParamSerializer', 'UtilService', 'UserService', 'API_URL', 'iam_API_URL', InvitationService])
 
-    function InvitationService($httpMock, $rootScope, $state, $httpParamSerializer, UtilService, UserService, API_URL) {
+    function InvitationService($httpMock, $rootScope, $state, $httpParamSerializer, UtilService, UserService, API_URL, iam_API_URL) {
         let invitations = [];
         const service = {
             invite,
-            retryInvite,
             getInvitation,
-            getAllInvitations,
             search,
             deleteInvitation,
             get invitations() {
@@ -25,28 +23,24 @@
         return service;
 
         function invite(invitations) {
-            return $httpMock.post(API_URL + '/api/invitations', invitations).then(UtilService.handleSuccess, UtilService.handleError('Failed to invite users'));
-        }
+            const authData = JSON.parse(localStorage.getItem('auth'));
 
-        function retryInvite(invitation) {
-            return $httpMock.post(API_URL + '/api/invitations/retry', invitation).then(UtilService.handleSuccess, UtilService.handleError('Failed to retry user invitation'));
+            return $httpMock.post(`${iam_API_URL}/api/iam/v1/invitations`, invitations.invitationTypes, {headers: {'Authorization':`${authData.authTokenType} ${authData.authToken}`}})
+                .then(UtilService.handleSuccess, UtilService.handleError('Failed to invite users'));
         }
 
         function getInvitation(token) {
-            return $httpMock.get(API_URL + '/api/invitations/info?token=' + token).then(UtilService.handleSuccess, UtilService.handleError('Failed to get user invitation'));
-        }
-
-        function getAllInvitations() {
-            return $httpMock.get(API_URL + '/api/invitations/all').then(UtilService.handleSuccess, UtilService.handleError('Failed to get all user invitations'));
+            return $httpMock.get(`${iam_API_URL}/api/iam/v1/invitations?token=${token}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get user invitation'));
         }
 
         function search(sc) {
-            var path = $httpParamSerializer({query: sc.query, page: sc.page, pageSize: sc.pageSize, orderBy: sc.orderBy, sortOrder: sc.sortOrder});
-            return $httpMock.get(API_URL + '/api/invitations/search?' + path).then(UtilService.handleSuccess, UtilService.handleError('Failed to search user invitations'));
+            const path = $httpParamSerializer({query: sc.query, page: sc.page, pageSize: sc.pageSize, orderBy: sc.orderBy, sortOrder: sc.sortOrder});
+
+            return $httpMock.get(`${iam_API_URL}/api/iam/v1/invitations?${path}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to search user invitations'));
         }
 
-        function deleteInvitation(idOrEmail) {
-            return $httpMock.delete(API_URL + '/api/invitations/' + idOrEmail).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete user invitation'));
+        function deleteInvitation(id) {
+            return $httpMock.delete(`${iam_API_URL}/api/iam/v1/invitations/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete user invitation'));
         }
 
     }

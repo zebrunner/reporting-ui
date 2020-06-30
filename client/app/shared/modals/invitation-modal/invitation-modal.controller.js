@@ -18,7 +18,7 @@ const inviteModalController = (
 
     $scope.tryInvite = false;
     $scope.emails = [];
-    $scope.groups = angular.copy(groups);
+    $scope.groups = angular.copy(groups).results;
     $scope.userGroup = undefined;
 
     $scope.SOURCES = ['INTERNAL', 'LDAP'];
