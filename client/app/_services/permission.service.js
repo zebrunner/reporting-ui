@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('PermissionService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', 'iam_API_URL', PermissionService])
+        .factory('PermissionService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', PermissionService])
 
-    function PermissionService($httpMock, $rootScope, UtilService, API_URL, iam_API_URL) {
+    function PermissionService($httpMock, $rootScope, UtilService, API_URL) {
         var service = {};
 
         service.createPermission = createPermission;
@@ -24,7 +24,7 @@
         }
 
         function getAllPermissions() {
-            return $httpMock.get(iam_API_URL + '/api/iam/v1/permissions').then(UtilService.handleSuccess, UtilService.handleError('Unable to get permissions list'));
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/permissions`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get permissions list'));
         }
 
         function deletePermission(id) {

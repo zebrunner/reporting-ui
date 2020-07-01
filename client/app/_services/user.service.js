@@ -5,7 +5,7 @@
         .module('app.services')
         .service('UserService', UserService);
 
-    function UserService($httpMock, UtilService, API_URL, iam_API_URL, $q, messageService, $httpParamSerializer) {
+    function UserService($httpMock, UtilService, API_URL, $q, messageService, $httpParamSerializer) {
         'ngInject';
 
         let _currentUser = null;
@@ -43,12 +43,12 @@
         return service;
 
         function getUserProfileByName(name) {
-            return $httpMock.get(`${iam_API_URL}/api/iam/v1/users?username=${name}`)
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users?username=${name}`)
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
         }
 
         function getUserProfileById(id) {
-        	return $httpMock.get(`${iam_API_URL}/api/iam/v1/users/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
+        	return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
         }
 
         function getUserPreferences(id) {
@@ -61,13 +61,13 @@
         }
 
         function updateStatus(user) {
-            return $httpMock.patch(`${iam_API_URL}/api/iam/v1/users/status`, user).then(UtilService.handleSuccess, UtilService.handleError('Unable to change user status'));
+            return $httpMock.patch(`${$httpMock.serviceUrl}/api/iam/v1/users/status`, user).then(UtilService.handleSuccess, UtilService.handleError('Unable to change user status'));
         }
 
         function searchUsers(sc) {
             const path = $httpParamSerializer({query: sc.query, status: sc.status, page: sc.page, pageSize: sc.pageSize, orderBy: sc.orderBy, sortOrder: sc.sortOrder});
 
-            return $httpMock.get(`${iam_API_URL}/api/iam/v1/users?${path}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users?${path}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
         }
 
         function searchUsersWithQuery(searchCriteria, criteria) {
@@ -83,27 +83,27 @@
         function updateUserProfile(userId, profileData) {
             const authData = JSON.parse(localStorage.getItem('auth'));
 
-            return $httpMock.patch(`${iam_API_URL}/api/iam/v1/users/${userId}`, profileData, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
+            return $httpMock.patch(`${$httpMock.serviceUrl}/api/iam/v1/users/${userId}`, profileData, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to update user profile'));
         }
 
         function updateUserPassword(id, password) {
             const authData = JSON.parse(localStorage.getItem('auth'));
 
-            return $httpMock.post(`${iam_API_URL}/api/iam/v1/users/${id}/password`, password, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
+            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users/${id}/password`, password, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to update user password'));
         }
 
         function createUser(user){
-            return $httpMock.post(`${iam_API_URL}/api/iam/v1/users`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to create user'));
+            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to create user'));
         }
 
         function addUserToGroup(user, groupId){
-            return $httpMock.put(`${iam_API_URL}/api/iam/v1/users/${user.id}/groups/${groupId}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to add user to group'));
+            return $httpMock.put(`${$httpMock.serviceUrl}/api/iam/v1/users/${user.id}/groups/${groupId}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to add user to group'));
         }
 
         function deleteUserFromGroup(idUser, idGroup){
-            return $httpMock.delete(`${iam_API_URL}/api/iam/v1/users/${idUser}/groups/${idGroup}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete user from group'));
+            return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/users/${idUser}/groups/${idGroup}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete user from group'));
         }
 
         function getDefaultPreferences() {
