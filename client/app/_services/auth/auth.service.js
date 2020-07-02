@@ -38,7 +38,7 @@ const authService = function authService(
             return authData;
         },
         get isLoggedIn() { return !!(this.authData && UserService.currentUser); },
-        get tenant() { return this.authData?.tenant; },
+        get tenant() { return this.authData?.tenantName; },
     };
 
     function login(username, password) {
