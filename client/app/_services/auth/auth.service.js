@@ -46,7 +46,7 @@ const authService = function authService(
             .then((res) => {
                 const headers = res.headers();
 
-                return { success: true, data: res.data, 'firstLogin': headers['first-login'] };
+                return { success: true, data: res.data, 'firstLogin': headers['x-zbr-first-login'] };
             }, UtilService.handleError('Invalid credentials'));
     }
 
