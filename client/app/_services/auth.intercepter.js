@@ -59,7 +59,7 @@
                     const authService = $injector.get('authService');
                     const authData = authService.authData;
                     // add authorization header to API requests
-                    if (request.url.includes(API_URL) && authData) {
+                    if ((request.url.includes(API_URL) || request.url.includes(authService.serviceUrl)) && authData) {
                         request.headers['Authorization'] = `${authData.authTokenType} ${authData.authToken}`;
                     }
 

@@ -61,12 +61,11 @@ const authService = function authService(
     }
 
     function forgotPassword(forgotPassword) {
-        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets`, forgotPassword, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-            .then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
+        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets`, forgotPassword).then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
     function getForgotPasswordInfo(token) {
-        return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets?token=${token}`, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
+        return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets?token=${token}`)
             // TODO: move redirection action from service
             .then(UtilService.handleSuccess, () => {
                 $state.go('signin');
@@ -76,7 +75,7 @@ const authService = function authService(
     function resetPassword(credentials, token) {
         const data = { resetToken: token, newPassword: credentials.password };
 
-        return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets`, {data: data, headers: {'Content-Type': 'application/json', 'Authorization': `${authData.authTokenType} ${authData.authToken}`}})
+        return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets`, {data: data, headers: {'Content-Type': 'application/json'}})
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
@@ -86,18 +85,15 @@ const authService = function authService(
     }
 
     function signUp(user, token) {
-        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users?invitation-token=${token}`, user, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-            .then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
+        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users?invitation-token=${token}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
     }
 
     function refreshToken(token) {
-        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/auth/refresh`, { 'refreshToken': token }, { skipAuthorization: true }, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-            .then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
+        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/auth/refresh`, { 'refreshToken': token }, { skipAuthorization: true }).then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
     }
 
     function generateAccessToken() {
-        return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/auth/access`, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-            .then(UtilService.handleSuccess, UtilService.handleError('Unable to generate token'));
+        return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/auth/access`).then(UtilService.handleSuccess, UtilService.handleError('Unable to generate token'));
     }
 
     function setCredentials(auth) {

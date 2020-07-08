@@ -43,20 +43,17 @@
         return service;
 
         function getUserProfileByName(name) {
-            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users?username=${name}`)
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users?username=${name}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
         }
 
         function getUserProfileById(id) {
             const authData = JSON.parse(localStorage.getItem('auth'));
 
-            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users/${id}`, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get user profile'));
         }
 
         function getUserPreferences(id) {
-            return $httpMock.get(`${API_URL}/api/users/${id}/preferences/extended`)
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get user preferences')); 
+            return $httpMock.get(`${API_URL}/api/users/${id}/preferences/extended`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get user preferences')); 
         }
 
         function fetchFullUserData() {
@@ -66,16 +63,14 @@
         function updateStatus(user) {
             const authData = JSON.parse(localStorage.getItem('auth'));
 
-            return $httpMock.patch(`${$httpMock.serviceUrl}/api/iam/v1/users/status`, user, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to change user status'));
+            return $httpMock.patch(`${$httpMock.serviceUrl}/api/iam/v1/users/status`, user).then(UtilService.handleSuccess, UtilService.handleError('Unable to change user status'));
         }
 
         function searchUsers(sc) {
             const authData = JSON.parse(localStorage.getItem('auth'));
             const path = $httpParamSerializer({query: sc.query, status: sc.status, page: sc.page, pageSize: sc.pageSize, orderBy: sc.orderBy, sortOrder: sc.sortOrder});
 
-            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users?${path}`, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users?${path}`).then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
         }
 
         function searchUsersWithQuery(searchCriteria, criteria) {
@@ -91,34 +86,29 @@
         function updateUserProfile(userId, profileData) {
             const authData = JSON.parse(localStorage.getItem('auth'));
 
-            return $httpMock.patch(`${$httpMock.serviceUrl}/api/iam/v1/users/${userId}`, profileData, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update user profile'));
+            return $httpMock.patch(`${$httpMock.serviceUrl}/api/iam/v1/users/${userId}`, profileData).then(UtilService.handleSuccess, UtilService.handleError('Unable to update user profile'));
         }
 
         function updateUserPassword(id, password) {
             const authData = JSON.parse(localStorage.getItem('auth'));
 
-            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users/${id}/password`, password, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update user password'));
+            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users/${id}/password`, password).then(UtilService.handleSuccess, UtilService.handleError('Unable to update user password'));
         }
 
         function createUser(user){
-            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users`, user, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Failed to create user'));
+            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to create user'));
         }
 
         function addUserToGroup(user, groupId){
             const authData = JSON.parse(localStorage.getItem('auth'));
 
-            return $httpMock.put(`${$httpMock.serviceUrl}/api/iam/v1/users/${user.id}/groups/${groupId}`, user, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Failed to add user to group'));
+            return $httpMock.put(`${$httpMock.serviceUrl}/api/iam/v1/users/${user.id}/groups/${groupId}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to add user to group'));
         }
 
         function deleteUserFromGroup(idUser, idGroup){
             const authData = JSON.parse(localStorage.getItem('auth'));
-            
-            return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/users/${idUser}/groups/${idGroup}`, {headers: {Authorization: `${authData.authTokenType} ${authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Failed to delete user from group'));
+
+            return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/users/${idUser}/groups/${idGroup}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete user from group'));
         }
 
         function getDefaultPreferences() {

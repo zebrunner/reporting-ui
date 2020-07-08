@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('GroupService', ['$httpMock', '$rootScope', 'UtilService', 'authService', GroupService])
+        .factory('GroupService', ['$httpMock', '$rootScope', 'UtilService', GroupService])
 
-    function GroupService($httpMock, rootScope, UtilService, authService) {
+    function GroupService($httpMock, rootScope, UtilService) {
         let groups = [];
 
         var service = {
@@ -14,7 +14,6 @@
             getAllGroups,
             updateGroup,
             deleteGroup,
-            authData: authService.authData,
             get groups() {
                 return groups;
             },
@@ -26,28 +25,23 @@
         return service;
 
         function createGroup(group){
-            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/groups`, group, {headers: {Authorization: `${service.authData.authTokenType} ${service.authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Failed to create group'));
+            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/groups`, group).then(UtilService.handleSuccess, UtilService.handleError('Failed to create group'));
         }
 
         function getGroup(id){
-            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`, {headers: {Authorization: `${service.authData.authTokenType} ${service.authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Failed to get group'));
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get group'));
         }
 
         function getAllGroups(){
-            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups`, {headers: {Authorization: `${service.authData.authTokenType} ${service.authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Failed to get groups'));
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get groups'));
         }
 
         function updateGroup(group, id){
-            return $httpMock.put(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`, group, {headers: {Authorization: `${service.authData.authTokenType} ${service.authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Failed to update group'));
+            return $httpMock.put(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`, group).then(UtilService.handleSuccess, UtilService.handleError('Failed to update group'));
         }
 
         function deleteGroup(id){
-            return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`, {headers: {Authorization: `${service.authData.authTokenType} ${service.authData.authToken}`}})
-                .then(UtilService.handleSuccess, UtilService.handleError('Failed to delete group'));
+            return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete group'));
         }
     }
 })();
