@@ -208,13 +208,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             locals: {
                 urlHandler: (url) => {
                     if (url) {
-                        const { username, firstName, lastName } = vm.user;
-                        const params = {
-                            username,
-                            firstName,
-                            lastName,
-                            photoURL: url,
-                        };
+                        const params = [{'op': 'replace', 'path': '/photoUrl', 'value': url}];
 
                         return UserService.updateUserProfile(vm.user.id, params)
                             .then((prs) => {
