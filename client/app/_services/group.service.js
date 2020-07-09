@@ -32,8 +32,8 @@
             return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get group'));
         }
 
-        function getAllGroups(){
-            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get groups'));
+        function getAllGroups(isPublic){
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups?public=${isPublic}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get groups'));
         }
 
         function updateGroup(group, id){
