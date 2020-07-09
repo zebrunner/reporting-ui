@@ -336,7 +336,7 @@ const UsersController = function UserViewController(
         GroupService.getAllGroups(isPublic)
             .then((rs) => {
                 if (rs.success) {
-                    GroupService.groups = rs.data || [];
+                    GroupService.groups = rs.data.results || [];
                 }
             });
     }

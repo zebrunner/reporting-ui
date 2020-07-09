@@ -117,7 +117,7 @@ const authController = function authController(
                         auth: rs.data
                     };
 
-                    if (rs.firstLogin) {
+                    if (rs.firstLogin === 'true') {
                         payload.firstLogin = rs.firstLogin;
                     } else {
                         $state.params.location && (payload.location = $state.params.location);

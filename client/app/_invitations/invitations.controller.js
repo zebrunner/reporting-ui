@@ -114,7 +114,7 @@ const InvitationsController = function InvitationsController(
     function getAllGroups(isPublic) {
         GroupService.getAllGroups(isPublic).then(function (rs) {
             if(rs.success) {
-                GroupService.groups = rs.data;
+                GroupService.groups = rs.data.results;
             }
         });
     };
