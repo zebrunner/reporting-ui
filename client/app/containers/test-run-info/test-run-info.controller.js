@@ -48,7 +48,7 @@ const testRunInfoController = function testRunInfoController(
     let logsRequestsCanceler = $q.defer();
     const testsWebsocketName = 'tests';
     const logsGettingDestroy$ = new Subject();
-    const initAgentAttemptsLimit = 10;
+    const initAgentAttemptsLimit = 20; // with 5sec delay provides approximately 2min interval
     const vm = {
         activeDriverIndex: 0,
         activeMode: null,
@@ -190,12 +190,12 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function reGetAgent$(agents, attempt) {
-        return timer(1000)
+        return timer(5000)
             .pipe(switchMap(() => getAgent$(agents, attempt)));
     }
 
     function findActiveAgent(agents, responses) {
-        const index = responses.findIndex((response) => typeof response === 'number');
+        const index = responses.findIndex((response) => response);
 
         if (index !== -1) {
             return agents[index];
