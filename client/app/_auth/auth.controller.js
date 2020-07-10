@@ -117,7 +117,7 @@ const authController = function authController(
                         auth: rs.data
                     };
 
-                    if (rs.firstLogin) {
+                    if (rs.firstLogin === 'true') {
                         payload.firstLogin = rs.firstLogin;
                     } else {
                         $state.params.location && (payload.location = $state.params.location);
@@ -138,10 +138,7 @@ const authController = function authController(
                 if (rs.success) {
                     $state.go('signin', { user });
                 } else {
-                    UtilService.resolveError(rs, form, 'validationError', 'username').then(function (rs) {
-                    }, function (rs) {
-                        messageService.error(rs.message);
-                    });
+                    messageService.error(rs.error.data.message);
                 }
             });
     };

@@ -60,10 +60,7 @@ const inviteModalController = (
                         $scope.chipCtrl.chipBuffer = '';
                     }
                 } else {
-                    UtilService.resolveError(rs, form, 'validationError', 'email').then(function (rs) {
-                    }, function (rs) {
-                        messageService.error(rs.message);
-                    });
+                    messageService.error(rs.error.data.message);
                 }
                 $scope.tryInvite = false;
             });

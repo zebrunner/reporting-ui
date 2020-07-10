@@ -91,9 +91,14 @@ const InvitationsController = function InvitationsController(
     };
 
     function retryInvite(invite, index) {
-        InvitationService.retryInvite(invite).then(function (rs) {
+        const {email, group: {id: groupId}, source} = invite;
+        const invitation = {
+            invitationTypes: [{email, groupId, source}],
+        };
+
+        InvitationService.invite(invitation).then(function (rs) {
             if (rs.success) {
-                vm.sr.splice(index, 1, rs.data);
+                vm.sr.results[index] = {...vm.sr.results[index], ...rs.data[0]};
                 messageService.success('Invitation was sent successfully.');
             } else {
                 messageService.error(rs.message);
@@ -109,7 +114,7 @@ const InvitationsController = function InvitationsController(
     function getAllGroups(isPublic) {
         GroupService.getAllGroups(isPublic).then(function (rs) {
             if(rs.success) {
-                GroupService.groups = rs.data;
+                GroupService.groups = rs.data.results;
             }
         });
     };

@@ -26,7 +26,6 @@ const authService = function authService(
         clearCredentials,
         refreshToken,
         generateAccessToken,
-        userHasAnyRole,
         userHasAnyPermission,
         hasValidToken,
         getTenant,
@@ -39,20 +38,20 @@ const authService = function authService(
             return authData;
         },
         get isLoggedIn() { return !!(this.authData && UserService.currentUser); },
-        get tenant() { return this.authData?.tenant; },
+        get tenant() { return this.authData?.tenantName; },
     };
 
     function login(username, password) {
-        return $httpMock.post(API_URL + '/api/auth/login', { username, password })
+        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/auth/login`, { username, password })
             .then((res) => {
                 const headers = res.headers();
 
-                return { success: true, data: res.data, 'firstLogin': headers['first-login'] };
+                return { success: true, data: res.data, 'firstLogin': headers['x-zbr-first-login'] };
             }, UtilService.handleError('Invalid credentials'));
     }
 
     function getTenant() {
-        return $httpMock.get(API_URL + '/api/auth/tenant')
+        return $httpMock.get(`${API_URL}/api/auth/tenant`)
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to get tenant info'));
     }
 
@@ -62,12 +61,11 @@ const authService = function authService(
     }
 
     function forgotPassword(forgotPassword) {
-        return $httpMock.post(API_URL + '/api/auth/password/forgot', forgotPassword)
-            .then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
+        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets`, forgotPassword).then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
     function getForgotPasswordInfo(token) {
-        return $httpMock.get(API_URL + '/api/auth/password/forgot?token=' + token)
+        return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets?token=${token}`)
             // TODO: move redirection action from service
             .then(UtilService.handleSuccess, () => {
                 $state.go('signin');
@@ -75,7 +73,9 @@ const authService = function authService(
     }
 
     function resetPassword(credentials, token) {
-        return $httpMock.put(API_URL + '/api/auth/password', credentials, {headers: {'Access-Token': token}})
+        const data = { resetToken: token, newPassword: credentials.password };
+
+        return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets`, {data: data, headers: {'Content-Type': 'application/json'}})
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
@@ -85,18 +85,15 @@ const authService = function authService(
     }
 
     function signUp(user, token) {
-        return $httpMock.post(API_URL + '/api/auth/signup', user, {headers: {'Access-Token': token}})
-            .then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
+        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users?invitation-token=${token}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
     }
 
     function refreshToken(token) {
-        return $httpMock.post(API_URL + '/api/auth/refresh', { 'refreshToken': token }, { skipAuthorization: true })
-            .then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
+        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/auth/refresh`, { 'refreshToken': token }, { skipAuthorization: true }).then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
     }
 
     function generateAccessToken() {
-        return $httpMock.get(API_URL + '/api/auth/access')
-            .then(UtilService.handleSuccess, UtilService.handleError('Unable to generate token'));
+        return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/auth/access`).then(UtilService.handleSuccess, UtilService.handleError('Unable to generate token'));
     }
 
     function setCredentials(auth) {
@@ -114,19 +111,6 @@ const authService = function authService(
         return authData?.refreshToken && !jwtHelper.isTokenExpired(authData.refreshToken);
     }
 
-    function userHasAnyRole(roles) {
-        if (!service.isLoggedIn) { return; }
-
-        var found = false;
-        angular.forEach(roles, function(role, index) {
-            if (UserService.currentUser.roles.indexOf(role) >= 0) {
-                found = true;
-                return;
-            }
-        });
-        return found;
-    }
-
     /**
      * returns if current user has any of provided permissions
      * @param {String[]} permissions - array of permission names
@@ -135,7 +119,7 @@ const authService = function authService(
     function userHasAnyPermission(permissions) {
         if (!service.isLoggedIn) { return; }
 
-        return (UserService.currentUser.permissions || []).some(({ name }) => permissions.includes(name));
+        return (UserService.currentUser.permissions || []).some((name) => permissions.includes(name));
     }
 
     return service;

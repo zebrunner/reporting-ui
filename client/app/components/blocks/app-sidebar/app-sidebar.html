@@ -54,7 +54,7 @@
                                     </div>
                                 </md-radio-group>
                             </li>
-                            <li ng-if="$ctrl.userHasAnyRole(['ROLE_ADMIN'])" class="nav__button _upload">
+                            <li class="nav__button _upload">
                                 <a ng-click="$ctrl.showUploadImageDialog($event)" class="js-menu-close" href=""><i class="material-icons">add_circle_outline</i><span>Upload new logo</span></a>
                             </li>
                         </ul>
@@ -107,7 +107,7 @@
                 </a>
             </li>
             <li class="main-nav__list-item users"
-                ng-if="$ctrl.userHasAnyRole(['ROLE_ADMIN']) && $ctrl.userHasAnyPermission(['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS'])"
+                ng-if="$ctrl.userHasAnyPermission(['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS'])"
                 ng-class="{'active':$ctrl.$state.includes('users')}">
                 <md-button
                     type="button"
