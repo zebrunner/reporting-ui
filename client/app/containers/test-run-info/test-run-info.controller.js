@@ -1,7 +1,7 @@
 'use strict';
 
 import { Subject, from as rxFrom, timer, defer, of, combineLatest } from 'rxjs';
-import { switchMap, takeUntil, tap, take, repeat, map, catchError } from 'rxjs/operators';
+import { switchMap, takeUntil, tap, take, repeat, map, catchError, filter } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
@@ -48,6 +48,7 @@ const testRunInfoController = function testRunInfoController(
     let logsRequestsCanceler = $q.defer();
     const testsWebsocketName = 'tests';
     const logsGettingDestroy$ = new Subject();
+    const initAgentAttemptsLimit = 10;
     const vm = {
         activeDriverIndex: 0,
         activeMode: null,
@@ -170,15 +171,18 @@ const testRunInfoController = function testRunInfoController(
     function initActiveAgent$() {
         const agents = getAgents();
 
-        return getAgent$(agents)
+        return getAgent$(agents, 0)
             .pipe(tap(foundAgent => agent = foundAgent));
     }
 
-    function getAgent$(agents) {
+    function getAgent$(agents, attempt) {
+        attempt += 1;
+
         return combineLatest(agents.map(agentsMapper))
             .pipe(
                 map(findActiveAgent.bind(null, agents)),
-                switchMap((foundAgent) => foundAgent ? of(foundAgent) : reGetAgent$(agents)),
+                filter(() => attempt <= initAgentAttemptsLimit),
+                switchMap((foundAgent) => foundAgent ? of(foundAgent) : reGetAgent$(agents, attempt)),
             );
     }
 
@@ -187,9 +191,9 @@ const testRunInfoController = function testRunInfoController(
             .pipe(catchError(() => of(false)));
     }
 
-    function reGetAgent$(agents) {
+    function reGetAgent$(agents, attempt) {
         return timer(1000)
-            .pipe(switchMap(() => getAgent$(agents)));
+            .pipe(switchMap(() => getAgent$(agents, attempt)));
     }
 
     function findActiveAgent(agents, responses) {
@@ -496,7 +500,13 @@ const testRunInfoController = function testRunInfoController(
             .pipe(takeUntil(logsGettingDestroy$))
             .subscribe({
                 complete() {
-                    setTestParams();
+                    if (agent) {
+                        setTestParams();
+                    } else {
+                        messageService.error('Unable to init logs agent');
+                        vm.isLogsLoading = false;
+                    }
+
                     initToolsSettings();
                     initTestExecutionData(skipHistoryUpdate);
                     bindEvents();
