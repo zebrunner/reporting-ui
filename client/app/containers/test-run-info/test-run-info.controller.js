@@ -171,18 +171,16 @@ const testRunInfoController = function testRunInfoController(
     function initActiveAgent$() {
         const agents = getAgents();
 
-        return getAgent$(agents, 0)
+        return getAgent$(agents, 1)
             .pipe(tap(foundAgent => agent = foundAgent));
     }
 
     function getAgent$(agents, attempt) {
-        attempt += 1;
-
         return combineLatest(agents.map(agentsMapper))
             .pipe(
                 map(findActiveAgent.bind(null, agents)),
                 filter(() => attempt <= initAgentAttemptsLimit),
-                switchMap((foundAgent) => foundAgent ? of(foundAgent) : reGetAgent$(agents, attempt)),
+                switchMap((foundAgent) => foundAgent ? of(foundAgent) : reGetAgent$(agents, attempt += 1)),
             );
     }
 
