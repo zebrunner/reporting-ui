@@ -24,7 +24,7 @@
         }
 
         function getAllPermissions() {
-            return $httpMock.get(API_URL + '/api/permissions').then(UtilService.handleSuccess, UtilService.handleError('Unable to get permissions list'));
+            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/permissions`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get permissions list'));
         }
 
         function deletePermission(id) {

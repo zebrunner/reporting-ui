@@ -17,31 +17,12 @@
                         <label>Group name</label>
                         <input id="groupName" type="text" name="name" data-ng-model="group.name" required>
                     </md-input-container>
-                    <md-input-container>
-                        <label>User role</label>
-                        <md-select id="groupRole" class="form-fields__select" name="role" ng-model="group.role" required>
-                            <md-option ng-repeat="role in roles" value="{{role}}">
-                                {{role}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
-
                 </div>
                 <div>
-                    <div ng-repeat="(key, value) in blocks" ng-if="(group.role !== 'ROLE_ADMIN' && ['users', 'invitations'].indexOf(key.toLowerCase()) === -1) || group.role === 'ROLE_ADMIN'" class="checkbox-clear-inline">
-                        <div flex layout='row' class="groups-modal__block" layout-align="start start">
-                            <div layout="row" class="groups-modal__block__name-wrapper">
-                                <div class="groups-modal__block__name">
-                                    <h5 class="text-capitalize">{{ key.split('_').join(' ') }}</h5>
-                                </div>
-                                <md-switch class="md-primary" ng-model="blocksChecked[key]" ng-change="toggleAllPermissions(key)" ng-required aria-label="integr-switch"></md-switch>
-                            </div>
-                            <div layout="row" class="groups-modal__block__permissions" ng-class="{'hidden-permissions': !blocksChecked[key]}">
-                                <div class="groups-modal__block__permissions__item" ng-repeat="permission in value.permissions">
-                                    <md-checkbox ng-true-value="true" ng-false-value="false" ng-model="permission.value" aria-label="Block"></md-checkbox>
-                                    <span name="permissionName" class="text-capitalize">{{ permission.name.split('_').join(' ') }}</span>
-                                </div>
-                            </div>
+                    <div ng-repeat="permission in allAvaliablePermissions" class="groups-modal__permissions-list">
+                        <div class="groups-modal__permissions-wrapper">
+                            <md-checkbox class="groups-modal__permissions-checkbox" ng-true-value="true" ng-false-value="false" ng-model="permission.value" ng-change="log(allAvaliablePermissions)" aria-label="Block"></md-checkbox>
+                            <span name="permissionName" class="groups-modal__permissions-text text-capitalize">{{ permission.name.split('_').join(' ') }}</span>
                         </div>
                     </div>
                 </div>

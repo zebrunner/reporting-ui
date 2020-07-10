@@ -65,14 +65,18 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function updateUserProfile() {
-        const { username, firstName, lastName } = vm.user;
+        const changedUserValues = [];
 
-        UserService.updateUserProfile(vm.user.id, { username, firstName, lastName })
+        for (const key in vm.user) {
+            if (vm.user[key] !== vm.previousUserData[key] && !angular.isObject(vm.user[key]) && !Array.isArray(vm.user[key])) {
+                changedUserValues.push({op: 'replace', path: `/${key}`, value: vm.user[key]})
+            }
+        }
+
+        UserService.updateUserProfile(vm.user.id, changedUserValues)
             .then(function (rs) {
                 if (rs.success) {
-                    vm.user = { ...vm.user, ...rs.data };
-                    UserService.currentUser.firstName = firstName;
-                    UserService.currentUser.lastName = lastName;
+                    vm.previousUserData = angular.copy(vm.user);
                     messageService.success('User profile updated');
                 } else {
                     messageService.error(rs.message);
@@ -106,8 +110,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     function updateUserPassword() {
         const data = angular.copy(vm.changePassword);
 
-        data.userId = vm.user.id;
-        UserService.updateUserPassword(data)
+        UserService.updateUserPassword(vm.user.id, data)
             .then(function (rs) {
                 if (rs.success) {
                     vm.changePassword = {};
@@ -119,30 +122,10 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function fetchUserProfile() {
-        UserService.getUserProfile()
-            .then(function (rs) {
-                if (rs.success) {
-                    vm.user = rs.data;
-                    vm.changePassword.userId = vm.user.id;
-                    if (vm.user.preferences.length) {
-                        vm.preferences = vm.user.preferences;
-                    } else {
-                        fetchDefaultPreferences();
-                    }
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
-    }
-
-    function fetchDefaultPreferences() {
-        UserService.getDefaultPreferences().then(function (rs) {
-            if (rs.success) {
-                    vm.preferences = rs.data;
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
+        vm.user = vm.currentUser;
+        vm.previousUserData = angular.copy(vm.currentUser);
+        vm.changePassword.userId = vm.user.id;
+        vm.preferences = vm.user.preferences;
     }
 
     // TODO: enable and refactor when more preferences will be added
@@ -225,13 +208,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             locals: {
                 urlHandler: (url) => {
                     if (url) {
-                        const { username, firstName, lastName } = vm.user;
-                        const params = {
-                            username,
-                            firstName,
-                            lastName,
-                            photoURL: url,
-                        };
+                        const params = [{'op': 'replace', 'path': '/photoUrl', 'value': url}];
 
                         return UserService.updateUserProfile(vm.user.id, params)
                             .then((prs) => {

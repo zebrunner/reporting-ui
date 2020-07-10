@@ -73,7 +73,6 @@ const AppSidebarController = function (
 
         activateSorter: activateDashboardsSorter,
         userHasAnyPermission: authService.userHasAnyPermission,
-        userHasAnyRole: authService.userHasAnyRole,
         handleMenuClick,
         $onDestroy() { unbindListeners(); },
         toggleMobileMenu,

@@ -1,7 +1,7 @@
 'use strict';
 
-import { Subject, from as rxFrom, timer, defer, of } from 'rxjs';
-import { switchMap, takeUntil, tap, take, repeat, map, catchError } from 'rxjs/operators';
+import { Subject, from as rxFrom, timer, defer, of, combineLatest } from 'rxjs';
+import { switchMap, takeUntil, tap, take, repeat, map, catchError, filter } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 
 import ImagesViewerController from '../../components/modals/images-viewer/images-viewer.controller';
@@ -48,6 +48,7 @@ const testRunInfoController = function testRunInfoController(
     let logsRequestsCanceler = $q.defer();
     const testsWebsocketName = 'tests';
     const logsGettingDestroy$ = new Subject();
+    const initAgentAttemptsLimit = 10;
     const vm = {
         activeDriverIndex: 0,
         activeMode: null,
@@ -154,21 +155,51 @@ const testRunInfoController = function testRunInfoController(
             });
     }
 
-    function getAgent() {
-        let agent = null;
+    function getAgents() {
+        const defaultAgent = defaultLogsAgent;
+        const carinaAgent = carinaLogsAgent;
 
-        // return default (new) version of the agent if test has an UUID
-        if (vm.test.hasOwnProperty('uuid')) {
-            agent = defaultLogsAgent;
-            agent.initSearchCriteria(vm.testRun.id, vm.test.id);
-            agent.initESIndex(vm.test.startTime, vm.test.finishTime);
-        } else {
-            agent = carinaLogsAgent;
-            agent.initSearchCriteria(vm.testRun.ciRunId, vm.test.ciTestId);
-            agent.initESIndex(vm.test.startTime, vm.test.finishTime);
+        defaultAgent.initSearchCriteria(vm.testRun.id, vm.test.id);
+        defaultAgent.initESIndex(vm.test.startTime, vm.test.finishTime);
+
+        carinaAgent.initSearchCriteria(vm.testRun.ciRunId, vm.test.ciTestId);
+        carinaAgent.initESIndex(vm.test.startTime, vm.test.finishTime);
+
+        return [defaultAgent, carinaAgent];
+    }
+
+    function initActiveAgent$() {
+        const agents = getAgents();
+
+        return getAgent$(agents, 1)
+            .pipe(tap(foundAgent => agent = foundAgent));
+    }
+
+    function getAgent$(agents, attempt) {
+        return combineLatest(agents.map(agentsMapper))
+            .pipe(
+                map(findActiveAgent.bind(null, agents)),
+                filter(() => attempt <= initAgentAttemptsLimit),
+                switchMap((foundAgent) => foundAgent ? of(foundAgent) : reGetAgent$(agents, attempt += 1)),
+            );
+    }
+
+    function agentsMapper(agent) {
+        return getCount$(agent)
+            .pipe(catchError(() => of(false)));
+    }
+
+    function reGetAgent$(agents, attempt) {
+        return timer(1000)
+            .pipe(switchMap(() => getAgent$(agents, attempt)));
+    }
+
+    function findActiveAgent(agents, responses) {
+        const index = responses.findIndex((response) => typeof response === 'number');
+
+        if (index !== -1) {
+            return agents[index];
         }
-
-        return agent;
     }
 
     function setTestParams() {
@@ -463,11 +494,22 @@ const testRunInfoController = function testRunInfoController(
         initTestsWebSocket();
         vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
 
-        agent = getAgent();
-        setTestParams();
-        initToolsSettings();
-        initTestExecutionData(skipHistoryUpdate);
-        bindEvents();
+        initActiveAgent$()
+            .pipe(takeUntil(logsGettingDestroy$))
+            .subscribe({
+                complete() {
+                    if (agent) {
+                        setTestParams();
+                    } else {
+                        messageService.error('Unable to init logs agent');
+                        vm.isLogsLoading = false;
+                    }
+
+                    initToolsSettings();
+                    initTestExecutionData(skipHistoryUpdate);
+                    bindEvents();
+                },
+            });
     }
 
     function $onDestroy() {
@@ -748,7 +790,7 @@ const testRunInfoController = function testRunInfoController(
     function getLiveESLogs$() {
         vm.logs = [];
 
-        return getCount$()
+        return getCount$(agent)
             .pipe(
                 switchMap((count) => fetchLiveESLogs$(count)),
             );
@@ -770,7 +812,7 @@ const testRunInfoController = function testRunInfoController(
     function reFetchLiveESLogs$(count) {
         return timer(5000)
             .pipe(
-                switchMap(() => getCount$()),
+                switchMap(() => getCount$(agent)),
                 switchMap(newCount => count !== newCount ? fetchLiveESLogs$(newCount) : reFetchLiveESLogs$(count)),
             );
     }
@@ -809,7 +851,7 @@ const testRunInfoController = function testRunInfoController(
     }
 
     function getPastESLogs$() {
-        return getCount$()
+        return getCount$(agent)
             .pipe(
                 switchMap((count) => fetchPastESLogs$(count)),
             );
@@ -831,14 +873,14 @@ const testRunInfoController = function testRunInfoController(
         return rxFrom(getLogsFromElasticsearch(from, size));
     }
 
-    function getCount$() {
-        return rxFrom(getCountFromElasticSearch())
+    function getCount$(agent) {
+        return rxFrom(getCountFromElasticSearch(agent))
             .pipe(
                 map((response) => response.count),
             );
     }
 
-    function getCountFromElasticSearch() {
+    function getCountFromElasticSearch(agent) {
         return elasticsearchService.fetchCount(agent.esIndex, agent.searchCriteria, logsRequestsCanceler.promise);
     }
 
