@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="users-table__col _min-size" data-title="Registration/ last activity" style="padding-right: 0;">
                                     <div class="users-table__content-wrapper">
-                                        <div class="users-table__content-date _block" name="userCreated">{{::user.createdAt | date}}</div>
+                                        <div class="users-table__content-date _block" name="userCreated">{{::user.registrationDateTime | date}}</div>
                                         <span class="users-table__content-additional" data-ng-if="user.lastLogin">last login <time name="lastLogin" am-time-ago="user.lastLogin" title="{{ user.lastLogin | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time></span>
                                         <span class="users-table__content-additional" data-ng-if="!user.lastLogin">never logged in</span>
                                     </div>

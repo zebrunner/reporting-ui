@@ -14,6 +14,7 @@ export function CoreModuleRunner(
     ConfigService,
     UserService,
     toolsService,
+    $httpMock,
 ) {
     'ngInject';
 
@@ -31,6 +32,7 @@ export function CoreModuleRunner(
             if (response.success) {
                 authService.isMultitenant = response.data?.multitenant;
                 authService.serviceUrl = response.data?.serviceUrl;
+                $httpMock.serviceUrl = response.data?.serviceUrl;
             }
         })
         .then(() => {
@@ -39,7 +41,7 @@ export function CoreModuleRunner(
             getVersion();
             updateCompanyLogo();
             if (authService.authData) {
-                UserService.initCurrentUser();
+                UserService.initCurrentUser(false, authService.authData.userId);
                 toolsService.getTools();
             }
         })
