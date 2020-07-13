@@ -30,7 +30,7 @@ const defaultLogsAgent = function defaultLogsAgent(
             let relativeImageUrl = log.originalMessage
                 .replace(new RegExp(`^(${log.tenant || authService.tenant})`, 'i'), '');
 
-            if (relativeImageUrl.length !== log.originalMessage.length) {
+            if (relativeImageUrl.length !== log.originalMessage.length || relativeImageUrl.charAt(0) !== '/') {
                 relativeImageUrl = `/${relativeImageUrl}`;
             }
 
