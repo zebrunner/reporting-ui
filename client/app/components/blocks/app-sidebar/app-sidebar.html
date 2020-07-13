@@ -159,6 +159,14 @@
                 </a>
             </li>
             <li class="main-nav__list-item _empty" style="flex-grow: 1"></li>
+            <li class="main-nav__list-item dynamic"
+                ui-sref-active="active"
+                ng-repeat="bottomMenuItem in $ctrl.bottomMenuItems track by bottomMenuItem.name">
+                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="{{ bottomMenuItem.state }}">
+                    <i class="material-icons">{{ bottomMenuItem.icon }}</i>
+                    <span>{{ bottomMenuItem.name }}</span>
+                </a>
+            </li>
             <li class="main-nav__list-item profile" ng-class="{'active':$ctrl.$state.includes('userProfile')}">
                 <md-button
                     type="button"
