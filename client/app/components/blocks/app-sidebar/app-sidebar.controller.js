@@ -81,7 +81,8 @@ const AppSidebarController = function (
         get currentUser() { return UserService.currentUser; },
         get isMobile() { return $mdMedia('xs'); },
         get dashboardList() { return DashboardService.dashboards; },
-        get menuItems() { return mainMenuService.items; },
+        get menuItems() { return mainMenuService.items.filter(({ position }) => position !== 'bottom'); },
+        get bottomMenuItems() { return mainMenuService.items.filter(({ position }) => position === 'bottom'); },
         getSubitems(name) { return mainMenuService.getSubItemsDefaultMenu(name); },
     };
 
