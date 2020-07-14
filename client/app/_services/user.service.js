@@ -185,8 +185,12 @@
             return service.currentUser;
         }
 
-        function setDefaultPreferences(userPreferences){
-            userPreferences.forEach(function(userPreference) {
+        function setDefaultPreferences(userPreferences) {
+            if (!Array.isArray(userPreferences)) {
+                return;
+            }
+
+            userPreferences.forEach((userPreference) => {
                 switch(userPreference.name) {
                     case 'DEFAULT_DASHBOARD':
                         service.currentUser.defaultDashboard = userPreference.value;

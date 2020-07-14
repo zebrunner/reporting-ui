@@ -1,7 +1,6 @@
 'use strict';
 
 const appHealthService = function appHealthService(
-    $http,
     $httpMock,
 ) {
     'ngInject';
@@ -9,7 +8,7 @@ const appHealthService = function appHealthService(
     let status = false;
 
     function checkServerStatus() {
-        return $http.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/status`, { transformResponse: [data => data] });
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/status`, { transformResponse: [data => data] });
     }
 
     function changeHealthyStatus(newStatus) {
