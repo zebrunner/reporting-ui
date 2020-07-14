@@ -42,7 +42,13 @@
     .config(($httpProvider) => {
         'ngInject';
 
-        $httpProvider.interceptors.push(($rootScope, $q, $injector, httpBuffer, API_URL) => {
+        $httpProvider.interceptors.push((
+            $rootScope,
+            $q,
+            $injector,
+            httpBuffer,
+            API_HOST,
+        ) => {
             'ngInject';
 
             const UNRECOGNIZED_STATES = ['signin', 'signup'];
@@ -57,10 +63,12 @@
                     }
 
                     const authService = $injector.get('authService');
-                    const authData = authService.authData;
+                    const $httpMock = $injector.get('$httpMock');
+                    const apiHost = $httpMock.apiHost ? $httpMock.apiHost : location.hostname;
+
                     // add authorization header to API requests
-                    if ((request.url.includes(API_URL) || request.url.includes(authService.serviceUrl)) && authData) {
-                        request.headers['Authorization'] = `${authData.authTokenType} ${authData.authToken}`;
+                    if ((request.url.includes(apiHost)) && authService.authData) {
+                        request.headers['Authorization'] = `${authService.authData.authTokenType} ${authService.authData.authToken}`;
                     }
 
                     return request;

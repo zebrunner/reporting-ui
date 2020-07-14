@@ -1,4 +1,4 @@
 {
-    "API_URL": "__SERVER_URL__",
+    "API_HOST": "__SERVER_HOST__",
     "UI_VERSION": "__UI_VERSION__"
 }

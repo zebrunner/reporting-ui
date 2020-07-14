@@ -3,31 +3,34 @@
 
     angular
         .module('app.services')
-        .factory('ProjectService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', ProjectService])
+        .factory('ProjectService', ['$httpMock', '$rootScope', 'UtilService', ProjectService])
 
-    function ProjectService($httpMock, $rootScope, UtilService, API_URL) {
-        const service = {
+    function ProjectService($httpMock, $rootScope, UtilService) {
+        return {
             createProject,
             deleteProject,
             updateProject,
             getAllProjects,
         };
 
-        return service;
-
         function createProject(project) {
-            return $httpMock.post(API_URL + '/api/projects', project).then(UtilService.handleSuccess, UtilService.handleError('Unable to create project'));
+            return $httpMock.post(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/projects`, project)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to create project'));
         }
 
         function deleteProject(id, reassignTo) {
-            return $httpMock.delete(API_URL + '/api/projects/' + id + (reassignTo ? '?reassignTo=' + reassignTo : '')).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete project'));
+            return $httpMock.delete(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/projects/${id}${reassignTo ? '?reassignTo=' + reassignTo : ''}`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to delete project'));
         }
 
         function updateProject(project) {
-            return $httpMock.put(API_URL + '/api/projects', project).then(UtilService.handleSuccess, UtilService.handleError('Unable to update project'));
+            return $httpMock.put(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/projects`, project)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to update project'));
         }
+
         function getAllProjects() {
-            return $httpMock.get(API_URL + '/api/projects').then(UtilService.handleSuccess, UtilService.handleError('Unable to get projects list'));
+            return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/projects`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get projects list'));
         }
     }
 })();
