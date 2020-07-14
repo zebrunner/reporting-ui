@@ -35,7 +35,7 @@ const defaultLogsAgent = function defaultLogsAgent(
             }
 
             if (relativeImageUrl) {
-                const imageUrl = `${authService.serviceUrl}${relativeImageUrl}`;
+                const imageUrl = `${authService.apiHost}${relativeImageUrl}`;
                 const thumbnailUrl = imageUrl.replace(fileExtensionPattern, '_thumbnail$1');
 
                 log.urls.image = { path: imageUrl, name: 'screenshot' };

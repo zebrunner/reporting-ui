@@ -6,7 +6,6 @@ const authService = function authService(
     $state,
     UtilService,
     UserService,
-    API_URL,
     jwtHelper,
 ) {
     'ngInject';
@@ -31,8 +30,8 @@ const authService = function authService(
         getTenant,
 
         get authData() {
-            if (!authData && localStorage.getItem('auth')) {
-                authData = JSON.parse(localStorage.getItem('auth'));
+            if (!authData && localStorage.getItem('zeb-auth')) {
+                authData = JSON.parse(localStorage.getItem('zeb-auth'));
             }
 
             return authData;
@@ -42,7 +41,7 @@ const authService = function authService(
     };
 
     function login(username, password) {
-        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/auth/login`, { username, password })
+        return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/auth/login`, { username, password })
             .then((res) => {
                 const headers = res.headers();
 
@@ -51,21 +50,21 @@ const authService = function authService(
     }
 
     function getTenant() {
-        return $httpMock.get(`${API_URL}/api/auth/tenant`)
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/auth/tenant`, { skipAuthorization: true })
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to get tenant info'));
     }
 
     function invite(emails) {
-        return $httpMock.post(API_URL + '/api/auth/invite', emails)
+        return $httpMock.post(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/auth/invite`, emails)
             .then(UtilService.handleSuccess, UtilService.handleError('Failed to invite users'));
     }
 
     function forgotPassword(forgotPassword) {
-        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets`, forgotPassword).then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
+        return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/users/password-resets`, forgotPassword).then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
     function getForgotPasswordInfo(token) {
-        return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets?token=${token}`)
+        return $httpMock.get(`${$httpMock.apiHost}/api/iam/v1/users/password-resets?token=${token}`)
             // TODO: move redirection action from service
             .then(UtilService.handleSuccess, () => {
                 $state.go('signin');
@@ -75,34 +74,34 @@ const authService = function authService(
     function resetPassword(credentials, token) {
         const data = { resetToken: token, newPassword: credentials.password };
 
-        return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/users/password-resets`, {data: data, headers: {'Content-Type': 'application/json'}})
+        return $httpMock.delete(`${$httpMock.apiHost}/api/iam/v1/users/password-resets`, {data: data, headers: {'Content-Type': 'application/json'}})
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to restore password'));
     }
 
     function getInvitation(token) {
-        return $httpMock.get(API_URL + '/api/auth/invite?token=' + token)
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/auth/invite?token=${token}`)
             .then(UtilService.handleSuccess, UtilService.handleError('Failed to get user invitation'));
     }
 
     function signUp(user, token) {
-        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/users?invitation-token=${token}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
+        return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/users?invitation-token=${token}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
     }
 
     function refreshToken(token) {
-        return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/auth/refresh`, { 'refreshToken': token }, { skipAuthorization: true }).then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
+        return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/auth/refresh`, { 'refreshToken': token }, { skipAuthorization: true }).then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
     }
 
     function generateAccessToken() {
-        return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/auth/access`).then(UtilService.handleSuccess, UtilService.handleError('Unable to generate token'));
+        return $httpMock.get(`${$httpMock.apiHost}/api/iam/v1/auth/access`).then(UtilService.handleSuccess, UtilService.handleError('Unable to generate token'));
     }
 
     function setCredentials(auth) {
-        localStorage.setItem('auth', JSON.stringify(auth));
+        localStorage.setItem('zeb-auth', JSON.stringify(auth));
         authData = auth;
     }
 
     function clearCredentials() {
-        localStorage.removeItem('auth');
+        localStorage.removeItem('zeb-auth');
         authData = null;
         UserService.clearCurrentUser();
     }

@@ -25,23 +25,28 @@
         return service;
 
         function createGroup(group){
-            return $httpMock.post(`${$httpMock.serviceUrl}/api/iam/v1/groups`, group).then(UtilService.handleSuccess, UtilService.handleError('Failed to create group'));
+            return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/groups`, group)
+                .then(UtilService.handleSuccess, UtilService.handleError('Failed to create group'));
         }
 
         function getGroup(id){
-            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get group'));
+            return $httpMock.get(`${$httpMock.apiHost}/api/iam/v1/groups/${id}`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Failed to get group'));
         }
 
         function getAllGroups(isPublic){
-            return $httpMock.get(`${$httpMock.serviceUrl}/api/iam/v1/groups?public=${isPublic}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to get groups'));
+            return $httpMock.get(`${$httpMock.apiHost}/api/iam/v1/groups?public=${isPublic}`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Failed to get groups'));
         }
 
         function updateGroup(group, id){
-            return $httpMock.put(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`, group).then(UtilService.handleSuccess, UtilService.handleError('Failed to update group'));
+            return $httpMock.put(`${$httpMock.apiHost}/api/iam/v1/groups/${id}`, group)
+                .then(UtilService.handleSuccess, UtilService.handleError('Failed to update group'));
         }
 
         function deleteGroup(id){
-            return $httpMock.delete(`${$httpMock.serviceUrl}/api/iam/v1/groups/${id}`).then(UtilService.handleSuccess, UtilService.handleError('Failed to delete group'));
+            return $httpMock.delete(`${$httpMock.apiHost}/api/iam/v1/groups/${id}`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Failed to delete group'));
         }
     }
 })();

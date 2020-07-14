@@ -3,10 +3,11 @@
 
     angular
         .module('app.services')
-        .factory('$httpMock', ['$http', '$rootScope', '$q', '$transitions', HttpMockResolver])
+        .factory('$httpMock', ['$http', '$rootScope', '$q', '$transitions', 'API_HOST', HttpMockResolver])
 
-    function HttpMockResolver($http, $rootScope, $q, $transitions) {
+    function HttpMockResolver($http, $rootScope, $q, $transitions, API_HOST) {
 
+        const reporting_path = '/reporting-service';
         var service = {
             // trigger mock
             back: function () { isBackClicked = true; },
@@ -19,6 +20,8 @@
             'delete': request('delete'),
             'put': request('put'),
             'patch': request('patch'),
+            get apiHost() { return API_HOST ?? ''; },
+            get reportingPath() { return reporting_path; },
         };
 
         var storage = {};

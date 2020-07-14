@@ -2,14 +2,14 @@
 
 const appHealthService = function appHealthService(
     $http,
-    API_URL,
+    $httpMock,
 ) {
     'ngInject';
 
     let status = false;
 
     function checkServerStatus() {
-        return $http.get(`${API_URL}/api/status`, { transformResponse: [data => data] });
+        return $http.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/status`, { transformResponse: [data => data] });
     }
 
     function changeHealthyStatus(newStatus) {

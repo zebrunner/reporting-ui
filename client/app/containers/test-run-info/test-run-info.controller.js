@@ -10,6 +10,7 @@ import IssuesModalController from '../../components/modals/issues/issues.control
 import IssuesModalTemplate from '../../components/modals/issues/issues.html';
 
 const testRunInfoController = function testRunInfoController(
+    $httpMock,
     $location,
     $mdDialog,
     $mdMedia,
@@ -25,7 +26,6 @@ const testRunInfoController = function testRunInfoController(
     elasticsearchService,
     UtilService,
     ArtifactService,
-    API_URL,
     TestExecutionHistoryService,
     TestRunService,
     testsRunsService,
@@ -563,7 +563,7 @@ const testRunInfoController = function testRunInfoController(
 
     /* Work with WebSocket */
     function initTestsWebSocket() {
-        const ws = new SockJS(`${API_URL}/api/websockets`);
+        const ws = new SockJS(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/websockets`);
 
         stompClient = Stomp.over(ws);
         stompClient.debug = null;

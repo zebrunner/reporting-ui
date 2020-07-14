@@ -14,7 +14,6 @@ export function CoreModuleRunner(
     ConfigService,
     UserService,
     toolsService,
-    $httpMock,
 ) {
     'ngInject';
 
@@ -30,11 +29,7 @@ export function CoreModuleRunner(
     authService.getTenant()
         .then(response => {
             if (response.success) {
-                console.log(response.data?.serviceUrl);
-                console.log(response);
                 authService.isMultitenant = response.data?.multitenant;
-                authService.serviceUrl = response.data?.serviceUrl;
-                $httpMock.serviceUrl = response.data?.serviceUrl;
             }
         })
         .then(() => {
