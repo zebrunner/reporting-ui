@@ -47,7 +47,6 @@
             $q,
             $injector,
             httpBuffer,
-            API_HOST,
         ) => {
             'ngInject';
 
@@ -64,10 +63,15 @@
 
                     const authService = $injector.get('authService');
                     const $httpMock = $injector.get('$httpMock');
-                    const apiHost = $httpMock.apiHost ? $httpMock.apiHost : location.hostname;
+                    const urlStarts = ['/api', $httpMock.reportingPath];
+                    const apiHost = $httpMock.apiHost ? $httpMock.apiHost : location.origin;
+
+                    if (apiHost) {
+                        urlStarts.push(apiHost);
+                    }
 
                     // add authorization header to API requests
-                    if ((request.url.includes(apiHost)) && authService.authData) {
+                    if (urlStarts.some((urlStart) => request.url.startsWith(urlStart)) && authService.authData) {
                         request.headers['Authorization'] = `${authService.authData.authTokenType} ${authService.authData.authToken}`;
                     }
 
