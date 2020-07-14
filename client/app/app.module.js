@@ -1315,6 +1315,7 @@ angular.injector(['ng'])
         // TODO: add error handler if incorrect data provided or missed
         ngModule
             .constant('API_HOST', response.data['API_HOST'] ?? '')
+            .constant('REPORTING_PATH', '/reporting-service')
             .constant('UI_VERSION', response.data['UI_VERSION'] || '');
 
         //manually bootstrap application after we have gotten our config data
