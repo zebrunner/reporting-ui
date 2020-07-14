@@ -2,7 +2,6 @@
 
 const TestExecutionHistoryService = function TestExecutionHistoryService(
     $httpMock,
-    API_URL,
     UtilService,
 ) {
     'ngInject';
@@ -13,7 +12,7 @@ const TestExecutionHistoryService = function TestExecutionHistoryService(
     };
 
     function getTestExecutionHistory(testId, limit = 10) {
-        return $httpMock.get(`${API_URL}/api/tests/${testId}/history?limit=${limit}`)
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/tests/${testId}/history?limit=${limit}`)
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to get test execution history'));
     }
 

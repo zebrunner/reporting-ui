@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('ConfigService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', ConfigService])
+        .factory('ConfigService', ['$httpMock', '$rootScope', 'UtilService', '$q', ConfigService])
 
-    function ConfigService($httpMock, $rootScope, UtilService, API_URL, $q) {
+    function ConfigService($httpMock, $rootScope, UtilService, $q) {
 
         const data = {};
 
@@ -19,7 +19,7 @@
             }
 
 
-            return $httpMock.get(API_URL + '/api/config/' + name)
+            return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/config/${name}`, { skipAuthorization: true })
                 .then(res => {
                     if (res.data) {
                         data[name] = res.data;
@@ -27,7 +27,7 @@
 
                     return res;
                 })
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get config "' + name + '"'));
+                .then(UtilService.handleSuccess, UtilService.handleError(`Unable to get config "${name}"`));
         }
     }
 })();
