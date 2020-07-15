@@ -704,12 +704,16 @@
                 })
                 .state('tests.default', {
                     url: '',
-                    controller: ($state, UserService, authService) => {
+                    controller: ($state, UserService, authService, $timeout) => {
                         'ngInject';
+
 
                         const view = authService.isMultitenant ? UserService.currentUser.testsView : 'runs';
 
-                        $state.go(`tests.${view}`, {}, { location: 'replace' });
+                        console.log('tests.default:', view);
+                        $timeout(() => {
+                            $state.go(`tests.${view}`, {}, { location: 'replace' });
+                        }, 0, false);
                     },
                 })
                 .state('welcomePage', {
