@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('CertificationService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', CertificationService])
+        .factory('CertificationService', ['$httpMock', '$rootScope', 'UtilService', CertificationService])
 
-    function CertificationService($httpMock, $rootScope, UtilService, API_URL) {
+    function CertificationService($httpMock, $rootScope, UtilService) {
         var service = {};
 
         service.loadCertificationDetails = loadCertificationDetails;
@@ -13,7 +13,10 @@
         return service;
 
         function loadCertificationDetails(upstreamJobId, upstreamJobBuildNumber) {
-        	return $httpMock.get(API_URL + '/api/certification/details', {params:{'upstreamJobId': upstreamJobId, 'upstreamJobBuildNumber': upstreamJobBuildNumber}}).then(UtilService.handleSuccess, UtilService.handleError('Unable to load certification details'));
+            const params = { upstreamJobId, upstreamJobBuildNumber };
+
+        	return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/certification/details`, { params })
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to load certification details'));
         }
     }
 })();

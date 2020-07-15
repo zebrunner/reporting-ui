@@ -14,7 +14,7 @@ const testDetailsController = function testDetailsController(
     $rootScope,
     $q,
     TestService,
-    API_URL,
+    $httpMock,
     modalsService,
     $state,
     $transitions,
@@ -1044,7 +1044,7 @@ const testDetailsController = function testDetailsController(
     function initWebsocket() {
         const wsName = 'zafira';
 
-        vm.zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
+        vm.zafiraWebsocket = Stomp.over(new SockJS(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/websockets`));
         vm.zafiraWebsocket.debug = null;
         vm.zafiraWebsocket.ws.close = function () { };
         vm.zafiraWebsocket.connect({ withCredentials: false }, function () {

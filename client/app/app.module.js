@@ -1298,21 +1298,6 @@ class mdDialogDelegate {
     }
 }
 
-angular.injector(['ng'])
-    .get('$http')
-    .get(`./config.json?timestamp=${Date.now()}`)
-    .then(function(response){
-        // TODO: add error handler if incorrect data provided or missed
-        ngModule
-            .constant('API_URL', response.data['API_URL'] || '')
-            .constant('UI_VERSION', response.data['UI_VERSION'] || '');
-
-        //manually bootstrap application after we have gotten our config data
-        angular.element(document).ready(function() {
-            angular.bootstrap(document, ['app'], { strictDi: !isProd });
-        });
-    });
-
 //Services
 require('./_services/services.module');
 //Modules
@@ -1321,3 +1306,27 @@ require('./core/config.route');
 require('./page/page.module');
 require('./layout/commons/common.module');
 require('./components/components');
+
+// TODO: get rid of this
+angular.injector(['ng'])
+    .get('$http')
+    .get(`./config.json?timestamp=${Date.now()}`)
+    .then((response) => {
+        let apiHost = response.data['API_HOST'] ?? '';
+        const lastIndex = apiHost.length - 1;
+
+        //remove ending slash
+        if (apiHost[lastIndex] === '/') {
+            apiHost = apiHost.slice(0, lastIndex);
+        }
+        // TODO: add error handler if incorrect data provided or missed
+        ngModule
+            .constant('API_HOST', apiHost)
+            .constant('REPORTING_PATH', '/reporting-service')
+            .constant('UI_VERSION', response.data['UI_VERSION'] || '');
+
+        //manually bootstrap application after we have gotten our config data
+        angular.element(document).ready(function() {
+            angular.bootstrap(document, ['app'], { strictDi: !isProd });
+        });
+    });

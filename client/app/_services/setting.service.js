@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('SettingsService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', SettingsService])
+        .factory('SettingsService', ['$httpMock', '$rootScope', 'UtilService', SettingsService])
 
-    function SettingsService($httpMock, $rootScope, UtilService, API_URL) {
+    function SettingsService($httpMock, $rootScope, UtilService) {
         var service = {};
 
         service.getCompanyLogo = getCompanyLogo;
@@ -17,23 +17,28 @@
         return service;
 
         function getCompanyLogo() {
-            return $httpMock.get(API_URL + '/api/settings/companyLogo').then(UtilService.handleSuccess, UtilService.handleError('Unable to get company logo URL'));
+            return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/settings/companyLogo`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get company logo URL'));
         }
 
         function deleteSetting(id) {
-            return $httpMock.delete(API_URL + '/api/settings/' + id).then(UtilService.handleSuccess, UtilService.handleError('Unable to delete setting #' + id));
+            return $httpMock.delete(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/settings/${id}`)
+                .then(UtilService.handleSuccess, UtilService.handleError(`Unable to delete setting #${id}`));
         }
 
         function createSetting(setting) {
-            return $httpMock.post(API_URL + '/api/settings', setting).then(UtilService.handleSuccess, UtilService.handleError('Unable to create setting'));
+            return $httpMock.post(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/settings`, setting)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to create setting'));
         }
 
         function editSetting(setting) {
-            return $httpMock.put(API_URL + '/api/settings', setting).then(UtilService.handleSuccess, UtilService.handleError('Unable to edit setting'));
+            return $httpMock.put(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/settings`, setting)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to edit setting'));
         }
 
         function regenerateKey() {
-            return $httpMock.post(API_URL + '/api/settings/key/regenerate').then(UtilService.handleSuccess, UtilService.handleError('Unable to get tools'));
+            return $httpMock.post(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/settings/key/regenerate`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get tools'));
         }
     }
 })();
