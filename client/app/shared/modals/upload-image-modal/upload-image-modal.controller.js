@@ -1,6 +1,6 @@
 'use strict';
 
-const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilService, urlHandler,
+const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilService, urlHandler, keyHandler, 
                                     fileTypes, messageService) => {
     'ngInject';
 
