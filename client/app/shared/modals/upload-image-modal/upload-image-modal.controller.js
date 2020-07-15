@@ -1,6 +1,6 @@
 'use strict';
 
-const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilService, urlHandler, keyHandler, 
+const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilService, urlHandler, 
                                     fileTypes, messageService) => {
     'ngInject';
 
@@ -20,11 +20,8 @@ const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilS
                 messageService.success('Image was uploaded');
                 if (urlHandler) {
                     const url = `${window.location.origin}/${rs.data.key}`;
-                    urlHandler(url).then((result) => {
-                        result && $mdDialog.hide();
-                    });
-                } else if (keyHandler) {
-                    keyHandler(rs.data.key).then((result) => {
+                    const key = rs.data.key;
+                    urlHandler(url, key).then((result) => {
                         result && $mdDialog.hide();
                     });
                 }
