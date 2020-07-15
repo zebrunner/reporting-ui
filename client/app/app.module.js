@@ -1312,9 +1312,16 @@ angular.injector(['ng'])
     .get('$http')
     .get(`./config.json?timestamp=${Date.now()}`)
     .then((response) => {
+        let apiHost = response.data['API_HOST'] ?? '';
+        const lastIndex = apiHost.length - 1;
+
+        //remove ending slash
+        if (apiHost[lastIndex] === '/') {
+            apiHost = apiHost.slice(0, lastIndex);
+        }
         // TODO: add error handler if incorrect data provided or missed
         ngModule
-            .constant('API_HOST', response.data['API_HOST'] ?? '')
+            .constant('API_HOST', apiHost)
             .constant('REPORTING_PATH', '/reporting-service')
             .constant('UI_VERSION', response.data['UI_VERSION'] || '');
 
