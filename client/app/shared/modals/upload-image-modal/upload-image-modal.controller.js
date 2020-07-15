@@ -23,6 +23,10 @@ const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilS
                     urlHandler(url).then((result) => {
                         result && $mdDialog.hide();
                     });
+                } else if (keyHandler) {
+                    keyHandler(rs.data.key).then((result) => {
+                        result && $mdDialog.hide();
+                    });
                 }
             } else {
                 messageService.error(rs.message);
