@@ -8,11 +8,12 @@ const authController = function authController(
     $templateCache,
     $stateParams,
     authService,
+    CompanySettings,
     UserService,
     UtilService,
     InvitationService,
     messageService,
-    ) {
+) {
     'ngInject';
 
     $scope.UtilService = UtilService;
@@ -43,8 +44,8 @@ const authController = function authController(
     $scope.forgotPasswordType = {};
     $scope.forgotPasswordEmailWasSent = false;
 
-    Object.defineProperty($scope, 'companyLogo', {
-       get: () => $rootScope.companyLogo,
+    Object.defineProperty($scope, 'companyLogoUrl', {
+       get: () => CompanySettings.companyLogoUrl,
     });
 
     $scope.emailType = {};

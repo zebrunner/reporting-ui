@@ -17,12 +17,12 @@
                     <div class="projects__selected">{{$ctrl.selectedProjectShortName}}</div>
                     <div>
                         <profile-photo id="brandPhoto"
-                            ng-model="$ctrl.companyLogo.value"
+                            ng-model="$ctrl.companyLogoUrl"
                             squared="8"
                             size="32"
                             auto-resize="false"
                             icon-visible="false">
-                            <span ng-if="!$ctrl.companyLogo.value" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">flag</i></span>
+                            <span ng-if="!$ctrl.companyLogoUrl" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">flag</i></span>
                         </profile-photo>
                     </div>
                 </md-button>
@@ -173,12 +173,12 @@
                     aria-label="menu"
                     class="app-sidebar__link menu-btn nav-btn js-menu-toggle">
                     <div>
-                        <profile-photo ng-model="$ctrl.currentUser.photoURL"
+                        <profile-photo ng-model="$ctrl.currentUser.photoUrl"
                             squared="8"
                             size="32"
                             icon-visible="false"
                             auto-resize="false">
-                            <span ng-if="!$ctrl.currentUser.photoURL" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">person</i></span>
+                            <span ng-if="!$ctrl.currentUser.photoUrl" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">person</i></span>
                         </profile-photo>
                     </div>
                 </md-button>
