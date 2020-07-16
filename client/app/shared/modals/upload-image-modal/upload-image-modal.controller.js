@@ -1,40 +1,50 @@
 'use strict';
 
-const uploadImageModalController = ($mdDialog, UploadService, UserService, UtilService, urlHandler,
-                                    fileTypes, messageService) => {
+const uploadImageModalController = (
+    $httpMock,
+    $mdDialog,
+    UploadService,
+    UtilService,
+    urlHandler,
+    fileTypes,
+    messageService,
+) => {
     'ngInject';
 
     const local = {
         FILE_TYPES: fileTypes || 'ORG_ASSET',
     };
 
-    const vm = {
+    return {
         closeModal,
         untouchForm: UtilService.untouchForm,
         uploadImage,
     };
 
     function uploadImage(multipartFile) {
-        UploadService.upload(multipartFile, local.FILE_TYPES).then(function (rs) {
-            if (rs.success) {
-                messageService.success('Image was uploaded');
-                if (urlHandler) {
-                    const url = `${window.location.origin}/${rs.data.key}`;
-                    urlHandler(url).then((result) => {
-                        result && $mdDialog.hide();
-                    });
+        UploadService.upload(multipartFile, local.FILE_TYPES)
+            .then((rs) => {
+                if (rs.success) {
+                    messageService.success('Image was uploaded successfully');
+                    if (urlHandler) {
+                        const url = `${$httpMock.apiHost}/${rs.data.key}`;
+
+                        urlHandler(url)
+                            .then((result) => {
+                                if (result) {
+                                    $mdDialog.hide(result);
+                                }
+                            });
+                    }
+                } else {
+                    messageService.error(rs.message);
                 }
-            } else {
-                messageService.error(rs.message);
-            }
-        });
+            });
     }
 
     function closeModal() {
         $mdDialog.cancel();
     }
-
-    return vm;
 };
 
 export default uploadImageModalController;
