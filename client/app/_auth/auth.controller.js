@@ -1,6 +1,7 @@
 'use strict';
 
 const authController = function authController(
+    $httpMock,
     $scope,
     $rootScope,
     $location,
@@ -85,6 +86,17 @@ const authController = function authController(
         $state.go(state);
     };
 
+    $scope.getSamlConfigs = function() {
+        authService.getSamlConfigs()
+            .then((rs) => {
+                $scope.providers = rs.data;
+            })
+    };
+
+    $scope.createUrl = function(reference) {
+        return `${$httpMock.apiHost}/${reference}?RelayState=${$state.href('ssoCallback', {}, {absolute: true})}`;
+    };
+
     (function initController() {
         switch($state.current.name) {
             case 'signup':
@@ -107,6 +119,7 @@ const authController = function authController(
             $scope.credentials.usernameOrEmail = $stateParams.user.email;
             $scope.credentials.password = $stateParams.user.password;
         }
+        $scope.getSamlConfigs();
         authService.clearCredentials();
     })();
 

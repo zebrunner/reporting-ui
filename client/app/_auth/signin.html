@@ -50,6 +50,27 @@
                                        ng-disabled="signin_form.$invalid">Login</md-button>
                         </div>
                     </form>
+                    <div class="buttons-container">
+                        <div class="buttons-wrapper">
+                            <div class="buttons-wrapper__top-divider">or continue with</div>
+                            <ul class="provider-list">
+                                <li class="provider-list__item" ng-repeat="provider in providers">
+                                    <div class="item">
+                                        <a class="item-wrapper" ng-href="{{createUrl(provider.reference)}}">
+                                            <div class="item-wrapper__photo-wrapper">
+                                                <md-icon md-svg-icon="photoIcon" class="material-icons icon"></md-icon>
+                                            </div>
+                                            <div class="item-wrapper__name-wrapper">
+                                                <span class="item-wrapper__text">
+                                                    {{provider.name}}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <copyright></copyright>
                 </div>
 

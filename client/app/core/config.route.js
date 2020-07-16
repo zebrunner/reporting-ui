@@ -360,6 +360,20 @@
                         }
                     }
                 })
+                .state('ssoCallback', {
+                    url: '/sso?jwt',
+                    controller: ($stateParams, authService) => {
+                        'ngInject';
+
+                        if ($stateParams.jwt) {
+                            authService.refreshToken($stateParams.jwt)
+                                .then((rs) => {
+                                    console.log(rs);
+                                })
+                            
+                        }
+                    },
+                })
                 .state('tests', {
                     url: '/tests',
                     abstract: true,

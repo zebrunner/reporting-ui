@@ -28,6 +28,7 @@ const authService = function authService(
         userHasAnyPermission,
         hasValidToken,
         getTenant,
+        getSamlConfigs,
 
         get authData() {
             if (!authData && localStorage.getItem('zeb-auth')) {
@@ -119,6 +120,10 @@ const authService = function authService(
         if (!service.isLoggedIn) { return; }
 
         return (UserService.currentUser.permissions || []).some((name) => permissions.includes(name));
+    }
+
+    function getSamlConfigs() {
+        return $httpMock.get(`${$httpMock.apiHost}/api/iam/v1/identity-providers`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get identity providers'));
     }
 
     return service;

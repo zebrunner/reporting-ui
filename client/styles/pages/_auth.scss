@@ -92,6 +92,108 @@
                 min-height: auto;
                 max-width: 100%;
             }
+
+            .buttons-container {
+
+                .buttons-wrapper {
+                    position: relative;
+                    margin-top: 42px;
+                    padding-bottom: 36px;
+
+                    &::before,
+                    &::after {
+                        position: absolute;
+                        display: block;
+                        content: '';
+                        width: calc(50% - 58px); // half of top divider text width
+                        height: 1px;
+                        background-color: #AEB8BE;
+                        top: 0;
+                    }
+    
+                    &::before {
+                        left: 0;
+                    }
+    
+                    &::after {
+                        right: 0;
+                    }
+
+                    &__top-divider {
+                        width: 116px;
+                        position: absolute;
+                        display: inline-block;
+                        margin: 0 auto;
+                        top: -8px;
+                        left: 0; 
+                        right: 0; 
+                        font-weight: 500;
+                        font-size: 14px;
+                        color: #AEB8BE;
+                        text-align: center;
+                    }
+
+                    .provider-list {
+                        margin: 4px 0 0 0;
+                        padding: 0;
+            
+                        &__item {
+                            list-style-type: none;
+                            padding-top: 20px;
+            
+                            &.active {
+                                .item-wrapper {
+                                    background-color: #fff;
+            
+                                    &::after {
+                                        background-color: #fff;
+                                    }
+                                }
+                            }
+            
+                            .item-wrapper {
+                                display: flex;
+                                position: relative;
+                                height: 40px;
+                                background: #F7F7F7;
+                                border-radius: 4px;
+                                text-decoration: none;
+            
+                                &__photo-wrapper {
+                                    flex: 0 0 56px;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+            
+                                    .icon {
+                                        border-radius: 4px;
+                                        background-color:  #DFE3E5;
+                                    }
+                                }
+            
+                                &__name-wrapper {
+                                    flex: 1 1 auto;
+                                    display: flex;
+                                    align-items: center;
+                                    overflow: hidden;
+                                }
+            
+                                &__text {
+                                    display: inline-block;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    margin-left: 8px;
+                                    font-weight: 500;
+                                    font-size: 14px;
+                                    color: #000000;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             .added-small{
                 margin-top: -8px;
                 font-size: 12px;
@@ -102,12 +204,12 @@
     .additional-info {
         color: rgba(0, 0, 0, 0.25);
         line-height: 1.15;
-        position: absolute;
-        padding-bottom: 28px;
-        padding-right: 5px;
-        bottom: 0;
         font-size: 10px;
         @media(max-width: 749px){
+            position: absolute;
+            padding-bottom: 28px;
+            padding-right: 5px;
+            bottom: 0;
             margin-bottom: -12px;
             max-width: 167px;
         }
