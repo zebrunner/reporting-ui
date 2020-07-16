@@ -25,11 +25,11 @@ export function CompanySettingsProvider() {
                 get companyLogoUrl() {
                     // to support old absolute path and new relative
                     // if url isn't relative and apiHost is specified add this host
-                    if (!local.companyLogo.value.startsWith('http') && $httpMock.apiHost) {
+                    if (!local.companyLogo?.value?.startsWith('http') && $httpMock.apiHost) {
                         return `${$httpMock.apiHost}${local.companyLogo.value}`;
                     }
 
-                    return local.companyLogo.value;
+                    return local.companyLogo.value ?? '';
                 },
                 set companyLogoUrl(url) {
                     local.companyLogo.value = url;
