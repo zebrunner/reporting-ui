@@ -43,6 +43,11 @@ const ngModule = angular
         TutorialsProvider.setUrl(`https://zebrunner.s3-us-west-1.amazonaws.com/common/tutorials/contents.json?timestamp=${Date.now()}`);
         TutorialsProvider.setMinWidth(768);
     })
+    .config((CompanySettingsProvider) => {
+        'ngInject';
+
+        CompanySettingsProvider.initCompanyLogo();
+    })
     .config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider, $mdIconProvider) {
         'ngInject';
 

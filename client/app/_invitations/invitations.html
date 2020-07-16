@@ -45,7 +45,7 @@
                         <div class="invitations-table">
                             <div class="invitations-table__row" ng-repeat="invite in $ctrl.sr">
                                 <div class="invitations-table__col" data-title="{{invite.username}}">
-                                    <profile-photo name="userPhoto" squared="15" ng-model="invite.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
+                                    <profile-photo name="userPhoto" squared="15" ng-model="invite.photoUrl" size="34" class="grey-icon desktop-only" label="#{{::invite.id}}"></profile-photo>
                                 </div>
                                 <div class="invitations-table__col _size-m" data-title="Email" name="userEmail">
                                     <span class="invitations-table__content">{{invite.email}}</span>
@@ -61,7 +61,7 @@
                                         <span class="invitations-table__content">{{ invite.createdAt | date }}</span>
                                         <span class="users-table__content-additional">sent by {{ invite.invitor.username }}</span>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="invitations-table__col">
                                     <md-menu ng-if="$ctrl.userHasAnyPermission(['MODIFY_INVITATIONS'])" class="pull-right">

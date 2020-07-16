@@ -3,6 +3,7 @@
 export default function FullscreenLoaderController(
     $rootScope,
     $timeout,
+    CompanySettings,
 ) {
     'ngInject';
 
@@ -11,7 +12,7 @@ export default function FullscreenLoaderController(
     const vm = {
         hidden: false,
 
-        get companyLogo() { return $rootScope.companyLogo; },
+        get companyLogoUrl() { return CompanySettings.companyLogoUrl; },
 
         $onInit() {
             registerListener();

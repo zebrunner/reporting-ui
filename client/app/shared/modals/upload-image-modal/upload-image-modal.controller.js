@@ -27,7 +27,7 @@ const uploadImageModalController = (
                 if (rs.success) {
                     messageService.success('Image was uploaded successfully');
                     if (urlHandler) {
-                        const url = `${$httpMock.apiHost}/${rs.data.key}`;
+                        const url = rs.data.key[0] !== '/' ? `/${rs.data.key}` : rs.data.key;
 
                         urlHandler(url)
                             .then((result) => {

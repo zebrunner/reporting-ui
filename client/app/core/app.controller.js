@@ -10,10 +10,8 @@ const appCtrl = function appCtrl(
     appConfig,
     authService,
     UserService,
-    SettingsService,
     ConfigService,
     messageService,
-    SettingProvider,
     $timeout,
     toolsService,
     UI_VERSION,
@@ -34,10 +32,6 @@ const appCtrl = function appCtrl(
     $scope.color = appConfig.color;
     $rootScope.darkThemes = ['11', '21', '31', '22'];
     $rootScope.currentOffset = 0;
-    $rootScope.companyLogo = {
-        name: 'COMPANY_LOGO_URL',
-        value: SettingProvider.getCompanyLogoURl() ?? '',
-    };
 
     const UNANIMATED_STATES = ['signin', 'signup', 'forgotPassword', 'resetPassword'];
 

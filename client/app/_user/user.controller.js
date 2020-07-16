@@ -3,8 +3,20 @@
 import uploadImageModalController from '../shared/modals/upload-image-modal/upload-image-modal.controller';
 import uploadImageModalTemplate from '../shared/modals/upload-image-modal/upload-image-modal.html';
 
-const UserProfileController = function UserProfileController($mdDialog, UserService, DashboardService, UtilService,
-                                                             authService, appConfig, $q, $state, messageService, $rootScope, pageTitleService) {
+const UserProfileController = function UserProfileController(
+    $httpMock,
+    $mdDialog,
+    UserService,
+    DashboardService,
+    UtilService,
+    authService,
+    appConfig,
+    $q,
+    $state,
+    messageService,
+    $rootScope,
+    pageTitleService
+) {
     'ngInject';
 
     const vm = {
@@ -39,7 +51,21 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         get currentTitle() { return pageTitleService.pageTitle },
         get currentUser() { return UserService.currentUser; },
         get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; },
-        get appVersions() { return $rootScope.version; }
+        get appVersions() { return $rootScope.version; },
+        get userImage() {
+            /// to support old absolute path and new relative
+            // if url isn't relative and apiHost is specified add this host
+            if (UserService.currentUser?.photoUrl && (!UserService.currentUser.photoUrl.startsWith('http') && $httpMock.apiHost)) {
+                return `${$httpMock.apiHost}${UserService.currentUser.photoUrl}`;
+            }
+
+            return UserService.currentUser?.photoUrl ?? '';
+        },
+        set userImage(url) {
+            if (UserService.currentUser) {
+                UserService.currentUser.photoUrl = url;
+            }
+        },
     };
 
     function goToState(state) {
@@ -213,7 +239,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
                         return UserService.updateUserProfile(vm.user.id, params)
                             .then((prs) => {
                                 if (prs.success) {
-                                    vm.currentUser.photoURL = `${url}?${(new Date()).getTime()}`;
+                                    vm.currentUser.photoUrl = `${url}?${(new Date()).getTime()}`;
                                     messageService.success('Profile was successfully updated');
 
                                     return true;
