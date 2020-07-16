@@ -26,7 +26,7 @@ const dashboardController = function dashboardController(
     toolsService,
     messageService,
     authService,
-    pageTitleService
+    pageTitleService,
     ) {
     'ngInject';
 

@@ -13,7 +13,7 @@ import pageTitleService from './page-title/page-title.service';
 import observerService from './observer/observer.service';
 import logLevelService from './log-level.service';
 import fullScreenService from './full-screen/full-screen.service';
-import { CompanySettingsProvider } from "./company-settings.provider";
+import { CompanySettingsProvider } from './company-settings.provider';
 
 angular.module('app.services', [])
     .provider('CompanySettings', CompanySettingsProvider)
