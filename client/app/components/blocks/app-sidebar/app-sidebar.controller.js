@@ -19,11 +19,11 @@ const AppSidebarController = function (
     $timeout,
     $transitions,
     authService,
-    ConfigService,
     DashboardService,
     mainMenuService,
     messageService,
     observerService,
+    ProjectService,
     projectsService,
     SettingsService,
     UserService,
@@ -270,8 +270,8 @@ const AppSidebarController = function (
     }
 
     function loadProjects() {
-        return ConfigService.getConfig('projects')
-            .then(function(rs) {
+        return ProjectService.getAllProjects()
+            .then((rs) => {
                 if (rs.success) {
                     vm.projects = [fakeProjectAll, ...rs.data];
 
@@ -285,9 +285,6 @@ const AppSidebarController = function (
                         }
                     }
                 }
-                // else {
-                //     messageService.error('Unable to load projects');
-                // }
             });
     }
 
