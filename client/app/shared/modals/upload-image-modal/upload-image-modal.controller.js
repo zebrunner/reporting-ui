@@ -7,7 +7,7 @@ const uploadImageModalController = (
     UtilService,
     urlHandler,
     fileTypes,
-    messageService
+    messageService,
 ) => {
     'ngInject';
 
@@ -31,7 +31,9 @@ const uploadImageModalController = (
 
                         urlHandler(url)
                             .then((result) => {
-                                result && $mdDialog.hide(result);
+                                if (result) {
+                                    $mdDialog.hide(result);
+                                }
                             });
                     }
                 } else {
