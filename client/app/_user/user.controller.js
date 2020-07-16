@@ -15,7 +15,7 @@ const UserProfileController = function UserProfileController(
     $state,
     messageService,
     $rootScope,
-    pageTitleService
+    pageTitleService,
 ) {
     'ngInject';
 

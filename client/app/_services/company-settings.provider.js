@@ -3,7 +3,7 @@ export function CompanySettingsProvider() {
         companyLogo: {
             name: 'COMPANY_LOGO_URL',
             value: '',
-        }
+        },
     };
 
     return {
