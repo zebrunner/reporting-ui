@@ -54,7 +54,7 @@
                                     </div>
                                 </md-radio-group>
                             </li>
-                            <li class="nav__button _upload">
+                            <li class="nav__button _upload" ng-if="$ctrl.userHasAnyPermission(['UPDATE_SETTINGS'])">
                                 <a ng-click="$ctrl.showUploadImageDialog($event)" class="js-menu-close" href=""><i class="material-icons">add_circle_outline</i><span>Upload new logo</span></a>
                             </li>
                         </ul>
