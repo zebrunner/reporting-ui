@@ -99,9 +99,11 @@ const authController = function authController(
         return `${$httpMock.apiHost}${path}`;
     }
 
-    $scope.createUrl = function(reference) {
-        return `${$httpMock.apiHost}${reference}?RelayState=${$state.href('ssoCallback', {}, {absolute: true})}`;
-    };
+    $scope.goToSSO = function(reference) {
+        const targetUrl = `${$httpMock.apiHost}${reference}?RelayState=${$state.href('ssoCallback', {}, {absolute: true})}`;
+
+        window.location.assign(targetUrl);
+    }
 
     (function initController() {
         switch($state.current.name) {

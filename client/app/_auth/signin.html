@@ -56,7 +56,7 @@
                             <ul class="provider-list">
                                 <li class="provider-list__item" ng-repeat="provider in ::providers">
                                     <div class="item">
-                                        <a class="item-wrapper" ng-href="{{ ::createUrl(provider.reference) }}">
+                                        <a class="item-wrapper" href="#" ng-click="goToSSO(provider.reference)">
                                             <div class="item-wrapper__photo-wrapper">
                                                 <md-icon ng-if="!provider.logoKey" md-svg-icon="photoIcon" class="material-icons icon"></md-icon>
                                                 <img ng-if="provider.logoKey" ng-src="{{ ::getProviderIconUrl(provider.logoKey) }}" class="provider-list__item-logo" />
