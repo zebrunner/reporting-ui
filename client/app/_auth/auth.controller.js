@@ -18,7 +18,7 @@ const authController = function authController(
     'ngInject';
 
     $scope.UtilService = UtilService;
-
+    $scope.providers = [];
     $scope.credentials = {
         valid: true
     };
@@ -89,12 +89,18 @@ const authController = function authController(
     $scope.getSamlConfigs = function() {
         authService.getSamlConfigs()
             .then((rs) => {
-                $scope.providers = rs.data;
-            })
+                if (rs.success) {
+                    $scope.providers = rs.data || [];
+                }
+            });
     };
 
+    $scope.getProviderIconUrl = function(path) {
+        return `${$httpMock.apiHost}${path}`;
+    }
+
     $scope.createUrl = function(reference) {
-        return `${$httpMock.apiHost}/${reference}?RelayState=${$state.href('ssoCallback', {}, {absolute: true})}`;
+        return `${$httpMock.apiHost}${reference}?RelayState=${$state.href('ssoCallback', {}, {absolute: true})}`;
     };
 
     (function initController() {

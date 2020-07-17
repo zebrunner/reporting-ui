@@ -257,7 +257,7 @@
                     },
                     redirectTo: (transisiton) => {
                         return transisiton.router.stateService.target('users.list', {}, { location: 'replace' });
-                      },
+                    },
                 })
                 .state('users.list', {
                     url: '/list',
@@ -362,17 +362,40 @@
                 })
                 .state('ssoCallback', {
                     url: '/sso?jwt',
-                    controller: ($stateParams, authService) => {
-                        'ngInject';
+                    redirectTo: ($transition$) => {
+                        const params = $transition$.params();
 
-                        if ($stateParams.jwt) {
-                            authService.refreshToken($stateParams.jwt)
-                                .then((rs) => {
-                                    console.log(rs);
-                                })
-                            
+                        if (params?.jwt) {
+                            const authService = $transition$.injector().get('authService');
+
+                            return authService.parseToken(params.jwt)
+                                .then((response) => {
+                                    if (response.success) {
+                                        authService.setCredentials(response.data);
+
+                                        return $transition$.router.stateService.target('home', {}, { location: 'replace', reload: true, inherit: false });
+                                    } else {
+                                        if (response.message) {
+                                            const messageService = $transition$.injector().get('messageService');
+
+                                            messageService.error(response.message);
+                                        }
+
+                                        return $transition$.router.stateService.target('signin', {}, { location: 'replace', reload: true, inherit: false });
+                                    }
+                                });
                         }
                     },
+                    // controller: ($stateParams, authService) => {
+                    //     'ngInject';
+                    //
+                    //     if ($stateParams.jwt) {
+                    //         authService.renewToken($stateParams.jwt)
+                    //             .then((rs) => {
+                    //                 console.log(rs);
+                    //             });
+                    //     }
+                    // },
                 })
                 .state('tests', {
                     url: '/tests',

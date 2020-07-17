@@ -50,15 +50,16 @@
                                        ng-disabled="signin_form.$invalid">Login</md-button>
                         </div>
                     </form>
-                    <div class="buttons-container">
+                    <div class="buttons-container" ng-if="providers.length">
                         <div class="buttons-wrapper">
                             <div class="buttons-wrapper__top-divider">or continue with</div>
                             <ul class="provider-list">
-                                <li class="provider-list__item" ng-repeat="provider in providers">
+                                <li class="provider-list__item" ng-repeat="provider in ::providers">
                                     <div class="item">
-                                        <a class="item-wrapper" ng-href="{{createUrl(provider.reference)}}">
+                                        <a class="item-wrapper" ng-href="{{ ::createUrl(provider.reference) }}">
                                             <div class="item-wrapper__photo-wrapper">
-                                                <md-icon md-svg-icon="photoIcon" class="material-icons icon"></md-icon>
+                                                <md-icon ng-if="!provider.logoKey" md-svg-icon="photoIcon" class="material-icons icon"></md-icon>
+                                                <img ng-if="provider.logoKey" ng-src="{{ ::getProviderIconUrl(provider.logoKey) }}" class="provider-list__item-logo" />
                                             </div>
                                             <div class="item-wrapper__name-wrapper">
                                                 <span class="item-wrapper__text">

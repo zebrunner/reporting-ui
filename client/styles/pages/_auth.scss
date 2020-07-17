@@ -110,11 +110,11 @@
                         background-color: #AEB8BE;
                         top: 0;
                     }
-    
+
                     &::before {
                         left: 0;
                     }
-    
+
                     &::after {
                         right: 0;
                     }
@@ -125,8 +125,8 @@
                         display: inline-block;
                         margin: 0 auto;
                         top: -8px;
-                        left: 0; 
-                        right: 0; 
+                        left: 0;
+                        right: 0;
                         font-weight: 500;
                         font-size: 14px;
                         color: #AEB8BE;
@@ -136,21 +136,21 @@
                     .provider-list {
                         margin: 4px 0 0 0;
                         padding: 0;
-            
+
                         &__item {
                             list-style-type: none;
                             padding-top: 20px;
-            
+
                             &.active {
                                 .item-wrapper {
                                     background-color: #fff;
-            
+
                                     &::after {
                                         background-color: #fff;
                                     }
                                 }
                             }
-            
+
                             .item-wrapper {
                                 display: flex;
                                 position: relative;
@@ -158,26 +158,32 @@
                                 background: #F7F7F7;
                                 border-radius: 4px;
                                 text-decoration: none;
-            
+
                                 &__photo-wrapper {
                                     flex: 0 0 56px;
                                     display: flex;
                                     justify-content: center;
                                     align-items: center;
-            
+
+                                    img,
                                     .icon {
                                         border-radius: 4px;
                                         background-color:  #DFE3E5;
                                     }
+
+                                    img {
+                                        max-width: 24px;
+                                        max-height: 24px;
+                                    }
                                 }
-            
+
                                 &__name-wrapper {
                                     flex: 1 1 auto;
                                     display: flex;
                                     align-items: center;
                                     overflow: hidden;
                                 }
-            
+
                                 &__text {
                                     display: inline-block;
                                     overflow: hidden;

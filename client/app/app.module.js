@@ -934,11 +934,17 @@ const ngModule = angular
         });
 
         $rootScope.$on('event:auth-loginRequired', function (e, payload) {
-            if (authService.hasValidToken()) {
-                authService.refreshToken(authService.authData.refreshToken)
-                    .then(function (rs) {
+            if (authService.refreshToken) {
+                authService.renewToken(authService.refreshToken)
+                    .then((rs) => {
                         if (rs.success) {
-                            authService.setCredentials(rs.data);
+                            const autData = rs.data;
+
+                            if (authService.authData.ssoToken) {
+                                autData.ssoToken = authService.authData.ssoToken
+                            }
+
+                            authService.setCredentials(autData);
                             AuthIntercepter.loginConfirmed(payload);
                         } else if ($state.current.name !== 'signup') {
                             AuthIntercepter.loginCancelled(payload);

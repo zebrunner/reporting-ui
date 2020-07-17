@@ -23,7 +23,8 @@ const authService = function authService(
         signUp,
         setCredentials,
         clearCredentials,
-        refreshToken,
+        parseToken,
+        renewToken,
         generateAccessToken,
         userHasAnyPermission,
         hasValidToken,
@@ -39,6 +40,7 @@ const authService = function authService(
         },
         get isLoggedIn() { return !!(this.authData && UserService.currentUser); },
         get tenant() { return this.authData?.tenantName; },
+        get refreshToken() { return authData?.refreshToken; },
     };
 
     function login(username, password) {
@@ -88,8 +90,20 @@ const authService = function authService(
         return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/users?invitation-token=${token}`, user).then(UtilService.handleSuccess, UtilService.handleError('Failed to sign up'));
     }
 
-    function refreshToken(token) {
-        return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/auth/refresh`, { 'refreshToken': token }, { skipAuthorization: true }).then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
+    function renewToken(token) {
+        const params = { 'refreshToken': token };
+        const settings = { skipAuthorization: true };
+
+        return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/auth/refresh`, params, settings)
+            .then(UtilService.handleSuccess, UtilService.handleError('Invalid refresh token'));
+    }
+
+    function parseToken(token) {
+        const params = { 'authToken': token };
+        const settings = { skipAuthorization: true };
+
+        return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/auth/parse`, params, settings)
+            .then(UtilService.handleSuccess, UtilService.handleError('Invalid auth token'));
     }
 
     function generateAccessToken() {
@@ -97,6 +111,7 @@ const authService = function authService(
     }
 
     function setCredentials(auth) {
+        console.log(auth);
         localStorage.setItem('zeb-auth', JSON.stringify(auth));
         authData = auth;
     }
@@ -108,7 +123,7 @@ const authService = function authService(
     }
 
     function hasValidToken() {
-        return authData?.refreshToken && !jwtHelper.isTokenExpired(authData.refreshToken);
+        return authData?.authToken;
     }
 
     /**
