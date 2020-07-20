@@ -49,6 +49,7 @@ const testRunInfoController = function testRunInfoController(
     const testsWebsocketName = 'tests';
     const logsGettingDestroy$ = new Subject();
     const initAgentAttemptsLimit = 20; // with 5sec delay provides approximately 2min interval
+    const fileExtensionPattern = /\.([0-9a-z]+)(?:[\?#]|$)/i;
     const vm = {
         activeDriverIndex: 0,
         activeMode: null,
@@ -267,23 +268,21 @@ const testRunInfoController = function testRunInfoController(
             const path = artifact.urls?.image?.path ?? '';
 
             if (path) {
-                try {
-                    const url = new URL(path);
-                    let newArtifact = {
-                        id: path,
-                        name: artifact.urls?.image?.name,
-                        link: path,
-                        extension: url.pathname.split('/').pop().split('.').pop(),
-                    };
-
-                    if (artifact.urls?.thumb?.path) {
-                        newArtifact.thumb = artifact.urls.thumb.path;
-                    }
-
-                    formatted.push(newArtifact);
-                } catch (error) {
-                    console.warn(`Broken screenshot url: "${path}"`);
+                const extensionMatch = path.match(fileExtensionPattern);
+                let newArtifact = {
+                    id: path,
+                    name: artifact.urls?.image?.name,
+                    link: path,
                 }
+
+                if (extensionMatch) {
+                    newArtifact.extension = extensionMatch[1];
+                }
+                if (artifact.urls?.thumb?.path) {
+                    newArtifact.thumb = artifact.urls.thumb.path;
+                }
+
+                formatted.push(newArtifact);
             }
 
             return formatted;
@@ -295,17 +294,19 @@ const testRunInfoController = function testRunInfoController(
 
             if (!name.includes('live') && !name.includes('video') && artifact.link) {
                 const links = artifact.link.split(' ');
+                let link = links[0];
+                const extensionMatch = link.match(fileExtensionPattern);
 
-                try {
-                    const url = new URL(links[0]);
-                    const extensionMatch = url.pathname.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
-
-                    if (extensionMatch) {
-                        artifact.extension = extensionMatch[1];
+                // if link is relative
+                if (!link.startsWith('http')) {
+                    if (link[0] !== '/') {
+                        link = `/${link}`;
                     }
-                } catch (error) {
-                    artifact.hasBrokenLink = true;
-                    console.warn(`Artifact "${name}" has invalid link.`);
+
+                    artifact.link = `${$httpMock.apiHost}${link}`;
+                }
+                if (extensionMatch) {
+                    artifact.extension = extensionMatch[1];
                 }
 
                 formatted.push(artifact);
