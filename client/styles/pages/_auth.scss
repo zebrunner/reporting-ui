@@ -152,14 +152,17 @@
                             }
 
                             .item-wrapper {
+                                width: 100%;
                                 display: flex;
                                 position: relative;
                                 height: 40px;
                                 background: #F7F7F7;
+                                border: 0;
                                 border-radius: 4px;
                                 text-decoration: none;
 
                                 &__photo-wrapper {
+                                    height: 100%;
                                     flex: 0 0 56px;
                                     display: flex;
                                     justify-content: center;
@@ -178,6 +181,7 @@
                                 }
 
                                 &__name-wrapper {
+                                    height: 100%;
                                     flex: 1 1 auto;
                                     display: flex;
                                     align-items: center;
