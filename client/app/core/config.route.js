@@ -143,8 +143,6 @@
                     component: 'signinComponent',
                     params: {
                         location: null,
-                        referrer: null,
-                        referrerParams: null,
                         user: null,
                     },
                     data: {
@@ -352,36 +350,40 @@
                     }
                 })
                 .state('ssoCallback', {
-                    url: '/sso?jwt',
-                    redirectTo: ($transition$) => {
-                        const params = $transition$.params();
+                    url: '/sso?jwt&targetLocation',
+                    controller: ($stateParams, authService, $rootScope, messageService) => {
+                        'ngInject';
 
-                        if (params?.jwt) {
-                            const authService = $transition$.injector().get('authService');
+                        return {
+                            $onInit() {
+                                if ($stateParams.jwt) {
+                                    authService.parseToken($stateParams.jwt)
+                                        .then((response) => {
+                                            if (response.success) {
+                                                const payload = {
+                                                    auth: response.data,
+                                                };
 
-                            return authService.parseToken(params.jwt)
-                                .then((response) => {
-                                    if (response.success) {
-                                        const authData = response.data;
+                                                payload.auth.isSSO = true;
+                                                if (response.firstLogin === 'true') {
+                                                    payload.firstLogin = true;
+                                                } else {
+                                                    $stateParams.targetLocation && (payload.location = $stateParams.targetLocation);
+                                                }
 
-                                        authData.isSSO = true;
-                                        authService.setCredentials(authData);
+                                                $rootScope.$broadcast('event:auth-loginSuccess', payload);
+                                            } else {
+                                                if (response.message) {
+                                                    messageService.error(response.message);
+                                                }
 
-                                        if (authData.firstLogin) {
-                                            return $transition$.router.stateService.transitionTo('welcomePage', {}, { location: 'replace', reload: true, inherit: false });
-                                        }
-
-                                        return $transition$.router.stateService.transitionTo('home', {}, { location: 'replace', reload: true, inherit: false });
-                                    } else {
-                                        if (response.message) {
-                                            const messageService = $transition$.injector().get('messageService');
-
-                                            messageService.error(response.message);
-                                        }
-
-                                        return $transition$.router.stateService.transitionTo('signin', {}, { location: 'replace', reload: true, inherit: false });
-                                    }
-                                });
+                                                $rootScope.$broadcast('event:auth-loginCancelled', { location: $stateParams.targetLocation });
+                                            }
+                                        });
+                                } else {
+                                    $rootScope.$broadcast('event:auth-loginCancelled', { location: $stateParams.targetLocation });
+                                }
+                            }
                         }
                     },
                 })
