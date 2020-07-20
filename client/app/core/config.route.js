@@ -89,50 +89,41 @@
                             const currentUser = UserService.currentUser;
                             let { defaultDashboardId } = currentUser;
 
-                            if (!currentUser || defaultDashboardId === undefined) {
+                            if (!currentUser || typeof defaultDashboardId !== 'number') {
                                 //get first available dashboard
                                 const hideDashboards = !authService.userHasAnyPermission(['VIEW_HIDDEN_DASHBOARDS']);
 
-                                return DashboardService.GetDashboards(hideDashboards).then(function (rs) {
-                                    if (rs.success) {
-                                        let defaultDashboard = rs.data.find(({ title }) => title.toLowerCase() === 'general') || rs.data[0];
+                                return DashboardService.GetDashboards(hideDashboards)
+                                    .then((rs) => {
+                                        if (rs.success) {
+                                            let defaultDashboard = rs.data.find(({ title }) => title.toLowerCase() === 'general') || rs.data[0];
 
-                                        if (defaultDashboard) {
-                                            defaultDashboardId = defaultDashboard.id;
+                                            if (defaultDashboard) {
+                                                defaultDashboardId = defaultDashboard.id;
 
-                                            // Redirect to default dashboard
-                                            // Timeout to avoid digest issues
-                                            $timeout(function() {
-                                                $state.go('dashboard.page', {dashboardId: defaultDashboardId}, {location: 'replace'});
-                                            }, 0, false);
+                                                // Redirect to default dashboard
+                                                return $state.go('dashboard.page', { dashboardId: defaultDashboardId }, { location: 'replace' });
+                                            } else {
+                                                //TODO: dashboards is a home page. If we redirect to dashboards we can get infinity loop. We need to add simple error page;
+                                                const message = 'Can\'t fetch default dashboard';
 
-                                            return false;
+                                                messageService.error(message);
+
+                                                return $state.go('404');
+                                            }
                                         } else {
                                             //TODO: dashboards is a home page. If we redirect to dashboards we can get infinity loop. We need to add simple error page;
-                                            const message = 'Can\'t fetch default dashboard';
+                                            const message = rs && rs.message || 'Can\'t fetch dashboards';
 
                                             messageService.error(message);
 
-                                            return $q.reject(message);
+                                            return $state.go('404');
                                         }
-                                    } else {
-                                        //TODO: dashboards is a home page. If we redirect to dashboards we can get infinity loop. We need to add simple error page;
-                                        const message = rs && rs.message || 'Can\'t fetch dashboards';
-
-                                        messageService.error(message);
-
-                                        return $q.reject(message);
-                                    }
-                                });
+                                    });
                             }
 
                             // Redirect to default dashboard
-                            // Timeout to avoid digest issues
-                            $timeout(function() {
-                                $state.go('dashboard.page', {dashboardId: defaultDashboardId}, {location: 'replace'});
-                            }, 0, false);
-
-                            return false;
+                            return $state.go('dashboard.page', { dashboardId: defaultDashboardId }, { location: 'replace' });
                         }
                     },
                     lazyLoad: async ($transition$) => {
@@ -257,7 +248,7 @@
                     },
                     redirectTo: (transisiton) => {
                         return transisiton.router.stateService.target('users.list', {}, { location: 'replace' });
-                      },
+                    },
                 })
                 .state('users.list', {
                     url: '/list',
@@ -362,15 +353,31 @@
                 })
                 .state('ssoCallback', {
                     url: '/sso?jwt',
-                    controller: ($stateParams, authService) => {
-                        'ngInject';
+                    redirectTo: ($transition$) => {
+                        const params = $transition$.params();
 
-                        if ($stateParams.jwt) {
-                            authService.refreshToken($stateParams.jwt)
-                                .then((rs) => {
-                                    console.log(rs);
-                                })
-                            
+                        if (params?.jwt) {
+                            const authService = $transition$.injector().get('authService');
+
+                            return authService.parseToken(params.jwt)
+                                .then((response) => {
+                                    if (response.success) {
+                                        const authData = response.data;
+
+                                        authData.isSSO = true;
+                                        authService.setCredentials(authData);
+
+                                        return $transition$.router.stateService.transitionTo('home', {}, { location: 'replace', reload: true, inherit: false });
+                                    } else {
+                                        if (response.message) {
+                                            const messageService = $transition$.injector().get('messageService');
+
+                                            messageService.error(response.message);
+                                        }
+
+                                        return $transition$.router.stateService.transitionTo('signin', {}, { location: 'replace', reload: true, inherit: false });
+                                    }
+                                });
                         }
                     },
                 })
@@ -718,16 +725,12 @@
                 })
                 .state('tests.default', {
                     url: '',
-                    controller: ($state, UserService, authService, $timeout) => {
-                        'ngInject';
+                    redirectTo: ($transition$) => {
+                        const authService = $transition$.injector().get('authService');
+                        const UserService = $transition$.injector().get('UserService');
+                        const view = authService.isMultitenant && UserService.currentUser?.testsView ? UserService.currentUser.testsView : 'runs';
 
-
-                        const view = authService.isMultitenant ? UserService.currentUser.testsView : 'runs';
-
-                        console.log('tests.default:', view);
-                        $timeout(() => {
-                            $state.go(`tests.${view}`, {}, { location: 'replace' });
-                        }, 0, false);
+                        return $transition$.router.stateService.transitionTo(`tests.${view}`);
                     },
                 })
                 .state('welcomePage', {

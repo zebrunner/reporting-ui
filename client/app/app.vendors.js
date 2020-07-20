@@ -9,7 +9,6 @@ require('angular-cookies');
 require('angular-messages');
 require('angular-sanitize');
 require('@uirouter/angularjs');
-require('angular-jwt');
 require('angular-material-data-table');
 window.moment = require('moment');
 require('angular-moment');
