@@ -100,7 +100,8 @@ const authController = function authController(
     };
 
     $scope.goToSSO = function(reference) {
-        const targetUrl = `${$httpMock.apiHost}${reference}?RelayState=${$state.href('ssoCallback', {}, {absolute: true})}`;
+        const relayState = $state.href('ssoCallback', { targetLocation: $state.params.location }, { absolute: true });
+        const targetUrl = `${$httpMock.apiHost}${reference}?RelayState=${relayState}`;
 
         window.location.assign(targetUrl);
     };
@@ -143,8 +144,6 @@ const authController = function authController(
                         payload.firstLogin = rs.firstLogin;
                     } else {
                         $state.params.location && (payload.location = $state.params.location);
-                        $state.params.referrer && (payload.referrer = $state.params.referrer);
-                        $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
                     }
                     $rootScope.$broadcast('event:auth-loginSuccess', payload);
                 } else {

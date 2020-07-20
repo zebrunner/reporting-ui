@@ -71,12 +71,6 @@ const appCtrl = function appCtrl(
 
                 if (payload.location) {
                     $window.location.href = payload.location;
-                } else if (payload.referrer) {
-                    var params = payload.referrerParams || {};
-
-                    $timeout(() => {
-                        $state.go(payload.referrer, params);
-                    }, 0, false);
                 } else {
                     $timeout(() => {
                         $state.go('home');
