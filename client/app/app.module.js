@@ -30,7 +30,6 @@ const ngModule = angular
         'ngSanitize',
         'textAngular',
         'ngMaterialDateRangePicker',
-        'angular-jwt',
         'oc.lazyLoad',
         TutorialsModule,
     ])

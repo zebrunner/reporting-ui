@@ -225,7 +225,6 @@ module.exports = (env) => {
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-messages/index.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-scroll/index.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-cookies/index.js'),
-            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-jwt/index.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-moment/angular-moment.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-sanitize/index.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'rangy/lib/rangy-core.js'),

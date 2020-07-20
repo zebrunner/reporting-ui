@@ -6,7 +6,6 @@ const authService = function authService(
     $state,
     UtilService,
     UserService,
-    jwtHelper,
 ) {
     'ngInject';
 
@@ -112,7 +111,6 @@ const authService = function authService(
     }
 
     function setCredentials(auth) {
-        console.log(auth);
         localStorage.setItem('zeb-auth', JSON.stringify(auth));
         authData = auth;
     }
