@@ -172,6 +172,10 @@
                                     .icon {
                                         border-radius: 4px;
                                         background-color:  #DFE3E5;
+
+                                        & svg {
+                                            fill: #AEB8BE;
+                                        }
                                     }
 
                                     img {
