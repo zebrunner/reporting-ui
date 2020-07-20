@@ -367,6 +367,10 @@
                                         authData.isSSO = true;
                                         authService.setCredentials(authData);
 
+                                        if (authData.firstLogin) {
+                                            return $transition$.router.stateService.transitionTo('welcomePage', {}, { location: 'replace', reload: true, inherit: false });
+                                        }
+
                                         return $transition$.router.stateService.transitionTo('home', {}, { location: 'replace', reload: true, inherit: false });
                                     } else {
                                         if (response.message) {

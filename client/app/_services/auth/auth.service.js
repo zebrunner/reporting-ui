@@ -45,11 +45,7 @@ const authService = function authService(
 
     function login(username, password) {
         return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/auth/login`, { username, password })
-            .then((res) => {
-                const headers = res.headers();
-
-                return { success: true, data: res.data, 'firstLogin': headers['x-zbr-first-login'] };
-            }, UtilService.handleError('Invalid credentials'));
+            .then(handleLoginSuccess, UtilService.handleError('Invalid credentials'));
     }
 
     function getTenant() {
@@ -103,7 +99,7 @@ const authService = function authService(
         const settings = { skipAuthorization: true };
 
         return $httpMock.post(`${$httpMock.apiHost}/api/iam/v1/auth/parse`, params, settings)
-            .then(UtilService.handleSuccess, UtilService.handleError('Invalid auth token'));
+            .then(handleLoginSuccess, UtilService.handleError('Invalid auth token'));
     }
 
     function generateAccessToken() {
@@ -138,6 +134,12 @@ const authService = function authService(
 
     function getSamlConfigs() {
         return $httpMock.get(`${$httpMock.apiHost}/api/iam/v1/identity-providers`).then(UtilService.handleSuccess, UtilService.handleError('Unable to get identity providers'));
+    }
+
+    function handleLoginSuccess(res) {
+        const headers = res.headers();
+
+        return { success: true, data: res.data, 'firstLogin': headers['x-zbr-first-login'] };
     }
 
     return service;
