@@ -23,6 +23,7 @@ const appCtrl = function appCtrl(
 
     const vm = {
         isLoading: true,
+        get isLoggedIn() { return authService.isLoggedIn; },
 
         $onInit: initController,
     };

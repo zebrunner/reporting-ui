@@ -938,19 +938,13 @@ const ngModule = angular
                 authService.renewToken(authService.refreshToken)
                     .then((rs) => {
                         if (rs.success) {
-                            const autData = rs.data;
-
-                            if (authService.authData.ssoToken) {
-                                autData.ssoToken = authService.authData.ssoToken
-                            }
-
-                            authService.setCredentials(autData);
+                            authService.setCredentials(rs.data);
                             AuthIntercepter.loginConfirmed(payload);
                         } else if ($state.current.name !== 'signup') {
                             AuthIntercepter.loginCancelled(payload);
                         }
                     });
-            } else {
+            } else if (!authService.isSSO) {
                 AuthIntercepter.loginCancelled(payload);
             }
         });
@@ -1050,7 +1044,6 @@ const ngModule = angular
 
             if (loginRequired) {
                 access = authGuard(trans)
-
             } else if (onlyGuests) {
                 access = guestGuard(trans);
             }
@@ -1071,7 +1064,7 @@ const ngModule = angular
 
             $document.scrollTo(0, 0);
         });
-        $transitions.onError({}, function(transition) {
+        $transitions.onError({}, (transition) => {
             const error = transition.error();
 
             // handle lazyLoading errors when modules become unreachable due the project rebuild

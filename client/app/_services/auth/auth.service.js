@@ -41,6 +41,7 @@ const authService = function authService(
         get isLoggedIn() { return !!(this.authData && UserService.currentUser); },
         get tenant() { return this.authData?.tenantName; },
         get refreshToken() { return authData?.refreshToken; },
+        get isSSO() { return authData?.isSSO; },
     };
 
     function login(username, password) {

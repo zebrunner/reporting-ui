@@ -135,9 +135,6 @@
         }
 
         function initCurrentUser(force, userId) {
-            const getUserProfile = getUserProfileById(userId);
-            const getUserPref = getUserPreferences(userId);
-
             if (service.currentUser && !force) {
                 return $q.resolve(service.currentUser);
             }
@@ -146,7 +143,19 @@
                 return _userFullDataFetchPromise;
             }
 
+            const getUserProfile = getUserProfileById(userId);
+            const getUserPref = getUserPreferences(userId);
+
             _userFullDataFetchPromise = $q.all([getUserProfile, getUserPref])
+                .then((results) => {
+                    const error = results.find(({ success }) => !success);
+
+                    if (error) {
+                        return $q.reject(error);
+                    }
+
+                    return results;
+                })
                 .then((results) => {
                     _userFullDataFetchPromise = null;
                     const userData = results.reduce((acc, value) => ({...acc, ...value.data}), {});
@@ -174,7 +183,7 @@
                     }
 
                     return service.currentUser;
-                }).catch((results) => $q.reject(results));
+                });
 
             return _userFullDataFetchPromise;
         }

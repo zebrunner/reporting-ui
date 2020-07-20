@@ -142,7 +142,7 @@
             const config = { headers: { 'Content-Type': undefined }, transformRequest : angular.identity };
 
             multipart.append('email', new Blob([JSON.stringify(email)], { type: 'application/json' }));
-            
+
             return $httpMock.post(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/dashboards/email?file=`, multipart, config)
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to send dashboard by email'));
         }
