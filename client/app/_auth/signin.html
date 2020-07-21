@@ -59,7 +59,7 @@
                                         <button class="item-wrapper" ng-click="goToSSO(provider.reference)">
                                             <div class="photo-container">
                                                 <div class="item-wrapper__photo-wrapper">
-                                                    <md-icon ng-if="!provider.logoKey" class="material-icons icon">crop_original</md-icon>
+                                                    <md-icon ng-if="!provider.logoKey" class="material-icons icon">lock_open</md-icon>
                                                     <img ng-if="provider.logoKey" ng-src="{{ ::getProviderIconUrl(provider.logoKey) }}" class="provider-list__item-logo" />
                                                 </div>
                                             </div>
