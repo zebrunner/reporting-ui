@@ -98,7 +98,7 @@
                 .buttons-wrapper {
                     position: relative;
                     margin-top: 42px;
-                    padding-bottom: 36px;
+                    padding-bottom: 50px;
 
                     &::before,
                     &::after {
@@ -216,6 +216,8 @@
     }
 
     .additional-info {
+        position: absolute;
+        bottom: 24px;
         color: rgba(0, 0, 0, 0.25);
         line-height: 1.15;
         font-size: 10px;
