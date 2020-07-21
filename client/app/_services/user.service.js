@@ -5,7 +5,7 @@
         .module('app.services')
         .service('UserService', UserService);
 
-    function UserService($httpMock, UtilService, $q, messageService, $httpParamSerializer) {
+    function UserService($httpMock, UtilService, $q, messageService) {
         'ngInject';
 
         let _currentUser = null;
@@ -17,7 +17,6 @@
             fetchFullUserData,
             updateStatus,
             searchUsers,
-            searchUsersWithQuery,
             updateUserProfile,
             updateUserPassword,
             createUser,
@@ -67,15 +66,12 @@
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to change user status'));
         }
 
-        function searchUsers(sc) {
-            const path = $httpParamSerializer({query: sc.query, status: sc.status, page: sc.page, pageSize: sc.pageSize, orderBy: sc.orderBy, sortOrder: sc.sortOrder});
+        function searchUsers(params, onlyPublic) {
+            if (onlyPublic) {
+                params.public = true;
+            }
 
-            return $httpMock.get(`${$httpMock.apiHost}/api/iam/v1/users?${path}`)
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
-        }
-
-        function searchUsersWithQuery(searchCriteria, criteria) {
-            return $httpMock.post(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/users/search?public=true`, searchCriteria, {params: {q: criteria}})
+            return $httpMock.get(`${$httpMock.apiHost}/api/iam/v1/users`, { params })
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to search users'));
         }
 

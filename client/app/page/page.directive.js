@@ -14,16 +14,16 @@
 
         return directive;
 
-        function customPageCtrl($scope, $element, $location, $transitions) {
+        function customPageCtrl($scope, $element, $location, $transitions, REJECT_TYPES) {
             'ngInject';
 
             function handleTransition(toState, fromState) {
                 $element.removeClass('on-canvas');
                 if (toState.name !== fromState.name) {
-                    if (fromState.data && fromState.data.classes) {
+                    if (fromState.data?.classes) {
                         $element.removeClass(fromState.data.classes);
                     }
-                    if (toState.data && toState.data.classes) {
+                    if (toState.data?.classes) {
                         $element.addClass(toState.data.classes);
                     }
                 }
@@ -33,11 +33,14 @@
                 handleTransition(e.to(), e.from());
             });
             $transitions.onError({}, function(e) {
-                handleTransition(e.from(), e.to());
+                const error = e.error();
+
+                if (error.type !== REJECT_TYPES.SUPERSEDED) {
+                    handleTransition(e.from(), e.to());
+                }
             });
         }
     }
-
 })();
 
 
