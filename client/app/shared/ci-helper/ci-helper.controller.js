@@ -569,7 +569,8 @@ const CiHelperController = function CiHelperController(
         }
     }
 
-    $scope.chooseLauncherPhone = function () {
+    $scope.chooseLauncherPhone = function (launcher) {
+        applyBuilder(launcher, vm.isMobile);
         vm.cardNumber = 3;
     };
 
