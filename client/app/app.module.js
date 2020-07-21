@@ -30,7 +30,6 @@ const ngModule = angular
         'ngSanitize',
         'textAngular',
         'ngMaterialDateRangePicker',
-        'angular-jwt',
         'oc.lazyLoad',
         TutorialsModule,
     ])
@@ -42,6 +41,11 @@ const ngModule = angular
         // Set a link to the json with data
         TutorialsProvider.setUrl(`https://zebrunner.s3-us-west-1.amazonaws.com/common/tutorials/contents.json?timestamp=${Date.now()}`);
         TutorialsProvider.setMinWidth(768);
+    })
+    .config((CompanySettingsProvider) => {
+        'ngInject';
+
+        CompanySettingsProvider.initCompanyLogo();
     })
     .config(function($httpProvider, $anchorScrollProvider, $qProvider, $locationProvider, $mdAriaProvider, $mdIconProvider) {
         'ngInject';
@@ -929,9 +933,9 @@ const ngModule = angular
         });
 
         $rootScope.$on('event:auth-loginRequired', function (e, payload) {
-            if (authService.hasValidToken()) {
-                authService.refreshToken(authService.authData.refreshToken)
-                    .then(function (rs) {
+            if (authService.refreshToken) {
+                authService.renewToken(authService.refreshToken)
+                    .then((rs) => {
                         if (rs.success) {
                             authService.setCredentials(rs.data);
                             AuthIntercepter.loginConfirmed(payload);
@@ -939,7 +943,7 @@ const ngModule = angular
                             AuthIntercepter.loginCancelled(payload);
                         }
                     });
-            } else {
+            } else if (!authService.isSSO) {
                 AuthIntercepter.loginCancelled(payload);
             }
         });
@@ -955,8 +959,8 @@ const ngModule = angular
             );
         }
 
-        function fetchUserData() {
-            return UserService.initCurrentUser()
+        function fetchUserData(userId) {
+            return UserService.initCurrentUser(false, userId)
                 .then(currentUser => {
                     //return rejection if returned user is empty by some reason
                     if (!currentUser) {
@@ -977,7 +981,7 @@ const ngModule = angular
         function authGuard(transition) {
             if (authService.hasValidToken()) {
                 //try to fetch user's data, cause it's required by next steps
-                return fetchUserData()
+                return fetchUserData(authService.authData.userId)
                     .then((currentUser) => {
                         const toState = transition.to();
                         const requiresPermissions = toState.data && toState.data.permissions;
@@ -1039,7 +1043,6 @@ const ngModule = angular
 
             if (loginRequired) {
                 access = authGuard(trans)
-
             } else if (onlyGuests) {
                 access = guestGuard(trans);
             }
@@ -1060,7 +1063,7 @@ const ngModule = angular
 
             $document.scrollTo(0, 0);
         });
-        $transitions.onError({}, function(transition) {
+        $transitions.onError({}, (transition) => {
             const error = transition.error();
 
             // handle lazyLoading errors when modules become unreachable due the project rebuild
@@ -1298,21 +1301,6 @@ class mdDialogDelegate {
     }
 }
 
-angular.injector(['ng'])
-    .get('$http')
-    .get(`./config.json?timestamp=${Date.now()}`)
-    .then(function(response){
-        // TODO: add error handler if incorrect data provided or missed
-        ngModule
-            .constant('API_URL', response.data['API_URL'] || '')
-            .constant('UI_VERSION', response.data['UI_VERSION'] || '');
-
-        //manually bootstrap application after we have gotten our config data
-        angular.element(document).ready(function() {
-            angular.bootstrap(document, ['app'], { strictDi: !isProd });
-        });
-    });
-
 //Services
 require('./_services/services.module');
 //Modules
@@ -1321,3 +1309,27 @@ require('./core/config.route');
 require('./page/page.module');
 require('./layout/commons/common.module');
 require('./components/components');
+
+// TODO: get rid of this
+angular.injector(['ng'])
+    .get('$http')
+    .get(`./config.json?timestamp=${Date.now()}`)
+    .then((response) => {
+        let apiHost = response.data['API_HOST'] ?? '';
+        const lastIndex = apiHost.length - 1;
+
+        //remove ending slash
+        if (apiHost[lastIndex] === '/') {
+            apiHost = apiHost.slice(0, lastIndex);
+        }
+        // TODO: add error handler if incorrect data provided or missed
+        ngModule
+            .constant('API_HOST', apiHost)
+            .constant('REPORTING_PATH', '/reporting-service')
+            .constant('UI_VERSION', response.data['UI_VERSION'] || '');
+
+        //manually bootstrap application after we have gotten our config data
+        angular.element(document).ready(function() {
+            angular.bootstrap(document, ['app'], { strictDi: !isProd });
+        });
+    });

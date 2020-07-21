@@ -72,19 +72,23 @@
             if (!vm.searchText.includes(stopCriteria)) {
                 stopCriteria = '########';
 
-                return UserService.searchUsersWithQuery(usersSearchCriteria, vm.searchText)
-                    .then(function (rs) {
+                return UserService.searchUsers(usersSearchCriteria, true)
+                    .then((rs) => {
                         if (rs.success) {
-                            if (!rs.data.results.length) {
+                            const results = rs.data?.results ?? [];
+
+                            if (!results.length) {
                                 stopCriteria = vm.searchText;
                             }
 
-                            return UtilService.filterUsersForSend(rs.data.results, vm.users);
+                            return UtilService.filterUsersForSend(results, vm.users);
+                        } else {
+                            return '';
                         }
                     });
             }
 
-            return "";
+            return '';
         }
 
         function clearInputOnSelect() {

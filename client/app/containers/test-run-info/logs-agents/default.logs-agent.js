@@ -1,6 +1,7 @@
 'use strict';
 
 const defaultLogsAgent = function defaultLogsAgent(
+    $httpMock,
     authService,
     moment,
 ) {
@@ -27,11 +28,15 @@ const defaultLogsAgent = function defaultLogsAgent(
             log.originalMessage = log.message;
             log.message = 'Screenshot is captured';
 
-            const relativeImageUrl = log.originalMessage
+            let relativeImageUrl = log.originalMessage
                 .replace(new RegExp(`^(${log.tenant || authService.tenant})`, 'i'), '');
 
+            if (relativeImageUrl.length !== log.originalMessage.length || relativeImageUrl.charAt(0) !== '/') {
+                relativeImageUrl = `/${relativeImageUrl}`;
+            }
+
             if (relativeImageUrl) {
-                const imageUrl = `${authService.serviceUrl}${relativeImageUrl}`;
+                const imageUrl = `${$httpMock.apiHost}${relativeImageUrl}`;
                 const thumbnailUrl = imageUrl.replace(fileExtensionPattern, '_thumbnail$1');
 
                 log.urls.image = { path: imageUrl, name: 'screenshot' };

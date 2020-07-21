@@ -14,7 +14,7 @@ const testDetailsController = function testDetailsController(
     $rootScope,
     $q,
     TestService,
-    API_URL,
+    $httpMock,
     modalsService,
     $state,
     $transitions,
@@ -46,7 +46,7 @@ const testDetailsController = function testDetailsController(
     };
     let _at = [];
     let scrollTickingTimeout = null;
-
+    const fileExtensionPattern = /\.([0-9a-z]+)(?:[\?#]|$)/i;
     const vm = {
         scrollTicking: false,
         countPerPage: initialCountToDisplay,
@@ -807,35 +807,26 @@ const testDetailsController = function testDetailsController(
 
             if (!name.includes('live') && !name.includes('video') && artifact.link) {
                 const links = artifact.link.split(' ');
-                let url = null;
+                let link = links[0];
+                const extensionMatch = link.match(fileExtensionPattern);
 
-                try {
-                    url = new URL(links[0]);
-                } catch (error) {
-                    artifact.hasBrokenLink = true;
-                    console.warn(`Artifact "${name}" has invalid link.`);
+                // if link is relative
+                if (!link.startsWith('http')) {
+                    if (link[0] !== '/') {
+                        link = `/${link}`;
+                    }
+
+                    artifact.link = `${$httpMock.apiHost}${link}`;
+                } else if (!link.startsWith(window.location.origin) && $httpMock.apiHost && !link.startsWith($httpMock.apiHost)) {
+                    artifact.isExternalLink = true;
+                }
+                if (!artifact.isExternalLink && !vm.testRun.hasArtifacts) {
+                    vm.testRun.hasArtifacts = true;
+                }
+                if (extensionMatch) {
+                    artifact.extension = extensionMatch[1];
                 }
 
-                if (url instanceof URL) {
-                    artifact.extension = url.pathname.split('/').pop().split('.').pop();
-                    //if artifact is external link
-                    if (window.location.host !== url.host) {
-                        artifact.isExternalLink = true;
-                    } else if (!vm.testRun.hasArtifacts) {
-                        vm.testRun.hasArtifacts = true;
-                    }
-                    /* FOR_DEV_ONLY:START */
-                    //previous condition won't work on localhost, so lets check if it is not a production and link's host starts on correct tenant name
-                    if (!window.isProd && authService.tenant !== url.host.split('.')[0]) {
-                        artifact.isExternalLink = true;
-                    } else {
-                        artifact.isExternalLink = false;
-                        if (!vm.testRun.hasArtifacts) {
-                            vm.testRun.hasArtifacts = true;
-                        }
-                    }
-                    /* FOR_DEV_ONLY:END */
-                }
                 formatted.push(artifact);
             }
 
@@ -1044,7 +1035,7 @@ const testDetailsController = function testDetailsController(
     function initWebsocket() {
         const wsName = 'zafira';
 
-        vm.zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
+        vm.zafiraWebsocket = Stomp.over(new SockJS(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/websockets`));
         vm.zafiraWebsocket.debug = null;
         vm.zafiraWebsocket.ws.close = function () { };
         vm.zafiraWebsocket.connect({ withCredentials: false }, function () {

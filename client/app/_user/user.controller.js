@@ -3,8 +3,20 @@
 import uploadImageModalController from '../shared/modals/upload-image-modal/upload-image-modal.controller';
 import uploadImageModalTemplate from '../shared/modals/upload-image-modal/upload-image-modal.html';
 
-const UserProfileController = function UserProfileController($mdDialog, UserService, DashboardService, UtilService,
-                                                             authService, appConfig, $q, $state, messageService, $rootScope, pageTitleService) {
+const UserProfileController = function UserProfileController(
+    $httpMock,
+    $mdDialog,
+    UserService,
+    DashboardService,
+    UtilService,
+    authService,
+    appConfig,
+    $q,
+    $state,
+    messageService,
+    $rootScope,
+    pageTitleService,
+) {
     'ngInject';
 
     const vm = {
@@ -39,7 +51,21 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
         get currentTitle() { return pageTitleService.pageTitle },
         get currentUser() { return UserService.currentUser; },
         get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; },
-        get appVersions() { return $rootScope.version; }
+        get appVersions() { return $rootScope.version; },
+        get userImage() {
+            /// to support old absolute path and new relative
+            // if url isn't relative and apiHost is specified add this host
+            if (UserService.currentUser?.photoUrl && (!UserService.currentUser.photoUrl.startsWith('http') && $httpMock.apiHost)) {
+                return `${$httpMock.apiHost}${UserService.currentUser.photoUrl}`;
+            }
+
+            return UserService.currentUser?.photoUrl ?? '';
+        },
+        set userImage(url) {
+            if (UserService.currentUser) {
+                UserService.currentUser.photoUrl = url;
+            }
+        },
     };
 
     function goToState(state) {
@@ -65,14 +91,18 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function updateUserProfile() {
-        const { username, firstName, lastName } = vm.user;
+        const changedUserValues = [];
 
-        UserService.updateUserProfile(vm.user.id, { username, firstName, lastName })
+        for (const key in vm.user) {
+            if (vm.user[key] !== vm.previousUserData[key] && !angular.isObject(vm.user[key]) && !Array.isArray(vm.user[key])) {
+                changedUserValues.push({op: 'replace', path: `/${key}`, value: vm.user[key]})
+            }
+        }
+
+        UserService.updateUserProfile(vm.user.id, changedUserValues)
             .then(function (rs) {
                 if (rs.success) {
-                    vm.user = { ...vm.user, ...rs.data };
-                    UserService.currentUser.firstName = firstName;
-                    UserService.currentUser.lastName = lastName;
+                    vm.previousUserData = angular.copy(vm.user);
                     messageService.success('User profile updated');
                 } else {
                     messageService.error(rs.message);
@@ -106,8 +136,7 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     function updateUserPassword() {
         const data = angular.copy(vm.changePassword);
 
-        data.userId = vm.user.id;
-        UserService.updateUserPassword(data)
+        UserService.updateUserPassword(vm.user.id, data)
             .then(function (rs) {
                 if (rs.success) {
                     vm.changePassword = {};
@@ -119,30 +148,10 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
     }
 
     function fetchUserProfile() {
-        UserService.getUserProfile()
-            .then(function (rs) {
-                if (rs.success) {
-                    vm.user = rs.data;
-                    vm.changePassword.userId = vm.user.id;
-                    if (vm.user.preferences.length) {
-                        vm.preferences = vm.user.preferences;
-                    } else {
-                        fetchDefaultPreferences();
-                    }
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
-    }
-
-    function fetchDefaultPreferences() {
-        UserService.getDefaultPreferences().then(function (rs) {
-            if (rs.success) {
-                    vm.preferences = rs.data;
-                } else {
-                    messageService.error(rs.message);
-                }
-            });
+        vm.user = vm.currentUser;
+        vm.previousUserData = angular.copy(vm.currentUser);
+        vm.changePassword.userId = vm.user.id;
+        vm.preferences = vm.user.preferences;
     }
 
     // TODO: enable and refactor when more preferences will be added
@@ -225,18 +234,12 @@ const UserProfileController = function UserProfileController($mdDialog, UserServ
             locals: {
                 urlHandler: (url) => {
                     if (url) {
-                        const { username, firstName, lastName } = vm.user;
-                        const params = {
-                            username,
-                            firstName,
-                            lastName,
-                            photoURL: url,
-                        };
+                        const params = [{'op': 'replace', 'path': '/photoUrl', 'value': url}];
 
                         return UserService.updateUserProfile(vm.user.id, params)
                             .then((prs) => {
                                 if (prs.success) {
-                                    vm.currentUser.photoURL = `${url}?${(new Date()).getTime()}`;
+                                    vm.currentUser.photoUrl = `${url}?${(new Date()).getTime()}`;
                                     messageService.success('Profile was successfully updated');
 
                                     return true;

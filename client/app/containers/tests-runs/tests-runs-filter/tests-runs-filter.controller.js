@@ -102,7 +102,6 @@ const TestsRunsFilterController = function TestsRunsFilterController(
         selectFilterForEdit: selectFilterForEdit,
         onFilterSliceUpdate: onFilterSliceUpdate,
         onSelect: onSelect,
-        userHasAnyRole: authService.userHasAnyRole,
     };
 
     vm.$onInit = init;

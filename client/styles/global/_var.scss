@@ -396,6 +396,8 @@ $screen-xs-max:              ($screen-sm-min - 1) !default;
 $screen-sm-max:              ($screen-md-min - 1) !default;
 $screen-md-max:              ($screen-lg-min - 1) !default;
 
+
+$breakpoint-mobile-xs: 375px;
 $breakpoint-mobile-small: 480px;
 $breakpoint-mobile: 600px;
 $breakpoint-tablet: 1024px;

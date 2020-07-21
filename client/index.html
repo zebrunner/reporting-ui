@@ -68,6 +68,7 @@
 
     <div class="main-container" data-ng-class="{ 'app-nav-horizontal': main.menu === 'horizontal' }">
         <app-sidebar
+            ng-if="$ctrl.isLoggedIn"
             ng-class="{
                 'nav-fixed': main.fixedSidebar,
                 'nav-vertical': main.menu === 'vertical',

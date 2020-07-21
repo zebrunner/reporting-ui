@@ -22,8 +22,8 @@ const CiHelperController = function CiHelperController(
     authService,
     messageService,
     UtilService,
-    API_URL,
     $http,
+    $httpMock,
     Upload,
 ) {
     'ngInject';
@@ -729,7 +729,6 @@ const CiHelperController = function CiHelperController(
             initWebsocket();
             launcherScan.scmAccountId = $scope.scmAccount.id;
             launcherScan.rescan = !!rescan;
-            console.log(launcherScan, $scope.currentServerId);
             LauncherService.scanRepository(launcherScan, $scope.currentServerId)
                 .then(function (rs) {
                     if (rs.success) {
@@ -1122,7 +1121,7 @@ const CiHelperController = function CiHelperController(
     function initWebsocket() {
         const wsName = 'zafira';
 
-        zafiraWebsocket = Stomp.over(new SockJS(API_URL + '/api/websockets'));
+        zafiraWebsocket = Stomp.over(new SockJS(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/websockets`));
         zafiraWebsocket.debug = null;
         zafiraWebsocket.ws.close = function() {};
         zafiraWebsocket.connect({ withCredentials: false }, function () {
@@ -1196,7 +1195,6 @@ const CiHelperController = function CiHelperController(
         resetLauncher(); //TODO: why do we need this?
         const launchersPromise = getAllLaunchers()
             .then(launchers => {
-                console.log(launchers);
                 return vm.launchers = launchers;
             });
         toolsService.fetchIntegrationOfTypeByName('AUTOMATION_SERVER')
@@ -1873,7 +1871,7 @@ const CiHelperController = function CiHelperController(
             $file.isUploading = true;
             $file.upload = Upload
                 .upload({
-                    url: `${API_URL}/v1/assets?type=${type}&file=`,
+                    url: `${$httpMock.apiHost}${$httpMock.reportingPath}/v1/assets?type=${type}&file=`,
                     file: $file,
                 })
                 .success(response => {

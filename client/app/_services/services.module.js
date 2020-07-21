@@ -13,8 +13,10 @@ import pageTitleService from './page-title/page-title.service';
 import observerService from './observer/observer.service';
 import logLevelService from './log-level.service';
 import fullScreenService from './full-screen/full-screen.service';
+import { CompanySettingsProvider } from './company-settings.provider';
 
 angular.module('app.services', [])
+    .provider('CompanySettings', CompanySettingsProvider)
     .service({ appHealthService })
     .service({ authService })
     .service({ ArtifactService})
@@ -48,7 +50,6 @@ require('./permission.service');
 require('./project.service');
 require('./utils/mapper.util');
 require('./scm.service');
-require('./setting.provider');
 require('./setting.service');
 require('./notification.service');
 require('./test.service');

@@ -50,12 +50,36 @@
                                        ng-disabled="signin_form.$invalid">Login</md-button>
                         </div>
                     </form>
+                    <div class="buttons-container" ng-if="providers.length">
+                        <div class="buttons-wrapper">
+                            <div class="buttons-wrapper__top-divider">or continue with</div>
+                            <ul class="provider-list">
+                                <li class="provider-list__item" ng-repeat="provider in ::providers">
+                                    <div class="item">
+                                        <button class="item-wrapper" ng-click="goToSSO(provider.reference)">
+                                            <div class="photo-container">
+                                                <div class="item-wrapper__photo-wrapper">
+                                                    <md-icon ng-if="!provider.logoKey" class="material-icons icon">lock_open</md-icon>
+                                                    <img ng-if="provider.logoKey" ng-src="{{ ::getProviderIconUrl(provider.logoKey) }}" class="provider-list__item-logo" />
+                                                </div>
+                                            </div>
+                                            <div class="item-wrapper__name-wrapper">
+                                                <span class="item-wrapper__text">
+                                                    {{provider.name}}
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <copyright></copyright>
                 </div>
 
                 <div class="additional-background">
                     <div class="version-container">
-                        <img class="logo" ng-if="companyLogo.value" ng-src="{{ companyLogo.value }}">
+                        <img class="logo" ng-if="companyLogoUrl" ng-src="{{ companyLogoUrl }}">
                     </div>
                     <bg-instance></bg-instance>
                 </div>

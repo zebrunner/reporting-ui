@@ -17,9 +17,9 @@ npm i
 
 ### Development
 
-For local development specify correct **SERVER_HOSTNAME** and execute:
+For local development specify correct **SERVER_HOST** and execute:
 ```
-SERVER_URL=https://localhost:8080/reporting-service
+SERVER_HOST=https://localhost:8080
 
 npm start
 ```
@@ -33,7 +33,7 @@ npm run build
 ```
 
 ### Container startup variables
-* **SERVER_URL** - hostname of API server
+* **SERVER_HOST** - hostname of API server
 
 ### Container build variables
 * **BASE_PATH** - base path used to serve content. May be useful if you plan to run Reporting UI behind proxy
