@@ -123,18 +123,18 @@ const UsersController = function UserViewController(
             }
         }
 
-        UserService.searchUsers(vm.sc).then(function (rs) {
-            if (rs.success) {
-                vm.sr = rs.data?.results || [];
-                vm.totalResults = rs.data?.totalResults || 0;
-            }
-            else {
-                messageService.error(rs.message);
-            }
-            vm.filterByStatusInAction = false;
-        });
+        UserService.searchUsers(vm.sc)
+            .then((rs) => {
+                if (rs.success) {
+                    vm.sr = rs.data?.results || [];
+                    vm.totalResults = rs.data?.totalResults || 0;
+                } else {
+                    messageService.error(rs.message);
+                }
+                vm.filterByStatusInAction = false;
+            });
         vm.isFiltered = true;
-    };
+    }
 
     function isScEqualDate() {
         if (vm.sc.selectedRange.dateStart && vm.sc.selectedRange.dateEnd) {
@@ -143,13 +143,13 @@ const UsersController = function UserViewController(
     };
 
     function reset() {
-        if(vm.isFiltered) {
+        if (vm.isFiltered) {
             vm.sc = angular.copy(DEFAULT_SC);
             search();
             vm.searchActive = false;
             vm.isFiltered = false;
         }
-    };
+    }
 
     function showCreateUserDialog(event) {
         $mdDialog.show({
