@@ -161,7 +161,7 @@
             </li>
             <li class="main-nav__list-item _empty" style="flex-grow: 1"></li>
             <li class="main-nav__list-item dynamic"
-                ng-if="!menuItem.permissions.length || $ctrl.userHasAnyPermission(menuItem.permissions)"
+                ng-if="!bottomMenuItem.permissions.length || $ctrl.userHasAnyPermission(bottomMenuItem.permissions)"
                 ui-sref-active="active"
                 ng-repeat="bottomMenuItem in $ctrl.bottomMenuItems track by bottomMenuItem.name">
                 <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="{{ bottomMenuItem.state }}">
