@@ -138,9 +138,10 @@
 
             _userFullDataFetchPromise = $q.all([getUserProfile, getUserPref])
                 .then((results) => {
-                    //throw error only if unable to get user profile
-                    if (!results[0]?.success) {
-                        return $q.reject(results[0]);
+                    const [userProfile] = results;
+
+                    if (!userProfile?.success) {
+                        return $q.reject(userProfile);
                     }
 
                     return results;
