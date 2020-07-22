@@ -144,8 +144,8 @@
                     </li>
                 </ul>
             </li>
-            <li class="main-nav__list-item integrations" ui-sref-active="active">
-                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="integrations" ng-if="$ctrl.userHasAnyPermission(['VIEW_INTEGRATIONS'])">
+            <li class="main-nav__list-item integrations" ui-sref-active="active" ng-if="$ctrl.userHasAnyPermission(['VIEW_INTEGRATIONS'])">
+                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="integrations">
                     <i class="material-icons">settings_input_component</i>
                     <span>Integrations</span>
                 </a>

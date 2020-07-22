@@ -76,6 +76,9 @@
                     }
                 }
             }
+            &._empty {
+                cursor: default;
+            }
 
             &:first-child > a {
                 border-top: 0;
