@@ -53,7 +53,7 @@ const appCtrl = function appCtrl(
     $scope.initSession = toolsService.getTools;
     $scope.progressbarService = progressbarService;
 
-    $rootScope.$on('event:auth-loginSuccess', function(ev, payload){
+    $rootScope.$on('event:auth-loginSuccess', (ev, payload) => {
         authService.setCredentials(payload.auth);
         $scope.initSession();
         UserService.initCurrentUser(true, authService.authData.userId)

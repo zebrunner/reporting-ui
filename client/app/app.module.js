@@ -943,7 +943,7 @@ const ngModule = angular
                             AuthIntercepter.loginCancelled(payload);
                         }
                     });
-            } else if (!authService.isSSO) {
+            } else {
                 AuthIntercepter.loginCancelled(payload);
             }
         });
