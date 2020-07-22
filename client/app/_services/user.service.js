@@ -14,7 +14,6 @@
             getUserProfileByName,
             getUserProfileById,
             getUserPreferences,
-            fetchFullUserData,
             updateStatus,
             searchUsers,
             updateUserProfile,
@@ -54,11 +53,6 @@
         function getUserPreferences(id) {
             return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/users/${id}/preferences/extended`)
                 .then(UtilService.handleSuccess, UtilService.handleError('Unable to get user preferences'));
-        }
-
-        function fetchFullUserData() {
-            return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/users/profile/extended`)
-                .then(UtilService.handleSuccess, UtilService.handleError('Unable to get extended user profile'));
         }
 
         function updateStatus(user) {
@@ -144,10 +138,10 @@
 
             _userFullDataFetchPromise = $q.all([getUserProfile, getUserPref])
                 .then((results) => {
-                    const error = results.find(({ success }) => !success);
+                    const [userProfile] = results;
 
-                    if (error) {
-                        return $q.reject(error);
+                    if (!userProfile?.success) {
+                        return $q.reject(userProfile);
                     }
 
                     return results;
@@ -160,23 +154,6 @@
                     service.currentUser.permissions = authData.permissionsSuperset;
 
                     setDefaultPreferences(service.currentUser.preferences);
-
-                    service.currentUser.pefrDashboardId = userData['performanceDashboardId'];
-                    if (!service.currentUser.pefrDashboardId) {
-                        messageService.error('\'User Performance\' dashboard is unavailable!');
-                    }
-
-                    service.currentUser.personalDashboardId = userData['personalDashboardId'];
-                    if (!service.currentUser.personalDashboardId) {
-                        messageService.error('\'Personal\' dashboard is unavailable!');
-                    }
-
-                    service.currentUser.stabilityDashboardId = userData['stabilityDashboardId'];
-
-                    service.currentUser.defaultDashboardId = userData['defaultDashboardId'];
-                    if (!service.currentUser.defaultDashboardId) {
-                        messageService.warning('Default Dashboard is unavailable!');
-                    }
 
                     return service.currentUser;
                 });

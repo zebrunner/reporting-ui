@@ -123,8 +123,8 @@
                                                     <span>Change password</span>
                                                 </md-button>
                                             </md-menu-item>
-                                            <md-menu-item ng-if="$ctrl.currentUser.pefrDashboardId">
-                                                <md-button class="user-menu__list-button" name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })">
+                                            <md-menu-item ng-if="$ctrl.currentUser.performanceDashboardId">
+                                                <md-button class="user-menu__list-button" name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.performanceDashboardId}}, userId:{{user.id}} })">
                                                     <span>Performance</span>
                                                 </md-button>
                                             </md-menu-item>
