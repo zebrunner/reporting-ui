@@ -494,6 +494,7 @@ const testRunInfoController = function testRunInfoController(
 
         initTestsWebSocket();
         vm.testRun.normalizedPlatformData = testsRunsService.normalizeTestPlatformData(vm.testRun.config);
+        initTestExecutionData(skipHistoryUpdate);
 
         initActiveAgent$()
             .pipe(takeUntil(logsGettingDestroy$))
@@ -502,12 +503,10 @@ const testRunInfoController = function testRunInfoController(
                     if (agent) {
                         setTestParams();
                     } else {
-                        messageService.error('Unable to init logs agent');
                         vm.isLogsLoading = false;
                     }
 
                     initToolsSettings();
-                    initTestExecutionData(skipHistoryUpdate);
                     bindEvents();
                 },
             });
