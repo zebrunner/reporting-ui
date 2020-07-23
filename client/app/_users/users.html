@@ -79,7 +79,7 @@
                         <div class="users-table">
                             <div class="users-table__row" ng-repeat="user in $ctrl.sr">
                                 <div class="users-table__col" data-title="{{user.username}}">
-                                    <profile-photo name="userPhoto" squared="15" ng-model="user.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
+                                    <profile-photo name="userPhoto" squared="15" ng-model="user.photoUrl" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
                                 </div>
                                 <div class="users-table__col" ng-if="!$ctrl.isTabletSm" data-title="Username">
                                     <span name="userUsername" class="users-table__content">{{user.username}}</span>
@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="users-table__col _min-size" data-title="Registration/ last activity" style="padding-right: 0;">
                                     <div class="users-table__content-wrapper">
-                                        <div class="users-table__content-date _block" name="userCreated">{{::user.createdAt | date}}</div>
+                                        <div class="users-table__content-date _block" name="userCreated">{{::user.registrationDateTime | date}}</div>
                                         <span class="users-table__content-additional" data-ng-if="user.lastLogin">last login <time name="lastLogin" am-time-ago="user.lastLogin" title="{{ user.lastLogin | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"></time></span>
                                         <span class="users-table__content-additional" data-ng-if="!user.lastLogin">never logged in</span>
                                     </div>
@@ -123,8 +123,8 @@
                                                     <span>Change password</span>
                                                 </md-button>
                                             </md-menu-item>
-                                            <md-menu-item ng-if="$ctrl.currentUser.pefrDashboardId">
-                                                <md-button class="user-menu__list-button" name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.pefrDashboardId}}, userId:{{user.id}} })">
+                                            <md-menu-item ng-if="$ctrl.currentUser.performanceDashboardId">
+                                                <md-button class="user-menu__list-button" name="userPerformance" ui-sref="dashboard.page({ dashboardId: {{$ctrl.currentUser.performanceDashboardId}}, userId:{{user.id}} })">
                                                     <span>Performance</span>
                                                 </md-button>
                                             </md-menu-item>

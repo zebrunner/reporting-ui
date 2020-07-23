@@ -17,12 +17,12 @@
                     <div class="projects__selected">{{$ctrl.selectedProjectShortName}}</div>
                     <div>
                         <profile-photo id="brandPhoto"
-                            ng-model="$ctrl.companyLogo.value"
+                            ng-model="$ctrl.companyLogoUrl"
                             squared="8"
                             size="32"
                             auto-resize="false"
                             icon-visible="false">
-                            <span ng-if="!$ctrl.companyLogo.value" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">flag</i></span>
+                            <span ng-if="!$ctrl.companyLogoUrl" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">flag</i></span>
                         </profile-photo>
                     </div>
                 </md-button>
@@ -54,7 +54,7 @@
                                     </div>
                                 </md-radio-group>
                             </li>
-                            <li ng-if="$ctrl.userHasAnyRole(['ROLE_ADMIN'])" class="nav__button _upload">
+                            <li class="nav__button _upload" ng-if="$ctrl.userHasAnyPermission(['UPDATE_SETTINGS'])">
                                 <a ng-click="$ctrl.showUploadImageDialog($event)" class="js-menu-close" href=""><i class="material-icons">add_circle_outline</i><span>Upload new logo</span></a>
                             </li>
                         </ul>
@@ -107,7 +107,7 @@
                 </a>
             </li>
             <li class="main-nav__list-item users"
-                ng-if="$ctrl.userHasAnyRole(['ROLE_ADMIN']) && $ctrl.userHasAnyPermission(['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS'])"
+                ng-if="$ctrl.userHasAnyPermission(['VIEW_USERS', 'MODIFY_USERS', 'MODIFY_USER_GROUPS', 'INVITE_USERS', 'MODIFY_INVITATIONS'])"
                 ng-class="{'active':$ctrl.$state.includes('users')}">
                 <md-button
                     type="button"
@@ -144,13 +144,14 @@
                     </li>
                 </ul>
             </li>
-            <li class="main-nav__list-item integrations" ui-sref-active="active">
-                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="integrations" ng-if="$ctrl.userHasAnyPermission(['VIEW_INTEGRATIONS'])">
+            <li class="main-nav__list-item integrations" ui-sref-active="active" ng-if="$ctrl.userHasAnyPermission(['VIEW_INTEGRATIONS'])">
+                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="integrations">
                     <i class="material-icons">settings_input_component</i>
                     <span>Integrations</span>
                 </a>
             </li>
             <li class="main-nav__list-item dynamic"
+                ng-if="!menuItem.permissions.length || $ctrl.userHasAnyPermission(menuItem.permissions)"
                 ui-sref-active="active"
                 ng-repeat="menuItem in $ctrl.menuItems track by menuItem.name">
                 <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="{{menuItem.state}}">
@@ -159,18 +160,27 @@
                 </a>
             </li>
             <li class="main-nav__list-item _empty" style="flex-grow: 1"></li>
+            <li class="main-nav__list-item dynamic"
+                ng-if="!bottomMenuItem.permissions.length || $ctrl.userHasAnyPermission(bottomMenuItem.permissions)"
+                ui-sref-active="active"
+                ng-repeat="bottomMenuItem in $ctrl.bottomMenuItems track by bottomMenuItem.name">
+                <a md-button class="app-sidebar__link nav-btn" aria-label="menu" ui-sref="{{ bottomMenuItem.state }}">
+                    <i class="material-icons">{{ bottomMenuItem.icon }}</i>
+                    <span>{{ bottomMenuItem.name }}</span>
+                </a>
+            </li>
             <li class="main-nav__list-item profile" ng-class="{'active':$ctrl.$state.includes('userProfile')}">
                 <md-button
                     type="button"
                     aria-label="menu"
                     class="app-sidebar__link menu-btn nav-btn js-menu-toggle">
                     <div>
-                        <profile-photo ng-model="$ctrl.currentUser.photoURL"
+                        <profile-photo ng-model="$ctrl.currentUser.photoUrl"
                             squared="8"
                             size="32"
                             icon-visible="false"
                             auto-resize="false">
-                            <span ng-if="!$ctrl.currentUser.photoURL" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">person</i></span>
+                            <span ng-if="!$ctrl.currentUser.photoUrl" class="app-sidebar__icon-wrapper _squared"><i class="material-icons">person</i></span>
                         </profile-photo>
                     </div>
                 </md-button>

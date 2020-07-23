@@ -1,6 +1,7 @@
 'use strict';
 
 const authController = function authController(
+    $httpMock,
     $scope,
     $rootScope,
     $location,
@@ -8,15 +9,16 @@ const authController = function authController(
     $templateCache,
     $stateParams,
     authService,
+    CompanySettings,
     UserService,
     UtilService,
     InvitationService,
     messageService,
-    ) {
+) {
     'ngInject';
 
     $scope.UtilService = UtilService;
-
+    $scope.providers = [];
     $scope.credentials = {
         valid: true
     };
@@ -43,8 +45,8 @@ const authController = function authController(
     $scope.forgotPasswordType = {};
     $scope.forgotPasswordEmailWasSent = false;
 
-    Object.defineProperty($scope, 'companyLogo', {
-       get: () => $rootScope.companyLogo,
+    Object.defineProperty($scope, 'companyLogoUrl', {
+       get: () => CompanySettings.companyLogoUrl,
     });
 
     $scope.emailType = {};
@@ -84,6 +86,26 @@ const authController = function authController(
         $state.go(state);
     };
 
+    $scope.getSamlConfigs = function() {
+        authService.getSamlConfigs()
+            .then((rs) => {
+                if (rs.success) {
+                    $scope.providers = rs.data || [];
+                }
+            });
+    };
+
+    $scope.getProviderIconUrl = function(path) {
+        return `${$httpMock.apiHost}${path}`;
+    };
+
+    $scope.goToSSO = function(reference) {
+        const relayState = $state.href('ssoCallback', { targetLocation: $state.params.location }, { absolute: true });
+        const targetUrl = `${$httpMock.apiHost}${reference}?RelayState=${relayState}`;
+
+        window.location.assign(targetUrl);
+    };
+
     (function initController() {
         switch($state.current.name) {
             case 'signup':
@@ -106,6 +128,7 @@ const authController = function authController(
             $scope.credentials.usernameOrEmail = $stateParams.user.email;
             $scope.credentials.password = $stateParams.user.password;
         }
+        $scope.getSamlConfigs();
         authService.clearCredentials();
     })();
 
@@ -117,12 +140,10 @@ const authController = function authController(
                         auth: rs.data
                     };
 
-                    if (rs.firstLogin) {
+                    if (rs.firstLogin === 'true') {
                         payload.firstLogin = rs.firstLogin;
                     } else {
                         $state.params.location && (payload.location = $state.params.location);
-                        $state.params.referrer && (payload.referrer = $state.params.referrer);
-                        $state.params.referrerParams && (payload.referrerParams = $state.params.referrerParams);
                     }
                     $rootScope.$broadcast('event:auth-loginSuccess', payload);
                 } else {
@@ -138,10 +159,7 @@ const authController = function authController(
                 if (rs.success) {
                     $state.go('signin', { user });
                 } else {
-                    UtilService.resolveError(rs, form, 'validationError', 'username').then(function (rs) {
-                    }, function (rs) {
-                        messageService.error(rs.message);
-                    });
+                    messageService.error(rs.error.data.message);
                 }
             });
     };

@@ -197,20 +197,48 @@
                 &:not(:nth-last-child(2)){
                     margin-bottom: 2px;
                 }
+                &._selected {
+                    background-color: rgba(0,0,0,.05);
+                }
                 &.success {
-                    & .test-selection,
-                    & .test-info,
-                    & .test-label,
-                    & .test-settings {
+                    td {
                         background-color: $green-bg-light-new;
+                    }
+                    &._selected {
+                        td {
+                            background-color: darken(desaturate(#ecfbef, 33.30), 4.71);
+                        }
                     }
                 }
                 &.danger {
-                    & .test-selection,
-                    & .test-info,
-                    & .test-label,
-                    & .test-settings {
+                    td {
                         background-color: $pink-bg-light-new;
+                    }
+                    &._selected {
+                        td {
+                            background-color: darken(desaturate($pink-bg-light-new, 50.00), 5.10);
+                        }
+                    }
+                }
+                &.warning {
+                    &._selected {
+                        td {
+                            background-color: darken(desaturate(adjust-hue($state-warning-bg, -1), 60.47), 4.90);
+                        }
+                    }
+                }
+                &.aborted-test-bg {
+                    &._selected {
+                        td {
+                            background-color: darken(#eaeaea, 4.71);
+                        }
+                    }
+                }
+                &.info {
+                    &._selected {
+                        td {
+                            background-color: darken(desaturate(adjust-hue($state-info-bg, -2), 42.88), 4.90)
+                        }
                     }
                 }
                 &-selection {

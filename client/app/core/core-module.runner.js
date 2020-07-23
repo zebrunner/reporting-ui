@@ -9,8 +9,7 @@ export function CoreModuleRunner(
     appHealthService,
     authService,
     UI_VERSION,
-    SettingProvider,
-    SettingsService,
+    CompanySettings,
     ConfigService,
     UserService,
     toolsService,
@@ -30,7 +29,6 @@ export function CoreModuleRunner(
         .then(response => {
             if (response.success) {
                 authService.isMultitenant = response.data?.multitenant;
-                authService.serviceUrl = response.data?.serviceUrl;
             }
         })
         .then(() => {
@@ -39,7 +37,7 @@ export function CoreModuleRunner(
             getVersion();
             updateCompanyLogo();
             if (authService.authData) {
-                UserService.initCurrentUser();
+                UserService.initCurrentUser(false, authService.authData.userId);
                 toolsService.getTools();
             }
         })
@@ -81,15 +79,12 @@ export function CoreModuleRunner(
     }
 
     function updateCompanyLogo() {
-        return SettingsService.getCompanyLogo()
-            .then(function(rs) {
+        return CompanySettings.fetchCompanyLogo()
+            .then((rs) => {
                 if (rs.success) {
-                    if (!$rootScope.companyLogo.value || $rootScope.companyLogo.value !== rs.data) {
-                        $rootScope.companyLogo = rs.data;
-                        SettingProvider.setCompanyLogoURL($rootScope.companyLogo.value);
+                    CompanySettings.companyLogo = rs.data;
 
-                        return $rootScope.companyLogo;
-                    }
+                    return CompanySettings.companyLogo;
                 } else {
                     return $q.reject(rs.message);
                 }

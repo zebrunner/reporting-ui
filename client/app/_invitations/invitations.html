@@ -39,20 +39,19 @@
                                 <div class="invitations-table__col">Group</div>
                                 <div class="invitations-table__col">Source</div>
                                 <div class="invitations-table__col">Registration/ last activity</div>
-                                <div class="invitations-table__col _centered">Status</div>
                                 <div class="invitations-table__col"></div>
                             </div>
                         </div>
                         <div class="invitations-table">
                             <div class="invitations-table__row" ng-repeat="invite in $ctrl.sr">
                                 <div class="invitations-table__col" data-title="{{invite.username}}">
-                                    <profile-photo name="userPhoto" squared="15" ng-model="invite.photoURL" size="34" class="grey-icon desktop-only" label="#{{::user.id}}"></profile-photo>
+                                    <profile-photo name="userPhoto" squared="15" ng-model="invite.photoUrl" size="34" class="grey-icon desktop-only" label="#{{::invite.id}}"></profile-photo>
                                 </div>
                                 <div class="invitations-table__col _size-m" data-title="Email" name="userEmail">
                                     <span class="invitations-table__content">{{invite.email}}</span>
                                 </div>
                                 <div class="invitations-table__col" data-title="Group">
-                                    <span class="invitations-table__content">{{ $ctrl.groups[$ctrl.groups.indexOfField('id', invite.groupId)].name }}</span>
+                                    <span class="invitations-table__content">{{ ::invite.group.name }}</span>
                                 </div>
                                 <div class="invitations-table__col" data-title="Source">
                                     <span class="source-label label black_font">{{::invite.source.toLowerCase()}}</span>
@@ -60,12 +59,9 @@
                                 <div data-title="Date" class="invitations-table__col">
                                     <div class="users-table__content-wrapper">
                                         <span class="invitations-table__content">{{ invite.createdAt | date }}</span>
-                                        <span class="users-table__content-additional">sent by {{ invite.createdBy.username }}</span>
+                                        <span class="users-table__content-additional">sent by {{ invite.invitor.username }}</span>
                                     </div>
-                                    
-                                </div>
-                                <div class="invitations-table__col _centered" data-title="Status">
-                                    <span class="status-label _size-s" ng-class="{'text-success': invite.status == 'ACCEPTED', 'text-info': invite.status == 'PENDING'}">{{ invite.status.toLowerCase() }}</span>
+
                                 </div>
                                 <div class="invitations-table__col">
                                     <md-menu ng-if="$ctrl.userHasAnyPermission(['MODIFY_INVITATIONS'])" class="pull-right">

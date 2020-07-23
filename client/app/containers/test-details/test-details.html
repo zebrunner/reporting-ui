@@ -200,7 +200,16 @@
                                     load-on-scroll="test"
                                     load-on-scroll-handler="$ctrl.onTrackedTestRender($data)"
                                     ng-repeat="test in $ctrl.testsToDisplay track by test.id"
-                                    ng-class="{'info {{::main.theme}}' : test.status === 'IN_PROGRESS', 'success {{::main.theme}}' : test.status === 'PASSED', 'danger {{::main.theme}}' : test.status === 'FAILED', 'warning {{::main.theme}}' : test.status === 'SKIPPED', 'aborted-test-bg' : test.status === 'ABORTED', 'active-highlight': test.id === $ctrl.testId}"
+                                    ng-class="{
+                                        [main.theme]: test.status !== 'ABORTED',
+                                        _selected: test.selected,
+                                        info: test.status === 'IN_PROGRESS',
+                                        success: test.status === 'PASSED',
+                                        danger: test.status === 'FAILED',
+                                        warning: test.status === 'SKIPPED',
+                                        'aborted-test-bg': test.status === 'ABORTED',
+                                        'active-highlight': test.id === $ctrl.testId
+                                    }"
                                     data-source-id="{{test.id}}"
                                     ng-init="$last && $ctrl.testId && $ctrl.highlightTest()">
                                     <td class="test-details__table-col test-selection">
@@ -296,20 +305,12 @@
                                                     target="{{::(artifact.isExternalLink ? '_blank' : '_self')}}"
                                                     aria-label="Test artifacts"
                                                     class="test-settings__attachment"
-                                                    ng-if="::('png' !== artifact.extension && !artifact.hasBrokenLink)">
+                                                    ng-if="::('png' !== artifact.extension)">
                                                     <md-icon md-svg-icon="{{::$ctrl.getArtifactIconId(artifact.extension)}}" ng-if="::artifact.extension" class="material-icons"></md-icon>
                                                     <md-icon md-font-library="material-icons" ng-if="!artifact.extension" class="material-icons">link</md-icon>
                                                     <span>{{::artifact.name}}</span>
                                                     <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
                                                 </a>
-                                                <span name="testArtifactsBroken"
-                                                    aria-label="Test artifacts"
-                                                    class="test-settings__attachment _broken"
-                                                    ng-if="::artifact.hasBrokenLink">
-                                                        <md-icon md-font-library="material-icons" class="material-icons">broken_image</md-icon>
-                                                        <span>{{::artifact.name}}</span>
-                                                        <md-tooltip md-direction="bottom">{{::artifact.name}}</md-tooltip>
-                                                    </span>
                                             </div>
                                         </div>
                                          <a ng-click="$ctrl.goToTestDetails(test.id);" class="test-details__clickable"></a>

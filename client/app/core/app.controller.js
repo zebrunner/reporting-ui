@@ -10,10 +10,8 @@ const appCtrl = function appCtrl(
     appConfig,
     authService,
     UserService,
-    SettingsService,
     ConfigService,
     messageService,
-    SettingProvider,
     $timeout,
     toolsService,
     UI_VERSION,
@@ -25,6 +23,7 @@ const appCtrl = function appCtrl(
 
     const vm = {
         isLoading: true,
+        get isLoggedIn() { return authService.isLoggedIn; },
 
         $onInit: initController,
     };
@@ -34,10 +33,6 @@ const appCtrl = function appCtrl(
     $scope.color = appConfig.color;
     $rootScope.darkThemes = ['11', '21', '31', '22'];
     $rootScope.currentOffset = 0;
-    $rootScope.companyLogo = {
-        name: 'COMPANY_LOGO_URL',
-        value: SettingProvider.getCompanyLogoURl() ?? '',
-    };
 
     const UNANIMATED_STATES = ['signin', 'signup', 'forgotPassword', 'resetPassword'];
 
@@ -58,10 +53,10 @@ const appCtrl = function appCtrl(
     $scope.initSession = toolsService.getTools;
     $scope.progressbarService = progressbarService;
 
-    $rootScope.$on('event:auth-loginSuccess', function(ev, payload){
+    $rootScope.$on('event:auth-loginSuccess', (ev, payload) => {
         authService.setCredentials(payload.auth);
         $scope.initSession();
-        UserService.initCurrentUser(true)
+        UserService.initCurrentUser(true, authService.authData.userId)
             .then((user) => {
                 $scope.main.skin = user.theme;
 
@@ -76,12 +71,6 @@ const appCtrl = function appCtrl(
 
                 if (payload.location) {
                     $window.location.href = payload.location;
-                } else if (payload.referrer) {
-                    var params = payload.referrerParams || {};
-
-                    $timeout(() => {
-                        $state.go(payload.referrer, params);
-                    }, 0, false);
                 } else {
                     $timeout(() => {
                         $state.go('home');

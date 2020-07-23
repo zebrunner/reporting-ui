@@ -34,7 +34,7 @@
                                     md-add-on-blur="true"
                                     md-separator-keys="$ctrl.keys">
                             <md-chip-template name="chip">
-                                <profile-photo ng-model="$chip.photoURL" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
+                                <profile-photo ng-model="$chip.photoUrl" size="40" squared="20" chip="true" auto-resize="false"></profile-photo>
                                 {{$chip.email}}
                             </md-chip-template>
                             <md-autocomplete
@@ -49,7 +49,7 @@
                                 placeholder="add email">
                                 <md-item-template>
                                     <span name="suggestion" class="chip-suggestion">
-                                        <profile-photo ng-model="user.photoURL" size="40" squared="20" chip="true"></profile-photo>
+                                        <profile-photo ng-model="user.photoUrl" size="40" squared="20" chip="true"></profile-photo>
                                         {{user.email}}
                                     </span>
                                 </md-item-template>

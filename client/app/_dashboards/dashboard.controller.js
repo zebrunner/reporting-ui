@@ -26,7 +26,7 @@ const dashboardController = function dashboardController(
     toolsService,
     messageService,
     authService,
-    pageTitleService
+    pageTitleService,
     ) {
     'ngInject';
 
@@ -103,6 +103,9 @@ const dashboardController = function dashboardController(
     };
 
     function loadDashboardData (dashboard, refresh) {
+        if (!Array.isArray(dashboard.widgets)) {
+            return;
+        }
         for (var i = 0; i < dashboard.widgets.length; i++) {
             var currentWidget = dashboard.widgets[i];
             currentWidget.location = jsonSafeParse(currentWidget.location);

@@ -1,6 +1,6 @@
 'use strict';
 
-const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) {
+const toolsService = function toolsService($httpMock, $q, UtilService) {
     'ngInject';
 
     let loader$ = null;
@@ -68,12 +68,13 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
     }
 
     function updateSettings(id, integrationDTO) {
-        return $httpMock.put(API_URL + '/api/integrations/' + id, integrationDTO).then(UtilService.handleSuccess, UtilService.handleError('Unable to edit settings'));
+        return $httpMock.put(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/integrations/${id}`, integrationDTO)
+            .then(UtilService.handleSuccess, UtilService.handleError('Unable to edit settings'));
     }
 
     /* Fetch available tools with their statuses */
     function fetchTools() {
-        return $httpMock.get(API_URL + '/api/integrations-info')
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/integrations-info`)
             .then(UtilService.handleSuccess, UtilService.handleError('Unable to fetch tools'))
             .then(response => {
                 if (response.success) {
@@ -109,31 +110,40 @@ const toolsService = function toolsService($httpMock, API_URL, $q, UtilService) 
     }
 
     function fetchToolSettings(toolName) {
-        return $httpMock.get(API_URL + '/api/settings/tool/' + toolName).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch ${toolName} settings`));
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/settings/tool/${toolName}`)
+            .then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch ${toolName} settings`));
     }
 
     function fetchIntegrationsTypes() {
-        return $httpMock.get(API_URL + '/api/integration-groups').then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integration groups`));
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/integration-groups`)
+            .then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integration groups`));
     }
 
     function createIntegration(integrationTypeId, integrationDTO) {
-        return $httpMock.post(API_URL + '/api/integrations?integrationTypeId=' + integrationTypeId, integrationDTO).then(UtilService.handleSuccess, UtilService.handleError('Unable to create integration'));
+        return $httpMock.post(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/integrations?integrationTypeId=${integrationTypeId}`, integrationDTO)
+            .then(UtilService.handleSuccess, UtilService.handleError('Unable to create integration'));
     }
 
     function fetchIntegrationOfType(type) {
-        return $httpMock.get(API_URL + '/api/integrations?groupId=' + type).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integrations of groups`));
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/integrations?groupId=${type}`)
+            .then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integrations of groups`));
     }
 
     function fetchIntegrationOfTypeByName(name) {
-        return $httpMock.get(API_URL + '/api/integrations?groupName=' + name).then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integrations of groups`));
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/integrations?groupName=${name}`)
+            .then(UtilService.handleSuccess, UtilService.handleError(`Unable to fetch integrations of groups`));
     }
 
     function fetchToolConnectionStatus(groupName, id) {
-        return $httpMock.get(API_URL + '/api/integrations-info/' + id + '?groupName=' + groupName).then(UtilService.handleSuccess, UtilService.handleError('Unable to get tool connection'));
+        return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/integrations-info/${id}?groupName=${groupName}`)
+            .then(UtilService.handleSuccess, UtilService.handleError('Unable to get tool connection'));
     }
 
     function uploadSettingFile(multipartFile, tool, settingName) {
-        return $httpMock.post(API_URL + '/api/settings/tools?tool=' + tool + '&name=' + settingName + '&file=', multipartFile, {headers: {'Content-Type': undefined}, transformRequest : angular.identity}).then(UtilService.handleSuccess, UtilService.handleError('Unable to upload file'));
+        const config = { headers: { 'Content-Type': undefined }, transformRequest : angular.identity };
+
+        return $httpMock.post(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/settings/tools?tool=${tool}&name=${settingName}&file=`, multipartFile, config)
+            .then(UtilService.handleSuccess, UtilService.handleError('Unable to upload file'));
     }
 
     return service;

@@ -19,13 +19,14 @@ const AppSidebarController = function (
     $timeout,
     $transitions,
     authService,
+    CompanySettings,
     ConfigService,
     DashboardService,
     mainMenuService,
     messageService,
     observerService,
+    ProjectService,
     projectsService,
-    SettingsService,
     UserService,
 ) {
     'ngInject';
@@ -73,17 +74,18 @@ const AppSidebarController = function (
 
         activateSorter: activateDashboardsSorter,
         userHasAnyPermission: authService.userHasAnyPermission,
-        userHasAnyRole: authService.userHasAnyRole,
         handleMenuClick,
         $onDestroy() { unbindListeners(); },
         toggleMobileMenu,
 
-        get companyLogo() { return $rootScope.companyLogo; },
         get currentUser() { return UserService.currentUser; },
         get isMobile() { return $mdMedia('xs'); },
         get dashboardList() { return DashboardService.dashboards; },
-        get menuItems() { return mainMenuService.items; },
+        get menuItems() { return mainMenuService.items.filter(({ position }) => position !== 'bottom'); },
+        get bottomMenuItems() { return mainMenuService.items.filter(({ position }) => position === 'bottom'); },
         getSubitems(name) { return mainMenuService.getSubItemsDefaultMenu(name); },
+        get companyLogoUrl() { return CompanySettings.companyLogoUrl; },
+        set companyLogoUrl(url) { CompanySettings.companyLogoUrl = url },
     };
 
     vm.$onInit = initController;
@@ -226,20 +228,24 @@ const AppSidebarController = function (
             locals: {
                 urlHandler: (url) => {
                     if (url) {
-                        $rootScope.companyLogo.value = url;
+                        const companyLogoData = {
+                            name: CompanySettings.companyLogo.name,
+                            value: url,
+                        };
 
-                        return SettingsService.editSetting($rootScope.companyLogo).then(function (prs) {
-                            if (prs.success) {
-                                $rootScope.companyLogo.value += '?' + (new Date()).getTime();
-                                messageService.success('Company logo was successfully changed');
+                        return CompanySettings.updateCompanyLogo(companyLogoData)
+                            .then((response) => {
+                                if (response.success) {
+                                    CompanySettings.companyLogo = response.data;
+                                    messageService.success('Company logo was successfully changed');
 
-                                return true;
-                            } else {
-                                messageService.error(prs.message);
+                                    return true;
+                                } else {
+                                    messageService.error(response.message);
 
-                                return false;
-                            }
-                        });
+                                    return false;
+                                }
+                            });
                     }
 
                     return $q.reject(false);
@@ -270,8 +276,8 @@ const AppSidebarController = function (
     }
 
     function loadProjects() {
-        return ConfigService.getConfig('projects')
-            .then(function(rs) {
+        return ProjectService.getAllProjects()
+            .then((rs) => {
                 if (rs.success) {
                     vm.projects = [fakeProjectAll, ...rs.data];
 
@@ -285,9 +291,6 @@ const AppSidebarController = function (
                         }
                     }
                 }
-                // else {
-                //     messageService.error('Unable to load projects');
-                // }
             });
     }
 

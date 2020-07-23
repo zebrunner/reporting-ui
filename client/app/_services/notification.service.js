@@ -3,15 +3,16 @@
 
     angular
         .module('app.services')
-        .factory('notificationService', ['$httpMock', '$rootScope', 'UtilService', 'API_URL', notificationService])
+        .factory('notificationService', ['$httpMock', '$rootScope', 'UtilService', notificationService])
 
-    function notificationService($httpMock, $rootScope, UtilService, API_URL) {
+    function notificationService($httpMock, $rootScope, UtilService) {
         return {
             triggerReviewNotif,
         };
 
         function triggerReviewNotif(id) {
-            return $httpMock.get(API_URL + '/api/notification/testrun/' + id + '/review').then(UtilService.handleSuccess, UtilService.handleError('Unable to trigger review notif'));
+            return $httpMock.get(`${$httpMock.apiHost}${$httpMock.reportingPath}/api/notification/testrun/${id}/review`)
+                .then(UtilService.handleSuccess, UtilService.handleError('Unable to trigger review notification'));
         }
     }
 })();

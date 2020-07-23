@@ -42,7 +42,12 @@
     .config(($httpProvider) => {
         'ngInject';
 
-        $httpProvider.interceptors.push(($rootScope, $q, $injector, httpBuffer, API_URL) => {
+        $httpProvider.interceptors.push((
+            $rootScope,
+            $q,
+            $injector,
+            httpBuffer,
+        ) => {
             'ngInject';
 
             const UNRECOGNIZED_STATES = ['signin', 'signup'];
@@ -57,10 +62,17 @@
                     }
 
                     const authService = $injector.get('authService');
-                    const authData = authService.authData;
+                    const $httpMock = $injector.get('$httpMock');
+                    const urlStarts = ['/api', $httpMock.reportingPath];
+                    const apiHost = $httpMock.apiHost ? $httpMock.apiHost : location.origin;
+
+                    if (apiHost) {
+                        urlStarts.push(apiHost);
+                    }
+
                     // add authorization header to API requests
-                    if (request.url.includes(API_URL) && authData) {
-                        request.headers['Authorization'] = `${authData.type} ${authData.accessToken}`;
+                    if (urlStarts.some((urlStart) => request.url.startsWith(urlStart)) && authService.authData) {
+                        request.headers['Authorization'] = `${authService.authData.authTokenType} ${authService.authData.authToken}`;
                     }
 
                     return request;
@@ -77,7 +89,7 @@
                             case 401:
                                 const payload = { location };
                                 // handle 401 on refreshing expired token
-                                if (rejection.config.url.includes('/api/auth/refresh')) {
+                                if (rejection.config.url.includes('/api/iam/v1/auth/refresh')) {
                                     $rootScope.$broadcast('event:auth-tokenHasExpired', location);
 
                                     return $q.reject(rejection);

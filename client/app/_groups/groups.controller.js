@@ -20,6 +20,8 @@ const GroupsController = function GroupsController(
         deleteUserFromGroup: deleteUserFromGroup,
         userHasAnyPermission: authService.userHasAnyPermission,
         usersSearchCriteria: {},
+        findGroupIndex,
+        getPermissionsNames,
         count: 0,
         get groups() { return GroupService.groups; },
         get currentTitle() { return pageTitleService.pageTitle; },
@@ -45,7 +47,7 @@ const GroupsController = function GroupsController(
             .then(function () {
             }, function (group) {
                 if (group) {
-                    var index = vm.groups.indexOfField('id', group.id);
+                    const index = findGroupIndex(group.id);
                     if (index >= 0) {
                         vm.groups.splice(index, 1, group);
                     } else {
@@ -54,6 +56,14 @@ const GroupsController = function GroupsController(
                 }
             });
     };
+
+    function findGroupIndex(groupId) {
+        return vm.groups.findIndex((item) => item.id === groupId);
+    }
+
+    function getPermissionsNames(permissions) {
+        return permissions.filter((permission) => permission.value).map((permission) => permission.name);
+    }
 
     function deleteGroup(group) {
         GroupService.deleteGroup(group.id).then(function (rs) {
@@ -75,7 +85,7 @@ const GroupsController = function GroupsController(
     function addUserToGroup(user, group) {
         UserService.addUserToGroup(user, group.id).then(function (rs) {
             if (rs.success) {
-                messageService.success('User "' + user.username + '" was added to group "' + group.name + '"');
+                messageService.success(`User "${user.username}" was added to group "${group.name}"`);
             }
             else {
                 messageService.error(rs.message);
@@ -86,7 +96,7 @@ const GroupsController = function GroupsController(
     function deleteUserFromGroup(user, group) {
         UserService.deleteUserFromGroup(user.id, group.id).then(function (rs) {
             if (rs.success) {
-                messageService.success('User "' + user.username + '" was deleted from group "' + group.name + '"');
+                messageService.success(`User "${user.username}" was deleted from group "${group.name}"`);
             }
             else {
                 messageService.error(rs.message);
@@ -97,7 +107,7 @@ const GroupsController = function GroupsController(
     function querySearch(criteria, group) {
         vm.usersSearchCriteria.query = criteria;
 
-        return UserService.searchUsersWithQuery(vm.usersSearchCriteria, criteria)
+        return UserService.searchUsers(vm.usersSearchCriteria, criteria)
             .then(function (rs) {
                 if (rs.success) {
                     return UtilService.filterUsersForSend(rs.data.results, group.users);
@@ -110,24 +120,13 @@ const GroupsController = function GroupsController(
     function getAllGroups(isPublic) {
         GroupService.getAllGroups(isPublic).then(function (rs) {
             if(rs.success) {
-                GroupService.groups = rs.data;
-            }
-        });
-    };
-
-    function getGroupsCount() {
-        GroupService.getGroupsCount().then(function (rs) {
-            if (rs.success) {
-                vm.count = rs.data;
-            }
-            else {
-                messageService.error(rs.message);
+                GroupService.groups = rs.data.results;
+                vm.count = rs.data.totalResults;
             }
         });
     };
 
     function initController() {
-        getGroupsCount();
         getAllGroups(false);
     };
 
@@ -138,49 +137,30 @@ const GroupsController = function GroupsController(
 
         $scope.UtilService = UtilService;
         $scope.group = group ? angular.copy(group) : {};
-        $scope.blocks = {};
-        $scope.roles = [];
+        $scope.allAvaliablePermissions = [];
         $scope.group.users = $scope.group.users || [];
         $scope.showGroups = false;
-        $scope.getRoles = function () {
-            GroupService.getRoles().then(function (rs) {
-                if (rs.success) {
-                    $scope.roles = rs.data;
-                }
-                else {
-                    messageService.error(rs.message);
-                }
-            });
-        };
-        $scope.getGroupsCount = function () {
-            GroupService.getGroupsCount().then(function (rs) {
-                if (rs.success) {
-                    $scope.count = rs.data;
-                }
-                else {
-                    messageService.error(rs.message);
-                }
-            });
-        };
+
         $scope.getAllPermissions = function () {
             PermissionService.getAllPermissions().then(function (rs) {
                 if (rs.success) {
                     $scope.permissions = rs.data;
-                    $scope.aggregatePermissionsByBlocks(rs.data);
-                    collectPermissions();
+                    $scope.createPermissionArray(rs.data);
                 }
                 else {
                     messageService.error(rs.message);
                 }
             });
         };
+
         $scope.createGroup = function (group) {
-            group.permissions = $scope.permissions.filter(function (permission) {
-                return permission.value;
-            });
+            group.permissions = getPermissionsNames($scope.allAvaliablePermissions);
+
             GroupService.createGroup(group).then(function (rs) {
                 if (rs.success) {
-                    $scope.cancel(rs.data);
+                    const newGroup = {...vm.groups[findGroupIndex(group.id)], ...rs.data};
+
+                    $scope.cancel(newGroup);
                     messageService.success('Group "' + group.name + '" was created');
                 }
                 else {
@@ -188,6 +168,7 @@ const GroupsController = function GroupsController(
                 }
             });
         };
+
         $scope.getGroup = function (id) {
             GroupService.getGroup(id).then(function (rs) {
                 if (rs.success) {
@@ -198,13 +179,13 @@ const GroupsController = function GroupsController(
                 }
             });
         };
+
         $scope.updateGroup = function (group) {
-            group.permissions = $scope.permissions.filter(function (permission) {
-                return permission.value;
-            });
-            GroupService.updateGroup(group).then(function (rs) {
+            group.permissions = getPermissionsNames($scope.allAvaliablePermissions);
+
+            GroupService.updateGroup(group, group.id).then(function (rs) {
                 if (rs.success) {
-                    $scope.cancel(rs.data);
+                    $scope.cancel({...vm.groups[findGroupIndex(group.id)], ...rs.data});
                     messageService.success('Group updated');
                 }
                 else {
@@ -213,74 +194,16 @@ const GroupsController = function GroupsController(
             });
         };
 
-        $scope.aggregatePermissionsByBlocks = function (permissions) {
-            permissions.forEach(function (p, index) {
-                if (!$scope.blocks[p.block]) {
-                    $scope.blocks[p.block] = {};
-                    $scope.blocks[p.block].selected = [];
-                    $scope.blocks[p.block].permissions = [];
-                }
-                $scope.blocks[p.block].permissions.push(p);
-            })
-        };
-
-        function collectPermissions() {
-            if ($scope.group.permissions) {
-                $scope.group.permissions.forEach(function (p) {
-                    if ($scope.blocks[p.block].selected) {
-                        $scope.blocks[p.block].selected = [];
-                    }
-                    $scope.blocks[p.block].permissions.forEach(function (perm) {
-                        if (perm.id === p.id) {
-                            perm.value = true;
-                        }
-                    });
+        $scope.createPermissionArray = function(permissions) {
+            $scope.allAvaliablePermissions = permissions.reduce((acc, item) => {
+                acc.push({
+                    name: item,
+                    value: !!$scope.group?.permissions?.find((permission) => permission === item),
                 });
-            }
-            $scope.getCheckedBlocks();
+                return acc;
+            }, []);
         };
 
-        $scope.getCheckedBlocks = function() {
-            $scope.blocksChecked = {};
-            for (let block in $scope.blocks) {
-                $scope.blocksChecked[block] = $scope.isCheckedBlock(block);
-            }
-        }
-
-        $scope.isCheckedBlock = function (blockName) {
-            return $scope.getCheckedPermissions(blockName).length !== 0;
-        };
-
-        $scope.getCheckedPermissions = function (blockName) {
-            return $scope.blocks[blockName].permissions.filter(function (permission) {
-                return permission.value;
-            })
-        };
-
-        $scope.setPermissionsValue = function (blockName, value) {
-            $scope.blocks[blockName].permissions.forEach(function (permission) {
-                permission.value = value;
-            })
-        };
-
-        $scope.toggleAllPermissions = function (blockName) {
-            if (!$scope.blocksChecked[blockName]) {
-                $scope.setPermissionsValue(blockName, false);
-            } else {
-                $scope.setPermissionsValue(blockName, true);
-            }
-        };
-
-        $scope.isIndeterminateBlock = function (blockName) {
-            var checkedPermissionsCount = $scope.getCheckedPermissions(blockName).length;
-            return (checkedPermissionsCount !== 0 && checkedPermissionsCount !== $scope.blocks[blockName].permissions.length);
-        };
-
-        $scope.clearPermissions = function () {
-            $scope.permissions.forEach(function (permission) {
-                delete permission.value;
-            })
-        };
         $scope.hide = function () {
             $mdDialog.hide();
         };
@@ -288,7 +211,6 @@ const GroupsController = function GroupsController(
             $mdDialog.cancel(group);
         };
         (function initController() {
-            $scope.getRoles();
             $scope.getAllPermissions();
         })();
     }

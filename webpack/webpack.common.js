@@ -15,7 +15,7 @@ module.exports = (env) => {
     const isProd = env === 'production';
     const isDev = env === 'development';
     const __PRODUCTION__ = JSON.stringify(isProd);
-    const __SERVER_URL__ = process.env.SERVER_URL || 'http://localhost:8080/reporting-service';
+    const __SERVER_HOST__ = process.env.SERVER_HOST || '';
     const __UI_VERSION__ = process.env.UI_VERSION || 'local';
     const packageName = JSON.stringify(process.env.npm_package_name) || 'Reporting UI';
     const base = JSON.stringify(process.env.BASE_PATH || '/');
@@ -225,7 +225,6 @@ module.exports = (env) => {
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-messages/index.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-scroll/index.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-cookies/index.js'),
-            new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-jwt/index.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-moment/angular-moment.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'angular-sanitize/index.js'),
             new webpack.PrefetchPlugin(path.join(process.cwd(), './node_modules'), 'rangy/lib/rangy-core.js'),
@@ -280,7 +279,7 @@ module.exports = (env) => {
                     from: '../config.json',
                     transform(data) {
                         const str = data.toString('utf8')
-                            .replace('__SERVER_URL__', __SERVER_URL__)
+                            .replace('__SERVER_HOST__', __SERVER_HOST__)
                             .replace('__UI_VERSION__', __UI_VERSION__);
 
                         return Buffer.from(str);
