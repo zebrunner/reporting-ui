@@ -50,7 +50,7 @@ const UserProfileController = function UserProfileController(
 
         get currentTitle() { return pageTitleService.pageTitle },
         get currentUser() { return UserService.currentUser; },
-        get serviceUrl() { return $rootScope.version && $rootScope.version.service_url || ''; },
+        get serviceUrl() { return `${ $httpMock.apiHost ? $httpMock.apiHost : location.origin }${$httpMock.reportingPath}`; },
         get appVersions() { return $rootScope.version; },
         get userImage() {
             /// to support old absolute path and new relative
