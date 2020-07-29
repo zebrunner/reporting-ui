@@ -37,12 +37,18 @@
                                             </div>
                                         </th>
                                         <th md-column data-ng-repeat="testRun in tr track by testRun.id">
-                                            <a href ng-click="openTestRun(testRun.id)">{{ testRun.testSuite.name }}</a>
-                                            <span>
-                                                    {{  testRun.startedAt | date:'medium'}}
-                                                </span>
-                                            <div>
-                                                <small>{{ testRun.config.appVersion }}</small>
+                                            <div class="test__wrapper" style="display: flex;">
+                                                <div class="test__platform-wrapper" style="display: flex; align-items: center; margin-right: 20px;">
+                                                    <span ng-if="testRun.platformIcon" class="platform-icon {{::testRun.platformIcon}}"></span>
+                                                    <span ng-if="testRun.platformVersion" style="color: #1f242a; margin-left: 5px;">{{::testRun.platformVersion}}</span>
+                                                </div>
+                                                <div class="test__data-wrapper" style="display: flex; flex-wrap: wrap;">
+                                                    <a href ng-click="openTestRun(testRun.id)" style="line-height: 20px; margin-right: 5px;">{{ testRun.testSuite.name }}</a>
+                                                    <span style="line-height: 20px;">{{  testRun.startedAt | date:'medium'}}</span>
+                                                </div>
+                                                <div>
+                                                    <small>{{ testRun.config.appVersion }}</small>
+                                                </div>
                                             </div>
                                         </th>
                                     </tr>
