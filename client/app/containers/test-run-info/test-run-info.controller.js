@@ -160,7 +160,7 @@ const testRunInfoController = function testRunInfoController(
         const defaultAgent = defaultLogsAgent;
         const carinaAgent = carinaLogsAgent;
 
-        defaultAgent.initSearchCriteria(vm.testRun.id, vm.test.id);
+        defaultAgent.initSearchCriteria(vm.testRun.id, vm.test.id, authService.tenant);
         defaultAgent.initESIndex(vm.test.startTime, vm.test.finishTime);
 
         carinaAgent.initSearchCriteria(vm.testRun.ciRunId, vm.test.ciTestId);
