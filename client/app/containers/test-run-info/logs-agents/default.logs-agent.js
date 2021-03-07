@@ -47,10 +47,11 @@ const defaultLogsAgent = function defaultLogsAgent(
         return log;
     }
 
-    function initSearchCriteria(testRunId, testId) {
+    function initSearchCriteria(testRunId, testId, tenant) {
         this.searchCriteria = [
             { testRunId },
             { testId },
+            { tenant },
         ];
     }
 
